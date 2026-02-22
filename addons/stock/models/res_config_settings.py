@@ -31,16 +31,11 @@ class ResConfigSettings(models.TransientModel):
     stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")
+    is_delivery_module_installed = fields.Boolean(compute='_compute_is_delivery_module_installed')
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex_rest = fields.Boolean("FedEx Connector")
     module_delivery_ups_rest = fields.Boolean("UPS Connector")
     module_delivery_usps_rest = fields.Boolean("USPS Connector")
-    module_delivery_bpost = fields.Boolean("bpost Connector")
-    module_delivery_easypost = fields.Boolean("Easypost Connector")
-    module_delivery_sendcloud = fields.Boolean("Sendcloud Connector")
-    module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
-    module_delivery_starshipit = fields.Boolean("Starshipit Connector")
-    module_delivery_envia = fields.Boolean("Envia.com Connector")
     module_quality_control = fields.Boolean("Quality")
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
@@ -63,6 +58,10 @@ class ResConfigSettings(models.TransientModel):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
         if route:
             self.replenish_on_order = route.active
+
+    @api.depends('module_delivery')
+    def _compute_is_delivery_module_installed(self):
+        self.is_delivery_module_installed = self.module_delivery and 'delivery' in self.env['ir.module.module']._installed()
 
     def _inverse_replenish_on_order(self):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
@@ -99,6 +98,25 @@ class ResConfigSettings(models.TransientModel):
     def onchange_adv_location(self):
         if self.group_stock_adv_location and not self.group_stock_multi_locations:
             self.group_stock_multi_locations = True
+
+    def action_open_delivery_methods(self):
+        return self.env['ir.actions.actions']._for_xml_id('delivery.action_delivery_carrier_form')
+
+    def action_view_delivery_provider_modules(self):
+        exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
+        return {
+            'name': self.env._("All Providers"),
+            'res_model': 'ir.module.module',
+            'view_mode': 'kanban,list',
+            'views': [
+                (self.env.ref('stock.module_view_kanban').id, 'kanban'),
+                (self.env.ref('stock.module_tree').id, 'list'),
+            ],
+            'search_view_id': [self.env.ref('stock.view_module_filter').id, 'search'],
+            'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
+            'type': 'ir.actions.act_window',
+            'help': self.env._('''<p class="o_view_nocontent">Buy Odoo Enterprise now to get more providers.</p>'''),
+        }
 
     def set_values(self):
         warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')

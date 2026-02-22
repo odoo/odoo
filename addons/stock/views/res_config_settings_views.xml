@@ -58,8 +58,24 @@
                             </setting>
                         </block>
                         <block title="Shipping" name="shipping_setting_container">
-                            <setting id="delivery" help="Compute shipping costs" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                            <setting id="delivery" help="Compute shipping costs" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods."
+                                documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                                 <field name="module_delivery"/>
+                                <field name="is_delivery_module_installed" invisible="1"/>
+                                <button
+                                    string="Configure Methods"
+                                    type="object"
+                                    name="action_open_delivery_methods"
+                                    class="btn btn-primary"
+                                    invisible="not is_delivery_module_installed"
+                                />
+                                <button
+                                    string="Find a Delivery Provider"
+                                    type="object"
+                                    name="action_view_delivery_provider_modules"
+                                    class="btn btn-link"
+                                    icon="oi-arrow-right"
+                                />
                             </setting>
                             <setting id="stock_fleet" help="Transport management: organize packs in your fleet, or carriers.">
                                 <field name="module_stock_fleet"/>
@@ -79,59 +95,6 @@
                             </setting>
                             <setting id="signature_delivery_orders" help="Require a signature on your delivery orders">
                                 <field name="group_stock_sign_delivery"/>
-                            </setting>
-                        </block>
-                        <block title="Shipping Connectors" name="shipping_connectors_setting_container">
-                            <setting id="compute_shipping_costs_ups" help="Compute shipping costs and ship with UPS">
-                                <div class="o_form_label">UPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with UPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                            </setting>
-                            <setting id="compute_shipping_costs_dhl" help=" Compute shipping costs and ship with DHL">
-                                <div class="o_form_label">DHL Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with DHL<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                            </setting>
-                            <setting id="compute_shipping_costs_fedex" help="Compute shipping costs and ship with FedEx">
-                                <div class="o_form_label">FedEx Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with FedEx<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                            </setting>
-                            <setting id="compute_shipping_costs_usps" help="Compute shipping costs and ship with USPS">
-                                <div class="o_form_label">USPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with USPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                            </setting>
-                            <setting id="compute_shipping_costs_bpost" help="Compute shipping costs and ship with bpost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_bpost" widget="upgrade_boolean"/>
-                            </setting>
-
-                            <setting id="compute_shipping_costs_easypost" help="Compute shipping costs and ship with Easypost" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_easypost" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_starshipit" help="Compute shipping costs and ship with Starshipit" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_starshipit" widget="upgrade_boolean"/>
-                            </setting>
-                            <setting id="compute_shipping_costs_envia" help="Compute shipping costs and ship with Envia.com" documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                                <field name="module_delivery_envia" widget="upgrade_boolean"/>
                             </setting>
                         </block>
                         <block title="Products" name="product_setting_container">
