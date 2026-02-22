@@ -153,7 +153,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                     if (!response.successful) {
                         return this.handleClosingError(response);
                     }
-                    window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                    window.location = this.closePosRedirectLocation;
                 } catch (error) {
                     const iError = identifyError(error);
                     if (iError instanceof ConnectionLostError || iError instanceof ConnectionAbortedError) {
@@ -168,7 +168,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                                 'An error has occurred when trying to close the session.\n' +
                                 'You will be redirected to the back-end to manually close the session.')
                         })
-                        window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                        window.location = this.closePosRedirectLocation;
                     }
                 }
                 this.closeSessionClicked = false;
@@ -177,11 +177,15 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         async handleClosingError(response) {
             await this.showPopup('ErrorPopup', {title: 'Error', body: response.message});
             if (response.redirect) {
-                window.location = '/web#action=point_of_sale.action_client_pos_menu';
+                window.location = this.closePosRedirectLocation;
             }
         }
         _getShowDiff(pm) {
             return pm.type == 'bank' && pm.number !== 0;
+        }
+
+        get closePosRedirectLocation() {
+          return '/web#action=point_of_sale.action_client_pos_menu';
         }
     }
 
