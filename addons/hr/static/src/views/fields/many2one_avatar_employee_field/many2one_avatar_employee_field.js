@@ -13,10 +13,17 @@ export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
     Many2OneAvatarUserField
 ) {
     get many2OneProps() {
-        return {
+        const props = {
             ...super.many2OneProps,
             relation: this.relation,
         };
+        if (
+            (this.props.name === "parent_id" || this.props.name === "coach_id") &&
+            this.props.record.data.has_cross_company_relation
+        ) {
+            props.canOpen = false;
+        }
+        return props;
     }
 }
 
