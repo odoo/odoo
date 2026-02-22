@@ -362,14 +362,16 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="card o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
+    <div t-attf-class="card o_wslides_course_card w-100 h-100 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <div>
+        <a t-attf-href="/slides/#{slug(channel)}" t-att-title="channel.name" class="text-decoration-none">
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
-        </div>
+        </a>
         <div class="card-body">
-            <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
+            <a t-attf-href="/slides/#{slug(channel)}" class="text-decoration-none text-body">
+                <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
+            </a>
             <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
                 <div class="o_line_clamp small" t-field="channel.description_short"/>
@@ -407,7 +409,7 @@
                 <small><t t-out="channel.total_slides"/> steps</small>
             </t>
         </div>
-    </a>
+    </div>
 </template>
 
 <template id="course_card_information" name='Course Information'>
