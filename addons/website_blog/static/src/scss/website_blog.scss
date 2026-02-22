@@ -310,6 +310,14 @@ $o-wblog-loader-size: 50px;
             pointer-events: none;
         }
     }
+
+    // Footer elements (name, subtitle, cover) of the next post should not be
+    // editable as they are only a preview and not the real content.
+    #o_wblog_post_footer {
+        .o_wblog_post_subtitle, .o_wblog_post_name, .o_record_cover_container {
+            pointer-events: none;
+        }
+    }
 }
 
 #o_wblog_post_content_jump {
