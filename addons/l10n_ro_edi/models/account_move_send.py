@@ -9,7 +9,10 @@ class AccountMoveSend(models.AbstractModel):
         return all([
             move._need_ubl_cii_xml('ciusro') or move.ubl_cii_xml_id,
             move.country_code == 'RO',
-            not move.l10n_ro_edi_state,
+            (not move.l10n_ro_edi_state or (
+                move.l10n_ro_edi_document_ids and
+                all(doc.state == 'invoice_sending_failed' for doc in move.l10n_ro_edi_document_ids)
+            )),
         ])
 
     def _get_all_extra_edis(self) -> dict:
@@ -25,7 +28,9 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        if waiting_moves := moves.filtered(lambda m: m.l10n_ro_edi_state == 'invoice_sent'):
+        if waiting_moves := moves.filtered(lambda m: m.l10n_ro_edi_state == 'invoice_sent' and
+            not (m.l10n_ro_edi_document_ids and all(doc.state == 'invoice_sending_failed' for doc in m.l10n_ro_edi_document_ids))
+        ):
             alerts['l10n_ro_edi_warning_waiting_moves'] = {
                 'message': _(
                     "The following invoice(s) are waiting for answer from the Romanian SPV: %s."

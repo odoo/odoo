@@ -215,3 +215,32 @@ class TestUBLRO(TestUBLROCommon):
     def test_export_constraints_new(self):
         self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
         self.test_export_constraints()
+
+    def test_sending_to_spv_options(self):
+        """ Test that it is possible to resend the E-Factura to SPV if all the previous attempts have failed. """
+        invoice = self.create_move('out_invoice', send=False)
+
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        # the option to send to SPV should be available
+        ro_spv_options = wizard.extra_edi_checkboxes['ro_edi']
+        self.assertTrue(ro_spv_options['checked'])
+        self.assertFalse(ro_spv_options.get('readonly', False))
+
+        # create a document in "Sent" state to simulate that it has been sent to SPV
+        document = self.env['l10n_ro_edi.document'].create({
+            'invoice_id': invoice.id,
+            'state': 'invoice_sent',
+        })
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        # the option to send to SPV should be disabled
+        ro_spv_options = wizard.extra_edi_checkboxes['ro_spv']
+        self.assertFalse(ro_spv_options['checked'])
+        self.assertTrue(ro_spv_options['readonly'])
+
+        # change the state of the document to simulate that it has been rejected by SPV
+        document.state = 'invoice_sending_failed'
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        # the option to send to SPV should be available
+        ro_spv_options = wizard.extra_edi_checkboxes['ro_edi']
+        self.assertTrue(ro_spv_options['checked'])
+        self.assertFalse(ro_spv_options.get('readonly', False))
