@@ -760,7 +760,9 @@ class ForumPost(models.Model):
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
                 ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
-                partner_ids += question_followers.ids
+                # Filter to partners the user can read
+                accessible_partners = self.env['res.partner'].search([('id', 'in', question_followers.ids)])
+                partner_ids += accessible_partners.ids
                 kwargs['partner_ids'] = partner_ids
 
             self.ensure_one()
