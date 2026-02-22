@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='address']//p[@t-if='doc.partner_id.vat']" position="replace">
+            <p t-if="doc.partner_id.vat" class="mb-0">
+                <t t-if="not doc.partner_id.is_vat or 'LATAMID' in doc.partner_id.fiscal_country_group_codes" t-out="doc.partner_id.l10n_latam_identification_type_id.name"/>
+                <t t-elif="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
+                <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
+            </p>
+        </xpath>
+    </template>
+</odoo>
