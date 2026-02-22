@@ -573,6 +573,8 @@ def _get_translation_source(stack_level: int, module: str = '', lang: str = '', 
         frame = inspect.currentframe()
         for _index in range(stack_level + 1):
             frame = frame.f_back
+            if frame.f_code is odoo.tools.safe_eval.safe_call.__code__:
+                frame = frame.f_back
         lang = lang or _get_lang(frame, default_lang)
     if lang and lang != 'en_US':
         return get_translated_module(module or frame), lang

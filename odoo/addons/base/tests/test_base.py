@@ -4,11 +4,12 @@
 import ast
 
 from textwrap import dedent
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests.common import tagged, TransactionCase, BaseCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
+from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval, UnsafePolicy
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -132,6 +133,89 @@ class TestSafeEval(BaseCase):
         # no dunder
         with self.assertRaises(NameError):
             safe_eval("self.__name__", {'self': self}, mode="exec")
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestSafeEvalRuntime(BaseCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.startClassPatcher(patch(
+            'odoo.tools.safe_eval.UNSAFE_POLICY',
+            UnsafePolicy.RAISE
+        ))
+
+        class UnsafeClass:
+            __module__ = 'odoo.unsafe_module'
+
+            def __init__(self, *args, **kwargs): ...
+
+        cls.unsafe_context = {'UnsafeClass': UnsafeClass}
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_callee(self):
+        expr = """
+            UnsafeClass()
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_args(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            callee(UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_kwargs(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            callee(kw=UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_structure(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            struct = {'a': {'b': {'c': UnsafeClass}}}
+            callee(struct)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            struct = ['a', 'b', 'c', UnsafeClass]
+            callee(struct)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_builtin_callee(self):
+        expr = """
+            map(UnsafeClass, ['foo'])
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            filter(UnsafeClass, ['foo'])
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            sorted(['foo'], key=UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

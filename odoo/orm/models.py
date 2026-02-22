@@ -53,7 +53,7 @@ from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
-from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_encoder
 from odoo.tools.translate import _, LazyTranslate
 
 from . import decorators as api
@@ -309,6 +309,8 @@ class MetaModel(type):
                 add_default('write_date', Datetime(
                     string='Last Updated on', readonly=True))
 
+
+safe_encoder.hooks[MetaModel] = None
 
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
