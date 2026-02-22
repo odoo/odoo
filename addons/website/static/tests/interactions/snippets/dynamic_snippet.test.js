@@ -1,7 +1,7 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll } from "@odoo/hoot-dom";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -24,16 +24,34 @@ setupInteractionWhiteList(["website.dynamic_snippet", "website.test_dynamic_item
 describe.current.tags("interaction_dev");
 
 test("dynamic snippet loads items and displays them through template", async () => {
+    const rpcCalls = [];
     onRpc("/website/snippet/filters", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
-        expect(json.params.filter_id).toBe(1);
-        expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
-        expect(json.params.limit).toBe(16);
-        expect(json.params.search_domain).toEqual([]);
-        return [
-            `<div class="s_test_dynamic_item" data-test-param="test">Some test record </div>`,
-            `<div class="s_test_dynamic_item" data-test-param="test2">Another test record</div>`,
-        ];
+        rpcCalls.push(json.params);
+        const offset = json.params.offset || 0;
+        if (offset === 0) {
+            return [
+                `<div class="s_test_dynamic_item" data-test-param="test1">Test Record 1</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test2">Test Record 2</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test3">Test Record 3</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test4">Test Record 4</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test5">Test Record 5</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test6">Test Record 6</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test7">Test Record 7</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test8">Test Record 8</div>`,
+            ];
+        } else if (offset === 8) {
+            return [
+                `<div class="s_test_dynamic_item" data-test-param="test9">Test Record 9</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test10">Test Record 10</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test11">Test Record 11</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test12">Test Record 12</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test13">Test Record 13</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test14">Test Record 14</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test15">Test Record 15</div>`,
+                `<div class="s_test_dynamic_item" data-test-param="test16">Test Record 16</div>`,
+            ];
+        }
     });
     const { core } = await startInteractions(`
         <div id="wrapwrap">
@@ -54,18 +72,43 @@ test("dynamic snippet loads items and displays them through template", async () 
                             </div>
                             <div class="dynamic_snippet_template"></div>
                         </section>
+                        <section class="s_dynamic_snippet_load_more d-none">
+                            <a href="www.odoo.com" class="btn">Load More</a>
+                        </section>
                     </div>
                 </div>
             </section>
         </div>
     `);
-    expect(core.interactions).toHaveLength(3);
-    const itemEls = queryAll(".dynamic_snippet_template .s_test_dynamic_item");
-    expect(itemEls[0]).toHaveAttribute("data-test-param", "test");
-    expect(itemEls[1]).toHaveAttribute("data-test-param", "test2");
+    expect(rpcCalls[0]).toMatchObject({
+        filter_id: 1,
+        template_key: "website.dynamic_filter_template_test_item",
+        limit: 8,
+        offset: 0,
+        search_domain: [],
+    });
+    expect(core.interactions).toHaveLength(9);
+    let itemEls = queryAll(".dynamic_snippet_template .s_test_dynamic_item");
+    expect(itemEls[0]).toHaveAttribute("data-test-param", "test1");
+    expect(itemEls[7]).toHaveAttribute("data-test-param", "test8");
     // Make sure element interactions are started.
-    expect(itemEls[0]).toHaveAttribute("data-started", "*test*");
-    expect(itemEls[1]).toHaveAttribute("data-started", "*test2*");
+    expect(itemEls[0]).toHaveAttribute("data-started", "*test1*");
+    expect(itemEls[7]).toHaveAttribute("data-started", "*test8*");
+    await click(".s_dynamic_snippet_load_more a");
+    expect(rpcCalls[1]).toMatchObject({
+        filter_id: 1,
+        template_key: "website.dynamic_filter_template_test_item",
+        limit: 8,
+        offset: 8,
+    });
+    await animationFrame();
+    itemEls = queryAll(".dynamic_snippet_template .s_test_dynamic_item");
+    expect(itemEls[8]).toHaveAttribute("data-test-param", "test9");
+    expect(itemEls[15]).toHaveAttribute("data-test-param", "test16");
+    expect(itemEls[8]).toHaveAttribute("data-started", "*test9*");
+    expect(itemEls[15]).toHaveAttribute("data-started", "*test16*");
+    expect(core.interactions).toHaveLength(17);
+    expect(".s_dynamic_snippet_load_more").not.toBeVisible();
     core.stopInteractions();
     // Make sure element interactions are stopped.
     expect(core.interactions).toHaveLength(0);

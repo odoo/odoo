@@ -9,6 +9,9 @@
             t-att-data-custom-template-data="custom_template_data or '{}'"
             t-att-data-number-of-records="is_single_record and '1' or ''">
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">
+                <t t-set="placeholder_content">
+                    <span class="placeholder col-12 rounded" style="height: 250px;"/>
+                </t>
                 <div class="row s_nb_column_fixed">
                     <!-- Dynamic snippet loading effect -->
                     <section class="s_dynamic_snippet_holder d-none px-4 placeholder-glow">
@@ -18,7 +21,7 @@
                             <span class="placeholder mt-3 col-6 rounded"/>
                         </div>
                         <div class="row mt-4">
-                            <span class="placeholder col-12 rounded" style="height: 250px;"/>
+                            <t t-out="placeholder_content"/>
                         </div>
                     </section>
                     <section t-attf-class="{{is_single_record and 'd-none' or 'd-flex'}} {{snippet_heading_extra_classes or 'justify-content-between flex-column flex-md-row'}} s_dynamic_snippet_title oe_unremovable oe_unmovable mb-lg-0 pb-3 pb-md-0 s_col_no_resize">
@@ -30,6 +33,11 @@
                             <a t-att-class="snippet_button_classes" t-att-href="main_page_url" t-out="snippet_button_text or snippet_button_text_default"/>
                         </div>
                     </section>
+                    <section class="s_dynamic_content_holder d-none px-4 placeholder-glow col">
+                        <div class="row mt-4">
+                            <t t-out="placeholder_content"/>
+                        </div>
+                    </section>
                     <section t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}">
                         <div class="css_non_editable_mode_hidden">
                             <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0">
@@ -39,6 +47,10 @@
                         <div class="dynamic_snippet_template">
                             <t t-out="0"/>
                         </div>
+                    </section>
+                    <!-- Load More button -->
+                    <section t-if="not is_load_more_button" class="s_dynamic_snippet_load_more oe_unremovable oe_unmovable d-none text-center mt-3">
+                        <a href="#" class="btn btn-primary oe_unremovable">Load More</a>
                     </section>
                 </div>
             </div>

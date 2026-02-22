@@ -36,7 +36,7 @@ test("dynamic snippet products loads items and displays them through template", 
         expect(json.params.template_key).toBe(
             "website_sale.dynamic_filter_template_product_product_products_item"
         );
-        expect(json.params.limit).toBe(16);
+        expect(json.params.limit).toBe(8);
         expect(json.params.search_domain).toEqual([["public_categ_ids", "child_of", 2]]);
         return [
             `

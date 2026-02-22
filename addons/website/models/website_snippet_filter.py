@@ -58,7 +58,7 @@ class WebsiteSnippetFilter(models.Model):
                 if not field_name.strip():
                     raise ValidationError(_("Empty field name in “%s”", record.field_names))
 
-    def _render(self, template_key, limit, search_domain=None, with_sample=False, res_model=None, res_id=None, **custom_template_data):
+    def _render(self, template_key, limit, offset=0, search_domain=None, with_sample=False, res_model=None, res_id=None, **custom_template_data):
         """Renders the website dynamic snippet items"""
         self and self.ensure_one()
 
@@ -72,7 +72,7 @@ class WebsiteSnippetFilter(models.Model):
         if self.model_name and self.model_name.replace('.', '_') not in template_key:
             return ''
 
-        records = self._prepare_values(limit=limit, search_domain=search_domain, res_model=res_model, res_id=res_id)
+        records = self._prepare_values(limit=limit, search_domain=search_domain, res_model=res_model, res_id=res_id, offset=offset)
         is_sample = with_sample and not records
         if is_sample:
             records = self._prepare_sample(limit, res_model=res_model)
@@ -90,9 +90,9 @@ class WebsiteSnippetFilter(models.Model):
         model_name = options.get('res_model') or self.filter_id.sudo().model_id
         res_id = options.get('res_id')
         # The "limit" field is there to prevent loading an arbitrary number of
-        # records asked by the client side. This here makes sure you can always
-        # load at least 16 records as it is what the editor allows.
-        max_limit = max(self.limit, 16)
+        # records asked by the client side, while also enforcing a minimum of
+        # 8 records.
+        max_limit = max(self.limit, 8)
         limit = limit and min(limit, max_limit) or max_limit
         single_record_filter = limit == 1 and model_name and res_id
 
@@ -115,7 +115,8 @@ class WebsiteSnippetFilter(models.Model):
                 records = self.env[model_name].sudo(False).with_context(**literal_eval(filter_sudo.context)).search(
                     domain,
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
-                    limit=limit
+                    limit=limit,
+                    offset=options.get('offset')
                 ) if not single_record_filter else self.env[model_name].browse([res_id])
                 return self._filter_records_to_values(records.sudo(), res_model=model_name)
             except MissingError:
@@ -127,6 +128,7 @@ class WebsiteSnippetFilter(models.Model):
                 return self.action_server_id.with_context(
                     dynamic_filter=self,
                     limit=limit,
+                    offset=options.get('offset'),
                     search_domain=search_domain,
                 ).sudo().run() or []
             except MissingError:
