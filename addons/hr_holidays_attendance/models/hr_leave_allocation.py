@@ -35,27 +35,19 @@ class HolidaysAllocation(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        for allocation in res:
-            if allocation.overtime_deductible and allocation.holiday_type == 'employee':
-                duration = allocation.number_of_hours_display
-                if duration > allocation.employee_id.total_overtime:
-                    raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
-                if not allocation.overtime_id:
-                    allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
-                        'employee_id': allocation.employee_id.id,
-                        'date': allocation.date_from,
-                        'adjustment': True,
-                        'duration': -1 * duration,
-                    })
+        res._validate_overtime_and_create_adjustment()
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        if 'number_of_days' not in vals:
+        if 'number_of_days' not in vals and 'holiday_status_id' not in vals:
             return res
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
             raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
+        self._validate_overtime_and_create_adjustment()
         for allocation in self.sudo().filtered('overtime_id'):
+            if 'number_of_days' not in vals:
+                continue
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
             overtime_duration = allocation.overtime_id.sudo().duration
@@ -69,6 +61,20 @@ class HolidaysAllocation(models.Model):
         res = super().action_refuse()
         self.overtime_id.sudo().unlink()
         return res
+
+    def _validate_overtime_and_create_adjustment(self):
+        for allocation in self:
+            if not (allocation.overtime_deductible and allocation.holiday_type == 'employee' and not allocation.overtime_id):
+                continue
+            duration = allocation.number_of_hours_display
+            if duration > allocation.employee_id.total_overtime:
+                raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+            allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
+                'employee_id': allocation.employee_id.id,
+                'date': allocation.date_from,
+                'adjustment': True,
+                'duration': -1 * duration,
+            })
 
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
         self.ensure_one()
