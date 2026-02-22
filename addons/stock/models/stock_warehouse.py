@@ -1160,3 +1160,6 @@ class StockWarehouse(models.Model):
 
     def get_current_warehouses(self):
         return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
+
+    def _default_wh_routes(self):
+        return self.env['stock.route']

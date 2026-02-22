@@ -305,6 +305,10 @@ class StockWarehouse(models.Model):
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
+    def _default_wh_routes(self):
+        manu_route = self.route_ids.filtered(lambda r: r.rule_ids and r.rule_ids[0].action == 'manufacture')
+        return manu_route | super()._default_wh_routes()
+
 
 class StockWarehouseOrderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"

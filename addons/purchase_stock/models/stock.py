@@ -121,6 +121,10 @@ class StockWarehouse(models.Model):
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
+    def _default_wh_routes(self):
+        buy_route = self.route_ids.filtered(lambda r: r.rule_ids and r.rule_ids[0].action == 'buy')
+        return buy_route | super()._default_wh_routes()
+
 
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"

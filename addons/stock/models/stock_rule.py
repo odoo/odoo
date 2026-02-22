@@ -477,12 +477,15 @@ class StockRule(models.Model):
             procurement.values.setdefault('date_planned', procurement.values.get('date_planned', False) or fields.Datetime.now())
             if self._skip_procurement(procurement):
                 continue
-            rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
+            extend_route = self.env['stock.route'].concat(*procurement.values.get('route_ids', [])) | procurement.location_id.warehouse_id._default_wh_routes()
+            test_proc = procurement._replace(values={**procurement.values, 'route_ids': extend_route})
+            rule = self._get_rule(test_proc.product_id, test_proc.location_id, test_proc.values)
             if not rule:
                 error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
                     product=procurement.product_id.display_name, location=procurement.location_id.display_name)
                 procurement_errors.append((procurement, error))
             else:
+                rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
 
@@ -744,3 +747,4 @@ class StockRule(models.Model):
         if company_id:
             domain += [('company_id', '=', company_id)]
         return domain
+
