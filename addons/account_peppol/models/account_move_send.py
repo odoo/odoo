@@ -123,7 +123,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol':
-            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state != 'rejected'
+            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state not in ['rejected', 'not_registered']
         else:
             return super()._is_applicable_to_company(method, company)
 
@@ -135,7 +135,7 @@ class AccountMoveSend(models.AbstractModel):
             return all([
                 self._is_applicable_to_company(method, move.company_id),
                 self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_edi_format) == 'valid',
-                move.company_id.account_peppol_proxy_state != 'rejected',
+                move.company_id.account_peppol_proxy_state not in ['rejected', 'not_registered'],
                 move._need_ubl_cii_xml(invoice_edi_format)
                 or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
             ])
