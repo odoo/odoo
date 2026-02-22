@@ -415,13 +415,16 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ],
         }])
         vendor = self.env['res.partner'].create({'name': 'Super vendor'})
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': vendor.id,
-            'order_line': [
-                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'price_unit': 1000})
-            ],
-        })
-        purchase_order.button_confirm()
+        purchase_orders = self.env['purchase.order'].create([
+            {
+                'partner_id': vendor.id,
+                'order_line': [
+                    Command.create({'product_id': super_kit.id, 'product_qty': qty, 'price_unit': 1000}),
+                ],
+            }
+            for qty in [1, 2]
+        ])
+        purchase_orders.button_confirm()
 
         # Actual cost shares:
         # Component01:
@@ -441,10 +444,14 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
         #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
         #   1.0 * 0.0 * 1.0 = 0.0 -> 0%
-        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
-        receipt = purchase_order.picking_ids
-        receipt.button_validate()
-        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), [
+        self.assertEqual(
+            [
+                sum(moves.mapped('cost_share'))
+                for moves in purchase_orders.order_line.move_ids.grouped('picking_id').values()
+            ], [100, 100])
+        receipts = purchase_orders.picking_ids
+        receipts.button_validate()
+        expected_values = [
             {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
             {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
             {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
@@ -456,7 +463,11 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
             {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
             {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
-        ])
+        ]
+        expected_values += [
+            {**item, 'value': item['value'] * 2} for item in expected_values
+        ]
+        self.assertRecordValues(receipts.move_ids.sorted(lambda m: (m.picking_id, m.product_id.id, m.cost_share)), expected_values)
 
     def test_kit_bom_cost_share_constraint_with_variants(self):
         """
