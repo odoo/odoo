@@ -235,6 +235,23 @@
                         <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="oi-arrow-right"/>
                     </div>
                 </setting>
+                <setting
+                    id="send_order_rating_emails_setting"
+                    help="Send a rating request for each order"
+                >
+                    <field name="send_order_rating_emails"/>
+                    <div invisible="not send_order_rating_emails" class="mt-1">
+                        <field name="rating_email_delay" class="oe_inline" /> days after order confirmation
+                    </div>
+                    <div invisible="not send_order_rating_emails" class="mt-2">
+                        <label
+                            string="Email"
+                            for="rating_email_template_id"
+                            class="o_light_label me-2"
+                        />
+                        <field name="rating_email_template_id" class="oe_inline"/>
+                    </div>
+                </setting>
                 <setting string="Orders Assignment" help="Assignment of online orders">
                     <div class="content-group">
                         <div class="row mt16">

@@ -64,6 +64,13 @@ class ResConfigSettings(models.TransientModel):
     confirmation_email_template_id = fields.Many2one(
         related='website_id.confirmation_email_template_id', readonly=False
     )
+    send_order_rating_emails = fields.Boolean(
+        related='website_id.send_order_rating_emails', readonly=False
+    )
+    rating_email_delay = fields.Integer(related='website_id.rating_email_delay', readonly=False)
+    rating_email_template_id = fields.Many2one(
+        related='website_id.rating_email_template_id', readonly=False
+    )
 
     # Additional settings
     account_on_checkout = fields.Selection(
@@ -117,6 +124,11 @@ class ResConfigSettings(models.TransientModel):
                 )
             ):
                 website._populate_product_feeds()
+        # if Request ratings option is enabled activate Customer Reviews view
+        if self.send_order_rating_emails:
+            view = self.env.ref('website_sale.product_comment', raise_if_not_found=False)
+            if view and not view.active:
+                view.active = True
 
     # === ACTION METHODS === #
 

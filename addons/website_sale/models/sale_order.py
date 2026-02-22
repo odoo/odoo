@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
 
@@ -50,6 +50,7 @@ class SaleOrder(models.Model):
     is_unfulfilled = fields.Boolean(
         string="Unfulfilled Orders", search='_search_is_unfulfilled', store=False
     )
+    is_rating_email_sent = fields.Boolean(string="Rating email already sent")
 
     #=== COMPUTE METHODS ===#
 
@@ -872,6 +873,37 @@ class SaleOrder(models.Model):
             ('website_published', '=', True),
             *self.env['delivery.carrier']._check_company_domain(self.company_id),
         ]).filtered(lambda carrier: carrier._is_available_for_order(self))
+
+    @api.model
+    def _cron_send_order_rating_emails(self):
+        """Send rating request emails to customers a few days after order."""
+        today = fields.Date.today()
+        # Find websites with rating emails enabled and email template configured.
+        websites = self.env['website'].search([
+            ('send_order_rating_emails', '=', True), ('rating_email_template_id', '!=', False)
+        ])
+        if not websites:
+            return
+
+        orders_to_process = self.env['sale.order']
+        # Calculate total orders to process
+        for website in websites:
+            date_threshold = today - timedelta(days=max(0, website.rating_email_delay))
+            orders_to_process |= self.search([
+                ('state', '=', 'sale'),
+                ('date_order', '>', date_threshold - timedelta(days=1)),
+                ('date_order', '<=', date_threshold),
+                ('is_rating_email_sent', '=', False),
+                ('website_id', '=', website.id),
+            ])
+
+        self.env['ir.cron']._commit_progress(remaining=len(orders_to_process))
+        for order in orders_to_process:
+            # Send request rating emails.
+            order.website_id.rating_email_template_id.send_mail(order.id)
+
+            order.is_rating_email_sent = True
+            self.env['ir.cron']._commit_progress(processed=1)
 
     #=== TOOLING ===#
 
