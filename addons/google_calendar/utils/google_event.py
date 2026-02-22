@@ -38,6 +38,17 @@ class GoogleEvent(abc.Set):
     def __iter__(self) ->  Iterator['GoogleEvent']:
         return iter(GoogleEvent([vals]) for vals in self._events.values())
 
+    def __add__(self, other):
+        if not isinstance(other, GoogleEvent):
+            raise TypeError("Both instances must be of type GoogleEvent.")
+        # Fast path for empty sets.
+        if not self:
+            return other
+        if not other:
+            return self
+        # Merge the underlying dictionaries directly.
+        return GoogleEvent({**self._events, **other._events})
+
     def __contains__(self, google_event):
         return google_event.id in self._events
 

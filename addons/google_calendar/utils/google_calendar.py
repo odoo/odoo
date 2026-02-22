@@ -71,6 +71,30 @@ class GoogleCalendarService():
         return GoogleEvent(events), next_sync_token, default_reminders
 
     @requires_auth_token
+    def fetch_working_location_events(self, token, start, end, timeout=3):
+        """ Get working location events from Google Calendar. """
+        url = "/calendar/v3/calendars/primary/events"
+        headers = {'Content-type': 'application/json'}
+        params = {
+            'access_token': token,
+            'timeMin': start.isoformat() + 'Z',
+            'timeMax': end.isoformat() + 'Z',
+            'eventTypes': ['workingLocation'],
+            'singleEvents': True,  # IMPORTANT: Expands recurring events into instances
+        }
+
+        events = []
+        while True:
+            _, data, _ = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
+            events += data.get('items', [])
+            next_page_token = data.get('nextPageToken')
+            if not next_page_token:
+                break
+            params['pageToken'] = next_page_token
+
+        return GoogleEvent(events)
+
+    @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT, need_video_call=True):
         send_updates = self.google_service.env.context.get('send_updates', True)
         url = "/calendar/v3/calendars/primary/events?conferenceDataVersion=%d&sendUpdates=%s" % (1 if need_video_call else 0, "all" if send_updates else "none")
