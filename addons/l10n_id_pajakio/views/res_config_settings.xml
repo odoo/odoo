@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Indonesian Electronic Invoicing" id='id_edi' invisible="country_code != 'ID'">
+                    <setting string="Pajak.io" company_dependent="1" help="Pajak.io Settings">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label string="Pajak.io Mode" for="l10n_id_pajakio_mode" />
+                                <field name="l10n_id_pajakio_mode" widget="radio"/>
+                            </div>
+                            <div class="mt18">
+                                <button name="action_sign_in_pajakio" string="Sign in" type="object" class="btn btn-link" invisible="l10n_id_pajakio_hide_register"/>
+                            </div>
+                            <div class="mt18">
+                                <button name="action_register_user_pajakio" string="Register Pajak.io User" type="object" class="btn btn-link" invisible="l10n_id_pajakio_hide_register"/>
+                            </div>
+                            <div class="mt18">
+                                <button name="action_register_company_pajakio" string="Register Pajak.io Company" type="object" class="btn btn-link" invisible="l10n_id_pajakio_hide_register_company"/>
+                            </div>
+                            <div class="mt18">
+                                <button name="action_link_company_iap" string="Connect to Pajak.io" type="object" class="btn btn-link" invisible="l10n_id_pajakio_linked"/>
+                            </div>
+                            <div class="mt18">
+                                <button name="action_unlink_company_iap" string="Disconnect from pajak.io" type="object" class="btn btn-link" invisible="not l10n_id_pajakio_linked"/>
+                            </div>
+                            <widget name="iap_buy_more_credits" service_name="l10n_id_pajakio_proxy" hide_service="1"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
