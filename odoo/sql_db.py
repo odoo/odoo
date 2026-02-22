@@ -61,6 +61,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_array_type((1231,), 'f
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
+_logger_savepoint = logging.getLogger("odoo.savepoint.count")
 
 re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
@@ -115,6 +116,8 @@ class Savepoint:
         self._cr = cr
         self.closed: bool = False
         cr.execute('SAVEPOINT "%s"' % self.name)
+        if hasattr(self._cr, '_increase_savepoint_count'):
+            self._cr._increase_savepoint_count()
 
     def __enter__(self):
         return self
@@ -181,6 +184,10 @@ class BaseCursor(_CursorProtocol):
         # for managing environments is instantiated by registry.cursor().  It
         # is not done here in order to avoid cyclic module dependencies.
         self.transaction = None
+        self.savepoint_count = 0
+
+    def _increase_savepoint_count(self):
+        self.savepoint_count += 1
 
     def flush(self) -> None:
         """ Flush the current transaction, and run precommit hooks. """
@@ -358,6 +365,20 @@ class Cursor(BaseCursor):
         if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
             self.execute("SET search_path = public, pg_catalog;")
             self.commit()  # ensure that the search_path remains after a rollback
+
+    def _increase_savepoint_count(self):
+        super()._increase_savepoint_count()
+        # This is not an abitrary number but linked to the size of the shared memory size that store sub trans info
+        stack_info = False
+        if self.savepoint_count % 10 == 0 and odoo.registry(self.dbname).ready:
+            stack_info = True
+        _logger_savepoint.info("New savepoint: savepoint count %s", self.savepoint_count, stack_info=stack_info)
+
+    def _clear_savepoint_count(self):
+        self.savepoint_count = 0
+
+    def __build_dict(self, row):
+        return {d.name: row[i] for i, d in enumerate(self._obj.description)}
 
     def dictfetchone(self) -> dict[str, typing.Any] | None:
         description = self._obj.description
@@ -548,6 +569,7 @@ class Cursor(BaseCursor):
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.run()
+        self._clear_savepoint_count()
 
     def rollback(self) -> None:
         """ Perform an SQL `ROLLBACK` """
@@ -559,6 +581,7 @@ class Cursor(BaseCursor):
             self.transaction.clear()
         self._now = None
         self.postrollback.run()
+        self._clear_savepoint_count()
 
     def __getattr__(self, name):
         if self._closed and name == '_obj':
