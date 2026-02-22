@@ -35,7 +35,7 @@ class Session(Controller):
 
         with ExitStack() as stack:
             if not request.db or request.db != db:
-                # Use a new env only when no db on the request, which means the env was not set on in through `_serve_db`
+                # Use a new env only when no db on the request, which means the env was not set on in through `serve_db`
                 # or the db is different than the request db
                 cr = stack.enter_context(odoo.modules.registry.Registry(db).cursor())
                 env = odoo.api.Environment(cr, None, {})
