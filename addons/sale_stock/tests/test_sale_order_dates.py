@@ -209,3 +209,42 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 invoice.delivery_date, custom_delivery_date,
                 "Custom invoice delivery shouldn't change resetting to draft invoice",
             )
+
+    @freeze_time('2025-3-02 23:30:00')
+    def test_so_invoice_delivery_date(self):
+        """
+        Testing that the delivery date is set correctly on the invoice
+        for different user timezones.
+
+        For example:
+        2025-03-02 23:30:00 UTC corresponds to
+        2025-03-03 05:00:00 IST.
+
+        Without proper timezone handling, the delivery date is incorrectly assigned
+        as 2025-03-02 on the UI instead of 2025-03-03.
+        """
+        self.env.user.tz = 'Asia/Kolkata'
+        self.env['stock.quant']._update_available_quantity(
+            self.test_product_delivery,
+            self.company_data['default_warehouse'].lot_stock_id,
+            100,
+        )
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.test_product_delivery.id,
+            })],
+        })
+        so.action_confirm()
+        so.picking_ids.button_validate()
+        invoice = so._create_invoices()
+        expected_date = fields.Date.context_today(so)
+        self.assertEqual(
+            invoice.delivery_date, expected_date,
+            "Delivery date should use the client's timezone at invoice creation.",
+        )
+        so.picking_ids.date_done = so.picking_ids.date_done - timedelta(hours=1)
+        self.assertEqual(
+            invoice.delivery_date, expected_date,
+            "Delivery date should use the client's timezone after effective date change.",
+        )
