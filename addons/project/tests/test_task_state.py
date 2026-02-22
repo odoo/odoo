@@ -225,3 +225,35 @@ class TestTaskState(TestProjectCommon):
         self.assertEqual(self.task_1.state, '03_approved')
         self.project_goats.allow_task_dependencies = True
         self.assertEqual(self.task_1.state, '03_approved')
+
+    def test_project_move_state_preservation(self):
+        """ Test that state is preserved when moving to a project sharing the stage """
+        project_goats_copy = self.project_goats.copy()
+        self.task_1.write({
+            'state': '03_approved',
+        })
+        # Test state preservation when moving to shared stage
+        original_stage = self.task_1.stage_id
+        self.task_1.write({
+            'project_id': project_goats_copy.id,
+        })
+        self.assertEqual(self.task_1.stage_id, original_stage, "Stage should remain the same")
+        self.assertEqual(
+            self.task_1.state,
+            '03_approved',
+            "State should be preserved when moving to project with shared stages"
+        )
+        # Test state reset when moving to non-shared stage
+        self.task_1.write({
+            'project_id': self.project_pigs.id,
+        })
+        self.assertNotEqual(
+            self.task_1.stage_id,
+            original_stage,
+            "Stage should change when moving to a project with different stages"
+        )
+        self.assertEqual(
+            self.task_1.state,
+            '01_in_progress',
+            "Task state should change when moving to a project with non-shared stage."
+        )

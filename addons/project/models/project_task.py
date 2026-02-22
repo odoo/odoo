@@ -396,7 +396,7 @@ class ProjectTask(models.Model):
                 if task.state not in CLOSED_STATES:
                     task.state = '04_waiting_normal'
             # if the task as no blocking dependencies and is in waiting_normal, the task goes back to in progress
-            elif task.state not in CLOSED_STATES:
+            elif task.state == '04_waiting_normal':
                 task.state = '01_in_progress'
 
     @api.depends('state')
@@ -426,7 +426,7 @@ class ProjectTask(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
-        if self.state != '04_waiting_normal':
+        if self.state != '04_waiting_normal' and self.stage_id != self._origin.stage_id:
             self.state = '01_in_progress'
 
     def is_blocked_by_dependences(self):
@@ -1301,6 +1301,10 @@ class ProjectTask(models.Model):
             additional_vals['description'] = vals.pop('description')
 
             # write changes
+        if 'project_id' in vals:
+            tasks_to_check = self | self._get_all_subtasks()
+            previous_stage_ids = {task.id: task.stage_id.id for task in tasks_to_check}
+
         if self.env.su or not self.env.user._is_portal():
             vals.update(additional_vals)
         elif additional_vals:
@@ -1329,8 +1333,17 @@ class ProjectTask(models.Model):
                     if task.is_blocked_by_dependences() and vals['state'] not in CLOSED_STATES and vals['state'] != '04_waiting_normal':
                         task.state = '04_waiting_normal'
                 task.date_last_stage_update = now
-        elif 'project_id' in vals:
-            self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
+
+        if 'project_id' in vals:
+            tasks_to_check.filtered(
+                lambda t: (
+                    t.state != '04_waiting_normal'
+                    and previous_stage_ids.get(t.id) != t.stage_id.id
+                    and not (t.id in self.ids and 'state' in vals)
+                )
+            ).state = '01_in_progress'
+        elif 'stage_id' in vals and 'state' not in vals:
+            self.filtered(lambda t: t.state != '04_waiting_normal' and t.state not in CLOSED_STATES).state = '01_in_progress'
 
         # Do not recompute the state when changing the parent (to avoid resetting the state)
         if 'parent_id' in vals:
