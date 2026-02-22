@@ -51,6 +51,10 @@ class HrEmployeePublic(models.Model):
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
+    has_cross_company_relation = fields.Boolean(
+        string="Has Cross-Company Manager or Coach",
+        compute="_compute_has_cross_company_relation",
+    )
 
     @api.depends_context('uid')
     @api.depends('parent_id')
@@ -58,6 +62,14 @@ class HrEmployeePublic(models.Model):
         all_reports = self.env['hr.employee.public'].search([('id', 'child_of', self.env.user.employee_id.id)]).ids
         for employee in self:
             employee.is_manager = employee.id in all_reports
+
+    def _compute_has_cross_company_relation(self):
+        allowed_companies = self.env.companies
+        for employee in self:
+            employee.has_cross_company_relation = bool(
+                (employee.parent_id and employee.parent_id.sudo().company_id not in allowed_companies) or
+                (employee.coach_id and employee.coach_id.sudo().company_id not in allowed_companies)
+            )
 
     def _get_manager_only_fields(self):
         return []
@@ -92,3 +104,8 @@ class HrEmployeePublic(models.Model):
                 %s
             FROM hr_employee emp
         )""" % (self._table, self._get_fields()))
+
+    def _can_return_content(self, field_name=None, access_token=None):
+        if self._name == "hr.employee.public" and field_name == "avatar_128":
+            return True
+        return super()._can_return_content(field_name, access_token)
