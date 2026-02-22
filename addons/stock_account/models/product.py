@@ -265,6 +265,7 @@ class ProductProduct(models.Model):
         domain = Domain([
             ('product_id', 'in', self.ids),
             ('move_id', '=', False),
+            ('company_id', 'in', self.env.companies.ids),
         ])
         if lot:
             domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
@@ -289,7 +290,7 @@ class ProductProduct(models.Model):
         return last_in
 
     def _with_valuation_context(self):
-        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True), ('company_id', 'in', self.env.companies.ids)])
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id])
 
     def _get_remaining_moves(self):

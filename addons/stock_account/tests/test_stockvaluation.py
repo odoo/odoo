@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
-from odoo.tests import Form
+from odoo.tests import Form, users
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
@@ -3135,3 +3135,63 @@ class TestStockValuation(TestStockValuationCommon):
         recs[-2:]._compute_cumulative_fields()
         self.assertEqual(recs[-1].total_quantity, 3)
         self.assertEqual(recs[-1].total_value, 30)
+
+    @users('admin')
+    def test_avco_valuation_multicompany(self):
+        """
+        Test that changing values manually for an AVCO product in different companies results
+        in the correct total value when the product is viewed in a single or multi-company context.
+        """
+        # _compute_value() uses sudo(False) which doesnt work when the user is the Superuser
+        product_avco = self.product_avco.with_user(self.env.user)
+
+        #  Setup Companies, Locations, and Products
+        c1 = self.env.company
+        c2 = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
+        c1_stock_loc = self.env['stock.location'].search([('company_id', '=', c1.id), ('usage', '=', 'internal')], limit=1)
+        c2_stock_loc = self.env['stock.location'].search([('company_id', '=', c2.id), ('usage', '=', 'internal')], limit=1)
+        c1_product = product_avco.with_context(allowed_company_ids=[c1.id])
+        c2_product = product_avco.with_context(allowed_company_ids=[c2.id])
+        c3_product = product_avco.with_context(allowed_company_ids=[c1.id, c2.id])
+        c1_product.cost_method = 'average'
+        c2_product.cost_method = 'average'
+        c3_product.cost_method = 'average'
+
+        # Change cost manually and create stock move for each company
+        # freeze_time is used because avco compares dates of stock moves against dates of new values
+        with freeze_time(Datetime.now() + timedelta(minutes=1)):
+            c1_product.standard_price = 10
+        with freeze_time(Datetime.now() + timedelta(minutes=2)):
+            move_1 = self.env['stock.move'].with_context(allowed_company_ids=[c1.id]).create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': c1_stock_loc.id,
+                'product_id': c1_product.id,
+                'product_uom': self.uom.id,
+                'product_uom_qty': 2.0,
+            })
+            move_1._action_confirm()
+            move_1.quantity = 2.0
+            move_1.picked = True
+            move_1._action_done()
+
+        with freeze_time(Datetime.now() + timedelta(minutes=3)):
+            c2_product.standard_price = 50
+        with freeze_time(Datetime.now() + timedelta(minutes=4)):
+            move_2 = self.env['stock.move'].with_context(allowed_company_ids=[c2.id]).create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': c2_stock_loc.id,
+                'product_id': c2_product.id,
+                'product_uom': self.uom.id,
+                'product_uom_qty': 1.0,
+            })
+            move_2._action_confirm()
+            move_2.quantity = 1.0
+            move_2.picked = True
+            move_2._action_done()
+
+        self.assertEqual(c1_product.total_value, 20)
+        self.env.invalidate_all()                      # ensure quantity is correctly recomputed during valuation
+        self.assertEqual(c2_product.total_value, 50)
+        self.assertEqual(c3_product.total_value, 150)  # last value is 50, and qty in both companies is 3 => 150
