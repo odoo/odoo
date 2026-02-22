@@ -169,7 +169,7 @@
                         <t t-set="display_taxes" t-value="any(l.tax_ids for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <t t-set="has_long_desc" t-value="any(line.name and line.name.count('\n') > 30 for line in o.invoice_line_ids if line.name)"/>
-                        <div class="table-responsive-sm">
+                        <div t-attf-class="{{ 'table-responsive-sm' if report_type == 'html' else '' }}">
                             <table class="o_has_total_table table o_main_table table-borderless mb-0" name="invoice_line_table">
                                 <thead t-attf-style="#{has_long_desc and 'display: table-row-group;' or ''}">
                                     <tr>
