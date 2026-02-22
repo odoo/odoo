@@ -245,10 +245,17 @@ class Mailing(models.Model):
 
     def action_send_sms(self, res_ids=None):
         for mailing in self:
-            if not res_ids:
-                res_ids = mailing._get_remaining_recipients()
-            if res_ids:
-                composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
+            mailing_res_ids = res_ids or mailing._get_remaining_recipients()
+            if not mailing_res_ids:
+                continue
+
+            # batch recipient IDs to avoid "expression can't exceed buffer limit"
+            # as res_ids are passed as a repr(list) to the composer
+            batch_size = 5000
+            for i in range(0, len(mailing_res_ids), batch_size):
+                composer = self.env['sms.composer'].with_context(active_id=False).create(
+                    mailing._send_sms_get_composer_values(mailing_res_ids[i:i + batch_size])
+                )
                 composer._action_send_sms()
         return True
 
