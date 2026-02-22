@@ -9,7 +9,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
         ratio_uom_seller = seller.uom_id.factor / bom.uom_id.factor
-        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
+        company = bom.company_id or self.env.company
+        price = seller.currency_id._convert(seller.price, company.currency_id, company, fields.Date.today())
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,
@@ -22,15 +23,16 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
         res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
         if bom.type == 'subcontract' and not self.env.context.get('minimized', False):
+            company = bom.company_id or self.env.company
             if not res['product']:
-                seller = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]
+                seller = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids and not s.company_id or s.company_id == company)[:1]
             else:
-                seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                seller = res['product'].with_company(company)._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):
                     res['bom_cost'] += res['subcontracting']['bom_cost']
-                    res['bom_unit_cost'] += bom.uom_id._compute_price(res['subcontracting']['bom_cost'], product.uom_id)
+                    res['bom_unit_cost'] += bom.uom_id._compute_price(res['subcontracting']['bom_cost'], bom.product_tmpl_id.uom_id)
 
         return res
 
