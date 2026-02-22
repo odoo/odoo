@@ -7,8 +7,6 @@ import operator as py_operator
 from collections import defaultdict
 from datetime import date, datetime, time, UTC
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -439,7 +437,8 @@ class HrWorkEntryType(models.Model):
         ]))
 
     @api.model
-    def get_allocation_data_request(self, target_date=None, hidden_allocations=True):
+    def get_allocation_data_request(self, target_date=None, hidden_allocations=True, update_accrual=False):
+        """ :param update_accrual: see `get_allocation_data` method """
         employee = self.env["hr.employee"]._get_contextual_employee()
         if not employee:
             return defaultdict(list)
@@ -447,7 +446,7 @@ class HrWorkEntryType(models.Model):
         if not hidden_allocations:
             domain.append(('hide_on_dashboard', '=', False))
         work_entry_types = self.search(domain, order='id')
-        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date)[
+        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date, update_accrual)[
             employee
         ]
         # We only need to filter allocation_data for the dashboard
@@ -460,7 +459,9 @@ class HrWorkEntryType(models.Model):
         ]
         return filtered_employee_work_entry_type_infos
 
-    def get_allocation_data(self, employees, target_date=None):
+    def get_allocation_data(self, employees, target_date=None, update_accrual=False):
+        """ :param update_accrual: if `target_date` is not set or is set to `today`, will update the accrual type
+            `hr.leave_allocation` of the `employees` before manipulation """
         allocation_data = defaultdict(list)
         if target_date and isinstance(target_date, str):
             target_date = datetime.fromisoformat(target_date).date()
@@ -468,6 +469,10 @@ class HrWorkEntryType(models.Model):
             target_date = target_date.date()
         elif not target_date:
             target_date = fields.Date.today()
+
+        # Just in case the cron hasn't been/is being run
+        if update_accrual and target_date == fields.Date.today() and employees:
+            self.env['hr.leave.allocation']._update_accrual(employees.ids)
 
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
@@ -599,17 +604,10 @@ class HrWorkEntryType(models.Model):
         for allocation in allocations:
             expiration_date = allocation.date_to
 
-            accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
+            current_lvl, _ = allocation.sudo()._get_current_accrual_plan_level_idx(target_date)
             carryover_date = False
-            if accrual_plan_level and (accrual_plan_level.action_with_unused_accruals == 'lost'
-            or accrual_plan_level.carryover_options == 'limited'):
-                carryover_date = allocation.sudo()._get_carryover_date(target_date)
-                # If carry over date == target date, then add 1 year to carry over date.
-                # Rational: for example if carry over date = 01/01 this year and target date = 01/01 this year,
-                # then any accrued days on 01/01 this year will have their carry over date 01/01 next year
-                # and not 01/01 this year.
-                if carryover_date == target_date:
-                    carryover_date += relativedelta(years=1)
+            if current_lvl and (current_lvl.action_with_unused_accruals == 'lost' or current_lvl.carryover_options == 'limited'):
+                carryover_date = allocation.sudo()._get_next_carryover_date(target_date, date_from_included=False)
 
             carried_over_days_expiration_date = carried_over_days_expiration_data[allocation]['expiration_date']
 
@@ -631,8 +629,8 @@ class HrWorkEntryType(models.Model):
                 if expiration_date and expiration_date == closest_expiration_date:
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
-                    accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
-                    expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
+                    current_lvl, _ = allocation.sudo()._get_current_accrual_plan_level_idx(target_date)
+                    expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - current_lvl.max_carryover_duration)
                 elif carried_over_days_expiration_date and carried_over_days_expiration_date == closest_expiration_date:
                     expiring_leaves_count += carried_over_days_expiration_data[allocation]['no_expiring_days']
 
