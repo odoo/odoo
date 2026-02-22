@@ -5,7 +5,9 @@ import re
 from collections.abc import Iterable
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools.misc import clean_context
 
 def sanitize_account_number(acc_number):
     if acc_number:
@@ -107,7 +109,7 @@ class ResPartnerBank(models.Model):
         """ To be overridden by subclasses in order to support other account_types.
         """
         return 'bank'
-    
+
     def name_get(self):
         return [(acc.id, '{} - {}'.format(acc.acc_number, acc.bank_id.name) if acc.bank_id else acc.acc_number)
                 for acc in self]
@@ -124,8 +126,27 @@ class ResPartnerBank(models.Model):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
-                if 'like' in op:
-                    value = '%' + value + '%'
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
         return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
+
+    def _find_or_create_bank_account(self, account_number, partner, company=None, allow_company=False, extra_create_vals=None):
+        # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
+        # Since it's not dependent of the company, we need to search on others company too to avoid the creation
+        # of an extra res.partner.bank raising an error coming from this constraint.
+        # However, at the end, we need to filter out the results to not trigger the check_company when trying to
+        # assign a res.partner.bank owned by another company.
+        bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
+            ('acc_number', '=', account_number),
+            ('partner_id', 'child_of', partner.id),
+        ])
+        if not bank_account:
+            if not allow_company and partner.id in self.env['res.company']._get_company_partner_ids():
+                raise UserError(_("Please add your own bank account manually."))
+            bank_account = self.env['res.partner.bank'].with_context(clean_context(self.env.context)).create({
+                **(extra_create_vals or {}),
+                'acc_number': account_number,
+                'partner_id': partner.id,
+                'allow_out_payment': False,
+            })
+        return bank_account.filtered(lambda x: x.company_id.id in (False, company.id if company else False)).sudo(False)

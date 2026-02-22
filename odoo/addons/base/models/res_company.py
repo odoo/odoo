@@ -10,7 +10,7 @@ import re
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, ormcache
 from random import randrange
 from PIL import Image
 
@@ -38,7 +38,7 @@ class Company(models.Model):
                 return base64.b64encode(f.read())
             # Modify the source image to add a colored bar on the bottom
             # This could seem overkill to modify the pixels 1 by 1, but
-            # Pillow doesn't provide an easy way to do it, and this 
+            # Pillow doesn't provide an easy way to do it, and this
             # is acceptable for a 16x16 image.
             color = (randrange(32, 224, 24), randrange(32, 224, 24), randrange(32, 224, 24))
             original = Image.open(f)
@@ -120,7 +120,7 @@ class Company(models.Model):
     def _get_company_address_update(self, partner):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
-    
+
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
@@ -345,3 +345,7 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    @ormcache()
+    def _get_company_partner_ids(self):
+        return tuple(self.env['res.company'].sudo().search([]).partner_id.ids)

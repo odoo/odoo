@@ -351,9 +351,26 @@ class AccountEdiCommon(models.AbstractModel):
                 invoice.partner_id.vat = vat
 
     def _import_retrieve_and_fill_partner_bank_details(self, invoice, bank_details):
-        """ Log the bank account numbers"""
-        body = _("The following bank account numbers got retrieved during the import : %s", ", ".join(bank_details))
-        invoice.with_context(no_new_invoice=True).message_post(body=body)
+        """ Retrieve the bank account, if no matching bank account is found, create it
+        """
+        if invoice.move_type in ('out_refund', 'in_invoice'):
+            partner = invoice.partner_id
+        elif invoice.move_type in ('out_invoice', 'in_refund'):
+            partner = invoice.company_id.partner_id
+        else:
+            return
+
+        banks = self.env['res.partner.bank'].union(*[
+            self.env['res.partner.bank']._find_or_create_bank_account(
+                account_number=account_number,
+                partner=partner,
+            )
+            for account_number in bank_details
+        ])
+        if banks:
+            if not banks[0].active:
+                banks[0].active = True
+            invoice.partner_bank_id = banks[0]
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, journal, qty_factor):
         logs = []
