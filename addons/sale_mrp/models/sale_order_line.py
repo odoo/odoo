@@ -39,9 +39,13 @@ class SaleOrderLine(models.Model):
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
                 # This bom should be the only one since bom_line_id was written on the moves
-                relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
+                relevant_bom = min(
+                    boms.filtered(lambda b: b.type == 'phantom' and
                         (b.product_id == order_line.product_id or
-                        (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
+                        (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id))),
+                    key=lambda b: b.sequence,
+                    default=boms.browse()
+                )
                 if not relevant_bom:
                     relevant_bom = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
                 if relevant_bom:
