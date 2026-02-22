@@ -26,7 +26,7 @@ class ModelPageController(Controller):
         ])
 
         page = request.env["website.controller.page"].search(website_page_domain, limit=1)
-        if not page or\
+        if not (page and page.sudo().model_id) or\
             (not page.website_published and not request.env.user.has_group('website.group_website_designer')):
             raise werkzeug.exceptions.NotFound()
 
