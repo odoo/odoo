@@ -692,7 +692,10 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
         hour_count = 0.0
         for attendance in self._get_global_attendances():
-            hour_count += attendance.hour_to - attendance.hour_from
+            if self.duration_based:
+                hour_count += attendance.duration_hours
+            else:
+                hour_count += attendance.hour_to - attendance.hour_from
         return hour_count / 2 if self.two_weeks_calendar else hour_count
 
     def _get_hours_per_day(self):
