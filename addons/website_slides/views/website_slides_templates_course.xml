@@ -129,12 +129,12 @@
                             </div>
 
                             <!-- ==== Header Right ==== -->
-                            <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+                            <div class="col-12 col-md-8 col-lg-9 d-flex flex-column pb-md-5">
                                 <div class="d-flex flex-column">
                                     <h1 t-field="channel.name"/>
-                                    <div class="mb-0 mb-xl-3" t-field="channel.description"/>
+                                    <div class="mb-0" t-field="channel.description"/>
                                 </div>
-                                <div class="d-flex flex-column justify-content-center h5 flex-grow-1 mb-md-5 o_not_editable" t-if="channel.allow_comment">
+                                <div class="d-flex flex-column justify-content-center h5 flex-grow-1 o_not_editable" t-if="channel.allow_comment">
                                     <t t-call="portal_rating.rating_stars_static_popup_composer">
                                         <t t-set="rating_avg" t-value="rating_avg"/>
                                         <t t-set="rating_count" t-value="rating_count"/>
