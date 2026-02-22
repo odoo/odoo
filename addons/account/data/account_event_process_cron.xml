@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+        Idea: Enable/Disable based on some company configuration.
+        I think some might want their events kept for history & analytics.
+        -->
+        <record id="ir_cron_account_event_clean" model="ir.cron">
+            <field name="name">Clean Processed Account Events</field>
+            <field name="model_id" ref="model_account_event_process"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_clean_events()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>
