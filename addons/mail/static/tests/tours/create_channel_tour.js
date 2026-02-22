@@ -19,7 +19,12 @@ registry.category("web_tour.tours").add("can_create_channel_from_form_view", {
             run: "edit Test channel",
         },
         {
-            trigger: ".breadcrumb-item:contains('OdooBot')",
+            trigger: '.breadcrumb .dropdown-toggle',
+            content: 'Open the breadcrumb dropdown',
+            run: "click",
+        },
+        {
+            trigger: '.o-overlay-container .dropdown-menu a:contains("OdooBot")',
             run: "click",
         },
         {

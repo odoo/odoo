@@ -3,23 +3,22 @@
 
     <t t-name="web.Breadcrumbs">
         <t t-set="currentBreadcrumbs" t-value="props.breadcrumbs.slice(-1)"/>
-        <t t-set="visiblePathBreadcrumbs" t-value="props.breadcrumbs.slice(-3, -1)"/>
-        <t t-set="collapsedBreadcrumbs" t-value="props.breadcrumbs.slice(0, -3).reverse()"/>
+        <t t-set="previousBreadcrumb" t-value="props.breadcrumbs.at(-2)"/>
+        <t t-set="collapsedBreadcrumbs" t-value="props.breadcrumbs.slice(0, -2).reverse()"/>
         <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
 
-        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
+        <div t-if="collapsedBreadcrumbs.length || previousBreadcrumb" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
             <t t-if="env.isSmall">
-                <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.at(-1)"/>
                 <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected">
                     <i class="oi oi-fw oi-arrow-left"/>
                 </button>
             </t>
             <t t-else="">
                 <ol class="breadcrumb flex-nowrap text-nowrap lh-sm">
-                    <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex min-w-0">
+                    <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex">
                         <Dropdown>
                             <button class="btn btn-light btn-sm px-1 p-0">
-                                <i class="oi oi-ellipsis-h"/>
+                                <i class="oi oi-ellipsis-h align-middle"/>
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
@@ -30,11 +29,13 @@
                             </t>
                         </Dropdown>
                     </li>
-                    <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                        <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="breadcrumb.onSelected">
-                            <a t-att-href="breadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;' + (breadcrumb.isFormView ? ' form' : '')"><t t-call="web.Breadcrumb.Name"/></a>
-                        </li>
-                    </t>
+                    <li t-if="previousBreadcrumb" class="breadcrumb-item d-inline-flex min-w-0 o_back_button" data-hotkey="b" t-on-click.prevent="previousBreadcrumb.onSelected">
+                        <a t-att-href="previousBreadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + previousBreadcrumb.name + '&quot;' + (previousBreadcrumb.isFormView ? ' form' : '')">
+                            <t t-call="web.Breadcrumb.Name">
+                                <t t-set="breadcrumb" t-value="previousBreadcrumb"/>
+                            </t>
+                        </a>
+                    </li>
                 </ol>
             </t>
             <div class="d-flex gap-1 text-truncate">

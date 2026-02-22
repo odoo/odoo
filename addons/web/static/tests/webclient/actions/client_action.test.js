@@ -273,7 +273,7 @@ test("ClientAction receives breadcrumbs and exports title", async () => {
     expect(".my_action").toHaveCount(1);
     await contains(".my_action").click();
     await getService("action").doAction(3);
-    expect(".o_breadcrumb").toHaveText("Partners Action 1\nnewTitle\nPartners");
+    expect(".o_breadcrumb").toHaveText("newTitle\nPartners");
 });
 
 test("ClientAction receives arbitrary props from doAction", async () => {

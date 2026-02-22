@@ -679,7 +679,7 @@ describe("fullscreen", () => {
         await animationFrame(); // wait for the webclient template to be re-rendered
         expect("nav.o_main_navbar").toHaveCount(0);
 
-        await contains(queryAll(".breadcrumb li a")[1]).click();
+        await contains(queryAll(".breadcrumb li a")[0]).click();
         await animationFrame(); // wait for the webclient template to be re-rendered
         expect("nav .o_menu_brand").toHaveCount(1);
         expect("nav .o_menu_brand").toHaveText("MAIN APP");
