@@ -217,3 +217,20 @@ export function generateQRCodeDataUrl(
     const qr_code_svg = new XMLSerializer().serializeToString(svg);
     return "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
 }
+
+// Equivalent to `image_data_uri` from odoo/tools/image.py
+export function imageDataUri(base64Source) {
+    if (!base64Source || typeof base64Source !== "string") {
+        return null;
+    }
+    const FILETYPE_BY_MAGIC_CHAR = {
+        "/": "jpeg",
+        R: "gif",
+        i: "png",
+        P: "svg+xml",
+        U: "webp",
+    };
+    const fileType = FILETYPE_BY_MAGIC_CHAR[base64Source.charAt(0)] || "png";
+
+    return `data:image/${fileType};base64,${base64Source}`;
+}

@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { PosOrderlineAccounting } from "./accounting/pos_order_line_accounting";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
+import { imageDataUri } from "@point_of_sale/utils";
 
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
@@ -91,7 +92,7 @@ export class PosConfig extends Base {
     }
 
     get receiptLogoUrl() {
-        return this.logo ? `data:image/png;base64,${this.logo}` : false;
+        return this.logo ? imageDataUri(this.logo) : false;
     }
 }
 

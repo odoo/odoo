@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import logging
 from datetime import datetime
 
@@ -184,10 +185,16 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             self.comparator(payments[0], payments[1], 'pos.payment')
 
     def test_receipt_data(self):
+        image = """<?xml version='1.0' encoding='UTF-8' ?>
+        <svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+            <rect width="180" height="180" style="fill: #FF5F1F;" />
+            <text fill='#EEE' font-size='96' text-anchor='middle' x='90' y='125'>P</text>
+        </svg>"""
         self.main_pos_config.write({
             'receipt_header': 'This is a test header for receipt',
             'receipt_footer': 'This is a test footer for receipt',
             'ship_later': True,
+            'logo': base64.b64encode(image.encode()),
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         data = {
@@ -205,3 +212,6 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
         self.start_pos_tour("test_receipt_data")
         self.compare_data(data['frontend_data'], data['backend_data'])
+
+        logo_image = data['backend_data']['image']['logo']
+        self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
