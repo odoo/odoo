@@ -25,10 +25,10 @@
                                 <field name="name" />
                                 <field name="address_id" invisible="location_type == 'home'" required="location_type != 'home'"/>
                                 <field name="location_type"
-                                       widget="selection_badge_icons"
+                                       widget="badges_selection"
                                        options="{
+                                            'default_icon': 'fa-map-marker',
                                             'icon_mapping': {'office': 'fa-building-o', 'home': 'fa-home'},
-                                            'default_icon': 'fa-map-marker'
                                        }"
                                 />
                             </group>

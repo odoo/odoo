@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BaseBadgeField">
+        <div class="d-flex flex-wrap gap-1">
+            <t t-if="props.readonly">
+                <span t-esc="string" t-att-raw-value="value" t-att-class="getBadgeClassNames()" />
+            </t>
+            <t t-else="">
+                <t t-if="hasMoreThanMax">
+                    <SelectMenu 
+                        id="props.id" 
+                        value="value" 
+                        choices="selectOptions" 
+                        onSelect.bind="onChange" 
+                        placeholder="props.placeholder"
+                        searchable="!isBottomSheet"
+                        canDeselect="this.props.canDeselect"
+                    />
+                </t>
+                <t t-else="">
+                    <t t-foreach="options" t-as="option" t-key="option[0]">
+                        <span
+                            class="o_selection_badge btn btn-sm btn-secondary mb-1"
+                            t-att-class="getBadgeClassNames(option)"
+                            t-att-value="stringify(option[0])"
+                            t-on-click="() => this.onChange(option[0])"
+                        >
+                            <t t-if="option[2]">
+                                <span t-att-class="`fa ${option[2]} pe-1`"/>
+                            </t>
+                            <span t-esc="option[1]" t-att-value="stringify(option[0])"/>
+                        </span>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

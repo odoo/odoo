@@ -15,14 +15,13 @@
                     <div class="d-flex flex-column" invisible="state != 'next_activity'">
                         <label for="activity_plan_id" invisible="not has_activity_plans"/>
                         <field name="activity_plan_id"
-                            widget="selection_badge"
-                            options="{'size': 'sm'}"
+                            widget="badges_many2one"
                             required="not activity_type_id and state == 'next_activity'"
                             invisible="not has_activity_plans"/>
                         <label for="activity_type_id"/>
                         <field name="activity_type_id"
-                            widget="selection_badge_icons"
-                            options="{'size': 'sm', 'related_icon_field': 'icon'}"
+                            widget="badges_many2one"
+                            options="{'related_icon_field': 'icon'}"
                             required="not activity_plan_id and state == 'next_activity'"/>
                     </div>
                     <group invisible="state != 'next_activity'">

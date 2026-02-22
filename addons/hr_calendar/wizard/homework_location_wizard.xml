@@ -19,11 +19,10 @@
                         <field name="work_location_id"
                                class="mb-n3"
                                nolabel="1"
-                               widget="selection_badge_icons"
+                               widget="badges_many2one"
                                options="{
-                                    'icon_mapping': {'office': 'fa-building-o', 'home': 'fa-home'},
-                                    'related_icon_field': 'location_type',
-                                    'default_icon': 'fa-map-marker'
+                                    'related_icon_field': 'icon',
+                                    'default_icon': 'fa-map-marker',
                                }"/>
                     </div>
                 </group>

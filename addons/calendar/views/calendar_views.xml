@@ -178,8 +178,7 @@
                         </group>
                         <group>
                             <field name="current_status" class="o_calendar_form_status_selection_badge" string="Going?"
-                                widget="selection_badge" options="{'horizontal': true, 'size': 'sm'}"
-                                required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
+                                widget="badges_selection" required="should_show_status" readonly="not should_show_status" invisible="not should_show_status"/>
                             <label for="privacy" string="Status"/>
                             <div class="d-flex">
                                 <field name="show_as" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1"/>
