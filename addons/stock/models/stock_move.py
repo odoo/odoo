@@ -1346,8 +1346,8 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.group_id, self.location_id, self.location_dest_id, self.picking_type_id)
-        if self.partner_id and not self.group_id:
-            keys += (self.partner_id, )
+        if self.move_orig_ids.picking_id and not self.group_id:
+            keys += (self.move_orig_ids.picking_id, )
         return keys
 
     def _search_picking_for_assignation_domain(self):
@@ -1358,12 +1358,12 @@ Please change the quantity done or the rounding precision of your unit of measur
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
-        if self.partner_id and not self.group_id:
-            domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
+        if not self.group_id:
+            return self.env['stock.picking']
         domain = self._search_picking_for_assignation_domain()
         picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
