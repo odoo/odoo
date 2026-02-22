@@ -103,12 +103,13 @@ class MrpRoutingWorkcenter(models.Model):
 
         for operation in self:
             workcenter = self.env.context.get('workcenter', operation.workcenter_id)
-            product = self.env.context.get('product', operation.bom_id.product_id or operation.bom_id.product_tmpl_id.product_variant_ids)
+            product = self.env.context.get('product',
+                operation.bom_id.product_id or operation.bom_id.product_tmpl_id.product_variant_ids.filtered(
+                    lambda p: p.product_template_attribute_value_ids <= operation.bom_product_template_attribute_value_ids,
+                ),
+            )
             if len(product) > 1:
-                operation.cycle_number = 1
-                operation.time_total = workcenter.time_start + workcenter.time_stop + operation.time_cycle_manual
-                operation.show_time_total = False
-                continue
+                product = product[0]
             quantity = self.env.context.get('quantity', operation.bom_id.product_qty or 1)
             unit = self.env.context.get('unit', operation.bom_id.product_uom_id)
             (capacity, setup, cleanup) = workcenter._get_capacity(product, unit, operation.bom_id.product_qty or 1)
