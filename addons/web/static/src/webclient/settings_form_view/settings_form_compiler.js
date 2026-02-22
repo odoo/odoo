@@ -77,7 +77,13 @@ export class SettingsFormCompiler extends FormCompiler {
         params.anchors.push(
             ...[...settingsApp.querySelectorAll("SearchableSetting")]
                 .filter((s) => s.id)
-                .map((s) => ({ app: module.key, settingId: s.id.replaceAll("`", "") }))
+                .map((s) => ({
+                    app: module.key,
+                    settingId: s.id.replaceAll("`", ""),
+                    fieldName: [...s.querySelectorAll("Field")].map((el) =>
+                        el.getAttribute("name") ? el.getAttribute("name").replaceAll("'", "") : ""
+                    ),
+                }))
         );
         return settingsApp;
     }

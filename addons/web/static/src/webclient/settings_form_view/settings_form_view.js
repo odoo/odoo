@@ -33,6 +33,12 @@ class SettingRecord extends formView.Model.Record {
         this.dirty = dirty;
         return prom;
     }
+
+    async save() {
+        const saved = await super.save(...arguments);
+        this.model.env.bus.trigger("SETTINGS:invalid-app");
+        return saved;
+    }
 }
 
 class SettingModel extends formView.Model {

@@ -2,6 +2,8 @@ import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { intersection } from "@web/core/utils/arrays";
+import { useBus } from "@web/core/utils/hooks";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
@@ -52,6 +54,26 @@ export class SettingsPage extends Component {
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
+
+        // We need to force the re-render because _unsetRequiredFields is in a markRaw.
+        useBus(this.env.bus, "SETTINGS:invalid-app", () => {
+            this.render(true);
+        });
+    }
+
+    get invalidApps() {
+        const unsetRequiredFields = this.env.model.root._unsetRequiredFields;
+        if (!unsetRequiredFields.size) {
+            return [];
+        }
+        const invalidApps = [];
+        for (const anchor of this.props.anchors) {
+            const intersect = intersection([...anchor.fieldName], [...unsetRequiredFields]);
+            if (intersect.length) {
+                invalidApps.push(anchor.app);
+            }
+        }
+        return invalidApps;
     }
 
     getCurrentIndex() {
