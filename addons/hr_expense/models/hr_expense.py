@@ -1079,12 +1079,8 @@ class HrExpense(models.Model):
 
         expense_description = msg_dict.get('subject', '')
 
-        if employee.user_id:
-            company = employee.user_id.company_id
-            currencies = company.currency_id | employee.user_id.company_ids.mapped('currency_id')
-        else:
-            company = employee.company_id
-            currencies = company.currency_id
+        company = employee.company_id
+        currencies = company.currency_id
 
         if not company:  # ultimate fallback, since company_id is required on expense
             company = self.env.company
