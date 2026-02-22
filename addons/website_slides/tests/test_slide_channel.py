@@ -162,6 +162,38 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
                 for mail in created_mails)
         )
 
+    def test_merge_partners_with_unique_courses(self):
+        """ Test merging partners with unique courses """
+        course1 = self.env['slide.channel'].create({'name': 'Course 1'})
+        course2 = self.env['slide.channel'].create({'name': 'Course 2'})
+        partner1 = self.env['res.partner'].create({'name': 'Partner 1', 'email': 'partner1@example.com'})
+        partner2 = self.env['res.partner'].create({'name': 'Partner 2', 'email': 'partner2@example.com'})
+        course1.sudo()._action_add_members(partner1)
+        course2.sudo()._action_add_members(partner2)
+        wizard = self.env['base.partner.merge.automatic.wizard'].create({})
+        wizard._merge([partner1.id, partner2.id], partner1)
+
+        self.assertFalse(partner2.exists(), "Source partner should be deleted after merge")
+        self.assertTrue(partner1.exists(), "Destination partner should exist after merge")
+        self.assertIn(course1, partner1.slide_channel_ids, "Course 1 should belong to destination partner")
+        self.assertIn(course2, partner1.slide_channel_ids, "Course 2 should belong to destination partner")
+
+    def test_merge_partners_with_duplicate_course(self):
+        """ Test merging partners with duplicate courses. Merging should fail in that case. """
+        course1 = self.env['slide.channel'].create({'name': 'Course 1'})
+        partner1 = self.env['res.partner'].create({'name': 'Partner 1', 'email': 'partner1@example.com'})
+        partner2 = self.env['res.partner'].create({'name': 'Partner 2', 'email': 'partner2@example.com'})
+        course1.sudo()._action_add_members(partner1 | partner2)
+        wizard = self.env['base.partner.merge.automatic.wizard'].create({})
+
+        with self.assertRaises(UserError) as user_error:
+            wizard._merge([partner1.id, partner2.id], partner1)
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            "You cannot merge contacts that are enrolled in the same course."
+        )
+
     def test_mail_completed_with_different_templates(self):
         """ When the completion email is generated, it must take into account different templates. """
 
