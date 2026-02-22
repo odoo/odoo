@@ -33,7 +33,7 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
-            calendar = leave.employee_id.resource_calendar_id
+            calendar = leave.resource_calendar_id
             calendar_timezone = pytz.timezone((calendar or leave.employee_id).tz)
 
             if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
@@ -52,7 +52,9 @@ class HrLeave(models.Model):
                 work_hours_data = leave.employee_id._list_work_time_per_day(
                     leave.date_from,
                     leave.date_to,
-                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None)[leave.employee_id.id]
+                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None,
+                            calendar=calendar
+                            )[leave.employee_id.id]
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
