@@ -433,6 +433,62 @@ class IrQwebFieldHtml(models.AbstractModel):
     _inherit = ['ir.qweb.field.html']
 
     @api.model
+    def value_to_html(self, value, options):
+        if value and 'data-embedded' in str(value):
+            value = self._process_embedded_components(value)
+        return super().value_to_html(value, options)
+
+    def _process_embedded_components(self, value):
+        """Convert embedded Owl components to static HTML for server-side
+        rendering (PDF reports, emails). Embedded components only render
+        client-side via JavaScript which is unavailable in wkhtmltopdf."""
+        try:
+            body = html.fromstring("<body>%s</body>" % value)
+        except (etree.XMLSyntaxError, ValueError, TypeError):
+            return value
+
+        modified = False
+        for element in body.iter():
+            if element.get('data-embedded') == 'file':
+                if self._convert_embedded_file(element):
+                    modified = True
+
+        if modified:
+            return etree.tostring(body, encoding='unicode', method='html')[6:-7]
+        return value
+
+    def _convert_embedded_file(self, element):
+        """Replace an embedded file component with a plain download link."""
+        props_str = element.get('data-embedded-props', '{}')
+        try:
+            props = json.loads(props_str)
+        except (json.JSONDecodeError, TypeError):
+            return False
+
+        file_data = props.get('fileData', {})
+        filename = file_data.get('name') or file_data.get('filename', 'File')
+        file_id = file_data.get('id')
+        access_token = file_data.get('access_token', '')
+
+        if file_id:
+            download_url = '/web/content/%s?download=true' % file_id
+            if access_token:
+                download_url += '&access_token=%s' % access_token
+        elif file_data.get('url'):
+            download_url = file_data['url']
+        else:
+            return False
+
+        for child in list(element):
+            element.remove(child)
+        element.attrib.clear()
+        element.tag = 'a'
+        element.set('href', download_url)
+        element.text = filename
+
+        return True
+
+    @api.model
     def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
