@@ -69,8 +69,10 @@ class AccountMoveSend(models.AbstractModel):
         """ Returns a dict with all the necessary data to generate and send invoices.
         Either takes the provided custom_settings, or the default value.
         """
+        move_sending_data = self.env['account.event.process'].get_record_active_event_data(move)
+
         def get_setting(key, from_cron=False, default_value=None):
-            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
+            return custom_settings.get(key) if key in custom_settings else move_sending_data.get(key) if from_cron else default_value
 
         vals = {
             'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or {},
@@ -829,12 +831,19 @@ class AccountMoveSend(models.AbstractModel):
         if success:
             self._hook_if_success(success, from_cron=from_cron)
 
+        to_reschedule = []
         # Update sending data of moves
         for move, move_data in moves_data.items():
             # We keep the sending_data, so it will be retried
             if from_cron and move_data.get('error', {}).get('retry'):
-                continue
-            move.sending_data = False
+                to_reschedule.append({
+                    'record': move,
+                    'event_code': 'account_move_send',
+                    'data': custom_settings,
+                })
+
+        if to_reschedule:
+            self.env['account.event.process'].schedule_events(to_reschedule)
 
         # Return generated attachments.
         attachments = self.env['ir.attachment']

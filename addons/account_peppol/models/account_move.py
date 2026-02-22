@@ -27,13 +27,18 @@ class AccountMove(models.Model):
             move.commercial_partner_id.button_account_peppol_check_partner_endpoint(company=move.company_id)
         return super().action_send_and_print()
 
+    def _can_process_event(self, event_code):
+        res = super()._can_process_event(event_code)
+        if event_code == 'action_move_send':
+            return res and self.state == 'posted' and self.peppol_move_state == 'to_send'
+        return res
+
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done
         # then it means it has been already sent to peppol proxy and we can't cancel
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to Peppol"))
         self.peppol_move_state = False
-        self.sending_data = False
 
     def _compute_display_send_button(self):
         # EXTENDS 'account'
