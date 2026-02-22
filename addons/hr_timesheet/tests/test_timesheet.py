@@ -1065,3 +1065,111 @@ class TestTimesheet(TestCommonTimesheet):
             'user_id': self.user_manager.id,
         })
         self.assertEqual(timesheet.company_id, self.env.company)
+
+    def test_sub_task_remaining_hours(self):
+        parent_task = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id':  self.project_customer.id,
+            'child_ids': [Command.create({'name': 'subtask'})],
+        })
+        sub_task = parent_task.child_ids[0]
+
+        # Case 1: project = 50h, task = 0h → task negative
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 0
+
+        self.env['account.analytic.line'].create({
+            'name': 'TS',
+            'task_id': parent_task.id,
+            'unit_amount': 5,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.assertEqual(
+            parent_task.remaining_hours, -5,
+            "Task remaining hours should be negative when project has allocated hours but task has none.",
+        )
+
+        # Case 2: project = 50h, task = 20h → no change
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 20
+
+        self.assertEqual(
+            parent_task.remaining_hours, 15,
+            "Task remaining hours should be unchanged when project and task both has allocated hours.",
+        )
+
+        # Case 3: project = 50h, parent = 20h, sub = 0h
+        # → parent unchanged, sub negative
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 20
+        sub_task.allocated_hours = 0
+
+        self.env['account.analytic.line'].create({
+            'name': 'TS',
+            'task_id': sub_task.id,
+            'unit_amount': 5,
+            'employee_id': self.empl_employee.id,
+        })
+
+        self.assertEqual(
+            parent_task.remaining_hours, 10,
+            "Task remaining hours should be unchanged when project and task both has allocated hours.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, -5,
+            "Subtask remaining hours should be negative when parent task has allocated hours but subtask has none.",
+        )
+
+        # At this point:
+        # - 5h logged on parent (case 1)
+        # - 5h logged on subtask (case 3)
+        # => total effective on parent = 10h
+
+        # Case 4: project = 50h, parent = 0h, sub = 0h
+        # → parent negative, sub unchanged
+        self.project_customer.allocated_hours = 50
+        parent_task.allocated_hours = 0
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, -10,
+            "Task remaining hours should be negative when project has allocated hours but task has none.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, 0,
+            "Subtask remaining hours should be 0 when parent task has no allocated hours.",
+        )
+
+        # Case 5: project = 0h, parent = 0h, sub = 0h → no changes
+        self.project_customer.allocated_hours = 0
+        parent_task.allocated_hours = 0
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, 0,
+            "Task remaining hours should be 0 when project and task both have no allocated hours",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, 0,
+            "Subtask remaining hours should be 0 when parent task has no allocated hours.",
+        )
+
+        # Case 6: project = 0h, parent = 20h, sub = 0h
+        # → parent unchanged, sub negative
+        self.project_customer.allocated_hours = 0
+        parent_task.allocated_hours = 20
+        sub_task.allocated_hours = 0
+
+        self.assertEqual(
+            parent_task.remaining_hours, 10,
+            "Task remaining hours should be unchanged when the task itself has allocated hours.",
+        )
+
+        self.assertEqual(
+            sub_task.remaining_hours, -5,
+            "Subtask remaining hours should be negative when parent task has allocated hours.",
+        )
