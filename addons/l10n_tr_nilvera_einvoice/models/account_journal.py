@@ -9,7 +9,8 @@ class AccountJournal(models.Model):
         # EXTENDS 'account'
         super()._compute_show_fetch_in_einvoices_button()
         self.filtered(
-            lambda j: j.is_nilvera_journal and
+            lambda j: self._has_field_access(self._fields['l10n_tr_nilvera_api_key'], 'read') and
+                      j.is_nilvera_journal and
                       j.l10n_tr_nilvera_api_key and
                       j.type == 'purchase'
         ).show_fetch_in_einvoices_button = True
@@ -19,7 +20,8 @@ class AccountJournal(models.Model):
         # EXTENDS 'account'
         super()._compute_show_refresh_out_einvoices_status_button()
         self.filtered(
-            lambda j: j.l10n_tr_nilvera_api_key and
+            lambda j: self._has_field_access(self._fields['l10n_tr_nilvera_api_key'], 'read') and
+                      j.l10n_tr_nilvera_api_key and
                       j.type == 'sale'
         ).show_refresh_out_einvoices_status_button = True
 
