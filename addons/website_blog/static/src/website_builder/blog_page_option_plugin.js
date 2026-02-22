@@ -16,10 +16,6 @@ export class BlogPageOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [BlogPageOption],
-        content_not_editable_selectors: [
-            "#o_wblog_post_footer .o_wblog_post_subtitle, #o_wblog_post_footer .o_wblog_post_name",
-        ],
-        not_activable_element_selectors: ["#o_wblog_post_footer .o_record_cover_image"],
     };
 }
 

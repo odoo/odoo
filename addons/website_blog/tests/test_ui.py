@@ -68,23 +68,8 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'social_tiktok': 'https://www.tiktok.com/@odoo',
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
-        blog = self.env['blog.blog'].create({'name': 'Test Non-Editable'})
-        Post = self.env['blog.post']
-        Post.create({
-            'name': 'First Post',
-            'blog_id': blog.id,
-            'is_published': True,
-        })
-        Post.create({
-            'name': 'Second Post',
-            'subtitle': 'Post sub',
-            'blog_id': blog.id,
-            'is_published': True,
-        })
-        (self.env.ref('website_blog.opt_blog_post_regular_cover') +
-         self.env.ref('website_blog.opt_blog_post_read_next') +
-         self.env.ref('website_blog.opt_blog_sidebar_show')).write({'active': True})
-        self.start_tour("/blog", "blog_context_and_social_media", login="admin", watch=True)
+        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        self.start_tour("/blog", "blog_context_and_social_media", login="admin")
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
