@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="report"
+xmlns:rep="report"
+xmlns:param="parametre">
+<xs:import namespace="parametre" schemaLocation="parametre.xsd"/>
+
+    <xs:complexType name="ReportDocumentType">
+        <xs:sequence>
+            <xs:element name="Id" type="xs:string" minOccurs="1" maxOccurs="1" >
+                <xs:annotation>
+                    <xs:documentation>TT-1 : Identifiant de la transmission généré par l'émetteur + Identifiant de la transmission agrégée généréé par le PPF et les PDP</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TT-2 : Nom du flux généré par l'émetteur</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssueDateTime" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TG-1 : Horodatage</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="DateTimeString" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-3 : Date et heure de création de la transmission</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TypeCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TT-4 : Type de transmission</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Sender" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TG-3 : Identification de l'émetteur du document de transmission (le déclarant ou son OD) ou Identification de l'émetteur du document de transmission agrégée (PPFou PDP)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Id" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-8 : Identifiant de l'émetteur du document de transmission (flux)</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="param:SenderIdType">
+                                        <xs:attribute name="schemeId" use="required" type="xs:string">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-7 : Type d'identifiant</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-9 : Raison sociale de l'émetteur du document de transmission (flux)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="RoleCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-10 : Code rôle</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="URIUniversalCommunication" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TG-4 : Adresse électronique émetteur</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="URIID" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>TT-11 : Adresse électronique (réseau CEF)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Issuer" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TG-5 : Identification du déclarant</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Id" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-13 : Identifiant du déclarant</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="param:IssuerIdType">
+                                        <xs:attribute name="schemeId" use="required" type="xs:string">
+                                            <xs:annotation>
+                                                <xs:documentation>TT-12 : Type d'identifiant</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-14 : Raison sociale du déclarant du document de transmission</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="RoleCode" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-15 : Code rôle du déclarant</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="URIUniversalCommunication" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TG-6 : Adresse électronique déclarant</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="URIID" type="xs:anyURI" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>TT-16 : Adresse électronique (réseau CEF)</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pdp_reports_account_journal_dashboard_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.l10n_fr_pdp</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Hide the "Get Paid online" text for e-reporting journals -->
+            <xpath expr="//t[@t-name='JournalTop']/t[@name='empty_journal_helper']/span[@t-if=&quot;journal_type == 'sale'&quot;]" position="attributes">
+                <attribute name="t-if">journal_type == 'sale' and !(dashboard and dashboard.pdp_is_ereporting_journal)</attribute>
+            </xpath>
+
+
+            <!-- Hide original content for EREP journal only -->
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']/div[@name='kanban_primary_left']" position="attributes">
+                <attribute name="t-if">!dashboard or !dashboard.pdp_is_ereporting_journal</attribute>
+            </xpath>
+
+            <!-- Add EREP journal content after original div -->
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']/div[@name='kanban_primary_left']" position="after">
+                <div class="col mb-3 mb-sm-0" name="kanban_primary_left" t-if="dashboard and dashboard.pdp_is_ereporting_journal">
+                    <div class="d-flex justify-content-between align-items-start mt-2">
+                        <!-- Left: Reports button -->
+                        <div>
+                            <button type="action"
+                                    name="%(l10n_fr_pdp_reports_action_flows)d"
+                                    class="btn btn-primary">
+                                <span>Reports</span>
+                            </button>
+                        </div>
+
+                        <!-- Right: Next due dates + alerts -->
+                        <div class="text-end">
+                            <t t-if="dashboard.pdp_error_count">
+                                <div class="mb-2">
+                                    <button type="object"
+                                            name="action_open_pdp_error_moves"
+                                            class="btn btn-link p-0 text-decoration-none">
+                                        <span t-att-class="'fw-bold ' + (dashboard.pdp_has_danger ? 'text-danger' : 'text-warning')">
+                                            <t t-out="dashboard.pdp_error_count"/> error(s) to fix
+                                        </span>
+                                    </button>
+                                </div>
+                            </t>
+                            <t t-if="dashboard.pdp_tx_due">
+                                <div class="mb-2">
+                                    <button type="object"
+                                            name="action_open_next_transaction_flow"
+                                            class="btn btn-link p-0 text-decoration-none">
+                                        <span>Next transactions reporting:</span>
+                                        <span t-att-class="'fw-bold ms-1 ' + (dashboard.pdp_tx_has_errors ? 'text-danger' : '')"
+                                              t-out="dashboard.pdp_tx_due"/>
+                                    </button>
+                                </div>
+                            </t>
+                            <t t-if="dashboard.pdp_pay_due">
+                                <div>
+                                    <button type="object"
+                                            name="action_open_next_payment_flow"
+                                            class="btn btn-link p-0 text-decoration-none">
+                                        <span>Next payment reporting:</span>
+                                        <span t-att-class="'fw-bold ms-1 ' + (dashboard.pdp_pay_has_errors ? 'text-danger' : '')"
+                                              t-out="dashboard.pdp_pay_due"/>
+                                    </button>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//t[@t-call='JournalBodyGraph']" position="attributes">
+                <attribute name="t-if">
+                    ['bank', 'cash', 'sale', 'purchase'].includes(journal_type)
+                    &amp;&amp; !(dashboard &amp;&amp; dashboard.pdp_is_ereporting_journal)
+                </attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

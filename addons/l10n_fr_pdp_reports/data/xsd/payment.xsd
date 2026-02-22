@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="payment"
+xmlns:pay="payment">
+
+    <xs:complexType name="PaymentsReportType">
+        <xs:sequence>
+            <xs:element name="ReportPeriod" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>TG-33 : Période transmission</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="StartDate" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-89 : Date début période</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="EndDate" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-90 : Date fin période</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Invoice" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>TG-34 : Facture</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="InvoiceID" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-91 : Numero de facture</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="IssueDate" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TT-102 : Date de la facture</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Payment" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TG-35 : Paiement</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Date" type="xs:string" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>TT-92 : Date paiement</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="SubTotals" minOccurs="1" maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:documentation>TG-36 : Répartition par taux</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="TaxPercent" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-93 : Taux</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element name="CurrencyCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-94 : Code devise paiement</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element name="Amount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-95 : Montant encaissé</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Transactions" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>TG-37 : Transactions</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Payment" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>TG-38 : Paiement</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Date" type="xs:string" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>TT-96 : Date paiement</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="SubTotals" minOccurs="1" maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:documentation>TG-39 : Répartition par taux</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="TaxPercent" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-97 : Taux</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element name="CurrencyCode" type="xs:string" minOccurs="0" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-98 : Code devise paiement</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element name="Amount" type="xs:decimal" minOccurs="1" maxOccurs="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>TT-99 : Montant encaissé</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

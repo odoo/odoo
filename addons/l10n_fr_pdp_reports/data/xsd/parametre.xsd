@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="parametre"
+xmlns:param="parametre">
+    <xs:simpleType name="sellerTaxRegistrationId">
+            <xs:restriction base="xs:string">
+            </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="buyerTaxRegistrationId">
+            <xs:restriction base="xs:string">
+            </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SenderIdType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IssuerIdType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ReportIdType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CompanyIdType">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

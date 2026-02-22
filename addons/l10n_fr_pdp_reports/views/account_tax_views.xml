@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pdp_reports_view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.fr.pdp</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_options']/group/group[1]" position="after">
+                <group string="PDP e-Reporting" invisible="country_code != 'FR'">
+                    <field name="l10n_fr_pdp_tt81_category"/>
+                    <field name="l10n_fr_pdp_vatex_code"/>
+                    <field name="l10n_fr_pdp_vatex_reason"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
