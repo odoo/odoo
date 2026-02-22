@@ -65,7 +65,7 @@ class NumberBuffer extends EventBus {
         this.isReset = false;
         this.bufferHolderStack = [];
         this.sound = services["mail.sound_effects"];
-        this.defaultDecimalPoint = services.localization.decimalPoint;
+        this.localization = services.localization;
         this.overlay = services.overlay;
         window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
@@ -157,7 +157,7 @@ class NumberBuffer extends EventBus {
         this.component = component;
         this.state = state;
         this.config = config;
-        this.decimalPoint = config.decimalPoint || this.defaultDecimalPoint;
+        this.decimalPoint = config.decimalPoint || this.localization.decimalPoint;
         this.maxTimeBetweenKeys = this.config.useWithBarcode
             ? barcodeService.maxTimeBetweenKeysInMs
             : 0;
