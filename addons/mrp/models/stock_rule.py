@@ -154,6 +154,8 @@ class StockRule(models.Model):
             ('user_id', '=', False),
             ('reference_ids', '=', procurement.values.get('reference_ids', self.env['stock.reference']).ids),
         )
+        if production_group_id := procurement.values.get('production_group_id'):
+            domain += (('production_group_id.parent_ids', '=', production_group_id),)
         if procurement.values.get('orderpoint_id'):
             procurement_date = datetime.combine(
                 fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
