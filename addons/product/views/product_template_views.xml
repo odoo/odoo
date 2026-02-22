@@ -203,6 +203,7 @@
             if records:
                 action = records.action_open_label_layout()
         </field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="action_product_template_price_list_report" model="ir.actions.server">
