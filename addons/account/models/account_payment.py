@@ -150,7 +150,7 @@ class AccountPayment(models.Model):
     )
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
-        search='_search_reconciled_invoice_ids',
+        search='_search_reconciled_invoice_and_bill_ids',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
         compute="_compute_stat_buttons_from_reconciliation")
@@ -161,6 +161,7 @@ class AccountPayment(models.Model):
         compute='_compute_stat_buttons_from_reconciliation')
     reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
         compute='_compute_stat_buttons_from_reconciliation',
+        search='_search_reconciled_invoice_and_bill_ids',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
@@ -464,7 +465,7 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('reconciled_invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
+    @api.depends('reconciled_invoice_ids.payment_state', 'reconciled_bill_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         payments_is_matched_to_recompute = self.env['account.payment']
         for payment in self:
@@ -479,8 +480,9 @@ class AccountPayment(models.Model):
                     'in_process'
                 )
             if (
-                payment.state == 'in_process' and payment.reconciled_invoice_ids and
-                all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids)
+                payment.state == 'in_process'
+                and (payment.reconciled_invoice_ids or payment.reconciled_bill_ids) and
+                all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids | payment.reconciled_bill_ids)
             ):
                 # The access to invoice.payment_state will trigger a flush_model on account_payment.is_matched in its compute.
                 # This flush will then trigger _compute_reconciliation_status. However, the payment.state will then be changed by this next line of code.
@@ -811,7 +813,7 @@ class AccountPayment(models.Model):
             # Uses payment._origin.id to handle records in edition/existing records and 0 for new records
             payment.duplicate_payment_ids = payment_to_duplicate_move.get(payment._origin.id, self.env['account.payment'])
 
-    def _search_reconciled_invoice_ids(self, operator, value):
+    def _search_reconciled_invoice_and_bill_ids(self, operator, value):
         if operator not in ('in', '='):
             return NotImplemented
         move_ids = self.env['account.move'].browse(value).reconciled_payment_ids.ids

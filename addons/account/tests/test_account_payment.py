@@ -907,3 +907,25 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         payment.action_draft()
         with self.assertRaises(UserError):
             payment.amount = 300.0
+
+    def test_vendor_bill_payment_status(self):
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test Product',
+                'quantity': 1,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+
+        with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', lambda self: 'paid'):
+            payment = self.env['account.payment.register'].with_context(
+                active_model='account.move',
+                active_ids=bill.ids,
+            ).create({'journal_id': self.bank_journal_1.id})._create_payments()
+            self.assertTrue(payment.reconciled_bill_ids)
+            self.assertEqual(payment.state, 'paid')
