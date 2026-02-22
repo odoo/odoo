@@ -174,11 +174,11 @@ test("search matches only frequently used emojis", async () => {
     await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
     await contains(".o-EmojiPicker-content .o-Emoji:eq(0):text('🥦')");
     await contains(".o-EmojiPicker-content .o-Emoji", { count: 1 });
-    await contains(".o-EmojiPicker-content:has(:text('No emoji matches your search'))", {
+    await contains(".o-EmojiPicker-content:has(:text('No emojis match your search'))", {
         count: 0,
     });
     await insertText(".o-EmojiPicker-search input", "2");
-    await contains(".o-EmojiPicker-content:has(:text('No emoji matches your search'))");
+    await contains(".o-EmojiPicker-content:has(:text('No emojis match your search'))");
 });
 
 test("emoji usage amount orders frequent emojis", async () => {
