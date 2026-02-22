@@ -23,7 +23,7 @@ declare module "plugins" {
     import { on_target_revealed_handlers } from "@html_builder/sidebar/invisible_elements_panel";
     import { on_snippet_dragged_handlers, on_snippet_dropped_handlers, on_snippet_dropped_near_handlers, on_snippet_dropped_over_handlers, on_snippet_move_handlers, on_snippet_out_dropzone_handlers, on_snippet_over_dropzone_handlers } from "@html_builder/sidebar/block_tab";
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_processors } from "@html_builder/snippets/add_snippet_dialog";
-    import { background_shape_groups_providers, background_shape_target_providers } from "@html_builder/plugins/background_option/background_shape_option_plugin";
+    import { background_shape_groups_providers, background_shape_target_providers, is_element_in_invisible_panel_predicates } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
     import { is_movable_selector, on_element_arrow_moved_handlers } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
@@ -109,6 +109,7 @@ declare module "plugins" {
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
         should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
         is_draggable_predicates: is_draggable_predicates;
+        is_element_in_invisible_panel_predicates: is_element_in_invisible_panel_predicates;
         is_node_empty_predicates: is_node_empty_predicates;
         is_valid_for_sibling_dropzone_predicates: is_valid_for_sibling_dropzone_predicates;
 

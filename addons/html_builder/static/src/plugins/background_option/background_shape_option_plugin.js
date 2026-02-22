@@ -26,11 +26,11 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * }>} BackgroundShapeGroups
  * @typedef {((shapeGroups: BackgroundShapeGroups) => BackgroundShapeGroups | void)[]} background_shape_groups_providers
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
+ * @typedef {((el: HTMLElement) => boolean)[]} is_element_in_invisible_panel_predicates
  */
 
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
-    static dependencies = ["visibility"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
@@ -159,7 +159,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      */
     updateConnectionShapeColor(editingEl) {
         const { shape, colors } = this.getShapeData(editingEl);
-        if (!this.isShapeEligibleForComputation(shape, editingEl)) {
+        if (
+            !this.isShapeEligibleForComputation(shape, editingEl) ||
+            !editingEl.querySelector(":scope > .o_we_shape")
+        ) {
             return;
         }
         const newColors = this.getImplicitColors(editingEl, shape, colors);
@@ -581,13 +584,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         const shapeData = this.getShapeData(editingElement);
         const isYFlipped = shapeData.flip.includes("y");
         const elementSibling = isYFlipped ? "previousElementSibling" : "nextElementSibling";
-        let siblingEl = editingElement[elementSibling];
-        while (siblingEl) {
-            if (this.isVisibleSnippet(siblingEl)) {
-                return siblingEl;
-            }
-            siblingEl = siblingEl[elementSibling];
-        }
+        return this.nearestVisibleSnippetSibling(editingElement[elementSibling], elementSibling);
     }
     /**
      * Compute the luminance of a color.
@@ -637,31 +634,37 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * @returns {HTMLElement[]} List of neighboring shape elements.
      */
     getNeighborShapeEls(previousEl, nextEl) {
-        const getBgShapedSnippetSiblingEl = (siblingEl, elementSibling) => {
-            while (siblingEl) {
-                if (this.isVisibleSnippet(siblingEl) && !siblingEl.matches(".oe_drop_clone")) {
-                    return siblingEl.dataset.oeShapeData ? siblingEl : null;
-                }
-                siblingEl = siblingEl[elementSibling];
-            }
-        };
-        const aboveShapeSnippetEl = previousEl
-            ? getBgShapedSnippetSiblingEl(previousEl, "previousElementSibling")
-            : undefined;
-        const underShapeSnippetEl = nextEl
-            ? getBgShapedSnippetSiblingEl(nextEl, "nextElementSibling")
-            : undefined;
-        return [aboveShapeSnippetEl, underShapeSnippetEl].filter(Boolean);
+        return [
+            [previousEl, "previousElementSibling"],
+            [nextEl, "nextElementSibling"],
+        ]
+            .map(([el, d]) => this.nearestVisibleSnippetSibling(el, d))
+            .filter((sibling) => sibling?.dataset.oeShapeData);
     }
     /**
-     * Checks if an element is a snippet that is visible on the page and is not
-     * in the invisible panel
+     * The nearest sibling that `isVisibleSnippet`
+     * @param {HTMLElement} siblingEl First sibling to consider
+     * @param {"previousElementSibling" | "nextElementSibling"} direction
+     * @returns {HTMLElement | undefined}
+     */
+    nearestVisibleSnippetSibling(siblingEl, direction) {
+        while (siblingEl && !this.isVisibleSnippet(siblingEl)) {
+            siblingEl = siblingEl[direction];
+        }
+        return siblingEl;
+    }
+    /**
+     * Whether an element is an always visible snippet (and thus can be used
+     * in shape-background connection)
      * @param {HTMLElement} el
      * @returns {Boolean}
      */
     isVisibleSnippet(el) {
-        const invisibleEls = this.dependencies.visibility.getInvisibleElements();
-        return el.matches("[data-snippet]") && isVisible(el) && !invisibleEls.includes(el);
+        return (
+            el.matches("[data-snippet]") &&
+            isVisible(el) &&
+            !this.getResource("is_element_in_invisible_panel_predicates").some((p) => p(el))
+        );
     }
 }
 
