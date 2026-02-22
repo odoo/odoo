@@ -204,7 +204,10 @@ class PosOrder(models.Model):
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         # correct quantity sign based on move type and if line is refund.
-        is_refund_order = pos_line.order_id.is_refund
+        is_refund_order = bool(
+            pos_line.order_id.is_refund
+            or pos_line.order_id.amount_total < 0.0
+        )
         qty_sign = -1 if (
             (move_type == 'out_invoice' and is_refund_order)
             or (move_type == 'out_refund' and not is_refund_order)
@@ -866,7 +869,9 @@ class PosOrder(models.Model):
 
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
-        move_type = 'out_invoice' if not any(order.is_refund for order in self) else 'out_refund'
+        move_type = 'out_invoice' if not any(
+            order.is_refund or order.amount_total < 0 for order in self
+        ) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
             if self.partner_id.property_payment_term_id and any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
