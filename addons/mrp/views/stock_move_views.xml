@@ -59,6 +59,9 @@
                         }
                     </attribute>
                 </xpath>
+                <xpath expr="//field[@name='result_package_id' and @widget='package_m2o']" position="attributes">
+                    <attribute name="column_invisible">parent.picking_code == 'mrp_operation'</attribute>
+                </xpath>
             </field>
         </record>
 
