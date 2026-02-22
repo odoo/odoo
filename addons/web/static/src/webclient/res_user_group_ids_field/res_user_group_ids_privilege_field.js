@@ -40,7 +40,7 @@ class ResUserGroupIdsPrivilegeField extends Component {
     }
 
     get impliedGroupDisplayName() {
-        return !this.isSet && this.impliedGroup ? this.groups[this.impliedGroup.id].name : "";
+        return !this.isSet && this.impliedGroup ? this.groups[this.impliedGroup.id].name : this.props.record.fields[this.props.name].placeholder;
     }
 
     get infoButtonClassnames() {

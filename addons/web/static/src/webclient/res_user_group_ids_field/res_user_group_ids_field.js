@@ -75,6 +75,7 @@ class ResUserGroupIdsField extends Component {
                     selection: privilege.group_ids.map((gId) => [gId, groups[gId].name]),
                     string: privilege.name,
                     type: "selection",
+                    placeholder: privilege.placeholder || ""
                 };
             }
         }
