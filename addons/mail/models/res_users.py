@@ -353,18 +353,39 @@ class Users(models.Model):
                 elif record in allowed_records:
                     activities_by_model_name[model_name] += activities
         model_ids = [self.env["ir.model"]._get_id(name) for name in activities_by_model_name]
+
+        def _get_studio_app_icon(Model):
+            action_ids = self.env["ir.actions.act_window"]._search([("res_model", "=", Model._name)])
+            if not action_ids:
+                return "/web/static/img/default_icon_app.png"
+            menu = self.env["ir.ui.menu"].search([("action", "in", [f"ir.actions.act_window,{aid}" for aid in action_ids])], limit=1)
+            if not menu:
+                return "/web/static/img/default_icon_app.png"
+            root = self.env["ir.ui.menu"].browse(int(menu.parent_path.split('/')[0])) if menu.parent_path else menu
+            if root.web_icon_data:
+                return f"/web/image/ir.ui.menu/{root.id}/web_icon_data"
+            if root.web_icon:
+                parts = root.web_icon.split(",")
+                if len(parts) == 3:
+                    return {'class': parts[0], 'color': parts[1], 'bg': parts[2]}
+            return "/web/static/img/default_icon_app.png"
+
         user_activities = {}
         for model_name, activities in activities_by_model_name.items():
             Model = self.env[model_name]
             module = Model._original_module
-            icon = module and modules.module.get_module_icon(module)
+            icon_data = (module and modules.module.get_module_icon(module)) or (Model._custom and _get_studio_app_icon(Model))
             model = self.env["ir.model"]._get(model_name).with_prefetch(model_ids)
+            is_dict = isinstance(icon_data, dict)
             user_activities[model_name] = {
                 "id": model.id,
                 "name": model.name,
                 "model": model_name,
                 "type": "activity",
-                "icon": icon,
+                "icon_type": "fa" if is_dict else "image",
+                "icon": icon_data.get('class') if is_dict else icon_data,
+                "icon_color": icon_data.get('color') if is_dict else None,
+                "icon_bg": icon_data.get('bg') if is_dict else None,
                 "total_count": 0,
                 "today_count": 0,
                 "overdue_count": 0,
