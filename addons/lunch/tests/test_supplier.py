@@ -259,3 +259,13 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
         order.action_order()
         self.assertEqual(order.state, "ordered")
+
+    def test_order_with_vendor_recurrency_end_date(self):
+        """ Test lunch order when vendor have recurrency_end_date field set """
+        self.supplier_pizza_inn.recurrency_end_date = self.monday_1pm.date() + timedelta(days=7)
+        order = self.env['lunch.order'].create({
+            'product_id': self.product_pizza.id,
+            'date': self.monday_1pm.date(),
+            'supplier_id': self.supplier_pizza_inn.id,
+        })
+        self.assertTrue(order.available_on_date)
