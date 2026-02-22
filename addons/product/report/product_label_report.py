@@ -40,7 +40,8 @@ def _prepare_data(env, docids, data):
     products = Product.search([('id', 'in', [int(p) for p in qty_by_product_in.keys()])], order='name desc')
     quantity_by_product = defaultdict(list)
     for product in products:
-        q = qty_by_product_in[str(product.id)]
+        # from js report action handler, int keys are converted to str, but from report_action method, kept as int
+        q = qty_by_product_in.get(str(product.id)) or qty_by_product_in.get(product.id)
         quantity_by_product[product].append((product.barcode, q))
         total += q
     if data.get('custom_barcodes'):

@@ -9,6 +9,24 @@
             <xpath expr="//field[@name='sequence_code']" position="after">
                 <field name="print_label" invisible="code not in ['internal', 'outgoing']"/>
             </xpath>
+            <field name="auto_print_reception_report_labels" position="after">
+                <div colspan="2" class="alert alert-warning" role="alert">
+                    <a class="alert-link">Carrier Labels</a>
+                    and <a class="alert-link">Export documents</a>
+                    are uploaded to the chatter when the picking is validated. If you want to
+                    print them automatically on validation, you need to configure a printer on the
+                    report form.<br/>
+                    <a type="action" name="%(open_shipping_labels_report)d">
+                        <i class="fa pe-1 fa-arrow-right"/>Configure Carrier Labels
+                    </a>
+                    <br/>
+                    <a type="action" name="%(open_export_docs_report)d">
+                        <i class="fa pe-1 fa-arrow-right"/>Configure Export Documents
+                    </a>
+                </div>
+                <field name="auto_print_carrier_labels" string="Carrier Labels" invisible="code == 'incoming'"/>
+                <field name="auto_print_export_documents" string="Export Documents" invisible="code == 'incoming'"/>
+            </field>
         </field>
     </record>
 

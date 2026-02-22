@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Window action to help assigning printers to the reports. -->
+    <record id="open_shipping_labels_report" model="ir.actions.act_window">
+        <field name="name">Shipping Labels Report</field>
+        <field name="res_model">ir.actions.report</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="action_report_shipping_labels"/>
+        <field name="target">new</field>
+        <field name="context">{'missing_printer': True}</field>
+    </record>
+
+    <record id="open_export_docs_report" model="ir.actions.act_window">
+        <field name="name">Shipping Documents Report</field>
+        <field name="res_model">ir.actions.report</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="action_report_shipping_docs"/>
+        <field name="target">new</field>
+        <field name="context">{'missing_printer': True}</field>
+    </record>
+</odoo>

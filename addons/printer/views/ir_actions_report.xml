@@ -1,0 +1,15 @@
+<odoo>
+  <record id="act_report_xml_view_printer" model="ir.ui.view">
+    <field name="name">ir.actions.report.printer</field>
+    <field name="model">ir.actions.report</field>
+    <field name="inherit_id" ref="base.act_report_xml_view"/>
+    <field name="arch" type="xml">
+      <field name="report_type" position="after">
+        <field name="printer_ids"
+               required="context.get('missing_printer')"
+               widget="many2many_tags"
+               context="{'default_report_ids': [id]}"/>
+      </field>
+    </field>
+  </record>
+</odoo>
