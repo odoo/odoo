@@ -629,6 +629,37 @@ class TestProcRule(TransactionCase):
         # opening the replenishment should not raise a KeyError even if the location is archived
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
+    def test_orderpoint_auto_naming(self):
+        """Test that the orderpoint name is correctly set based on its trigger mode."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        product = self.env['product.product'].create({'name': 'Test Product', 'is_storable': True})
+
+        stock_move = self.env['stock.move'].create({
+            'name': 'Test Move',
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 5,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        stock_move._action_confirm()
+
+        # open the replenishment to automatically create the orderpoint
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', product.id),
+            ('location_id', '=', warehouse.lot_stock_id.id),
+        ], limit=1)
+        self.assertEqual(orderpoint.trigger, 'manual', 'Orderpoint should be created with manual trigger.')
+        self.assertEqual(orderpoint.name, 'Replenishment Report', 'Orderpoint name should be set to "Replenishment Report".')
+        # convert the orderpoint to `auto` trigger
+        orderpoint.trigger = 'auto'
+        self.assertTrue(orderpoint.name.startswith('OP/'), 'Orderpoint name should now use the default naming "OP/xxx" format.')
+        op_name = orderpoint.name
+        # converting it back to `manual` trigger
+        orderpoint.trigger = 'manual'
+        self.assertEqual(orderpoint.name, op_name, 'Orderpoint name should remain unchanged when switching back to manual trigger.')
+
     def test_compute_qty_to_order(self):
         """
         Check that the quantity to order is updated in the orderpoint when a new demand is created.
