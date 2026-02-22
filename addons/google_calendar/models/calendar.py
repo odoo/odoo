@@ -384,4 +384,7 @@ class Meeting(models.Model):
     def _is_google_insertion_blocked(self, sender_user):
         self.ensure_one()
         has_different_owner = self.user_id and self.user_id != sender_user
-        return has_different_owner
+        is_odoobot_user = sender_user == self.env.ref('base.user_root')
+        # Since Odoobot has no token, we must bypass this check for creating events.
+        # The function `_get_event_user` will always get the organizer as it can have a valid sync token.
+        return has_different_owner and not is_odoobot_user
