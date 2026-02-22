@@ -174,6 +174,10 @@ class StockPicking(models.Model):
             'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
         }
 
+    def _prepare_merge_group_key(self, picking):
+        grouped_fields = super()._prepare_merge_group_key(picking)
+        return grouped_fields + (picking.carrier_id.id,)
+
     def _add_delivery_cost_to_so(self):
         self.ensure_one()
         sale_order = self.sale_id

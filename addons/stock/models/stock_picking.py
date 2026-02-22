@@ -1484,6 +1484,87 @@ class StockPicking(models.Model):
             'res_id': backorder.id,
         }
 
+    def action_merge_pickings(self):
+        if len(self) < 2:
+            raise UserError(self.env._("Please select at least two transfers to merge."))
+        if len(self.picking_type_id) > 1:
+            raise UserError(self.env._("Transfers with different operation types cannot be merged."))
+        if len(set(self.mapped('state'))) > 1:
+            raise UserError(self.env._("Transfers with different states cannot be merged."))
+        if self[0].state in ['done', 'cancel']:
+            raise UserError(self.env._("Transfers with done or cancel states cannot be merged."))
+
+        merge_group_keys = {
+            picking._prepare_merge_group_key(picking)
+            for picking in self
+        }
+        if len(merge_group_keys) > 1:
+            raise UserError(self.env._(
+                "Selected transfers cannot be merged. They must share the same partner, carrier, source, and destination locations."
+            ))
+
+        # Take the picking into which all other pickings are merged.
+        # It is determined based on priority first, then scheduled_date.
+        target_picking = self.sorted(key=lambda p: (p.priority, p.scheduled_date))[-1]
+        other_transfers = self - target_picking
+        target_moves = self.env['stock.move']
+
+        message = self.env._(
+            "This transfer has been merged into %(target_picking)s.",
+            target_picking=target_picking._get_html_link(),
+        )
+
+        for picking in other_transfers:
+            for move in picking.move_ids:
+                # Find a compatible move in the target picking to merge with the current move,
+                # ensuring the move date is within 24 hours.
+                existing_move = target_picking.move_ids.filtered(
+                    lambda m: (
+                        m.product_id == move.product_id
+                        and m.reference_ids == move.reference_ids
+                        and m.location_final_id == move.location_final_id
+                        and m.uom_id == move.uom_id
+                        and m.package_ids == move.package_ids
+                        and m.move_line_ids.mapped('lot_name') == move.move_line_ids.mapped('lot_name')
+                        and m.move_line_ids.lot_id == move.move_line_ids.lot_id
+                        and abs(m.date - move.date).total_seconds() <= 86400
+                    )
+                )
+
+                if existing_move:
+                    target_moves |= existing_move
+                    existing_move.product_uom_qty += move.product_uom_qty
+                else:
+                    move.move_line_ids.picking_id = target_picking
+                    moves_vals = move.copy_data({
+                        'state': 'confirmed',
+                        'picking_id': target_picking.id,
+                        'reference_ids': target_picking.move_ids.reference_ids,
+                        'move_line_ids': [Command.set(move.move_line_ids.ids)],
+                    })
+                    target_moves |= self.env['stock.move'].create(moves_vals)
+
+            # Post a log note with a link of the target picking, allowing users to easily identify and navigate to it.
+            picking.message_post(body=message)
+
+        target_moves._filtered_for_assign()._action_assign()
+        pickings_names = ', '.join(other_transfers.mapped('name'))
+        merged_message = self.env._(
+            "The following transfers have been merged into this one: %s.",
+            pickings_names,
+        )
+        target_picking.message_post(body=merged_message)
+        merged_picking_vals = target_picking._get_merged_picking_vals()
+        target_picking.write(merged_picking_vals)
+        other_transfers.action_cancel()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.picking',
+            'view_mode': 'form',
+            'res_id': target_picking.id,
+        }
+
     def _pre_action_done_hook(self):
         for picking in self:
             has_quantity = False
@@ -2144,6 +2225,12 @@ class StockPicking(models.Model):
                 package_ids.update(picking.move_line_ids.result_package_id._get_all_package_dest_ids())
         return self.env['stock.package'].browse(package_ids)
 
+    def _get_merged_picking_vals(self):
+        self.ensure_one()
+        return {
+            'scheduled_date': self.scheduled_date,
+        }
+
     def _add_reference(self, references):
         """ link the given references to the list of references. """
         self.ensure_one()
@@ -2175,3 +2262,6 @@ class StockPicking(models.Model):
                 'is_entire_pack': True,
             })
         return move_line_vals
+
+    def _prepare_merge_group_key(self, picking):
+        return (picking.partner_id.id, picking.location_id.id, picking.location_dest_id.id)

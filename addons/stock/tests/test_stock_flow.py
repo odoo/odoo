@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger, float_round
 from odoo import Command, fields
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -2641,6 +2641,65 @@ class TestStockFlow(TestStockCommon):
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
+
+    def test_merge_pickings(self):
+        """Test to ensure that 'Merge Transfers' action works correctly for multiple pickings."""
+        products = [self.DozA, self.SDozA, self.UnitA]
+        partner = self.env['res.partner'].create({'name': 'Partner'})
+        pickings = self.env['stock.picking']
+
+        # Create one picking per product, each containing a corresponding stock move.
+        for product in products:
+            picking = self.PickingObj.create({
+                'picking_type_id': self.picking_type_in.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'state': 'draft',
+            })
+            self.MoveObj.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'uom_id': product.uom_id.id,
+                'picking_id': picking.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })
+            pickings |= picking
+
+        picking_1, picking_2, picking_3 = pickings
+        # Assign a partner only to picking_2 (the other pickings will have no partner assigned).
+        picking_2.partner_id = partner
+        # Confirm only the first two pickings.
+        pickings[:-1].action_confirm()
+
+        # --- Case 1: Only one picking selected ---
+        with self.assertRaises(UserError) as err:
+            picking_1.action_merge_pickings()
+        self.assertEqual(err.exception.args[0], 'Please select at least two transfers to merge.')
+
+        # --- Case 2: Pickings with different operation types ---
+        picking_2.picking_type_id = self.picking_type_out.id
+        with self.assertRaises(UserError) as err:
+            (picking_1 | picking_2).action_merge_pickings()
+        self.assertEqual(err.exception.args[0], 'Transfers with different operation types cannot be merged.')
+
+        # --- Case 3: Pickings with different states ---
+        with self.assertRaises(UserError) as err:
+            (picking_1 | picking_3).action_merge_pickings()
+        self.assertEqual(err.exception.args[0], 'Transfers with different states cannot be merged.')
+
+        # --- Case 4: Pickings with different partner ---
+        picking_3.action_confirm()
+        (picking_1 | picking_3).picking_type_id = self.picking_type_out.id
+        with self.assertRaises(UserError) as err:
+            pickings.action_merge_pickings()
+        self.assertEqual(err.exception.args[0], 'Selected transfers cannot be merged. They must share the same partner, carrier, source, and destination locations.')
+
+        # --- Case 5: Valid merge scenario (more than one picking, same operation type, same state
+        #             (not in 'done' or 'cancel'), and identical partner, source, and destination) ---
+        (picking_1 | picking_3).partner_id = partner
+        pickings.action_merge_pickings()
+
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
