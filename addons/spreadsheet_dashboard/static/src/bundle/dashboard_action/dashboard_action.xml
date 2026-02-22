@@ -47,7 +47,8 @@
                 <t t-set="status" t-value="dashboard.status"/>
                 <h3 t-if="status === Status.Loading" class="dashboard-loading-status">Loading...</h3>
                 <div t-elif="status === Status.Error" class="dashboard-loading-status error">
-                    An error occured while loading the dashboard
+                    <t t-if="dashboard.error and dashboard.error.message" t-out="dashboard.error.message"/>
+                    <t t-else="">An error occurred while loading the dashboard</t>
                 </div>
                 <t t-else="">
                     <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>

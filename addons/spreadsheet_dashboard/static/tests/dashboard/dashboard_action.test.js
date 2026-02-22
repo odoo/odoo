@@ -168,6 +168,24 @@ test("load dashboard that doesn't exist", async () => {
     expect.verifyErrors(["RPC_ERROR"]);
 });
 
+test("shows access error when user has no access to dashboard data", async () => {
+    onRpc(
+        "/spreadsheet/dashboard/data/2",
+        () => new Response("<h1>Forbidden</h1>", { status: 403 }),
+        { pure: true }
+    );
+    await createSpreadsheetDashboard();
+    expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
+    await contains(".o_search_panel li:eq(1)").click();
+    expect(".o-spreadsheet").toHaveCount(0, { message: "It should not display the spreadsheet" });
+    expect(".o_spreadsheet_dashboard_action .dashboard-loading-status.error").toHaveText(
+        "This dashboard includes data you are not allowed to access. Contact your administrator for the required permissions."
+    );
+    await contains(".o_search_panel li:eq(0)").click();
+    expect(".o-spreadsheet").toHaveCount(1, { message: "It should display the spreadsheet" });
+    expect(".o_renderer .error").toHaveCount(0, { message: "It should not display an error" });
+});
+
 test("Last selected spreadsheet is kept when go back from breadcrumb", async function () {
     const spreadsheetData = {
         version: 16,
