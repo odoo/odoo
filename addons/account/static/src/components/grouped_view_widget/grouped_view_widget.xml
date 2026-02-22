@@ -18,11 +18,13 @@
     </t>
 
     <tbody t-name="account.GroupedItemsTemplate">
-        <tr style="background-color: #dee2e6;">
-            <td t-attf-colspan="{{props.options.columns.length}}">
-                <t t-out="props.group_vals.group_name"/>
-            </td>
-        </tr>
+        <t t-if="props.group_vals.group_name">
+            <tr style="background-color: #dee2e6;">
+                <td t-attf-colspan="{{props.options.columns.length}}">
+                    <t t-out="props.group_vals.group_name"/>
+                </td>
+            </tr>
+        </t>
         <t t-foreach="props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
             <ListItem item_vals="item_vals[2]" options="props.options"/>
         </t>
