@@ -39,6 +39,9 @@ class TestCreatePicking(ProductVariantsCommon):
         }
 
     def test_00_create_picking(self):
+        """
+        Verify PO and Picking synchronization during modifications and backorder creation.
+        """
 
         # Draft purchase order created
         self.po = self.env['purchase.order'].create(self.po_vals)
@@ -71,6 +74,16 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
         self.assertEqual(len(moves), 1, 'One moves should have been created')
+        self.po.picking_ids[-1].move_line_ids.quantity = 1
+        self.po.picking_ids[-1].write({'move_line_ids': [
+            Command.create({
+                'product_id': self.product_sofa_blue.id,
+                'quantity': 1.0,
+                })]})
+        Form.from_action(self.env, self.po.picking_ids[-1].button_validate()).save().process()
+        self.assertEqual(len(self.po.picking_ids), 3)
+        self.assertEqual(len(self.po.picking_ids[-1].move_line_ids), 1)
+        self.assertRecordValues(self.po.picking_ids[-1].move_line_ids[0], [{'product_id': self.product_id_2.id, 'quantity': 4, 'picking_code': 'incoming'}])
 
     def test_01_check_double_validation(self):
 

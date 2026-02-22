@@ -182,7 +182,11 @@ class PurchaseOrderLine(models.Model):
                 # Give priority to the pickings related to the line
                 moves_to_assign = line.order_id.picking_ids.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
                 moves_to_assign.purchase_line_id = line.id
-                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                line_pickings_all = line.move_ids.picking_id.filtered(lambda p: p.state not in ('cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                line_pickings_done = line_pickings_all.filtered(lambda p: p.state == 'done')
+                line_pickings = line_pickings_all - line_pickings_done
+                if line_pickings_done and line.product_qty < line.qty_received:
+                    continue
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
