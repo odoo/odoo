@@ -257,8 +257,10 @@
                                         <field name="study_field"/>
                                     </group>
                                     <group string="Documents" name="hr_document_group">
-                                        <field name="id_card"/>
-                                        <field name="driving_license"/>
+                                        <field name="id_card_name" invisible="1"/>
+                                        <field name="driving_license_name" invisible="1"/>
+                                        <field name="id_card" filename="id_card_name"/>
+                                        <field name="driving_license" filename="driving_license_name"/>
                                     </group>
                                 </group>
                             </page>
