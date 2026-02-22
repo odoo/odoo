@@ -129,7 +129,7 @@ class ProductTemplate(models.Model):
     )
 
     base_unit_count = fields.Float(
-        string="Base Unit Count",
+        string="Reference Unit",
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.",
         compute='_compute_base_unit_count',
         inverse='_set_base_unit_count',
@@ -676,6 +676,23 @@ class ProductTemplate(models.Model):
             # If the price should be hidden, we don't want to send any price information regarding
             # the product
             combination_info['compare_list_price'] = 0
+
+        if product_or_template._has_multiple_uoms():
+            # for packaging pricings
+            combination_info['packaging_prices'] = {uom.id: pricelist_price}
+            # do not compute price again for already selected UOM
+            for product_uom in set(product_or_template._get_available_uoms() - uom):
+                uom_price = pricelist._get_product_price(  # unit price in packaging UOM
+                    product=product_or_template,
+                    quantity=quantity,
+                    uom=product_uom,
+                )
+                base_uom_price = product_uom._compute_price(  # convert packaging prices to base UOM
+                    price=uom_price,
+                    to_unit=product_or_template.uom_id,
+                )
+
+                combination_info['packaging_prices'][product_uom.id] = base_uom_price
 
         return combination_info
 

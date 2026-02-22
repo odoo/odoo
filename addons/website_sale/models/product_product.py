@@ -21,7 +21,7 @@ class ProductProduct(models.Model):
     )
 
     base_unit_count = fields.Float(
-        string="Base Unit Count",
+        string="Reference Unit",
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
              " product.",
         required=True,

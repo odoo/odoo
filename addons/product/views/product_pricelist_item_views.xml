@@ -114,6 +114,12 @@
                     required="1"
                 />
                 <field name="min_quantity" colspan="4"/>
+                <field
+                    name="uom_ids"
+                    widget="many2many_tags"
+                    invisible="display_applied_on != '1_product'"
+                    groups="uom.group_uom"
+                />
                 <field name="currency_id" column_invisible="True"/>
                 <field name="date_start" optional="show"/>
                 <field name="date_end" optional="show"/>
@@ -177,14 +183,35 @@
                                 </t>
                             </div>
                         </group>
-                        <group name="pricelist_rule_limits">
-                            <field name="min_quantity" string="Min Qty"/>
-                            <field name="date_start"
-                                string="Validity"
-                                widget="daterange"
-                                options="{'end_date_field': 'date_end'}"/>
-                            <field name="date_end" invisible="1"/>
-                        </group>
+                        <div name="pricelist_rule_limits">
+                            <group name="min_quantity">
+                                <label for="min_quantity" string="Min Qty"/>
+                                <div class="o_row gap-3">
+                                    <field name="min_quantity"/>
+                                    <!-- apply allowed_uom_ids domain only if product template is selected -->
+                                    <field
+                                        name="uom_ids"
+                                        placeholder="All units/packagings"
+                                        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []"
+                                        groups="uom.group_uom"
+                                        invisible="display_applied_on != '1_product'"
+                                        widget="many2many_uom_tags"
+                                        context="{'product_id': product_id}"
+                                        options="{'no_create': 1}"
+                                        nolabel="1"
+                                    />
+                                </div>
+                            </group>
+                            <group name="date_range">
+                                <field
+                                    name="date_start"
+                                    string="Validity"
+                                    widget="daterange"
+                                    options="{'end_date_field': 'date_end'}"
+                                />
+                                <field name="date_end" invisible="1"/>
+                            </group>
+                        </div>
                     </group>
                     <group name="pricelist_rule_base" invisible="compute_price != 'formula'">
                         <group>

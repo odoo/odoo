@@ -7,8 +7,7 @@
             class="o_base_unit_price"
             t-out="base_unit_price"
             t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-        />
-         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
+        />/<span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
     </template>
 
     <template id="website_sale.product" name="Product" track="1">
@@ -127,10 +126,15 @@
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_price mb-4"
                                     >
                                         <t t-call="website_sale.product_price"/>
-                                        <small t-if="combination_info.get('base_unit_price')"
-                                            class="ms-1 text-muted o_base_unit_price_wrapper d-none">
-                                            <t t-call="website_sale.base_unit_price"
-                                                base_unit_price="combination_info['base_unit_price']"/>
+                                        <small
+                                            t-if="combination_info.get('base_unit_price')"
+                                            class="text-muted o_base_unit_price_wrapper d-block d-none"
+                                        >
+                                            (<t
+                                                t-call="website_sale.base_unit_price"
+                                                product="product"
+                                                base_unit_price="combination_info['base_unit_price']"
+                                            />)
                                         </small>
                                     </div>
 
@@ -437,19 +441,23 @@
             <li>
                 <!-- Separate template to reduce views duplication -->
                 <t t-call="website_sale.packaging_title"/>
-                <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
+                <ul class="btn-group-toggle list-inline list-unstyled mt-2" data-bs-toggle="buttons">
                     <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
                     <t t-foreach="product_uoms" t-as="uom">
                         <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
-                        <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
+                        <li
+                            t-attf-class="o_packaging_button o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}"
+                        >
                             <input
-                                class="position-absolute opacity-0 cursor-pointer"
+                                class="position-absolute opacity-0 cursor-pointer o_packaging_input"
                                 type="radio"
                                 t-att-checked="is_main_uom"
                                 name="uom_id"
                                 t-att-value="uom.id"
                                 t-attf-id="uom-{{uom.id}}"
-                                t-att-autocomplete="off"/>
+                                t-att-autocomplete="off"
+                                t-att-data-packaging-price="combination_info.get('packaging_prices', {}).get(uom.id, False)"
+                            />
                             <label class="radio_input_value cursor-pointer" t-attf-for="uom-{{uom.id}}">
                                 <span t-field="uom.name"/>
                             </label>
@@ -488,7 +496,17 @@
     </template>
 
     <template id="website_sale.packaging_title" name="Packaging title">
-        <h6 class="attribute_name mb-2">Packaging</h6>
+        <h6 class="attribute_name d-inline">Packaging</h6>
+        <span class="d-inline-flex d-none text-muted o_packaging_price">
+            -
+            <p
+                class="o_packaging_price mb-0 ms-1"
+                t-out="combination_info.get('packaging_prices', {}).get(product.uom_id.id, False)"
+                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+            />
+            /
+            <p t-field="product.base_unit_name" class="mb-0"/>
+        </span>
     </template>
 
     <template id="website_sale.product_title">

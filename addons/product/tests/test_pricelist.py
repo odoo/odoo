@@ -542,3 +542,32 @@ class TestPricelist(ProductVariantsCommon):
         self.assertEqual(pricelist.item_ids.applied_on, "1_product")
         # check that product_id is cleared
         self.assertFalse(pricelist.item_ids.product_id)
+
+    def test_pricelist_packaging_rules(self):
+        self.product_template_sofa.uom_ids = [Command.link(self.uom_dozen.id)]
+        self.packaging_pricelist = self.env['product.pricelist'].create({
+            'name': 'Packaging Pricelist',
+            'item_ids': [
+                Command.create({
+                    'applied_on': '1_product',
+                    'compute_price': 'fixed',
+                    'fixed_price': 10.0,
+                    'product_tmpl_id': self.product_template_sofa.id,
+                    'min_quantity': 6,
+                }),
+            ],
+        })
+
+        # must be assigned afterwards since domain on uom_ids is dependent on product_template
+        self.packaging_pricelist.item_ids[0].uom_ids = [Command.link(self.uom_dozen.id)]
+
+        self.assertEqual(
+            self.packaging_pricelist._get_product_price(self.product_template_sofa, 6.0, uom=self.uom_unit),
+            1.0,
+            "Packaging rules should not be applied when the product has a UoM which is not defined on pricelist rule",
+        )
+        self.assertEqual(
+            self.packaging_pricelist._get_product_price(self.product_template_sofa, 6.0, uom=self.uom_dozen),
+            120.0,
+            "Packaging rules should be applied when the product has a UoM which is defined on pricelist rule",
+        )

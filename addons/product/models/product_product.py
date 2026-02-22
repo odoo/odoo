@@ -1194,3 +1194,13 @@ class ProductProduct(models.Model):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
         return True
+
+    def _has_multiple_uoms(self):
+        return (
+            self.product_tmpl_id._should_check_multi_uoms()
+            and len(self._get_available_uoms()) > 1
+        )
+
+    def _get_available_uoms(self):
+        self.ensure_one()
+        return self.product_tmpl_id._get_available_uoms()

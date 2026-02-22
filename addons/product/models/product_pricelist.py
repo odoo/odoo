@@ -203,25 +203,17 @@ class ProductPricelist(models.Model):
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
-            quantity_uom = uom or product.uom_id
-            qty_to_consider = self._compute_qty_to_consider(
-                product,
-                quantity,
-                quantity_uom,
-                currency=currency,
-                date=date,
-                compute_price=compute_price,
-                **kwargs,
-            )
+            # If no uom is specified, fallback on the product uom
+            target_uom = uom or product.uom_id
 
             for rule in rules:
-                if rule._is_applicable_for(product, qty_to_consider):
+                if rule._is_applicable_for(product, quantity, uom=target_uom, **kwargs):
                     suitable_rule = rule
                     break
 
             if compute_price:
                 price = suitable_rule._compute_price(
-                    product, quantity, quantity_uom, date=date, currency=currency, **kwargs
+                    product, quantity, target_uom, date=date, currency=currency, **kwargs
                 )
             else:
                 # Skip price computation when only the rule is requested.
@@ -258,14 +250,6 @@ class ProductPricelist(models.Model):
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
-
-    def _compute_qty_to_consider(self, product, quantity, uom, **_kwargs):
-        """Compute quantity in product UoM because the min quantity on pricelist rules are specified
-        w.r.t. product default UoM."""
-        product_uom = product.uom_id
-        if uom != product_uom:
-            return uom._compute_quantity(quantity, product_uom, raise_if_failure=False)
-        return quantity
 
     # Multi pricelists price|rule computation
     def _price_get(self, product, quantity, **kwargs):
@@ -414,3 +398,34 @@ class ProductPricelist(models.Model):
             'type': 'ir.actions.client',
             'tag': 'generate_pricelist_report',
         }
+
+    def _get_related_uoms(self, product, is_product_tmpl):
+        """Return UoMs from pricelist rules applicable to the given product.
+
+        The method looks for pricelist items applied on:
+        - the product template (if ``is_product_tmpl`` is True),
+        - the product variant and/or its template (if False),
+        - global pricelist rules.
+
+        :param product: Product template or product variant.
+        :param bool is_product_tmpl: True if ``product`` is a template.
+        :return: UoMs defined on matching pricelist items.
+        :rtype: product.uom
+        """
+        if is_product_tmpl:
+            domain = (
+                Domain('applied_on', '=', '1_product')
+                & Domain('product_tmpl_id', '=', product.id)
+            )
+        else:
+            domain = (
+                Domain('applied_on', '=', '0_product_variant')
+                & Domain('product_id', '=', product.id)
+            ) | (
+                Domain('applied_on', '=', '1_product')
+                & Domain('product_tmpl_id', '=', product.product_tmpl_id.id)
+            )
+
+        domain = domain | Domain('applied_on', '=', '3_global')
+
+        return self.item_ids.filtered_domain(domain).mapped('uom_ids')

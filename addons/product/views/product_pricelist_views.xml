@@ -77,6 +77,13 @@
                                     <field name="name" string="Apply on"/>
                                     <field name="min_quantity"/>
                                     <field
+                                        name="uom_ids"
+                                        widget="many2many_tags"
+                                        invisible="display_applied_on != '1_product'"
+                                        groups="uom.group_uom"
+                                        colspan="4"
+                                    />
+                                    <field
                                         name="date_start"
                                         string="Validity"
                                         widget="daterange"

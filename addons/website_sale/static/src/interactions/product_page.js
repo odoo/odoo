@@ -25,6 +25,11 @@ export class ProductPage extends Interaction {
             't-on-change': this.onChangeImageAttribute,
         },
         '.o_variant_pills': { 't-on-click': this.onChangePillsAttribute },
+        '.o_packaging_button': {
+            't-on-mouseenter': this.onHoverPackagingButton,
+            't-on-mouseleave': this.onMouseLeavePackagingButton,
+            't-on-click': this.onMouseLeavePackagingButton,
+        },
     };
 
     start() {
@@ -176,6 +181,23 @@ export class ProductPage extends Interaction {
                 );
             }
         });
+    }
+
+    onHoverPackagingButton(ev) {
+        const parent = ev.target.closest('.js_product');
+        const currentPackagingPrice = this._getUoMPrice(parent);
+        const hoveredPackagingPrice = parseFloat(
+            ev.target.querySelector('input.o_packaging_input').dataset.packagingPrice
+        );
+        if (currentPackagingPrice !== hoveredPackagingPrice) {
+            parent.querySelector('p.o_packaging_price').querySelector('.oe_currency_value').textContent = this._priceToStr(hoveredPackagingPrice, false);
+            parent.querySelector('span.o_packaging_price').classList.remove('d-none');
+        }
+    }
+
+    onMouseLeavePackagingButton(ev) {
+        const parent = ev.target.closest('.js_product');
+        parent.querySelector('span.o_packaging_price').classList.add('d-none');
     }
 
     /**
@@ -348,6 +370,10 @@ export class ProductPage extends Interaction {
         }));
         this._onChangeCombination(ev, parent, combinationInfo);
         this._checkExclusions(parent, combination);
+    }
+
+    _getUoMPrice(element) {
+        return parseFloat(element.querySelector('input[name="uom_id"]:checked')?.dataset.packagingPrice);
     }
 
     /**
@@ -571,6 +597,11 @@ export class ProductPage extends Interaction {
             }
         }
 
+        if('packaging_prices' in combination) {
+            this._handlePackagingInfo(parent, combination);
+        }
+
+        // handle GMC tracking
         if ('product_tracking_info' in combination) {
             const product = document.querySelector('#product_detail');
             // Trigger an event to track variant changes in Google Analytics.
@@ -641,6 +672,21 @@ export class ProductPage extends Interaction {
         ));
 
         this.handleCustomValues(ev.target);
+    }
+
+    /**
+     * Update the packaging prices.
+     * @private
+     * @param {Element} parent
+     * @param {Object} combination
+     * */
+    _handlePackagingInfo(parent, combination) {
+        Object.entries(combination.packaging_prices).forEach(([uomId, price]) => {
+            const el = parent.querySelector(`input.o_packaging_input#uom-${uomId}`);
+            if (!el) return;
+
+            el.dataset.packagingPrice = price;
+        });
     }
 
     /**
