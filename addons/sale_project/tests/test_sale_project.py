@@ -1920,3 +1920,61 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(optional_product_line.project_id)
         optional_product_line.write({'product_uom_qty': 1})
         self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
+
+    def test_subtask_inherits_sale_line_from_template(self):
+        """Test that subtasks created from project template inherit sale_line_id from parent task."""
+
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template with Subtasks',
+        })
+        parent_task_template = self.env['project.task'].create({
+            'name': 'Parent Task Template',
+            'project_id': project_template.id,
+        })
+        self.env['project.task'].create([
+            {
+                'name': 'Subtask Template 1',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            },
+            {
+                'name': 'Subtask Template 2',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            }
+        ])
+
+        service_product = self.env['product.product'].create({
+            'name': 'Service with Project Template',
+            'standard_price': 20,
+            'list_price': 40,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': self.uom_hour.id,
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'project_template_id': project_template.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': service_product.id,
+            'product_uom_qty': 1,
+        })
+        sale_order.action_confirm()
+
+        created_project = sale_order_line.project_id
+        self.assertTrue(created_project, "A new project should have been created")
+
+        created_tasks = created_project.task_ids
+        parent_task = created_tasks.filtered(lambda t: not t.parent_id)
+        subtasks = created_tasks.filtered(lambda t: t.parent_id)
+
+        self.assertEqual(len(subtasks), 2, "Should have exactly two subtasks from template")
+        self.assertEqual(parent_task.sale_line_id, sale_order_line, "Parent task should have sale_line_id set")
+
+        for subtask in subtasks:
+            self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
