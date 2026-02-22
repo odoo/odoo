@@ -402,3 +402,29 @@ class TestPosMargin(TestPoSCommon):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.6)
 
         self.env.company.point_of_sale_update_stock_quantities = 'real'
+
+    def test_margin_of_refunded_orders(self):
+        """
+        Test the margin computation on a refunded order
+        """
+        product = self.create_product('Product', self.categ_basic, 10, 5)  # Sale price: $10 | Cost: $5
+
+        # Create order
+        self.open_new_session()
+        order = [self.create_ui_order_data([(product, 1)], customer=self.customer)]
+        self.env['pos.order'].sync_from_ui(order)
+        self.assertRecordValues(self.pos_session.order_ids, [
+            {'margin': 5.0, 'margin_percent': 0.5},
+        ])
+
+        # Refund & Margin Computation
+        refund_action = self.pos_session.order_ids.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+        context_make_payment = {"active_ids": refund.ids, "active_id": refund.id}
+        self.env['pos.make.payment'].with_context(context_make_payment).create({
+            'payment_method_id': self.cash_pm1.id,
+            'amount': refund.amount_total,
+        }).check()
+        self.assertRecordValues(refund, [
+            {'margin': -5.0, 'margin_percent': 0.5},
+        ])
