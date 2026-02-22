@@ -3079,14 +3079,9 @@ class MrpProduction(models.Model):
 
         return {**default_data, **new_default_data}
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            product_catalog[product.id] |= self._get_product_price_and_data(product)
-        return product_catalog
-
-    def _get_product_price_and_data(self, product):
-        return {'price': product.standard_price}
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        product_data = self._get_product_catalog_price_and_data(product)
+        return super()._get_product_catalog_product_data(product, **product_data, **kwargs)
 
     def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
         if not child_field:
@@ -3097,23 +3092,24 @@ class MrpProduction(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
-    def _update_order_line_info(self, product_id, quantity, *, child_field=False, **kwargs):
+    def _update_order_line_info(self, product, quantity, uom=False, *, child_field=False, **kwargs):
         if not child_field:
             return 0
-        entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)
+        entity = self[child_field].filtered(lambda line: line.product_id.id == product.id)
         if entity:
             if quantity != 0:
                 self._update_catalog_line_quantity(entity, quantity, **kwargs)
             else:
                 entity.unlink()
+                return self._get_product_catalog_price_and_data(product, price=product.standard_price)
         elif quantity > 0:
-            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, child_field=child_field, **kwargs)
+            new_line_vals = self._get_new_catalog_line_values(product.id, quantity, child_field=child_field, **kwargs)
             command = Command.create(new_line_vals)
             self.write({child_field: [command]})
-            new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product_id)[-1:]
+            new_line = self[child_field].filtered(lambda mv: mv.product_id.id == product.id)[-1:]
             self._update_catalog_line_quantity(new_line, quantity, **kwargs)
 
-        return self.env['product.product'].browse(product_id).standard_price
+        return {'price': product.standard_price}
 
     def _update_catalog_line_quantity(self, line, quantity, **kwargs):
         line.product_uom_qty = quantity

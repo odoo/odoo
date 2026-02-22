@@ -54,16 +54,13 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         return {}
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        """ Returns a dict containing the products' data. Those data are for products who aren't in
+    def _get_product_catalog_products_data(self, products):
+        """ Returns a dict containing the products' data. Those data are for products that aren't in
         the record yet. For products already in the record, see `_get_product_catalog_lines_data`.
 
-        For each product, its id is the key and the value is another dict with all needed data.
-        By default, the price is the only needed data but each model is free to add more data.
-        Must be overrided by each model using this mixin.
+        For each product, we call `_get_product_catalog_product_data` that sets every individual product's data
 
         :param products: Recordset of `product.product`.
-        :param dict kwargs: additional values given for inherited models.
         :rtype: dict
         :return: A dict with the following structure:
             {
@@ -72,18 +69,15 @@ class ProductCatalogMixin(models.AbstractModel):
                 'productType': string
                 'price': float
                 'uomDisplayName': string
+                'productUomDisplayName': string (optional)
                 'code': string (optional)
                 'readOnly': bool (optional)
             }
         """
-        return {
-            product.id: {
-                'productType': product.type,
-                'uomDisplayName': product.uom_id.display_name,
-                'code': product.code if product.code else '',
-            }
-            for product in products
-        }
+        catalog_info = {}
+        for product in products:
+            catalog_info[product.id] = self._get_product_catalog_product_data(product)
+        return catalog_info
 
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Returns products information to be shown in the catalog.
@@ -98,6 +92,7 @@ class ProductCatalogMixin(models.AbstractModel):
                 'productType': string
                 'price': float
                 'uomDisplayName': string
+                'productUomDisplayName': string (optional)
                 'code': string (optional)
                 'readOnly': bool (optional)
             }
@@ -115,9 +110,8 @@ class ProductCatalogMixin(models.AbstractModel):
 
         default_data = self._default_order_line_values(child_field)
         products = self.env['product.product'].browse(product_ids)
-        product_data = self._get_product_catalog_order_data(products, **kwargs)
-
-        for product_id, data in product_data.items():
+        products_data = self._get_product_catalog_products_data(products)
+        for product_id, data in products_data.items():
             if product_id in order_line_info:
                 continue
             order_line_info[product_id] = {**default_data, **data}
@@ -138,14 +132,99 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         return False
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(self, product, quantity, uom=False, **kwargs):
         """ Update the line information for a given product or create a new one if none exists yet.
         Must be overrided by each model using this mixin.
-        :param int product_id: The product, as a `product.product` id.
+        :param object product: The product, as a `product.product` instance.
         :param int quantity: The product's quantity.
         :param dict kwargs: additional values given for inherited models.
         :return: The unit price of the product, based on the pricelist of the
-                 purchase order and the quantity selected.
-        :rtype: float
+                 order and the quantity selected, the price per product unit
+                 and the uom display name only if a line has been removed.
+        :rtype: dict
         """
-        return 0
+        return {'price': 0}
+
+    def _get_product_catalog_price_and_data(self, product, **kwargs):
+        """
+            This function will return a dict containing the price of the product, UoM display name , and the seller's data if found.
+            :param match_seller: Decide whether to try to match with a seller or not
+            :param use_standard_price: Use standard price, if false list_price will be used for price.
+            :param date: date of the order/invoice
+            :param partner: partner set on the order/invoice
+            :param order: order/invoice
+            :rtype: dict
+            :return: A dict with the following structure:
+                {
+                    'price': float,
+                    'uomDisplayName': string,
+                    'uomFactor': float (optional),
+                    'productUomDisplayName': string (optional),
+                    'productUnitPrice': float (optional)
+                    'min_qty': float (optional)
+                }
+        """
+        self.ensure_one()
+        product.ensure_one()
+        uom_id = kwargs.get('uom_id', False)
+        product_infos = {
+            'price': kwargs.get('price', product.standard_price),
+            'uomDisplayName': (uom_id or product.uom_id).display_name,
+            'uomId': (uom_id or product.uom_id).id,
+        }
+        match_seller = kwargs.get('match_seller', False)
+        date = kwargs.get('date', False)
+        # Check if there is a price and a minimum quantity for the order's vendor.
+        if match_seller and hasattr(self, 'partner_id') and self.partner_id:
+            seller = product._select_seller(
+                partner_id=self.partner_id,
+                quantity=None,
+                date=date,
+                uom_id=uom_id,
+                ordered_by='min_qty',
+                params={'order_id': self, 'force_uom': kwargs.get('force_uom', False)}
+            )
+            if seller:
+                seller_price = seller.currency_id._convert(
+                    from_amount=seller.price_discounted,
+                    to_currency=product.currency_id,
+                    company=product.company_id,
+                    round=False
+                )
+                if seller.uom_id != product.uom_id:
+                    product_infos.update(
+                        uomFactor=seller.uom_id.factor / product.uom_id.factor,
+                        productUomDisplayName=product.uom_id.display_name,
+                        productUnitPrice=seller_price
+                    )
+
+                product_infos.update(
+                    price=product.uom_id._compute_price(seller_price, seller.uom_id),
+                    min_qty=seller.min_qty,
+                    uomId=seller.uom_id.id,
+                    uomDisplayName=seller.uom_id.display_name,
+                )
+        return product_infos
+
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        """
+            This function will return a dict containing all the product data.
+            To be overriden in any module that needs to add extra arguments.
+            :rtype: dict
+            :return: A dict with the following structure:
+                {
+                    'productType': float,
+                    'uomDisplayName': string,
+                    'productUomDisplayName': string (optional),
+                    'code': float (optional),
+                    'kwargs': dict (optional)
+                }
+        """
+        product_data = {
+            'productType': product.type,
+            'uomDisplayName': product.uom_id.display_name,
+            'productUomDisplayName': product.uom_id.display_name,
+            'code': product.code if product.code else '',
+            **kwargs,
+        }
+        return product_data

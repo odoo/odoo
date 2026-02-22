@@ -28,21 +28,23 @@ class ProductCatalogController(Controller):
         """
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._get_product_catalog_order_line_info(
-            product_ids, **kwargs,
+            product_ids=product_ids, **kwargs,
         )
 
     @route('/product/catalog/update_order_line_info', auth='user', type='jsonrpc')
-    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, **kwargs):
+    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, uom_id=False, **kwargs):
         """ Update order line information on a given order for a given product.
 
         :param string res_model: The order model.
         :param int order_id: The order id.
         :param int product_id: The product, as a `product.product` id.
         :return: The unit price price of the product, based on the pricelist of the order and
-                 the quantity selected.
-        :rtype: float
+                 the quantity selected, and the price per product unit.
+        :rtype: dict
         """
         order = request.env[res_model].browse(order_id)
+        product = request.env['product.product'].browse(product_id)
+        uom = request.env['uom.uom'].browse(uom_id)  # To allow unit change from catalog
         return order.with_company(order.company_id)._update_order_line_info(
-            product_id, quantity, **kwargs,
+            product, quantity, uom, **kwargs,
         )

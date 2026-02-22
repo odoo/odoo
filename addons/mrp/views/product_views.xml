@@ -63,7 +63,8 @@
             <field name="inherit_id" ref="product.product_view_search_catalog"/>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <filter name="goods" position="after">
+                <filter name="favorites" position="after">
+                    <separator/>
                     <filter string="In the BoM"
                             invisible="context.get('active_model') != 'mrp.bom.line'"
                             name="products_in_bom"

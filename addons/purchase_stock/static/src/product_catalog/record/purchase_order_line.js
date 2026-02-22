@@ -1,8 +1,9 @@
-import { ProductCatalogPurchaseOrderLine } from "@purchase/product_catalog/purchase_order_line/purchase_order_line";
+import { patch } from "@web/core/utils/patch";
+import { ProductCatalogOrderLine } from "@product/product_catalog/order_line/order_line";
 
-export class ProductCatalogPurchaseSuggestOrderLine extends ProductCatalogPurchaseOrderLine {
-    static props = {
-        ...ProductCatalogPurchaseOrderLine.props,
+patch(ProductCatalogOrderLine, {
+    props: {
+        ...ProductCatalogOrderLine.props,
         suggested_qty: { type: Number, optional: true },
-    };
-}
+    },
+});

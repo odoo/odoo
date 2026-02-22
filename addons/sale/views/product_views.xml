@@ -164,6 +164,11 @@
         <field name="model">product.product</field>
         <field name="arch" type="xml">
             <filter name="favorites" position="after">
+                <separator/>
+                <filter string="In the Order"
+                        invisible="context.get('active_model', '') != 'sale.order.line'"
+                        name="products_in_sale_order"
+                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
                 <filter
                     string="Previously bought"
                     name="products_previously_bought_by_customer"
@@ -172,10 +177,6 @@
                 />
             </filter>
             <filter name="goods" position="after">
-                <filter string="In the Order"
-                        invisible="context.get('active_model', '') != 'sale.order.line'"
-                        name="products_in_sale_order"
-                        domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
             </filter>
         </field>
     </record>

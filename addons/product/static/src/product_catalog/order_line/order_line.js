@@ -8,8 +8,11 @@ export class ProductCatalogOrderLine extends Component {
         productId: Number,
         quantity: Number,
         price: Number,
+        productUnitPrice: { type: Number, optional: true },
         productType: String,
+        uomId: { type: Number, optional: true },
         uomDisplayName: String,
+        productUomDisplayName: { type: String, optional: true },
         uomFactor: { type: Number, optional: true },
         code: { type: String, optional: true },
         readOnly: { type: Boolean, optional: true },
@@ -45,6 +48,14 @@ export class ProductCatalogOrderLine extends Component {
         return formatMonetary(this.props.price, { currencyId, digits });
     }
 
+    get productUnitPrice() {
+        const { currencyId, digits } = this.env;
+        if (!this.props.productUnitPrice) {
+            return this.price;
+        }
+        return formatMonetary(this.props.productUnitPrice, { currencyId, digits });
+    }
+
     get quantity() {
         const digits = [false, this.env.precision];
         const options = { digits, decimalPoint: ".", thousandsSep: "" };
@@ -53,5 +64,10 @@ export class ProductCatalogOrderLine extends Component {
 
     get showPrice() {
         return true;
+    }
+
+    get displayPriceByProductUoM() {
+        const { uomDisplayName, productUomDisplayName, productUnitPrice } = this.props;
+        return uomDisplayName != productUomDisplayName && productUnitPrice && productUomDisplayName;
     }
 }

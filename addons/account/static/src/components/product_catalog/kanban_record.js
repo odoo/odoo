@@ -20,9 +20,9 @@ patch(ProductCatalogKanbanRecord.prototype, {
         return super.orderLineComponent;
     },
 
-    _getUpdateQuantityAndGetPriceParams() {
+    _getUpdateQuantityAndGetProductInfoParams() {
         return {
-            ...super._getUpdateQuantityAndGetPriceParams(),
+            ...super._getUpdateQuantityAndGetProductInfoParams(),
             section_id: this.env.searchModel.selectedSection.sectionId || false,
         };
     },

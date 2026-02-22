@@ -13,7 +13,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     setup() {
         super.setup();
-        this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
+        this.debouncedUpdateQuantity = useDebounced(this._updateQuantityAndSetProductInfo, 500, {
             execBeforeUnmount: true,
         });
 
@@ -58,23 +58,33 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
-    async _updateQuantity() {
-        const price = await this._updateQuantityAndGetPrice();
-        this.productCatalogData.price = parseFloat(price);
+    async _updateQuantityAndSetProductInfo() {
+        const { price, productUnitPrice, uomDisplayName } =
+            await this._updateQuantityAndGetProductInfo();
+        this.productCatalogData.price = price ? parseFloat(price) : 0.0;
+        // To update the productUnitPrice, if a match happens with another seller (if seller exists)
+        this.productCatalogData.productUnitPrice = productUnitPrice
+            ? parseFloat(productUnitPrice)
+            : this.productCatalogData.price;
+        // Reset to original unit at deletion.
+        this.productCatalogData.uomDisplayName = uomDisplayName
+            ? uomDisplayName
+            : this.productCatalogData.uomDisplayName;
     }
 
-    _updateQuantityAndGetPrice() {
-        return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPriceParams());
+    _updateQuantityAndGetProductInfo() {
+        return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetProductInfoParams());
     }
 
-    _getUpdateQuantityAndGetPriceParams() {
+    _getUpdateQuantityAndGetProductInfoParams() {
         return {
             order_id: this.env.orderId,
             product_id: this.env.productId,
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
-        }
+            uom_id: this.productCatalogData.uomId,
+        };
     }
 
     //--------------------------------------------------------------------------

@@ -2293,21 +2293,27 @@ class SaleOrder(models.Model):
 
     # === CATALOG === #
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        pricelist = self.pricelist_id._get_products_price(
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        price = self.pricelist_id._get_product_price(
+            product=product,
             quantity=1.0,
-            products=products,
             currency=self.currency_id,
             date=self.date_order,
             **kwargs,
         )
-        res = super()._get_product_catalog_order_data(products, **kwargs)
+        #  start_date and end_date are only needed within the pricelist and
+        #  shouldn't be returned to the catalog
+        if kwargs.get('start_date') is not None and kwargs.get('end_date') is not None:
+            del kwargs['start_date']
+            del kwargs['end_date']
         has_warning_group = self.env.user.has_group('sale.group_warning_sale')
-        for product in products:
-            res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn_msg and has_warning_group:
-                res[product.id]['warning'] = product.sale_line_warn_msg
-        return res
+        product_data = {
+            'price': price,
+            'productUnitPrice': price,
+        }
+        if product.sale_line_warn_msg and has_warning_group:
+            product_data.update(warning=product.sale_line_warn_msg)
+        return super()._get_product_catalog_product_data(product, **product_data, **kwargs)
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
@@ -2331,7 +2337,7 @@ class SaleOrder(models.Model):
         return 'order_id'
 
     def _update_order_line_info(
-        self, product_id, quantity, *, section_id=False, child_field='order_line', **kwargs
+        self, product, quantity, uom=False, *, section_id=False, child_field='order_line', **kwargs
     ):
         """ Update sale order line information for a given product or create a
         new one if none exists yet.
@@ -2339,12 +2345,13 @@ class SaleOrder(models.Model):
         :param int quantity: The quantity selected in the catalog.
         :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
-                 sale order and the quantity selected.
-        :rtype: float
+                 sale order and the quantity selected, the price per product unit
+                 and the uom display name only if a line has been removed.
+        :rtype: dict
         """
         request.update_context(catalog_skip_tracking=True)
         sol = self.order_line.filtered(
-            lambda l: l.product_id.id == product_id
+            lambda l: l.product_id.id == product.id
             and l.get_parent_section_line().id == section_id,
         )
         if sol:
@@ -2359,26 +2366,29 @@ class SaleOrder(models.Model):
                     **kwargs,
                 )
                 sol.unlink()
-                return price_unit
+                return self._get_product_catalog_price_and_data(product, price=price_unit)
             else:
                 sol.product_uom_qty = 0
         elif quantity > 0:
             sol = self.env['sale.order.line'].create({
                 'order_id': self.id,
-                'product_id': product_id,
+                'product_id': product.id,
                 'product_uom_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
         else:  # quantity of 0, no line to update, return defaut pricelist price
-            return self.pricelist_id._get_product_price(
-                product=self.env['product.product'].browse(product_id),
-                quantity=1.0,
-                currency=self.currency_id,
-                date=self.date_order,
-                **kwargs,
-            )
+            return {
+                'price': self.pricelist_id._get_product_price(
+                    product=product,
+                    quantity=1.0,
+                    currency=self.currency_id,
+                    date=self.date_order,
+                    **kwargs,
+                )
+            }
 
-        return sol._get_discounted_price()
+        discounted_price = sol._get_discounted_price()
+        return {'price': discounted_price, 'productUnitPrice': sol.product_uom_id._compute_price(discounted_price, sol.product_id.uom_id)}
 
     # === Product Documents === #
 

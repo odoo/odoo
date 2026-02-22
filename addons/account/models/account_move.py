@@ -2886,39 +2886,14 @@ class AccountMove(models.Model):
         new_default_data = self.env['account.move.line']._get_product_catalog_lines_data()
         return {**default_data, **new_default_data}
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            product_catalog[product.id] |= self._get_product_price_and_data(product)
-        return product_catalog
-
-    def _get_product_price_and_data(self, product):
-        """
-            This function will return a dict containing the price of the product. If the product is a sale document then
-            we return the list price (which is the "Sales Price" in a product) otherwise we return the standard_price
-            (which is the "Cost" in a product).
-            In case of a purchase document, it's possible that we have special price for certain partner.
-            We will check the sellers set on the product and update the price and min_qty for it if needed.
-        """
-        self.ensure_one()
-        product_infos = {'price': product.list_price if self.is_sale_document() else product.standard_price}
-
-        # Check if there is a price and a minimum quantity for the order's vendor.
-        if self.is_purchase_document() and self.partner_id:
-            seller = product._select_seller(
-                partner_id=self.partner_id,
-                quantity=None,
-                date=self.invoice_date,
-                uom_id=product.uom_id,
-                ordered_by='min_qty',
-                params={'order_id': self}
-            )
-            if seller:
-                product_infos.update(
-                    price=seller.price,
-                    min_qty=seller.min_qty,
-                )
-        return product_infos
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        price = product.standard_price if self.is_purchase_document() else product.lst_price
+        product_data = self._get_product_catalog_price_and_data(
+            product,
+            price=price,
+            date=self.invoice_date,
+        )
+        return super()._get_product_catalog_product_data(product, **product_data, **kwargs)
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
@@ -2938,7 +2913,7 @@ class AccountMove(models.Model):
         return grouped_lines
 
     def _update_order_line_info(
-        self, product_id, quantity, *, section_id=False, child_field='line_ids', **kwargs
+        self, product, quantity, uom=False, *, section_id=False, child_field='line_ids', **kwargs
     ):
         """ Update account_move_line information for a given product or create a
         new one if none exists yet.
@@ -2946,33 +2921,46 @@ class AccountMove(models.Model):
         :param int quantity: The quantity selected in the catalog
         :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
-                 sale order and the quantity selected.
-        :rtype: float
+                 sale order or purchase order and the quantity selected, the price per product unit
+                 and the uom display name only if a line has been removed.
+        :rtype: dict
         """
         move_line = self.line_ids.filtered(
-            lambda line: line.product_id.id == product_id
+            lambda line: line.product_id.id == product.id
             and line.get_parent_section_line().id == section_id,
         )
         if move_line:
             if quantity != 0:
                 move_line.quantity = quantity
             elif self.state in {'draft', 'sent'}:
-                price_unit = self._get_product_price_and_data(move_line.product_id)['price']
                 # The catalog is designed to allow the user to select products quickly.
                 # Therefore, sometimes they may select the wrong product or decide to remove
                 # some of them from the quotation. The unlink is there for that reason.
                 move_line.unlink()
-                return price_unit
+                price = product.standard_price if self.is_purchase_document() else product.lst_price
+                product_data = self._get_product_catalog_price_and_data(
+                    product,
+                    price=price,
+                )
+                return product_data
             else:
                 move_line.quantity = 0
         elif quantity > 0:
             move_line = self.env['account.move.line'].create({
                 'move_id': self.id,
                 'quantity': quantity,
-                'product_id': product_id,
+                'product_id': product.id,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-        return move_line.price_unit
+
+        price = price_per_product_unit = move_line.price_unit
+        uom_display_name = product.uom_id
+        if move_line.product_uom_id:  # Avoid sending an empty uom if a product is added and removed quickly
+            price_per_product_unit = move_line.product_uom_id._compute_price(price, move_line.product_id.uom_id)
+            # Only for accounting, since the uom is taken from the seller but the rest of
+            # the data is standard, so this is to make sure the correct unit is shown regardless.
+            uom_display_name = move_line.product_uom_id.display_name
+        return {'price': price, 'productUnitPrice': price_per_product_unit, 'uomDisplayName': uom_display_name}
 
     def _is_readonly(self):
         """

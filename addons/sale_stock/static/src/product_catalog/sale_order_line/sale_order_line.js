@@ -1,12 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
 import { ProductCatalogOrderLine } from "@product/product_catalog/order_line/order_line";
+import { patch } from "@web/core/utils/patch";
+
+patch(ProductCatalogOrderLine, {
+    props: {
+        ...ProductCatalogOrderLine.props,
+        deliveredQty: { type: Number, optional: true },
+    },
+});
 
 export class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
-    static props = {
-        ...ProductCatalogOrderLine.props,
-        deliveredQty: Number,
-    }
-
     get disableRemove() {
         return this.props.quantity === this.props.deliveredQty;
     }
