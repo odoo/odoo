@@ -1,3 +1,5 @@
+from lxml import etree
+
 from odoo import Command
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
 try:
@@ -524,3 +526,58 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
 
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount_upsell')
+
+    def test_invoice_discount_rounding(self):
+        tax_21 = self.percent_tax(21.0)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=price_unit,
+                    quantity=quantity,
+                    discount=discount,
+                    tax_ids=tax_21,
+                )
+                for quantity, price_unit, discount in (
+                        (3, 41.33, 6.250),
+                        (1, 27.05, 20.31),
+                        (1, 39.30, 6.250),
+                        (1, 39.90, 6.250),
+                        (2, 28.28, 6.250),
+                        (1, 35.97, 6.250),
+                        (1, 33.33, 6.250),
+                        (2, 30.51, 6.250),
+                        (1, 36.37, 6.250),
+                        (2, 35.72, 6.250),
+                        (6, 36.75, 6.250),
+                        (110, 26.84, 9.09),
+                )
+            ],
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        root = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+
+        # Execute check https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/PEPPOL-EN16931-R120/
+        # on all lines
+
+        # Invoice line net amount MUST equal (Invoiced quantity * (Item net price/item price base quantity) + Sum of invoice line charge amount - sum of invoice line allowance amount
+        # /ubl-invoice:Invoice[1]/cac:InvoiceLine[12]
+        # u:slack($lineExtensionAmount, ($quantity * ($priceAmount div $baseQuantity)) + $chargesTotal - $allowancesTotal, 0.02)
+
+        for invoice_line_node in root.findall("./{*}InvoiceLine"):
+            expected = (
+                float(
+                    invoice_line_node.find("./{*}InvoicedQuantity").text
+                )
+                * float(
+                    invoice_line_node.find("./{*}Price/{*}PriceAmount").text
+                )
+                - float(
+                    invoice_line_node.find("./{*}AllowanceCharge/{*}Amount").text
+                )
+            )
+            amount = float(invoice_line_node.find("./{*}LineExtensionAmount").text)
+            # Allow for 2 cents of slack plus a python float representation artefact
+            self.assertAlmostEqual(amount, expected, delta=0.02000001)
