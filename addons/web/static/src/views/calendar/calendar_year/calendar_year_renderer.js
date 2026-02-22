@@ -36,6 +36,13 @@ export class CalendarYearRenderer extends Component {
 
         useEffect(() => {
             this.updateSize();
+
+            const observer = new ResizeObserver(() => {
+                this.updateSize();
+            });
+            observer.observe(this.rootRef.el);
+
+            return () => observer.disconnect(); // clean up on destroy
         });
     }
 
@@ -135,8 +142,15 @@ export class CalendarYearRenderer extends Component {
         }
     }
     updateSize() {
+        // Dynamically set the height of the root container
         const height = window.innerHeight - this.rootRef.el.getBoundingClientRect().top;
         this.rootRef.el.style.height = `${height}px`;
+
+        for (const fc of Object.values(this.fcs)) {
+            if (fc.api && typeof fc.api.updateSize === "function") {
+                fc.api.updateSize();
+            }
+        }
     }
 
     onDateClick(info) {
