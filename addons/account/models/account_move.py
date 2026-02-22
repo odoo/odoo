@@ -658,6 +658,7 @@ class AccountMove(models.Model):
         help="Is the move being sent asynchronously",
         compute='_compute_is_being_sent'
     )
+    event_process_ids = fields.One2many(comodel_name="account.move.event.process", inverse_name="move_id")
 
     move_sent_values = fields.Selection(
         selection=[
@@ -707,7 +708,6 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    sending_data = fields.Json(copy=False)
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -808,10 +808,10 @@ class AccountMove(models.Model):
             else:
                 move.invoice_user_id = False
 
-    @api.depends('sending_data')
+    @api.depends('event_process_ids')
     def _compute_is_being_sent(self):
         for move in self:
-            move.is_being_sent = bool(move.sending_data)
+            move.is_being_sent = bool(move.event_process_ids.filtered(lambda ep: ep.event_code == 'account_move_send'))
 
     @api.depends('is_move_sent')
     def _compute_move_sent_values(self):
@@ -5312,6 +5312,17 @@ class AccountMove(models.Model):
                     name += f', {format_date(self.env, self.date)}'
         return name + (f" ({shorten(self.ref, width=50)})" if show_ref and self.ref else '')
 
+    def _get_move_process_event_data(self):
+        self.ensure_one()
+        if event := self.event_process_ids.filtered(lambda e: e.state == 'process'):
+            return event.data
+        return {}
+
+    def _update_move_process_event_data(self, vals):
+        self.ensure_one()
+        event = self.event_process_ids.filtered(lambda e: e.state == 'process')
+        event.data.update(vals)
+
     def _get_reconciled_amls(self):
         """Helper used to retrieve the reconciled move lines on this journal entry"""
         reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
@@ -6282,7 +6293,6 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.state = 'draft'
-        self.sending_data = False
 
         self._detach_attachments()
 
@@ -6470,23 +6480,18 @@ class AccountMove(models.Model):
         """ Process invoices generation and sending asynchronously.
         :param job_count: maximum number of jobs to process if specified.
         """
-        domain = [
-            ('sending_data', '!=', False),
-            ('state', '=', 'posted'),
-        ]
-        to_process = self.search(
-            domain,
-            order='date asc, invoice_date asc, sequence_number asc, id asc',
-            limit=job_count)
-        to_process.try_lock_for_update()
-        if not to_process:
-            return
+        AccountMoveSend = self.env['account.move.send']
+        events = self.env['account.move.event.process'].get_batch_to_process('account_move_send', batch_size=job_count)
+        to_process = events.filtered(lambda event: AccountMoveSend._can_process_event_account_move_send(
+            event.move_id,
+            AccountMoveSend._get_default_sending_methods(event.move_id),
+        ))
+        if to_process:
+            AccountMoveSend._generate_and_send_invoices(to_process.move_id, from_cron=True)
 
-        self.env['account.move.send']._generate_and_send_invoices(
-            to_process,
-            from_cron=True,
-        )
-        self.env['ir.cron']._commit_progress(len(to_process), remaining=self.search_count(domain))
+        to_retry = to_process.filtered(lambda event: event.data.get('error', {}).get('retry'))
+        to_retry.state = 'new'
+        (events - to_retry).unlink()
 
     # -------------------------------------------------------------------------
     # HELPER METHODS

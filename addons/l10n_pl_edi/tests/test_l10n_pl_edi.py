@@ -434,7 +434,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     def l10n_pl_edi_generate_attachments(self, invoices, from_cron=False):
         moves_data = {
-            invoice: self.env['account.move.send']._get_default_sending_settings(invoice, from_cron=from_cron)
+            invoice: self.env['account.move.send']._get_default_sending_settings(invoice)
             for invoice in invoices
         }
         with patch('odoo.addons.l10n_pl_edi.models.account_move_send.AccountMoveSend._call_web_service_before_invoice_pdf_render'):

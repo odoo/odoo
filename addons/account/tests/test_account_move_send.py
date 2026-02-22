@@ -559,7 +559,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # Process.
         results = wizard.action_send_and_print()
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertFalse(invoice.sending_data)
+        self.assertFalse(invoice.event_process_ids)
 
         # The PDF has been successfully generated.
         pdf_report = invoice.invoice_pdf_report_id
@@ -578,7 +578,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             results = wizard.action_send_and_print()
             mocked_method.assert_not_called()
         self.assertEqual(results['type'], 'ir.actions.act_url')
-        self.assertFalse(invoice.sending_data)
+        self.assertFalse(invoice.event_process_ids)
+
         self.assertRecordValues(invoice, [{'invoice_pdf_report_id': pdf_report.id}])
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice._name),
@@ -924,7 +925,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             results = wizard.action_send_and_print(allow_fallback_pdf=True)
 
         self.assertEqual(results['type'], 'ir.actions.act_window_close')
-        self.assertFalse(invoice.sending_data)
+        self.assertFalse(invoice.event_process_ids)
 
         # The PDF is not generated but a proforma.
         self.assertFalse(invoice.invoice_pdf_report_id)
@@ -946,7 +947,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             results = wizard.action_send_and_print(allow_fallback_pdf=True)
 
         self.assertEqual(results['type'], 'ir.actions.act_window_close')
-        self.assertFalse(invoice.sending_data)
+        self.assertFalse(invoice.event_process_ids)
 
         # The PDF is generated even in case of error, but invoice_pdf_report_id is not set
         self.assertFalse(invoice.invoice_pdf_report_id)
@@ -1050,11 +1051,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoices = invoice_1_1 + invoice_1_2 + invoice_2_1 + invoice_2_2
         invoices = invoices.sudo()  # keep access after flush of the cron
         self.assertFalse(invoices.invoice_pdf_report_id)
-        self.assertTrue(all(invoice.sending_data for invoice in invoices))
+        self.assertTrue(all(inv.event_process_ids for inv in invoices))
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertTrue(all(invoice.invoice_pdf_report_id for invoice in invoices))
-        self.assertTrue(all(not invoice.sending_data for invoice in invoices))
+        self.assertFalse(invoices.event_process_ids)
 
     def test_cron_notifications(self):
         invoices_success = (
@@ -1081,9 +1082,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             if invoice.id in invoices_error.ids:
                 invoice_data['error'] = {'error_title': 'blblblbl'}
 
-        self.assertTrue(all(invoice.sending_data for invoice in invoices_success + invoices_error))
-        self.assertTrue(all(invoice.sending_data.get('author_partner_id') == sp_partner_1.id for invoice in invoices_success))
-        self.assertTrue(all(invoice.sending_data.get('author_partner_id') == user_2.partner_id.id for invoice in invoices_error))
+        self.assertTrue(all(inv.event_process_ids for inv in invoices_success + invoices_error))
+        self.assertTrue(all(e.data.get('author_partner_id') == sp_partner_1.id for e in invoices_success.event_process_ids))
+        self.assertTrue(all(e.data.get('author_partner_id') == user_2.partner_id.id for e in invoices_error.event_process_ids))
 
         #  reset bus
         self.env.cr.precommit.run()

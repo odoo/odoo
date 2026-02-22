@@ -27,7 +27,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         ])
 
     def generate_l10n_it_edi_send_attachments(self, invoices, from_cron=False):
-        moves_data = {invoice: self.env['account.move.send']._get_default_sending_settings(invoice, from_cron=from_cron) for invoice in invoices}
+        moves_data = {invoice: self.env['account.move.send']._get_default_sending_settings(invoice) for invoice in invoices}
         with patch('odoo.addons.l10n_it_edi.models.account_move_send.AccountMoveSend._call_web_service_after_invoice_pdf_render'):
             self.env['account.move.send']._generate_invoice_documents(moves_data)
 
@@ -47,7 +47,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2)
 
         # Asserts
-        self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
+        self.assertFalse((invoice1 + invoice2).event_process_ids)
         self.assertEqual(1, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertFalse(invoice1.l10n_it_edi_attachment_file)
@@ -73,7 +73,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2, sending_methods=['email'])
 
         # Asserts
-        self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
+        self.assertFalse((invoice1 + invoice2).event_process_ids)
         self.assertEqual(2, len(self.get_attachments(invoice1.id)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertTrue(invoice1.l10n_it_edi_attachment_file)
@@ -204,7 +204,13 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
     def test_l10n_it_edi_send_from_cron(self):
         invoices = self._create_invoice_it() + self._create_invoice_it()
-        invoices.sending_data = {'author_user_id': self.env.user.id, 'author_partner_id': self.env.user.partner_id.id}
+        self.env['account.move.event.process'].create([
+            {
+                'move_id': i.id,
+                'event_code': 'account_move_send',
+                'data': {'author_user_id': self.env.user.id, 'author_partner_id': self.env.user.partner_id.id},
+            } for i in invoices
+        ])
         self.generate_l10n_it_edi_send_attachments(invoices, from_cron=True)
 
         success = {'id_transaction': "SDI ID 1", 'signed': False, 'signed_data': False}

@@ -67,7 +67,6 @@ class AccountMove(models.Model):
         if any(move.nemhandel_move_state in {'processing', 'done'} for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to Nemhandel"))
         self.nemhandel_move_state = False
-        self.sending_data = False
 
     def action_send_and_print(self):
         for move in self:
