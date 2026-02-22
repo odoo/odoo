@@ -707,7 +707,6 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    sending_data = fields.Json(copy=False)
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -808,10 +807,9 @@ class AccountMove(models.Model):
             else:
                 move.invoice_user_id = False
 
-    @api.depends('sending_data')
     def _compute_is_being_sent(self):
         for move in self:
-            move.is_being_sent = bool(move.sending_data)
+            move.is_being_sent = bool(self.env['account.event.process'].get_record_active_event_data(move))
 
     @api.depends('is_move_sent')
     def _compute_move_sent_values(self):
@@ -6270,7 +6268,6 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.line_ids.analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
         self.state = 'draft'
-        self.sending_data = False
 
         self._detach_attachments()
 
@@ -6458,14 +6455,15 @@ class AccountMove(models.Model):
         """ Process invoices generation and sending asynchronously.
         :param job_count: maximum number of jobs to process if specified.
         """
-        domain = [
-            ('sending_data', '!=', False),
-            ('state', '=', 'posted'),
-        ]
-        to_process = self.search(
-            domain,
-            order='date asc, invoice_date asc, sequence_number asc, id asc',
-            limit=job_count)
+        events = self.env['account.event.process'].get_batch_to_process('account_move_send', batch_size=job_count)
+
+        moves_dict = {m.id: m for m in self.browse([e.res_id for e in events])}
+        to_process = self.env['account.move']
+        for e in events:
+            related_move = moves_dict.get(e.res_id)
+            if related_move and related_move.state == 'posted':
+                to_process += related_move
+
         to_process.try_lock_for_update()
         if not to_process:
             return
@@ -6474,7 +6472,8 @@ class AccountMove(models.Model):
             to_process,
             from_cron=True,
         )
-        self.env['ir.cron']._commit_progress(len(to_process), remaining=self.search_count(domain))
+
+        events.state = 'done'
 
     # -------------------------------------------------------------------------
     # HELPER METHODS

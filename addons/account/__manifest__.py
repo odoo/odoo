@@ -67,6 +67,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_portal_templates.xml',
         'views/report_payment_receipt_templates.xml',
         'data/service_cron.xml',
+        'data/account_event_process_cron.xml',
         'views/account_incoterms_view.xml',
         'data/account_incoterms_data.xml',
         'views/digest_views.xml',
