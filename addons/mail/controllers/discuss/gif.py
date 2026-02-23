@@ -15,12 +15,17 @@ _logger = logging.getLogger(__name__)
 
 
 class DiscussGifController(Controller):
-    def _request_gifs(self, endpoint):
+    def _request_gifs(self, endpoint, klipy=False):
         response = None
         try:
-            response = requests.get(
-                f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
-            )
+            if klipy:
+                response = requests.get(
+                    f"https://api.klipy.com/v2/{endpoint}", timeout=3
+                )
+            else:
+                response = requests.get(
+                    f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
+                )
             response.raise_for_status()
         except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
             _logger.error("Exceeded the request's maximum size for a searching term.")
@@ -38,7 +43,7 @@ class DiscussGifController(Controller):
         query_string = werkzeug.urls.url_encode(
             {
                 "q": search_term,
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "key": self._get_key(ir_config),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -48,7 +53,7 @@ class DiscussGifController(Controller):
                 "pos": position,
             }
         )
-        response = self._request_gifs(f"search?{query_string}")
+        response = self._request_gifs(f"search?{query_string}", klipy=self._is_klipy(ir_config))
         if response:
             return response.json()
 
@@ -60,7 +65,7 @@ class DiscussGifController(Controller):
             return
         query_string = werkzeug.urls.url_encode(
             {
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "key": self._get_key(ir_config),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -68,7 +73,7 @@ class DiscussGifController(Controller):
                 "country": country,
             }
         )
-        response = self._request_gifs(f"categories?{query_string}")
+        response = self._request_gifs(f"categories?{query_string}", klipy=self._is_klipy(ir_config))
         if response:
             return response.json()
 
@@ -80,18 +85,27 @@ class DiscussGifController(Controller):
             return
         request.env["discuss.gif.favorite"].create({"tenor_gif_id": tenor_gif_id})
 
+    def _is_klipy(self, ir_config):
+        return ir_config.get_str("discuss.tenor_api_key").startswith("KLIPY:")
+
+    def _get_key(self, ir_config):
+        key = ir_config.get_str("discuss.tenor_api_key")
+        if key.startswith("KLIPY:"):
+            key = key[len("KLIPY:"):]
+        return key
+
     def _gif_posts(self, ids):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
         query_string = werkzeug.urls.url_encode(
             {
-                "ids": ",".join(ids),
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "ids": ",".join(ids) or None,
+                "key": self._get_key(ir_config),
                 "client_key": request.env.cr.dbname,
                 "media_filter": "tinygif",
             }
         )
-        response = self._request_gifs(f"posts?{query_string}")
+        response = self._request_gifs(f"posts?{query_string}", klipy=self._is_klipy(ir_config))
         if response:
             return response.json()["results"]
 
@@ -104,6 +118,8 @@ class DiscussGifController(Controller):
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
+        if not tenor_gif_ids.mapped("tenor_gif_id"):
+            return ([[]])
         return (self._gif_posts(tenor_gif_ids.mapped("tenor_gif_id")) or [],)
 
     @route("/discuss/gif/remove_favorite", type="jsonrpc", auth="user")

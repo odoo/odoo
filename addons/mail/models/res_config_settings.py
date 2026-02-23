@@ -63,7 +63,8 @@ class ResConfigSettings(models.TransientModel):
     tenor_api_key = fields.Char(
         'Tenor API key',
         config_parameter='discuss.tenor_api_key',
-        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup\n"
+        "/!\\ Tenor shuts down June 30, please provide Klipy API instead https://klipy.com/migrate with prefix 'KLIPY:' (without quotes)",
     )
     use_google_translate_api = fields.Boolean(
         "Use Google Translate API",
