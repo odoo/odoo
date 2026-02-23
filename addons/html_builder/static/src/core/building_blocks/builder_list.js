@@ -42,6 +42,7 @@ export class BuilderList extends Component {
         forbidLastItemRemoval: { type: Boolean, optional: true },
         isEditable: { type: Boolean, optional: true },
         limit: { type: Number, optional: true },
+        disableLastCheckedCheckbox: { type: Boolean, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -54,6 +55,7 @@ export class BuilderList extends Component {
         forbidLastItemRemoval: false,
         isEditable: true,
         limit: 50,
+        disableLastCheckedCheckbox: false,
     };
     static components = { BuilderComponent, SelectMenu };
 
@@ -268,5 +270,31 @@ export class BuilderList extends Component {
         } else {
             this.preview(items);
         }
+    }
+
+    /**
+     * Checks if the checkbox for the given item is the only one
+     * still checked for the given property, and should be disabled
+     * to prevent unchecking all options.
+     *
+     * @param {Array} items - List of all items
+     * @param {Object} currentItem - Item to check
+     * @param {string} propertyName - Property name to check against
+     * @returns {boolean} True if this is the last checked checkbox
+     */
+    isLastCheckboxChecked(items, currentItem, propertyName) {
+        if (!this.props.disableLastCheckedCheckbox || !currentItem[propertyName]) {
+            return false;
+        }
+        let activeCount = 0;
+        for (const item of items) {
+            if (item[propertyName]) {
+                activeCount++;
+            }
+            if (activeCount > 1) {
+                return false;
+            }
+        }
+        return true;
     }
 }

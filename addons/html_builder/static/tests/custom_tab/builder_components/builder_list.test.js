@@ -491,3 +491,20 @@ test("loads more items when the last row intersects", async () => {
     await contains(".we-bg-options-container .o_we_table_wrapper").scroll({ top: 9999 });
     expect(".we-bg-options-container .o_row_draggable").toHaveCount(150);
 });
+
+test("should disable last checked checkbox", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                itemShape="{ value: 'boolean' }"
+                default="{'value':'true'}"
+                disableLastCheckedCheckbox="true"
+            />`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    expect(".we-bg-options-container tr .o-checkbox input").toHaveAttribute("disabled");
+});

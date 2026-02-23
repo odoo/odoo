@@ -26,6 +26,7 @@
                                                     t-att-checked="item[entry[0]]"
                                                     t-att-data-id="item._id"
                                                     t-on-click="this.onChange"
+                                                    t-att-disabled="isLastCheckboxChecked(items, item, entry[0])"
                                                 />
                                             </div>
                                         </t>
