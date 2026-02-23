@@ -43,7 +43,7 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
             UpdateSocialMediaLinksAction,
             UpdateTitlePositionAction,
         },
-        so_content_addition_selector: [".s_social_media"],
+        so_content_addition_selectors: [".s_social_media"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         content_editable_selectors: [
             ".s_social_media a > i",

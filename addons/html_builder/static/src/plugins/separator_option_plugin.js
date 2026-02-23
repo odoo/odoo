@@ -5,12 +5,13 @@ export class SeparatorOptionPlugin extends Plugin {
     static id = "separatorOption";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_hr",
             dropNear: "p, h1, h2, h3, blockquote, .s_hr",
         },
-        so_content_addition_selector: [".s_hr"],
-        is_movable_selector: { selector: ".s_hr", direction: "vertical" },
+        so_content_addition_selectors: [".s_hr"],
+        is_movable_selectors: { selector: ".s_hr", direction: "vertical" },
     };
 }
+
 registry.category("builder-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);

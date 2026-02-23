@@ -5,11 +5,11 @@ export class TimelineListOptionPlugin extends Plugin {
     static id = "timelineListOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_timeline_list_row",
             dropNear: ".s_timeline_list_row",
         },
-        is_movable_selector: { selector: ".s_timeline_list_row", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_timeline_list_row", direction: "vertical" },
     };
 }
 

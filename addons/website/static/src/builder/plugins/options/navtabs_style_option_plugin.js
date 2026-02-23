@@ -25,13 +25,13 @@ export class NavTabsStyleOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        is_unremovable_selector: ".nav-item",
+        is_unremovable_selectors: ".nav-item",
         is_node_splittable_predicates: (node) => {
             if (this.isUnsplittable(node)) {
                 return false;
             }
         },
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_tabs, .s_tabs_images",
             excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
         },

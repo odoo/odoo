@@ -6,7 +6,7 @@ export class accordionOptionPlugin extends Plugin {
     static id = "accordionOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        so_content_addition_selector: [".s_accordion"],
+        so_content_addition_selectors: [".s_accordion"],
         builder_actions: {
             DefineCustomIconAction,
             CustomAccordionIconAction,

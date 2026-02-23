@@ -29,7 +29,7 @@ export class TableOfContentOptionPlugin extends Plugin {
         },
         normalize_processors: this.normalize.bind(this),
         // Prevent dropping a table of content inside another table of content.
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_table_of_content",
             excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
         },
@@ -43,7 +43,7 @@ export class TableOfContentOptionPlugin extends Plugin {
                 return false;
             }
         },
-        is_unremovable_selector: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
+        is_unremovable_selectors: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
         content_not_editable_selectors: ".s_table_of_content_navbar",
     };
 

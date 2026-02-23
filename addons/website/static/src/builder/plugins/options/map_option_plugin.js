@@ -8,7 +8,7 @@ export class MapOptionPlugin extends Plugin {
     static id = "mapOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        so_content_addition_selector: [".s_map"],
+        so_content_addition_selectors: [".s_map"],
         builder_actions: {
             MapUpdateSrcAction,
             MapDescriptionAction,

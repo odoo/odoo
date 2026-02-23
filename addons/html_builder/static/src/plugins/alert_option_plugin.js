@@ -10,7 +10,7 @@ export class AlertOptionPlugin extends Plugin {
         builder_actions: {
             AlertIconAction,
         },
-        so_content_addition_selector: [".s_alert"],
+        so_content_addition_selectors: [".s_alert"],
     };
 }
 

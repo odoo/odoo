@@ -7,7 +7,7 @@ export class AddToCartOptionPlugin extends Plugin {
     static id = "addToCartOption";
     static dependencies = ["builderActions"];
     resources = {
-        so_content_addition_selector: [".s_add_to_cart"],
+        so_content_addition_selectors: [".s_add_to_cart"],
         builder_actions: {
             ProductToCartAction,
             VariantToCartAction,

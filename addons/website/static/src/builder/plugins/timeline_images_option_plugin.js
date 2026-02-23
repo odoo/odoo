@@ -5,11 +5,11 @@ export class TimelineImagesOptionPlugin extends Plugin {
     static id = "timelineImagesOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_timeline_images_row",
             dropNear: ".s_timeline_images_row",
         },
-        is_movable_selector: { selector: ".s_timeline_images_row", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_timeline_images_row", direction: "vertical" },
     };
 }
 

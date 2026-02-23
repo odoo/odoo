@@ -6,7 +6,7 @@ import { renderToFragment } from "@web/core/utils/render";
 export class NewsletterSubscribeCommonOptionPlugin extends Plugin {
     static id = "newsletterSubscribeCommonOption";
     resources = {
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector: ".js_subscribe",
                 dropNear: "p, h1, h2, h3, blockquote, .card",
@@ -14,7 +14,7 @@ export class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             },
         ],
         on_snippet_dropped_handlers: withSequence(-1, (args) => this.onSnippetDropped(args)),
-        is_unremovable_selector: ".js_subscribe_btn",
+        is_unremovable_selectors: ".js_subscribe_btn",
         immutable_link_selectors: [".js_subscribe_btn"],
     };
 

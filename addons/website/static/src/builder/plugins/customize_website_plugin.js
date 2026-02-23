@@ -1,4 +1,8 @@
-import { isCSSVariable, setBuilderCSSVariables, getBgImageURLFromEl } from "@html_builder/utils/utils_css";
+import {
+    isCSSVariable,
+    setBuilderCSSVariables,
+    getBgImageURLFromEl,
+} from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
@@ -74,7 +78,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             RemoveBodyBgImageAction,
             BodyBgPositionOverlayAction,
         },
-        color_combination_getters: withSequence(5, (el, actionParam) => {
+        color_combination_providers: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
             if (combination) {
                 const style = getHtmlStyle(this.document);

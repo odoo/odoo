@@ -132,7 +132,7 @@ export class SocialMediaOptionPlugin extends Plugin {
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        so_content_addition_selector: [".s_share", ".s_social_media"],
+        so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,

@@ -6,18 +6,20 @@ export class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_product_catalog_dish",
             dropNear: ".s_product_catalog_dish",
         },
-        is_movable_selector: { selector: ".s_product_catalog_dish", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_product_catalog_dish", direction: "vertical" },
         // Protect pricelist item, price, and description blocks from being
         // split/merged by the delete plugin.
         is_node_splittable_predicates: (node) => {
-            if (isElement(node) &&
+            if (
+                isElement(node) &&
                 node.matches(
                     ".s_product_catalog_dish, .s_product_catalog_dish_price, .s_product_catalog_dish_description"
-                )) {
+                )
+            ) {
                 return false;
             }
         },

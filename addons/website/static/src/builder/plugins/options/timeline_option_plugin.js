@@ -12,7 +12,7 @@ export class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
         },
@@ -20,7 +20,7 @@ export class TimelineOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        is_movable_selector: { selector: ".s_timeline_row", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_timeline_row", direction: "vertical" },
     };
 
     setup() {

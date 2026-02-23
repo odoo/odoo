@@ -25,7 +25,7 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
 /**
- * @typedef {(() => void)[]} on_mobile_preview_clicked
+ * @typedef {(() => void)[]} on_mobile_preview_clicked_handlers
  * @typedef {(() => void)[]} on_dom_updated_handlers
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
  */
@@ -131,7 +131,7 @@ export class Builder extends Component {
                     on_dom_updated_handlers: () => {
                         this.triggerDomUpdated();
                     },
-                    on_mobile_preview_clicked: withSequence(20, () => {
+                    on_mobile_preview_clicked_handlers: withSequence(20, () => {
                         this.triggerDomUpdated();
                     }),
                     on_will_save_handlers: () => {
@@ -320,7 +320,7 @@ export class Builder extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        this.editor.resources["on_mobile_preview_clicked"].forEach((handler) => handler());
+        this.editor.resources["on_mobile_preview_clicked_handlers"].forEach((handler) => handler());
     }
 
     updateInvisibleEls(isMobile = this.props.isMobile) {

@@ -173,7 +173,7 @@ export class FormOptionPlugin extends Plugin {
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
         },
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector: ".s_website_form",
                 excludeAncestor: "form",
@@ -185,10 +185,10 @@ export class FormOptionPlugin extends Plugin {
                 dropLockWithin: "form",
             },
         ],
-        so_content_addition_selector: [".s_website_form"],
+        so_content_addition_selectors: [".s_website_form"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
-        is_unremovable_selector: ".s_website_form_send, .s_website_form_submit",
+        is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
         immutable_link_selectors: [".s_website_form_send"],
     };
     setup() {

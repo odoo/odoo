@@ -19,7 +19,7 @@ export class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        so_content_addition_selector: [".s_countdown"],
+        so_content_addition_selectors: [".s_countdown"],
         builder_actions: {
             SetEndActionAction,
             PreviewEndMessageAction,

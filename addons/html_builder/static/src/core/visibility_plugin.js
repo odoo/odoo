@@ -30,7 +30,10 @@ export class VisibilityPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
+        on_mobile_preview_clicked_handlers: withSequence(
+            10,
+            this.onMobilePreviewClicked.bind(this)
+        ),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
         clean_for_save_processors: this.cleanForSaveVisibility.bind(this),

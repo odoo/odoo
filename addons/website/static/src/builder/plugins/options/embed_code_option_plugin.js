@@ -10,7 +10,7 @@ export class EmbedCodeOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        so_content_addition_selector: [".s_embed_code"],
+        so_content_addition_selectors: [".s_embed_code"],
         builder_actions: {
             EditCodeAction,
         },

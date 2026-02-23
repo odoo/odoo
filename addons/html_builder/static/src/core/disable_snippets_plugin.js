@@ -10,14 +10,17 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class DisableSnippetsPlugin extends Plugin {
     static id = "disableSnippets";
-    static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selector"];
+    static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selectors"];
     static shared = ["disableUndroppableSnippets"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_removed_handlers: this.disableUndroppableSnippets.bind(this),
         on_undone_handlers: this.disableUndroppableSnippets.bind(this),
         on_redone_handlers: this.disableUndroppableSnippets.bind(this),
-        on_mobile_preview_clicked: withSequence(20, this.disableUndroppableSnippets.bind(this)),
+        on_mobile_preview_clicked_handlers: withSequence(
+            20,
+            this.disableUndroppableSnippets.bind(this)
+        ),
     };
 
     setup() {
@@ -136,7 +139,7 @@ export class DisableSnippetsPlugin extends Plugin {
      */
     getDropAreas(editableAreaEls, rootEl) {
         const dropAreasBySelector = [];
-        this.getResource("dropzone_selector").forEach((dropzoneSelector) => {
+        this.getResource("dropzone_selectors").forEach((dropzoneSelector) => {
             const {
                 selector,
                 exclude = false,

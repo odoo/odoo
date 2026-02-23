@@ -25,7 +25,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
-    import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_getters, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
+    import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_providers, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_items } from "@html_editor/main/font/font_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
@@ -46,7 +46,7 @@ declare module "plugins" {
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
-    import { can_display_toolbar_predicates, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
+    import { toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
     import { CollaborationShared, on_external_history_step_added_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
@@ -193,7 +193,6 @@ declare module "plugins" {
         triple_click_overrides: triple_click_overrides;
 
         // Predicates
-        can_display_toolbar_predicates: can_display_toolbar_predicates;
         has_format_predicates: has_format_predicates;
         is_char_tangible_for_keyboard_navigation_predicates: is_char_tangible_for_keyboard_navigation_predicates;
         is_empty_link_legit_predicates: is_empty_link_legit_predicates;
@@ -235,7 +234,7 @@ declare module "plugins" {
 
         // Providers
         closest_savable_providers: closest_savable_providers;
-        color_combination_getters: color_combination_getters;
+        color_combination_providers: color_combination_providers;
         content_editable_providers: content_editable_providers;
         content_not_editable_providers: content_not_editable_providers;
         feff_providers: feff_providers;

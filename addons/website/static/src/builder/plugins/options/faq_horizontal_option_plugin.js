@@ -5,7 +5,7 @@ export class FaqHorizontalOptionPlugin extends Plugin {
     static id = "faqHorizontalOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_faq_horizontal",
             excludeAncestor: ".s_table_of_content",
         },

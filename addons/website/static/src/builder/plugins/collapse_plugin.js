@@ -8,13 +8,13 @@ export class CollapsePlugin extends Plugin {
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector: ".accordion-item",
                 dropLockWithin: ".accordion",
             },
         ],
-        is_movable_selector: {
+        is_movable_selectors: {
             selector: ".s_accordion .accordion-item",
             direction: "vertical",
             noScroll: true,

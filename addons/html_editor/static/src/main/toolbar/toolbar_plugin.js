@@ -103,8 +103,6 @@ export const DISABLED_NAMESPACE = "disabled";
  */
 
 /**
- * @typedef {((namespace: string) => boolean)[]} can_display_toolbar_predicates
- *
  * @typedef {ToolbarGroup[]} toolbar_groups
  * @typedef {ToolbarNamespace[]} toolbar_namespaces
  */

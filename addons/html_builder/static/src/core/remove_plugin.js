@@ -24,7 +24,7 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
  *
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_node_empty_predicates
  *
- * @typedef {CSSSelector[]} is_unremovable_selector
+ * @typedef {CSSSelector[]} is_unremovable_selectors
  */
 
 const removableNodePredicates = [
@@ -76,7 +76,7 @@ export class RemovePlugin extends Plugin {
         this.overlayTarget = null;
 
         const unremovableSelectors = [];
-        for (const unremovableSelector of this.getResource("is_unremovable_selector")) {
+        for (const unremovableSelector of this.getResource("is_unremovable_selectors")) {
             unremovableSelectors.push(unremovableSelector);
         }
         if (unremovableSelectors.length) {

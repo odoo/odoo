@@ -249,7 +249,7 @@ export async function setupHTMLBuilder(
         class P extends Plugin {
             static id = pluginId;
             resources = {
-                dropzone_selector: dropzoneSelectors,
+                dropzone_selectors: dropzoneSelectors,
             };
         }
         Plugins.push(P);
@@ -418,7 +418,7 @@ export function addDropZoneSelector(selector) {
     class P extends Plugin {
         static id = pluginId;
         resources = {
-            dropzone_selector: [selector],
+            dropzone_selectors: [selector],
         };
     }
 

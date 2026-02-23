@@ -92,7 +92,7 @@ export class DragAndDropPlugin extends Plugin {
     };
 
     setup() {
-        this.dropzoneSelectors = this.getResource("dropzone_selector");
+        this.dropzoneSelectors = this.getResource("dropzone_selectors");
         this.overlayTarget = null;
         this.iframe = this.document.defaultView.frameElement;
         this.isRtl = this.config.isEditableRTL;

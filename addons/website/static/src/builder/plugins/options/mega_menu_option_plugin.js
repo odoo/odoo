@@ -13,17 +13,20 @@ export class MegaMenuOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".o_mega_menu .nav > .nav-link",
             dropIn: ".o_mega_menu nav",
             dropNear: ".o_mega_menu .nav-link",
         },
         on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
-        is_unremovable_selector: ".o_mega_menu > section",
+        is_unremovable_selectors: ".o_mega_menu > section",
         is_node_splittable_predicates: (node) => {
             //avoid merge
-            if (node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link")) {
+            if (
+                node?.nodeType === Node.ELEMENT_NODE &&
+                node.matches(".o_mega_menu .nav > .nav-link")
+            ) {
                 return false;
             }
         },

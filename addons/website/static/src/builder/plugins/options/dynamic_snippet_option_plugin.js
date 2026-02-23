@@ -79,7 +79,7 @@ export class DynamicSnippetOptionPlugin extends Plugin {
             NumberOfRecordsAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        is_unremovable_selector: ".s_dynamic_snippet_title",
+        is_unremovable_selectors: ".s_dynamic_snippet_title",
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
@@ -213,7 +213,10 @@ export class DynamicSnippetOptionPlugin extends Plugin {
             el.classList.remove(...(oldTemplate.extraSnippetClasses?.split(" ") || []));
             el.classList.add(...(template.extraSnippetClasses?.split(" ") || []));
         }
-        this.trigger("on_dynamic_snippet_template_updated_handlers", { el: el, template: template });
+        this.trigger("on_dynamic_snippet_template_updated_handlers", {
+            el: el,
+            template: template,
+        });
     }
     async fetchDynamicFilters(params) {
         this.fetchedDynamicFilters = await this.dynamicFiltersCache.read(params);

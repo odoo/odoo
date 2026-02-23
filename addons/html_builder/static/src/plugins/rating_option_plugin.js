@@ -7,7 +7,7 @@ export class RatingOptionPlugin extends Plugin {
     static dependencies = ["history", "media"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        so_content_addition_selector: [".s_rating"],
+        so_content_addition_selectors: [".s_rating"],
         builder_actions: {
             SetIconsAction,
             CustomIconAction,

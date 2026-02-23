@@ -9,7 +9,7 @@ export class MailGroupOptionPlugin extends Plugin {
     static dependencies = ["builderActions"];
     static shared = ["createGroup"];
     resources = {
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_group",
             dropNear: "p, h1, h2, h3, blockquote, .card",
             dropIn: ".row.o_grid_mode",
