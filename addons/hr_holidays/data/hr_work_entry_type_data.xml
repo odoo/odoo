@@ -190,6 +190,15 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_part_sick" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- CH: Switzerland -->
 
     <record id="hr_work_entry.l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
