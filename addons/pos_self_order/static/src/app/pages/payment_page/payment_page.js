@@ -34,6 +34,14 @@ export class PaymentPage extends Component {
     }
 
     selectMethod(methodId) {
+        if (methodId === this.cashPaymentMethod?.id) {
+            this.selfOrder.confirmationPage(
+                "pay",
+                this.selfOrder.config.self_ordering_mode,
+                this.selfOrder.currentOrder.access_token
+            );
+            return;
+        }
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
         this.startPayment();
@@ -77,5 +85,12 @@ export class PaymentPage extends Component {
             this.selfOrder.handleErrorNotification(error);
             this.selfOrder.paymentError = true;
         }
+    }
+
+    get cashPaymentMethod() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+            return this.selfOrder.models["pos.payment.method"].find((pm) => pm.is_cash_count);
+        }
+        return false;
     }
 }
