@@ -543,7 +543,7 @@ class MailThread(models.AbstractModel):
             return
         self.env.cr.precommit.add(self._track_finalize)
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self:
+        for record in self.sudo():  # be sure to compute initial values whatever current user ACLs
             if not record.id:
                 continue
             values = initial_values.setdefault(record.id, {})
@@ -581,7 +581,7 @@ class MailThread(models.AbstractModel):
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
             return
-        records = self.browse(ids).sudo()
+        records = self.browse(ids).sudo()  # be sure to compute end values whatever current user ACLs
         fnames = self._track_get_fields()
         context = clean_context(self.env.context)
         tracking = records.with_context(context)._message_track(fnames, initial_values)
