@@ -991,6 +991,10 @@ class MrpWorkorder(models.Model):
             'date_finished': False,
         })
 
+    def action_scrap(self):
+        self.ensure_one()
+        return self.production_id.action_scrap()
+
     def _compute_expected_operation_cost(self, without_employee_cost=False):
         return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
