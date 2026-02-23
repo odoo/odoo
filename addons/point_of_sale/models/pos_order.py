@@ -791,11 +791,14 @@ class PosOrder(models.Model):
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_payment_term_id': False,
-            'invoice_cash_rounding_id': self.config_id.rounding_method.id,
         }
         if self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
             vals['reversed_entry_id'] = self.refunded_order_id.account_move.id
+
+        if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+            vals['invoice_cash_rounding_id'] = self.config_id.rounding_method.id
+
         if self.floating_order_name:
             vals.update({'narration': self.floating_order_name})
         return vals
@@ -897,7 +900,7 @@ class PosOrder(models.Model):
                 ('product_id.categ_id.property_valuation', '=', 'real_time')
             ])
             for stock_move in stock_moves:
-                expense_account = stock_move.product_id._get_product_accounts()['expense']
+                expense_account = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()['expense']
                 stock_output_account = stock_move.product_id.categ_id.property_stock_account_output_categ_id
                 balance = -sum(stock_move.stock_valuation_layer_ids.mapped('value'))
                 aml_vals_list_per_nature['stock'].append({
@@ -987,8 +990,9 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:
             raise UserError(_("You cannot invoice orders belonging to different companies."))
+        is_picking_created = self._should_create_picking_real_time()
         self.write({'to_invoice': True})
-        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
+        if not is_picking_created and self._should_create_picking_real_time() and self.session_id.state != 'closed':
             self._create_order_picking()
         return self._generate_pos_order_invoice()
 
@@ -1160,7 +1164,10 @@ class PosOrder(models.Model):
         return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
 
     def _should_create_picking_real_time(self):
-        return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
+        return not self.session_id.update_stock_at_closing or self._force_create_picking_real_time()
+
+    def _force_create_picking_real_time(self):
+        return self.company_id.anglo_saxon_accounting and self.to_invoice
 
     def _create_order_picking(self):
         self.ensure_one()

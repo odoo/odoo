@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2024
 #
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2025-08-12 22:21+0000\n"
+"PO-Revision-Date: 2026-02-14 09:03+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "auth_ldap/uk/>\n"
@@ -20,10 +20,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
+"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
+"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
+" ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -41,9 +42,13 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Фільтр, що використовується для пошуку облікових записів користувачів у базі даних LDAP. Це довільний фільтр LDAP у рядковому представленні. Будь-який заповнювач `%s` буде замінено на логін (ідентифікатор), наданий користувачем, фільтр повинен містити принаймні один такий заповнювач.\n"
+"    Фільтр, що використовується для пошуку облікових записів користувачів у "
+"базі даних LDAP. Це довільний фільтр LDAP у рядковому представленні. Будь-"
+"який заповнювач `%s` буде замінено на логін (ідентифікатор), наданий "
+"користувачем, фільтр повинен містити принаймні один такий заповнювач.\n"
 "\n"
-"    Фільтр повинен дати рівно один (1) результат, інакше логін вважатиметься недійсним.\n"
+"    Фільтр повинен дати рівно один (1) результат, інакше логін вважатиметься "
+"недійсним.\n"
 "\n"
 "    Приклад (фактичні атрибути залежать від сервера LDAP та налаштування):\n"
 "\n"

@@ -386,3 +386,40 @@ test("touch rendering - tap-to-show", async () => {
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 });
+
+test.tags("desktop");
+test("tooltip from and to child element", async () => {
+    class MyComponent extends Component {
+        static props = ["*"];
+        static template = xml`
+        <div class="no-tooltip">space</div>
+        <div class="p-5" data-tooltip="hello">
+            <button>Action</button>
+        </div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+
+    await pointerDown("div[data-tooltip]");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    const popover = queryOne(".o_popover");
+
+    await pointerDown("button");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(queryOne(".o_popover")).toBe(popover);
+
+    await pointerDown("div[data-tooltip]");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(queryOne(".o_popover")).toBe(popover);
+
+    await pointerDown(".no-tooltip");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});

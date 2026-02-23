@@ -447,3 +447,80 @@ class TestItEdiImport(TestItEdi):
             'amount_untaxed': 25.0,
             'amount_tax': 5.5,
         }])
+
+    def test_cron_import_bill_from_another_company_without_conflicts(self):
+        """
+        Ensure that in a multi-company environment, importing a bill containing products
+        restricted to another company does not fail due to company inconsistencies.
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'default_code': 'TEST',
+            'barcode': 'TEST',
+            'standard_price': 75.0,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': test_product.id,
+            'product_code': 'TEST',
+            'partner_id': self.company_data_2["company"].partner_id.id,
+        })
+
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi/DettaglioLinee" position="after">
+                <DettaglioLinee>
+                    <NumeroLinea>2</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>1.00</Quantita>
+                    <PrezzoUnitario>5.00</PrezzoUnitario>
+                    <PrezzoTotale>5.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+                <DettaglioLinee>
+                    <NumeroLinea>3</NumeroLinea>
+                    <CodiceArticolo>
+                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceValore>TEST</CodiceValore>
+                    </CodiceArticolo>
+                    <Descrizione>[TEST] Test Product</Descrizione>
+                    <Quantita>2.00</Quantita>
+                    <PrezzoUnitario>4.00</PrezzoUnitario>
+                    <PrezzoTotale>8.00</PrezzoTotale>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DettaglioLinee>
+            </xpath>
+        """
+
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': 18.0,
+            'amount_tax': 3.96,
+            'invoice_line_ids': [
+                {
+                    "product_id": False,
+                    'name': 'DESCRIZIONE DELLA FORNITURA',
+                    'quantity': 5.0,
+                    'price_unit': 1.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 1.0,
+                    'price_unit': 5.0,
+                    'debit': 5.0,
+                },
+                {
+                    'product_id': False,
+                    'name': '[TEST] Test Product',
+                    'quantity': 2.0,
+                    'price_unit': 4.0,
+                    'debit': 8.0,
+                },
+            ],
+        }], applied_xml)

@@ -31,3 +31,13 @@ class ResConfigSettings(models.TransientModel):
                   'message': _("API credentials validated successfully"),
               }
           }
+
+    def _l10n_in_gsp_provider_changed(self):
+        """
+            This change should effect all Indian companies so we search for them and
+            Invalidate existing tokens if GSP provider changed
+        """
+        self.env['res.company'].sudo().search([('account_fiscal_country_id.code', '=', 'IN')]).write({
+            'l10n_in_edi_ewaybill_auth_validity': False,
+        })
+        super()._l10n_in_gsp_provider_changed()

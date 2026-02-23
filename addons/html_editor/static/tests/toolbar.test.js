@@ -1263,3 +1263,12 @@ test("dropdown menu should not overflow scroll container", async () => {
     // Font selector should be visible
     expect(fontSelector).toBeVisible();
 });
+
+describe.tags("desktop");
+describe("toolbar visibility on contenteditable false elements", () => {
+    test("should not open toolbar when selected element is contenteditble false", async () => {
+        await setupEditor('<div contenteditable="false"><p>a[bc<strong>def</strong>gh]i</p></div>');
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(0);
+    });
+});

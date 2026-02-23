@@ -45,14 +45,14 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
 # Gustas Putvinskas <gustas@vialaurea.com>, 2025.
 # Gailius Kazlauskas <gailius@vialaurea.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-27 23:15+0000\n"
-"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.com>\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-14 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "account/lt/>\n"
 "Language: lt\n"
@@ -89,6 +89,25 @@ msgid ""
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
+msgstr ""
+"\n"
+"    - Mokesčių grupė: Mokestį sudaro rinkinys kitų mokesčių.\n"
+"    - Pastovus: Mokesčio suma išlieka pastovi nepriklausomai nuo kainos.\n"
+"    - Procentas: Mokesčio suma yra apskaičiuojama kaip % of nuo kainos:\n"
+"        pvz.: 100 * (1 + 10%) = 110 (mokestis neįtrauktas į kainą)\n"
+"        pvz.: 110 / (1 + 10%) = 100 (mokestis įtrauktas į kainą)\n"
+"    - Procentas kai mokestis įskaičiuotas: mokesčio suma yra įtraukta į "
+"kainą:\n"
+"        e.g 180 / (1 - 10%) = 200 (mokestis neįtrauktas į kainą)\n"
+"        e.g 200 * (1 - 10%) = 180 (mokestis įtrauktas į kainą)\n"
+"        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
 msgstr ""
 
 #. module: account
@@ -4369,6 +4388,8 @@ msgid "Chart of accounts set!"
 msgstr "Sąskaitų planas nustatytas!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Pažymėti"
@@ -9544,6 +9565,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Žurnalai"
 
@@ -15212,6 +15234,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr ""
@@ -15249,7 +15279,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Šalis, iš kurios bus naudojamos šios įmonės mokesčių ataskaitos"
 
 #. module: account
 #. odoo-python
@@ -15353,6 +15383,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
 msgstr ""
 
 #. module: account
@@ -15775,6 +15813,14 @@ msgstr "Įmonės valiuta pateikta žurnalo likutinė suma."
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
 msgstr ""
 
 #. module: account
@@ -17912,6 +17958,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18246,7 +18299,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
 msgstr ""
 
 #. module: account

@@ -358,8 +358,8 @@ test("Internal user should be displayed first", async () => {
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@Person ");
     await contains(":nth-child(1 of .o-mail-Composer-suggestion) strong", { text: "Person D" });
-    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "Person C" });
-    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "Person B" });
+    await contains(":nth-child(2 of .o-mail-Composer-suggestion) strong", { text: "Person B" });
+    await contains(":nth-child(3 of .o-mail-Composer-suggestion) strong", { text: "Person C" });
     await contains(":nth-child(4 of .o-mail-Composer-suggestion) strong", { text: "Person A" });
 });
 
