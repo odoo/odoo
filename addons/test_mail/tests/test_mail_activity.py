@@ -165,12 +165,6 @@ class TestActivityRights(TestActivityCommon):
             activity2.write({'user_id': self.user_employee.id})
 
     def test_activity_security_user_noaccess_manual(self):
-        def _employee_crash(records, operation):
-            """ If employee is test employee, consider they have no access on document """
-            if records.env.uid == self.user_employee.id and not records.env.su:
-                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
-            return DEFAULT
-
         test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
@@ -181,14 +175,9 @@ class TestActivityRights(TestActivityCommon):
         test_activity.flush_recordset()
 
         # can _search activities if access to the document
-        self.env['mail.activity'].with_user(self.user_employee)._search(
+        searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
             [('id', '=', test_activity.id)])
-
-        # cannot _search activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
-                    [('id', '=', test_activity.id)])
+        self.assertTrue(searched_activity, "Activity not found by employee")
 
         # can formatted_read_group activities if access to the document
         read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
@@ -199,64 +188,70 @@ class TestActivityRights(TestActivityCommon):
         self.assertEqual(1, read_group_result[0]['__count'])
         self.assertEqual('Summary', read_group_result[0]['summary'])
 
+        # ---------------------------------------
+        # Let only the creator access an activity
+        self.env['ir.rule'].create({
+            'name': 'Hop hop hop Ernest',
+            'domain_force': '[("user_id", "=", user.id)]',
+            'model_id': self.env['ir.model']._get('mail.activity').id,
+        })
+
+        # cannot _search activities if no access to the document
+        searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
+            [('id', '=', test_activity.id)])
+        self.assertFalse(searched_activity)
+
         # cannot read_group activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
-                    [('id', '=', test_activity.id)],
-                    ['summary'],
-                    ['__count'],
-                )
+        result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['__count'],
+        )
+        self.assertFalse(result)
 
         # cannot read activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                searched_activity = self.env['mail.activity'].with_user(self.user_employee).search(
-                    [('id', '=', test_activity.id)])
-                searched_activity.read(['summary'])
+        with self.assertRaises(exceptions.AccessError):
+            test_activity.with_user(self.user_employee).read(['summary'])
 
         # cannot search_read activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).search_read(
-                    [('id', '=', test_activity.id)],
-                    ['summary'])
+        result = self.env['mail.activity'].with_user(self.user_employee).search_read(
+            [('id', '=', test_activity.id)],
+            ['summary'])
+        self.assertFalse(result)
 
         # can create activities for people that cannot access record
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            self.env['mail.activity'].create({
-                'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
-                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
-                'res_id': self.test_record.id,
-                'user_id': self.user_employee.id,
-            })
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+        })
 
         # cannot create activities if no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            with self.assertRaises(exceptions.AccessError):
-                activity = self.test_record.with_user(self.user_employee).activity_schedule(
-                    'test_mail.mail_act_test_todo',
-                    user_id=self.user_admin.id)
+        with self.assertRaises(exceptions.AccessError):
+            self.test_record.with_user(self.user_employee).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_admin.id)
 
+        # ---------------------------------------
+        # Assign the activity to the user
         test_activity.user_id = self.user_employee
         test_activity.flush_recordset()
 
         # user can read activities assigned to him even if he has no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            found = self.env['mail.activity'].with_user(self.user_employee).search(
-                [('id', '=', test_activity.id)])
-            self.assertEqual(found, test_activity)
-            found.read(['summary'])
+        found = self.env['mail.activity'].with_user(self.user_employee).search(
+            [('id', '=', test_activity.id)])
+        self.assertEqual(found, test_activity)
+        found.read(['summary'])
 
         # user can read_group activities assigned to him even if he has no access to the document
-        with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
-                [('id', '=', test_activity.id)],
-                ['summary'],
-                ['__count'],
-            )
-            self.assertEqual(1, read_group_result[0]['__count'])
-            self.assertEqual('Summary', read_group_result[0]['summary'])
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['__count'],
+        )
+        self.assertEqual(1, read_group_result[0]['__count'])
+        self.assertEqual('Summary', read_group_result[0]['summary'])
 
 
 @tests.tagged('mail_activity')
@@ -502,11 +497,10 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         # In the mean time, some FK deletes the record where the message is
         # scheduled, skipping its unlink() override
+        cls.env.invalidate_all()
         cls.env.cr.execute(
             f"DELETE FROM {cls.test_lead_records._table} WHERE id = %s", (cls.deleted_record.id,)
         )
-
-        cls.env.invalidate_all()
 
     @users("employee")
     def test_systray_activities_for_various_records(self):

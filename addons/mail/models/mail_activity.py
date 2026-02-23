@@ -8,14 +8,14 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
-from .mail_message import MAX_COMODELS_FOR_DOMAIN, _find_allowed_doc_ids, exists_in_cache
+from .mail_message import MAX_COMODELS_FOR_DOMAIN, MAX_SEARCH_LIMIT, _find_allowed_doc_ids, exists_in_cache
 
 _logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
@@ -69,6 +69,27 @@ class MailActivity(models.Model):
     res_name = fields.Char(
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         readonly=True)
+    res_access_read = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('read'),
+        search=lambda self, operator, value: self._search_res_access('read', operator),
+        compute_sudo=True, depends_context=('uid',))
+    res_access_write = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('write'),
+        search=lambda self, operator, value: self._search_res_access('write', operator),
+        compute_sudo=True, depends_context=('uid',))
+    res_access_create = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('create'),
+        search=lambda self, operator, value: self._search_res_access('create', operator),
+        compute_sudo=True, depends_context=('uid',))
+    res_access_unlink = fields.Boolean(
+        groups=fields.NO_ACCESS,
+        compute=lambda self: self._compute_res_access('unlink'),
+        search=lambda self, operator, value: self._search_res_access('unlink', operator),
+        compute_sudo=True, depends_context=('uid',))
+
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
@@ -203,82 +224,48 @@ class MailActivity(models.Model):
             elif not activity.user_id:
                 activity.user_id = self.env.user
 
-    def _check_access(self, operation: str) -> tuple | None:
+    def _compute_res_access(self, operation: str):
         """ Determine the subset of ``self`` for which ``operation`` is allowed.
         A custom implementation is done on activities as this document has some
         access rules and is based on related document for activities that are
         not covered by those rules.
-
-        Access on activities are the following :
-
-          * read: access rule AND (assigned to user OR read rights on related documents);
-          * write: access rule OR (``mail_post_access`` or write) rights on related documents);
-          * create: access rule AND (``mail_post_access`` or write) right on related documents;
-          * unlink: access rule OR (``mail_post_access`` or write) rights on related documents);
         """
-        result = super()._check_access(operation)
-        if not self:
-            return result
+        assert self.env.su
+        field_name = f'res_access_{operation}'
 
-        # determine activities on which to check the related document
-        if operation == 'read':
-            # check activities allowed by access rules
-            activities = self - result[0] if result else self
-            activities -= activities.sudo().filtered_domain([('user_id', '=', self.env.uid)])
-        elif operation == 'create':
-            # check activities allowed by access rules
-            activities = self - result[0] if result else self
-        else:
-            assert operation in ('write', 'unlink'), f"Unexpected operation {operation!r}"
-            # check access to the model, and check the forbidden records only
-            if self.browse()._check_access(operation):
-                return result
-            activities = result[0] if result else self.browse()
-            result = None
-
-        if not activities:
-            return result
+        if not self or not self.browse().sudo(False).has_access(operation):
+            self[field_name] = False
+            return
 
         # now check access on related document of 'activities', and collect the
-        # ids of forbidden activities; free activities are checked against user_id
+        # ids of forbidden activities
         model_docid_actids = defaultdict(lambda: defaultdict(list))
-        forbidden_ids = []
-        for activity in activities.sudo():
+        for activity in self:
             if activity.res_model and activity.res_id:
                 model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
-            elif activity.user_id.id != self.env.uid:
-                forbidden_ids.append(activity.id)
 
-        allowed = _find_allowed_doc_ids(self.env, model_docid_actids, operation)
-        forbidden_ids.extend(
-            act_id
-            for docid_actids in model_docid_actids.values()
-            for act_ids in docid_actids.values()
-            for act_id in act_ids
-            if act_id not in allowed
+        allowed = _find_allowed_doc_ids(self.env(su=False), model_docid_actids, operation)
+        for activity in self:
+            activity[field_name] = activity.id in allowed
+
+    def _check_access(self, operation):
+        res = super()._check_access(operation)
+        if not res:
+            return None
+        forbidden = res[0]
+        forbidden.invalidate_recordset()  # avoid cache pollution
+        return forbidden, lambda: (
+            AccessError(self.env._(
+                "The requested operation cannot be completed due to security restrictions. "
+                "Please contact your system administrator.\n\n"
+                "(Document type: %(type)s, Operation: %(operation)s)\n\n"
+                "Records: %(records)s, User: %(user)s",
+                type=self._description,
+                operation=operation,
+                records=forbidden.ids[:6],
+                user=self.env.uid,
+            ))
         )
-
-        if forbidden_ids:
-            forbidden = self.browse(forbidden_ids)
-            if result:
-                result = (result[0] + forbidden, result[1])
-            else:
-                result = (forbidden, lambda: forbidden._make_access_error(operation))
-            forbidden.invalidate_recordset()  # avoid cache pollution
-
-        return result
-
-    def _make_access_error(self, operation: str) -> AccessError:
-        return AccessError(_(
-            "The requested operation cannot be completed due to security restrictions. "
-            "Please contact your system administrator.\n\n"
-            "(Document type: %(type)s, Operation: %(operation)s)\n\n"
-            "Records: %(records)s, User: %(user)s",
-            type=self._description,
-            operation=operation,
-            records=self.ids[:6],
-            user=self.env.uid,
-        ))
 
     # ------------------------------------------------------
     # ORM overrides
@@ -388,7 +375,7 @@ class MailActivity(models.Model):
             activities the current user is allowed to see. An activity is
             accessible if the user is the assignee (`user_id`), or if they have
             read access to the related document (`res_model`, `res_id`). This
-            logic is detailed in :meth:`~._check_access`.
+            logic is detailed in res_access* fields.
             Superusers bypass this and perform a standard search.
         """
         domain = Domain(domain).optimize(self)
@@ -430,8 +417,29 @@ class MailActivity(models.Model):
             records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
             return records._filtered_access('read')._as_query(ordered=bool(order))
 
+        return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+
+    def _search_res_access(self, operation, domain_operator):
+        assert self.env.su
+        if domain_operator != 'in':
+            return NotImplemented
+        domain = self.env.context.get('search_domain')
+        if not isinstance(domain, Domain):
+            domain = Domain.TRUE
+        self = self.sudo(False)  # noqa: PLW0642
+
+        res_model_names = condition_values(self, 'res_model', domain)
+        if operation != 'read' or res_model_names is None:
+            records = self.sudo().with_context(active_test=False).search_fetch(
+                domain, SECURITY_FIELDS, order='id', limit=MAX_SEARCH_LIMIT)
+            if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
+                raise UserError(self.env._("Cannot search, too many activities"))
+            records = records.sudo(False)._filtered_access(operation)
+            # [('id', 'any!', query_with_ids)] is optimized in sec_domain
+            return Domain('id', 'any!', records._as_query(ordered=False))
+
         # search by model and res_id
-        sec_domain = Domain('user_id', '=', self.env.uid)
+        sec_domain = Domain.FALSE
         env = self.with_context(active_test=False).env
         for res_model_name in res_model_names:
             if res_model_name not in env:
@@ -466,7 +474,7 @@ class MailActivity(models.Model):
                 codomain &= Domain('res_id', 'any!', query)
             sec_domain |= codomain
 
-        return super()._search(domain & sec_domain, offset, limit, order, **kwargs)
+        return sec_domain
 
     @api.depends('summary', 'activity_type_id')
     def _compute_display_name(self):

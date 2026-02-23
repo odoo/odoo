@@ -1387,11 +1387,11 @@ class TestMailAccessPerformance(BaseMailPerformance):
     def test_activity_search(self):
         # queries
         # select mail.activity: 1
-        # filter records: 3 (1 / model)
+        # filter records: 4 (1 / model)
         self.env.invalidate_all()
         self.env.transaction.clear_access_cache()
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=4), profile:
+        with self.assertQueryCount(employee=5), profile:
             found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
         self.assertEqual(found, self.activities - self.activities_emp_nope)
 
@@ -1420,7 +1420,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # filter records: 1 / model (access rules done in batch)
         # _get_mail_message_access: 3 on custom implementation, no prefetching
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=4), profile:
+        with self.assertQueryCount(employee=5), profile:
             found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
         self.assertEqual(found, self.messages - self.messages_emp_nope)
 
