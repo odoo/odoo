@@ -137,6 +137,15 @@ export class Thread extends Record {
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
+    isFocusedByThread = fields.Attr(false, {
+        onUpdate() {
+            if (this.isFocusedByThread) {
+                this.isFocusedCounter++;
+            } else {
+                this.isFocusedCounter--;
+            }
+        },
+    });
     isFocusedCounter = fields.Attr(0, {
         onUpdate() {
             if (this.isFocusedCounter < 0) {
