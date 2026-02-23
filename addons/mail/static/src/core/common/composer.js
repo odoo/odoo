@@ -941,7 +941,8 @@ export class Composer extends Component {
         }
     }
 
-    onFocusin() {
+    onFocusin(ev) {
+        ev.stopPropagation();
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
         if (
