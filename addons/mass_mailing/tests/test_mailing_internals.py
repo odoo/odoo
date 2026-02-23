@@ -837,5 +837,6 @@ class TestMassMailingActions(MassMailCommon):
             }
         ])
         results = mass_mailings[0].action_view_opened()
-        results_partner = self.env["res.partner"].search(results['domain'])
+        results_trace = self.env["mailing.trace"].search(results['domain'])
+        results_partner = self.env["res.partner"].search([('id', 'in', results_trace.res_id)])
         self.assertEqual(results_partner, self.partner_admin, "Trace leaked from mass_mailing_2 to mass_mailing_1")

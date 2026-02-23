@@ -13,6 +13,17 @@
         </field>
     </record>
 
+    <record id="mailing_trace_view_graph" model="ir.ui.view">
+        <field name="name">mailing.trace.view.graph.inherit.sms</field>
+        <field name="model">mailing.trace</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mail_statistics_graph"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='mail_mail_id_int']" position="after">
+                <field name="sms_id_int" invisible="1"/> <!-- Hide it from the graph view's measures -->
+            </xpath>
+        </field>
+    </record>
+
     <record id="mailing_trace_view_tree" model="ir.ui.view">
         <field name="name">mailing.trace.view.list.inherit.sms</field>
         <field name="model">mailing.trace</field>

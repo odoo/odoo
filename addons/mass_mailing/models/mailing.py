@@ -20,6 +20,7 @@ from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime, Domain
+from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.image import ImageProcess
 
@@ -41,7 +42,7 @@ class MailingMailing(models.Model):
                 'mail.activity.mixin',
                 'mail.render.mixin',
     ]
-    _order = 'calendar_date DESC'
+    _order = 'state ASC, calendar_date DESC, write_date DESC'
     _rec_name = "subject"
     _systray_view = 'list'
 
@@ -244,6 +245,24 @@ class MailingMailing(models.Model):
         "CHECK(email_from IS NOT NULL OR mailing_type != 'mail')",
         "email from is required for mailing"
     )
+
+    def _order_field_to_sql(self, table, field_expr, direction, nulls):
+        # Override the ORDER BY logic for the `state` field from draft to sent
+        # whatever the key name and label
+        if field_expr == "state":
+            sql_field = table.state
+            table._query._order_groupby.append(sql_field)
+            return SQL("""
+                CASE %s
+                    WHEN 'draft' THEN 1
+                    WHEN 'in_queue' THEN 2
+                    WHEN 'sending' THEN 3
+                    WHEN 'done' THEN 4
+                    ELSE 99
+                END %s %s
+            """, sql_field, direction, nulls)
+
+        return super()._order_field_to_sql(table, field_expr, direction, nulls)
 
     @api.constrains('mailing_model_id', 'mailing_filter_id')
     def _check_mailing_filter_model(self):
@@ -718,68 +737,89 @@ class MailingMailing(models.Model):
         return action
 
     def action_view_clicked(self):
-        return self._action_view_documents_filtered('clicked')
+        return self._action_view_mailing_statistics_filtered('clicked')
 
     def action_view_opened(self):
-        return self._action_view_documents_filtered('open')
+        return self._action_view_mailing_statistics_filtered('open')
 
     def action_view_replied(self):
-        return self._action_view_documents_filtered('reply')
+        return self._action_view_mailing_statistics_filtered('reply')
 
     def action_view_bounced(self):
-        return self._action_view_documents_filtered('bounce')
+        return self._action_view_mailing_statistics_filtered('bounce')
 
     def action_view_delivered(self):
-        return self._action_view_documents_filtered('delivered')
+        return self._action_view_mailing_statistics_filtered('delivered')
 
-    def _action_view_documents_filtered(self, view_filter):
-        def _fetch_trace_res_ids(trace_domain):
-            trace_domain &= Domain('mass_mailing_id', '=', self.id)
-            return self.env['mailing.trace'].search_fetch(domain=trace_domain, field_names=['res_id']).mapped('res_id')
-
-        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
+    def _action_view_mailing_statistics_filtered(self, view_filter):
+        if view_filter == "clicked":
+            view_mode = "list,graph"
+        else:
+            view_mode = "graph,list"
         helper_header = None
         helper_message = None
+        domain = Domain('mass_mailing_id', '=', self.id)
+        views = False
+        context = {
+            **self.env.context,
+            'create': False,
+            'graph_mode': 'bar',
+            'stacked': True,
+        }
         if view_filter == 'reply':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'reply'))
-            helper_header = _("No %s replied to your mailing yet!", model_name)
+            action_name = _('Mailing Statistics')
+            res_model = 'mailing.trace'
+            domain &= Domain('trace_status', '=', 'reply')
+            context = {**context, 'search_default_group_reply_date': True}
+            helper_header = _("No Recipient replied to your mailing yet!")
             helper_message = _("To track how many replies this mailing gets, make sure "
                                "its reply-to address belongs to this database.")
         elif view_filter == 'bounce':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', '=', 'bounce'))
-            helper_header = _("No %s address bounced yet!", model_name)
+            action_name = _('Mailing Statistics')
+            res_model = 'mailing.trace'
+            domain &= Domain('trace_status', '=', 'bounce')
+            helper_header = _("No Recipient address bounced yet!")
             helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
                                "server issues, ...). Check each record to see what went wrong.")
         elif view_filter == 'clicked':
-            res_ids = _fetch_trace_res_ids(Domain('links_click_ids', '!=', False))
-            helper_header = _("No %s clicked your mailing yet!", model_name)
+            action_name = _('Link Clicks')
+            res_model = 'link.tracker.click'
+            context = {**context, 'search_default_groupby_email': True, 'stacked': False, 'graph_mode': 'pie'}
+            views = [(self.env.ref('mass_mailing.link_tracker_click_view_list_simplified').id, 'list'), (False, 'graph')]
+            helper_header = _("No Recipient clicked your mailing yet!")
             helper_message = _(
                 "Come back once your mailing has been sent to track who clicked on the embedded links.")
         elif view_filter == 'open':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('open', 'reply')))
-            helper_header = _("No %s opened your mailing yet!", model_name)
+            action_name = _('Mailing Statistics')
+            res_model = 'mailing.trace'
+            domain &= Domain('trace_status', 'in', ('open', 'reply'))
+            context = {**context, 'search_default_group_open_date': True}
+            helper_header = _("No Recipient opened your mailing yet!")
             helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
         elif view_filter == 'delivered':
-            res_ids = _fetch_trace_res_ids(Domain('trace_status', 'in', ('sent', 'open', 'reply')))
-            helper_header = _("No %s received your mailing yet!", model_name)
+            action_name = _('Mailing Statistics')
+            res_model = 'mailing.trace'
+            domain &= Domain('trace_status', 'in', ('sent', 'open', 'reply'))
+            helper_header = _("No Recipient received your mailing yet!")
             helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
         elif view_filter == 'sent':
-            res_ids = _fetch_trace_res_ids(Domain('sent_datetime', '!=', False))
-        else:
-            res_ids = []
+            action_name = _('Mailing Statistics')
+            res_model = 'mailing.trace'
+            domain &= Domain('sent_datetime', '!=', False)
 
         action = {
-            'name': model_name,
+            'name': action_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'list,form',
-            'res_model': self.mailing_model_real,
-            'domain': [('id', 'in', res_ids)],
-            'context': dict(self.env.context, create=False),
+            'view_mode': view_mode,
+            'res_model': res_model,
+            'views': views,
+            'domain': domain,
+            'context': context,
         }
         if helper_header and helper_message:
             action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
-            ),
+            )
         return action
 
     def action_import_mailing_contacts(self):

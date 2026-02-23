@@ -34,6 +34,9 @@
             <xpath expr="//field[@name='campaign_id']" position="before">
                 <field name="mass_mailing_id" optional="hide"/>
             </xpath>
+            <xpath expr="//field[@name='url']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -43,12 +46,18 @@
             <field name="model">link.tracker.click</field>
         <field name="inherit_id" ref="link_tracker.link_tracker_click_view_search"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='link_id']" position="after">
+                <field name="email"/>
+            </xpath>
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
             </xpath>
             <xpath expr="//filter[@name='groupby_country_id']" position="after">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_mass_mailing_id']" position="after">
+                <filter string="Clicked By" name="groupby_email" context="{'group_by': 'email'}"/>
             </xpath>
         </field>
     </record>
@@ -75,6 +84,20 @@
                 <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
             </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_click_view_list_simplified" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.list.simplified</field>
+        <field name="model">link.tracker.click</field>
+        <field name="priority" eval="25"/>
+        <field name="arch" type="xml">
+            <list string="Links Clicks">
+                <field name="url"/>
+                <field name="create_date" string="Clicked On"/>
+                <field name="campaign_id" optional="hide"/>
+                <field name="mass_mailing_id" optional="hide"/>
+            </list>
         </field>
     </record>
 

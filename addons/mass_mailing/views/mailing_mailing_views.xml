@@ -44,12 +44,12 @@
                     <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
                     <field name="sent" sum="Total" />
-                    <field name="received_ratio" class="d-flex align-items-center ps-0" widget="progressbar" string="Delivered (%)" avg="Average"/>
-                    <field name="opened_ratio" class="d-flex align-items-center ps-0" widget="progressbar" string="Opened (%)" avg="Average"/>
-                    <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average"/>
-                    <field name="clicks_ratio" string="Clicked (%)" avg="Average"/>
-                    <field name="replied_ratio" string="Replied (%)" avg="Average"/>
-                    <field name="state" decoration-info="state in ['draft', 'in_queue']" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
+                    <field name="received_ratio" widget="full_range_percentage" string="Delivered"/>
+                    <field name="opened_ratio" widget="full_range_percentage" string="Opened"/>
+                    <field name="bounced_ratio" widget="full_range_percentage" string="Bounced" optional="hide"/>
+                    <field name="clicks_ratio" widget="full_range_percentage" string="Clicked"/>
+                    <field name="replied_ratio" widget="full_range_percentage" string="Replied"/>
+                    <field name="state" decoration-info="state in ['in_queue']" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
                 </list>
             </field>
         </record>
@@ -179,14 +179,6 @@
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
-                            </button>
-                            <button name="action_view_delivered"
-                                id="button_view_delivered"
-                                type="object"
-                                context="{'search_default_filter_delivered': True}"
-                                invisible="state in ('draft', 'test')"
-                                class="oe_stat_button">
-                                <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
                             <button name="action_view_bounced"
                                 type="object"

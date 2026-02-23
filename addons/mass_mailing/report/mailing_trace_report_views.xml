@@ -30,7 +30,7 @@
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
                 <pivot string="Mass Mailing Statistics" disable_linking="1" sample="1">
-                    <field name="name" type="row"/>
+                    <field name="scheduled_date" type="row"/>
                     <field name="sent" type="measure"/>
                     <field name="scheduled" type="measure"/>
                     <field name="delivered" type="measure"/>
@@ -88,7 +88,7 @@
            <field name="name">Mailing Analysis</field>
            <field name="res_model">mailing.trace.report</field>
            <field name="domain">[('mailing_type', '=', 'mail')]</field>
-           <field name="view_mode">graph,pivot,list</field>
+           <field name="view_mode">pivot,graph,list</field>
            <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No Mailing Data yet!
