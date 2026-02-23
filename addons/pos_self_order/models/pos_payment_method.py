@@ -15,5 +15,5 @@ class PosPaymentMethod(models.Model):
     @api.model
     def _load_pos_self_data_domain(self, data, config):
         if config.self_ordering_mode == 'kiosk':
-            return [('payment_provider', '!=', False), ('id', 'in', config.payment_method_ids.ids)]
+            return [('id', 'in', config.payment_method_ids.ids), '|', ('type', '=', 'cash'), ('payment_provider', '!=', False)]
         return [('id', '=', False)]
