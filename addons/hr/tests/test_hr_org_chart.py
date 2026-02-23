@@ -29,6 +29,7 @@ class TestHrOrgChart(TestHrCommon, HttpCase):
         ])
 
     def test_employee_deletion(self):
+        self.cr.flush()  # detect tracking issues
         # Tests an issue with the form view where the employee could be deleted
         self.employee_georges.write({
             'parent_id': self.employee_georges.id,
