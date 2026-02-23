@@ -30,7 +30,8 @@ class ResConfigSettings(models.TransientModel):
     def _compute_peppol_use_parent_company(self):
         for setting in self:
             setting.peppol_use_parent_company = (
-                setting.company_id != setting.company_id.peppol_parent_company_id
+                setting.account_peppol_edi_user
+                and setting.company_id != setting.company_id.peppol_parent_company_id
                 and setting.company_id.peppol_can_send
                 and setting.company_id.peppol_parent_company_id.peppol_can_send
             )
