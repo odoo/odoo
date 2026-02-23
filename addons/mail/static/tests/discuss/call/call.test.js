@@ -18,9 +18,17 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
-import { mockSendBeacon } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    beforeEach,
+    describe,
+    expect,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    mockSendBeacon,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import {
     asyncStep,
     Command,
