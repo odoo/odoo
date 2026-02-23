@@ -507,7 +507,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # EXTENDS account.edi.ubl
         node = super()._ubl_get_delivery_node_from_delivery_address(vals)
         invoice = vals.get('invoice')
-        if invoice and invoice.delivery_date:
+        if not invoice:
+            return node
+
+        if invoice.delivery_date:
             node['cbc:ActualDeliveryDate']['_text'] = invoice.delivery_date
 
         # Intracom delivery inside European area.
