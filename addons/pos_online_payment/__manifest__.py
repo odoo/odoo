@@ -26,6 +26,7 @@
         ],
         'point_of_sale.customer_display_assets_test': [
             'pos_online_payment/static/tests/tours/customer_display_tour.js',
+            'point_of_sale/static/tests/generic_helpers/dialog_util.js',
         ],
         'web.assets_tests': [
             'pos_online_payment/static/tests/tours/**/*',
