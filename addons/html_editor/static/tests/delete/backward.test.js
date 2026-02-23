@@ -1,8 +1,15 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, microTick, press } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import {
+    animationFrame,
+    beforeEach,
+    describe,
+    expect,
+    manuallyDispatchProgrammaticEvent,
+    microTick,
+    mockUserAgent,
+    press,
+    test,
+    tick,
+} from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
@@ -2263,12 +2270,7 @@ describe("Selection not collapsed", () => {
     });
 
     describe("Android Chrome", () => {
-        beforeEach(() => {
-            patchWithCleanup(browser.navigator, {
-                userAgent:
-                    "Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36",
-            });
-        });
+        beforeEach(() => mockUserAgent("android"));
 
         // This simulates the sequence of events that happens in Android Chrome
         // when pressing backspace. Some random stuff might happen, and
