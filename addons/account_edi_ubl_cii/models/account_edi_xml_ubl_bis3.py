@@ -411,6 +411,519 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             },
         }
 
+<<<<<<< eca020dca2e251fc3c9f4372d96fb6d322a18c31
+||||||| c59193dfd6302585bd94506aa6e992e0c1812c63
+    def _ubl_get_partner_address_node(self, vals, partner):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_partner_address_node(vals, partner)
+        node['cbc:CountrySubentityCode'] = None
+        node['cac:Country']['cbc:Name'] = None
+        return node
+
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        if commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
+            vals['party_node']['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
+
+    def _ubl_add_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_identification_nodes(vals)
+        nodes = vals['party_node']['cac:PartyIdentification']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': '0208',
+                },
+            })
+        elif commercial_partner.ref:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.ref,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.vat and commercial_partner.vat != '/':
+            country_code = commercial_partner.country_id.code
+            if country_code in GST_COUNTRY_CODES:
+                tax_scheme_id = 'GST'
+            else:
+                tax_scheme_id = 'VAT'
+
+            nodes.append({
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': tax_scheme_id},
+                },
+            })
+        elif commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            # TaxScheme based on partner's EAS/Endpoint.
+            nodes.append({
+                'cbc:CompanyID': {'_text': commercial_partner.peppol_endpoint},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
+                },
+            })
+
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        nodes = vals['party_node']['cac:PartyLegalEntity']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.peppol_eas in ('0106', '0190'):
+            nl_id = commercial_partner.peppol_endpoint
+        else:
+            nl_id = commercial_partner.company_registry
+
+        if commercial_partner.country_code == 'NL' and nl_id:
+            # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+            # To implement a workaround on stable, company_registry field is used without recording whether
+            # the number is a KVK or OIN, and the length of the number (8 = KVK, 20 = OIN) is used to determine the type
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': nl_id,
+                    'schemeID': '0190' if len(nl_id) == 20 else '0106',
+                },
+            })
+        elif commercial_partner.country_code == 'LU' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.country_code == 'SE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit()),
+                },
+            })
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': '0208',
+                },
+            })
+        elif (
+            commercial_partner.country_code == 'DK'
+            and commercial_partner.peppol_eas == '0184'
+            and commercial_partner.peppol_endpoint
+        ):
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': '0184',
+                },
+            })
+        elif commercial_partner.vat and commercial_partner.vat != '/':
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.vat,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.peppol_endpoint:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'NO':
+            nodes.append({
+                'cbc:CompanyID': {'_text': "Foretaksregisteret"},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': "TAX"},
+                },
+            })
+
+    def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_accounting_supplier_party_node(sub_vals)
+
+    def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_accounting_customer_party_node(sub_vals)
+
+    def _ubl_add_delivery_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_endpoint_id_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cbc:EndpointID'] = {
+            '_text': None,
+            'schemeID': None,
+        }
+
+    def _ubl_add_delivery_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_identification_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyIdentification'] = []
+
+    def _ubl_add_delivery_party_postal_address_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_postal_address_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PostalAddress'] = None
+
+    def _ubl_add_delivery_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_tax_scheme_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyTaxScheme'] = []
+
+    def _ubl_add_delivery_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_legal_entity_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyLegalEntity'] = []
+
+    def _ubl_add_delivery_party_contact_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_contact_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:Contact'] = None
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_delivery_node_from_delivery_address(vals)
+        invoice = vals.get('invoice')
+        if invoice and invoice.delivery_date:
+            node['cbc:ActualDeliveryDate']['_text'] = invoice.delivery_date
+
+        # Intracom delivery inside European area.
+        customer = vals['customer']
+        supplier = vals['supplier']
+        if (
+            customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+            and supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+            and supplier.country_id != customer.country_id
+        ):
+            node['cbc:ActualDeliveryDate']['_text'] = invoice.invoice_date
+        return node
+
+    def _add_invoice_delivery_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_delivery_nodes(sub_vals)
+        # Retro-compatibility with the "old" code.
+        if document_node['cac:Delivery']:
+            document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
+
+=======
+    def _ubl_get_partner_address_node(self, vals, partner):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_partner_address_node(vals, partner)
+        node['cbc:CountrySubentityCode'] = None
+        node['cac:Country']['cbc:Name'] = None
+        return node
+
+    def _ubl_add_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+        if commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
+            vals['party_node']['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
+
+    def _ubl_add_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_identification_nodes(vals)
+        nodes = vals['party_node']['cac:PartyIdentification']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': '0208',
+                },
+            })
+        elif commercial_partner.ref:
+            nodes.append({
+                'cbc:ID': {
+                    '_text': commercial_partner.ref,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.vat and commercial_partner.vat != '/':
+            country_code = commercial_partner.country_id.code
+            if country_code in GST_COUNTRY_CODES:
+                tax_scheme_id = 'GST'
+            else:
+                tax_scheme_id = 'VAT'
+
+            nodes.append({
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': tax_scheme_id},
+                },
+            })
+        elif commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
+            # TaxScheme based on partner's EAS/Endpoint.
+            nodes.append({
+                'cbc:CompanyID': {'_text': commercial_partner.peppol_endpoint},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
+                },
+            })
+
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        nodes = vals['party_node']['cac:PartyLegalEntity']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.peppol_eas in ('0106', '0190'):
+            nl_id = commercial_partner.peppol_endpoint
+        else:
+            nl_id = commercial_partner.company_registry
+
+        if commercial_partner.country_code == 'NL' and nl_id:
+            # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+            # To implement a workaround on stable, company_registry field is used without recording whether
+            # the number is a KVK or OIN, and the length of the number (8 = KVK, 20 = OIN) is used to determine the type
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': nl_id,
+                    'schemeID': '0190' if len(nl_id) == 20 else '0106',
+                },
+            })
+        elif commercial_partner.country_code == 'LU' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.country_code == 'SE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit()),
+                },
+            })
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.company_registry,
+                    'schemeID': '0208',
+                },
+            })
+        elif (
+            commercial_partner.country_code == 'DK'
+            and commercial_partner.peppol_eas == '0184'
+            and commercial_partner.peppol_endpoint
+        ):
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': '0184',
+                },
+            })
+        elif commercial_partner.vat and commercial_partner.vat != '/':
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.vat,
+                    'schemeID': None,
+                },
+            })
+        elif commercial_partner.peppol_endpoint:
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': commercial_partner.peppol_endpoint,
+                    'schemeID': None,
+                },
+            })
+
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if commercial_partner.country_code == 'NO':
+            nodes.append({
+                'cbc:CompanyID': {'_text': "Foretaksregisteret"},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': "TAX"},
+                },
+            })
+
+    def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_accounting_supplier_party_node(sub_vals)
+
+    def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_accounting_customer_party_node(sub_vals)
+
+    def _ubl_add_delivery_party_endpoint_id_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_endpoint_id_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cbc:EndpointID'] = {
+            '_text': None,
+            'schemeID': None,
+        }
+
+    def _ubl_add_delivery_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_identification_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyIdentification'] = []
+
+    def _ubl_add_delivery_party_postal_address_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_postal_address_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PostalAddress'] = None
+
+    def _ubl_add_delivery_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_tax_scheme_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyTaxScheme'] = []
+
+    def _ubl_add_delivery_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_legal_entity_nodes(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:PartyLegalEntity'] = []
+
+    def _ubl_add_delivery_party_contact_node(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_delivery_party_contact_node(vals)
+        if not vals.get('invoice'):
+            return
+
+        vals['party_node']['cac:Contact'] = None
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_delivery_node_from_delivery_address(vals)
+        invoice = vals.get('invoice')
+        if not invoice:
+            return node
+
+        if invoice.delivery_date:
+            node['cbc:ActualDeliveryDate']['_text'] = invoice.delivery_date
+
+        # Intracom delivery inside European area.
+        customer = vals['customer']
+        supplier = vals['supplier']
+        if (
+            customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+            and supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+            and supplier.country_id != customer.country_id
+        ):
+            node['cbc:ActualDeliveryDate']['_text'] = invoice.invoice_date
+        return node
+
+    def _add_invoice_delivery_nodes(self, document_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+        }
+        self._ubl_add_delivery_nodes(sub_vals)
+        # Retro-compatibility with the "old" code.
+        if document_node['cac:Delivery']:
+            document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
+
+>>>>>>> 9ac402f5061d25da7f83158f15098fe1f936eaaa
     def _add_invoice_allowance_charge_nodes(self, document_node, vals):
         # OVERRIDE
         ubl_values = vals['_ubl_values']
