@@ -51,7 +51,7 @@ class ResourceTag extends Component {
         onDelete: { type: Function, optional: true },
         text: { type: String, optional: true },
         tooltip: { type: String, optional: true },
-        type: { type: String },
+        type: { type: [String, { value: false }] }, // in sample data, the type is false
     };
 }
 
