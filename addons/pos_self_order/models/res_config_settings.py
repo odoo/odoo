@@ -50,18 +50,19 @@ class ResConfigSettings(models.TransientModel):
             self.use_kiosk_mode = True
             self.pos_module_pos_restaurant = False
             self.pos_self_ordering_pay_after = "each"
-            cash_payment_methods = self.pos_payment_method_ids.filtered(lambda x: x.is_cash_count and not x.payment_provider)
-            self.pos_payment_method_ids = self.pos_payment_method_ids - cash_payment_methods
         else:
             self.use_kiosk_mode = False
 
             if not self.pos_module_pos_restaurant:
                 self.pos_self_ordering_service_mode = 'counter'
+            if self.pos_config_id.self_ordering_mode == 'kiosk' and self.pos_self_ordering_mode != 'kiosk':
+                cash_payment_methods = self.pos_payment_method_ids.filtered(lambda x: x.is_cash_count and not x.payment_provider)
+                self.pos_payment_method_ids = self.pos_payment_method_ids - cash_payment_methods
 
     @api.onchange("pos_payment_method_ids")
     def _onchange_pos_payment_method_ids(self):
-        if self.pos_self_ordering_mode == 'kiosk' and any(pm.is_cash_count and not pm.payment_provider for pm in self.pos_payment_method_ids):
-            raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
+        # TODO: Delete in master
+        pass
 
     @api.onchange("pos_self_ordering_pay_after", "pos_self_ordering_mode")
     def _onchange_pos_self_order_pay_after(self):
