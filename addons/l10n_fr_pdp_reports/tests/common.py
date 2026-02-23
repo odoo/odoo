@@ -13,16 +13,17 @@ class PdpTestCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.startClassPatcher(patch(
+            'odoo.addons.l10n_fr_pdp_reports.models.pdp_flow.PdpFlow._get_pdp_proxy_user',
+            return_value=False,
+        ))
         company_vals = {
             'name': "PDP Test Company",
             'country_id': cls.env.ref('base.fr').id,
             'currency_id': cls.env.ref('base.EUR').id,
-            'l10n_fr_pdp_enabled': True,
-            'l10n_fr_pdp_sender_id': 'OD00',
+            'l10n_fr_pdp_reports_enabled': True,
             'l10n_fr_pdp_periodicity': 'decade',
             'l10n_fr_pdp_payment_periodicity': 'monthly',
-            'l10n_fr_pdp_deadline_override_start': False,
-            'l10n_fr_pdp_deadline_override_end': False,
             'siret': '12345678900000',
         }
         if 'generate_deferred_expense_entries_method' in cls.env['res.company']._fields:
@@ -34,7 +35,7 @@ class PdpTestCommon(TransactionCase):
             })
         cls.company = cls.env['res.company'].create(company_vals)
         cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=[cls.company.id]))
-        cls.env['ir.config_parameter'].sudo().set_param('PDP_TEST_ENV', '1')
+        cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
         cls.company.partner_id.write({
             'vat': 'FR23334175221',
             'country_id': cls.env.ref('base.fr').id,
@@ -142,7 +143,7 @@ class PdpTestCommon(TransactionCase):
             manual_method_line.payment_account_id = cls.bank_account
 
         # Ensure a clean slate
-        cls.env['l10n.fr.pdp.flow'].sudo().search([('company_id', '=', cls.company.id)]).unlink()
+        cls.env['l10n.fr.pdp.reports.flow'].sudo().search([('company_id', '=', cls.company.id)]).unlink()
 
     def setUp(self):
         super().setUp()
@@ -152,7 +153,7 @@ class PdpTestCommon(TransactionCase):
         self._date_today_patcher.start()
         self.addCleanup(self._context_today_patcher.stop)
         self.addCleanup(self._date_today_patcher.stop)
-        self.env['l10n.fr.pdp.flow'].sudo().search([('company_id', '=', self.company.id)]).unlink()
+        self.env['l10n.fr.pdp.reports.flow'].sudo().search([('company_id', '=', self.company.id)]).unlink()
         self.env['account.move'].sudo().search([
             ('company_id', '=', self.company.id),
             ('move_type', 'in', self.env['account.move'].get_sale_types(include_receipts=True)),
@@ -174,13 +175,10 @@ class PdpTestCommon(TransactionCase):
         write_vals = {
             'siret': '12345678900000',
             'country_id': self.env.ref('base.fr').id,
-            'l10n_fr_pdp_enabled': True,
-            'l10n_fr_pdp_sender_id': 'OD00',
+            'l10n_fr_pdp_reports_enabled': True,
             'l10n_fr_pdp_periodicity': 'decade',
             'l10n_fr_pdp_payment_periodicity': 'monthly',
             'l10n_fr_pdp_tax_due_code': '3',
-            'l10n_fr_pdp_deadline_override_start': False,
-            'l10n_fr_pdp_deadline_override_end': False,
             'l10n_fr_pdp_send_mode': 'auto',
             'transfer_account_id': self.bank_account.id,
         }
@@ -267,24 +265,22 @@ class PdpTestCommon(TransactionCase):
 
     def _run_aggregation(self):
         # Clean previous flows for deterministic assertions
-        self.env['l10n.fr.pdp.flow'].sudo().search([('company_id', '=', self.company.id)]).unlink()
-        aggregator = self.env['l10n.fr.pdp.flow.aggregator']
-        ctx = {**self.env.context, 'mail_create_nolog': True, 'tracking_disable': True}
-        return aggregator.with_context(ctx)._cron_process_company(self.company)
+        self.env['l10n.fr.pdp.reports.flow'].sudo().search([('company_id', '=', self.company.id)]).unlink()
+        return self._aggregate_company()
 
     def _aggregate_company(self):
         """Run the PDP aggregator without clearing existing flows."""
-        aggregator = self.env['l10n.fr.pdp.flow.aggregator']
-        ctx = {**self.env.context, 'mail_create_nolog': True, 'tracking_disable': True}
-        return aggregator.with_context(ctx)._cron_process_company(self.company)
+        return self.env['l10n.fr.pdp.reports.flow.aggregator'].with_context(
+            mail_create_nolog=True, tracking_disable=True,
+        )._cron_process_company(self.company)
 
     def _get_single_flow(self):
-        return self.env['l10n.fr.pdp.flow'].search([('company_id', '=', self.company.id)])
+        return self.env['l10n.fr.pdp.reports.flow'].search([('company_id', '=', self.company.id)])
 
-    def _create_payment_for_invoice(self, invoice, amount=None, pay_date=None):
+    def _create_payment_for_invoice(self, invoice, amount=None, payment_date=None):
         """Create and post a customer payment and reconcile with the invoice."""
         amount = amount or invoice.amount_total
-        pay_date = pay_date or self.TEST_PAYMENT_DATE
+        payment_date = payment_date or self.TEST_PAYMENT_DATE
         journal = self.bank_journal
         # In "all" runs, the accountant stack may be installed, meaning `account.payment`
         # will not auto-fill an outstanding account unless a payment method line provides it.
@@ -301,7 +297,7 @@ class PdpTestCommon(TransactionCase):
             'partner_type': 'customer',
             'partner_id': invoice.partner_id.id,
             'amount': amount,
-            'date': pay_date,
+            'date': payment_date,
             'journal_id': journal.id,
             'payment_method_line_id': method_line.id,
         })

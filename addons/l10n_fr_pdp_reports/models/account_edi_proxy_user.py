@@ -1,40 +1,30 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import uuid
 
-from odoo import _, fields, models
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo import _, models, fields
 from odoo.exceptions import UserError
+
+DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_fr_pdp demo utils
+    'pilot_phase': lambda params: {
+        'annuaire_line_start_date': fields.Date.today(),
+        'pilot_phase': params['pdp_pilot_phase'],
+    },
+    'participant_status': lambda params: {},
+    'send_document': lambda params: {
+        'ppf_messages': [{'message_uuid': f'demo_{uuid.uuid4()}'} for _d in params['documents']]
+    },
+    'pdp_state': lambda params: {},
+}
 
 
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    proxy_type = fields.Selection(selection_add=[('pdp', 'French PDP')], ondelete={'pdp': 'cascade'})
-
-    def _get_proxy_urls(self):
-        urls = super()._get_proxy_urls()
-        config = self.env['ir.config_parameter'].sudo()
-        urls['pdp'] = {
-            'demo': False,
-            'prod': config.get_param('l10n_fr_pdp_proxy_server_url_prod', 'https://pdp.api.odoo.com'),
-            'test': config.get_param('l10n_fr_pdp_proxy_server_url_test', 'https://pdp.test.odoo.com'),
-        }
-        return urls
-
-    def _get_proxy_identification(self, company, proxy_type):
-        if proxy_type == 'pdp':
-            vat = company.partner_id.vat
-            if not vat:
-                raise UserError(_("Please set the company VAT before enabling PDP proxy integration."))
-            return vat
-        return super()._get_proxy_identification(company, proxy_type)
-
-    def _l10n_fr_pdp_call_proxy(self, endpoint, params=None):
-        self.ensure_one()
-        if self.proxy_type != 'pdp':
-            raise UserError(_("EDI user should be of type PDP."))
-        try:
-            server_url = (self._get_server_url() or '').rstrip('/')
-            endpoint_url = '/%s' % (endpoint or '').lstrip('/')
-            return self._make_request('%s%s' % (server_url, endpoint_url), params=params or {})
-        except AccountEdiProxyError as error:
-            raise UserError(error.message or _("Failed to contact the PDP proxy."))
+    def _call_peppol_proxy(self, endpoint, params=None):
+        demo_endpoint = DEMO_ENDPOINTS.get(endpoint.split('/')[-1])
+        if self.env.company._get_peppol_edi_mode() == 'demo' and (demo_endpoint := DEMO_ENDPOINTS.get(endpoint.split('/')[-1])):
+            self.ensure_one()
+            if self.proxy_type != 'pdp':
+                raise UserError(self.env._('EDI user should be of type PDP'))
+            return demo_endpoint(params)
+        else:
+            return super()._call_peppol_proxy(endpoint, params)

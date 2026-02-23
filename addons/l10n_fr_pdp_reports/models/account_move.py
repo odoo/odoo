@@ -1,70 +1,57 @@
-import logging
+from collections import defaultdict
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 from odoo.addons.l10n_fr_pdp_reports.utils import drom_com_territories
-
-_logger = logging.getLogger(__name__)
+from odoo.addons.l10n_fr_pdp_reports.models.pdp_flow import FLOW_SENT_STATES, FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES_SELECTION
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import frozendict
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_fr_pdp_flow_ids = fields.Many2many(
-        comodel_name='l10n.fr.pdp.flow',
-        relation='l10n_fr_pdp_flow_move_rel',
+    l10n_fr_pdp_sent_in_flow_ids = fields.Many2many(
+        comodel_name='l10n.fr.pdp.reports.flow',
+        string="Sent in PDP Flows",
+        relation='sent_account_move__pdp_flow',
         column1='move_id',
         column2='flow_id',
-        string="PDP Flows",
-        readonly=True,
-        copy=False,
+    )
+    l10n_fr_pdp_last_flow_id = fields.Many2one(
+        comodel_name='l10n.fr.pdp.reports.flow',
+        string="Last PDP Flows",
+        compute='_compute_l10n_fr_pdp_last_flow_id',
+        store=True,
     )
     l10n_fr_pdp_status = fields.Selection(
         selection=[
             ('out_of_scope', "Out of scope"),
             ('pending', "Pending"),
-            ('ready', "Ready to send"),
             ('error', "Error"),
-            ('sent', "Sent"),
-            ('cancelled', "Cancelled"),
-        ],
+        ] + FLOW_OPEN_STATES_SELECTION + FLOW_SENT_STATES_SELECTION,
         string="E-Reporting Status",
         compute='_compute_l10n_fr_pdp_status',
         store=True,
-        copy=False,
-        help="Lifecycle of the invoice within the French PDP reporting process.",
     )
-    l10n_fr_pdp_invoice_reference = fields.Char(
-        string="PDP Invoice Reference Override",
-        help="Override the invoice identifier used in Flux 10 payloads (test datasets or specific mappings).",
+    l10n_fr_pdp_display_info = fields.Boolean(related='company_id.l10n_fr_f10_enable_reporting')
+    l10n_fr_pdp_flow_10_report_type = fields.Selection(  # This field dictates if a move has to be reported or not.
+        selection=[('transaction', 'Transaction'), ('payment', 'Payment')],
+        compute='_compute_l10n_fr_pdp_flow_10_report_type',
+        store=True,
+    )  
+    l10n_fr_pdp_flow_10_operation_type = fields.Selection(
+        selection=[('sale', 'Sale'), ('purchase', 'Purchase')],
+        compute='_compute_l10n_fr_pdp_flow_10_operation_type',
+        store=True,
     )
-    l10n_fr_pdp_bt3_code = fields.Char(
-        string="PDP BT-3 Invoice Type Code",
-        help="Invoice type code (BT-3) used to map TT-21 in Flux 10.1.",
+    l10n_fr_pdp_error_message = fields.Text(
+        string="Flow 10 blocking errors",
+        compute='_compute_l10n_fr_pdp_error_message',
     )
-    l10n_fr_pdp_bt8_code = fields.Char(
-        string="PDP BT-8 Tax Due Date Type",
-        help="Tax due date type code (BT-8) used to map TT-24 in Flux 10.1.",
-    )
-    l10n_fr_pdp_contract_reference = fields.Char(
-        string="PDP Contract Reference (BT-12)",
-        help="Contract reference used for TT-30 when BT-3=262.",
-    )
-    l10n_fr_pdp_billing_period_start = fields.Date(
-        string="PDP Billing Period Start (BT-73)",
-        help="Billing period start date used for TT-31 when BT-3=262.",
-    )
-    l10n_fr_pdp_note_blu = fields.Text(
-        string="PDP Note BLU",
-        help="BLU note content for Flux 10.1 (TT-26/TT-27).",
-    )
-    l10n_fr_pdp_note_txd = fields.Text(
-        string="PDP Note TXD",
-        help="TXD note content for Flux 10.1 (TT-26/TT-27).",
-    )
-    l10n_fr_pdp_note_pai = fields.Text(
-        string="PDP Note PAI",
-        help="PAI note content for Flux 10.1 (TT-26/TT-27).",
+    l10n_fr_pdp_has_error = fields.Boolean(
+        compute='_compute_l10n_fr_pdp_has_error',
+        store=True,
+        readonly=True,
     )
 
     # -------------------------------------------------------------------------
@@ -72,219 +59,286 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     @api.depends(
-        'state',
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'date',
+        'l10n_fr_pdp_flow_10_operation_type',
+        'l10n_fr_pdp_flow_10_report_type',
+        'l10n_fr_pdp_has_error',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
         'move_type',
-        'partner_id',
-        'partner_id.vat',
-        'partner_id.country_id',
-        'company_id',
-        'company_id.country_id',
-        'company_id.partner_id.vat',
-        'l10n_fr_pdp_flow_ids.state',
-        'l10n_fr_pdp_flow_ids.error_move_ids',
-        'l10n_fr_pdp_flow_ids.period_status',
-        'is_move_sent',
+    )
+    def _compute_l10n_fr_pdp_last_flow_id(self):
+        scopes_moves_map = defaultdict(list)
+        Flow = self.env['l10n.fr.pdp.reports.flow']
+        for move in self:
+            if move.l10n_fr_pdp_flow_10_report_type:
+                scopes_moves_map[frozendict(Flow._get_scope_params_for_move(move))].append(move.id)
+            else:
+                move.l10n_fr_pdp_last_flow_id = None
+        for scope, move_ids in dict(scopes_moves_map).items():
+            moves = self.browse(move_ids)
+            domain = [(key, '=', value) for key, value in scope.items()]
+            last_flow = Flow.search(
+                domain=domain,
+                order='id desc',
+                limit=1,
+            )
+            if not last_flow or (last_flow.state in FLOW_SENT_STATES and not move.l10n_fr_pdp_sent_in_flow_ids):
+                last_flow = Flow._get_open_flow_and_create_if_needed(moves[0])
+            moves.l10n_fr_pdp_last_flow_id = last_flow
+
+    @api.depends(
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'date',
+        'l10n_fr_pdp_flow_10_report_type',
+        'l10n_fr_pdp_has_error',
+        'l10n_fr_pdp_last_flow_id',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
+        'move_type',
+        'state',
     )
     def _compute_l10n_fr_pdp_status(self):
+        today = fields.Date.context_today(self)
         for move in self:
-            is_sale = move.is_sale_document(include_receipts=True)
-            is_purchase = move.is_purchase_document(include_receipts=False)
-
-            # Not posted or not a supported document -> not applicable
-            if move.state != 'posted' or not (is_sale or is_purchase):
-                move.l10n_fr_pdp_status = False
-                continue
-
-            # Check if move is out of scope.
-            in_scope = (
-                bool(move._get_l10n_fr_pdp_transaction_type())
-                if is_sale
-                else self._is_international_partner_for_purchase(move)
-            )
-            if not in_scope:
+            if move.state == 'draft':
+                move.l10n_fr_pdp_status = None
+            elif not move.l10n_fr_pdp_flow_10_report_type:
                 move.l10n_fr_pdp_status = 'out_of_scope'
-                continue
-
-            # Check if move is in any flow
-            flows = move.l10n_fr_pdp_flow_ids
-            if not flows:
-                # In-scope posted document not aggregated yet.
-                move.l10n_fr_pdp_status = 'pending'
-                continue
-
-            # Get the most relevant flow for this move (prioritize non-sent flows),
-            # then pick the most recent one to avoid stale status from older flows.
-            active_flows = flows.filtered(lambda f: f.state not in {'sent', 'completed'})
-            relevant_flow = active_flows.sorted('id', reverse=True)[:1] if active_flows else flows.sorted('id', reverse=True)[:1]
-
-            if not relevant_flow:
-                move.l10n_fr_pdp_status = False
-                continue
-
-            # Check if move has validation errors in the relevant flow
-            has_errors = move in relevant_flow.error_move_ids
-
-            # v1.2 Status logic based on period_status:
-            # - open period -> pending (users have time to fix errors)
-            # - grace period -> error (if validation errors) OR ready (if valid)
-            # - closed period -> sent (if flow sent) OR error (will be in auto-created RE)
-
-            # Recompute directly to avoid stale cached value when "today" changes
-            # (especially in cron/time-window transitions and tests patching today).
-            period_status = relevant_flow._get_period_status()
-            flow_state = relevant_flow.state
-
-            # Priority 1: Flow already sent/completed
-            if flow_state in {'sent', 'completed'}:
-                if has_errors and relevant_flow.transport_status == 'PARTIAL_REJECTED':
-                    move.l10n_fr_pdp_status = 'error'
-                else:
-                    move.l10n_fr_pdp_status = 'sent'
-            elif flow_state == 'cancelled':
-                move.l10n_fr_pdp_status = 'cancelled'
-            # Open period: users have time to fix errors, stay pending.
-            elif period_status == 'open':
-                move.l10n_fr_pdp_status = 'pending'
-            # Grace/closed: validation errors are surfaced.
-            elif has_errors:
+            elif move.l10n_fr_pdp_has_error:
                 move.l10n_fr_pdp_status = 'error'
-            # Flow built and valid: ready to send (even on due day / after if not sent yet).
-            elif flow_state == 'ready':
-                move.l10n_fr_pdp_status = 'ready'
-            else:
+            elif not move.l10n_fr_pdp_last_flow_id:
+                move.l10n_fr_pdp_status = None
+            elif move.l10n_fr_pdp_last_flow_id.period_end >= today:
                 move.l10n_fr_pdp_status = 'pending'
+            else:
+                move.l10n_fr_pdp_status = move.l10n_fr_pdp_last_flow_id.state
+
+    @api.depends(
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'is_move_sent',
+        'l10n_fr_pdp_flow_10_report_type',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
+        'move_type',
+        'state',
+    )
+    def _compute_l10n_fr_pdp_has_error(self):
+        for move in self:
+            move.l10n_fr_pdp_has_error = bool(move._get_l10n_fr_pdp_errors(lazy=True))
+
+    @api.depends(
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'company_id.account_peppol_edi_user',
+        'company_id.l10n_fr_f10_enable_reporting',
+        'company_id.l10n_fr_pdp_send_to_ppf',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
+        'state',
+    )
+    def _compute_l10n_fr_pdp_flow_10_operation_type(self):
+        for move in self:
+            if move.state == 'draft' or not move.company_id.l10n_fr_f10_enable_reporting:
+                move.l10n_fr_pdp_flow_10_operation_type = None
+                continue
+            matched = move._l10n_fr_pdp_get_matched_transactions()
+            tagret_move = matched[0] if matched else move
+            if tagret_move._l10n_fr_pdp_is_purchase():
+                move.l10n_fr_pdp_flow_10_operation_type = 'purchase'
+            elif tagret_move._l10n_fr_pdp_is_sale():
+                move.l10n_fr_pdp_flow_10_operation_type = 'sale'
+            else:
+                move.l10n_fr_pdp_flow_10_operation_type = None
+
+    @api.depends(
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'company_id.l10n_fr_f10_enable_reporting',
+        'company_id.l10n_fr_pdp_flow_10_start_date',
+        'l10n_fr_pdp_flow_10_operation_type',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
+        'move_type',
+        'state',
+    )
+    def _compute_l10n_fr_pdp_flow_10_report_type(self):
+        for move in self:
+            if (
+                move.state == 'draft'
+                or not move.company_id.l10n_fr_f10_enable_reporting
+                or not move.company_id.l10n_fr_pdp_flow_10_start_date
+                or move.date < move.company_id.l10n_fr_pdp_flow_10_start_date
+                or not move._l10n_fr_pdp_get_transaction_type()  # is b2bi or b2c
+            ):
+                move.l10n_fr_pdp_flow_10_report_type = None
+                continue
+            is_purchase = move._l10n_fr_pdp_is_purchase()
+            is_sale = not is_purchase and move._l10n_fr_pdp_is_sale()
+            if is_purchase or is_sale:
+                move.l10n_fr_pdp_flow_10_report_type = 'transaction'
+            elif move.move_type == 'entry':
+                if move._l10n_fr_pdp_get_matched_transactions():
+                    move.l10n_fr_pdp_flow_10_report_type = 'payment'
+                elif move.l10n_fr_pdp_sent_in_flow_ids:
+                    # payment was sent but is not linked to an invoice anymore, must create rectificative flow
+                    self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+            else:
+                move.l10n_fr_pdp_flow_10_report_type = None
+
+    @api.depends(
+        'commercial_partner_id.country_id',
+        'commercial_partner_id.vat',
+        'company_id.account_fiscal_country_id',
+        'date',
+        'l10n_fr_pdp_flow_10_report_type',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'line_ids.matched_debit_ids.debit_move_id',
+        'move_type',
+    )
+    def _compute_l10n_fr_pdp_error_message(self):
+        for move in self:
+            errors = move._get_l10n_fr_pdp_errors()
+            move.l10n_fr_pdp_error_message = '- ' + '\n- '.join(errors) if errors else None
+
+    @api.depends('l10n_fr_pdp_sent_in_flow_ids')
+    def _compute_show_reset_to_draft_button(self):
+        super()._compute_show_reset_to_draft_button()
+        for move in self:
+            if move.l10n_fr_pdp_sent_in_flow_ids:
+                move.show_reset_to_draft_button = False
 
     # -------------------------------------------------------------------------
     # Business Methods
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _get_l10n_fr_pdp_flow_domain(self, company, reporting_date):
-        """Return domain for invoices eligible for PDP flow on given date."""
-        reporting_date = fields.Date.to_date(reporting_date)
-        return [
-            ('company_id', '=', company.id),
-            ('state', '=', 'posted'),
-            ('move_type', 'in', self.get_sale_types(include_receipts=True)),
-            '|',
-            ('invoice_date', '=', reporting_date),
-            '&',
-            ('invoice_date', '=', False),
-            ('date', '=', reporting_date),
-        ]
-
-    def _get_l10n_fr_pdp_transaction_type(self):
-        """Classify invoice for PDP reporting: b2c, international, or False (domestic B2B)."""
+    def _l10n_fr_pdp_get_matched_transactions(self):
         self.ensure_one()
-        partner = self.commercial_partner_id
-        company_country_code = self.company_id.country_id.code if self.company_id.country_id else None
-        partner_country_code = partner.country_id.code if partner.country_id else None
-
-        # Use the centralized DROM-COM logic
-        return drom_com_territories.get_transaction_flow_type(
-            company_country=company_country_code,
-            partner_country=partner_country_code,
-            partner_vat=partner.vat
+        if self.move_type != 'entry':
+            return
+        
+        return self._get_reconciled_amls().move_id.filtered(
+            lambda move: move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
+                move._is_downpayment()
+                or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
+            )
         )
+    
+    def _l10n_fr_pdp_is_sale(self):
+        self.ensure_one()
+        return self.is_sale_document(include_receipts=True)
 
-    def _is_international_partner_for_purchase(self, move=None):
-        """Return True when a vendor bill partner is treated as international for Flux 10."""
-        target_move = move or self
-        target_move.ensure_one()
-        partner = target_move.commercial_partner_id
-        company_country_code = target_move.company_id.country_id.code if target_move.company_id.country_id else None
-        partner_country_code = partner.country_id.code if partner.country_id else None
+    def _l10n_fr_pdp_is_purchase(self):
+        self.ensure_one()
+        return self.is_purchase_document(include_receipts=False)
 
-        # Purchases are classified on geography/territory rules, not on supplier VAT presence.
-        # Missing VAT must stay in-scope and be handled by validation errors.
-        if company_country_code and partner_country_code:
-            if drom_com_territories.should_use_einvoicing(company_country_code, partner_country_code):
-                return False
-            company_is_fr = drom_com_territories.is_france_territory(company_country_code)
-            partner_is_fr = drom_com_territories.is_france_territory(partner_country_code)
-            return not (company_is_fr and partner_is_fr and company_country_code == partner_country_code)
+    def _get_l10n_fr_pdp_errors(self, lazy=False):
+        """Return the list of validation errors for this move in the context of PDP reporting."""
+        self.ensure_one()
+        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type != 'transaction':
+            return []
+        def check():
+            if self.is_sale_document(include_receipts=True) and not self.is_move_sent:
+                yield self.env._("Invoice/credit note has not been sent to the customer.")
+            if transaction_type == 'b2bi':
+                try:
+                    self.commercial_partner_id.check_vat()
+                except ValidationError:
+                    yield self.env._("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
 
-        vat = (partner.vat or '').strip()
-        company_country = target_move.company_id.country_id
-        if vat and company_country and len(vat) >= 2:
-            return vat[:2].upper() != (company_country.code or '')
-        return False
+            for move in (self, self._l10n_fr_pdp_get_referenced_document()):
+                if not move:
+                    continue
+                ref_move = self.env._(" in referenced move %s", move.name) if move != self else ""
+                if not move.partner_shipping_id.street:
+                    yield self.env._("Missing address street (line 1)%s.", ref_move)
+                if not move.partner_shipping_id.city:
+                    yield self.env._("Missing address city%s.", ref_move)
+                if not move.partner_shipping_id.zip:
+                    yield self.env._("Missing address zip code%s.", ref_move)
+                if not move.partner_shipping_id.zip:
+                    yield self.env._("Missing address country%s.", ref_move)
+
+        transaction_type = self._l10n_fr_pdp_get_transaction_type()
+        if lazy:
+            error = next(check(), False)
+            return [error] if error else []
+        return list(check())
+    
+    def _l10n_fr_pdp_get_referenced_document(self):
+        self.ensure_one()
+        return self.reversed_entry_id or (self.debit_origin_id if 'debit_origin_id' in self._fields else None)
+
+    def _l10n_fr_pdp_get_transaction_type(self):
+        """Classify invoice for PDP reporting: b2c, b2bi, or False (domestic B2B)."""
+        self.ensure_one()
+
+        if matched_moves := self._l10n_fr_pdp_get_matched_transactions():
+            # if payment, get matched move transaction type
+            move = matched_moves[0]
+        else:
+            move = self
+
+        if not move:
+            return
+        company_country_code = move.company_id.account_fiscal_country_id.code
+        partner_country_code = move.commercial_partner_id.country_id.code
+        partner_vat = move.commercial_partner_id.vat
+        operation_type = move.l10n_fr_pdp_flow_10_operation_type
+
+        if not operation_type:
+            return
+
+        # partner has no vat -> b2c, if is sale, else no VAT has to be reported
+        if operation_type == 'sale' and not partner_vat or len(partner_vat) == 1:
+            return 'b2c'
+
+        if not partner_country_code:
+            partner_country_code = self.env['res.country'].search(
+                [('code', '=', move.commercial_partner_id._deduce_country_code())]
+            ).code
+            if not partner_country_code:
+                return
+
+        company_territory_type = drom_com_territories.get_territory_type(company_country_code)
+        partner_territory_type = drom_com_territories.get_territory_type(partner_country_code)
+        # One party outside French territories => International
+        if not partner_territory_type or not company_territory_type:
+            return 'b2bi'
+        
+        # all companies are in e-invoicing zones 
+        if {company_territory_type, partner_territory_type}.issubset(drom_com_territories.E_INVOICING_ZONES):
+            return  # b2b
+        
+        # All other cases: International
+        return 'b2bi'
 
     # -------------------------------------------------------------------------
     # CRUD Override
     # -------------------------------------------------------------------------
 
-    def write(self, vals):
-        """Reset open PDP flows when tracked fields change."""
-        prev_states = {move.id: move.state for move in self}
-        tracked_fields = {
-            'invoice_date',
-            'date',
-            'invoice_line_ids',
-            'currency_id',
-            'partner_id',
-            'partner_shipping_id',
-            'move_type',
-            'state',
-            'is_move_sent',
-            'l10n_fr_pdp_invoice_reference',
-            'l10n_fr_pdp_bt3_code',
-            'l10n_fr_pdp_bt8_code',
-            'l10n_fr_pdp_contract_reference',
-            'l10n_fr_pdp_billing_period_start',
-            'l10n_fr_pdp_note_blu',
-            'l10n_fr_pdp_note_txd',
-            'l10n_fr_pdp_note_pai',
-        }
-        res = super().write(vals)
-        if tracked_fields.intersection(vals):
-            open_states = {'draft', 'building', 'ready', 'error'}
-            flows_to_reset = self.env['l10n.fr.pdp.flow'].browse()
-            for move in self:
-                if move.state != 'posted':
-                    continue
-                if move.is_sale_document(include_receipts=True):
-                    if not move._get_l10n_fr_pdp_transaction_type():
-                        continue
-                elif move.is_purchase_document(include_receipts=False):
-                    if not self._is_international_partner_for_purchase(move):
-                        continue
-                else:
-                    continue
-                open_flows = move.l10n_fr_pdp_flow_ids.filtered(lambda f: f.state in open_states)
-                if open_flows:
-                    flows_to_reset |= open_flows
-            if flows_to_reset:
-                flows_to_reset._mark_as_outdated()
-            # v1.2: No automatic correction flows. User must create credit note + RE manually.
-        if 'is_move_sent' in vals:
-            affected = self.filtered(lambda m: m.state == 'posted' and m.is_sale_document(include_receipts=True))
-            if affected:
-                flows = affected.mapped('l10n_fr_pdp_flow_ids').filtered(lambda f: f.state in {'draft', 'building', 'ready', 'error'})
-                if flows:
-                    flows._mark_as_outdated()
-                    try:
-                        flows._build_payload()
-                    except Exception:
-                        _logger.exception('Failed to rebuild PDP payload after send flag change')
-        # Create rectificative flows for cancellations of previously sent invoices.
-        if 'state' in vals and vals.get('state') == 'cancel':
-            sent_flows = self.env['l10n.fr.pdp.flow'].browse()
-            for move in self:
-                if prev_states.get(move.id) != 'posted':
-                    continue
-                if not move.is_sale_document(include_receipts=True):
-                    continue
-                sent_flows |= move.l10n_fr_pdp_flow_ids.filtered(lambda f: f.state in {'sent', 'completed'})
-            for flow in sent_flows:
-                flow.action_create_rectificative_flow()
-        return res
-
-    def button_draft(self):
+    def _check_draftable(self):
         """Prevent resetting to draft when invoice already sent to PDP."""
+        if not self.env.context.get('l10n_fr_pdp_bypass_draft_check') and self.l10n_fr_pdp_sent_in_flow_ids:
+            raise UserError(self.env._(
+                "You cannot reset an invoice to draft if it was already sent to PDP. "
+                "Create a credit note and issue a new invoice instead or cancel this invoice."
+            ))
+        return super()._check_draftable()
+
+    def button_cancel(self):
         for move in self:
-            if not move.is_sale_document(include_receipts=True):
-                continue
-            if move.l10n_fr_pdp_status == 'sent':
-                raise UserError(_("You cannot reset to draft an invoice already sent to PDP. Create a credit note and issue a new invoice instead."))
-        return super().button_draft()
+            if move.state == 'posted' and move.l10n_fr_pdp_sent_in_flow_ids:
+                # move was sent, must rectify
+                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                move.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
+        return super().button_cancel()
