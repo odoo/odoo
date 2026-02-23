@@ -3,9 +3,11 @@ import {
     contains,
     createVideoStream,
     defineMailModels,
+    dragenterFiles,
+    dropFiles,
     listenStoreFetch,
-    mockGetMedia,
     makeMockRtcNetwork,
+    mockGetMedia,
     openDiscuss,
     patchUiSize,
     setupChatHub,
@@ -15,8 +17,6 @@ import {
     triggerEvents,
     triggerHotkey,
     waitStoreFetch,
-    dragenterFiles,
-    dropFiles,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
@@ -24,9 +24,19 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
-import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    beforeEach,
+    describe,
+    expect,
+    getFixture,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    mockSendBeacon,
+    mockUserAgent,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import {
     asyncStep,
     Command,
@@ -38,8 +48,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();
