@@ -1125,6 +1125,8 @@ class PosOrder(models.Model):
             draft_orders.write({'state': 'cancel'})
             for config in draft_orders.mapped('config_id'):
                 config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
+        else:
+            raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
         return {
             'pos.order': draft_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
         }
