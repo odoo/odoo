@@ -151,6 +151,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Re-select image.",
         trigger: 'iframe .s_three_columns .row > :nth-child(1) img',
+        run: function (actions) {
+            actions.click();
+            const el = this.$anchor[0];
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Check that the second image is not within a link.",
@@ -178,6 +185,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Reselect the first image.",
         trigger: 'iframe .s_three_columns .row > :nth-child(1) div > a > img',
+        run: function (actions) {
+            actions.click();
+            const el = this.$anchor[0];
+            const sel = el.ownerDocument.getSelection();
+            sel.collapse(el, 0);
+            el.focus();
+        },
     },
     {
         content: "Check that link tools appear.",

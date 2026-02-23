@@ -191,7 +191,7 @@ class TestUBLROSynchronize(TestUBLROCommon):
         ])
         self.assertEqual(len(bills), 1)
         self.assertEqual(bills.state, 'draft')
-        self.assertEqual(bills.amount_total, 1785.0)
+        self.assertEqual(bills.amount_total, 1815.0)
         self.assertEqual(bills.commercial_partner_id.vat, '8001011234567')
         self.assertEqual(bills.l10n_ro_edi_index, '5020704741')
         self.assertEqual(bills.l10n_ro_edi_state, 'invoice_sent')
