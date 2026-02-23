@@ -9,7 +9,7 @@ import {
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { click, queryOne, animationFrame, edit, waitFor } from "@odoo/hoot-dom";
+import { click, queryOne, animationFrame, edit, waitFor, press } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -259,6 +259,10 @@ test("Edit share icon", async () => {
     await dragAndDropSnippet("s_share");
     await contains(":iframe .s_share a i").dblclick();
     expect(".modal-content").toBeDisplayed();
+    await press("Escape");
+    await contains(":iframe .s_share a").dblclick();
+    await animationFrame();
+    expect(".o-we-linkpopover").toHaveCount(0);
 });
 
 test("Social Media snippet options are correct", async () => {
@@ -266,5 +270,11 @@ test("Social Media snippet options are correct", async () => {
 });
 
 test("Share snippet options are correct", async () => {
+    const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
     await testSocialSnippetOptions("s_share", "Share", "facebook");
+    expect(":iframe .s_share.o_not_editable").toHaveCount(1);
+    await contains(`${rowSelector(0)} .o_handle_cell`).dragAndDrop(rowSelector(1));
+    expect(":iframe .s_share a:first-of-type").toHaveClass("s_share_twitter");
+    await contains(".o_we_table_wrapper tr:nth-of-type(1) .o-checkbox input").click();
+    expect(":iframe .s_share .s_share_twitter.d-none").toHaveCount(1);
 });

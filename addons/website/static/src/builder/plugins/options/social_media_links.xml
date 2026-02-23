@@ -42,9 +42,26 @@
 </t>
 
 
+<t t-name="website.ShareMediaLinksOption">
+    <BuilderList
+        action="'shareMediaLinks'"
+        itemShape="{ name : 'text', status: 'boolean' }"
+        isEditable="false"
+        disableLastCheckedCheckbox="true"
+    />
+</t>
+
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <social_media_links selector=".s_social_media"/>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <share_media_links
+            template="website.ShareMediaLinksOption"
+            selector=".s_share"/>
     </xpath>
 </t>
 
