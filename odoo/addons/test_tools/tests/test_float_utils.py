@@ -12,8 +12,6 @@ class TestFloatPrecision(TransactionCase):
 
     def test_rounding_02(self):
         """ Test rounding methods with 2 digits. """
-        currency = self.env.ref('base.EUR')
-
         def try_round(amount, expected, digits=2, method='HALF-UP'):
             value = float_round(amount, precision_digits=digits, rounding_method=method)
             result = float_repr(value, precision_digits=digits)
@@ -35,7 +33,7 @@ class TestFloatPrecision(TransactionCase):
         try_round(-5.025, '-5.02', method='HALF-EVEN')
 
         def try_zero(amount, expected):
-            self.assertEqual(currency.is_zero(amount), expected,
+            self.assertEqual(float_is_zero(amount, precision_rounding=0.01), expected,
                              "Rounding error: %s should be zero!" % amount)
 
         try_zero(0.01, False)
@@ -50,7 +48,7 @@ class TestFloatPrecision(TransactionCase):
         try_zero(2.675-2.68, False) # 2.675 - 2.68 = -0.005 -> rounds to -0.01
 
         def try_compare(amount1, amount2, expected):
-            self.assertEqual(currency.compare_amounts(amount1, amount2), expected,
+            self.assertEqual(float_compare(amount1, amount2, precision_rounding=0.01), expected,
                              "Rounding error, compare_amounts(%s,%s) should be %s" % (amount1, amount2, expected))
 
         try_compare(0.001, 0.001, 0)
@@ -196,32 +194,10 @@ class TestFloatPrecision(TransactionCase):
         try_round(2.5, '2.50', precision_rounding=0.05, method='DOWN')
         try_round(-2.5, '-2.50', precision_rounding=0.05, method='DOWN')
 
-    def test_rounding_04(self):
-        """ check that proper rounding is performed for float persistence """
-        currency = self.env.ref('base.EUR')
-        currency_rate = self.env['res.currency.rate']
-
-        def try_roundtrip(value, expected, date):
-            rate = currency_rate.create({'name': date,
-                                         'rate': value,
-                                         'currency_id': currency.id})
-            self.assertEqual(rate.rate, expected,
-                             'Roundtrip error: got %s back from db, expected %s' % (rate, expected))
-
-        # res.currency.rate no more uses 6 digits of precision by default, it now uses whatever precision it gets
-        try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
-
-        #TODO re-enable those tests when tests are made on dedicated models
-        # (res.currency.rate don't accept negative value anymore)
-        #try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
-        #try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')
-
     def test_float_split_05(self):
         """ Test split method with 2 digits. """
-        currency = self.env.ref('base.EUR')
-
         def try_split(value, expected, split_fun, rounding=None):
-            digits = max(0, -int(log10(currency.rounding))) if rounding is None else rounding
+            digits = max(0, -int(log10(0.01))) if rounding is None else rounding
             result = split_fun(value, precision_digits=digits)
             self.assertEqual(result, expected, 'Split error: got %s, expected %s' % (result, expected))
 
@@ -281,12 +257,3 @@ class TestFloatPrecision(TransactionCase):
 
         with self.assertRaises(AssertionError):
             float_round(1.25, precision_digits=0.5)
-
-    def test_amount_to_text_10(self):
-        """ verify that amount_to_text works as expected """
-        currency = self.env.ref('base.EUR')
-
-        amount_target = currency.amount_to_text(0.29)
-        amount_test = currency.amount_to_text(0.28)
-        self.assertNotEqual(amount_test, amount_target,
-                            "Amount in text should not depend on float representation")

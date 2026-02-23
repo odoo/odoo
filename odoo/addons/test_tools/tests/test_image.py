@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, PngImagePlugin
 from odoo.tools import image as tools
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, TransactionCase
-from .files import PNG_RAW
+from odoo.addons.base.tests.files import PNG_RAW
 
 img_open = tools.binary_to_image
 
