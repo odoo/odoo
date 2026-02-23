@@ -753,7 +753,7 @@ class AccountJournal(models.Model):
             ('journal_id', 'in', self.ids),
             ('review_state', 'in', ('todo', 'anomaly')),
             ('state', '=', 'posted'),
-        ])
+        ], bypass_access=True)
         selects = [
             SQL("journal_id"),
             SQL("company_id"),
