@@ -136,7 +136,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         line_node['cac:Item']['cac:CommodityClassification'] = {
             'cbc:ItemClassificationCode': {
                 '_text': product.cpv_code_id.code,
-                'listID': 'CPV',
+                'listID': 'STI',
             }
         }
 
