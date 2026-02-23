@@ -7,7 +7,7 @@ export class EmptyNotEditableElementsPlugin extends Plugin {
     static id = "mass_mailing.EmptyNotEditableElements";
     static dependencies = ["selection"];
     resources = {
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
     };
 
     /**
