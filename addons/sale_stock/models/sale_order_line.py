@@ -207,7 +207,7 @@ class SaleOrderLine(models.Model):
                         continue
                     qty += move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 for move in incoming_moves:
-                    if move.state != 'done':
+                    if move.state != 'done' or (not move.origin_returned_move_id and line.product_uom_qty > 0 and not move.picking_id.return_id):
                         continue
                     qty -= move.product_uom._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 delivered_qties[line] = qty
