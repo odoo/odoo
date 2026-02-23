@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
         {
             trigger: 'div[name="name"] textarea',
-            content: _t("Add some description for the people that will validate it"),
+            content: _t("Add some description for the leave"),
             run: "click",
             tooltipPosition: "right",
         },
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
         {
             trigger: 'button[data-menu-xmlid="hr_holidays.menu_hr_holidays_management"]',
-            content: _t("Let's go validate it"),
+            content: _t("Let's go check it"),
             tooltipPosition: "bottom",
             run: "click",
         },
@@ -85,15 +85,9 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: 'button[name="action_approve"]',
-            content: _t("Let's approve it"),
-            tooltipPosition: "bottom",
-            run: "click",
-        },
-        {
             isActive: ["auto"],
             trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,
-            content: "Verify leave is approved",
+            content: "Verify leave has been automatically approved as it has been created by an admin",
         },
     ],
 });

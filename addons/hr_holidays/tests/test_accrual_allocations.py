@@ -4193,7 +4193,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_approve()
             # A virtual leave that is pending approval and will be taken after the carryover date
-            leave = self.env['hr.leave'].create({
+            leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
                 'name': 'Virtual Leave',
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': work_entry_type.id,

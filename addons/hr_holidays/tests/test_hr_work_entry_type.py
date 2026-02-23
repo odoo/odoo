@@ -45,7 +45,6 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             'request_date_from': '2025-09-01',  # Monday
             'request_date_to': '2025-09-05',
         })
-        leave_0.action_approve()
         self.assertEqual(
             self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_0.id)]).count_as,
             'working_time',
@@ -73,7 +72,6 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             'request_date_from': '2025-09-03',
             'request_date_to': '2025-09-03',
         })
-        leave_1.action_approve()
 
         self.assertEqual(
             self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_1.id)]).count_as,

@@ -27,7 +27,7 @@ class TestDeparture(TestHolidayContract):
             'number_of_days': 1000,
         }])
 
-        cls.leave_before, cls.leave_during, cls.leave_after_1, cls.leave_after_2 = cls.env['hr.leave'].create([
+        cls.leave_before, cls.leave_during, cls.leave_after_1, cls.leave_after_2 = cls.env['hr.leave'].with_context(leave_fast_create=True).create([
             {
                 'name': "Leave before the departure",
                 'employee_id': cls.jules_emp.id,

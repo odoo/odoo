@@ -27,7 +27,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_from_period = 'am'
@@ -55,7 +55,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
@@ -96,7 +96,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
@@ -126,7 +126,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
@@ -161,7 +161,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
         with Form(
-            self.env["hr.leave"].with_context(default_employee_id=employee.id)
+            self.env["hr.leave"].with_context(default_employee_id=employee.id, leave_fast_create=True)
         ) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)  # Monday
@@ -202,7 +202,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
         with Form(
-            self.env["hr.leave"].with_context(default_employee_id=employee.id)
+            self.env["hr.leave"].with_context(default_employee_id=employee.id, leave_fast_create=True)
         ) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)  # Monday
@@ -244,7 +244,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
         with Form(
-            self.env["hr.leave"].with_context(default_employee_id=employee.id)
+            self.env["hr.leave"].with_context(default_employee_id=employee.id, leave_fast_create=True)
         ) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             leave_form.request_date_from = date(2019, 9, 2)  # Monday
@@ -286,7 +286,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             # does not work on mondays
             leave_form.request_date_from = date(2019, 9, 2)
@@ -314,7 +314,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = self.work_entry_type
             # does not work on tuesdays
             leave_form.request_date_from = date(2019, 9, 3)

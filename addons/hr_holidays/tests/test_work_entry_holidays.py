@@ -75,7 +75,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         # /!\ this is a week day => it exists an calendar attendance at this time
         self.work_entry_type.request_unit = 'hour'
         self.work_entry_type.unit_of_measure = 'hour'
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
             'work_entry_type_id': self.work_entry_type.id,
@@ -84,7 +84,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_hour_from': 11,
             'request_hour_to': 17,
         })
-        leave.action_approve()
 
         work_entries_vals = self.richard_emp.generate_work_entries(self.start.date(), self.end.date())
         leave_work_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.work_entry_type]
@@ -100,6 +99,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'name': 'Parental 0h',
             'attendance_ids': False,
         })
+
         employee = self.env['hr.employee'].create({
             'name': 'My employee',
             'contract_date_start': self.start.date() - relativedelta(years=1),
@@ -118,7 +118,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'count_as': 'absence',
         })
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': "Sick 1 that doesn't make sense, but it's the prod so YOLO",
             'employee_id': employee.id,
             'work_entry_type_id': work_entry_type.id,
@@ -158,7 +158,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_date_from': date(2023, 2, 3),
             'request_date_to': date(2023, 2, 9),
         })
-        leave.action_approve()
 
         work_entries_vals = self.richard_emp.generate_work_entries(date_from, date_to)
         leave_work_entries = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.work_entry_type]
@@ -168,19 +167,18 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertFalse(public_holiday_work_entry[0].get('leave_ids'), "Public holiday work entry should not have leave_ids")
 
     def test_work_entries_overlap_work_leaves(self):
-        remote = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'remote1',
             'employee_id': self.richard_emp.id,
             'work_entry_type_id': self.work_entry_type_remote.id,
             'request_date_from': date(2015, 11, 2),  # Monday
             'request_date_to': date(2015, 11, 6),
         })
-        remote.action_approve()
 
         self.work_entry_type.request_unit = 'hour'
         self.work_entry_type.unit_of_measure = 'hour'
         self.work_entry_type.count_as = 'absence'
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
             'work_entry_type_id': self.work_entry_type.id,
@@ -189,7 +187,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_hour_from': 11,
             'request_hour_to': 17,
         })
-        leave.action_approve()
 
         work_entries_vals = self.richard_emp.generate_work_entries(self.start.date(), self.end.date())
         remote_work_entry = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.work_entry_type_remote]
@@ -219,7 +216,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(2, len(work_entries_vals))
         self.assertTrue(all(vals['duration'] == 8.0 for vals in work_entries_vals))
         attendance_work_entry_type_id = work_entries_vals[0]['work_entry_type_id']
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'Half-Day Leave',
             'employee_id': self.richard_emp.id,
             'request_date_from': date(2025, 11, 27),
@@ -228,7 +225,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_date_to_period': 'am',
             'work_entry_type_id': self.half_day_work_entry_type.id,
         })
-        leave.action_approve()
         work_entries_vals = self.richard_emp.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
         work_entries_vals = [
             vals for vals in work_entries_vals
@@ -260,7 +256,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(1, len(work_entries_vals))
         self.assertEqual(8.0, work_entries_vals[0]['duration'])
         attendance_work_entry_type_id = work_entries_vals[0]['work_entry_type_id']
-        leave = self.env['hr.leave'].create({
+        self.env['hr.leave'].create({
             'name': 'Hours Leave',
             'employee_id': self.richard_emp.id,
             'request_date_from': date(2025, 11, 27),
@@ -269,7 +265,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_hour_to': 12.0,
             'work_entry_type_id': self.hours_work_entry_type.id,
         })
-        leave.action_approve()
         work_entries_vals = self.richard_emp.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
         work_entries_vals = [vals for vals in work_entries_vals if vals['employee_id'] == self.richard_emp and vals['date'] == date(2025, 11, 27)]
         self.assertEqual(2, len(work_entries_vals))
@@ -322,7 +317,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         # Setup contract generation state
 
         leave = self.create_leave(start, end)
-        leave.action_approve()
         leave_work_entry_vals = self.richard_emp.version_id.generate_work_entries(start.date(), end.date())
         self.assertEqual(leave_work_entry_vals[:1][0]['leave_ids'], leave)
         leave.action_refuse()
@@ -379,7 +373,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             },
         ])
 
-        leave_paid, leave_unpaid = self.env['hr.leave'].create([{
+        self.env['hr.leave'].create([{
             'name': 'Paid leave',
             'employee_id': self.jules_emp.id,
             'work_entry_type_id': work_entry_type_paid.id,
@@ -398,7 +392,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_hour_to': '10',
         }])
 
-        (leave_paid | leave_unpaid).with_user(SUPERUSER_ID).action_approve()
         work_entries_vals = self.contract_cdi._generate_work_entries(datetime(2024, 9, 10, 0, 0, 0), datetime(2024, 9, 10, 23, 59, 59))
         paid_leave_entry = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == work_entry_type_paid]
         unpaid_leave_entry = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == work_entry_type_unpaid]
@@ -408,8 +401,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(unpaid_leave_entry[0]['duration'], 1)
 
     def test_work_data(self):
-        leave = self.create_leave(datetime(2015, 11, 8, 8, 0), datetime(2015, 11, 10, 22, 0), name="Doctor Appointment", employee_id=self.jules_emp.id)
-        leave.action_approve()
+        self.create_leave(datetime(2015, 11, 8, 8, 0), datetime(2015, 11, 10, 22, 0), name="Doctor Appointment", employee_id=self.jules_emp.id)
 
         work_entries_vals = self.jules_emp.version_ids.generate_work_entries(date(2015, 11, 10), date(2015, 11, 21))
         work_entry_type_attendance_id = self.env['hr.work.entry.type'].search([('code', '=', 'WORK100'), ('country_id', '=', self.env.company.country_id.id)])
@@ -436,7 +428,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
     def test_multi_contract_holiday(self):
         # Leave during second contract
         leave = self.create_leave(datetime(2015, 11, 17), datetime(2015, 11, 20), name="Doctor Appointment", employee_id=self.jules_emp.id)
-        leave.action_approve()
         start = datetime(2015, 11, 1, 0, 0, 0)
         end_generate = datetime(2015, 11, 30, 23, 59, 59)
         work_entries_vals = self.jules_emp.version_ids._generate_work_entries(start, end_generate)
@@ -468,7 +459,6 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             'request_date_from': date(2019, 10, 10),
             'request_date_to': date(2019, 10, 10),
         })
-        leave.action_approve()
         work_entries_vals = self.contract_cdi.generate_work_entries(date(2019, 10, 10), date(2019, 10, 10))
         self.assertEqual(len(work_entries_vals), 1)
         self.assertEqual(work_entries_vals[0]['leave_ids'], leave)

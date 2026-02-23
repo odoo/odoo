@@ -416,7 +416,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'unit_of_measure': 'day',
         })
 
-        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id, leave_fast_create=True)) as leave_form:
             leave_form.work_entry_type_id = work_entry_type
             leave_form.request_date_from = date(2023, 2, 14)  # full-time calendar
             leave_form.request_date_to = date(2023, 2, 14)

@@ -112,7 +112,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to': date(2025, 7, 29),
             'request_hour_from': 11.0,
             'request_hour_to': 16.0,
-        }]).action_approve()
+        }])
 
         start_dt = datetime(2025, 7, 28).astimezone(UTC)
         end_dt = datetime(2025, 8, 3, 17).astimezone(UTC)

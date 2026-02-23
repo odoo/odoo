@@ -102,7 +102,6 @@ class TestSandwichLeave(TransactionCase):
             'request_date_to': '2025-08-18',
             'state': 'confirm',
         })
-        approved_leave.action_approve()
         self.assertIsNotNone(approved_leave.with_user(self.demo_user).work_entry_type_increases_duration)
 
         approved_leave_without_sl = self.env['hr.leave'].create({
@@ -113,7 +112,6 @@ class TestSandwichLeave(TransactionCase):
             'request_date_to': '2025-12-15',
             'state': 'confirm',
         })
-        approved_leave_without_sl.action_approve()
         self.assertEqual(
             approved_leave_without_sl.with_user(self.demo_user)._get_durations()[approved_leave_without_sl.id][0],
             1
@@ -176,7 +174,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_friday_sunday(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -188,7 +186,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_saturday_sunday(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -200,7 +198,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_saturday(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -212,7 +210,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_sunday(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -283,7 +281,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_2days_start_with_public_holidays(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -295,7 +293,7 @@ class TestSandwichLeave(TransactionCase):
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_public_holidays(self):
-        holiday_leave = self.env['hr.leave'].create({
+        holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -465,7 +463,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from_period': 'am',
             'request_date_to_period': 'pm',
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_half_day.id,

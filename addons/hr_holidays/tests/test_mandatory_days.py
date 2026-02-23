@@ -385,7 +385,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             self.assertEqual(color, mandatory_days[day])
 
         # Check that has_mandatory_day is computed correctly for multiple leaves
-        leave_1, leave_2 = self.env['hr.leave'].with_user(self.manager_user.id).create([{
+        leave_1, leave_2 = self.env['hr.leave'].with_user(self.manager_user.id).with_context(leave_fast_create=True).create([{
             'name': 'have been given the black spot',
             'work_entry_type_id': self.work_entry_type.id,
             'employee_id': self.employee_emp.id,
@@ -416,7 +416,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'requires_allocation': False,
             'leave_validation_type': 'both',
         })
-        employee_leave = self.env['hr.leave'].create({
+        employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 5 days',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': work_entry_type.id,
@@ -451,7 +451,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'requires_allocation': False,
             'leave_validation_type': 'both',
         })
-        employee_leave = self.env['hr.leave'].create({
+        employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 4 days',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': work_entry_type.id,
@@ -496,7 +496,6 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'end_date': datetime(2025, 5, 13),
             'resource_calendar_id': self.default_calendar.id,
         })
-        employee_leave.with_user(self.hr_user).action_approve()
         self.assertEqual(employee_leave.state, 'validate', 'employee leave state should be in validate state')
         employee_leave.with_user(self.hr_user).action_back_to_approval()
         employee_leave.with_user(self.hr_user).action_refuse()

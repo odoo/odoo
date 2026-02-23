@@ -133,7 +133,7 @@ class TestFrenchLeaves(TransactionCase):
         self.company.resource_calendar_id = self.base_calendar
         self.employee.resource_calendar_id = employee_calendar
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test',
             'work_entry_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
@@ -235,7 +235,7 @@ class TestFrenchLeaves(TransactionCase):
         self.company.resource_calendar_id = company_calendar
         self.employee.resource_calendar_id = employee_calendar
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test',
             'work_entry_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,
@@ -284,7 +284,7 @@ class TestFrenchLeaves(TransactionCase):
             ]
         })
 
-        leave_1 = self.env['hr.leave'].create({
+        leave_1 = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test leave',
             'work_entry_type_id': self.time_off_type.id,
             'employee_id': self.employee.id,

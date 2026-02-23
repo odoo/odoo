@@ -152,7 +152,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         self.employee_emp.resource_calendar_id = self.calendar_1.id
 
-        leave = self.env['hr.leave'].create({
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Test new leave',
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': work_entry_type.id,
@@ -264,7 +264,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'unit_of_measure': 'day',
         })
 
-        employee_leave = self.env['hr.leave'].create({
+        employee_leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'name': 'Holiday 5 days',
             'employee_id': employee_david.id,
             'work_entry_type_id': work_entry_type.id,
