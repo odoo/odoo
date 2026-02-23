@@ -644,3 +644,24 @@ class TestDropshipPostInstall(common.TransactionCase):
         self.assertFalse(po.dest_address_id)
         po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship'), ('company_id', '=', self.env.company.id)], limit=1)
         self.assertEqual(po.dest_address_id, self.customer)
+
+    def test_so_line_delivered_qty_for_dropshipping(self):
+        """
+        Ensure that the delivered quantity on a Sale Order line remains 0
+        and does not become -1 when the purchase order picking type (location
+        address) is changed to warehouse during a dropshipping instead of delivering
+        directly to the customer.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id':  self.dropship_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        so.action_confirm()
+        po = so._get_purchase_orders()
+        po.picking_type_id = po._default_picking_type()
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0)
