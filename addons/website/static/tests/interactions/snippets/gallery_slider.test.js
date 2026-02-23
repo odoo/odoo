@@ -34,15 +34,15 @@ function getDefaultGallery(bsRide = false, bsInterval = 0, showPopup = false) {
                             </button>
                             <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
-                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <span class="visually-hidden">Slide 1 of 3</span>
                                     <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
                                 </button>
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
-                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <span class="visually-hidden">Slide 2 of 3</span>
                                     <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
                                 </button>
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
-                                    <span class="visually-hidden">Carousel indicator</span>
+                                    <span class="visually-hidden">Slide 3 of 3</span>
                                     <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
                                 </button>
                             </div>
@@ -70,7 +70,7 @@ function getDefaultGallery(bsRide = false, bsInterval = 0, showPopup = false) {
 }
 
 // TODO Obtain rendering from `website.gallery.s_image_gallery_mirror.lightbox` template ?
-const defaultLightbox = `
+const defaultLightbox = /*xml*/ `
     <main class="modal-body o_slideshow bg-transparent">
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;">
         </button>
@@ -82,27 +82,27 @@ const defaultLightbox = `
                 </button>
                 <div class="carousel-indicators s_image_gallery_indicators_bars">
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="0" class="active">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 1 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_03" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="1">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 2 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_10" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="2">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 3 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_13" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="3">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 4 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_05" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="4">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 5 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_14" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="5">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 6 of 6</span>
                         <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_16" aria-hidden="true"/>
                     </button>
                 </div>

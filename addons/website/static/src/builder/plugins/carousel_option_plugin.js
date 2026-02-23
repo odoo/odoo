@@ -119,9 +119,9 @@ export class CarouselOptionPlugin extends Plugin {
         );
         const newIndicatorEl = activeIndicatorEl.cloneNode(true);
         newIndicatorEl.setAttribute("aria-controls", newItemEl.id);
-        newIndicatorEl.setAttribute("aria-label", _t("Carousel indicator"));
         newIndicatorEl.setAttribute("aria-selected", "false");
         activeIndicatorEl.after(newIndicatorEl);
+        this.updateIndicatorsLabels(editingElement);
 
         // Slide to the new item.
         await this.slide(editingElement, "next");
@@ -153,6 +153,7 @@ export class CarouselOptionPlugin extends Plugin {
                 controlEl.classList.toggle("d-none", newLength === 1)
             );
         }
+        this.updateIndicatorsLabels(editingElement);
     }
 
     /**
@@ -300,11 +301,34 @@ export class CarouselOptionPlugin extends Plugin {
             this.dependencies.builderOptions.setNextTarget(activeItemEl);
         }
     }
+    /**
+     * @param {HTMLElement} editingElement the carousel element
+     */
+    updateIndicatorsLabels(editingElement) {
+        const indicatorEls = editingElement.querySelectorAll(".carousel-indicators > *");
+        for (const indicatorEl of indicatorEls) {
+            updateIndicatorLabel(indicatorEl, indicatorEls);
+        }
+    }
+}
+
+/**
+ * @param {HTMLElement} indicatorEl one indicator
+ * @param {HTMLCollection|NodeList|HTMLElement[]} siblingEls all indicators
+ */
+export function updateIndicatorLabel(indicatorEl, siblingEls) {
+    indicatorEl.setAttribute(
+        "aria-label",
+        _t("Slide %(itemIndex)s of %(total)s", {
+            itemIndex: [...siblingEls].indexOf(indicatorEl) + 1,
+            total: siblingEls.length,
+        })
+    );
 }
 
 /**
  * Updates the carousel indicators to make the one at the given index be the
- * active one.
+ * active one, as well as update the aria-labels.
  *
  * @param {HTMLElement} carouselEl the carousel element
  * @param {Number} newPosition the index
@@ -312,6 +336,7 @@ export class CarouselOptionPlugin extends Plugin {
 export function updateCarouselIndicators(carouselEl, newPosition) {
     const indicatorEls = carouselEl.querySelectorAll(".carousel-indicators > *");
     indicatorEls.forEach((indicatorEl, i) => {
+        updateIndicatorLabel(indicatorEl, indicatorEls);
         indicatorEl.classList.toggle("active", i === newPosition);
         indicatorEl.setAttribute("aria-selected", "false");
         if (i === newPosition) {

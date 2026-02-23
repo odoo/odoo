@@ -29,7 +29,7 @@
                                     role="tab"
                                     t-att-aria-selected="image_index === this.index ? 'true' : 'false'"
                                     t-attf-aria-controls="{{this.id}}_{{image_index}}">
-                                <span class="visually-hidden">Carousel indicator</span>
+                                <span class="visually-hidden" t-out="this.getIndicatorLabel(image_index + 1, this.images.length)"/>
                                 <img class="object-fit-cover w-100 h-100" t-att-src="image.getAttribute('src')" aria-hidden="true"/>
                             </button>
                     </t>

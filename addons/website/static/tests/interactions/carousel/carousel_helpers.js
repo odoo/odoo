@@ -8,15 +8,15 @@ export const defaultCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ `
                 </button>
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 1 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 2 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable">
-                        <span class="visually-hidden">Carousel indicator</span>
+                        <span class="visually-hidden">Slide 3 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
                     </button>
                 </div>
@@ -50,15 +50,15 @@ export const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ 
                     </button>
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active">
-                            <span class="visually-hidden">Carousel indicator</span>
+                            <span class="visually-hidden">Slide 1 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
                         </button>
                         <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable">
-                            <span class="visually-hidden">Carousel indicator</span>
+                            <span class="visually-hidden">Slide 2 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
                         </button>
                         <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable">
-                            <span class="visually-hidden">Carousel indicator</span>
+                            <span class="visually-hidden">Slide 3 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
                         </button>
                     </div>
