@@ -163,6 +163,8 @@ class ProjectProject(models.Model):
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
     stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     duration_tracking = fields.Json(groups="project.group_project_stages")
+    rotting_days = fields.Integer(groups="project.group_project_stages")
+    is_rotting = fields.Boolean(groups="project.group_project_stages")
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
