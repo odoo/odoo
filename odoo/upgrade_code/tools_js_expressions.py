@@ -365,6 +365,7 @@ class TemplateCompiler:
             path: str,
             modules: list[str],
             aggregator: VariableAggregator,
+            excluded_templates: set[str],
     ):
         self.t_call_vars = aggregator.t_call_vars
         self.t_call_outer_vars = aggregator.t_call_outer_vars
@@ -374,6 +375,7 @@ class TemplateCompiler:
         self.modules = modules
         self.template_path = path
         self.current_template = path  # default to the file path but if inside a t-name takes that value
+        self.excluded_templates = excluded_templates
 
         self.nested_inherit_vars = set()
 
@@ -388,6 +390,8 @@ class TemplateCompiler:
         if template_nodes:
             for template in template_nodes:
                 self.current_template = template.attrib.get("t-name") or self.template_path
+                if self.current_template in self.excluded_templates:
+                    continue
 
                 bound_variables = self._collect_bound_variables(template)
                 bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
@@ -693,8 +697,8 @@ class TemplateCompiler:
         return is_component_xpath_expr(xp_expr)
 
 
-def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator):
-    compiler = TemplateCompiler(path, modules, aggregator)
+def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator, excluded_templates: set[str]):
+    compiler = TemplateCompiler(path, modules, aggregator, excluded_templates)
 
     def callback(tree):
         compiler.fix_rendering_context(tree)
@@ -711,7 +715,7 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
 
 
 def run_tests_main(test):
-    return update_template("", test["content"], [], VariableAggregator())
+    return update_template("", test["content"], [], VariableAggregator(), {})
 
 
 tests = [
@@ -1535,7 +1539,7 @@ def run_test_specific_modules(test):
 
     aggregator = VariableAggregator()
     aggregator.all_vars = variables
-    return update_template(path, test["content"], modules, aggregator)
+    return update_template(path, test["content"], modules, aggregator, {})
 
 
 test_external_xpath = [
@@ -1672,7 +1676,7 @@ def run_test_vars(test):
     aggregator.t_call_vars = test["outside_vars"]
     aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
 
-    return update_template("", test["content"], False, aggregator)
+    return update_template("", test["content"], False, aggregator, {})
 
 
 test_vars = [
@@ -1851,6 +1855,43 @@ test_vars_collection = [
 # ------------------------------------------------------------------------------
 
 
+def run_test_specific_modules(test):
+    modules = test.get("modules", False)
+    path = test.get("path", False)
+
+    aggregator = VariableAggregator()
+    aggregator.all_vars = {}
+    return update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
+
+
+test_exclude_templates = [
+    {
+        "name": "no exclude",
+        "excluded_templates": {},
+        "content": """<t t-name="web.xyz"> <t t-out="value"/> </t>""",
+        "expected": """<t t-name="web.xyz"> <t t-out="this.value"/> </t>""",
+    },
+    {
+        "name": "exclude only one template",
+        "excluded_templates": {'web.xyz'},
+        "content": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="value"/> </t>
+                <t t-name="web.abc"> <t t-out="value"/> </t>
+            </templates>
+        """,
+        "expected": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="value"/> </t>
+                <t t-name="web.abc"> <t t-out="this.value"/> </t>
+            </templates>
+        """,
+    },
+]
+
+# ------------------------------------------------------------------------------
+
+
 WHITELIST = []
 
 
@@ -1889,6 +1930,7 @@ if __name__ == "__main__":
         ("xpaths", test_external_xpath, run_test_specific_modules),
         ("external vars", test_vars, run_test_vars),
         ("vars aggregator", test_vars_collection, run_test_vars_collection),
+        ("excluded templates", test_exclude_templates, run_test_specific_modules),
     ]:
         s, f = run_test_group(name, test_group, func)
         total_success += s
