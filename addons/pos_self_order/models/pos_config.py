@@ -9,7 +9,7 @@ import qrcode
 import qrcode.image.svg
 
 from odoo import _, api, fields, models, release
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, UserError
 
 
 class PosConfig(models.Model):
@@ -221,8 +221,8 @@ class PosConfig(models.Model):
 
     @api.constrains("payment_method_ids", "self_ordering_mode")
     def _onchange_payment_method_ids(self):
-        if any(record.self_ordering_mode == 'kiosk' and any(pm.is_cash_count and not pm.payment_provider for pm in record.payment_method_ids) for record in self):
-            raise ValidationError(_("You cannot add cash payment methods in kiosk mode."))
+        # TODO: Delete in master
+        pass
 
     def _get_qr_code_data(self):
         self.ensure_one()
@@ -350,6 +350,17 @@ class PosConfig(models.Model):
     def _compute_self_ordering_url(self):
         for record in self:
             record.self_ordering_url = record.get_base_url() + record._get_self_order_route()
+
+    def _can_use_cash_payment_method(self, cash_method):
+        self.ensure_one()
+        return (
+                    not cash_method.payment_provider and
+                    (
+                        self.self_ordering_mode == 'kiosk' or
+                        not cash_method.config_ids.filtered(lambda config: config != self and config.self_ordering_mode != 'kiosk')
+                    )
+                ) or \
+            super()._can_use_cash_payment_method(cash_method)
 
     def close_ui(self):
         if self.self_ordering_mode == "kiosk":

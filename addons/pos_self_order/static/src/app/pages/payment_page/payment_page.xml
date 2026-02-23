@@ -5,16 +5,24 @@
         t-attf-style="background-image:#{this.selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
             <div class="d-flex flex-column flex-grow-1 overflow-y-auto justify-content-center my-auto">
                <div class="container o_self_container ">
-                    <div t-if="this.state.selection"  class="grid gap-4 align-items-center justify-content-center p-3 ">
+                    <div t-if="this.state.selection" class="row align-items-center justify-content-center p-3 ">
                         <button
-                            t-foreach="this.selfOrder.models['pos.payment.method'].getAll()"
+                            t-foreach="this.selfOrder.models['pos.payment.method'].filter((pm) => !pm.is_cash_count || pm.payment_provider)"
                             t-as="payment_method"
                             t-key="payment_method.id"
                             role="button"
-                            class="g-col-12 g-col-md-6 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
+                            class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
                             t-on-click="() => this.selectMethod(payment_method.id)">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
                             <span t-out="payment_method.name" />
+                        </button>
+                        <button
+                            t-if="this.cashPaymentMethod"
+                            role="button"
+                            class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
+                            t-on-click="() => this.selectMethod(this.cashPaymentMethod.id)">
+                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <span t-out="this.cashPaymentMethod.name" />
                         </button>
                     </div>
                     <div t-else="" class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-sm-75 w-50-md mx-auto"
