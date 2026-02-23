@@ -16,6 +16,11 @@ registry.category("web_tour.tours").add("test_catalog_vendor_uom", {
         { trigger: "td[data-tooltip='PO/TEST/00002']", run: "click" },
         ...purchaseForm.displayOptionalField("discount"),
         ...purchaseForm.openCatalog(),
+        {
+            content: "Check 'No section' is selected in the catalog",
+            trigger: ".o_search_panel_sections .o_selected_section:contains('No Section') span.o_section_name",
+            run: "click",
+        },
         ...productCatalog.checkProductPrice("Crab Juice", "$ 2.50"),
         // Add 6 units and check the price is correctly updated.
         ...productCatalog.addProduct("Crab Juice"),
