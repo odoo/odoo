@@ -669,7 +669,8 @@ export class Composer extends Component {
         }
     }
 
-    onFocusin() {
+    onFocusin(ev) {
+        ev.stopPropagation();
         this.props.composer.isFocused = true;
         if (this.props.composer.thread) {
             this.threadService.markAsRead(this.props.composer.thread);
