@@ -124,7 +124,7 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
             wizard.withhold_tax_amount = abs(tax_amount)
-            wizard.amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.apply_withhold_tax else wizard.withhold_base_amount
+            wizard.amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.apply_withhold_tax else wizard.amount
 
     @api.depends('withholding_payment_account_id', 'apply_withhold_tax')
     def _compute_withholding_outstanding_account_id(self):

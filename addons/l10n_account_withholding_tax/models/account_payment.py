@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 class AccountPayment(models.Model):
@@ -168,7 +168,45 @@ class AccountPayment(models.Model):
 
     def _prepare_move_withholding_lines(self, default_values):
         # EXTENDS account
-        withholding_lines = super()._prepare_move_withholding_lines(default_values)
-        if self.should_withhold_tax and self.withholding_line_ids:
-            withholding_lines += self.withholding_line_ids._prepare_withholding_amls_create_values()
-        return withholding_lines
+        write_off_lines = super()._prepare_move_withholding_lines(default_values)
+        if self.apply_withhold_tax and self.withhold_tax_amount:
+            write_off_lines = [
+                {
+                    'quantity': 1.0,
+                    'price_unit': self.withhold_base_amount,
+                    'debit': self.withhold_base_amount,
+                    'credit': 0.0,
+                    'account_id': self.company_id.withholding_tax_control_account_id.id,
+                    'tax_ids': [Command.set([self.withhold_tax_id.id])],
+                    'is_withhold_line': True,
+                },
+                {
+                    'quantity': 1.0,
+                    'price_unit': self.withhold_base_amount,
+                    'debit': 0.0,
+                    'credit': self.withhold_base_amount,
+                    'account_id': self.company_id.withholding_tax_control_account_id.id,
+                    'tax_ids': False,
+                    'is_withhold_line': True,
+                },
+                {
+                    'quantity': 1.0,
+                    'debit': self.withhold_tax_amount,
+                    'price_unit': self.withhold_tax_amount,
+                    'credit': 0.0,
+                    'account_id': self.partner_id.property_account_payable_id.id,
+                    'tax_ids': False,
+                    'is_withhold_line': True,
+                },
+                {
+                    'quantity': 1.0,
+                    'debit': 0.0,
+                    'price_unit': self.withhold_tax_amount,
+                    'credit': self.withhold_tax_amount,
+                    'account_id': self.withhold_tax_id.invoice_repartition_line_ids.filtered(lambda r:
+                        r.repartition_type == 'tax').account_id.id,
+                    'tax_ids': False,
+                    'is_withhold_line': True,
+                },
+            ]
+        return write_off_lines
