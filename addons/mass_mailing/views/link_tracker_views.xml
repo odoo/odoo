@@ -46,9 +46,13 @@
             <xpath expr="//field[@name='country_id']" position="after">
                 <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
+                <field name="email"/>
             </xpath>
             <xpath expr="//filter[@name='groupby_country_id']" position="after">
                 <filter string="Mass Mailing" name="groupby_mass_mailing_id" context="{'group_by': 'mass_mailing_id'}"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_mass_mailing_id']" position="after">
+                <filter string="Clicked By" name="groupby_email" context="{'group_by': 'email'}"/>
             </xpath>
         </field>
     </record>
@@ -74,6 +78,7 @@
             <xpath expr="//field[@name='link_id']" position="after">
                 <field name="campaign_id"/>
                 <field name="mass_mailing_id"/>
+                <field name="email" column_invisible="True"/>
             </xpath>
         </field>
     </record>

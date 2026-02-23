@@ -15,6 +15,7 @@ class LinkTrackerClick(models.Model):
 
     mailing_trace_id = fields.Many2one('mailing.trace', string='Mail Statistics', index='btree_not_null')
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index='btree_not_null')
+    email = fields.Char(string="Email", compute="_compute_clicker_email", readonly=True, store=True, help="The email address of the entity that clicked the link")
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = super(LinkTrackerClick, self)._prepare_click_values_from_route(**route_values)
@@ -40,3 +41,8 @@ class LinkTrackerClick(models.Model):
             click.mailing_trace_id.set_clicked()
 
         return click
+
+    @api.depends('mailing_trace_id.email')
+    def _compute_clicker_email(self):
+        for link in self:
+            link.email = link.mailing_trace_id.email

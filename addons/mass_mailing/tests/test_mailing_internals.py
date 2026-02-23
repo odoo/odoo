@@ -837,5 +837,89 @@ class TestMassMailingActions(MassMailCommon):
             }
         ])
         results = mass_mailings[0].action_view_opened()
-        results_partner = self.env["res.partner"].search(results['domain'])
+        results_trace = self.env["mailing.trace"].search(results['domain'])
+        results_partner = self.env["res.partner"].search([('id', 'in', results_trace.res_id)])
         self.assertEqual(results_partner, self.partner_admin, "Trace leaked from mass_mailing_2 to mass_mailing_1")
+
+    def test_mailing_action_clicked(self):
+        # Prepare
+        emma_email = "emma@yahoo.com"
+        mark_email = "mark@outlook.com"
+        mass_mailings = self.env['mailing.mailing'].create([
+            {'subject': 'First subject'},
+            {'subject': 'Second subject'}
+        ])
+        traces = self.env["mailing.trace"].create([{
+                "trace_status": "open",
+                "mass_mailing_id": mass_mailings[0].id,
+                "model": "res.partner",
+                "res_id": self.partner_admin.id,
+                "email": emma_email,
+            }, {
+                "trace_status": "open",
+                "mass_mailing_id": mass_mailings[1].id,
+                "model": "res.partner",
+                "res_id": self.partner_employee.id,
+                "email": mark_email,
+            }
+        ])
+        link_1 = self.env["link.tracker"].create({
+            "url": "https://example.com/1",
+        })
+        link_2 = self.env["link.tracker"].create({
+            "url": "https://example.com/2",
+        })
+        link_3 = self.env["link.tracker"].create({
+            "url": "https://example.com/3",
+        })
+        click_1 = self.env["link.tracker.click"].create({
+            "link_id": link_1.id,
+            "mailing_trace_id": traces[0].id,
+            "mass_mailing_id": mass_mailings[0].id,
+        })
+        click_2 = self.env["link.tracker.click"].create({
+            "link_id": link_2.id,
+            "mailing_trace_id": traces[1].id,
+            "mass_mailing_id": mass_mailings[1].id,
+        })
+        click_3 = self.env["link.tracker.click"].create({
+            "link_id": link_3.id,
+            "mailing_trace_id": traces[1].id,
+            "mass_mailing_id": mass_mailings[1].id,
+        })
+        click_4 = self.env["link.tracker.click"].create({
+            "link_id": link_3.id,
+            "mailing_trace_id": traces[1].id,
+            "mass_mailing_id": mass_mailings[1].id,
+        })
+
+        # Execute
+        clicked_action_mailing_0 = mass_mailings[0].action_view_clicked()
+        clicked_action_mailing_1 = mass_mailings[1].action_view_clicked()
+
+        # Assert
+        email_who_clicked_in_mailing_0 = list(set(traces[0].links_click_ids.mapped("email")))
+        email_who_clicked_in_mailing_1 = list(set(traces[1].links_click_ids.mapped("email")))
+        clicks_in_mailing_0 = traces[0].links_click_ids
+        clicks_in_mailing_1 = traces[1].links_click_ids
+
+        ## Leaks
+        self.assertEqual(1, len(traces[0].links_click_ids))
+        self.assertEqual(3, len(traces[1].links_click_ids))
+
+        ## Action details
+        self.assertEqual('link.tracker.click', clicked_action_mailing_1['res_model'])
+        self.assertEqual('list,graph', clicked_action_mailing_1['view_mode'])
+        self.assertEqual([('id', 'in', [click_2.id, click_3.id, click_4.id])], clicked_action_mailing_1['domain'])
+        self.assertEqual(True, clicked_action_mailing_1['context']['search_default_groupby_email'])
+        self.assertEqual('pie', clicked_action_mailing_1['context']['graph_mode'])
+        self.assertEqual(False, clicked_action_mailing_1['context']['stacked'])
+        self.assertEqual([('id', 'in', [click_1.id])], clicked_action_mailing_0['domain'])
+
+        ## Clicks
+        self.assertEqual(1, len(email_who_clicked_in_mailing_1))
+        self.assertEqual(1, len(email_who_clicked_in_mailing_0))
+        self.assertEqual(1, len(clicks_in_mailing_0))
+        self.assertEqual(3, len(clicks_in_mailing_1))
+        self.assertEqual(emma_email, email_who_clicked_in_mailing_0[0])
+        self.assertEqual(mark_email, email_who_clicked_in_mailing_1[0])
