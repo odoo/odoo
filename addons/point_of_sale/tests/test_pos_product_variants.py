@@ -256,3 +256,40 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_integration_dynamic_always_never_variant_price', login="pos_user")
+
+    def test_get_product_info_pos_uses_template_available_quantity_for_variant_product(self):
+        """Units Available in product info popup must use template stock for variant products."""
+        size_attribute = self.env['product.attribute'].create({'name': 'Size'})
+        size_small = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': size_attribute.id})
+        size_medium = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': size_attribute.id})
+
+        product_template = self.env['product.template'].create({
+            'name': 'Variant stock product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'taxes_id': False,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': size_attribute.id,
+                'value_ids': [Command.set([size_small.id, size_medium.id])],
+            })],
+        })
+        variants = product_template.product_variant_ids.sorted('id')
+        self.assertEqual(len(variants), 2)
+
+        warehouse = self.main_pos_config.warehouse_id
+        self.env['stock.quant']._update_available_quantity(variants[0], warehouse.lot_stock_id, 2.0)
+        self.env['stock.quant']._update_available_quantity(variants[1], warehouse.lot_stock_id, 5.0)
+
+        selected_variant = variants[1]
+        info = product_template.get_product_info_pos(
+            product_template.list_price,
+            1,
+            self.main_pos_config.id,
+        )
+        warehouse_info = next(w for w in info['warehouses'] if w['id'] == warehouse.id)
+
+        template_available_qty = product_template.with_context(warehouse_id=warehouse.id).qty_available
+        selected_variant_qty = selected_variant.with_context(warehouse_id=warehouse.id).qty_available
+
+        self.assertNotEqual(template_available_qty, selected_variant_qty)
+        self.assertEqual(warehouse_info['available_quantity'], template_available_qty)
