@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="l10n_fr_pdp_reports_view_flow_list" model="ir.ui.view">
-        <field name="name">l10n.fr.pdp.flow.list.reporting</field>
-        <field name="model">l10n.fr.pdp.flow</field>
+        <field name="name">l10n.fr.pdp.reports.flow.list.reporting</field>
+        <field name="model">l10n.fr.pdp.reports.flow</field>
         <field name="arch" type="xml">
-            <list string="EDI exports" create="0">
-                <field name="name" string="Reference"/>
+            <list string="Flows 10" create="0">
+                <field name="name" />
                 <field name="period_start" string="Start date"/>
                 <field name="period_end" string="End date"/>
-                <field name="next_deadline_end" string="Due date" optional="hide"/>
+                <field name="due_period_start" optional="hide"/>
+                <field name="due_period_end" optional="hide"/>
                 <field name="state" string="Status" widget="badge"
                        decoration-info="state == 'ready'"
-                       decoration-muted="state in ('pending', 'sent', 'cancelled')"
+                       decoration-muted="state in ('pending', 'sent')"
                        decoration-success="state == 'completed'"
                        decoration-danger="state == 'error'"/>
-                <field name="report_kind" string="Type"/>
+                <field name="report_type" string="Type"/>
                 <field name="company_id" string="Company" optional="hide"/>
-                <field name="last_send_datetime" string="Send on" optional="hide"/>
-                <field name="transmission_type" string="Transmission type" widget="badge"
-                       decoration-info="transmission_type == 'IN'"
-                       decoration-warning="transmission_type == 'RE'"/>
-                <field name="acknowledgement_status" optional="hide" groups="base.group_no_one"/>
-                <field name="transport_identifier" optional="hide" groups="base.group_no_one"/>
+                <field name="transmission_type" string="Transmission type" widget="badge" optional="hide"
+                       decoration-info="transmission_type == 'initial'"
+                       decoration-warning="transmission_type == 'rectificative'"/>
                 <field name="tracking_id" optional="hide" groups="base.group_no_one"/>
             </list>
         </field>
     </record>
 
     <record id="l10n_fr_pdp_reports_view_flow_form" model="ir.ui.view">
-        <field name="name">l10n.fr.pdp.flow.form.reporting</field>
-        <field name="model">l10n.fr.pdp.flow</field>
+        <field name="name">l10n.fr.pdp.reports.flow.form.reporting</field>
+        <field name="model">l10n.fr.pdp.reports.flow</field>
         <field name="arch" type="xml">
             <form string="E-Reporting">
                 <header>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="pending,ready,error,cancelled,sent,completed"/>
+                           statusbar_visible="pending,ready,error,sent,completed"/>
                     <button name="action_build_payload_manual"
                             type="object"
                             class="btn-secondary"
@@ -45,11 +43,6 @@
                             class="btn-primary"
                             string="Send"
                             invisible="state not in ['ready', 'pending', 'error']"/>
-                    <button name="action_create_rectificative_flow"
-                            type="object"
-                            class="btn-secondary"
-                            string="Create Rectificative"
-                            invisible="state not in ['completed', 'sent']"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Sent" bg_color="text-bg-success"
@@ -61,18 +54,19 @@
                                 name="action_view_moves"
                                 class="oe_stat_button"
                                 icon="fa-file-text-o"
-                                invisible="report_kind == 'payment' or not move_ids">
-                            <field name="move_ids" string="Invoices" widget="statinfo"/>
+                                invisible="not move_ids">
+                            <field name="move_ids" string="Invoices" widget="statinfo" invisible="report_type == 'payment'"/>
+                            <field name="move_ids" string="Payments" widget="statinfo" invisible="report_type == 'transaction'"/>
                         </button>
                         <button type="object"
-                                name="action_view_payments"
+                                name="action_view_initial"
                                 class="oe_stat_button"
-                                icon="fa-university"
-                                invisible="report_kind != 'payment'">
-                            <field name="payment_move_count" string="Payments" widget="statinfo"/>
+                                icon="fa-file-text-o"
+                                invisible="not initial_flow_id">
+                            <div>Initial</div>
                         </button>
                     </div>
-                    <div class="alert alert-warning" role="alert" invisible="not has_error_moves or period_status == 'open'">
+                    <div class="alert alert-warning" role="alert" invisible="not error_moves_count or period_status == 'open'">
                         <span>
                             Some invoices were excluded because of validation errors.
                             <button type="object" name="action_view_error_moves" class="btn-link">View invoices</button>
@@ -80,12 +74,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="name" string="Reference" readonly="1"/>
-                            <field name="report_kind" string="Type" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="report_type" string="Type" readonly="1"/>
                             <field name="state" string="Status" readonly="1"/>
-                            <field name="transmission_type" string="Transmission type" readonly="1"
+                            <field name="transmission_type" string="Transmission type"
                                    help="Type of transmission per Flux 10 v1.2: IN (Initial) or RE (Rectificative). No references to previous flows in v1.2."/>
-                            <field name="company_id" string="Company" readonly="1"/>
                         </group>
                         <group>
                             <field name="period_start" string="Start date" readonly="1"/>
@@ -94,37 +87,11 @@
                                    decoration-info="period_status == 'open'"
                                    decoration-warning="period_status == 'grace'"
                                    decoration-danger="period_status == 'closed'"/>
-                            <field name="next_deadline_end" string="Due date" readonly="1"/>
-                        </group>
-                    </group>
-                    <group groups="base.group_no_one">
-                        <group>
-                            <field name="transaction_type"/>
-                            <field name="document_type"/>
-                            <field name="currency_id"/>
-                            <field name="periodicity_code" readonly="1"/>
-                            <field name="tracking_id" readonly="1"/>
-                            <field name="company_periodicity" readonly="1"/>
-                            <field name="company_payment_periodicity" readonly="1"/>
-                            <field name="next_deadline_start" readonly="1"/>
-                            <field name="acknowledgement_status" readonly="1"/>
-                            <field name="acknowledgement_details" readonly="1"/>
-                            <field name="transport_identifier" readonly="1"/>
-                            <field name="transport_status" readonly="1"/>
-                            <field name="transport_message" readonly="1"/>
-                            <field name="attempt_count" readonly="1"/>
-                            <field name="last_send_datetime" readonly="1"/>
-                            <field name="send_datetime" readonly="1"/>
-                            <field name="reporting_date"/>
-                        </group>
-                    </group>
-                    <group invisible="not transport_identifier">
-                        <separator string="Transport Response"/>
-                        <group>
-                            <field name="transport_status" readonly="1"/>
-                            <field name="transport_message" readonly="1"/>
-                            <field name="transport_identifier" readonly="1"/>
-                            <field name="acknowledgement_status" readonly="1"/>
+                            <label string="Due Period Start" for="due_period_start" invisible="due_period_start == due_period_end"/>
+                            <label string="Due Date" for="due_period_start" invisible="due_period_start != due_period_end"/>
+                            <field name="due_period_start" readonly="1" nolabel="1"/>
+                            <field name="due_period_end" readonly="1" invisible="due_period_start == due_period_end"/>
+                            
                         </group>
                     </group>
                 </sheet>
@@ -134,30 +101,28 @@
     </record>
 
     <record id="l10n_fr_pdp_reports_view_flow_search" model="ir.ui.view">
-        <field name="name">l10n.fr.pdp.flow.search.reporting</field>
-        <field name="model">l10n.fr.pdp.flow</field>
+        <field name="name">l10n.fr.pdp.reports.flow.search.reporting</field>
+        <field name="model">l10n.fr.pdp.reports.flow</field>
         <field name="arch" type="xml">
             <search string="Search EDI exports">
                 <field name="name"/>
-                <field name="transport_identifier"/>
                 <filter name="filter_state_pending" string="Pending" domain="[('state', '=', 'pending')]"/>
                 <filter name="filter_state_ready" string="Ready" domain="[('state', '=', 'ready')]"/>
                 <filter name="filter_state_sent" string="Sent" domain="[('state', 'in', ('sent', 'completed'))]"/>
                 <filter name="filter_state_error" string="Error" domain="[('state', '=', 'error')]"/>
-                <filter name="filter_state_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
-                <filter name="filter_kind_transaction" string="Transactions" domain="[('report_kind', '=', 'transaction')]"/>
-                <filter name="filter_kind_payment" string="Payments" domain="[('report_kind', '=', 'payment')]"/>
+                <filter name="filter_kind_transaction" string="Transactions" domain="[('report_type', '=', 'transaction')]"/>
+                <filter name="filter_kind_payment" string="Payments" domain="[('report_type', '=', 'payment')]"/>
                 <separator/>
-                <filter name="filter_transmission_in" string="Initial (IN)" domain="[('transmission_type', '=', 'IN')]"/>
-                <filter name="filter_transmission_re" string="Rectificative (RE)" domain="[('transmission_type', '=', 'RE')]"/>
+                <filter name="filter_transmission_in" string="Initial" domain="[('initial_flow_id', '=', None)]"/>
+                <filter name="filter_transmission_re" string="Rectificative" domain="[('initial_flow_id', '!=', None)]"/>
             </search>
         </field>
     </record>
 
     <record id="l10n_fr_pdp_reports_action_flows" model="ir.actions.act_window">
         <field name="name">E-Reporting</field>
-        <field name="res_model">l10n.fr.pdp.flow</field>
+        <field name="res_model">l10n.fr.pdp.reports.flow</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="l10n_fr_pdp_reports_view_flow_search"/>
     </record>
@@ -165,8 +130,8 @@
     <!-- Bulk actions -->
     <record id="l10n_fr_pdp_reports_action_build_multi" model="ir.actions.server">
         <field name="name">Build Payload</field>
-        <field name="model_id" ref="model_l10n_fr_pdp_flow"/>
-        <field name="binding_model_id" ref="model_l10n_fr_pdp_flow"/>
+        <field name="model_id" ref="model_l10n_fr_pdp_reports_flow"/>
+        <field name="binding_model_id" ref="model_l10n_fr_pdp_reports_flow"/>
         <field name="binding_type">action</field>
         <field name="state">code</field>
         <field name="code">records.action_build_payload_manual(); action = {'type': 'ir.actions.act_window_close'}</field>
@@ -177,7 +142,7 @@
         <field name="res_model">account.move</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('l10n_fr_pdp_status', '=', 'error')]</field>
-        <field name="context">{'search_default_group_by_move_type': 1, 'group_by': ['l10n_fr_pdp_flow_ids']}</field>
+        <field name="context">{'search_default_group_by_move_type': 1, 'group_by': ['l10n_fr_pdp_last_flow_id']}</field>
     </record>
 
     <!-- Menu structure: Reporting > France > E-reporting -->
