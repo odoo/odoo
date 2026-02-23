@@ -96,13 +96,8 @@ class HrEmployeePrivate(models.Model):
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name')
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
-    certificate = fields.Selection([
-        ('graduate', 'Graduate'),
-        ('bachelor', 'Bachelor'),
-        ('master', 'Master'),
-        ('doctor', 'Doctor'),
-        ('other', 'Other'),
-    ], 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
+
+    certificate = fields.Selection('_get_certificate_selection', 'Certificate Level', default='other', groups="hr.group_hr_user", tracking=True)
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
@@ -614,3 +609,13 @@ class HrEmployeePrivate(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['user_partner_id']
+
+    @api.model
+    def _get_certificate_selection(self):
+        return [
+            ('graduate', 'Graduate'),
+            ('bachelor', 'Bachelor'),
+            ('master', 'Master'),
+            ('doctor', 'Doctor'),
+            ('other', 'Other'),
+        ]
