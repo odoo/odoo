@@ -1,7 +1,6 @@
-import { mockWorker } from "@odoo/hoot-mock";
-import { MockServer } from "@web/../tests/web_test_helpers";
 import { BaseWorker } from "@bus/workers/base_worker";
-import { patch } from "@web/core/utils/patch";
+import { mockWorker } from "@odoo/hoot";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 /**
  * @param {SharedWorker | Worker} worker
@@ -16,7 +15,7 @@ function onWorkerConnected(worker) {
     client.start();
 }
 
-patch(MockServer.prototype, {
+patchWithCleanup(MockServer.prototype, {
     start() {
         mockWorker(onWorkerConnected);
         return super.start(...arguments);
