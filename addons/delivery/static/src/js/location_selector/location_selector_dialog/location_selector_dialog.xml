@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="delivery.locationSelector.dialog">
         <Dialog
-            title="title"
+            title="this.title"
             bodyClass="'d-flex flex-column p-0 px-md-3'"
             contentClass="'o_location_selector h-100 overflow-hidden'"
         >
@@ -17,31 +17,31 @@
                         class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
                         t-att-class="{'border-bottom active': this.state.viewMode === 'list'}"
                         t-on-click="() => this.state.viewMode = 'list'"
-                        t-out="listViewButtonLabel"
+                        t-out="this.listViewButtonLabel"
                     />
                     <button
                         class="o_location_selector_mobile_tab btn flex-grow-1 border-0 rounded-0 py-3 bg-transparent"
                         t-att-class="{'border-bottom border-primary fw-bold active' : this.state.viewMode === 'map'}"
                         t-on-click="() => this.state.viewMode = 'map'"
-                        t-out="mapViewButtonLabel"
+                        t-out="this.mapViewButtonLabel"
                     />
                 </div>
 
                 <!-- Component -->
                 <div class="flex-grow-1 overflow-x-auto">
                     <t
-                        t-if="locations.length"
-                        t-component="mobileComponent"
-                        locations="locations"
+                        t-if="this.locations.length"
+                        t-component="this.mobileComponent"
+                        locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
-                        setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
+                        setSelectedLocation.bind="this.setSelectedLocation"
+                        validateSelection.bind="this.validateSelection"
                     />
                     <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
+                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="this.errorMessage"/>
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
-                                <span class="visually-hidden" t-out="loadingMessage"/>
+                                <span class="visually-hidden" t-out="this.loadingMessage"/>
                             </div>
                         </div>
                     </t>
@@ -64,17 +64,17 @@
 
                     <!-- List group -->
                     <LocationList
-                        t-if="locations.length"
-                        locations="locations"
+                        t-if="this.locations.length"
+                        locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
-                        setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
+                        setSelectedLocation.bind="this.setSelectedLocation"
+                        validateSelection.bind="this.validateSelection"
                     />
                     <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
+                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="this.errorMessage"/>
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
-                                <span class="visually-hidden" t-out="loadingMessage"/>
+                                <span class="visually-hidden" t-out="this.loadingMessage"/>
                             </div>
                         </div>
                     </t>
@@ -83,10 +83,10 @@
                 <!-- Map view -->
                 <section class="o_location_selector_view col-md-8 d-flex flex-grow-1 border-start">
                     <MapContainer
-                        locations="locations"
+                        locations="this.locations"
                         selectedLocationId="this.state.selectedLocationId.toString()"
-                        setSelectedLocation.bind="setSelectedLocation"
-                        validateSelection.bind="validateSelection"
+                        setSelectedLocation.bind="this.setSelectedLocation"
+                        validateSelection.bind="this.validateSelection"
                     />
                 </section>
             </div>
@@ -99,8 +99,8 @@
                         id="submit_location_small"
                         class="btn btn-primary w-100"
                         t-att-disabled="!this.state.selectedLocationId"
-                        t-on-click="validateSelection"
-                        t-out="validationButtonLabel"
+                        t-on-click="this.validateSelection"
+                        t-out="this.validationButtonLabel"
                     />
                 </div>
             </t>
@@ -113,10 +113,10 @@
                 id="o_location_selector_search"
                 class="search-query form-control oe_search_box border-0 text-bg-light"
                 t-model.lazy="this.state.zipCode"
-                t-att-placeholder="postalCodePlaceholder"
+                t-att-placeholder="this.postalCodePlaceholder"
             />
             <button
-                t-on-click="debouncedSearchButton"
+                t-on-click="this.debouncedSearchButton"
                 aria-label="Search"
                 title="Search"
                 class="btn btn-light"

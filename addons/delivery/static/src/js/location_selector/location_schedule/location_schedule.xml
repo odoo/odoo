@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="delivery.locationSelector.schedule">
-        <span t-attf-class="o_location_selector_schedule d-grid gap-1 #{props.wrapClass}">
+        <span t-attf-class="o_location_selector_schedule d-grid gap-1 #{this.props.wrapClass}">
             <t t-foreach="this.props.openingHours" t-as="openingHour" t-key="openingHour_index">
                 <t t-call="delivery.locationSelector.dailySchedule">
                     <t t-set="weekday" t-value="openingHour_index"/>
@@ -13,7 +13,7 @@
 
     <t t-name="delivery.locationSelector.dailySchedule">
         <span class="d-contents">
-            <small class="me-4 text-muted" t-out="getWeekDay(weekday)"/>
+            <small class="me-4 text-muted" t-out="this.getWeekDay(weekday)"/>
             <span class="o_location_selector_schedule_hours d-flex flex-wrap">
                 <t t-if="openingPeriods.length">
                     <t t-foreach="openingPeriods" t-as="openingPeriod" t-key="openingPeriod_index">
@@ -21,7 +21,7 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <small class="text-danger" t-out="closedLabel"/>
+                    <small class="text-danger" t-out="this.closedLabel"/>
                 </t>
             </span>
         </span>
