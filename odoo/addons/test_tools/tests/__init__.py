@@ -1,6 +1,8 @@
 from . import test_barcode
 from . import test_cloc
 from . import test_config
+from . import test_convert
+from . import test_convert_env
 from . import test_date_utils
 from . import test_float_utils
 from . import test_func
@@ -8,6 +10,7 @@ from . import test_i18n
 from . import test_image
 from . import test_intervals
 from . import test_mail
+from . import test_mimetypes
 from . import test_misc
 from . import test_pdf
 from . import test_profiler
