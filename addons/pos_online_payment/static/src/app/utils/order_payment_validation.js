@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { OnlinePaymentPopup } from "@pos_online_payment/app/components/popups/online_payment_popup/online_payment_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { qrCodeSrc } from "@point_of_sale/utils";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(OrderPaymentValidation.prototype, {
@@ -121,17 +121,19 @@ patch(OrderPaymentValidation.prototype, {
                     await this.pos.syncAllOrders({ orders: [this.order] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.order.selectPaymentline(onlinePaymentLine);
+                    const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
                     const onlinePaymentData = {
                         formattedAmount: this.pos.env.utils.formatCurrency(onlinePaymentLineAmount),
-                        qrCode: qrCodeSrc(
-                            `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`
-                        ),
+                        qrCode: generateQRCodeDataUrl(qrCodeUrl),
                         orderName: this.order.name,
                     };
                     this.order.onlinePaymentData = onlinePaymentData;
                     const qrCodePopupCloser = this.pos.dialog.add(
                         OnlinePaymentPopup,
-                        onlinePaymentData,
+                        {
+                            ...onlinePaymentData,
+                            qrCode: generateQRCodeDataUrl(qrCodeUrl, { useThemeQr: true }),
+                        },
                         {
                             onClose: () => {
                                 onlinePaymentLine.onlinePaymentResolver(false);

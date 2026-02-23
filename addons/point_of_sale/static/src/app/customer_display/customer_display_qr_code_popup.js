@@ -17,7 +17,7 @@ export class QrCodeCustomerDisplay extends Component {
     }
 
     getQrCode() {
-        return generateQRCodeDataUrl(this.props.customerDisplayURL);
+        return generateQRCodeDataUrl(this.props.customerDisplayURL, { useThemeQr: true });
     }
 
     openOnThisDevice() {

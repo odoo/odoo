@@ -1,6 +1,7 @@
 /* global QRCode */
 
 import { session } from "@web/session";
+import { cookie } from "@web/core/browser/cookie";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
@@ -204,15 +205,32 @@ export function getTimeUtil(date) {
  * @param {number} [options.height=150] - The height of the QR code.
  * @param {number} [options.correctLevel=QRCode.CorrectLevel.L] - The error correction level for the QR code.
  * @param {boolean} [options.useSVG=true] - Whether to generate the QR code as SVG.
+ * @param {boolean} [options.useThemeQr=false] - Generates the QR code based on the active PoS theme.
+ *   DANGER: Do NOT use this option for receipt QR codes.
+ *   In dark mode, it generates a white QR code, which will become invisible on printed receipts.
  * @param {Object} [options.rest] - Additional options to pass to the QRCode constructor.
  * @returns {string} The QR code as a data URL in SVG format.
  */
 export function generateQRCodeDataUrl(
     url,
-    { width = 150, height = 150, correctLevel = QRCode.CorrectLevel.L, ...rest } = {}
+    {
+        width = 150,
+        height = 150,
+        correctLevel = QRCode.CorrectLevel.L,
+        useThemeQr = false,
+        ...rest
+    } = {}
 ) {
     const tempDiv = document.createElement("div");
-    const options = { width, height, correctLevel, ...rest };
+    let themeOptions = {};
+    if (useThemeQr) {
+        const colorScheme = cookie.get("pos_color_scheme") || "light";
+        themeOptions = {
+            colorDark: colorScheme === "light" ? "black" : "white",
+            colorLight: "transparent",
+        };
+    }
+    const options = { width, height, correctLevel, ...themeOptions, ...rest };
 
     new QRCode(tempDiv, { text: url, useSVG: true, ...options });
 

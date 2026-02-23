@@ -8,6 +8,7 @@ import {
     Counter,
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
+    generateQRCodeDataUrl,
 } from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -2394,9 +2395,9 @@ export class PosStore extends WithLazyGetterTrap {
             return false;
         }
         payment.setPaymentStatus("waiting");
-        let qr;
+        let qrCodeUrl;
         try {
-            qr = await this.data.call("pos.payment.method", "get_qr_code", [
+            qrCodeUrl = await this.data.call("pos.payment.method", "get_qr_code_url", [
                 [payment.payment_method_id.id],
                 payment.amount,
                 payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
@@ -2405,8 +2406,8 @@ export class PosStore extends WithLazyGetterTrap {
                 payment.pos_order_id.partner_id?.id,
             ]);
         } catch (error) {
-            qr = payment.payment_method_id.default_qr;
-            if (!qr) {
+            qrCodeUrl = payment.payment_method_id.default_qr;
+            if (!qrCodeUrl) {
                 let message;
                 if (error instanceof ConnectionLostError) {
                     message = _t(
@@ -2422,8 +2423,8 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
-        payment.updateCustomerDisplayQrCode(qr);
-        payment.qr_code = qr;
+        payment.updateCustomerDisplayQrCode(generateQRCodeDataUrl(qrCodeUrl));
+        payment.qr_code = generateQRCodeDataUrl(qrCodeUrl, { useThemeQr: true });
         return await ask(this.env.services.dialog, payment.getQrPopupProps(), {}, QRPopup).then(
             (result) => {
                 payment.updateCustomerDisplayQrCode(null);
