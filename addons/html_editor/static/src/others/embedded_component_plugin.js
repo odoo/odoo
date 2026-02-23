@@ -1,6 +1,7 @@
 import { nodeToTree } from "@html_editor/core/history_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -34,6 +35,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
+        before_sanitize_processors: this.preProcessSanitizedElem.bind(this),
+        after_sanitize_processors: this.postProcessSanitizedElem.bind(this),
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
@@ -331,5 +334,35 @@ export class EmbeddedComponentPlugin extends Plugin {
             delete host.dataset.oeProtected;
             delete host.dataset.embeddedState;
         });
+    }
+
+    preProcessSanitizedElem(elem) {
+        if (elem?.nodeType !== Node.ELEMENT_NODE) {
+            return elem;
+        }
+        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+            if (host.dataset.embeddedProps) {
+                host.dataset.embeddedProps = encodeURIComponent(host.dataset.embeddedProps);
+            }
+            if (host.dataset.embeddedState) {
+                host.dataset.embeddedState = encodeURIComponent(host.dataset.embeddedState);
+            }
+        }
+        return elem;
+    }
+
+    postProcessSanitizedElem(elem) {
+        if (elem?.nodeType !== Node.ELEMENT_NODE) {
+            return elem;
+        }
+        for (const host of selectElements(elem, "[data-embedded-props], [data-embedded-state]")) {
+            if (host.dataset.embeddedProps) {
+                host.dataset.embeddedProps = decodeURIComponent(host.dataset.embeddedProps);
+            }
+            if (host.dataset.embeddedState) {
+                host.dataset.embeddedState = decodeURIComponent(host.dataset.embeddedState);
+            }
+        }
+        return elem;
     }
 }
