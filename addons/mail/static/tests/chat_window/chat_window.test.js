@@ -21,18 +21,15 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { EventBus } from "@odoo/owl";
 import {
     asyncStep,
     Command,
     getService,
-    patchWithCleanup,
     preloadBundle,
     serverState,
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -949,9 +946,6 @@ test("Notification settings rendering in chatwindow", async () => {
 });
 
 test("open channel in chat window from push notification", async () => {
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), { register: () => Promise.resolve() }),
-    });
     const pyEnv = await startServer();
     const [channelId, salesId] = pyEnv["discuss.channel"].create([
         { name: "General" },
@@ -961,7 +955,7 @@ test("open channel in chat window from push notification", async () => {
     await start();
     await contains(".o-mail-ChatWindow", { text: "Sales" });
     await contains(".o-mail-ChatWindow", { text: "General", count: 0 });
-    browser.navigator.serviceWorker.dispatchEvent(
+    navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId } },
         })
