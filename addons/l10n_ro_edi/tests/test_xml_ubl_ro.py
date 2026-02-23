@@ -142,8 +142,7 @@ def _patch_request_ciusro_xml_to_pdf(company, xml_data):
     return {'content': 'JVBERi0xLjEKMSAwIG9iaiA8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PiBlbmRvYmogMiAwIG9iaiA8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PiBlbmRvYmogMyAwIG9iaiA8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCAxIDEgXT4+IGVuZG9iaiB0cmFpbGVyIDw8L1Jvb3QgMSAwIFI+PiAlJUVPRg=='}
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLRO(TestUBLCommon):
+class TestUBLROCommon(TestUBLCommon):
 
     @classmethod
     @TestUBLCommon.setup_country('ro')
@@ -227,6 +226,10 @@ class TestUBLRO(TestUBLCommon):
         self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
         return move.ubl_cii_xml_id
 
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUBLRO(TestUBLROCommon):
+
     ####################################################
     # Testing of the XML generation
     ####################################################
@@ -278,6 +281,13 @@ class TestUBLRO(TestUBLCommon):
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
+
+    def test_export_invoice_cpv_code(self):
+        self.product_a.cpv_code_id = self.env.ref('l10n_ro_edi.030000001')
+        self.product_b.cpv_code_id = self.env.ref('l10n_ro_edi.031000002')
+        invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_cpv_code.xml')
 
     def test_export_constraints(self):
         self.company_data['company'].company_registry = False
