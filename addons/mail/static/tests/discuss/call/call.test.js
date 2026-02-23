@@ -1224,7 +1224,7 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await mockedRemote.updateUpload("camera", null);
     await click(".o-discuss-CallParticipantCard[aria-label='Batman']");
     await click("[title='Fullscreen']");
-    await contains(".o-mail-Meeting");
+    await contains(".o-mail-Meeting[data-active]");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
