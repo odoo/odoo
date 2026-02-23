@@ -2270,6 +2270,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id, round=False)
         total_qty = qty
         consumed_quant = set()
+        quants = []
         for ml in self.move_line_ids:
             ml_qty = ml.quantity
             if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) < 0:
@@ -2306,6 +2307,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                                       package_id=ml.package_id,
                                                                       owner_id=ml.owner_id,
                                                                       strict=True)
+            quants.append(ml_quants)
+        for ml_quants in quants:
+            if float_is_zero(qty, precision_rounding=self.product_uom.rounding):
+                break
             avail_qty = sum(q[1] for q in ml_quants)
             # the quant did not add the quantity reserved on this specific move line
             consumed_quant |= {q[0].id for q in ml_quants}

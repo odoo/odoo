@@ -1,7 +1,7 @@
 import copy
 
 from odoo.exceptions import UserError
-from odoo.tests import common, tagged, Form
+from odoo.tests import common, Command, tagged, Form
 
 
 class TestConsumeComponentCommon(common.TransactionCase):
@@ -462,6 +462,38 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants |= self.create_quant(self.raw_serial, 2)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        lot_move = mo.move_raw_ids.filtered(lambda m: m.product_id == self.raw_lot)
+        lot_move.quantity = 0
+        move_line_updates = [Command.clear()]
+        move_line_updates += [
+            Command.create({
+                'quantity': 1,
+                'product_id': self.raw_lot.id,
+                'product_uom_id': self.raw_lot.uom_id.id,
+                'lot_id': quants[i].lot_id.id
+            })
+            for i in range(2)
+        ]
+        lot_move.move_line_ids = move_line_updates
+
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_line_ids.filtered(lambda m: m.product_id == self.raw_lot), [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
         ])
 
     def test_no_component_consumption_on_lot_removal(self):
