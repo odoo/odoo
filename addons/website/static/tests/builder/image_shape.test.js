@@ -3,6 +3,7 @@ import { queryFirst, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
+import { dummyCORSSrc, setupCORSProtectedImg } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -632,4 +633,17 @@ test("Should reset shape transformation with reset button and when switching sha
     expect(imgSelector).toHaveAttribute("data-shape", "html_builder/geometric/geo_shuriken");
     expect(imgSelector).not.toHaveAttribute("data-shape-flip");
     expect(imgSelector).not.toHaveAttribute("data-shape-rotate");
+});
+
+test("Don't display the shape option on image that do not have an original src", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src="${dummyCORSSrc}">
+        </div>
+    `);
+    setupCORSProtectedImg();
+
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+    expect("[data-label='Shape']").toHaveCount(0);
 });
