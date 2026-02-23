@@ -59,6 +59,32 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         cls.resources = cls.flex_resource | cls.fully_flex_resource
 
+    def test_flexible_resource_hours_per_week(self):
+        # create a standard 40h/week calendar and make it the company's default
+        cal_40 = self.env['resource.calendar'].create({
+            'name': 'Company 40h',
+            'hours_per_week': 40.0,
+            'full_time_required_hours': 40.0,
+            'attendance_ids': [
+                (0, 0, {'dayofweek': str(d), 'hour_from': 9.0, 'hour_to': 17.0})
+                for d in range(5)  # Monday to Friday 8h
+            ],
+        })
+        self.env.company.resource_calendar_id = cal_40
+        resource = self.env['resource.resource'].create({
+            'name': 'flexpt',
+            'tz': 'UTC',
+            'calendar_id': False,
+            'hours_per_week': 38.0,
+            'hours_per_day': 7.6,
+        })
+        start_dt = datetime(2025, 7, 28).astimezone(UTC)
+        end_dt = datetime(2025, 8, 3).astimezone(UTC)
+        work_intervals, hours_per_day, hours_per_week = resource._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
+        hours = resource._get_flexible_resource_work_hours(work_intervals[resource.id], hours_per_day[resource.id], hours_per_week[resource.id])
+        self.assertAlmostEqual(hours, 38.0, 2)
+        self.assertAlmostEqual(hours_per_week[resource.id][2025, 31], 38.0, 2)
+
     def test_flexible_resource_work_intervals(self):
         start_dt = datetime(2025, 7, 28).astimezone(UTC)
         end_dt = datetime(2025, 8, 3, 17, 0).astimezone(UTC)
