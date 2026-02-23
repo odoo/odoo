@@ -302,6 +302,7 @@ class SaleOrder(models.Model):
                 continue
             tax_data = line.tax_ids.compute_all(
                 line.price_unit,
+                currency=line.currency_id,
                 quantity=line.product_uom_qty,
                 product=line.product_id,
                 partner=line.order_partner_id,
