@@ -408,8 +408,8 @@ class OdooPdfFileWriter(PdfFileWriter):
         assert attachment, "embed_odoo_attachment cannot be called without attachment."
         self.add_attachment(attachment.name, attachment.raw, subtype=subtype or attachment.mimetype)
 
-    def clone_reader_root_document(self, reader):
-        super().clone_reader_root_document(reader)
+    def clone_reader_document_root(self, reader):
+        super().clone_reader_document_root(reader)
         self._reader = reader
         # Try to read the header coming in, and reuse it in our new PDF
         # This is done in order to allows modifying PDF/A files after creating them (as PyPDF does not read it)
