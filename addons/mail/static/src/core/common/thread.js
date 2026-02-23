@@ -81,7 +81,6 @@ export class Thread extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
-            isFocused: false,
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
@@ -207,8 +206,8 @@ export class Thread extends Component {
             }
         });
         onWillUnmount(() => {
-            if (this.state.isFocused) {
-                this.props.thread.isFocusedCounter--;
+            if (this.props.thread.isFocusedByThread) {
+                this.props.thread.isFocusedByThread = false;
             }
         });
         useEffect(
@@ -502,8 +501,7 @@ export class Thread extends Component {
     }
 
     onFocusin() {
-        this.state.isFocused = true;
-        this.props.thread.isFocusedCounter++;
+        this.props.thread.isFocusedByThread = true;
         const thread = toRaw(this.props.thread);
         if (thread?.scrollTop === "bottom" && !thread.scrollUnread && !thread.markedAsUnread) {
             thread?.markAsRead();
@@ -511,8 +509,7 @@ export class Thread extends Component {
     }
 
     onFocusout() {
-        this.state.isFocused = false;
-        this.props.thread.isFocusedCounter--;
+        this.props.thread.isFocusedByThread = false;
     }
 
     async onParentMessageClick(parentMessage) {
