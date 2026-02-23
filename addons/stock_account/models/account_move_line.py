@@ -71,14 +71,15 @@ class AccountMoveLine(models.Model):
                 price_unit = self.product_id.standard_price
             else:
                 price_unit = self.product_id._run_fifo(cogs_qty) / cogs_qty if cogs_qty else 0
-        return (price_unit * cogs_qty - self._get_posted_cogs_value()) / self.quantity
+        line_quantity_uom = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
+        return (price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom
 
     def _get_stock_moves(self):
         return self.env['stock.move']
 
     def _get_cogs_qty(self):
         self.ensure_one()
-        return self.quantity
+        return self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
 
     def _get_posted_cogs_value(self):
         self.ensure_one()
