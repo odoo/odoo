@@ -1,10 +1,17 @@
+/* NorTK Theme */
 /* static/src/scss/nortk.scss */
+
+/* Import Montserrat from Google Fonts */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..700;1,300..700&display=swap');
+}
 
 :root {
     /* --- Main Backgrounds --- */
     --o-view-background-color: #1e1e1e;
     --o-component-background-color: #2b2b2b;
-    --o-web-client-background-color: #121212;
+    --o-web-client-background-color: #000000;
 
     /* --- Text Colors --- */
     --o-main-text-color: #e0e0e0;
@@ -20,7 +27,9 @@
     --o-input-text-color: #ffffff;
 
     /* --- Navigation / Navbar --- */
-    --o-navbar-background-color: #121212;
+    --o-main-navbar-background-color: #141414;
+    --o-navbar-background-color: #161616;
+    --o-navbar-background-color-toogle: #212121;
     --o-navbar-text-color: #ffffff;
 
     /* --- Control Panel (Search bar area) --- */
@@ -30,6 +39,10 @@
     --o-dropdown-background-color: #2b2b2b;
     --o-dropdown-item-text-color: #e0e0e0;
     --o-dropdown-item-hover-background-color: #444444;
+
+    /* Use Montserrat Font */
+    --font-family-sans-serif: 'Montserrat', sans-serif !important;
+    --o-main-font-family: 'Montserrat', sans-serif !important;
 }
 
 /* Force standard scrollbars to be dark in supported browsers */
@@ -37,10 +50,8 @@ html {
     color-scheme: dark;
 }
 
-/* Optional: Fix specific hardcoded white backgrounds in some list views */
-.o_list_view .o_list_table {
-    background-color: var(--o-view-background-color) !important;
-    color: var(--o-main-text-color) !important;
+a {
+    color: #64b5f6 !important;
 }
 
 /* --- Login & Database Selector Specific Overrides --- */
@@ -49,6 +60,26 @@ html {
 body {
     background-color: var(--o-web-client-background-color) !important;
     color: var(--o-main-text-color) !important;
+}
+
+body, .o_web_client {
+  font-family: 'Montserrat', sans-serif !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+}
+
+/* Navigation bar */
+
+.o_main_navbar {
+    background: var(--o-main-navbar-background-color) !important;
+}
+
+.o_main_navbar .o_menu_sections .o_nav_entry {
+    background: var(--o-navbar-background-color) !important;
+}
+
+.o_main_navbar .o_menu_sections .dropdown-toggle {
+    background: var(--o-navbar-background-color-toogle) !important;
 }
 
 /* Style the "Card" (The white box containing the login form or DB list) */
@@ -65,7 +96,23 @@ body {
     color: var(--o-input-text-color) !important;
 }
 
-/* Fix links (e.g., "Reset Password", "Manage Databases") */
-a {
-    color: #64b5f6 !important; /* A lighter blue for better contrast on dark */
+/* Chat and Mail */
+.o-mail-DiscussContent-core {
+    background-color: var(--o-view-background-color) !important;
 }
+
+.o_list_view .o_list_table .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record {
+    background-color: var(--o-view-background-color) !important;
+    color: var(--o-main-text-color) !important;
+}
+
+.o_kanban_record:not(.o_kanban_ghost) {
+    background-color: #1e1e1e !important;
+    color: var(--o-main-text-color) !important;
+}
+
+.o_kanban_record {
+    background-color: #1e1e1e !important;
+    color: var(--o-main-text-color) !important;
+}
+
