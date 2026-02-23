@@ -163,7 +163,7 @@ export class Popup extends Interaction {
             tabableEls[0].focus();
             this.el.querySelector(".modal").scrollTop = 0;
         } else {
-            this.el.focus();
+            this.el.querySelector(".modal").focus();
         }
         // The focus should stay free for no backdrop popups.
         if (this.el.querySelector(".s_popup_no_backdrop")) {
