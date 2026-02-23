@@ -11,8 +11,8 @@
                 <t t-set-slot="content">
                     <div class="px-3 pb-2">
                         <label class="mb-2">Add to my dashboard</label>
-                        <input type="text" class="o_input mb-3" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
-                        <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
+                        <input type="text" class="o_input mb-3" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="this.onInputKeydown" />
+                        <button type="button" class="btn btn-primary" t-on-click="this.addToBoard">Add</button>
                     </div>
                 </t>
             </Dropdown>
@@ -20,7 +20,7 @@
     </t>
 
     <t t-name="Dashboard.DashboardIcon">
-        <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="o_ui_app_icon oi-large">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" class="o_ui_app_icon oi-large">
             <path d="M4 8C4 5.79086 5.79086 4 8 4H25V21C25 23.2091 23.2091 25 21 25H4V8Z" fill="var(--oi-color, #FC868B)"/>
             <path d="M4 35C4 32.7909 5.79086 31 8 31H19V42C19 44.2091 17.2091 46 15 46H4V35Z" fill="var(--oi-color, #F9464C)"/>
             <path d="M25 46H29C31.2091 46 33 44.2091 33 42V31H29C26.7909 31 25 32.7909 25 35V46Z" fill="var(--oi-color, #FBB945)"/>

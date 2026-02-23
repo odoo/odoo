@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarQuickCreate">
-        <Dialog size="'sm'" title="dialogTitle">
+        <Dialog size="'sm'" title="this.dialogTitle">
             <div class="o-calendar-quick-create mb-3">
                 <label for="title" class="col-form-label o_form_label">
                     Name:
@@ -12,18 +12,18 @@
                     class="o_input o_required_modifier o-calendar-quick-create--input"
                     name="title"
                     t-ref="title"
-                    t-on-keyup="onInputKeyup"
-                    t-att-value="props.title"
+                    t-on-keyup="this.onInputKeyup"
+                    t-att-value="this.props.title"
                 />
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-calendar-quick-create--create-btn" t-on-click="onCreateBtnClick">
+                <button class="btn btn-primary o-calendar-quick-create--create-btn" t-on-click="this.onCreateBtnClick">
                     Create
                 </button>
-                <button class="btn btn-secondary o-calendar-quick-create--edit-btn" t-on-click="onEditBtnClick">
+                <button class="btn btn-secondary o-calendar-quick-create--edit-btn" t-on-click="this.onEditBtnClick">
                     Edit
                 </button>
-                <button class="btn btn-secondary o-calendar-quick-create--cancel-btn" t-on-click="onCancelBtnClick">
+                <button class="btn btn-secondary o-calendar-quick-create--cancel-btn" t-on-click="this.onCancelBtnClick">
                     Cancel
                 </button>
             </t>
