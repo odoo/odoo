@@ -290,7 +290,10 @@ export class ClosePosPopup extends Component {
             },
             cancel: async () => {
                 if (!response.redirect) {
-                    const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
+                    const now = DateTime.now();
+                    const ordersDraft = this.pos.models["pos.order"].filter(
+                        (o) => !o.finalized && !(o.preset_time && o.preset_time > now)
+                    );
                     await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
                     this.closeSession();
                 }
