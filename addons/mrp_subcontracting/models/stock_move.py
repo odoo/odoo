@@ -291,3 +291,10 @@ class StockMove(models.Model):
         if self.is_subcontract:
             return super(StockMove, self.with_context(force_lot_m2o=True))._generate_serial_numbers(next_serial, next_serial_count, location_id)
         return super()._generate_serial_numbers(next_serial, next_serial_count, location_id)
+
+    def _get_partner_id(self):
+        if self.raw_material_production_id.subcontractor_id:
+            route = self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto', raise_if_not_found=False)
+            if route and self.rule_id.route_id == route:
+                return self.raw_material_production_id.subcontractor_id.id
+        return super()._get_partner_id()
