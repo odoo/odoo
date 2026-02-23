@@ -24,15 +24,18 @@ export class Many2ManyCheckboxesField extends Component {
             const { relation } = props.record.fields[props.name];
             const domain = getFieldDomain(props.record, props.name, props.domain);
             return orm
-                .call(relation, "name_search", ["", domain], {
+                .call(relation, "web_name_search", [], {
+                    name: "",
+                    domain,
                     context: this.props.context || {},
+                    specification: this.webNameSearchSpecification,
                 })
                 .catch((error) => {
                     if (error instanceof ConnectionLostError) {
-                        return this.props.record.data[this.props.name].records.map((r) => [
-                            r.resId,
-                            r.data.display_name,
-                        ]);
+                        return (this.props.record.data[this.props.name].records || []).map((r) => ({
+                            id: r.resId,
+                            ...r.data,
+                        }));
                     }
                     throw error;
                 });
@@ -47,12 +50,16 @@ export class Many2ManyCheckboxesField extends Component {
         onWillUnmount(this.commitChanges.bind(this));
     }
 
+    get webNameSearchSpecification() {
+        return { display_name: {} };
+    }
+
     get items() {
         return this.specialData.data;
     }
 
     isSelected(item) {
-        return this.props.record.data[this.props.name].currentIds.includes(item[0]);
+        return this.props.record.data[this.props.name].currentIds.includes(item.id);
     }
 
     commitChanges() {
