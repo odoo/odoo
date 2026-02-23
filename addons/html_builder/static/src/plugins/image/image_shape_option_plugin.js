@@ -305,9 +305,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             );
         }
 
-        for (const cb of this.getResource("on_shape_computed_handlers")) {
-            await cb(svg, params);
-        }
+        await this.triggerAsync("on_shape_computed_handlers", svg, params);
 
         svg.removeChild(svg.querySelector("#preview"));
         return svg;

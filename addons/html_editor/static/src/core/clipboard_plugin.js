@@ -221,10 +221,11 @@ export class ClipboardPlugin extends Plugin {
      */
     handlePasteUnsupportedHtml(selection, clipboardData) {
         if (!isHtmlContentSupported(selection)) {
-            let text = clipboardData.getData("text/plain");
-            for (const processor of this.getResource("clipboard_paste_text_processors")) {
-                text = processor(selection, text);
-            }
+            const text = this.processThrough(
+                "clipboard_paste_text_processors",
+                clipboardData.getData("text/plain"),
+                selection
+            );
             this.dependencies.dom.insert(text);
             return true;
         }

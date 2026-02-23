@@ -72,7 +72,7 @@ export class MonetaryFieldPlugin extends Plugin {
         }
     }
 
-    processUnsupportedHtmlForPaste(selection, text) {
+    processUnsupportedHtmlForPaste(text, selection) {
         const monetaryField = closestElement(
             selection.anchorNode,
             `${monetarySel} .oe_currency_value`
