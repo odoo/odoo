@@ -1670,6 +1670,42 @@ test_external_xpath = [
 # ------------------------------------------------------------------------------
 
 
+def run_test_exclude_modules(test):
+    modules = test.get("modules", False)
+    path = test.get("path", False)
+
+    aggregator = VariableAggregator()
+    return update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
+
+
+test_exclude_templates = [
+    {
+        "name": "no exclude",
+        "excluded_templates": {},
+        "content": """<t t-name="web.xyz"> <t t-out="value"/> </t>""",
+        "expected": """<t t-name="web.xyz"> <t t-out="this.value"/> </t>""",
+    },
+    {
+        "name": "exclude only one template",
+        "excluded_templates": {'web.xyz'},
+        "content": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="value"/> </t>
+                <t t-name="web.abc"> <t t-out="value"/> </t>
+            </templates>
+        """,
+        "expected": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="value"/> </t>
+                <t t-name="web.abc"> <t t-out="this.value"/> </t>
+            </templates>
+        """,
+    },
+]
+
+# ------------------------------------------------------------------------------
+
+
 def run_test_vars(test):
     aggregator = VariableAggregator()
     aggregator.all_vars = test["inside_vars"]
@@ -1852,42 +1888,6 @@ test_vars_collection = [
     },
 ]
 
-# ------------------------------------------------------------------------------
-
-
-def run_test_specific_modules(test):
-    modules = test.get("modules", False)
-    path = test.get("path", False)
-
-    aggregator = VariableAggregator()
-    aggregator.all_vars = {}
-    return update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
-
-
-test_exclude_templates = [
-    {
-        "name": "no exclude",
-        "excluded_templates": {},
-        "content": """<t t-name="web.xyz"> <t t-out="value"/> </t>""",
-        "expected": """<t t-name="web.xyz"> <t t-out="this.value"/> </t>""",
-    },
-    {
-        "name": "exclude only one template",
-        "excluded_templates": {'web.xyz'},
-        "content": """
-            <templates id="template" xml:space="preserve">
-                <t t-name="web.xyz"> <t t-out="value"/> </t>
-                <t t-name="web.abc"> <t t-out="value"/> </t>
-            </templates>
-        """,
-        "expected": """
-            <templates id="template" xml:space="preserve">
-                <t t-name="web.xyz"> <t t-out="value"/> </t>
-                <t t-name="web.abc"> <t t-out="this.value"/> </t>
-            </templates>
-        """,
-    },
-]
 
 # ------------------------------------------------------------------------------
 
@@ -1928,9 +1928,9 @@ if __name__ == "__main__":
     for name, test_group, func in [
         ("main", tests, run_tests_main),
         ("xpaths", test_external_xpath, run_test_specific_modules),
+        ("excluded templates", test_exclude_templates, run_test_exclude_modules),
         ("external vars", test_vars, run_test_vars),
         ("vars aggregator", test_vars_collection, run_test_vars_collection),
-        ("excluded templates", test_exclude_templates, run_test_specific_modules),
     ]:
         s, f = run_test_group(name, test_group, func)
         total_success += s
