@@ -1,6 +1,8 @@
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as CustomerDisplay from "@point_of_sale/../tests/customer_display/customer_display_utils";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
     steps: () =>
@@ -14,6 +16,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTourOnlinePayment", {
             },
             CustomerDisplay.postMessage(CustomerDisplay.PAID, "payment approved"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
+            negateStep(Dialog.is()),
             {
                 content: "Check that we are now on the 'Thank you' screen",
                 trigger: "div:contains('Thank you.')",
