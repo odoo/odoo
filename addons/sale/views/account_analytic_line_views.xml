@@ -40,6 +40,7 @@
                 <field
                     name="product_id"
                     domain="[('expense_policy', '!=', 'no')]"
+                    context="{'default_expense_policy' : 'sales_price'}"
                     required="True"
                     width="350px"
                 />
