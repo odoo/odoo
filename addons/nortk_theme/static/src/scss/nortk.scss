@@ -9,13 +9,15 @@
 
 :root {
     /* --- Main Backgrounds --- */
-    --o-view-background-color: #1e1e1e;
+    --o-view-background-color: #1e1d1d;
+    --o-header-view-background-color: #0b0b0b;
     --o-component-background-color: #2b2b2b;
     --o-web-client-background-color: #000000;
 
     /* --- Text Colors --- */
     --o-main-text-color: #e0e0e0;
     --o-secondary-text-color: #a0a0a0;
+    --o-header-view-text-color: #FFFFFF;
 
     /* --- Borders and Separators --- */
     --o-border-color: #444444;
@@ -99,6 +101,11 @@ body, .o_web_client {
 /* Chat and Mail */
 .o-mail-DiscussContent-core {
     background-color: var(--o-view-background-color) !important;
+}
+
+.o-mail-DiscussContent-header {
+    background-color: var(--o-header-view-background-color) !important;
+    color: var(--o-header-view-text-color) !important;
 }
 
 .o_list_view .o_list_table .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record {
