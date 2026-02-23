@@ -94,9 +94,18 @@ MAIL_WHITELIST = {
 }
 EVENT_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
-    # "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
 }
-THIS_TARGETS = ["event"]
+
+ACCOUNT_WHITELIST = {
+    "account_saft.company_data_warning": {'warningParams'},  # dynamic t-call
+    "account_disallowed_expenses.warning_multi_rate": {'warningParams'},  # dynamic t-call
+    "account_fiscal_categories_fleet.warning_missing_fiscal_category": {'warningParams'},  # dynamic t-call
+    "account_reports.has_bank_miscellaneous_move_lines": {'warningParams'},  # dynamic t-call
+    "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
+    "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
+}
+THIS_TARGETS = ["ai"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
