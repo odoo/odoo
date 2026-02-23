@@ -353,8 +353,16 @@
                                         <field name="children"/>
                                     </group>
                                     <group string="Education" name="hr_education_group">
+<<<<<<< d7b1b778a94520ed3d825e685f973552d4bad148
                                         <field name="certificate"/>
                                         <field name="study_field" placeholder="e.g. Engineering, Commerce, Business Administration, ..."/>
+||||||| 12c62e01d50478311b9c3d795466dd9bacdcbc9f
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+=======
+                                        <field name="certificate" class="o_hr_certificate_base" widget="filterable_selection" options="{'whitelisted_values': ['graduate', 'bachelor', 'master', 'doctor', 'other']}"/>
+                                        <field name="study_field"/>
+>>>>>>> 91913a4f5cb992ac17362c8ecb4e379ebf73f7fb
                                     </group>
                                     <group string="Documents" name="hr_document_group">
                                         <field name="id_card_name" invisible="1"/>
