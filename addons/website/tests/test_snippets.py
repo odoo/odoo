@@ -154,6 +154,9 @@ class TestSnippets(HttpCase):
     def test_tabs_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/", True), "snippet_tabs", login="admin")
 
+    def test_snippet_popup_esc(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_esc', login='admin')
+
     def test_cookie_bar_updates_gtag_consent(self):
         website = self.env.ref('website.default_website')
         website.google_analytics_key = 'G-XXXXXXXXXXX'
