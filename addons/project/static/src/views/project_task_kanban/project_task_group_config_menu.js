@@ -17,17 +17,7 @@ export class ProjectTaskGroupConfigMenu extends GroupConfigMenu {
     }
 
     async deleteGroup() {
-        if (this.group.groupByField.name === "stage_id") {
-            const action = await this.group.model.orm.call(
-                this.group.groupByField.relation,
-                "unlink_wizard",
-                [this.group.value],
-                { context: this.group.context }
-            );
-            this.action.doAction(action);
-            return;
-        }
-        super.deleteGroup();
+        return this.props.deleteGroup(this.group);
     }
 
     canEditGroup() {

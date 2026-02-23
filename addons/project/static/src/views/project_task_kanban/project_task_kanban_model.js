@@ -7,6 +7,23 @@ export class ProjectTaskKanbanDynamicGroupList extends RelationalModel.DynamicGr
     get isGroupedByStage() {
         return !!this.groupByField && this.groupByField.name === "stage_id";
     }
+
+    async _unlinkGroups(groups) {
+        if (this.isGroupedByStage) {
+            const action = await this.model.orm.call(
+                this.groupByField.relation,
+                'unlink_wizard',
+                groups.map((g) => g.value),
+                { context: this.context },
+            );
+            return new Promise((resolve) => {
+                this.model.action.doAction(action, {
+                    onClose: ({ success }) => resolve(!!success),
+                });
+            });
+        }
+        return super._unlinkGroups(groups);
+    }
 }
 
 export class ProjectTaskRecord extends Record {
