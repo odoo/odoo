@@ -44,7 +44,7 @@ export class PaymentScreen extends Component {
     }
 
     get configPaymentMethods() {
-        return this.pos.config.payment_method_ids.slice().sort((a, b) => a.sequence - b.sequence);
+        return this.pos.config.paymentMethods;
     }
 
     onMounted() {
