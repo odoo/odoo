@@ -7,7 +7,6 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour(
     "snippet_background_video",
     {
-        url: "/",
         edition: true,
     },
     () => [

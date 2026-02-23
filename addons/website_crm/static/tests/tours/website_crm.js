@@ -31,7 +31,6 @@ function setFormActionToCreateOpportunity() {
 registerWebsitePreviewTour(
     "website_crm_pre_tour",
     {
-        url: "/contactus",
         edition: true,
     },
     () => [
@@ -112,7 +111,6 @@ registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_t
 registerWebsitePreviewTour(
     "website_crm_form_properties",
     {
-        url: "/contactus",
         edition: true,
     },
     () => [

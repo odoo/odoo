@@ -32,7 +32,6 @@ function fillInputField(selector, value) {
 registerWebsitePreviewTour(
     "donation_form_custom_field_create",
     {
-        url: "/donation/pay",
         edition: true,
     },
     () => [

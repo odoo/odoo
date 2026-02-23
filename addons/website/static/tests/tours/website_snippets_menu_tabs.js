@@ -3,7 +3,6 @@ import { goToTheme, registerWebsitePreviewTour } from "@website/js/tours/tour_ut
 registerWebsitePreviewTour(
     "website_snippets_menu_tabs",
     {
-        url: "/",
         edition: true,
     },
     () => [

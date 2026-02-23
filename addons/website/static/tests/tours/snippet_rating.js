@@ -8,7 +8,6 @@ import {
 registerWebsitePreviewTour(
     "snippet_rating",
     {
-        url: "/",
         edition: true,
     },
     () => [

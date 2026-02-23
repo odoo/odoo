@@ -30,7 +30,6 @@ const selectImageSteps = [
 registerWebsitePreviewTour(
     "test_image_link",
     {
-        url: "/",
         edition: true,
     },
     () => [

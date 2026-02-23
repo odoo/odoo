@@ -8,7 +8,6 @@ import {
 registerWebsitePreviewTour(
     "create_missing_page",
     {
-        url: "/",
         edition: true,
     },
     () => [

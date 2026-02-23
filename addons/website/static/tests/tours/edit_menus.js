@@ -76,7 +76,6 @@ registerWebsitePreviewTour(
     "edit_menus",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
     },
     () => [
         // Add a megamenu item from the menu.
@@ -565,34 +564,28 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour(
-    "edit_menus_delete_parent",
+registerWebsitePreviewTour("edit_menus_delete_parent", {}, () => [
     {
-        url: "/",
+        trigger: ":iframe #wrapwrap",
     },
-    () => [
-        {
-            trigger: ":iframe #wrapwrap",
-        },
-        {
-            content: "Open site menu",
-            trigger: 'button[data-menu-xmlid="website.menu_site"]',
-            run: "click",
-        },
-        {
-            content: "Click on Edit Menu",
-            trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
-            run: "click",
-        },
-        {
-            content: "Delete Home menu",
-            trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
-            run: "click",
-        },
-        {
-            content: "Save",
-            trigger: ".modal-footer button:first-child",
-            run: "click",
-        },
-    ]
-);
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
+    },
+    {
+        content: "Delete Home menu",
+        trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
+        run: "click",
+    },
+    {
+        content: "Save",
+        trigger: ".modal-footer button:first-child",
+        run: "click",
+    },
+]);

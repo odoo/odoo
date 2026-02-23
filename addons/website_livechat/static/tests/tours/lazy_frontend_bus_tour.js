@@ -6,7 +6,6 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
-    url: "/",
     steps: () => [
         {
             trigger: "body",

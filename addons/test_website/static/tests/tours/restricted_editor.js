@@ -70,7 +70,6 @@ registerWebsitePreviewTour(
     "test_restricted_editor_only",
     {
         undeterministicTour_doNotCopy: true,
-        url: "/",
     },
     () => [
         // Home
@@ -123,7 +122,6 @@ registerWebsitePreviewTour(
         // Remove this key to make the tour fail with error:
         // "Element has not been found." at step "Open Edit menu"
         undeterministicTour_doNotCopy: true,
-        url: "/",
     },
     () => [
         // Home
@@ -183,17 +181,11 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_tester",
+registerWebsitePreviewTour("test_restricted_editor_tester", {}, () => [
+    ...clickOnEditAndWaitEditMode(),
     {
-        url: "/test_model/1",
+        content: "Footer should not be be editable for restricted user",
+        trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
     },
-    () => [
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Footer should not be be editable for restricted user",
-            trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
-        },
-        ...clickOnSave(),
-    ]
-);
+    ...clickOnSave(),
+]);

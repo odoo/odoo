@@ -5,13 +5,8 @@ import {
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour(
-    'website_sale.category_page_and_products_snippet_edition',
+registerWebsitePreviewTour("website_sale.category_page_and_products_snippet_edition", {}, () => [
     {
-        url: '/shop',
-    },
-    () => [
-        {
         content: "Navigate to category",
         trigger: ':iframe .o_wsale_filmstrip > li:contains("Test Category") > a',
         run: "click",

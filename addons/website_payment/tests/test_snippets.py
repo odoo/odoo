@@ -28,11 +28,11 @@ class TestSnippets(HttpCaseWithUserPortal):
         self.user_portal.country_id = belgium.id
 
     def test_01_donation(self):
-        self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), "donation_snippet_edition", login='admin')
         self.start_tour("/", "donation_snippet_use", login="portal")
-        self.start_tour("/?enable_editor=1", "donation_snippet_edition_2", login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), "donation_snippet_edition_2", login='admin')
         self.start_tour("/", "donation_snippet_use_2", login="portal")
 
     def test_02_donation_form_custom_field(self):
-        self.start_tour("/donation/pay", "donation_form_custom_field_create", login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/donation/pay", True), "donation_form_custom_field_create", login="admin")
         self.start_tour("/donation/pay", "donation_form_custom_field_submit", login="portal")

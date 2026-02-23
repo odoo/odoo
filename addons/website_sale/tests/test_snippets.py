@@ -37,7 +37,7 @@ class TestSnippets(HttpCase):
             'sale_ok': True,
             'list_price': 500,
         })
-        self.start_tour('/', 'website_sale.snippet_products', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), 'website_sale.snippet_products', login='admin')
 
     def test_02_snippet_products_remove(self):
         Visitor = self.env['website.visitor']
@@ -57,7 +57,7 @@ class TestSnippets(HttpCase):
         before_tour_product_ids = website_visitor.product_ids.ids
         website_visitor._add_viewed_product(self.product.id)
 
-        self.start_tour('/', 'website_sale.products_snippet_recently_viewed', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), 'website_sale.products_snippet_recently_viewed', login='admin')
         self.assertEqual(before_tour_product_ids, website_visitor.product_ids.ids, "There shouldn't be any new product in recently viewed after this tour")
 
     def test_website_category_url(self):

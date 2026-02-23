@@ -7,7 +7,6 @@ import {
 registerWebsitePreviewTour(
     "website_multi_edition",
     {
-        url: "/",
         edition: true,
     },
     () => [

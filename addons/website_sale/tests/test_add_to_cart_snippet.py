@@ -81,4 +81,4 @@ class TestAddToCartSnippet(HttpCase):
             'phone': "+32 123456789"
         })
         self.env.ref('base.user_admin').country_id = self.env.ref('base.be')
-        self.start_tour('/', 'website_sale.add_to_cart_snippet', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), 'website_sale.add_to_cart_snippet', login='admin')

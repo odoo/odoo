@@ -1,8 +1,8 @@
-import { clickOnSave, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { clickOnSave, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour('website_sale.enable_extra_info',
+registerWebsitePreviewTour(
+    "website_sale.enable_extra_info",
     {
-        url: '/shop/cart',
         edition: true,
     },
     () => [
@@ -16,12 +16,13 @@ registerWebsitePreviewTour('website_sale.enable_extra_info',
         },
         {
             content: "Enable Extra step",
-            trigger: "[data-action-param='{\"views\":[\"website_sale.extra_info\"]}'] input[type='checkbox']",
+            trigger:
+                "[data-action-param='{\"views\":[\"website_sale.extra_info\"]}'] input[type='checkbox']",
             run: "click",
         },
         {
             trigger: ":iframe .o_wizard [name=step_name]:contains(extra)",
         },
         ...clickOnSave(),
-    ],
+    ]
 );

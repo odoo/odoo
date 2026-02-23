@@ -20,13 +20,13 @@ class TestWebsiteFieldSanitize(odoo.tests.HttpCase):
 
         # Add a video to an HTML field (admin).
         self.start_tour(
-            self.env['website'].get_client_action_url('/test_website/model_item/1'),
+            self.env['website'].get_client_action_url('/test_website/model_item/1', True),
             'website_designer_iframe_video',
             login='admin'
         )
         # Make sure a user can still edit the content (restricted editor).
         self.start_tour(
-            self.env['website'].get_client_action_url('/test_website/model_item/1'),
+            self.env['website'].get_client_action_url('/test_website/model_item/1', True),
             'website_restricted_editor_iframe_video',
             login='restricted'
         )

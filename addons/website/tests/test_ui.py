@@ -137,7 +137,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         '''
         generic_page.arch = oe_structure_layout
         oe_structure_layout = generic_page.arch
-        self.start_tour(self.env['website'].get_client_action_url('/generic'), 'html_editor_multiple_templates', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/generic', True), 'html_editor_multiple_templates', login='admin')
         self.assertEqual(View.search_count([('key', '=', 'test.generic_view')]), 2, "homepage view should have been COW'd")
         self.assertTrue(generic_page.arch == oe_structure_layout, "Generic homepage view should be untouched")
         self.assertEqual(len(generic_page.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 0, "oe_structure view should have been deleted when aboutus was COW")
@@ -180,7 +180,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         mock_media_library_search.routing_type = 'json'
         HTML_Editor.media_library_search = http.route(['/html_editor/media_library_search'], type='jsonrpc', auth='user', website=True)(mock_media_library_search)
 
-        self.start_tour("/", 'website_media_dialog_undraw', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_media_dialog_undraw', login='admin')
 
     def test_dynamic_svg_theme_colors(self):
         svg = (
@@ -198,18 +198,17 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
             'public': True,
             'url': '/html_editor/shape/illustration/dynamic-svg-test',
         })
-        self.start_tour("/", 'website_dynamic_svg_theme_colors', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_dynamic_svg_theme_colors', login='admin')
 
     def test_code_editor_usable(self):
         # TODO: enable debug mode when failing tests have been fixed (props validation)
-        url = '/odoo/action-website.website_preview'
-        self.start_tour(url, 'website_code_editor_usable', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", False), 'website_code_editor_usable', login='admin')
 
 
 @odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
 class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
     def test_media_dialog_external_library(self):
-        self.start_tour("/", 'website_media_dialog_external_library', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_media_dialog_external_library', login='admin')
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -221,7 +220,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'iso_code': 'pa_GB',
             'url_code': 'pa_GB',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'rte_translator', login='admin', timeout=120)
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'rte_translator', login='admin', timeout=120)
 
     def test_translate_menu_name(self):
         lang_en = self.env.ref('base.lang_en')
@@ -244,7 +243,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'url': '/englishURL',
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_menu_name', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/pa_GB'), 'translate_menu_name', login='admin')
 
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
@@ -259,7 +258,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_text_options', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_text_options', login='admin')
 
     def test_snippet_translation(self):
         ResLang = self.env['res.lang']
@@ -319,7 +318,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
         })
         Website = self.env['website']
         Website.create({'name': 'Website Test'})
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'multiple_websites_add_language', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'multiple_websites_add_language', login='admin')
 
     def test_translate_select_element(self):
         lang_en = self.env.ref('base.lang_en')
@@ -331,7 +330,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_select_element', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_select_element', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -410,7 +409,7 @@ class TestUi(HttpCaseWithWebsiteUser):
                 </xpath>
             """,
         }])
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_version_1', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_version_1', login='admin')
 
     def test_08_website_style_custo(self):
         self.env['ir.attachment'].create({
@@ -420,17 +419,17 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'bg_test.png',
             'mimetype': 'image/png',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin', timeout=180)
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_link_popover', login='admin', timeout=180)
 
     def test_10_website_conditional_visibility(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_1', login='admin')
         self.start_tour('/odoo', 'conditional_visibility_2', login='website_user')
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin', timeout=180)
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_3', login='admin', timeout=180)
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_4', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_5', login='admin')
 
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({
@@ -440,7 +439,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'test.png',
             'mimetype': 'image/png',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_background_edition', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_background_edition', login='admin')
 
     def test_12_edit_translated_page_redirect(self):
         lang = self.env['res.lang']._activate_lang('nl_NL')
@@ -448,34 +447,34 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour("/nl/contactus", 'edit_translated_page_redirect', login='admin')
 
     def test_14_carousel_snippet_content_removal(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'carousel_content_removal', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'carousel_content_removal', login='admin')
 
     def test_16_website_edit_megamenu(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu', login='admin')
 
     def test_website_megamenu_active_nav_link(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'megamenu_active_nav_link', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'megamenu_active_nav_link', login='admin')
 
     def test_17_website_edit_menus(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
     def test_18_website_snippets_menu_tabs(self):
-        self.start_tour('/', 'website_snippets_menu_tabs', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_snippets_menu_tabs', login='admin')
 
     def test_19_website_page_options(self):
-        self.start_tour("/odoo", "website_page_options", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_page_options", login="admin")
 
     def test_20_snippet_editor_panel_options(self):
-        self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'snippet_editor_panel_options', login='admin')
 
     def test_21_website_start_cloned_snippet(self):
-        self.start_tour('/odoo', 'website_start_cloned_snippet', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('', True), 'website_start_cloned_snippet', login='admin')
 
     def test_22_website_gray_color_palette(self):
-        self.start_tour('/odoo', 'website_gray_color_palette', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_gray_color_palette', login='admin')
 
     def test_23_website_multi_edition(self):
-        self.start_tour('/@/', 'website_multi_edition', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_multi_edition', login='admin')
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
@@ -494,7 +493,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
             snippet_key='s_text_block',
             template_key='website.snippets')
-        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
+        self.start_tour(self.env["website"].get_client_action_url('/@/', True), 'snippet_cache_across_websites', login='admin', cookies={
             'websiteIdMapping': json.dumps({'Test Website': website.id})
         })
 
@@ -509,13 +508,13 @@ class TestUi(HttpCaseWithWebsiteUser):
             'social_tiktok': 'https://www.tiktok.com/@odoo',
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
-        self.start_tour("/", 'website_media_dialog_icons', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
-        self.start_tour('/odoo', 'website_click_tour', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', False), 'website_click_tour', login='admin')
 
     def test_29_website_text_edition(self):
-        self.start_tour('/@/', 'website_text_edition', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_text_edition', login='admin')
 
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
@@ -530,13 +529,13 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour('/', 'website_backend_menus_redirect', login='admin')
 
     def test_30_website_text_animations(self):
-        self.start_tour("/", 'text_animations', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_animations', login='admin')
 
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'edit_megamenu_big_icons_subtitles', login='admin')
 
     def test_32_website_background_colorpicker(self):
-        self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_background_colorpicker", login="admin")
 
     def test_33_website_menus(self):
         # Create a website to prevent auto-assignment of the default parent menu.
@@ -546,22 +545,22 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour("/odoo/action-website.action_website_menu", "parent_child_menu", login="admin")
 
     def test_34_website_page_breadcrumb(self):
-        self.start_tour('/contactus', 'website_page_breadcrumb', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url("/contactus", False), 'website_page_breadcrumb', login='admin')
 
     def test_website_media_dialog_image_shape(self):
-        self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_media_dialog_image_shape', login='admin')
 
     def test_website_media_dialog_insert_media(self):
-        self.start_tour("/", "website_media_dialog_insert_media", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_media_dialog_insert_media", login="admin")
 
     def test_website_text_font_size(self):
-        self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
+        self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_text_font_size', login='admin', timeout=300)
 
     def test_update_column_count(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_update_column_count', login="admin")
 
     def test_website_text_highlights(self):
-        self.start_tour("/", 'text_highlights', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_highlights', login='admin')
 
     def test_website_extra_items_no_dirty_page(self):
         """
@@ -595,7 +594,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'parent_id': website.menu_id.id,
         })
 
-        self.start_tour('/', 'website_no_action_no_dirty_page', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_no_action_no_dirty_page', login='admin')
 
     def test_website_no_dirty_page(self):
         # Previous tests are testing the dirty behavior when the extra items
@@ -604,7 +603,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         website = self.env['website'].get_current_website()
         website.menu_id.child_id[1:].unlink()
 
-        self.start_tour('/', 'website_no_dirty_page', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_no_dirty_page', login='admin')
 
     def test_interaction_lifecycle(self):
         self.env['ir.asset'].create({
@@ -612,7 +611,7 @@ class TestUi(HttpCaseWithWebsiteUser):
             'bundle': 'website.assets_wysiwyg',
             'path': 'website/static/tests/tour_utils/lifecycle_patch_wysiwyg.js',
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'interaction_lifecycle', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'interaction_lifecycle', login='admin')
 
     def test_drop_404_ir_attachment_url(self):
         website_snippets = self.env.ref('website.snippets')
@@ -648,14 +647,14 @@ class TestUi(HttpCaseWithWebsiteUser):
             'model': 'ir.attachment',
             'res_id': attachment.id,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'drop_404_ir_attachment_url', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'drop_404_ir_attachment_url', login='admin')
 
     def test_mobile_order_with_drag_and_drop(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_mobile_order_with_drag_and_drop', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_mobile_order_with_drag_and_drop', login='admin')
 
     def test_powerbox_snippet(self):
-        self.start_tour('/', 'website_powerbox_snippet', login='admin')
-        self.start_tour('/', 'website_powerbox_keyword', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_powerbox_snippet', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_powerbox_keyword', login='admin')
 
     def test_website_no_dirty_lazy_image(self):
         website = self.env['website'].browse(1)
@@ -688,7 +687,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         ]:
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
-        self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/", True), 'website_no_dirty_lazy_image', login='admin')
 
     def test_website_edit_menus_delete_parent(self):
         website = self.env['website'].browse(1)
@@ -708,46 +707,46 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
 
     def test_snippet_carousel(self):
-        self.start_tour('/', 'snippet_carousel', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_carousel', login='admin')
 
     def test_snippet_carousel_clickable_slides(self):
-        self.start_tour("/", "snippet_carousel_clickable_slides", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_carousel_clickable_slides", login="admin")
 
     def test_media_iframe_video(self):
-        self.start_tour("/", "website_media_iframe_video", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_media_iframe_video", login="admin")
 
     def test_snippet_visibility_option(self):
-        self.start_tour("/", "snippet_visibility_option", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_visibility_option", login="admin")
 
     def test_website_font_family(self):
-        self.start_tour("/", "website_font_family", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
 
     def test_website_seo_notification(self):
-        self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", False), "website_seo_notification", login="admin")
 
     def test_website_add_snippet_dialog(self):
-        self.start_tour("/", "website_add_snippet_dialog", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_add_snippet_dialog", login="admin")
 
     def test_popup_visibility_option(self):
-        self.start_tour("/", "website_popup_visibility_option", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "website_popup_visibility_option", login="admin")
 
     def test_systray_items_disappear(self):
-        self.start_tour("/", "website_systray_items_disappear", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", False), "website_systray_items_disappear", login="admin")
 
     def test_auto_hide_menu(self):
-        self.start_tour("/", "website_auto_hide_menu", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", False), "website_auto_hide_menu", login="admin")
 
     def test_editing_awaits_navigation(self):
-        self.start_tour("/", "website_editing_awaits_navigation", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", False), "website_editing_awaits_navigation", login="admin")
 
     def test_create_missing_page(self):
-        self.start_tour("/", "create_missing_page", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "create_missing_page", login="admin")
 
     def test_hiding_sidebar_header(self):
-        self.start_tour("/", "hide_sidebar_header", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "hide_sidebar_header", login="admin")
 
     def test_website_edit_megamenu_visibility(self):
-        self.start_tour("/", 'edit_megamenu_visibility', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url("/", True), 'edit_megamenu_visibility', login='admin')
 
     def test_alt_a_edit(self):
         lang_en = self.env.ref('base.lang_en')
@@ -777,10 +776,10 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour('/', 'alt_a_edit', login='admin')
 
     def test_mega_footer(self):
-        self.start_tour('/', 'mega_footer', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url("/", True), 'mega_footer', login='admin')
 
     def test_anchor_on_accordion_item(self):
-        self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/", True), "anchor_behaviour_on_accordion_same_tab", login="admin")
         self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
 
     def test_background_color_gradient_precedence(self):
@@ -795,4 +794,4 @@ class TestUi(HttpCaseWithWebsiteUser):
                 'menu-gradient': 'linear-gradient(rgb(2, 2, 2), rgb(3, 3, 3))',
             },
         )
-        self.start_tour('/', 'background_color_gradient_precedence', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url('/', True), 'background_color_gradient_precedence', login='admin')

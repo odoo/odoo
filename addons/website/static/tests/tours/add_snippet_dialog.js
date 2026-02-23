@@ -4,7 +4,6 @@ registerWebsitePreviewTour(
     "website_add_snippet_dialog",
     {
         edition: true,
-        url: "/",
     },
     () => [
         {

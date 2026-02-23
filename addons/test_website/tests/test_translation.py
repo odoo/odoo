@@ -16,16 +16,16 @@ class TestTranslation(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_single_language_fr_user_en_site', login='admin')
 
     def _multi_language_fr_user_fr_en_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_multi_language_fr_user_fr_en_site', login='admin', timeout=250)
+        self.start_tour(self.env['website'].get_client_action_url('/fr'), 'translation_multi_language_fr_user_fr_en_site', login='admin', timeout=250)
 
     def _multi_language_fr_user_en_fr_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_multi_language_fr_user_en_fr_site', login='admin', timeout=250)
+        self.start_tour(self.env['website'].get_client_action_url('/en'), 'translation_multi_language_fr_user_en_fr_site', login='admin', timeout=250)
 
     def _multi_language_en_user_fr_en_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_multi_language_en_user_fr_en_site', login='admin', timeout=250)
+        self.start_tour(self.env['website'].get_client_action_url('/fr'), 'translation_multi_language_en_user_fr_en_site', login='admin', timeout=250)
 
     def _multi_language_en_user_en_fr_site(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translation_multi_language_en_user_en_fr_site', login='admin', timeout=250)
+        self.start_tour(self.env['website'].get_client_action_url('/en'), 'translation_multi_language_en_user_en_fr_site', login='admin', timeout=250)
 
     def _fr_db(self):
         self._fr_en_db()

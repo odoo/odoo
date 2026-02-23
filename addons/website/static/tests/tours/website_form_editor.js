@@ -171,7 +171,6 @@ registerWebsitePreviewTour(
     "website_form_editor_tour",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -921,7 +920,6 @@ function editContactUs(steps) {
 registerWebsitePreviewTour(
     "website_form_contactus_edition_with_email",
     {
-        url: "/contactus",
         edition: true,
     },
     () =>
@@ -937,7 +935,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_contactus_edition_no_email",
     {
-        url: "/contactus",
         edition: true,
     },
     () =>
@@ -960,7 +957,6 @@ registerWebsitePreviewTour(
     "website_form_conditional_required_checkboxes",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -1116,7 +1112,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_contactus_change_random_option",
     {
-        url: "/contactus",
         edition: true,
     },
     () =>
@@ -1133,7 +1128,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_nested_forms",
     {
-        url: "/my/account",
         edition: true,
     },
     () => [
@@ -1160,7 +1154,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_editable_content",
     {
-        url: "/",
         edition: true,
     },
     () => [
@@ -1229,7 +1222,6 @@ registerWebsitePreviewTour(
     "website_form_special_characters",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
@@ -1272,7 +1264,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_duplicate_field_ids",
     {
-        url: "/",
         edition: true,
     },
     () => [

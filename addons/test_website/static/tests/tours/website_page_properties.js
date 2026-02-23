@@ -308,55 +308,41 @@ function testWebsitePageProperties() {
     return steps;
 }
 
-registerWebsitePreviewTour(
-    "website_page_properties_common",
-    {
-        url: "/test_view",
-    },
-    () => [...testCommonProperties("/test_view", false).finalize()]
-);
+registerWebsitePreviewTour("website_page_properties_common", {}, () => [
+    ...testCommonProperties("/test_view", false).finalize(),
+]);
 
-registerWebsitePreviewTour(
-    "website_page_properties_can_publish",
-    {
-        url: "/test_website/model_item/1",
-    },
-    () => [...testCommonProperties("/test_website/model_item/1", true).finalize()]
-);
+registerWebsitePreviewTour("website_page_properties_can_publish", {}, () => [
+    ...testCommonProperties("/test_website/model_item/1", true).finalize(),
+]);
 
-registerWebsitePreviewTour(
-    "website_page_properties_website_page",
+registerWebsitePreviewTour("website_page_properties_website_page", {}, () => [
+    ...openCreatePageDialog,
     {
-        url: "/",
+        content: "Use blank template",
+        trigger: ".o_page_template .o_button_area:hidden",
+        run: "click",
     },
-    () => [
-        ...openCreatePageDialog,
-        {
-            content: "Use blank template",
-            trigger: ".o_page_template .o_button_area:hidden",
-            run: "click",
-        },
-        {
-            content: "Name page",
-            trigger: ".modal-body input",
-            run: "edit New Page",
-        },
-        {
-            content: "Don't add to menu",
-            trigger: ".modal-body .o_switch",
-            run: "click",
-        },
-        {
-            content: "Click on Create button",
-            trigger: ".modal-footer .btn-primary",
-            run: "click",
-        },
-        {
-            content: "Wait for editor to open",
-            trigger: ":iframe body.editor_enable",
-            timeout: 30000,
-        },
-        ...clickOnSave(),
-        ...testWebsitePageProperties().finalize(),
-    ]
-);
+    {
+        content: "Name page",
+        trigger: ".modal-body input",
+        run: "edit New Page",
+    },
+    {
+        content: "Don't add to menu",
+        trigger: ".modal-body .o_switch",
+        run: "click",
+    },
+    {
+        content: "Click on Create button",
+        trigger: ".modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        content: "Wait for editor to open",
+        trigger: ":iframe body.editor_enable",
+        timeout: 30000,
+    },
+    ...clickOnSave(),
+    ...testWebsitePageProperties().finalize(),
+]);

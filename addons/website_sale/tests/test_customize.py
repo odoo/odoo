@@ -240,7 +240,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             {'name': 'Base Pricelist', 'selectable': True},
             {'name': 'Other Pricelist', 'selectable': True}
         ])
-        self.start_tour('/shop', 'website_sale.shop_editor', login='website_user')
+        self.start_tour(self.env["website"].get_client_action_url("/shop", True), 'website_sale.shop_editor', login='website_user')
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple
@@ -392,7 +392,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         )
 
     def test_11_shop_editor_set_product_ribbon(self):
-        self.start_tour('/shop', 'website_sale.shop_editor_set_product_ribbon', login='admin')
+        self.start_tour(self.env["website"].get_client_action_url("/shop", True), 'website_sale.shop_editor_set_product_ribbon', login='admin')
 
     def test_12_multi_checkbox_attribute_single_value(self):
         attribute = self.env['product.attribute'].create([
@@ -433,4 +433,4 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         })
         product_no_alternative.set_sequence_top()
         product_with_alternative.set_sequence_top()
-        self.start_tour('/shop', 'shop_editor_no_alternative_products_visibility_tour', login="admin")
+        self.start_tour(self.env["website"].get_client_action_url("/shop", False), 'shop_editor_no_alternative_products_visibility_tour', login="admin")

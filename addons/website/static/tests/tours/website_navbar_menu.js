@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("website_navbar_menu", {
-    url: "/",
     steps: () => [
         {
             content: "Ensure menus are in DOM",
@@ -23,7 +22,7 @@ registry.category("web_tour.tours").add("website_navbar_menu", {
     ],
 });
 
-registerWebsitePreviewTour("website_systray_items_disappear", { url: "/" }, () => [
+registerWebsitePreviewTour("website_systray_items_disappear", {}, () => [
     {
         content: "Ensure frontend systray items have been added to the navbar",
         trigger: ".o_main_navbar .o_menu_systray:has(.o_edit_website_container)",

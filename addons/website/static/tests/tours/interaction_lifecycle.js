@@ -14,7 +14,6 @@ const localStorageKey = "interactionAndWysiwygLifecycle";
 registerWebsitePreviewTour(
     "interaction_lifecycle",
     {
-        url: "/",
         edition: true,
     },
     () => [

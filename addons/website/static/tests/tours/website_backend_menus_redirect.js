@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_backend_menus_redirect", {
-    url: "/",
     steps: () => [
         {
             isActive: ["enterprise"],

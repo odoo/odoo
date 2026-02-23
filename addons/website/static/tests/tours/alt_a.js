@@ -25,7 +25,6 @@ function searchParamsCheck() {
 }
 
 registry.category("web_tour.tours").add("alt_a_edit", {
-    url: "/",
     steps: () => [
         pressAltA(),
         {

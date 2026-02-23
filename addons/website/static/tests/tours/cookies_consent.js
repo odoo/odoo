@@ -22,7 +22,6 @@ function assertGtagConsent(expectedState) {
 }
 
 registry.category("web_tour.tours").add("cookie_bar_updates_gtag_consent", {
-    url: "/",
     steps: () => [
         {
             content: "Accept all cookies",

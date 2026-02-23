@@ -8,7 +8,6 @@ import {
 registerWebsitePreviewTour(
     "test_form_conditional_visibility_record_field",
     {
-        url: "/test_website/model_item/1",
         edition: true,
     },
     () => [

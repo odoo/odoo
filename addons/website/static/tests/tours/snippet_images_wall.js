@@ -57,7 +57,6 @@ const reselectSignImageSteps = [
 registerWebsitePreviewTour(
     "snippet_images_wall",
     {
-        url: "/",
         edition: true,
     },
     () => [

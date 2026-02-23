@@ -15,8 +15,6 @@ registerWebsitePreviewTour(
     "course_publisher",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
-        // TODO: replace by getClientActionURL when it's added
-        url: "/slides",
     },
     () =>
         [

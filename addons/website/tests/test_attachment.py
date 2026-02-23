@@ -37,7 +37,7 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         self.assertEqual(req.status_code, 200)
 
     def test_02_image_quality(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_quality', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_image_quality', login="admin")
 
     def test_03_link_to_document(self):
         text = b'Lorem Ipsum'
@@ -47,7 +47,7 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
             'mimetype': 'text/plain',
             'raw': text,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_link_to_document', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'test_link_to_document', login="admin")
 
     def test_04_image_srcset(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_image_srcset', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_image_srcset', login="admin")
