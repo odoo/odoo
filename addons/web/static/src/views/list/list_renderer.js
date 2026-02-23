@@ -297,6 +297,9 @@ export class ListRenderer extends Component {
             if (this.activeElement !== this.uiService.activeElement) {
                 return;
             }
+            if (document.activeElement?.closest(".o-we-linkpopover")) {
+                return;
+            }
             if (this.editedRecord && this.activeRowId !== this.editedRecord.id) {
                 if (this.cellToFocus && this.cellToFocus.record === this.editedRecord) {
                     const column = this.cellToFocus.column;
@@ -2150,6 +2153,9 @@ export class ListRenderer extends Component {
         }
         // Legacy autocomplete
         if (ev.target.closest(".ui-autocomplete")) {
+            return;
+        }
+        if (ev.target.name == 'link' || ev.target.parentNode.name == 'link') {
             return;
         }
         this.props.list.leaveEditMode();

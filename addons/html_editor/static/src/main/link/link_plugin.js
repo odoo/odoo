@@ -814,7 +814,7 @@ export class LinkPlugin extends Plugin {
             (isProtecting(anchorNode) || isProtected(anchorNode));
         if (!selectionData.currentSelectionIsInEditable || isSelectionInProtected) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
-            const anchorNode = document.getSelection()?.anchorNode;
+            const anchorNode = document.querySelector(".o_we_href_input_link");
             if (
                 (popoverEl && !selectionData.documentSelection) ||
                 (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover"))
