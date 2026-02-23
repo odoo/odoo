@@ -19,6 +19,7 @@ import {
     defineModels,
     models,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
@@ -598,4 +599,19 @@ export async function unfoldAllOptionsGroups() {
         await click(i);
     }
     await animationFrame();
+}
+
+export const dummyCORSSrc = "/web/image/0-redirect/foo.jpg";
+
+export function setupCORSProtectedImg() {
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            id: 1,
+            image_src: dummyCORSSrc,
+            mimetype: "image/jpeg",
+        },
+    }));
+    onRpc(dummyCORSSrc, () => {
+        throw new Error("simulated cors error");
+    });
 }

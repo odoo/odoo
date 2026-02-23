@@ -3,6 +3,7 @@ import { useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { deepCopy } from "@web/core/utils/objects";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
@@ -19,7 +20,10 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.customizeTabPlugin = this.dependencies.customizeTab;
         this.imageShapeOption = this.dependencies.imageShapeOption;
         this.toRatio = toRatio;
-        this.state = useDomState((editingElement) => {
+        this.state = useDomState(async (editingElement) => {
+            const { originalSrc } = editingElement.dataset.originalSrc
+                ? editingElement.dataset
+                : await loadImageInfo(editingElement);
             const shape = editingElement.dataset.shape;
             const imageShapeColorNames = [0, 1, 2, 3, 4].map((i) =>
                 this.isShapeVisible(editingElement, i)
@@ -34,6 +38,7 @@ export class ImageShapeOption extends BaseOptionComponent {
                 hasShapeTransformation:
                     !!editingElement.dataset.shapeFlip ||
                     !!parseInt(editingElement.dataset.shapeRotate),
+                isShapeSupported: !!originalSrc,
             };
         });
     }
