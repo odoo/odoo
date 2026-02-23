@@ -349,6 +349,15 @@ class StockForecasted(models.AbstractModel):
             for out in out_moves:
                 data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
                 moves_data[out].update(data)
+
+        # The out reserved moves may have removed quantities on a sublocation;
+        # any sublocation qties will be added to the main stock location qty
+        for product_id, location_id in currents:
+            qties = currents[product_id, location_id]
+            if location_id in wh_stock_sub_location_ids and location_id != wh_stock_location.id:
+                currents[product_id, location_id] -= qties
+                currents[product_id, wh_stock_location.id] += qties
+
         product_sum = defaultdict(float)
         for product_loc, quantity in currents.items():
             product_sum[product_loc[0]] += quantity
