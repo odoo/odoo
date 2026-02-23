@@ -1,0 +1,88 @@
+.o_form_view.o_crm_partner_form {
+    .o_form_sheet {
+        max-width: 1420px;
+        padding: 18px 20px;
+    }
+
+    .o_notebook {
+        .nav-tabs {
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--bs-border-color);
+
+            .nav-link {
+                font-weight: 600;
+                padding: 9px 16px;
+                border-radius: .45rem .45rem 0 0;
+            }
+        }
+
+        .tab-pane {
+            padding-top: 12px;
+        }
+    }
+
+    .o_group {
+        margin-bottom: 14px;
+        border: 1px solid var(--bs-border-color);
+        border-radius: .6rem;
+        padding: 12px 14px;
+        background-color: var(--bs-body-bg);
+        box-shadow: var(--bs-box-shadow-sm);
+
+        > .o_inner_group {
+            column-gap: 26px;
+            row-gap: 10px;
+        }
+
+        .o_td_label .o_form_label {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    }
+
+    .o_form_sheet .o_horizontal_separator,
+    .o_form_sheet .o_group .o_group_name {
+        margin-top: 4px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: .01em;
+    }
+
+    .o_field_x2many .o_list_renderer {
+        margin-top: 6px;
+        border: 1px solid var(--bs-border-color);
+        border-radius: .45rem;
+        overflow: hidden;
+
+        th {
+            font-weight: 600;
+            background-color: var(--bs-secondary-bg);
+        }
+    }
+
+    .o_field_widget.o_field_html {
+        border-radius: .45rem;
+        border: 1px solid var(--bs-border-color);
+        background-color: var(--bs-body-bg);
+    }
+}
+
+.o_form_view.o_crm_partner_company_form {
+    .o_form_sheet {
+        .o_notebook .tab-pane > .o_group:last-child {
+            margin-bottom: 0;
+        }
+
+        .o_field_widget[name="map_html"],
+        .o_field_widget[name="contact_map_html"] {
+            min-height: 260px;
+            overflow: hidden;
+        }
+    }
+}
+
+.o_form_view.o_crm_partner_contact_form {
+    .o_form_sheet {
+        min-height: 540px;
+    }
+}

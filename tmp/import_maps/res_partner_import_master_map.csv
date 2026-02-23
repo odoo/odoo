@@ -1,0 +1,919 @@
+row_type,model,field,field_label,field_type,required,readonly,related_model,id,xml_id,display_name
+FIELD,res.partner,account_name,Nombre de cuenta,char,False,True,,,,
+FIELD,res.partner,active,Activo,boolean,False,False,,,,
+FIELD,res.partner,active_lang_count,Número de idiomas activos,integer,False,True,,,,
+FIELD,res.partner,activity_calendar_event_id,Siguiente evento en el calendario de actividades.,many2one,False,True,calendar.event,,,
+FIELD,res.partner,activity_date_deadline,Fecha límite de la siguiente actividad,date,False,True,,,,
+FIELD,res.partner,activity_exception_decoration,Decoración de Actividad de Excepción,selection,False,True,,,,
+FIELD,res.partner,activity_exception_icon,Icono,char,False,True,,,,
+FIELD,res.partner,activity_ids,Actividades,one2many,False,False,mail.activity,,,
+FIELD,res.partner,activity_state,Estado de la actividad,selection,False,True,,,,
+FIELD,res.partner,activity_summary,Resumen de la siguiente actividad,char,False,False,,,,
+FIELD,res.partner,activity_type_icon,Icono de tipo de actvidad,char,False,True,,,,
+FIELD,res.partner,activity_type_id,Tipo de la siguiente actividad,many2one,False,False,mail.activity.type,,,
+FIELD,res.partner,activity_user_id,Usuario responsable,many2one,False,True,res.users,,,
+FIELD,res.partner,additional_info,Información adicional,char,False,False,,,,
+FIELD,res.partner,associated_company_ids,Sedes asociadas,one2many,False,False,res.partner,,,
+FIELD,res.partner,autopost_bills,Registrar facturas automáticamente,selection,True,False,,,,
+FIELD,res.partner,available_location_ids,Ubicaciones disponibles,many2many,False,True,crm.partner.location,,,
+FIELD,res.partner,available_peppol_eas,EAS de Peppol disponible,json,False,True,,,,
+FIELD,res.partner,available_peppol_edi_formats,Formatos EDI Peppol disponibles,json,False,True,,,,
+FIELD,res.partner,available_peppol_sending_methods,Métodos de envío Peppol disponibles,json,False,True,,,,
+FIELD,res.partner,avatar_1024,Avatar 1024,binary,False,True,,,,
+FIELD,res.partner,avatar_128,Avatar 128,binary,False,True,,,,
+FIELD,res.partner,avatar_1920,Avatar,binary,False,True,,,,
+FIELD,res.partner,avatar_256,Avatar 256,binary,False,True,,,,
+FIELD,res.partner,avatar_512,Avatar 512,binary,False,True,,,,
+FIELD,res.partner,bank_account_count,Banco,integer,False,True,,,,
+FIELD,res.partner,bank_ids,Bancos,one2many,False,False,res.partner.bank,,,
+FIELD,res.partner,barcode,Código de barras,char,False,False,,,,
+FIELD,res.partner,billing_default_pricelist,Lista de precios por defecto,char,False,False,,,,
+FIELD,res.partner,billing_default_product,Producto,char,False,False,,,,
+FIELD,res.partner,billing_incidents_cobro,Incidencias cobro,selection,False,False,,,,
+FIELD,res.partner,billing_invoice_email,Email facturación,char,False,False,,,,
+FIELD,res.partner,billing_irpf_retention,Retenciones IRPF (%),float,False,False,,,,
+FIELD,res.partner,billing_payment_method,Forma de pago (legacy),selection,False,False,,,,
+FIELD,res.partner,billing_payment_method_custom,Nueva forma de pago,char,False,False,,,,
+FIELD,res.partner,billing_payment_method_id,Forma de pago,many2one,False,False,crm.payment.method,,,
+FIELD,res.partner,billing_prepago,Cliente prepago,boolean,False,False,,,,
+FIELD,res.partner,billing_sepa_document_id,Documento SEPA,many2one,False,False,ir.attachment,,,
+FIELD,res.partner,billing_sepa_signed,SEPA firmado,boolean,False,False,,,,
+FIELD,res.partner,calendar_last_notif_ack,Última notificación marcada como leída desde el calendario principal,datetime,False,False,,,,
+FIELD,res.partner,category_id,Etiquetas,many2many,False,False,res.partner.category,,,
+FIELD,res.partner,centralita_number,Número de Centralita,char,False,False,,,,
+FIELD,res.partner,channel_ids,Canales,many2many,False,False,discuss.channel,,,
+FIELD,res.partner,child_ids,Contacto,one2many,False,False,res.partner,,,
+FIELD,res.partner,city,Ciudad,char,False,False,,,,
+FIELD,res.partner,color,Índice de Colores,integer,False,False,,,,
+FIELD,res.partner,comment,Notas,html,False,False,,,,
+FIELD,res.partner,commercial_company_name,Entidad del nombre de la empresa,char,False,True,,,,
+FIELD,res.partner,commercial_partner_id,Entidad comercial,many2one,False,True,res.partner,,,
+FIELD,res.partner,company_id,Compañía,many2one,False,False,res.company,,,
+FIELD,res.partner,company_name,Nombre de la empresa,char,False,False,,,,
+FIELD,res.partner,company_registry,ID de la compañía,char,False,False,,,,
+FIELD,res.partner,company_registry_label,Etiqueta de identificación de la empresa,char,False,True,,,,
+FIELD,res.partner,company_type,Tipo de compañía,selection,False,False,,,,
+FIELD,res.partner,complete_name,Nombre completo,char,False,True,,,,
+FIELD,res.partner,contact_address,Dirección completa,char,False,True,,,,
+FIELD,res.partner,contact_address_inline,Dirección completa Inline,char,False,True,,,,
+FIELD,res.partner,contact_count,Número de Contactos,integer,False,True,,,,
+FIELD,res.partner,contact_map_html,Mapa del contacto,html,False,True,,,,
+FIELD,res.partner,contract_acronis,Acronis,boolean,False,False,,,,
+FIELD,res.partner,contract_antivirus,Antivirus,boolean,False,False,,,,
+FIELD,res.partner,contract_cloud_centralita,Mantenimiento centralita cloud,boolean,False,False,,,,
+FIELD,res.partner,contract_extra_line_ids,Contratos extra,one2many,False,False,crm.contract.option.line,,,
+FIELD,res.partner,contract_extra_option_ids,Contratos extra (interno),many2many,False,False,crm.contract.option,,,
+FIELD,res.partner,contract_ids,Contratos de contactos,one2many,False,True,account.analytic.account,,,
+FIELD,res.partner,contract_incidents_cobro,Incidencias cobro,boolean,False,False,,,,
+FIELD,res.partner,contract_it_bonus,Bono informática,boolean,False,False,,,,
+FIELD,res.partner,contract_office365,Office 365,boolean,False,False,,,,
+FIELD,res.partner,contract_physical_centralita,Mantenimiento centralita física,boolean,False,False,,,,
+FIELD,res.partner,contract_total_it_maintenance,Mantenimiento total informática,boolean,False,False,,,,
+FIELD,res.partner,contract_vpn,Mantenimiento VPN,boolean,False,False,,,,
+FIELD,res.partner,country_code,Código de país,char,False,True,,,,
+FIELD,res.partner,country_id,País,many2one,False,False,res.country,,,
+FIELD,res.partner,create_date,Creado el,datetime,False,True,,,,
+FIELD,res.partner,create_uid,Creado por,many2one,False,True,res.users,,,
+FIELD,res.partner,credit,Total por cobrar,monetary,False,True,,,,
+FIELD,res.partner,credit_limit,Crédito concedido,float,False,False,,,,
+FIELD,res.partner,credit_to_invoice,Crédito a facturar,monetary,False,True,,,,
+FIELD,res.partner,currency_id,Moneda,many2one,False,True,res.currency,,,
+FIELD,res.partner,customer_rank,Rango del cliente,integer,False,False,,,,
+FIELD,res.partner,date_localization,Fecha de geolocalización,date,False,False,,,,
+FIELD,res.partner,days_sales_outstanding,Periodo medio de cobros (DSO),float,False,True,,,,
+FIELD,res.partner,debit,Total por pagar,monetary,False,True,,,,
+FIELD,res.partner,debit_limit,Límite por pagar,monetary,False,False,,,,
+FIELD,res.partner,display_invoice_edi_format,Mostrar formato EDI de la factura,boolean,False,False,,,,
+FIELD,res.partner,display_invoice_template_pdf_report_id,Mostrar informe PDF de la plantilla de la factura,boolean,False,False,,,,
+FIELD,res.partner,display_name,Nombre para mostrar,char,False,True,,,,
+FIELD,res.partner,duplicate_bank_partner_ids,Duplicar contacto de banco,many2many,False,True,res.partner,,,
+FIELD,res.partner,duplicated_bank_account_partners_count,Número de empresas con cuenta bancaria duplicada,integer,False,True,,,,
+FIELD,res.partner,email,Correo electrónico,char,False,False,,,,
+FIELD,res.partner,email_formatted,Correo electrónico formateado,char,False,True,,,,
+FIELD,res.partner,email_normalized,Correo electrónico normalizado,char,False,True,,,,
+FIELD,res.partner,employee,Empleado,boolean,False,False,,,,
+FIELD,res.partner,employee_ids,Empleados,one2many,False,False,hr.employee,,,
+FIELD,res.partner,employees_count,Número de empleados,integer,False,True,,,,
+FIELD,res.partner,first_name,Nombre de pila,char,False,False,,,,
+FIELD,res.partner,fiscal_country_codes,Códigos de país fiscal,char,False,True,,,,
+FIELD,res.partner,fsm_location,Es una Ubicación FS,boolean,False,False,,,,
+FIELD,res.partner,fsm_location_ids,Ubicación del servicio fijo relacionado,one2many,False,True,fsm.location,,,
+FIELD,res.partner,fsm_person,Es un Trabajador FS,boolean,False,False,,,,
+FIELD,res.partner,function,Puesto de trabajo,char,False,False,,,,
+FIELD,res.partner,geocode_address,Dirección geocodificada,char,False,True,,,,
+FIELD,res.partner,global_location_number,GLN,char,False,False,,,,
+FIELD,res.partner,has_message,Tiene un mensaje,boolean,False,True,,,,
+FIELD,res.partner,helpdesk_category_ids,Available category,many2many,False,False,helpdesk.ticket.category,,,
+FIELD,res.partner,helpdesk_team_ids,Available teams,many2many,True,False,helpdesk.ticket.team,,,
+FIELD,res.partner,helpdesk_ticket_active_count,Cantidad de tickets activos,integer,False,True,,,,
+FIELD,res.partner,helpdesk_ticket_count,Cantidad de tickets,integer,False,True,,,,
+FIELD,res.partner,helpdesk_ticket_count_string,Tíquets,char,False,True,,,,
+FIELD,res.partner,helpdesk_ticket_ids,Tickets relacionados,one2many,False,False,helpdesk.ticket,,,
+FIELD,res.partner,id,ID,integer,False,True,,,,
+FIELD,res.partner,ignore_abnormal_invoice_amount,Ignorar importe de factura anormal,boolean,False,False,,,,
+FIELD,res.partner,ignore_abnormal_invoice_date,Ignorar fecha de factura anormal,boolean,False,False,,,,
+FIELD,res.partner,im_status,Estado de mensajería instantanea,char,False,True,,,,
+FIELD,res.partner,image_1024,Imagen 1024,binary,False,True,,,,
+FIELD,res.partner,image_128,Imagen 128,binary,False,True,,,,
+FIELD,res.partner,image_1920,Imagen,binary,False,False,,,,
+FIELD,res.partner,image_256,Imagen 256,binary,False,True,,,,
+FIELD,res.partner,image_512,Imagen 512,binary,False,True,,,,
+FIELD,res.partner,industry_id,Sector,many2one,False,False,res.partner.industry,,,
+FIELD,res.partner,invoice_edi_format,Formato de la factura electrónica,selection,False,False,,,,
+FIELD,res.partner,invoice_edi_format_store,Almacenamiento de formato EDI de factura,char,False,False,,,,
+FIELD,res.partner,invoice_ids,Facturas de clientes,one2many,False,True,account.move,,,
+FIELD,res.partner,invoice_sending_method,Envío de facturas,selection,False,False,,,,
+FIELD,res.partner,invoice_template_pdf_report_id,Plantilla de factura,many2one,False,False,ir.actions.report,,,
+FIELD,res.partner,invoice_warn,Factura,selection,False,False,,,,
+FIELD,res.partner,invoice_warn_msg,Mensaje para factura,text,False,False,,,,
+FIELD,res.partner,is_blacklisted,Lista negra,boolean,False,True,,,,
+FIELD,res.partner,is_coa_installed,¿El plan contable está instalado?,boolean,False,False,,,,
+FIELD,res.partner,is_company,Es una compañía,boolean,False,False,,,,
+FIELD,res.partner,is_peppol_edi_format,Es formato de EDI de Peppol,boolean,False,True,,,,
+FIELD,res.partner,is_public,Es público,boolean,False,True,,,,
+FIELD,res.partner,is_ubl_format,Es formato UBL,boolean,False,True,,,,
+FIELD,res.partner,journal_item_count,Apuntes contables,integer,False,True,,,,
+FIELD,res.partner,l10n_es_edi_facturae_ac_center_code,Código,char,False,False,,,,
+FIELD,res.partner,l10n_es_edi_facturae_ac_logical_operational_point,Punto Lógico Operacional,char,False,False,,,,
+FIELD,res.partner,l10n_es_edi_facturae_ac_physical_gln,GLN Físico,char,False,False,,,,
+FIELD,res.partner,l10n_es_edi_facturae_ac_role_type_ids,Roles,many2many,False,False,l10n_es_edi_facturae.ac_role_type,,,
+FIELD,res.partner,l10n_es_edi_facturae_residence_type,Código del tipo de residencia EDI de Facturae,char,False,True,,,,
+FIELD,res.partner,lang,Idioma,selection,False,False,,,,
+FIELD,res.partner,last_geocode,Última geocodificación,datetime,False,True,,,,
+FIELD,res.partner,last_name,Apellidos,char,False,False,,,,
+FIELD,res.partner,latitude,Latitud,float,False,False,,,,
+FIELD,res.partner,location_detected_html,Ubicación detectada,html,False,True,,,,
+FIELD,res.partner,location_id,Ubicación,many2one,False,False,crm.partner.location,,,
+FIELD,res.partner,location_ids,Ubicaciones,one2many,False,False,crm.partner.location,,,
+FIELD,res.partner,location_search,Buscar,char,False,False,,,,
+FIELD,res.partner,location_show_active_only,Mostrar activos,boolean,False,False,,,,
+FIELD,res.partner,longitude,Longitud,float,False,False,,,,
+FIELD,res.partner,lopd_document_id,Documento LOPD,many2one,False,False,ir.attachment,,,
+FIELD,res.partner,lopd_signed,LOPD firmada,boolean,False,False,,,,
+FIELD,res.partner,main_contact_id,Contacto principal,many2one,False,False,res.partner,,,
+FIELD,res.partner,map_html,Mapa,html,False,True,,,,
+FIELD,res.partner,meeting_count,Nº de reuniones,integer,False,True,,,,
+FIELD,res.partner,meeting_ids,Reuniones,many2many,False,False,calendar.event,,,
+FIELD,res.partner,message_attachment_count,Número de archivos adjuntos,integer,False,True,,,,
+FIELD,res.partner,message_bounce,Rebotado,integer,False,False,,,,
+FIELD,res.partner,message_follower_ids,Seguidores,one2many,False,False,mail.followers,,,
+FIELD,res.partner,message_has_error,Error de envío de mensaje,boolean,False,True,,,,
+FIELD,res.partner,message_has_error_counter,Número de errores,integer,False,True,,,,
+FIELD,res.partner,message_has_sms_error,Error de envío del SMS,boolean,False,True,,,,
+FIELD,res.partner,message_ids,Mensajes,one2many,False,False,mail.message,,,
+FIELD,res.partner,message_is_follower,Es un seguidor,boolean,False,True,,,,
+FIELD,res.partner,message_needaction,Acción requerida,boolean,False,True,,,,
+FIELD,res.partner,message_needaction_counter,Número de acciones,integer,False,True,,,,
+FIELD,res.partner,message_partner_ids,Seguidores (Contactos),many2many,False,False,res.partner,,,
+FIELD,res.partner,mobile,Móvil,char,False,False,,,,
+FIELD,res.partner,mobile_blacklisted,El teléfono en la lista negra es un móvil,boolean,False,True,,,,
+FIELD,res.partner,my_activity_date_deadline,Fecha límite de mi actividad,date,False,True,,,,
+FIELD,res.partner,name,Nombre,char,False,False,,,,
+FIELD,res.partner,notes,Notas,text,False,False,,,,
+FIELD,res.partner,outlook_message_count,Mensajes Outlook,integer,False,True,,,,
+FIELD,res.partner,owned_location_count,# de Ubicaciones Propias,integer,False,True,,,,
+FIELD,res.partner,owned_location_ids,Ubicaciones Propias,one2many,False,False,fsm.location,,,
+FIELD,res.partner,parent_id,Compañía relacionada,many2one,False,False,res.partner,,,
+FIELD,res.partner,parent_name,Nombre principal,char,False,True,,,,
+FIELD,res.partner,partner_company_registry_placeholder,Marcador de posición del registro de la compañía para contactos,char,False,True,,,,
+FIELD,res.partner,partner_gid,ID de la base de datos de la compañía,integer,False,False,,,,
+FIELD,res.partner,partner_latitude,Latitud geográfica,float,False,False,,,,
+FIELD,res.partner,partner_longitude,Longitud geográfica,float,False,False,,,,
+FIELD,res.partner,partner_share,Compartir contacto,boolean,False,True,,,,
+FIELD,res.partner,partner_vat_placeholder,Marcador de posición para el NIF del contacto,char,False,True,,,,
+FIELD,res.partner,payment_token_count,Número de tókenes de pago,integer,False,True,,,,
+FIELD,res.partner,payment_token_ids,Tókenes de pago,one2many,False,False,payment.token,,,
+FIELD,res.partner,peppol_eas,Dirección electrónica de Peppol (EAS),selection,False,False,,,,
+FIELD,res.partner,peppol_endpoint,Punto de conexión Peppol,char,False,False,,,,
+FIELD,res.partner,peppol_verification_state,Estado de Peppol,selection,False,False,,,,
+FIELD,res.partner,perform_vies_validation,Realizar validación VIES,boolean,False,True,,,,
+FIELD,res.partner,phone,Teléfono,char,False,False,,,,
+FIELD,res.partner,phone_blacklisted,El teléfono en la lista negra es un teléfono,boolean,False,True,,,,
+FIELD,res.partner,phone_mobile_search,Teléfono/móvil,char,False,False,,,,
+FIELD,res.partner,phone_sanitized,Número depurado,char,False,True,,,,
+FIELD,res.partner,phone_sanitized_blacklisted,Teléfono en la lista negra,boolean,False,True,,,,
+FIELD,res.partner,picking_warn,Albarán,selection,False,False,,,,
+FIELD,res.partner,picking_warn_msg,Mensaje para albarán de picking,text,False,False,,,,
+FIELD,res.partner,preferred_contact_method,Forma de contacto preferida,selection,False,False,,,,
+FIELD,res.partner,project_ids,Projects,one2many,False,False,project.project,,,
+FIELD,res.partner,property_account_payable_id,Cuenta por pagar,many2one,False,False,account.account,,,
+FIELD,res.partner,property_account_position_id,Posición fiscal,many2one,False,False,account.fiscal.position,,,
+FIELD,res.partner,property_account_receivable_id,Cuentas por cobrar,many2one,False,False,account.account,,,
+FIELD,res.partner,property_inbound_payment_method_line_id,Línea de método de pago de entrada de la propiedad,many2one,False,False,account.payment.method.line,,,
+FIELD,res.partner,property_outbound_payment_method_line_id,Línea de método de pago de salida de la propiedad,many2one,False,False,account.payment.method.line,,,
+FIELD,res.partner,property_payment_term_id,Condiciones de pago de cliente,many2one,False,False,account.payment.term,,,
+FIELD,res.partner,property_product_pricelist,Lista de precios,many2one,False,False,product.pricelist,,,
+FIELD,res.partner,property_stock_customer,Ubicación de cliente,many2one,False,False,stock.location,,,
+FIELD,res.partner,property_stock_supplier,Ubicación de proveedor,many2one,False,False,stock.location,,,
+FIELD,res.partner,property_supplier_payment_term_id,Condiciones de pago del proveedor,many2one,False,False,account.payment.term,,,
+FIELD,res.partner,rating_ids,Calificaciones,one2many,False,False,rating.rating,,,
+FIELD,res.partner,ref,Referencia,char,False,False,,,,
+FIELD,res.partner,ref_company_ids,Empresas que se refieren al contacto,one2many,False,False,res.company,,,
+FIELD,res.partner,relationship_type,Tipo de relación,selection,False,False,,,,
+FIELD,res.partner,relationship_type_id,Tipo de relación,many2one,False,False,crm.relationship.type,,,
+FIELD,res.partner,sale_order_count,Número de pedidos de venta,integer,False,True,,,,
+FIELD,res.partner,sale_order_ids,Pedido de venta,one2many,False,False,sale.order,,,
+FIELD,res.partner,sale_warn,Advertencias de ventas,selection,False,False,,,,
+FIELD,res.partner,sale_warn_msg,Mensaje para el pedido de venta,text,False,False,,,,
+FIELD,res.partner,same_company_registry_partner_id,Contacto con el mismo registro de compañía,many2one,False,True,res.partner,,,
+FIELD,res.partner,same_vat_partner_id,Contacto con la misma identificación fiscal,many2one,False,True,res.partner,,,
+FIELD,res.partner,self,Sí mismo,many2one,False,True,res.partner,,,
+FIELD,res.partner,service_address,Dirección de servicio,text,False,False,,,,
+FIELD,res.partner,service_location_id,Lugar de Servicio Primario,many2one,False,False,fsm.location,,,
+FIELD,res.partner,show_credit_limit,Mostrar crédito concedido,boolean,False,True,,,,
+FIELD,res.partner,signup_type,Tipo de token de registro,char,False,False,,,,
+FIELD,res.partner,specific_property_product_pricelist,Lista de precios para producto con propiedad específica,many2one,False,False,product.pricelist,,,
+FIELD,res.partner,starred_message_ids,Mensaje destacado,many2many,False,False,mail.message,,,
+FIELD,res.partner,state_id,Provincia,many2one,False,False,res.country.state,,,
+FIELD,res.partner,street,Calle,char,False,False,,,,
+FIELD,res.partner,street2,Calle2,char,False,False,,,,
+FIELD,res.partner,street_number,Número,char,False,False,,,,
+FIELD,res.partner,supplier_invoice_count,# Facturas de proveedores,integer,False,True,,,,
+FIELD,res.partner,supplier_rank,Rango de proveedor,integer,False,False,,,,
+FIELD,res.partner,task_count,# Tasks,integer,False,True,,,,
+FIELD,res.partner,task_ids,Tasks,one2many,False,False,project.task,,,
+FIELD,res.partner,title,Título,many2one,False,False,res.partner.title,,,
+FIELD,res.partner,total_invoiced,Total facturado,monetary,False,True,,,,
+FIELD,res.partner,trade_name,Marca Comercial,char,False,False,,,,
+FIELD,res.partner,trust,Grado de confianza en este deudor,selection,False,False,,,,
+FIELD,res.partner,type,Tipo de dirección,selection,False,False,,,,
+FIELD,res.partner,tz,Zona horaria,selection,False,False,,,,
+FIELD,res.partner,tz_offset,Compensación de zona horaria,char,False,True,,,,
+FIELD,res.partner,use_partner_credit_limit,Límite para el contacto,boolean,False,False,,,,
+FIELD,res.partner,user_id,Comercial,many2one,False,False,res.users,,,
+FIELD,res.partner,user_ids,Usuarios,one2many,False,False,res.users,,,
+FIELD,res.partner,vat,NIF,char,False,False,,,,
+FIELD,res.partner,vat_label,Etiqueta de identificación fiscal,char,False,True,,,,
+FIELD,res.partner,vies_valid,Validez intracomunitaria,boolean,False,False,,,,
+FIELD,res.partner,vies_vat_to_check,Comprobar un número de IVA en VIES,char,False,True,,,,
+FIELD,res.partner,website,Enlace del sitio web,char,False,False,,,,
+FIELD,res.partner,website_message_ids,Mensajes del sitio web,one2many,False,False,mail.message,,,
+FIELD,res.partner,write_date,Última actualización el,datetime,False,True,,,,
+FIELD,res.partner,write_uid,Última actualización por,many2one,False,True,res.users,,,
+FIELD,res.partner,zip,C.P.,char,False,False,,,,
+MAIN_RECORD,res.partner,,,,,,,4770,__import__.dyn_acc_ecffeefd-36fb-ee11-a1fe-000d3ad8b66e,*aseso
+MAIN_RECORD,res.partner,,,,,,,4773,__import__.dyn_acc_8080a8a4-6fe7-ee11-904c-000d3ab09cc7,A TU LADO GRUPO SERVICIO INTEGRAL DE ATE
+MAIN_RECORD,res.partner,,,,,,,4711,__import__.dyn_acc_fcf7fa73-2df1-f011-8406-0022489efd4a,ADOBER ENERGIAS RENOVABLES SL
+MAIN_RECORD,res.partner,,,,,,,4732,__import__.dyn_acc_7f2eb328-cfd8-ef11-8eea-000d3ad8fa57,"AFILADOS TECNOLOGICOS INSULARES, S.L."
+MAIN_RECORD,res.partner,,,,,,,4780,__import__.dyn_acc_6818cc15-9f45-ee11-be6e-000d3ab0ffe8,ALTABOX S.L.
+MAIN_RECORD,res.partner,,,,,,,4719,__import__.dyn_acc_38406b23-9c6b-f011-b4cb-7c1e52fccdf6,ALVEHOLA MARKETING S.L.
+MAIN_RECORD,res.partner,,,,,,,4839,__import__.dyn_acc_dfdaffd0-9df3-ec11-bb3d-000d3a666f1d,AMAZING GENERAL CONSULTING ONE SL
+MAIN_RECORD,res.partner,,,,,,,4858,__import__.dyn_acc_73470522-ced1-ec11-a7b5-0022489d2f74,ASOCIACION EMPRESARIAL DE MONCADA
+MAIN_RECORD,res.partner,,,,,,,4793,__import__.dyn_acc_c365d28d-109b-ed11-aad1-000d3ab0ffe8,ASOCIACIÓN CULTURAL NIEVA
+MAIN_RECORD,res.partner,,,,,,,4873,__import__.dyn_acc_971fd705-f921-e811-a957-000d3ab0cb37,Academia de la LLingua Asturiana
+MAIN_RECORD,res.partner,,,,,,,4803,__import__.dyn_acc_39ca82e0-071b-e811-a957-000d3ab0cb82,Aceros Aviles S.A
+MAIN_RECORD,res.partner,,,,,,,4730,__import__.dyn_acc_2b006bd6-d696-eb11-b1ac-0022489c741f,Adober Electricidad S.L.
+MAIN_RECORD,res.partner,,,,,,,4791,__import__.dyn_acc_e0f181fa-8dcf-ec11-a7b5-0022489d2f74,Adolfo González Prats
+MAIN_RECORD,res.partner,,,,,,,4815,__import__.dyn_acc_f80b52b1-f7c5-ec11-a7b6-0022489f0def,Aluminios de Tremañes E. I.   S.L
+MAIN_RECORD,res.partner,,,,,,,4809,__import__.dyn_acc_f4a167b9-cd4a-ed11-bba2-000d3adf733d,Angel Azpeitia Muñoz
+MAIN_RECORD,res.partner,,,,,,,4840,__import__.dyn_acc_30d9ad66-f8f1-ec11-bb3d-000d3a66643c,Antonio Del Busto Fernández
+MAIN_RECORD,res.partner,,,,,,,4864,__import__.dyn_acc_8585d29e-45c5-ec11-a7b6-0022489f0def,Aplimetal 2000  S.L
+MAIN_RECORD,res.partner,,,,,,,4765,__import__.dyn_acc_5d5fcb31-e9f0-ee11-904b-002248a386d1,Asistencia Técnica Industrial Asturiana
+MAIN_RECORD,res.partner,,,,,,,4844,__import__.dyn_acc_7c8ab445-f3e7-ec11-bb3c-000d3ad7ca67,Asoc. Conf. Esp. AREAS Emp. (CEDAES)
+MAIN_RECORD,res.partner,,,,,,,4813,__import__.dyn_acc_42a9832e-1f1b-e811-a951-000d3ab0c24c,Asociación Empresarios Poligono Silvota
+MAIN_RECORD,res.partner,,,,,,,4882,__import__.dyn_acc_b2447085-9b1b-e811-a951-000d3ab0cd3c,Asociación Llares
+MAIN_RECORD,res.partner,,,,,,,4805,__import__.dyn_acc_dab36df2-242c-e811-a954-000d3ab0c08c,Asociación Soc. Cultural Candas
+MAIN_RECORD,res.partner,,,,,,,4884,__import__.dyn_acc_250ff6a1-bc2d-e811-a95a-000d3ab0cb82,Asociación de Emigrantes Españoles Retor
+MAIN_RECORD,res.partner,,,,,,,4821,__import__.dyn_acc_6dca1c04-0a1b-e811-a951-000d3ab0c24c,Asturiana de Asesoramiento EAR
+MAIN_RECORD,res.partner,,,,,,,4868,__import__.dyn_acc_71010fd7-f921-e811-a957-000d3ab0cb37,Asturiana de Terrenos y edificios S.A
+MAIN_RECORD,res.partner,,,,,,,4845,__import__.dyn_acc_0e136124-091b-e811-a951-000d3ab0c24c,Asturiana de recambios
+MAIN_RECORD,res.partner,,,,,,,4741,__import__.dyn_acc_6205057f-fa7e-ee11-8179-000d3ab0ffe8,Auto Diesel Lino S.l
+MAIN_RECORD,res.partner,,,,,,,4877,__import__.dyn_acc_b225e873-2da5-e811-a967-000d3ab0cd3c,Ayuntamiento de Gijón
+MAIN_RECORD,res.partner,,,,,,,4897,__import__.dyn_acc_34c709f7-3612-e811-a956-000d3ab0cb82,Azvase Aviles
+MAIN_RECORD,res.partner,,,,,,,4893,__import__.dyn_acc_bce78a61-3812-e811-a956-000d3ab0cb82,Azvase Burgos
+MAIN_RECORD,res.partner,,,,,,,4894,__import__.dyn_acc_07f151b1-3712-e811-a956-000d3ab0cb82,Azvase Gijón
+MAIN_RECORD,res.partner,,,,,,,4888,__import__.dyn_acc_40472841-3a12-e811-a956-000d3ab0cb82,Azvase Grao
+MAIN_RECORD,res.partner,,,,,,,4891,__import__.dyn_acc_4a4f7fe1-3812-e811-a956-000d3ab0cb82,Azvase Huesca
+MAIN_RECORD,res.partner,,,,,,,4889,__import__.dyn_acc_69d9fcdf-3912-e811-a956-000d3ab0cb82,Azvase Langreo
+MAIN_RECORD,res.partner,,,,,,,4895,__import__.dyn_acc_3e421686-3712-e811-a956-000d3ab0cb82,Azvase Mieres
+MAIN_RECORD,res.partner,,,,,,,4767,__import__.dyn_acc_2307a81c-3a12-e811-a956-000d3ab0cb82,Azvase Oviedo 2
+MAIN_RECORD,res.partner,,,,,,,4890,__import__.dyn_acc_d86c4f2c-3912-e811-a956-000d3ab0cb82,Azvase Piedras Blancas
+MAIN_RECORD,res.partner,,,,,,,4702,__import__.dyn_acc_73b9f3b9-ad11-e811-a951-000d3ab0cd3c,Azvase S.L
+MAIN_RECORD,res.partner,,,,,,,4896,__import__.dyn_acc_b6a7f332-3712-e811-a956-000d3ab0cb82,Azvase SMRA
+MAIN_RECORD,res.partner,,,,,,,4887,__import__.dyn_acc_20d337db-3a12-e811-a956-000d3ab0cb82,Azvase Sevilla
+MAIN_RECORD,res.partner,,,,,,,4892,__import__.dyn_acc_f040beb1-3812-e811-a956-000d3ab0cb82,Azvase Torrelavega
+MAIN_RECORD,res.partner,,,,,,,4786,__import__.dyn_acc_5766a2e4-dab8-ed11-83ff-000d3ab0ffe8,BEGO COSTA AFRICA & WORLWIDE SL
+MAIN_RECORD,res.partner,,,,,,,4814,__import__.dyn_acc_f380083b-d2bf-ec11-983f-0022489cc3dc,Biosalud Ambiental S.L
+MAIN_RECORD,res.partner,,,,,,,4721,__import__.dyn_acc_aa22e254-9a1b-e811-a951-000d3ab0cd3c,CANO CARPINTERIA EBANISTERIA SL
+MAIN_RECORD,res.partner,,,,,,,4709,__import__.dyn_acc_224dfc79-7acb-ec11-a7b5-000d3ab9cc34,CIENFUEGOS Y CANTELI EQUIPAMIENTO 2016 S
+MAIN_RECORD,res.partner,,,,,,,4785,__import__.dyn_acc_55c45ec9-a2c8-ed11-b597-000d3adf733d,CLECE S.A
+MAIN_RECORD,res.partner,,,,,,,4871,__import__.dyn_acc_1bf561b5-0b1b-e811-a951-000d3ab0c24c,CLUB DE GOLF MADERA III
+MAIN_RECORD,res.partner,,,,,,,4760,__import__.dyn_acc_6fb8c212-2444-ef11-a316-000d3a67b82f,COALLA ASESORIA INFORMATICA SL
+MAIN_RECORD,res.partner,,,,,,,4759,__import__.dyn_acc_47537836-a245-ef11-a316-000d3adc9e4c,CONSERVATORIO DE MUSICA DE GIJON
+MAIN_RECORD,res.partner,,,,,,,4740,__import__.dyn_acc_8d6f5e8b-231b-e811-a951-000d3ab0c24c,CONSTRUCCIONES Y MONTAJES CAMIÑA SL
+MAIN_RECORD,res.partner,,,,,,,4822,__import__.dyn_acc_89ead52c-7327-ed11-9db1-000d3ada2743,COPIMIERES AL YME SL
+MAIN_RECORD,res.partner,,,,,,,4788,__import__.dyn_acc_a0592ba9-53ba-e811-a972-000d3ab0c08c,Carlos Garcia Fernandez-Jardon
+MAIN_RECORD,res.partner,,,,,,,4867,__import__.dyn_acc_de3fa442-fa21-e811-a957-000d3ab0cb37,Carrocerias Santana S.L
+MAIN_RECORD,res.partner,,,,,,,4722,__import__.dyn_acc_4d22b116-5b40-f011-877a-6045bddece40,Carson Bosque & Jardín S.L.
+MAIN_RECORD,res.partner,,,,,,,4715,__import__.dyn_acc_30c3a541-bda5-f011-bbd3-7c1e5235b24f,Casa Cambre SL
+MAIN_RECORD,res.partner,,,,,,,4726,__import__.dyn_acc_814bb28a-6505-f011-bae3-000d3ab4bb7d,Casquero Lucena SLP
+MAIN_RECORD,res.partner,,,,,,,4797,__import__.dyn_acc_5e8d149f-0e90-ed11-aad1-000d3adf733d,Centro Int de Form. Profesional Avilés
+MAIN_RECORD,res.partner,,,,,,,4832,__import__.dyn_acc_62f3d049-d0b4-ec11-983f-000d3a65fc5d,Clinica Dental Peña Lopez SLP
+MAIN_RECORD,res.partner,,,,,,,4885,__import__.dyn_acc_40aec2b6-e317-e811-a957-000d3ab0cb82,Clínica Veterinaria Asturpet Larri S.L.L
+MAIN_RECORD,res.partner,,,,,,,4745,__import__.dyn_acc_44095716-f374-ef11-a670-000d3abab1ea,Colegio Publico Asturias
+MAIN_RECORD,res.partner,,,,,,,4746,__import__.dyn_acc_b65852cd-f274-ef11-a670-000d3abab1ea,Colegio Publico Begoña
+MAIN_RECORD,res.partner,,,,,,,4833,__import__.dyn_acc_7e23f288-92dd-ec11-bb3d-0022489b6c47,Colegio de Mediadores de Seguros del Ppa
+MAIN_RECORD,res.partner,,,,,,,4859,__import__.dyn_acc_c79c3b7c-221b-e811-a951-000d3ab0c24c,Construcciones Hermanos Riestra S.A.
+MAIN_RECORD,res.partner,,,,,,,4761,__import__.dyn_acc_7fe9fe5f-e117-e811-a957-000d3ab0cb82,"Construcciones JCN S,L"
+MAIN_RECORD,res.partner,,,,,,,4734,__import__.dyn_acc_72e6d528-38af-ec11-9840-000d3adc24b9,Convergencia de Telecomunicaciones SL
+MAIN_RECORD,res.partner,,,,,,,4850,__import__.dyn_acc_4f9c2947-282c-e811-a954-000d3ab0c08c,Cristina Herrero Fernández
+MAIN_RECORD,res.partner,,,,,,,4818,__import__.dyn_acc_a275b036-1daf-ec11-9840-000d3adc24b9,Cuenta de Prueba --- No Borrar ---
+MAIN_RECORD,res.partner,,,,,,,4830,__import__.dyn_acc_c9e04c8f-691d-ed11-b83d-000d3ab45f63,Cuenta de pruebas 2
+MAIN_RECORD,res.partner,,,,,,,4708,__import__.dyn_acc_fc4e903e-a101-f111-8407-7ced8d4afee9,DAPA Soluciones Tecnológicas SL
+MAIN_RECORD,res.partner,,,,,,,4849,__import__.dyn_acc_e15711cc-95d6-ec11-a7b5-0022489ebbea,DEPAU SISTEMAS S.L.
+MAIN_RECORD,res.partner,,,,,,,4853,__import__.dyn_acc_58598912-95d6-ec11-a7b5-0022489ebbea,DMI Computer S.A.
+MAIN_RECORD,res.partner,,,,,,,4724,__import__.dyn_acc_1bb36094-97d2-ec11-a7b5-0022489d2773,"DOMONOVA XXI, S.L."
+MAIN_RECORD,res.partner,,,,,,,4704,__import__.dyn_acc_82150a49-b719-ef11-9f89-000d3a658874,DSI Soluciones Industriales
+MAIN_RECORD,res.partner,,,,,,,4812,__import__.dyn_acc_d3b9b129-beca-ec11-a7b5-000d3ab9c605,David Diaz Muñiz
+MAIN_RECORD,res.partner,,,,,,,4762,__import__.dyn_acc_9b8e363f-6bc4-ec11-a7b6-0022489f0def,David Diaz Muñoz
+MAIN_RECORD,res.partner,,,,,,,4824,__import__.dyn_acc_279098ad-252c-e811-a954-000d3ab0c08c,Desarrollo Cad-Cam SL
+MAIN_RECORD,res.partner,,,,,,,4842,__import__.dyn_acc_fd5b7ac8-5f3d-e811-a95b-000d3ab0cb82,Digital Asesores Franquicias S.L.
+MAIN_RECORD,res.partner,,,,,,,4744,__import__.dyn_acc_ce946c8a-f374-ef11-a670-000d3abab1ea,Distribuciones Cimadevilla S.A
+MAIN_RECORD,res.partner,,,,,,,4816,__import__.dyn_acc_1894de47-e134-ed11-9db1-000d3adf733d,EET Europarts Intelligent Trading Distri
+MAIN_RECORD,res.partner,,,,,,,4707,__import__.dyn_acc_e62f8d52-c201-f111-8407-7ced8d4afee9,Elige Tu Viaje S.L
+MAIN_RECORD,res.partner,,,,,,,4876,__import__.dyn_acc_6e1936cc-dea9-e811-a96b-000d3ab0cd3c,Enrique Alonso Asesores S.L
+MAIN_RECORD,res.partner,,,,,,,4854,__import__.dyn_acc_80338142-94d6-ec11-a7b5-0022489ebbea,"Esprinet Ibérica, S.L."
+MAIN_RECORD,res.partner,,,,,,,4835,__import__.dyn_acc_a325977d-9bd2-ec11-a7b5-0022489d2773,Estudio Juridico R. Ladreda
+MAIN_RECORD,res.partner,,,,,,,4899,__import__.dyn_acc_ed79bc67-fb21-e811-a957-000d3ab0cb37,Ethan Laser Medica S.L.U
+MAIN_RECORD,res.partner,,,,,,,4879,__import__.dyn_acc_7f1eb483-2ea5-e811-a967-000d3ab0cd3c,Evancis Technologies S.L
+MAIN_RECORD,res.partner,,,,,,,4781,__import__.dyn_acc_6c76a450-2922-ee11-9966-000d3ab0ffe8,FEFCOLL- Col. Dulce Nombre Jesus
+MAIN_RECORD,res.partner,,,,,,,4735,__import__.dyn_acc_6f24fbfb-3c95-ef11-8a6a-6045bdddc676,Facultad de Psicología - UNIOVI
+MAIN_RECORD,res.partner,,,,,,,4794,__import__.dyn_acc_f5ae9d79-bc98-ed11-aad1-000d3adf733d,"Faro Norte Tech, s.l."
+MAIN_RECORD,res.partner,,,,,,,4826,__import__.dyn_acc_ca070cf3-f821-ed11-b83d-000d3ab8cd0a,Federacion Areas Empresariales Asturias
+MAIN_RECORD,res.partner,,,,,,,4729,__import__.dyn_acc_75887493-7ff0-ec11-bb3d-000d3a66643c,Federación Pol. Em. C.Valenciana FEPEVAL
+MAIN_RECORD,res.partner,,,,,,,4749,__import__.dyn_acc_9794d7d8-9cc4-ec11-a7b6-0022489f0def,Fundacion CTIC
+MAIN_RECORD,res.partner,,,,,,,4811,__import__.dyn_acc_50b913ff-1721-e811-a951-000d3ab0c24c,Fundacion Cruz de los angeles
+MAIN_RECORD,res.partner,,,,,,,4727,__import__.dyn_acc_bb97c587-bdbe-ef11-b8e8-7c1e52764629,Fundacion Edade
+MAIN_RECORD,res.partner,,,,,,,4852,__import__.dyn_acc_acc5e5fa-2a2c-e811-a954-000d3ab0c08c,Fundiciones Veriña SA
+MAIN_RECORD,res.partner,,,,,,,4718,__import__.dyn_acc_769e9e48-b311-e811-a951-000d3ab0cd3c,Funeraria de Aviles S.L
+MAIN_RECORD,res.partner,,,,,,,4714,__import__.dyn_acc_385dd5d8-cea8-f011-bbd2-000d3a66cf3c,GENERAL DE REPARACIONES Y SINIESTROS S.L.
+MAIN_RECORD,res.partner,,,,,,,4808,__import__.dyn_acc_eccc316b-ad4b-ed11-bba1-000d3ab0ffe8,GRUPO AVOLAR ABOGADOS
+MAIN_RECORD,res.partner,,,,,,,4742,__import__.dyn_acc_f6460cbf-44cc-ec11-a7b5-000d3ab9c605,GRUPO MUNICIPAL SOCIALISTA DE GIJÓN
+MAIN_RECORD,res.partner,,,,,,,4875,__import__.dyn_acc_3f3eb83d-b0c0-e811-a954-000d3ab98726,Gas Gijon SA
+MAIN_RECORD,res.partner,,,,,,,4703,__import__.dyn_acc_77e54a6c-afb7-ef11-b8e8-000d3a65cbd5,Gesdepor XXI   S.L
+MAIN_RECORD,res.partner,,,,,,,4851,__import__.dyn_acc_0871624d-252c-e811-a954-000d3ab0c08c,Gespyme Llanes SL
+MAIN_RECORD,res.partner,,,,,,,4837,__import__.dyn_acc_9e782252-72b9-ec11-983f-000d3adf38a6,Gestión e Innovación en Eficiencia Energetica S.L
+MAIN_RECORD,res.partner,,,,,,,4713,__import__.dyn_acc_017a9c55-bda9-f011-bbd2-7ced8d75c0ab,Gestoria Siero
+MAIN_RECORD,res.partner,,,,,,,4827,__import__.dyn_acc_f9906f64-e721-ed11-b83d-000d3ab8cd0a,Grupo Digalco SL
+MAIN_RECORD,res.partner,,,,,,,4801,__import__.dyn_acc_994ec785-051b-e811-a957-000d3ab0cb82,Hierros Marcelino Franco S.A
+MAIN_RECORD,res.partner,,,,,,,4847,__import__.dyn_acc_49f58a32-518e-e811-a966-000d3ab0cb37,Hosteleria el Quesu S.L
+MAIN_RECORD,res.partner,,,,,,,4774,__import__.dyn_acc_2225aa12-df17-e811-a957-000d3ab0cb82,I-NSURE BROKERS Correduría de Seguros SL
+MAIN_RECORD,res.partner,,,,,,,4782,__import__.dyn_acc_04a8f71f-36d0-ec11-a7b5-0022489d2f74,INSTITUTO UROLOGICO ASTURIANO SL
+MAIN_RECORD,res.partner,,,,,,,4717,__import__.dyn_acc_821735cb-2587-f011-b4cc-7c1e52372807,"ISOLPAC SOLUCION TERMICA ANTICODENSACION, S.L"
+MAIN_RECORD,res.partner,,,,,,,4720,__import__.dyn_acc_02bbc654-f341-f011-877a-7c1e52fccdf6,ITS Integral Thermal Shield
+MAIN_RECORD,res.partner,,,,,,,4763,__import__.dyn_acc_d71d3e5d-c21c-ef11-840a-000d3adb5086,Iberastur Ingeniería S.
+MAIN_RECORD,res.partner,,,,,,,4779,__import__.dyn_acc_0076180b-f37e-ee11-8179-000d3adf733d,Ignacio García-Pola Vallejo
+MAIN_RECORD,res.partner,,,,,,,4819,__import__.dyn_acc_24dfc828-3428-ed11-9db1-000d3ada26eb,Imprimacero SA
+MAIN_RECORD,res.partner,,,,,,,4860,__import__.dyn_acc_a76d3d46-63cc-ec11-a7b5-000d3ab9c605,Intel S.A
+MAIN_RECORD,res.partner,,,,,,,4795,__import__.dyn_acc_ed4d3bf5-5550-ed11-bba3-000d3adf733d,JOAQUIN CONCEJO FERNANDEZ
+MAIN_RECORD,res.partner,,,,,,,4772,__import__.dyn_acc_e05ef026-26e8-ee11-904c-6045bddd5f5b,JUMCO GLOBAL SOFT SL
+MAIN_RECORD,res.partner,,,,,,,4796,__import__.dyn_acc_2ab9a8b5-e617-e811-a953-000d3ab0cb37,Jose Manuel Nuño S.L NUÑO EMbutidos
+MAIN_RECORD,res.partner,,,,,,,4790,__import__.dyn_acc_dc13d213-d497-ed11-aad1-000d3adf733d,Josè Manuel Fueyo Bernardo
+MAIN_RECORD,res.partner,,,,,,,4863,__import__.dyn_acc_fdd2e355-c6c6-ec11-a7b6-0022489f0def,Juan Fermin Diaz Mere
+MAIN_RECORD,res.partner,,,,,,,4777,__import__.dyn_acc_bc8bcf8e-9cd2-ec11-a7b5-0022489d2773,"LAWTON SCHOOL, S.L."
+MAIN_RECORD,res.partner,,,,,,,4728,__import__.dyn_acc_96122166-f3f4-ef11-be1f-000d3a66b47f,LIMPIEZAS LOLO SL
+MAIN_RECORD,res.partner,,,,,,,4757,__import__.dyn_acc_d1a386bc-8c49-ef11-bfe2-000d3ada36f3,LUCKLER MEDICAL SL
+MAIN_RECORD,res.partner,,,,,,,4800,__import__.dyn_acc_5efa4378-b1c0-ec11-983f-0022489cc3dc,LUX GIJON SA
+MAIN_RECORD,res.partner,,,,,,,4705,__import__.dyn_acc_d03aa680-acf3-ec11-bb3d-000d3a666f1d,La Electrica Alvarez Sirgo S.A
+MAIN_RECORD,res.partner,,,,,,,4789,__import__.dyn_acc_d1a8fbce-b9e0-ec11-bb3c-000d3ab70757,Least Cost Routing Telecom SL
+MAIN_RECORD,res.partner,,,,,,,4872,__import__.dyn_acc_47eb75f2-292c-e811-a954-000d3ab0c08c,Lejias Campa S.L
+MAIN_RECORD,res.partner,,,,,,,4862,__import__.dyn_acc_a207ab45-aec7-ec11-a7b6-0022489f0a6b,Liliana Ausin Martinez Asturias Ocio y Cultura
+MAIN_RECORD,res.partner,,,,,,,4712,__import__.dyn_acc_26013018-12dc-f011-8543-0022489d897b,Limpiezas y Servicios la Campa SL
+MAIN_RECORD,res.partner,,,,,,,4831,__import__.dyn_acc_55172722-9902-ed11-82e5-000d3adb0610,Loterías de Avilés SL
+MAIN_RECORD,res.partner,,,,,,,4771,__import__.dyn_acc_88a0e4db-1f97-ed11-aad1-000d3adf733d,MANCHADO ASESORES SL.
+MAIN_RECORD,res.partner,,,,,,,4874,__import__.dyn_acc_dd462f81-c396-eb11-b1ac-0022489c741f,MARTIN FERRERO ALVAREZ
+MAIN_RECORD,res.partner,,,,,,,4758,__import__.dyn_acc_9e039613-c396-eb11-b1ac-0022489c741f,MARTIN VEGA MAQUINARIA SA
+MAIN_RECORD,res.partner,,,,,,,4766,__import__.dyn_acc_982e2010-8612-ef11-9f89-000d3a658874,"MBA INCORPORADO, S.L.U."
+MAIN_RECORD,res.partner,,,,,,,4778,__import__.dyn_acc_41f55ceb-9e83-ee11-8179-000d3adf733d,MIMARA ASTURIAS RESIDENCIAL S.L.U.
+MAIN_RECORD,res.partner,,,,,,,4857,__import__.dyn_acc_50a6ee7c-95d2-ec11-a7b5-0022489d2773,Manteniship Spain S.L
+MAIN_RECORD,res.partner,,,,,,,4776,__import__.dyn_acc_15932495-31e1-ee11-904c-002248995576,Marcelino Galán Feito
+MAIN_RECORD,res.partner,,,,,,,4799,__import__.dyn_acc_3a52e4ff-211b-e811-a951-000d3ab0c24c,Maria Jose Muñiz Diego
+MAIN_RECORD,res.partner,,,,,,,4738,__import__.dyn_acc_472093b9-b592-ef11-8a6a-6045bddd8a24,Maria Telenti y asociados
+MAIN_RECORD,res.partner,,,,,,,4817,__import__.dyn_acc_782c3456-9d2a-ed11-9db1-000d3ada2743,Masscomm Innova SL
+MAIN_RECORD,res.partner,,,,,,,4710,__import__.dyn_acc_a8bab58d-a6d1-ef11-8ee9-7c1e52764629,Miguel Angel Bañegil Espinosa
+MAIN_RECORD,res.partner,,,,,,,4823,__import__.dyn_acc_346f6ee7-a109-ed11-82e5-00224899bb34,Miriam Batuecas Mohedano
+MAIN_RECORD,res.partner,,,,,,,4737,__import__.dyn_acc_5fb3a200-3b95-ef11-8a6a-6045bdddc676,Miss bailarinas SL
+MAIN_RECORD,res.partner,,,,,,,4807,__import__.dyn_acc_b714630d-3d5c-ed11-9562-000d3adf733d,Montajes Azcona S.L
+MAIN_RECORD,res.partner,,,,,,,1,base.main_partner,My Company
+MAIN_RECORD,res.partner,,,,,,,3,base.partner_admin,"My Company, Pedro Diaz"
+MAIN_RECORD,res.partner,,,,,,,8,base.partner_demo_portal,"My Company, rere terete"
+MAIN_RECORD,res.partner,,,,,,,4802,__import__.dyn_acc_1cafab01-8970-ed11-9561-000d3adf733d,"NIEBBE BAQQUEIRA, S.L. Prima Fernando Edicurs"
+MAIN_RECORD,res.partner,,,,,,,4846,__import__.dyn_acc_691626b5-9c1b-e811-a951-000d3ab0cd3c,NOEGA SYSTEMS S.L.
+MAIN_RECORD,res.partner,,,,,,,4723,__import__.dyn_acc_8d4b584f-dc17-e811-a957-000d3ab0cb82,Oficina Funeraria Aviles
+MAIN_RECORD,res.partner,,,,,,,4841,__import__.dyn_acc_49ea04bd-dceb-ec11-bb3d-000d3ab2a00b,Operiax difusión S.L X-Aire
+MAIN_RECORD,res.partner,,,,,,,4810,__import__.dyn_acc_ae556d1a-5049-ed11-bba2-000d3adf7a50,Organismo autónomo ERA
+MAIN_RECORD,res.partner,,,,,,,4706,__import__.dyn_acc_967b2672-241b-e811-a955-000d3ab0ca26,Ovidio Suarez Distribuciones S.L
+MAIN_RECORD,res.partner,,,,,,,4775,__import__.dyn_acc_1cab9a8b-fb95-eb11-b1ac-0022489c76ca,"POLICLÍNICA ROZONA, S.L."
+MAIN_RECORD,res.partner,,,,,,,4769,__import__.dyn_acc_fcb646f4-1102-ef11-9f89-002248a3e554,PRALIBEL SA
+MAIN_RECORD,res.partner,,,,,,,4856,__import__.dyn_acc_1493306f-f9c5-ec11-a7b6-0022489f0def,"PROYECTO CENTINELA, S.L."
+MAIN_RECORD,res.partner,,,,,,,4756,__import__.dyn_acc_af52ff1b-8e49-ef11-bfe2-000d3a68dfdd,Pablo Tasis Moreno
+MAIN_RECORD,res.partner,,,,,,,4700,__import__.dyn_acc_eb8f4ac1-3421-e811-a954-000d3ab0cb37,Palentina de Automoviles S.L
+MAIN_RECORD,res.partner,,,,,,,4848,__import__.dyn_acc_2f77e311-1e1b-e811-a951-000d3ab0c24c,Paraja y Carton S.L
+MAIN_RECORD,res.partner,,,,,,,4755,__import__.dyn_acc_fedd4aea-8954-ef11-bfe3-000d3adc9e4c,"Parrilla Pepito, S.L."
+MAIN_RECORD,res.partner,,,,,,,4878,__import__.dyn_acc_a8858f2d-7aa7-e811-a96d-000d3ab0cb37,Patronato Deportivo Municipal de Gijon
+MAIN_RECORD,res.partner,,,,,,,4870,__import__.dyn_acc_6e62d69a-0c1b-e811-a951-000d3ab0c24c,Piedra Gonzalez y Asociados Correduria de Seguros
+MAIN_RECORD,res.partner,,,,,,,4754,__import__.dyn_acc_1290a023-1b5e-ef11-bfe2-000d3ada9662,Planeamiento y Diseño Urbano SLP
+MAIN_RECORD,res.partner,,,,,,,4861,__import__.dyn_acc_b578465a-981b-e811-a951-000d3ab0cd3c,Profesionales del Mantenimiento Integrado
+MAIN_RECORD,res.partner,,,,,,,4748,__import__.dyn_acc_68e893c2-ef02-ef11-9f89-000d3a658874,Prueba Alvaro
+MAIN_RECORD,res.partner,,,,,,,4865,__import__.dyn_acc_af0abfd6-d3bf-ec11-983f-0022489cc3dc,"QUESOS LA PERAL, S.L"
+MAIN_RECORD,res.partner,,,,,,,4806,__import__.dyn_acc_0840e66c-0d1b-e811-a951-000d3ab0c24c,RADIO TAXI VILLA JOVELLANOS
+MAIN_RECORD,res.partner,,,,,,,4838,__import__.dyn_acc_da346fe2-9bb1-ec11-9840-000d3adc24b9,RADIO TAXI VILLA JOVELLANOS INACTIVO
+MAIN_RECORD,res.partner,,,,,,,4725,__import__.dyn_acc_97b438ab-cec9-ef11-b8e8-000d3a65cbd5,"RECALVI PARTS, S.L.U."
+MAIN_RECORD,res.partner,,,,,,,4731,__import__.dyn_acc_9da91502-63dd-ef11-8eea-7c1e52764629,RENTAL ADVANCE S.L.
+MAIN_RECORD,res.partner,,,,,,,4747,__import__.dyn_acc_91fad7a0-0474-ef11-a670-002248a45445,ROYUELA MARTIN S.A
+MAIN_RECORD,res.partner,,,,,,,4768,__import__.dyn_acc_ceb6d63e-e7bf-ec11-983f-0022489cc3dc,ROZONA SERVICIO DE PREVENCION SL
+MAIN_RECORD,res.partner,,,,,,,4733,__import__.dyn_acc_810c5881-40af-ec11-9840-000d3adc24b9,Recalvi Norte SA
+MAIN_RECORD,res.partner,,,,,,,4825,__import__.dyn_acc_d1001eff-0a1b-e811-a951-000d3ab0c24c,Residencia Valdesoto SL
+MAIN_RECORD,res.partner,,,,,,,4764,__import__.dyn_acc_7366d4a0-a021-ef11-840a-000d3a65cd8f,Resolution Servicios Integrales SL
+MAIN_RECORD,res.partner,,,,,,,4701,__import__.dyn_acc_d1a1d4e1-ed79-e811-a968-000d3ab0ca26,Restaurante la Torre S.L
+MAIN_RECORD,res.partner,,,,,,,4804,__import__.dyn_acc_3b5c82fc-f995-eb11-b1ac-0022489c76ca,Rozona Centro de Formacion S.L
+MAIN_RECORD,res.partner,,,,,,,4792,__import__.dyn_acc_6af539cf-2da5-e811-a967-000d3ab0cd3c,Rozona Geriatría SL
+MAIN_RECORD,res.partner,,,,,,,4834,__import__.dyn_acc_deb91bc4-1704-ed11-82e5-000d3adb0610,S.R.M. S.A.T.
+MAIN_RECORD,res.partner,,,,,,,4743,__import__.dyn_acc_b37d4f8d-f774-ef11-a670-000d3abab1ea,S4 PROYECTOS DISEÑO Y SUMINISTROS SL
+MAIN_RECORD,res.partner,,,,,,,4716,__import__.dyn_acc_4eafa349-578d-f011-b4cc-7c1e52372807,"SAHARASTUR MOTOR, S.L.U"
+MAIN_RECORD,res.partner,,,,,,,4866,__import__.dyn_acc_51374a80-201b-e811-a951-000d3ab0c24c,SERVICIO DE REPARACION Y MANTENIMIENTO DEL PRINCIPADO SL
+MAIN_RECORD,res.partner,,,,,,,4883,__import__.dyn_acc_23749d63-991b-e811-a951-000d3ab0cd3c,SIBARIS FORMACION INTEGRAL SL
+MAIN_RECORD,res.partner,,,,,,,4752,__import__.dyn_acc_f824c5ec-9a1b-e811-a951-000d3ab0cd3c,Sanchez y Lago S.L
+MAIN_RECORD,res.partner,,,,,,,4798,__import__.dyn_acc_eac11d1e-33cd-ec11-a7b5-000d3ab9c605,Segurastur Brokers SL
+MAIN_RECORD,res.partner,,,,,,,4699,__import__.dyn_acc_4cbfacc4-f321-e811-a957-000d3ab0cb37,Serv. Int. de Corretaje InmobiliariosS.L
+MAIN_RECORD,res.partner,,,,,,,4843,__import__.dyn_acc_421afb3c-c6eb-ec11-bb3d-000d3ab30389,Sidrería Grupo Trabanco S.L.
+MAIN_RECORD,res.partner,,,,,,,47,l10n_es.partner_simplified,Simplified Invoice Partner (ES)
+MAIN_RECORD,res.partner,,,,,,,4829,__import__.dyn_acc_358a5c2b-d41e-ed11-b83d-000d3ab45f63,Smarters Accesorios S.L. (Diginova)
+MAIN_RECORD,res.partner,,,,,,,4783,__import__.dyn_acc_88f9b741-e508-ed11-82e5-00224899bb34,Somio Park SL
+MAIN_RECORD,res.partner,,,,,,,4855,__import__.dyn_acc_fe72e403-1fc6-ec11-a7b6-0022489f0a6b,Suminfor
+MAIN_RECORD,res.partner,,,,,,,4751,__import__.dyn_acc_3f978861-da69-ef11-bfe2-0022489c7b5d,"TRANS-ANLEO, S.L."
+MAIN_RECORD,res.partner,,,,,,,4784,__import__.dyn_acc_5b38892c-211b-e811-a951-000d3ab0c24c,Talleres Larrea S.L
+MAIN_RECORD,res.partner,,,,,,,4886,__import__.dyn_acc_def38224-dc17-e811-a957-000d3ab0cb82,Tanatorio la Cruz/ de Candas
+MAIN_RECORD,res.partner,,,,,,,4898,__import__.dyn_acc_41c29be5-fb21-e811-a957-000d3ab0cb37,Taxus Gestión Ambiental Eco. y cal. S.L
+MAIN_RECORD,res.partner,,,,,,,4881,__import__.dyn_acc_7d924718-9c1b-e811-a951-000d3ab0cd3c,Tesamento S.L
+MAIN_RECORD,res.partner,,,,,,,4880,__import__.dyn_acc_c0de368c-9e1b-e811-a951-000d3ab0cd3c,Todorruedas Asturias
+MAIN_RECORD,res.partner,,,,,,,4828,__import__.dyn_acc_d6be029b-9d1b-e811-a951-000d3ab0cd3c,Tomas Amado Correduria de Seguros
+MAIN_RECORD,res.partner,,,,,,,4869,__import__.dyn_acc_26cfaa0d-f521-e811-a957-000d3ab0cb37,Tresamento SL
+MAIN_RECORD,res.partner,,,,,,,4836,__import__.dyn_acc_b4aaa2fc-f521-e811-a957-000d3ab0cb37,UNED centro asociado de Asturias
+MAIN_RECORD,res.partner,,,,,,,4736,__import__.dyn_acc_7baab873-9a83-ee11-8179-000d3ab0ffe8,Universidad de Oviedo
+MAIN_RECORD,res.partner,,,,,,,4753,__import__.dyn_acc_e62a91c9-afc0-e811-a954-000d3ab98726,"VIMOIL, S.A."
+MAIN_RECORD,res.partner,,,,,,,4787,__import__.dyn_acc_da41c28e-93b2-ed11-83ff-000d3adf733d,VOX GRUPO POLITICO MUNICIPAL
+MAIN_RECORD,res.partner,,,,,,,4820,__import__.dyn_acc_4c655976-3328-ed11-9db1-000d3ada26eb,Visal 2004 SL
+MAIN_RECORD,res.partner,,,,,,,7,base.partner_demo,"YourCompany, Marc Demo"
+MAIN_RECORD,res.partner,,,,,,,4750,__import__.dyn_acc_37f7373f-d0e5-ee11-904c-6045bddd5f5b,ZaLle
+MAIN_RECORD,res.partner,,,,,,,4739,__import__.dyn_acc_1569bf13-1286-ef11-ac21-6045bddd8a24,gesinne
+RELATION_VALUE,res.partner,available_location_ids,,,,,crm.partner.location,8,,ACEROS AVILES SA
+RELATION_VALUE,res.partner,available_location_ids,,,,,crm.partner.location,7,,RECALVI NORTE SA.
+RELATION_VALUE,res.partner,billing_payment_method_id,,,,,crm.payment.method,1,crm.crm_payment_method_contado,Contado
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,1,mail.channel_all_employees,general
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,2,mail.channel_admin,Administrators
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,6,mail.from_notification_message,Welcome to the #general channel
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,7,mail.idea_suggestions_sub,Ideas & Suggestions
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,8,mail.troubleshooting_sub,Troubleshooting
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,9,,"System, Administrator"
+RELATION_VALUE,res.partner,channel_ids,,,,,discuss.channel,10,,False
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,1,base.main_partner,My Company
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,7,base.partner_demo,"YourCompany, Marc Demo"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,47,l10n_es.partner_simplified,Simplified Invoice Partner (ES)
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4699,__import__.dyn_acc_4cbfacc4-f321-e811-a957-000d3ab0cb37,Serv. Int. de Corretaje InmobiliariosS.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4700,__import__.dyn_acc_eb8f4ac1-3421-e811-a954-000d3ab0cb37,Palentina de Automoviles S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4701,__import__.dyn_acc_d1a1d4e1-ed79-e811-a968-000d3ab0ca26,Restaurante la Torre S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4702,__import__.dyn_acc_73b9f3b9-ad11-e811-a951-000d3ab0cd3c,Azvase S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4703,__import__.dyn_acc_77e54a6c-afb7-ef11-b8e8-000d3a65cbd5,Gesdepor XXI   S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4704,__import__.dyn_acc_82150a49-b719-ef11-9f89-000d3a658874,DSI Soluciones Industriales
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4705,__import__.dyn_acc_d03aa680-acf3-ec11-bb3d-000d3a666f1d,La Electrica Alvarez Sirgo S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4706,__import__.dyn_acc_967b2672-241b-e811-a955-000d3ab0ca26,Ovidio Suarez Distribuciones S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4707,__import__.dyn_acc_e62f8d52-c201-f111-8407-7ced8d4afee9,Elige Tu Viaje S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4708,__import__.dyn_acc_fc4e903e-a101-f111-8407-7ced8d4afee9,DAPA Soluciones Tecnológicas SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4709,__import__.dyn_acc_224dfc79-7acb-ec11-a7b5-000d3ab9cc34,CIENFUEGOS Y CANTELI EQUIPAMIENTO 2016 S
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4710,__import__.dyn_acc_a8bab58d-a6d1-ef11-8ee9-7c1e52764629,Miguel Angel Bañegil Espinosa
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4711,__import__.dyn_acc_fcf7fa73-2df1-f011-8406-0022489efd4a,ADOBER ENERGIAS RENOVABLES SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4712,__import__.dyn_acc_26013018-12dc-f011-8543-0022489d897b,Limpiezas y Servicios la Campa SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4713,__import__.dyn_acc_017a9c55-bda9-f011-bbd2-7ced8d75c0ab,Gestoria Siero
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4714,__import__.dyn_acc_385dd5d8-cea8-f011-bbd2-000d3a66cf3c,GENERAL DE REPARACIONES Y SINIESTROS S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4715,__import__.dyn_acc_30c3a541-bda5-f011-bbd3-7c1e5235b24f,Casa Cambre SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4716,__import__.dyn_acc_4eafa349-578d-f011-b4cc-7c1e52372807,"SAHARASTUR MOTOR, S.L.U"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4717,__import__.dyn_acc_821735cb-2587-f011-b4cc-7c1e52372807,"ISOLPAC SOLUCION TERMICA ANTICODENSACION, S.L"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4718,__import__.dyn_acc_769e9e48-b311-e811-a951-000d3ab0cd3c,Funeraria de Aviles S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4719,__import__.dyn_acc_38406b23-9c6b-f011-b4cb-7c1e52fccdf6,ALVEHOLA MARKETING S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4720,__import__.dyn_acc_02bbc654-f341-f011-877a-7c1e52fccdf6,ITS Integral Thermal Shield
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4721,__import__.dyn_acc_aa22e254-9a1b-e811-a951-000d3ab0cd3c,CANO CARPINTERIA EBANISTERIA SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4722,__import__.dyn_acc_4d22b116-5b40-f011-877a-6045bddece40,Carson Bosque & Jardín S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4723,__import__.dyn_acc_8d4b584f-dc17-e811-a957-000d3ab0cb82,Oficina Funeraria Aviles
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4724,__import__.dyn_acc_1bb36094-97d2-ec11-a7b5-0022489d2773,"DOMONOVA XXI, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4725,__import__.dyn_acc_97b438ab-cec9-ef11-b8e8-000d3a65cbd5,"RECALVI PARTS, S.L.U."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4726,__import__.dyn_acc_814bb28a-6505-f011-bae3-000d3ab4bb7d,Casquero Lucena SLP
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4727,__import__.dyn_acc_bb97c587-bdbe-ef11-b8e8-7c1e52764629,Fundacion Edade
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4728,__import__.dyn_acc_96122166-f3f4-ef11-be1f-000d3a66b47f,LIMPIEZAS LOLO SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4729,__import__.dyn_acc_75887493-7ff0-ec11-bb3d-000d3a66643c,Federación Pol. Em. C.Valenciana FEPEVAL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4730,__import__.dyn_acc_2b006bd6-d696-eb11-b1ac-0022489c741f,Adober Electricidad S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4731,__import__.dyn_acc_9da91502-63dd-ef11-8eea-7c1e52764629,RENTAL ADVANCE S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4732,__import__.dyn_acc_7f2eb328-cfd8-ef11-8eea-000d3ad8fa57,"AFILADOS TECNOLOGICOS INSULARES, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4733,__import__.dyn_acc_810c5881-40af-ec11-9840-000d3adc24b9,Recalvi Norte SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4734,__import__.dyn_acc_72e6d528-38af-ec11-9840-000d3adc24b9,Convergencia de Telecomunicaciones SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4735,__import__.dyn_acc_6f24fbfb-3c95-ef11-8a6a-6045bdddc676,Facultad de Psicología - UNIOVI
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4736,__import__.dyn_acc_7baab873-9a83-ee11-8179-000d3ab0ffe8,Universidad de Oviedo
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4737,__import__.dyn_acc_5fb3a200-3b95-ef11-8a6a-6045bdddc676,Miss bailarinas SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4738,__import__.dyn_acc_472093b9-b592-ef11-8a6a-6045bddd8a24,Maria Telenti y asociados
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4739,__import__.dyn_acc_1569bf13-1286-ef11-ac21-6045bddd8a24,gesinne
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4740,__import__.dyn_acc_8d6f5e8b-231b-e811-a951-000d3ab0c24c,CONSTRUCCIONES Y MONTAJES CAMIÑA SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4741,__import__.dyn_acc_6205057f-fa7e-ee11-8179-000d3ab0ffe8,Auto Diesel Lino S.l
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4742,__import__.dyn_acc_f6460cbf-44cc-ec11-a7b5-000d3ab9c605,GRUPO MUNICIPAL SOCIALISTA DE GIJÓN
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4743,__import__.dyn_acc_b37d4f8d-f774-ef11-a670-000d3abab1ea,S4 PROYECTOS DISEÑO Y SUMINISTROS SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4744,__import__.dyn_acc_ce946c8a-f374-ef11-a670-000d3abab1ea,Distribuciones Cimadevilla S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4745,__import__.dyn_acc_44095716-f374-ef11-a670-000d3abab1ea,Colegio Publico Asturias
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4746,__import__.dyn_acc_b65852cd-f274-ef11-a670-000d3abab1ea,Colegio Publico Begoña
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4747,__import__.dyn_acc_91fad7a0-0474-ef11-a670-002248a45445,ROYUELA MARTIN S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4748,__import__.dyn_acc_68e893c2-ef02-ef11-9f89-000d3a658874,Prueba Alvaro
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4749,__import__.dyn_acc_9794d7d8-9cc4-ec11-a7b6-0022489f0def,Fundacion CTIC
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4750,__import__.dyn_acc_37f7373f-d0e5-ee11-904c-6045bddd5f5b,ZaLle
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4751,__import__.dyn_acc_3f978861-da69-ef11-bfe2-0022489c7b5d,"TRANS-ANLEO, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4752,__import__.dyn_acc_f824c5ec-9a1b-e811-a951-000d3ab0cd3c,Sanchez y Lago S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4753,__import__.dyn_acc_e62a91c9-afc0-e811-a954-000d3ab98726,"VIMOIL, S.A."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4754,__import__.dyn_acc_1290a023-1b5e-ef11-bfe2-000d3ada9662,Planeamiento y Diseño Urbano SLP
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4755,__import__.dyn_acc_fedd4aea-8954-ef11-bfe3-000d3adc9e4c,"Parrilla Pepito, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4756,__import__.dyn_acc_af52ff1b-8e49-ef11-bfe2-000d3a68dfdd,Pablo Tasis Moreno
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4757,__import__.dyn_acc_d1a386bc-8c49-ef11-bfe2-000d3ada36f3,LUCKLER MEDICAL SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4758,__import__.dyn_acc_9e039613-c396-eb11-b1ac-0022489c741f,MARTIN VEGA MAQUINARIA SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4759,__import__.dyn_acc_47537836-a245-ef11-a316-000d3adc9e4c,CONSERVATORIO DE MUSICA DE GIJON
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4760,__import__.dyn_acc_6fb8c212-2444-ef11-a316-000d3a67b82f,COALLA ASESORIA INFORMATICA SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4761,__import__.dyn_acc_7fe9fe5f-e117-e811-a957-000d3ab0cb82,"Construcciones JCN S,L"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4762,__import__.dyn_acc_9b8e363f-6bc4-ec11-a7b6-0022489f0def,David Diaz Muñoz
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4763,__import__.dyn_acc_d71d3e5d-c21c-ef11-840a-000d3adb5086,Iberastur Ingeniería S.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4764,__import__.dyn_acc_7366d4a0-a021-ef11-840a-000d3a65cd8f,Resolution Servicios Integrales SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4765,__import__.dyn_acc_5d5fcb31-e9f0-ee11-904b-002248a386d1,Asistencia Técnica Industrial Asturiana
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4766,__import__.dyn_acc_982e2010-8612-ef11-9f89-000d3a658874,"MBA INCORPORADO, S.L.U."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4767,__import__.dyn_acc_2307a81c-3a12-e811-a956-000d3ab0cb82,Azvase Oviedo 2
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4768,__import__.dyn_acc_ceb6d63e-e7bf-ec11-983f-0022489cc3dc,ROZONA SERVICIO DE PREVENCION SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4769,__import__.dyn_acc_fcb646f4-1102-ef11-9f89-002248a3e554,PRALIBEL SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4770,__import__.dyn_acc_ecffeefd-36fb-ee11-a1fe-000d3ad8b66e,*aseso
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4771,__import__.dyn_acc_88a0e4db-1f97-ed11-aad1-000d3adf733d,MANCHADO ASESORES SL.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4772,__import__.dyn_acc_e05ef026-26e8-ee11-904c-6045bddd5f5b,JUMCO GLOBAL SOFT SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4773,__import__.dyn_acc_8080a8a4-6fe7-ee11-904c-000d3ab09cc7,A TU LADO GRUPO SERVICIO INTEGRAL DE ATE
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4774,__import__.dyn_acc_2225aa12-df17-e811-a957-000d3ab0cb82,I-NSURE BROKERS Correduría de Seguros SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4775,__import__.dyn_acc_1cab9a8b-fb95-eb11-b1ac-0022489c76ca,"POLICLÍNICA ROZONA, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4776,__import__.dyn_acc_15932495-31e1-ee11-904c-002248995576,Marcelino Galán Feito
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4777,__import__.dyn_acc_bc8bcf8e-9cd2-ec11-a7b5-0022489d2773,"LAWTON SCHOOL, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4778,__import__.dyn_acc_41f55ceb-9e83-ee11-8179-000d3adf733d,MIMARA ASTURIAS RESIDENCIAL S.L.U.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4779,__import__.dyn_acc_0076180b-f37e-ee11-8179-000d3adf733d,Ignacio García-Pola Vallejo
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4780,__import__.dyn_acc_6818cc15-9f45-ee11-be6e-000d3ab0ffe8,ALTABOX S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4781,__import__.dyn_acc_6c76a450-2922-ee11-9966-000d3ab0ffe8,FEFCOLL- Col. Dulce Nombre Jesus
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4782,__import__.dyn_acc_04a8f71f-36d0-ec11-a7b5-0022489d2f74,INSTITUTO UROLOGICO ASTURIANO SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4783,__import__.dyn_acc_88f9b741-e508-ed11-82e5-00224899bb34,Somio Park SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4784,__import__.dyn_acc_5b38892c-211b-e811-a951-000d3ab0c24c,Talleres Larrea S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4785,__import__.dyn_acc_55c45ec9-a2c8-ed11-b597-000d3adf733d,CLECE S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4786,__import__.dyn_acc_5766a2e4-dab8-ed11-83ff-000d3ab0ffe8,BEGO COSTA AFRICA & WORLWIDE SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4787,__import__.dyn_acc_da41c28e-93b2-ed11-83ff-000d3adf733d,VOX GRUPO POLITICO MUNICIPAL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4788,__import__.dyn_acc_a0592ba9-53ba-e811-a972-000d3ab0c08c,Carlos Garcia Fernandez-Jardon
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4789,__import__.dyn_acc_d1a8fbce-b9e0-ec11-bb3c-000d3ab70757,Least Cost Routing Telecom SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4790,__import__.dyn_acc_dc13d213-d497-ed11-aad1-000d3adf733d,Josè Manuel Fueyo Bernardo
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4791,__import__.dyn_acc_e0f181fa-8dcf-ec11-a7b5-0022489d2f74,Adolfo González Prats
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4792,__import__.dyn_acc_6af539cf-2da5-e811-a967-000d3ab0cd3c,Rozona Geriatría SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4793,__import__.dyn_acc_c365d28d-109b-ed11-aad1-000d3ab0ffe8,ASOCIACIÓN CULTURAL NIEVA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4794,__import__.dyn_acc_f5ae9d79-bc98-ed11-aad1-000d3adf733d,"Faro Norte Tech, s.l."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4795,__import__.dyn_acc_ed4d3bf5-5550-ed11-bba3-000d3adf733d,JOAQUIN CONCEJO FERNANDEZ
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4796,__import__.dyn_acc_2ab9a8b5-e617-e811-a953-000d3ab0cb37,Jose Manuel Nuño S.L NUÑO EMbutidos
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4797,__import__.dyn_acc_5e8d149f-0e90-ed11-aad1-000d3adf733d,Centro Int de Form. Profesional Avilés
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4798,__import__.dyn_acc_eac11d1e-33cd-ec11-a7b5-000d3ab9c605,Segurastur Brokers SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4799,__import__.dyn_acc_3a52e4ff-211b-e811-a951-000d3ab0c24c,Maria Jose Muñiz Diego
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4800,__import__.dyn_acc_5efa4378-b1c0-ec11-983f-0022489cc3dc,LUX GIJON SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4801,__import__.dyn_acc_994ec785-051b-e811-a957-000d3ab0cb82,Hierros Marcelino Franco S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4802,__import__.dyn_acc_1cafab01-8970-ed11-9561-000d3adf733d,"NIEBBE BAQQUEIRA, S.L. Prima Fernando Edicurs"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4803,__import__.dyn_acc_39ca82e0-071b-e811-a957-000d3ab0cb82,Aceros Aviles S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4804,__import__.dyn_acc_3b5c82fc-f995-eb11-b1ac-0022489c76ca,Rozona Centro de Formacion S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4805,__import__.dyn_acc_dab36df2-242c-e811-a954-000d3ab0c08c,Asociación Soc. Cultural Candas
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4806,__import__.dyn_acc_0840e66c-0d1b-e811-a951-000d3ab0c24c,RADIO TAXI VILLA JOVELLANOS
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4807,__import__.dyn_acc_b714630d-3d5c-ed11-9562-000d3adf733d,Montajes Azcona S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4808,__import__.dyn_acc_eccc316b-ad4b-ed11-bba1-000d3ab0ffe8,GRUPO AVOLAR ABOGADOS
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4809,__import__.dyn_acc_f4a167b9-cd4a-ed11-bba2-000d3adf733d,Angel Azpeitia Muñoz
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4810,__import__.dyn_acc_ae556d1a-5049-ed11-bba2-000d3adf7a50,Organismo autónomo ERA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4811,__import__.dyn_acc_50b913ff-1721-e811-a951-000d3ab0c24c,Fundacion Cruz de los angeles
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4812,__import__.dyn_acc_d3b9b129-beca-ec11-a7b5-000d3ab9c605,David Diaz Muñiz
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4813,__import__.dyn_acc_42a9832e-1f1b-e811-a951-000d3ab0c24c,Asociación Empresarios Poligono Silvota
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4814,__import__.dyn_acc_f380083b-d2bf-ec11-983f-0022489cc3dc,Biosalud Ambiental S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4815,__import__.dyn_acc_f80b52b1-f7c5-ec11-a7b6-0022489f0def,Aluminios de Tremañes E. I.   S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4816,__import__.dyn_acc_1894de47-e134-ed11-9db1-000d3adf733d,EET Europarts Intelligent Trading Distri
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4817,__import__.dyn_acc_782c3456-9d2a-ed11-9db1-000d3ada2743,Masscomm Innova SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4818,__import__.dyn_acc_a275b036-1daf-ec11-9840-000d3adc24b9,Cuenta de Prueba --- No Borrar ---
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4819,__import__.dyn_acc_24dfc828-3428-ed11-9db1-000d3ada26eb,Imprimacero SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4820,__import__.dyn_acc_4c655976-3328-ed11-9db1-000d3ada26eb,Visal 2004 SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4821,__import__.dyn_acc_6dca1c04-0a1b-e811-a951-000d3ab0c24c,Asturiana de Asesoramiento EAR
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4822,__import__.dyn_acc_89ead52c-7327-ed11-9db1-000d3ada2743,COPIMIERES AL YME SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4823,__import__.dyn_acc_346f6ee7-a109-ed11-82e5-00224899bb34,Miriam Batuecas Mohedano
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4824,__import__.dyn_acc_279098ad-252c-e811-a954-000d3ab0c08c,Desarrollo Cad-Cam SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4825,__import__.dyn_acc_d1001eff-0a1b-e811-a951-000d3ab0c24c,Residencia Valdesoto SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4826,__import__.dyn_acc_ca070cf3-f821-ed11-b83d-000d3ab8cd0a,Federacion Areas Empresariales Asturias
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4827,__import__.dyn_acc_f9906f64-e721-ed11-b83d-000d3ab8cd0a,Grupo Digalco SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4828,__import__.dyn_acc_d6be029b-9d1b-e811-a951-000d3ab0cd3c,Tomas Amado Correduria de Seguros
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4829,__import__.dyn_acc_358a5c2b-d41e-ed11-b83d-000d3ab45f63,Smarters Accesorios S.L. (Diginova)
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4830,__import__.dyn_acc_c9e04c8f-691d-ed11-b83d-000d3ab45f63,Cuenta de pruebas 2
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4831,__import__.dyn_acc_55172722-9902-ed11-82e5-000d3adb0610,Loterías de Avilés SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4832,__import__.dyn_acc_62f3d049-d0b4-ec11-983f-000d3a65fc5d,Clinica Dental Peña Lopez SLP
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4833,__import__.dyn_acc_7e23f288-92dd-ec11-bb3d-0022489b6c47,Colegio de Mediadores de Seguros del Ppa
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4834,__import__.dyn_acc_deb91bc4-1704-ed11-82e5-000d3adb0610,S.R.M. S.A.T.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4835,__import__.dyn_acc_a325977d-9bd2-ec11-a7b5-0022489d2773,Estudio Juridico R. Ladreda
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4836,__import__.dyn_acc_b4aaa2fc-f521-e811-a957-000d3ab0cb37,UNED centro asociado de Asturias
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4837,__import__.dyn_acc_9e782252-72b9-ec11-983f-000d3adf38a6,Gestión e Innovación en Eficiencia Energetica S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4838,__import__.dyn_acc_da346fe2-9bb1-ec11-9840-000d3adc24b9,RADIO TAXI VILLA JOVELLANOS INACTIVO
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4839,__import__.dyn_acc_dfdaffd0-9df3-ec11-bb3d-000d3a666f1d,AMAZING GENERAL CONSULTING ONE SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4840,__import__.dyn_acc_30d9ad66-f8f1-ec11-bb3d-000d3a66643c,Antonio Del Busto Fernández
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4841,__import__.dyn_acc_49ea04bd-dceb-ec11-bb3d-000d3ab2a00b,Operiax difusión S.L X-Aire
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4842,__import__.dyn_acc_fd5b7ac8-5f3d-e811-a95b-000d3ab0cb82,Digital Asesores Franquicias S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4843,__import__.dyn_acc_421afb3c-c6eb-ec11-bb3d-000d3ab30389,Sidrería Grupo Trabanco S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4844,__import__.dyn_acc_7c8ab445-f3e7-ec11-bb3c-000d3ad7ca67,Asoc. Conf. Esp. AREAS Emp. (CEDAES)
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4845,__import__.dyn_acc_0e136124-091b-e811-a951-000d3ab0c24c,Asturiana de recambios
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4846,__import__.dyn_acc_691626b5-9c1b-e811-a951-000d3ab0cd3c,NOEGA SYSTEMS S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4847,__import__.dyn_acc_49f58a32-518e-e811-a966-000d3ab0cb37,Hosteleria el Quesu S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4848,__import__.dyn_acc_2f77e311-1e1b-e811-a951-000d3ab0c24c,Paraja y Carton S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4849,__import__.dyn_acc_e15711cc-95d6-ec11-a7b5-0022489ebbea,DEPAU SISTEMAS S.L.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4850,__import__.dyn_acc_4f9c2947-282c-e811-a954-000d3ab0c08c,Cristina Herrero Fernández
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4851,__import__.dyn_acc_0871624d-252c-e811-a954-000d3ab0c08c,Gespyme Llanes SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4852,__import__.dyn_acc_acc5e5fa-2a2c-e811-a954-000d3ab0c08c,Fundiciones Veriña SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4853,__import__.dyn_acc_58598912-95d6-ec11-a7b5-0022489ebbea,DMI Computer S.A.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4854,__import__.dyn_acc_80338142-94d6-ec11-a7b5-0022489ebbea,"Esprinet Ibérica, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4855,__import__.dyn_acc_fe72e403-1fc6-ec11-a7b6-0022489f0a6b,Suminfor
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4856,__import__.dyn_acc_1493306f-f9c5-ec11-a7b6-0022489f0def,"PROYECTO CENTINELA, S.L."
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4857,__import__.dyn_acc_50a6ee7c-95d2-ec11-a7b5-0022489d2773,Manteniship Spain S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4858,__import__.dyn_acc_73470522-ced1-ec11-a7b5-0022489d2f74,ASOCIACION EMPRESARIAL DE MONCADA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4859,__import__.dyn_acc_c79c3b7c-221b-e811-a951-000d3ab0c24c,Construcciones Hermanos Riestra S.A.
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4860,__import__.dyn_acc_a76d3d46-63cc-ec11-a7b5-000d3ab9c605,Intel S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4861,__import__.dyn_acc_b578465a-981b-e811-a951-000d3ab0cd3c,Profesionales del Mantenimiento Integrado
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4862,__import__.dyn_acc_a207ab45-aec7-ec11-a7b6-0022489f0a6b,Liliana Ausin Martinez Asturias Ocio y Cultura
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4863,__import__.dyn_acc_fdd2e355-c6c6-ec11-a7b6-0022489f0def,Juan Fermin Diaz Mere
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4864,__import__.dyn_acc_8585d29e-45c5-ec11-a7b6-0022489f0def,Aplimetal 2000  S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4865,__import__.dyn_acc_af0abfd6-d3bf-ec11-983f-0022489cc3dc,"QUESOS LA PERAL, S.L"
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4866,__import__.dyn_acc_51374a80-201b-e811-a951-000d3ab0c24c,SERVICIO DE REPARACION Y MANTENIMIENTO DEL PRINCIPADO SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4867,__import__.dyn_acc_de3fa442-fa21-e811-a957-000d3ab0cb37,Carrocerias Santana S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4868,__import__.dyn_acc_71010fd7-f921-e811-a957-000d3ab0cb37,Asturiana de Terrenos y edificios S.A
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4869,__import__.dyn_acc_26cfaa0d-f521-e811-a957-000d3ab0cb37,Tresamento SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4870,__import__.dyn_acc_6e62d69a-0c1b-e811-a951-000d3ab0c24c,Piedra Gonzalez y Asociados Correduria de Seguros
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4871,__import__.dyn_acc_1bf561b5-0b1b-e811-a951-000d3ab0c24c,CLUB DE GOLF MADERA III
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4872,__import__.dyn_acc_47eb75f2-292c-e811-a954-000d3ab0c08c,Lejias Campa S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4873,__import__.dyn_acc_971fd705-f921-e811-a957-000d3ab0cb37,Academia de la LLingua Asturiana
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4874,__import__.dyn_acc_dd462f81-c396-eb11-b1ac-0022489c741f,MARTIN FERRERO ALVAREZ
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4875,__import__.dyn_acc_3f3eb83d-b0c0-e811-a954-000d3ab98726,Gas Gijon SA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4876,__import__.dyn_acc_6e1936cc-dea9-e811-a96b-000d3ab0cd3c,Enrique Alonso Asesores S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4877,__import__.dyn_acc_b225e873-2da5-e811-a967-000d3ab0cd3c,Ayuntamiento de Gijón
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4878,__import__.dyn_acc_a8858f2d-7aa7-e811-a96d-000d3ab0cb37,Patronato Deportivo Municipal de Gijon
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4879,__import__.dyn_acc_7f1eb483-2ea5-e811-a967-000d3ab0cd3c,Evancis Technologies S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4880,__import__.dyn_acc_c0de368c-9e1b-e811-a951-000d3ab0cd3c,Todorruedas Asturias
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4881,__import__.dyn_acc_7d924718-9c1b-e811-a951-000d3ab0cd3c,Tesamento S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4882,__import__.dyn_acc_b2447085-9b1b-e811-a951-000d3ab0cd3c,Asociación Llares
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4883,__import__.dyn_acc_23749d63-991b-e811-a951-000d3ab0cd3c,SIBARIS FORMACION INTEGRAL SL
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4884,__import__.dyn_acc_250ff6a1-bc2d-e811-a95a-000d3ab0cb82,Asociación de Emigrantes Españoles Retor
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4885,__import__.dyn_acc_40aec2b6-e317-e811-a957-000d3ab0cb82,Clínica Veterinaria Asturpet Larri S.L.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4886,__import__.dyn_acc_def38224-dc17-e811-a957-000d3ab0cb82,Tanatorio la Cruz/ de Candas
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4887,__import__.dyn_acc_20d337db-3a12-e811-a956-000d3ab0cb82,Azvase Sevilla
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4888,__import__.dyn_acc_40472841-3a12-e811-a956-000d3ab0cb82,Azvase Grao
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4889,__import__.dyn_acc_69d9fcdf-3912-e811-a956-000d3ab0cb82,Azvase Langreo
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4890,__import__.dyn_acc_d86c4f2c-3912-e811-a956-000d3ab0cb82,Azvase Piedras Blancas
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4891,__import__.dyn_acc_4a4f7fe1-3812-e811-a956-000d3ab0cb82,Azvase Huesca
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4892,__import__.dyn_acc_f040beb1-3812-e811-a956-000d3ab0cb82,Azvase Torrelavega
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4893,__import__.dyn_acc_bce78a61-3812-e811-a956-000d3ab0cb82,Azvase Burgos
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4894,__import__.dyn_acc_07f151b1-3712-e811-a956-000d3ab0cb82,Azvase Gijón
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4895,__import__.dyn_acc_3e421686-3712-e811-a956-000d3ab0cb82,Azvase Mieres
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4896,__import__.dyn_acc_b6a7f332-3712-e811-a956-000d3ab0cb82,Azvase SMRA
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4897,__import__.dyn_acc_34c709f7-3612-e811-a956-000d3ab0cb82,Azvase Aviles
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4898,__import__.dyn_acc_41c29be5-fb21-e811-a957-000d3ab0cb37,Taxus Gestión Ambiental Eco. y cal. S.L
+RELATION_VALUE,res.partner,commercial_partner_id,,,,,res.partner,4899,__import__.dyn_acc_ed79bc67-fb21-e811-a957-000d3ab0cb37,Ethan Laser Medica S.L.U
+RELATION_VALUE,res.partner,company_id,,,,,res.company,1,base.main_company,My Company
+RELATION_VALUE,res.partner,country_id,,,,,res.country,233,base.us,Estados Unidos
+RELATION_VALUE,res.partner,country_id,,,,,res.country,68,base.es,España
+RELATION_VALUE,res.partner,create_uid,,,,,res.users,1,base.user_root,System
+RELATION_VALUE,res.partner,create_uid,,,,,res.users,2,base.user_admin,Pedro Diaz
+RELATION_VALUE,res.partner,currency_id,,,,,res.currency,126,base.EUR,EUR
+RELATION_VALUE,res.partner,location_id,,,,,crm.partner.location,8,,ACEROS AVILES SA
+RELATION_VALUE,res.partner,location_id,,,,,crm.partner.location,7,,RECALVI NORTE SA.
+RELATION_VALUE,res.partner,lopd_document_id,,,,,ir.attachment,872,__export__.ir_attachment_872_7ead8c96,web.assets_web.min.css
+RELATION_VALUE,res.partner,main_contact_id,,,,,res.partner,8,base.partner_demo_portal,"My Company, rere terete"
+RELATION_VALUE,res.partner,meeting_ids,,,,,calendar.event,3,calendar.calendar_event_3,Pricing Discussion
+RELATION_VALUE,res.partner,meeting_ids,,,,,calendar.event,4,calendar.calendar_event_4,Requirements review
+RELATION_VALUE,res.partner,meeting_ids,,,,,calendar.event,5,calendar.calendar_event_5,Changes in Designing
+RELATION_VALUE,res.partner,message_partner_ids,,,,,res.partner,3,base.partner_admin,"My Company, Pedro Diaz"
+RELATION_VALUE,res.partner,parent_id,,,,,res.partner,1,base.main_partner,My Company
+RELATION_VALUE,res.partner,property_account_payable_id,,,,,account.account,183,account.1_account_common_4100,410000 Acreedores por prestaciones de servicios (euros)
+RELATION_VALUE,res.partner,property_account_receivable_id,,,,,account.account,188,account.1_account_common_4300,430000 Clientes (euros)
+RELATION_VALUE,res.partner,property_product_pricelist,,,,,product.pricelist,1,,Default (EUR)
+RELATION_VALUE,res.partner,property_stock_customer,,,,,stock.location,13,,Physical Locations/Tránsito entre almacenes
+RELATION_VALUE,res.partner,property_stock_customer,,,,,stock.location,5,stock.stock_location_customers,Partners/Customers
+RELATION_VALUE,res.partner,property_stock_supplier,,,,,stock.location,4,stock.stock_location_suppliers,Partners/Vendors
+RELATION_VALUE,res.partner,property_stock_supplier,,,,,stock.location,13,,Physical Locations/Tránsito entre almacenes
+RELATION_VALUE,res.partner,relationship_type_id,,,,,crm.relationship.type,1,crm.crm_relationship_type_customer,Cliente
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4866,__import__.dyn_acc_51374a80-201b-e811-a951-000d3ab0c24c,SERVICIO DE REPARACION Y MANTENIMIENTO DEL PRINCIPADO SL
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4834,__import__.dyn_acc_deb91bc4-1704-ed11-82e5-000d3adb0610,S.R.M. S.A.T.
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4836,__import__.dyn_acc_b4aaa2fc-f521-e811-a957-000d3ab0cb37,UNED centro asociado de Asturias
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4869,__import__.dyn_acc_26cfaa0d-f521-e811-a957-000d3ab0cb37,Tresamento SL
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4838,__import__.dyn_acc_da346fe2-9bb1-ec11-9840-000d3adc24b9,RADIO TAXI VILLA JOVELLANOS INACTIVO
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4806,__import__.dyn_acc_0840e66c-0d1b-e811-a951-000d3ab0c24c,RADIO TAXI VILLA JOVELLANOS
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4778,__import__.dyn_acc_41f55ceb-9e83-ee11-8179-000d3adf733d,MIMARA ASTURIAS RESIDENCIAL S.L.U.
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4812,__import__.dyn_acc_d3b9b129-beca-ec11-a7b5-000d3ab9c605,David Diaz Muñiz
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4877,__import__.dyn_acc_b225e873-2da5-e811-a967-000d3ab0cd3c,Ayuntamiento de Gijón
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4881,__import__.dyn_acc_7d924718-9c1b-e811-a951-000d3ab0cd3c,Tesamento S.L
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4825,__import__.dyn_acc_d1001eff-0a1b-e811-a951-000d3ab0c24c,Residencia Valdesoto SL
+RELATION_VALUE,res.partner,same_vat_partner_id,,,,,res.partner,4762,__import__.dyn_acc_9b8e363f-6bc4-ec11-a7b6-0022489f0def,David Diaz Muñoz
+RELATION_VALUE,res.partner,self,,,,,res.partner,1,base.main_partner,My Company
+RELATION_VALUE,res.partner,self,,,,,res.partner,3,base.partner_admin,"My Company, Pedro Diaz"
+RELATION_VALUE,res.partner,self,,,,,res.partner,7,base.partner_demo,"YourCompany, Marc Demo"
+RELATION_VALUE,res.partner,self,,,,,res.partner,8,base.partner_demo_portal,"My Company, rere terete"
+RELATION_VALUE,res.partner,self,,,,,res.partner,47,l10n_es.partner_simplified,Simplified Invoice Partner (ES)
+RELATION_VALUE,res.partner,self,,,,,res.partner,4699,__import__.dyn_acc_4cbfacc4-f321-e811-a957-000d3ab0cb37,Serv. Int. de Corretaje InmobiliariosS.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4700,__import__.dyn_acc_eb8f4ac1-3421-e811-a954-000d3ab0cb37,Palentina de Automoviles S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4701,__import__.dyn_acc_d1a1d4e1-ed79-e811-a968-000d3ab0ca26,Restaurante la Torre S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4702,__import__.dyn_acc_73b9f3b9-ad11-e811-a951-000d3ab0cd3c,Azvase S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4703,__import__.dyn_acc_77e54a6c-afb7-ef11-b8e8-000d3a65cbd5,Gesdepor XXI   S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4704,__import__.dyn_acc_82150a49-b719-ef11-9f89-000d3a658874,DSI Soluciones Industriales
+RELATION_VALUE,res.partner,self,,,,,res.partner,4705,__import__.dyn_acc_d03aa680-acf3-ec11-bb3d-000d3a666f1d,La Electrica Alvarez Sirgo S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4706,__import__.dyn_acc_967b2672-241b-e811-a955-000d3ab0ca26,Ovidio Suarez Distribuciones S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4707,__import__.dyn_acc_e62f8d52-c201-f111-8407-7ced8d4afee9,Elige Tu Viaje S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4708,__import__.dyn_acc_fc4e903e-a101-f111-8407-7ced8d4afee9,DAPA Soluciones Tecnológicas SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4709,__import__.dyn_acc_224dfc79-7acb-ec11-a7b5-000d3ab9cc34,CIENFUEGOS Y CANTELI EQUIPAMIENTO 2016 S
+RELATION_VALUE,res.partner,self,,,,,res.partner,4710,__import__.dyn_acc_a8bab58d-a6d1-ef11-8ee9-7c1e52764629,Miguel Angel Bañegil Espinosa
+RELATION_VALUE,res.partner,self,,,,,res.partner,4711,__import__.dyn_acc_fcf7fa73-2df1-f011-8406-0022489efd4a,ADOBER ENERGIAS RENOVABLES SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4712,__import__.dyn_acc_26013018-12dc-f011-8543-0022489d897b,Limpiezas y Servicios la Campa SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4713,__import__.dyn_acc_017a9c55-bda9-f011-bbd2-7ced8d75c0ab,Gestoria Siero
+RELATION_VALUE,res.partner,self,,,,,res.partner,4714,__import__.dyn_acc_385dd5d8-cea8-f011-bbd2-000d3a66cf3c,GENERAL DE REPARACIONES Y SINIESTROS S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4715,__import__.dyn_acc_30c3a541-bda5-f011-bbd3-7c1e5235b24f,Casa Cambre SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4716,__import__.dyn_acc_4eafa349-578d-f011-b4cc-7c1e52372807,"SAHARASTUR MOTOR, S.L.U"
+RELATION_VALUE,res.partner,self,,,,,res.partner,4717,__import__.dyn_acc_821735cb-2587-f011-b4cc-7c1e52372807,"ISOLPAC SOLUCION TERMICA ANTICODENSACION, S.L"
+RELATION_VALUE,res.partner,self,,,,,res.partner,4718,__import__.dyn_acc_769e9e48-b311-e811-a951-000d3ab0cd3c,Funeraria de Aviles S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4719,__import__.dyn_acc_38406b23-9c6b-f011-b4cb-7c1e52fccdf6,ALVEHOLA MARKETING S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4720,__import__.dyn_acc_02bbc654-f341-f011-877a-7c1e52fccdf6,ITS Integral Thermal Shield
+RELATION_VALUE,res.partner,self,,,,,res.partner,4721,__import__.dyn_acc_aa22e254-9a1b-e811-a951-000d3ab0cd3c,CANO CARPINTERIA EBANISTERIA SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4722,__import__.dyn_acc_4d22b116-5b40-f011-877a-6045bddece40,Carson Bosque & Jardín S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4723,__import__.dyn_acc_8d4b584f-dc17-e811-a957-000d3ab0cb82,Oficina Funeraria Aviles
+RELATION_VALUE,res.partner,self,,,,,res.partner,4724,__import__.dyn_acc_1bb36094-97d2-ec11-a7b5-0022489d2773,"DOMONOVA XXI, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4725,__import__.dyn_acc_97b438ab-cec9-ef11-b8e8-000d3a65cbd5,"RECALVI PARTS, S.L.U."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4726,__import__.dyn_acc_814bb28a-6505-f011-bae3-000d3ab4bb7d,Casquero Lucena SLP
+RELATION_VALUE,res.partner,self,,,,,res.partner,4727,__import__.dyn_acc_bb97c587-bdbe-ef11-b8e8-7c1e52764629,Fundacion Edade
+RELATION_VALUE,res.partner,self,,,,,res.partner,4728,__import__.dyn_acc_96122166-f3f4-ef11-be1f-000d3a66b47f,LIMPIEZAS LOLO SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4729,__import__.dyn_acc_75887493-7ff0-ec11-bb3d-000d3a66643c,Federación Pol. Em. C.Valenciana FEPEVAL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4730,__import__.dyn_acc_2b006bd6-d696-eb11-b1ac-0022489c741f,Adober Electricidad S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4731,__import__.dyn_acc_9da91502-63dd-ef11-8eea-7c1e52764629,RENTAL ADVANCE S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4732,__import__.dyn_acc_7f2eb328-cfd8-ef11-8eea-000d3ad8fa57,"AFILADOS TECNOLOGICOS INSULARES, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4733,__import__.dyn_acc_810c5881-40af-ec11-9840-000d3adc24b9,Recalvi Norte SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4734,__import__.dyn_acc_72e6d528-38af-ec11-9840-000d3adc24b9,Convergencia de Telecomunicaciones SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4735,__import__.dyn_acc_6f24fbfb-3c95-ef11-8a6a-6045bdddc676,Facultad de Psicología - UNIOVI
+RELATION_VALUE,res.partner,self,,,,,res.partner,4736,__import__.dyn_acc_7baab873-9a83-ee11-8179-000d3ab0ffe8,Universidad de Oviedo
+RELATION_VALUE,res.partner,self,,,,,res.partner,4737,__import__.dyn_acc_5fb3a200-3b95-ef11-8a6a-6045bdddc676,Miss bailarinas SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4738,__import__.dyn_acc_472093b9-b592-ef11-8a6a-6045bddd8a24,Maria Telenti y asociados
+RELATION_VALUE,res.partner,self,,,,,res.partner,4739,__import__.dyn_acc_1569bf13-1286-ef11-ac21-6045bddd8a24,gesinne
+RELATION_VALUE,res.partner,self,,,,,res.partner,4740,__import__.dyn_acc_8d6f5e8b-231b-e811-a951-000d3ab0c24c,CONSTRUCCIONES Y MONTAJES CAMIÑA SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4741,__import__.dyn_acc_6205057f-fa7e-ee11-8179-000d3ab0ffe8,Auto Diesel Lino S.l
+RELATION_VALUE,res.partner,self,,,,,res.partner,4742,__import__.dyn_acc_f6460cbf-44cc-ec11-a7b5-000d3ab9c605,GRUPO MUNICIPAL SOCIALISTA DE GIJÓN
+RELATION_VALUE,res.partner,self,,,,,res.partner,4743,__import__.dyn_acc_b37d4f8d-f774-ef11-a670-000d3abab1ea,S4 PROYECTOS DISEÑO Y SUMINISTROS SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4744,__import__.dyn_acc_ce946c8a-f374-ef11-a670-000d3abab1ea,Distribuciones Cimadevilla S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4745,__import__.dyn_acc_44095716-f374-ef11-a670-000d3abab1ea,Colegio Publico Asturias
+RELATION_VALUE,res.partner,self,,,,,res.partner,4746,__import__.dyn_acc_b65852cd-f274-ef11-a670-000d3abab1ea,Colegio Publico Begoña
+RELATION_VALUE,res.partner,self,,,,,res.partner,4747,__import__.dyn_acc_91fad7a0-0474-ef11-a670-002248a45445,ROYUELA MARTIN S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4748,__import__.dyn_acc_68e893c2-ef02-ef11-9f89-000d3a658874,Prueba Alvaro
+RELATION_VALUE,res.partner,self,,,,,res.partner,4749,__import__.dyn_acc_9794d7d8-9cc4-ec11-a7b6-0022489f0def,Fundacion CTIC
+RELATION_VALUE,res.partner,self,,,,,res.partner,4750,__import__.dyn_acc_37f7373f-d0e5-ee11-904c-6045bddd5f5b,ZaLle
+RELATION_VALUE,res.partner,self,,,,,res.partner,4751,__import__.dyn_acc_3f978861-da69-ef11-bfe2-0022489c7b5d,"TRANS-ANLEO, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4752,__import__.dyn_acc_f824c5ec-9a1b-e811-a951-000d3ab0cd3c,Sanchez y Lago S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4753,__import__.dyn_acc_e62a91c9-afc0-e811-a954-000d3ab98726,"VIMOIL, S.A."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4754,__import__.dyn_acc_1290a023-1b5e-ef11-bfe2-000d3ada9662,Planeamiento y Diseño Urbano SLP
+RELATION_VALUE,res.partner,self,,,,,res.partner,4755,__import__.dyn_acc_fedd4aea-8954-ef11-bfe3-000d3adc9e4c,"Parrilla Pepito, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4756,__import__.dyn_acc_af52ff1b-8e49-ef11-bfe2-000d3a68dfdd,Pablo Tasis Moreno
+RELATION_VALUE,res.partner,self,,,,,res.partner,4757,__import__.dyn_acc_d1a386bc-8c49-ef11-bfe2-000d3ada36f3,LUCKLER MEDICAL SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4758,__import__.dyn_acc_9e039613-c396-eb11-b1ac-0022489c741f,MARTIN VEGA MAQUINARIA SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4759,__import__.dyn_acc_47537836-a245-ef11-a316-000d3adc9e4c,CONSERVATORIO DE MUSICA DE GIJON
+RELATION_VALUE,res.partner,self,,,,,res.partner,4760,__import__.dyn_acc_6fb8c212-2444-ef11-a316-000d3a67b82f,COALLA ASESORIA INFORMATICA SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4761,__import__.dyn_acc_7fe9fe5f-e117-e811-a957-000d3ab0cb82,"Construcciones JCN S,L"
+RELATION_VALUE,res.partner,self,,,,,res.partner,4762,__import__.dyn_acc_9b8e363f-6bc4-ec11-a7b6-0022489f0def,David Diaz Muñoz
+RELATION_VALUE,res.partner,self,,,,,res.partner,4763,__import__.dyn_acc_d71d3e5d-c21c-ef11-840a-000d3adb5086,Iberastur Ingeniería S.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4764,__import__.dyn_acc_7366d4a0-a021-ef11-840a-000d3a65cd8f,Resolution Servicios Integrales SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4765,__import__.dyn_acc_5d5fcb31-e9f0-ee11-904b-002248a386d1,Asistencia Técnica Industrial Asturiana
+RELATION_VALUE,res.partner,self,,,,,res.partner,4766,__import__.dyn_acc_982e2010-8612-ef11-9f89-000d3a658874,"MBA INCORPORADO, S.L.U."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4767,__import__.dyn_acc_2307a81c-3a12-e811-a956-000d3ab0cb82,Azvase Oviedo 2
+RELATION_VALUE,res.partner,self,,,,,res.partner,4768,__import__.dyn_acc_ceb6d63e-e7bf-ec11-983f-0022489cc3dc,ROZONA SERVICIO DE PREVENCION SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4769,__import__.dyn_acc_fcb646f4-1102-ef11-9f89-002248a3e554,PRALIBEL SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4770,__import__.dyn_acc_ecffeefd-36fb-ee11-a1fe-000d3ad8b66e,*aseso
+RELATION_VALUE,res.partner,self,,,,,res.partner,4771,__import__.dyn_acc_88a0e4db-1f97-ed11-aad1-000d3adf733d,MANCHADO ASESORES SL.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4772,__import__.dyn_acc_e05ef026-26e8-ee11-904c-6045bddd5f5b,JUMCO GLOBAL SOFT SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4773,__import__.dyn_acc_8080a8a4-6fe7-ee11-904c-000d3ab09cc7,A TU LADO GRUPO SERVICIO INTEGRAL DE ATE
+RELATION_VALUE,res.partner,self,,,,,res.partner,4774,__import__.dyn_acc_2225aa12-df17-e811-a957-000d3ab0cb82,I-NSURE BROKERS Correduría de Seguros SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4775,__import__.dyn_acc_1cab9a8b-fb95-eb11-b1ac-0022489c76ca,"POLICLÍNICA ROZONA, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4776,__import__.dyn_acc_15932495-31e1-ee11-904c-002248995576,Marcelino Galán Feito
+RELATION_VALUE,res.partner,self,,,,,res.partner,4777,__import__.dyn_acc_bc8bcf8e-9cd2-ec11-a7b5-0022489d2773,"LAWTON SCHOOL, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4778,__import__.dyn_acc_41f55ceb-9e83-ee11-8179-000d3adf733d,MIMARA ASTURIAS RESIDENCIAL S.L.U.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4779,__import__.dyn_acc_0076180b-f37e-ee11-8179-000d3adf733d,Ignacio García-Pola Vallejo
+RELATION_VALUE,res.partner,self,,,,,res.partner,4780,__import__.dyn_acc_6818cc15-9f45-ee11-be6e-000d3ab0ffe8,ALTABOX S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4781,__import__.dyn_acc_6c76a450-2922-ee11-9966-000d3ab0ffe8,FEFCOLL- Col. Dulce Nombre Jesus
+RELATION_VALUE,res.partner,self,,,,,res.partner,4782,__import__.dyn_acc_04a8f71f-36d0-ec11-a7b5-0022489d2f74,INSTITUTO UROLOGICO ASTURIANO SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4783,__import__.dyn_acc_88f9b741-e508-ed11-82e5-00224899bb34,Somio Park SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4784,__import__.dyn_acc_5b38892c-211b-e811-a951-000d3ab0c24c,Talleres Larrea S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4785,__import__.dyn_acc_55c45ec9-a2c8-ed11-b597-000d3adf733d,CLECE S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4786,__import__.dyn_acc_5766a2e4-dab8-ed11-83ff-000d3ab0ffe8,BEGO COSTA AFRICA & WORLWIDE SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4787,__import__.dyn_acc_da41c28e-93b2-ed11-83ff-000d3adf733d,VOX GRUPO POLITICO MUNICIPAL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4788,__import__.dyn_acc_a0592ba9-53ba-e811-a972-000d3ab0c08c,Carlos Garcia Fernandez-Jardon
+RELATION_VALUE,res.partner,self,,,,,res.partner,4789,__import__.dyn_acc_d1a8fbce-b9e0-ec11-bb3c-000d3ab70757,Least Cost Routing Telecom SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4790,__import__.dyn_acc_dc13d213-d497-ed11-aad1-000d3adf733d,Josè Manuel Fueyo Bernardo
+RELATION_VALUE,res.partner,self,,,,,res.partner,4791,__import__.dyn_acc_e0f181fa-8dcf-ec11-a7b5-0022489d2f74,Adolfo González Prats
+RELATION_VALUE,res.partner,self,,,,,res.partner,4792,__import__.dyn_acc_6af539cf-2da5-e811-a967-000d3ab0cd3c,Rozona Geriatría SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4793,__import__.dyn_acc_c365d28d-109b-ed11-aad1-000d3ab0ffe8,ASOCIACIÓN CULTURAL NIEVA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4794,__import__.dyn_acc_f5ae9d79-bc98-ed11-aad1-000d3adf733d,"Faro Norte Tech, s.l."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4795,__import__.dyn_acc_ed4d3bf5-5550-ed11-bba3-000d3adf733d,JOAQUIN CONCEJO FERNANDEZ
+RELATION_VALUE,res.partner,self,,,,,res.partner,4796,__import__.dyn_acc_2ab9a8b5-e617-e811-a953-000d3ab0cb37,Jose Manuel Nuño S.L NUÑO EMbutidos
+RELATION_VALUE,res.partner,self,,,,,res.partner,4797,__import__.dyn_acc_5e8d149f-0e90-ed11-aad1-000d3adf733d,Centro Int de Form. Profesional Avilés
+RELATION_VALUE,res.partner,self,,,,,res.partner,4798,__import__.dyn_acc_eac11d1e-33cd-ec11-a7b5-000d3ab9c605,Segurastur Brokers SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4799,__import__.dyn_acc_3a52e4ff-211b-e811-a951-000d3ab0c24c,Maria Jose Muñiz Diego
+RELATION_VALUE,res.partner,self,,,,,res.partner,4800,__import__.dyn_acc_5efa4378-b1c0-ec11-983f-0022489cc3dc,LUX GIJON SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4801,__import__.dyn_acc_994ec785-051b-e811-a957-000d3ab0cb82,Hierros Marcelino Franco S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4802,__import__.dyn_acc_1cafab01-8970-ed11-9561-000d3adf733d,"NIEBBE BAQQUEIRA, S.L. Prima Fernando Edicurs"
+RELATION_VALUE,res.partner,self,,,,,res.partner,4803,__import__.dyn_acc_39ca82e0-071b-e811-a957-000d3ab0cb82,Aceros Aviles S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4804,__import__.dyn_acc_3b5c82fc-f995-eb11-b1ac-0022489c76ca,Rozona Centro de Formacion S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4805,__import__.dyn_acc_dab36df2-242c-e811-a954-000d3ab0c08c,Asociación Soc. Cultural Candas
+RELATION_VALUE,res.partner,self,,,,,res.partner,4806,__import__.dyn_acc_0840e66c-0d1b-e811-a951-000d3ab0c24c,RADIO TAXI VILLA JOVELLANOS
+RELATION_VALUE,res.partner,self,,,,,res.partner,4807,__import__.dyn_acc_b714630d-3d5c-ed11-9562-000d3adf733d,Montajes Azcona S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4808,__import__.dyn_acc_eccc316b-ad4b-ed11-bba1-000d3ab0ffe8,GRUPO AVOLAR ABOGADOS
+RELATION_VALUE,res.partner,self,,,,,res.partner,4809,__import__.dyn_acc_f4a167b9-cd4a-ed11-bba2-000d3adf733d,Angel Azpeitia Muñoz
+RELATION_VALUE,res.partner,self,,,,,res.partner,4810,__import__.dyn_acc_ae556d1a-5049-ed11-bba2-000d3adf7a50,Organismo autónomo ERA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4811,__import__.dyn_acc_50b913ff-1721-e811-a951-000d3ab0c24c,Fundacion Cruz de los angeles
+RELATION_VALUE,res.partner,self,,,,,res.partner,4812,__import__.dyn_acc_d3b9b129-beca-ec11-a7b5-000d3ab9c605,David Diaz Muñiz
+RELATION_VALUE,res.partner,self,,,,,res.partner,4813,__import__.dyn_acc_42a9832e-1f1b-e811-a951-000d3ab0c24c,Asociación Empresarios Poligono Silvota
+RELATION_VALUE,res.partner,self,,,,,res.partner,4814,__import__.dyn_acc_f380083b-d2bf-ec11-983f-0022489cc3dc,Biosalud Ambiental S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4815,__import__.dyn_acc_f80b52b1-f7c5-ec11-a7b6-0022489f0def,Aluminios de Tremañes E. I.   S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4816,__import__.dyn_acc_1894de47-e134-ed11-9db1-000d3adf733d,EET Europarts Intelligent Trading Distri
+RELATION_VALUE,res.partner,self,,,,,res.partner,4817,__import__.dyn_acc_782c3456-9d2a-ed11-9db1-000d3ada2743,Masscomm Innova SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4818,__import__.dyn_acc_a275b036-1daf-ec11-9840-000d3adc24b9,Cuenta de Prueba --- No Borrar ---
+RELATION_VALUE,res.partner,self,,,,,res.partner,4819,__import__.dyn_acc_24dfc828-3428-ed11-9db1-000d3ada26eb,Imprimacero SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4820,__import__.dyn_acc_4c655976-3328-ed11-9db1-000d3ada26eb,Visal 2004 SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4821,__import__.dyn_acc_6dca1c04-0a1b-e811-a951-000d3ab0c24c,Asturiana de Asesoramiento EAR
+RELATION_VALUE,res.partner,self,,,,,res.partner,4822,__import__.dyn_acc_89ead52c-7327-ed11-9db1-000d3ada2743,COPIMIERES AL YME SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4823,__import__.dyn_acc_346f6ee7-a109-ed11-82e5-00224899bb34,Miriam Batuecas Mohedano
+RELATION_VALUE,res.partner,self,,,,,res.partner,4824,__import__.dyn_acc_279098ad-252c-e811-a954-000d3ab0c08c,Desarrollo Cad-Cam SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4825,__import__.dyn_acc_d1001eff-0a1b-e811-a951-000d3ab0c24c,Residencia Valdesoto SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4826,__import__.dyn_acc_ca070cf3-f821-ed11-b83d-000d3ab8cd0a,Federacion Areas Empresariales Asturias
+RELATION_VALUE,res.partner,self,,,,,res.partner,4827,__import__.dyn_acc_f9906f64-e721-ed11-b83d-000d3ab8cd0a,Grupo Digalco SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4828,__import__.dyn_acc_d6be029b-9d1b-e811-a951-000d3ab0cd3c,Tomas Amado Correduria de Seguros
+RELATION_VALUE,res.partner,self,,,,,res.partner,4829,__import__.dyn_acc_358a5c2b-d41e-ed11-b83d-000d3ab45f63,Smarters Accesorios S.L. (Diginova)
+RELATION_VALUE,res.partner,self,,,,,res.partner,4830,__import__.dyn_acc_c9e04c8f-691d-ed11-b83d-000d3ab45f63,Cuenta de pruebas 2
+RELATION_VALUE,res.partner,self,,,,,res.partner,4831,__import__.dyn_acc_55172722-9902-ed11-82e5-000d3adb0610,Loterías de Avilés SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4832,__import__.dyn_acc_62f3d049-d0b4-ec11-983f-000d3a65fc5d,Clinica Dental Peña Lopez SLP
+RELATION_VALUE,res.partner,self,,,,,res.partner,4833,__import__.dyn_acc_7e23f288-92dd-ec11-bb3d-0022489b6c47,Colegio de Mediadores de Seguros del Ppa
+RELATION_VALUE,res.partner,self,,,,,res.partner,4834,__import__.dyn_acc_deb91bc4-1704-ed11-82e5-000d3adb0610,S.R.M. S.A.T.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4835,__import__.dyn_acc_a325977d-9bd2-ec11-a7b5-0022489d2773,Estudio Juridico R. Ladreda
+RELATION_VALUE,res.partner,self,,,,,res.partner,4836,__import__.dyn_acc_b4aaa2fc-f521-e811-a957-000d3ab0cb37,UNED centro asociado de Asturias
+RELATION_VALUE,res.partner,self,,,,,res.partner,4837,__import__.dyn_acc_9e782252-72b9-ec11-983f-000d3adf38a6,Gestión e Innovación en Eficiencia Energetica S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4838,__import__.dyn_acc_da346fe2-9bb1-ec11-9840-000d3adc24b9,RADIO TAXI VILLA JOVELLANOS INACTIVO
+RELATION_VALUE,res.partner,self,,,,,res.partner,4839,__import__.dyn_acc_dfdaffd0-9df3-ec11-bb3d-000d3a666f1d,AMAZING GENERAL CONSULTING ONE SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4840,__import__.dyn_acc_30d9ad66-f8f1-ec11-bb3d-000d3a66643c,Antonio Del Busto Fernández
+RELATION_VALUE,res.partner,self,,,,,res.partner,4841,__import__.dyn_acc_49ea04bd-dceb-ec11-bb3d-000d3ab2a00b,Operiax difusión S.L X-Aire
+RELATION_VALUE,res.partner,self,,,,,res.partner,4842,__import__.dyn_acc_fd5b7ac8-5f3d-e811-a95b-000d3ab0cb82,Digital Asesores Franquicias S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4843,__import__.dyn_acc_421afb3c-c6eb-ec11-bb3d-000d3ab30389,Sidrería Grupo Trabanco S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4844,__import__.dyn_acc_7c8ab445-f3e7-ec11-bb3c-000d3ad7ca67,Asoc. Conf. Esp. AREAS Emp. (CEDAES)
+RELATION_VALUE,res.partner,self,,,,,res.partner,4845,__import__.dyn_acc_0e136124-091b-e811-a951-000d3ab0c24c,Asturiana de recambios
+RELATION_VALUE,res.partner,self,,,,,res.partner,4846,__import__.dyn_acc_691626b5-9c1b-e811-a951-000d3ab0cd3c,NOEGA SYSTEMS S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4847,__import__.dyn_acc_49f58a32-518e-e811-a966-000d3ab0cb37,Hosteleria el Quesu S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4848,__import__.dyn_acc_2f77e311-1e1b-e811-a951-000d3ab0c24c,Paraja y Carton S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4849,__import__.dyn_acc_e15711cc-95d6-ec11-a7b5-0022489ebbea,DEPAU SISTEMAS S.L.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4850,__import__.dyn_acc_4f9c2947-282c-e811-a954-000d3ab0c08c,Cristina Herrero Fernández
+RELATION_VALUE,res.partner,self,,,,,res.partner,4851,__import__.dyn_acc_0871624d-252c-e811-a954-000d3ab0c08c,Gespyme Llanes SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4852,__import__.dyn_acc_acc5e5fa-2a2c-e811-a954-000d3ab0c08c,Fundiciones Veriña SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4853,__import__.dyn_acc_58598912-95d6-ec11-a7b5-0022489ebbea,DMI Computer S.A.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4854,__import__.dyn_acc_80338142-94d6-ec11-a7b5-0022489ebbea,"Esprinet Ibérica, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4855,__import__.dyn_acc_fe72e403-1fc6-ec11-a7b6-0022489f0a6b,Suminfor
+RELATION_VALUE,res.partner,self,,,,,res.partner,4856,__import__.dyn_acc_1493306f-f9c5-ec11-a7b6-0022489f0def,"PROYECTO CENTINELA, S.L."
+RELATION_VALUE,res.partner,self,,,,,res.partner,4857,__import__.dyn_acc_50a6ee7c-95d2-ec11-a7b5-0022489d2773,Manteniship Spain S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4858,__import__.dyn_acc_73470522-ced1-ec11-a7b5-0022489d2f74,ASOCIACION EMPRESARIAL DE MONCADA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4859,__import__.dyn_acc_c79c3b7c-221b-e811-a951-000d3ab0c24c,Construcciones Hermanos Riestra S.A.
+RELATION_VALUE,res.partner,self,,,,,res.partner,4860,__import__.dyn_acc_a76d3d46-63cc-ec11-a7b5-000d3ab9c605,Intel S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4861,__import__.dyn_acc_b578465a-981b-e811-a951-000d3ab0cd3c,Profesionales del Mantenimiento Integrado
+RELATION_VALUE,res.partner,self,,,,,res.partner,4862,__import__.dyn_acc_a207ab45-aec7-ec11-a7b6-0022489f0a6b,Liliana Ausin Martinez Asturias Ocio y Cultura
+RELATION_VALUE,res.partner,self,,,,,res.partner,4863,__import__.dyn_acc_fdd2e355-c6c6-ec11-a7b6-0022489f0def,Juan Fermin Diaz Mere
+RELATION_VALUE,res.partner,self,,,,,res.partner,4864,__import__.dyn_acc_8585d29e-45c5-ec11-a7b6-0022489f0def,Aplimetal 2000  S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4865,__import__.dyn_acc_af0abfd6-d3bf-ec11-983f-0022489cc3dc,"QUESOS LA PERAL, S.L"
+RELATION_VALUE,res.partner,self,,,,,res.partner,4866,__import__.dyn_acc_51374a80-201b-e811-a951-000d3ab0c24c,SERVICIO DE REPARACION Y MANTENIMIENTO DEL PRINCIPADO SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4867,__import__.dyn_acc_de3fa442-fa21-e811-a957-000d3ab0cb37,Carrocerias Santana S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4868,__import__.dyn_acc_71010fd7-f921-e811-a957-000d3ab0cb37,Asturiana de Terrenos y edificios S.A
+RELATION_VALUE,res.partner,self,,,,,res.partner,4869,__import__.dyn_acc_26cfaa0d-f521-e811-a957-000d3ab0cb37,Tresamento SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4870,__import__.dyn_acc_6e62d69a-0c1b-e811-a951-000d3ab0c24c,Piedra Gonzalez y Asociados Correduria de Seguros
+RELATION_VALUE,res.partner,self,,,,,res.partner,4871,__import__.dyn_acc_1bf561b5-0b1b-e811-a951-000d3ab0c24c,CLUB DE GOLF MADERA III
+RELATION_VALUE,res.partner,self,,,,,res.partner,4872,__import__.dyn_acc_47eb75f2-292c-e811-a954-000d3ab0c08c,Lejias Campa S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4873,__import__.dyn_acc_971fd705-f921-e811-a957-000d3ab0cb37,Academia de la LLingua Asturiana
+RELATION_VALUE,res.partner,self,,,,,res.partner,4874,__import__.dyn_acc_dd462f81-c396-eb11-b1ac-0022489c741f,MARTIN FERRERO ALVAREZ
+RELATION_VALUE,res.partner,self,,,,,res.partner,4875,__import__.dyn_acc_3f3eb83d-b0c0-e811-a954-000d3ab98726,Gas Gijon SA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4876,__import__.dyn_acc_6e1936cc-dea9-e811-a96b-000d3ab0cd3c,Enrique Alonso Asesores S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4877,__import__.dyn_acc_b225e873-2da5-e811-a967-000d3ab0cd3c,Ayuntamiento de Gijón
+RELATION_VALUE,res.partner,self,,,,,res.partner,4878,__import__.dyn_acc_a8858f2d-7aa7-e811-a96d-000d3ab0cb37,Patronato Deportivo Municipal de Gijon
+RELATION_VALUE,res.partner,self,,,,,res.partner,4879,__import__.dyn_acc_7f1eb483-2ea5-e811-a967-000d3ab0cd3c,Evancis Technologies S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4880,__import__.dyn_acc_c0de368c-9e1b-e811-a951-000d3ab0cd3c,Todorruedas Asturias
+RELATION_VALUE,res.partner,self,,,,,res.partner,4881,__import__.dyn_acc_7d924718-9c1b-e811-a951-000d3ab0cd3c,Tesamento S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4882,__import__.dyn_acc_b2447085-9b1b-e811-a951-000d3ab0cd3c,Asociación Llares
+RELATION_VALUE,res.partner,self,,,,,res.partner,4883,__import__.dyn_acc_23749d63-991b-e811-a951-000d3ab0cd3c,SIBARIS FORMACION INTEGRAL SL
+RELATION_VALUE,res.partner,self,,,,,res.partner,4884,__import__.dyn_acc_250ff6a1-bc2d-e811-a95a-000d3ab0cb82,Asociación de Emigrantes Españoles Retor
+RELATION_VALUE,res.partner,self,,,,,res.partner,4885,__import__.dyn_acc_40aec2b6-e317-e811-a957-000d3ab0cb82,Clínica Veterinaria Asturpet Larri S.L.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4886,__import__.dyn_acc_def38224-dc17-e811-a957-000d3ab0cb82,Tanatorio la Cruz/ de Candas
+RELATION_VALUE,res.partner,self,,,,,res.partner,4887,__import__.dyn_acc_20d337db-3a12-e811-a956-000d3ab0cb82,Azvase Sevilla
+RELATION_VALUE,res.partner,self,,,,,res.partner,4888,__import__.dyn_acc_40472841-3a12-e811-a956-000d3ab0cb82,Azvase Grao
+RELATION_VALUE,res.partner,self,,,,,res.partner,4889,__import__.dyn_acc_69d9fcdf-3912-e811-a956-000d3ab0cb82,Azvase Langreo
+RELATION_VALUE,res.partner,self,,,,,res.partner,4890,__import__.dyn_acc_d86c4f2c-3912-e811-a956-000d3ab0cb82,Azvase Piedras Blancas
+RELATION_VALUE,res.partner,self,,,,,res.partner,4891,__import__.dyn_acc_4a4f7fe1-3812-e811-a956-000d3ab0cb82,Azvase Huesca
+RELATION_VALUE,res.partner,self,,,,,res.partner,4892,__import__.dyn_acc_f040beb1-3812-e811-a956-000d3ab0cb82,Azvase Torrelavega
+RELATION_VALUE,res.partner,self,,,,,res.partner,4893,__import__.dyn_acc_bce78a61-3812-e811-a956-000d3ab0cb82,Azvase Burgos
+RELATION_VALUE,res.partner,self,,,,,res.partner,4894,__import__.dyn_acc_07f151b1-3712-e811-a956-000d3ab0cb82,Azvase Gijón
+RELATION_VALUE,res.partner,self,,,,,res.partner,4895,__import__.dyn_acc_3e421686-3712-e811-a956-000d3ab0cb82,Azvase Mieres
+RELATION_VALUE,res.partner,self,,,,,res.partner,4896,__import__.dyn_acc_b6a7f332-3712-e811-a956-000d3ab0cb82,Azvase SMRA
+RELATION_VALUE,res.partner,self,,,,,res.partner,4897,__import__.dyn_acc_34c709f7-3612-e811-a956-000d3ab0cb82,Azvase Aviles
+RELATION_VALUE,res.partner,self,,,,,res.partner,4898,__import__.dyn_acc_41c29be5-fb21-e811-a957-000d3ab0cb37,Taxus Gestión Ambiental Eco. y cal. S.L
+RELATION_VALUE,res.partner,self,,,,,res.partner,4899,__import__.dyn_acc_ed79bc67-fb21-e811-a957-000d3ab0cb37,Ethan Laser Medica S.L.U
+RELATION_VALUE,res.partner,state_id,,,,,res.country.state,40,base.state_us_32,Oregon (US)
+RELATION_VALUE,res.partner,state_id,,,,,res.country.state,422,base.state_es_o,Asturias (ES)
+RELATION_VALUE,res.partner,user_id,,,,,res.users,2,base.user_admin,Pedro Diaz
+RELATION_VALUE,res.partner,write_uid,,,,,res.users,1,base.user_root,System
+RELATION_VALUE,res.partner,write_uid,,,,,res.users,2,base.user_admin,Pedro Diaz

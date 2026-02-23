@@ -5,7 +5,7 @@
         <field name="name">res.partner.form.crm.person</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <form string="Contacto">
+            <form string="Contacto" class="o_crm_partner_form o_crm_partner_contact_form">
                 <sheet>
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
@@ -15,14 +15,12 @@
                             <field name="first_name" required="1" placeholder="Ej: Juan"/>
                             <field name="last_name" required="1" placeholder="Ej: Pérez"/>
                             <field name="function" string="Puesto"/>
-                            <field name="parent_id" string="Cuenta" domain="[('is_company', '=', True), ('id', '!=', id)]" options="{'no_create': True}" placeholder="Selecciona una cuenta"/>
-                            <field name="account_name" readonly="1"/>
+                            <field name="parent_id" string="Cuenta" domain="[('is_company', '=', True), ('id', '!=', id)]" options="{'no_create': True}" placeholder="Selecciona una cuenta" context="{'form_view_ref': 'crm.view_partner_form_crm_company'}"/>
                         </group>
                         <group>
                             <field name="email" string="Correo electrónico" placeholder="nombre@empresa.com"/>
                             <field name="phone" string="Teléfono del trabajo" placeholder="Ej: 985123456"/>
                             <field name="mobile" string="Teléfono móvil" placeholder="Ej: 612345678"/>
-                            <field name="fax" placeholder="Ej: 985123457"/>
                             <field name="preferred_contact_method"/>
                             <field name="tz" string="Zona horaria principal"/>
                         </group>
@@ -57,7 +55,7 @@
         <field name="name">res.partner.form.crm.company</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <form string="Cuenta">
+            <form string="Cuenta" class="o_crm_partner_form o_crm_partner_company_form">
                 <sheet>
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
@@ -70,7 +68,6 @@
                                     <field name="vat" string="CIF" placeholder="Ej: B12345678"/>
                                     <field name="trade_name" string="Marca Comercial" placeholder="Ej: DSI"/>
                                     <field name="phone" string="Teléfono" placeholder="Ej: 628787560"/>
-                                    <field name="fax" string="Fax" placeholder="Ej: 985123457"/>
                                     <label for="website" string="Sitio web"/>
                                     <div class="o_row">
                                         <field name="website" nolabel="1"/>
@@ -88,10 +85,10 @@
                                 <group>
                                     <group col="2">
                                         <label for="parent_id" string="Cuenta primaria"/>
-                                        <field name="parent_id" nolabel="1" domain="[('is_company', '=', True), ('id', '!=', id)]" placeholder="Cuenta primaria"/>
+                                        <field name="parent_id" nolabel="1" domain="[('is_company', '=', True), ('id', '!=', id)]" placeholder="Cuenta primaria" context="{'form_view_ref': 'crm.view_partner_form_crm_company'}"/>
 
-                                        <label for="relationship_type" string="Tipo de relación"/>
-                                        <field name="relationship_type" nolabel="1"/>
+                                        <label for="relationship_type_id" string="Tipo de relación"/>
+                                        <field name="relationship_type_id" nolabel="1"/>
 
                                         <label for="main_contact_id" string="Contacto principal"/>
                                         <field name="main_contact_id" nolabel="1" domain="[('parent_id', '=', id), ('type', '=', 'contact')]" placeholder="Contacto principal"/>
@@ -132,7 +129,7 @@
 
                                     <field name="latitude" invisible="1"/>
                                     <field name="longitude" invisible="1"/>
-                                    <button name="action_geocode_address" type="object" string="Actualizar coordenadas" class="btn-secondary"/>
+                                    <button name="action_geocode_address" type="object" string="Actualizar" class="btn-secondary"/>
                                 </group>
 
                                 <group string="MAPA">
@@ -156,7 +153,7 @@
                             <group col="2">
                                 <group>
                                     <field name="billing_prepago" widget="boolean_toggle"/>
-                                    <field name="billing_payment_method"/>
+                                    <field name="billing_payment_method_id"/>
                                     <field name="billing_invoice_email"/>
                                     <field name="billing_sepa_signed" widget="boolean_toggle"/>
                                 </group>
@@ -266,13 +263,13 @@
         <field name="name">res.partner.form.crm.unified</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <form string="Partner">
+            <form string="Partner" class="o_crm_partner_form o_crm_partner_unified_form">
                 <sheet>
                     <field name="is_company" invisible="1"/>
                     <group col="2">
                         <group>
                             <field name="name"/>
-                            <field name="parent_id" domain="[('is_company', '=', True), ('id', '!=', id)]"/>
+                            <field name="parent_id" domain="[('is_company', '=', True), ('id', '!=', id)]" context="{'form_view_ref': 'crm.view_partner_form_crm_company'}"/>
                             <field name="available_location_ids" invisible="1"/>
                             <field name="location_id" string="Ubicación" domain="[('id', 'in', available_location_ids)]" options="{'no_create': True}"/>
                             <field name="street"/>

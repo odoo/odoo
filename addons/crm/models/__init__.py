@@ -9,6 +9,7 @@ from . import crm_stage
 from . import crm_team
 from . import crm_team_member
 from . import crm_relationship_type
+from . import crm_payment_method
 from . import ir_config_parameter
 from . import res_config_settings
 from . import res_partner

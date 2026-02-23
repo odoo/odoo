@@ -130,7 +130,6 @@ class ResPartner(models.Model):
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
         if not check_func:
-            # No VAT validation available, default to check that the country code exists
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
 
@@ -139,8 +138,6 @@ class ResPartner(models.Model):
         """ Retrieve the VAT number, if one such exists, to be used when checking against the VIES system """
         eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
         for partner in self:
-            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
-            # a partner for which they haven't yet input VAT, and one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
                 partner.vies_vat_to_check = ''
                 continue
@@ -172,7 +169,6 @@ class ResPartner(models.Model):
     def fix_eu_vat_number(self, country_id, vat):
         europe = self.env.ref('base.europe')
         country = self.env["res.country"].browse(country_id)
-        # In Romania, the CUI can be used as tax identifier and it is not prefixed with the country code
         country_codes_to_not_prepend = ['RO']
         if not europe:
             europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
@@ -188,14 +184,10 @@ class ResPartner(models.Model):
 
     @api.constrains('vat', 'country_id')
     def check_vat(self):
-        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
-        # This is for API pushes from external platforms where you have no control over VAT numbers.
-        if self.env.context.get('no_vat_validation'):
+        if self.env.context.get('no_vat_validation') or self.env.context.get('import_file'):
             return
 
         for partner in self:
-            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
-            # A partner for which they didn't input VAT, and the one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
                 continue
             country = partner.commercial_partner_id.country_id
@@ -237,15 +229,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
-        # OVERRIDE account
         check_result = None
 
-        # First check with country code as prefix of the TIN
         vat_country_code, vat_number_split = self._split_vat(vat_number)
 
         if vat_country_code == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
-            # Foreign companies that trade with non-enterprises in the EU
-            # may have a VATIN starting with "EU" instead of a country code.
             return True
 
         vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())], limit=1)
@@ -262,15 +250,10 @@ class ResPartner(models.Model):
             if check_result:
                 return default_country.code.lower()
 
-        # We allow any number if it doesn't start with a country code and the partner has no country.
-        # This is necessary to support an ORM limitation: setting vat and country_id together on a company
-        # triggers two distinct write on res.partner, one for each field, both triggering this constraint.
-        # If vat is set before country_id, the constraint must not break.
         return check_result
 
     @api.model
     def _build_vat_error_message(self, country_code, wrong_vat, record_label):
-        # OVERRIDE account
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
@@ -282,7 +265,6 @@ class ResPartner(models.Model):
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
-        # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
             return '\n' + _(
                 'The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',

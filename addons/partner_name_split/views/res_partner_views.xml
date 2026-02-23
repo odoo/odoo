@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_name_split" model="ir.ui.view">
+        <field name="name">res.partner.form.name.split</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name'][1]" position="after">
+                <field name="firstname" invisible="is_company"/>
+                <field name="lastname" invisible="is_company"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

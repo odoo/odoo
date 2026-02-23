@@ -19,7 +19,6 @@ class Partner(models.Model):
         string="Marca Comercial",
         help="Nombre comercial de la empresa",
     )
-    fax = fields.Char(string="Fax")
 
     first_name = fields.Char(string="Nombre de pila")
     last_name = fields.Char(string="Apellidos")
@@ -58,6 +57,12 @@ class Partner(models.Model):
         selection=_selection_relationship_type,
         string="Tipo de relación",
     )
+    relationship_type_id = fields.Many2one(
+        'crm.relationship.type',
+        string="Tipo de relación",
+        compute='_compute_relationship_type_id',
+        inverse='_inverse_relationship_type_id',
+    )
     lopd_signed = fields.Boolean(string="LOPD firmada", default=False)
     lopd_document_id = fields.Many2one(
         'ir.attachment',
@@ -71,9 +76,16 @@ class Partner(models.Model):
             ('transferencia', 'Transferencia'),
             ('sepa', 'SEPA'),
         ],
-        string="Forma de pago",
+        string="Forma de pago (legacy)",
         default='contado',
     )
+    billing_payment_method_id = fields.Many2one(
+        'crm.payment.method',
+        string="Forma de pago",
+        compute='_compute_billing_payment_method_id',
+        inverse='_inverse_billing_payment_method_id',
+    )
+    billing_payment_method_custom = fields.Char(string="Nueva forma de pago")
     billing_invoice_email = fields.Char(string="Email facturación")
     billing_sepa_signed = fields.Boolean(string="SEPA firmado", default=False)
     billing_irpf_retention = fields.Float(string="Retenciones IRPF (%)", digits=(5, 2))
@@ -213,6 +225,17 @@ class Partner(models.Model):
         help="Cuentas hijas asociadas a esta empresa (sedes)",
     )
 
+    def get_formview_id(self, access_uid=None):
+        self.ensure_one()
+        if self.is_company:
+            return self.env.ref('crm.view_partner_form_crm_company').id
+        return self.env.ref('crm.view_partner_form_crm_person').id
+
+    def unlink(self):
+        if 'calendar.filters' in self.env:
+            self.env['calendar.filters'].search([('partner_id', 'in', self.ids)]).unlink()
+        return super().unlink()
+
     @api.depends('first_name', 'last_name', 'is_company')
     def _compute_contact_display_name(self):
         for partner in self:
@@ -232,6 +255,28 @@ class Partner(models.Model):
             first = (partner.first_name or '').strip()
             last = (partner.last_name or '').strip()
             partner.name = ' '.join(p for p in [first, last] if p)
+
+    @api.depends('relationship_type')
+    def _compute_relationship_type_id(self):
+        relation_types = self.env['crm.relationship.type'].search([])
+        relation_type_map = {relation_type.code: relation_type for relation_type in relation_types}
+        for partner in self:
+            partner.relationship_type_id = relation_type_map.get(partner.relationship_type)
+
+    def _inverse_relationship_type_id(self):
+        for partner in self:
+            partner.relationship_type = partner.relationship_type_id.code if partner.relationship_type_id else False
+
+    @api.depends('billing_payment_method')
+    def _compute_billing_payment_method_id(self):
+        payment_methods = self.env['crm.payment.method'].search([])
+        payment_method_map = {payment_method.code: payment_method for payment_method in payment_methods}
+        for partner in self:
+            partner.billing_payment_method_id = payment_method_map.get(partner.billing_payment_method)
+
+    def _inverse_billing_payment_method_id(self):
+        for partner in self:
+            partner.billing_payment_method = partner.billing_payment_method_id.code if partner.billing_payment_method_id else False
 
     @api.depends(
         'is_company',
@@ -745,15 +790,37 @@ class Partner(models.Model):
 
     @api.constrains('billing_sepa_signed', 'billing_sepa_document_id')
     def _check_billing_sepa_document(self):
+        if self.env.context.get('import_file'):
+            return
         for partner in self:
             if partner.billing_sepa_signed and not partner.billing_sepa_document_id:
                 raise ValidationError(
                     _("Si marca SEPA como firmado, debe adjuntar el documento mediante el botón 'Adjuntar documento SEPA'.")
                 )
 
+    @api.constrains('vat', 'country_id')
+    def check_vat(self):
+        if self.env.context.get('import_file'):
+            return
+        return super().check_vat()
+
+    def _sanitize_import_vat(self, vat_value, country_id):
+        if not vat_value or not country_id:
+            return vat_value
+        country = self.env['res.country'].browse(country_id)
+        if country.code != 'ES':
+            return vat_value
+        compact_vat = ''.join(char for char in vat_value.upper() if char.isalnum())
+        if not compact_vat:
+            return vat_value
+        return compact_vat if compact_vat.startswith('ES') else f'ES{compact_vat}'
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            if vals.get('vat') and self.env.context.get('import_file'):
+                country_id = vals.get('country_id')
+                vals['vat'] = self._sanitize_import_vat(vals['vat'], country_id)
             is_company = vals.get('is_company', False)
             if not is_company:
                 vals.setdefault('type', 'contact')
@@ -768,6 +835,18 @@ class Partner(models.Model):
         return partners
 
     def write(self, vals):
+        if vals.get('vat') and self.env.context.get('import_file') and len(self) > 1:
+            for partner in self:
+                partner_vals = dict(vals)
+                country_id = partner_vals.get('country_id', partner.country_id.id)
+                partner_vals['vat'] = self._sanitize_import_vat(partner_vals['vat'], country_id)
+                super(Partner, partner).write(partner_vals)
+            return True
+
+        if vals.get('vat') and self.env.context.get('import_file') and len(self) == 1:
+            country_id = vals.get('country_id', self.country_id.id)
+            vals['vat'] = self._sanitize_import_vat(vals['vat'], country_id)
+
         if 'is_company' in vals:
             vals['type'] = 'contact'
 
