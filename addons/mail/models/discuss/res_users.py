@@ -47,9 +47,9 @@ class ResUsers(models.Model):
         super()._store_init_global_fields(res)
         # sudo: ir.config_parameter - reading hard-coded config params to check their existence, safe to
         # return whether the features are enabled
-        get_bool = self.env["ir.config_parameter"].sudo().get_bool
-        res.attr("hasGifPickerFeature", get_bool("discuss.use_tenor_api"))
-        res.attr("hasMessageTranslationFeature", get_bool("mail.use_google_translate_api"))
+        ir_config_sudo = self.env["ir.config_parameter"].sudo()
+        res.attr("hasGifPickerFeature", ir_config_sudo.get_bool("discuss.use_tenor_api") or ir_config_sudo.get_str("discuss.tenor_api_key").startswith("KLIPY:"))
+        res.attr("hasMessageTranslationFeature", ir_config_sudo.get_bool("mail.use_google_translate_api"))
         res.attr(
             "hasCannedResponses",
             self.env["mail.canned.response"].sudo().search_count(

@@ -71,10 +71,15 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="tenor_api_key" string="Send GIFs" help="Share GIFs in your conversations using the Tenor API" documentation="https://developers.google.com/tenor/guides/quickstart#setup">
-                                <field name="use_tenor_api"/>
-                                <label for="tenor_api_key" string="API Key:" invisible="not use_tenor_api" class="col-lg-2 o_light_label"/>
-                                <field name="tenor_api_key" invisible="not use_tenor_api" placeholder="e.g. AIabCd5543a0b450ar4c7t95f1b6e8" required="1"/>
+                            <setting id="klipy_api_key" string="Send GIFs with Klipy" help="Share GIFs in your conversations using the Klipy API" documentation="https://docs.klipy.com/getting-started">
+                                <field name="use_klipy_api"/>
+                                <label for="klipy_api_key" string="API Key:" invisible="not use_klipy_api" class="col-lg-2 o_light_label"/>
+                                <field name="klipy_api_key" invisible="not use_klipy_api" placeholder="e.g. AIabCd5543a0b450ar4c7t95f1b6e8" required="1"/>
+                            </setting>
+                            <setting id="tenor_api_key_deprecated" string="(DEPRECATED) Send GIFs with Tenor" help="(DEPRECATED) Share GIFs in your conversations using the Tenor API. /!\\ service shutdown on June 30 2026, please use a Klipy GIF API key instead!" documentation="https://developers.google.com/tenor/guides/quickstart#setup">
+                                <field name="use_tenor_api_deprecated"/>
+                                <label for="tenor_api_key_deprecated" string="API Key:" invisible="not use_tenor_api_deprecated" class="col-lg-2 o_light_label"/>
+                                <field name="tenor_api_key_deprecated" invisible="not use_tenor_api_deprecated" placeholder="e.g. AIabCd5543a0b450ar4c7t95f1b6e8" required="1"/>
                             </setting>
                             <setting id="message_translation_setting" string="Translate Messages" help="Translate customer messages using the Google Translate API" documentation="https://cloud.google.com/translate/docs/setup">
                                 <field name="use_google_translate_api"/>

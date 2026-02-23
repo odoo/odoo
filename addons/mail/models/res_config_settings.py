@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -60,10 +60,15 @@ class ResConfigSettings(models.TransientModel):
         help="If you want to use Tenor API to share GIFs in conversations.",
         config_parameter='discuss.use_tenor_api',
     )
+    use_tenor_api_deprecated = fields.Boolean("Use Tenor (deprecated)")
+    use_klipy_api = fields.Boolean("Use Klipy API")
+    klipy_api_key = fields.Char("GIF API Key")
+    tenor_api_key_deprecated = fields.Char("Tenor API key (deprecated)")
     tenor_api_key = fields.Char(
         'Tenor API key',
         config_parameter='discuss.tenor_api_key',
-        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup\n"
+        "/!\\ Tenor shuts down on June 30 2026, please use Klipy instead instead https://klipy.com/migrate",
     )
     use_google_translate_api = fields.Boolean(
         "Use Google Translate API",
@@ -98,3 +103,26 @@ class ResConfigSettings(models.TransientModel):
 
     def open_mail_templates(self):
         return self.env['ir.actions.actions']._for_xml_id('mail.action_email_template_tree_all')
+
+    def set_values(self):
+        super().set_values()
+        if self.klipy_api_key:
+            gif_api_value = f"KLIPY:{self.klipy_api_key}"
+        elif self.use_klipy_api:
+            gif_api_value = "KLIPY:"
+        else:
+            gif_api_value = self.tenor_api_key_deprecated or ""
+        self.env["ir.config_parameter"].sudo().set_str("discuss.tenor_api_key", gif_api_value)
+
+    @api.model
+    def get_values(self):
+        res = super().get_values()
+        raw = self.env["ir.config_parameter"].sudo().get_str("discuss.tenor_api_key", "")
+        use_klipy_api = raw.startswith("KLIPY:")
+        res.update({
+            "use_klipy_api": use_klipy_api,
+            "use_tenor_api_deprecated": not use_klipy_api and self.env["ir.config_parameter"].sudo().get_bool("discuss.use_tenor_api", False),
+            "klipy_api_key": raw[6:] if use_klipy_api else "",
+            "tenor_api_key_deprecated": raw if not use_klipy_api else "",
+        })
+        return res
