@@ -377,7 +377,10 @@ class TemplateCompiler:
         self.current_template = path  # default to the file path but if inside a t-name takes that value
         self.excluded_templates = excluded_templates
 
+        # Dynamic attributes can change on each nodes
         self.nested_inherit_vars = set()
+        self.node_vars = set()
+        self.warning_vars = set()
 
     def _map_nested_inherits_vars(self, template_name):
         chain = get_inheritance_chain(template_name, self.inherit_map)
@@ -437,29 +440,29 @@ class TemplateCompiler:
             if self._should_skip_node(node):
                 continue
 
-            node_vars, warning_vars = self._get_node_vars(node, bound_variables)
+            self._set_node_vars(node, bound_variables)
 
             if node.tag == "xpath":
-                node.set("expr", self._process_xpath_expr(node, node_vars, warning_vars))
+                node.set("expr", self._process_xpath_expr(node))
             elif node.tag == "attribute":
-                self._process_attribute(node, node_vars, warning_vars)
+                self._process_attribute(node)
                 continue
 
             for d in DIRECTIVES:
                 if d in node.attrib:
                     val = node.get(d)
                     if val:
-                        node.set(d, self._compile_expr(val, node_vars, warning_vars))
+                        node.set(d, self._compile_expr(val))
 
             for attr, value in node.attrib.items():
                 if attr.startswith("t-on-") and value:
-                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
+                    node.set(attr, self._compile_expr(value))
                 if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
-                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
+                    node.set(attr, self._compile_expr(value))
                 if attr.startswith("t-attf-"):
-                    self.process_dynamic_string(node, node_vars, warning_vars, attr)
+                    self.process_dynamic_string(node, attr)
                 if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
-                    self.process_dynamic_string(node, node_vars, warning_vars, attr)
+                    self.process_dynamic_string(node, attr)
 
             if self._is_component(node):
                 for attr, value in node.attrib.items():
@@ -469,32 +472,34 @@ class TemplateCompiler:
                         continue  # skip Owl directives
                     if is_inside_inherit(node) and attr.startswith("position"):
                         continue  # A component can be replaced with <A position="replace"/> inside inherits
-                    node.set(attr, self._compile_expr(value, node_vars, warning_vars))
+                    node.set(attr, self._compile_expr(value))
 
-    def process_dynamic_string(self, node, bound_variables, warning_vars, attr="t-attf-class"):
+    def process_dynamic_string(self, node, attr="t-attf-class"):
         value = node.get(attr)
         if not value:
             return
 
-        new_value = self._process_dynamic_string(value, bound_variables, warning_vars)
+        new_value = self._process_dynamic_string(value)
         node.set(attr, new_value)
 
-    def _get_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
+    def _set_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
         if is_inside_inherit(node):
             target = is_inside_inherit(node)[0].get("t-inherit")
-            node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
-
             self._map_nested_inherits_vars(target)
 
-            return node_vars, self.t_call_outer_vars.get(target, set())
-        return base_vars, {}
+            self.node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
+            self.warning_vars = self.t_call_outer_vars.get(target, set())
 
-    def _process_attribute(self, node: etree._Element, node_vars: set[str], warning_vars: set[str]):
+        else:
+            self.node_vars, self.warning_vars = base_vars, {}
+
+    def _process_attribute(self, node: etree._Element):
         """ Static handler for <attribute> nodes processing """
         attr_name = node.get("name")
         txt = node.text or ""
-        if not txt.strip():
+
+        if not txt.strip() and not (node.get("add", False) or node.get("remove", False)):
             return
 
         # Locate the parent xpath expression to decide if we should compile
@@ -502,14 +507,18 @@ class TemplateCompiler:
         xp_expr = xp[0].get("expr") if xp else ""
 
         if self._should_compile_attribute_node(attr_name, xp_expr):
+            if node.get("add", False):
+                node.set("add", self._compile_expr(node.get("add")))
+            if node.get("remove", False):
+                node.set("remove", self._compile_expr(node.get("remove")))
             if attr_name and attr_name.startswith("t-attf-"):
-                compiled = self._process_dynamic_string(txt, node_vars, warning_vars)
+                compiled = self._process_dynamic_string(txt)
             else:
-                compiled = self._compile_expr(txt, node_vars, warning_vars)
+                compiled = self._compile_expr(txt)
 
             node.text = etree.CDATA(compiled)
 
-    def _process_xpath_expr(self, node: etree._Element, bound_variables: set[str], warning_vars: set[str]):
+    def _process_xpath_expr(self, node: etree._Element):
         def repl(match):
             attr_name = match.group(1)
             js_expr = match.group(2)
@@ -518,9 +527,9 @@ class TemplateCompiler:
                 return match.group(0)
 
             if attr_name == "call":
-                new_expr = self._process_dynamic_string(js_expr, bound_variables, warning_vars)
+                new_expr = self._process_dynamic_string(js_expr)
             else:
-                new_expr = self._compile_expr(js_expr, bound_variables, warning_vars)
+                new_expr = self._compile_expr(js_expr)
             # preserve quotes
             return match.group(0).replace(js_expr, new_expr)
 
@@ -529,10 +538,8 @@ class TemplateCompiler:
             return T_ATTR_RE.sub(repl, expr)
         return node
 
-    def _compile_expr(self, expr, bound_variables, warning_variables):
+    def _compile_expr(self, expr):
         TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
-
-        bound_variables = set(bound_variables)
 
         leading_ws = len(expr) - len(expr.lstrip(" "))
         trailing_ws = len(expr) - len(expr.rstrip(" "))
@@ -555,7 +562,7 @@ class TemplateCompiler:
 
                 def replace(match):
                     inner_expr = match.group(1)
-                    rewritten = self._compile_expr(inner_expr, bound_variables, warning_variables)
+                    rewritten = self._compile_expr(inner_expr)
                     return "${" + rewritten + "}"
 
                 tok.value = TEMPLATE_EXPR.sub(replace, tok.value)
@@ -587,7 +594,7 @@ class TemplateCompiler:
             if (
                 tok.type == "SYMBOL"
                 and tok.value not in RESERVED_WORDS
-                and tok.value not in bound_variables
+                and tok.value not in self.node_vars
                 and tok.value not in local_vars
                 and tok.value != "this"
                 and not (prev_tok and prev_tok.type == "OPERATOR" and prev_tok.value == ".")
@@ -598,7 +605,7 @@ class TemplateCompiler:
                     and next_tok.type == "COLON"
                 )
             ):
-                if tok.value in warning_variables:
+                if tok.value in self.warning_vars:
                     print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)  # noqa: T201
                 if tok.value in self.nested_inherit_vars:
                     print("WARNING in template " + self.current_template + " : nested inherit variable" + expr)  # noqa: T201
@@ -618,7 +625,7 @@ class TemplateCompiler:
         compiled = "".join((t.value) for t in tokens)
         return " " * leading_ws + compiled + " " * trailing_ws
 
-    def _process_dynamic_string(self, str, bound_variables, warning_variables):
+    def _process_dynamic_string(self, str):
         INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
 
         def repl(match):
@@ -632,7 +639,7 @@ class TemplateCompiler:
             if not stripped_expr:
                 return match.group(0)  # empty expression → leave unchanged
 
-            compiled = self._compile_expr(stripped_expr, bound_variables, warning_variables)
+            compiled = self._compile_expr(stripped_expr)
             # Reconstruct using the original delimiters
             if match.group(2) is not None:
                 return f"#{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}"
@@ -688,7 +695,7 @@ class TemplateCompiler:
         if not attr_name:
             return False
 
-        if attr_name in DIRECTIVES or attr_name.startswith(("t-on-", "t-att-")):
+        if attr_name in DIRECTIVES or attr_name.startswith(("t-on-", "t-att-", "t-attf-")):
             return True
 
         if attr_name in SKIP_XPATH_ATTRS:
@@ -973,6 +980,26 @@ tests = [
 </t>
 """,
     },
+    {
+        "name": "xpath position=attribute, add and remove",
+        "content": """
+<t t-name="mail.RottingStatusBarDurationField" t-inherit="mail.StatusBarDurationField" t-inherit-mode="primary">
+    <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="attributes">
+        <attribute name="t-attf-class" add="{{ props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "/>
+        <attribute name="t-if" remove="(!props.record.data.is_rotting || !item.isSelected)" separator=" and "/>
+    </xpath>
+</t>
+""",
+        "expected": """
+<t t-name="mail.RottingStatusBarDurationField" t-inherit="mail.StatusBarDurationField" t-inherit-mode="primary">
+    <xpath expr="//span[@t-att-title='this.item.fullTimeInStage']" position="attributes">
+        <attribute name="t-attf-class" add="{{ this.props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "></attribute>
+        <attribute name="t-if" remove="(!this.props.record.data.is_rotting || !this.item.isSelected)" separator=" and "></attribute>
+    </xpath>
+</t>
+""",
+    },
+
     {
         "name": "t-slot scope",
         "content": """
