@@ -115,13 +115,13 @@ export class PowerButtonsPlugin extends Plugin {
         this.descriptionToElementMap = new Map(powerButtons.map((pb) => [pb, renderButton(pb)]));
 
         this.powerButtonsContainer = this.document.createElement("div");
-        this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center d-none`;
+        this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center invisible position-absolute`;
         this.powerButtonsContainer.append(...this.descriptionToElementMap.values());
         this.powerButtonsOverlay.append(this.powerButtonsContainer);
     }
 
     updatePowerButtons() {
-        this.powerButtonsContainer.classList.add("d-none");
+        this.powerButtonsContainer.classList.add("invisible");
         const { documentSelection, editableSelection, currentSelectionIsInEditable } =
             this.dependencies.selection.getSelectionData();
         if (!currentSelectionIsInEditable) {
@@ -143,29 +143,25 @@ export class PowerButtonsPlugin extends Plugin {
                 predicate(documentSelection)
             )
         ) {
-            this.powerButtonsContainer.classList.remove("d-none");
             const direction = closestElement(block, "[dir]")?.getAttribute("dir");
-            this.powerButtonsContainer.setAttribute("dir", direction);
             // Hide/show buttons based on their availability.
             for (const [{ isAvailable }, buttonElement] of this.descriptionToElementMap.entries()) {
                 const shouldHide = Boolean(!isAvailable(editableSelection));
                 buttonElement.classList.toggle("d-none", shouldHide); // 2nd arg must be a boolean
             }
             this.setPowerButtonsPosition(block, blockRect, direction);
+            this.powerButtonsContainer.classList.remove("invisible");
+            this.powerButtonsContainer.setAttribute("dir", direction);
         }
     }
 
     getPlaceholderWidth(block) {
-        let width;
-        this.dependencies.history.ignoreDOMMutations(() => {
-            const clone = block.cloneNode(true);
-            clone.innerText = clone.getAttribute("o-we-hint-text");
-            clone.style.width = "fit-content";
-            clone.style.visibility = "hidden";
-            block.after(clone);
-            width = clone.getBoundingClientRect().width;
-            clone.remove();
-        });
+        const hintText = block.getAttribute("o-we-hint-text");
+        const cs = getComputedStyle(block);
+        const canvas = this.canvas || (this.canvas = document.createElement("canvas"));
+        const ctx = canvas.getContext("2d");
+        ctx.font = cs.font;
+        const width = ctx.measureText(hintText).width;
         return width;
     }
 
@@ -175,11 +171,8 @@ export class PowerButtonsPlugin extends Plugin {
      * @param {string} direction
      */
     setPowerButtonsPosition(block, blockRect, direction) {
-        const overlayStyles = this.powerButtonsOverlay.style;
         // Resetting the position of the power buttons.
-        overlayStyles.top = "0px";
-        overlayStyles.left = "0px";
-        const buttonsRect = this.powerButtonsContainer.getBoundingClientRect();
+        const overlayRect = this.powerButtonsOverlay.getBoundingClientRect();
         let referenceRect = { top: 0, left: 0 };
         let frameElement;
         try {
@@ -191,34 +184,39 @@ export class PowerButtonsPlugin extends Plugin {
         if (frameElement) {
             referenceRect = frameElement.getBoundingClientRect();
         }
-        const placeholderWidth = this.getPlaceholderWidth(block) + 20;
+        const placeholderWidth = this.getPlaceholderWidth(block);
         let newButtonContainerLeft;
         const editableRect = this.editable.getBoundingClientRect();
         if (direction === "rtl") {
             newButtonContainerLeft =
-                blockRect.right + referenceRect.left - buttonsRect.right - placeholderWidth;
+                blockRect.right - (overlayRect.left - referenceRect.left) - placeholderWidth - 30;
             if (newButtonContainerLeft <= 0) {
                 this.powerButtonsContainer
                     .querySelectorAll(".power_button:not(:last-child)")
                     .forEach((el) => el.classList.add("d-none"));
-                const buttonRect = this.powerButtonsContainer
-                    .querySelector(".power_button:last-child")
-                    .getBoundingClientRect();
                 newButtonContainerLeft =
-                    blockRect.right + referenceRect.left - buttonRect.right - placeholderWidth;
+                    blockRect.right -
+                    (overlayRect.left - referenceRect.left) -
+                    placeholderWidth -
+                    30;
             }
+            this.powerButtonsContainer.style.transform = "translateX(-100%)";
         } else {
+            this.powerButtonsContainer.style.transform = "unset";
             newButtonContainerLeft =
-                blockRect.left + referenceRect.left - buttonsRect.left + placeholderWidth;
-            if (newButtonContainerLeft + buttonsRect.width >= editableRect.width) {
+                blockRect.left - (overlayRect.left - referenceRect.left) + placeholderWidth + 30;
+            if (
+                newButtonContainerLeft + this.powerButtonsContainer.offsetWidth >
+                editableRect.width
+            ) {
                 this.powerButtonsContainer
                     .querySelectorAll(".power_button:not(:last-child)")
                     .forEach((el) => el.classList.add("d-none"));
             }
         }
-        overlayStyles.left = newButtonContainerLeft + "px";
-        overlayStyles.top = blockRect.top - (buttonsRect.top - referenceRect.top) + "px";
-        overlayStyles.height = blockRect.height + "px";
+        this.powerButtonsContainer.style.left = newButtonContainerLeft + "px";
+        this.powerButtonsContainer.style.top =
+            blockRect.top - (overlayRect.top - referenceRect.top) + "px";
     }
 
     /**
