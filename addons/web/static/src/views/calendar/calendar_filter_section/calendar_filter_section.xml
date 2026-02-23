@@ -55,7 +55,7 @@
 
     <t t-name="web.CalendarFilterSection.filter">
         <div
-            class="o_calendar_filter_item o-checkbox form-check position-relative w-100 cursor-pointer"
+            class="o_calendar_filter_item o-checkbox form-check position-relative w-100"
             t-att-class="this.getFilterColor(filter)"
             t-att-data-value="filter.value"
         >
@@ -69,7 +69,7 @@
                 t-on-change="(ev) => this.onFilterInputChange(filter, ev)"
             />
             <label
-                class="d-flex align-items-center gap-1"
+                class="d-flex align-items-center gap-1 cursor-pointer"
                 t-attf-for="o_calendar_filter_item_{{this.filterId}}"
             >
                 <t t-if="this.section.hasAvatar and filter.hasAvatar">
