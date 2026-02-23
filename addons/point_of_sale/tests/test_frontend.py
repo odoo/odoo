@@ -1290,8 +1290,12 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Check that two product variant are created
         self.assertEqual(product_2_template.product_variant_count, 2)
-        product_2_template.product_variant_ids[0].write({'barcode': '0100201'})
-        product_2_template.product_variant_ids[1].write({'barcode': '0100202'})
+        white_ptav = product_2_template.attribute_line_ids.product_template_value_ids.filtered(lambda v: v.name == 'White')
+        red_ptav = product_2_template.attribute_line_ids.product_template_value_ids.filtered(lambda v: v.name == 'Red')
+        variant_white = product_2_template.product_variant_ids.filtered(lambda v: white_ptav in v.product_template_variant_value_ids)
+        variant_red = product_2_template.product_variant_ids.filtered(lambda v: red_ptav in v.product_template_variant_value_ids)
+        variant_white.write({'barcode': '0100201'})
+        variant_red.write({'barcode': '0100202'})
 
         self.env['product.product'].create({
             'name': 'Test Product 3',
@@ -1314,7 +1318,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'fixed_price': 80,
         }, {
             'applied_on': '0_product_variant',
-            'product_id': product_2_template.product_variant_ids[1].id,
+            'product_id': variant_red.id,
             'fixed_price': 120,
         }])
         self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
