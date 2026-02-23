@@ -370,6 +370,9 @@ registry.category("web_tour.tours").add("LotTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
+            Dialog.is({ title: "Lot/Serial number(s) required" }),
+            Dialog.discard(),
+            ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("1"),
             ProductScreen.selectedOrderlineHas("Product A", "1"),
             inLeftSide(
