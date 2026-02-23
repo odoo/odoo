@@ -472,7 +472,7 @@ export class SelfOrder extends Reactive {
     hasPaymentMethod() {
         return (
             this.config.self_ordering_mode === "kiosk" &&
-            this.models["pos.payment.method"].getAll().length > 0
+            this.models["pos.payment.method"].filter((pm) => !pm.is_cash_count).length > 0
         );
     }
 
