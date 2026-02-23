@@ -737,7 +737,7 @@ class HrApplicant(models.Model):
             hr_job = self.env['hr.job']
 
         nocontent_body = Markup("""
-<p class="o_view_nocontent_smiling_face">%(help_title)s</p>
+<p class="o_view_nocontent_img o_nc_empty_folder">%(help_title)s</p>
 """) % {
             'help_title': _("No applications found."),
         }

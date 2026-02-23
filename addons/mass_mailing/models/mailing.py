@@ -677,7 +677,7 @@ class MailingMailing(models.Model):
             'view_mode': 'list,form',
             'res_model': 'link.tracker',
             'domain': [('mass_mailing_id', '=', self.id)],
-            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+            'help': Markup('<p class="o_view_nocontent_img o_nc_empty_folder">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
             'context': dict(self.env.context, create=False)
@@ -772,7 +772,7 @@ class MailingMailing(models.Model):
             'context': dict(self.env.context, create=False),
         }
         if helper_header and helper_message:
-            action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+            action['help'] = Markup('<p class="o_view_nocontent_img o_nc_empty_folder">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
         return action
