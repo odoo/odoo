@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageShapeOption">
-    <BuilderRow label.translate="Shape">
+    <BuilderRow label.translate="Shape" t-if="this.state.isShapeSupported">
         <div class="btn-group o-hb-button-group">
             <BuilderSlidingPanel
                 label.translate="Shape"
