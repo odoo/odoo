@@ -1178,8 +1178,14 @@ export class BaseOptionComponent extends Component {
         this.getResource = context.getResource;
         /** @type { EditorContext['trigger'] } **/
         this.trigger = context.trigger;
+        /** @type { EditorContext['triggerAsync'] } **/
+        this.triggerAsync = context.triggerAsync;
         /** @type { EditorContext['delegateTo'] } **/
         this.delegateTo = context.delegateTo;
+        /** @type { EditorContext['processThrough'] } **/
+        this.processThrough = context.processThrough;
+        /** @type { EditorContext['checkPredicates'] } **/
+        this.checkPredicates = context.checkPredicates;
 
         this.isActiveItem = useIsActiveItem();
         const comp = useComponent();
