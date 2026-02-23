@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
@@ -25,12 +26,12 @@ export class ImagePopUp extends Interaction {
             images: [clone],
             index: 0,
             shouldShowControls: this.hasMultipleImages,
+            getIndicatorLabel: (itemPosition, total) =>
+                _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
         })[0];
         this.insert(this.modalEl, document.body);
         new Modal(this.modalEl, { keyboard: true, backdrop: true }).show();
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website.image_popup", ImagePopUp);
+registry.category("public.interactions").add("website.image_popup", ImagePopUp);
