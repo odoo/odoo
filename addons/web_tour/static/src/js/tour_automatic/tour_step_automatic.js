@@ -1,29 +1,9 @@
 import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { serializeChanges, serializeMutation } from "@web_tour/js/utils/tour_utils";
 import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { TourStep } from "@web_tour/js/tour_step";
 import { getTag } from "@web/core/utils/xml";
-import { MacroMutationObserver } from "@web/core/macro";
 
-async function waitForMutations(target = document, timeout = 1000 / 16) {
-    return new Promise((resolve) => {
-        let observer;
-        let timer;
-        const mutationList = [];
-        function onMutation(mutations) {
-            mutationList.push(...(mutations || []));
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                observer.disconnect();
-                resolve(mutationList);
-            }, timeout);
-        }
-        observer = new MacroMutationObserver(onMutation);
-        observer.observe(target);
-        onMutation([]);
-    });
-}
 export class TourStepAutomatic extends TourStep {
     skipped = false;
     error = "";
@@ -31,36 +11,6 @@ export class TourStepAutomatic extends TourStep {
         super(data, tour);
         this.index = index;
         this.tourConfig = tourState.getCurrentConfig();
-    }
-
-    async checkForUndeterminisms(initialElement, delay) {
-        if (delay <= 0 || !initialElement) {
-            return;
-        }
-        const tagName = initialElement.tagName?.toLowerCase();
-        if (["body", "html"].includes(tagName) || !tagName) {
-            return;
-        }
-        const snapshot = initialElement.cloneNode(true);
-        const mutations = await waitForMutations(initialElement, delay);
-        let reason;
-        if (!hoot.isVisible(initialElement)) {
-            reason = `Initial element is no longer visible`;
-        } else if (!initialElement.isEqualNode(snapshot)) {
-            reason =
-                `Initial element has changed:\n` +
-                JSON.stringify(serializeChanges(snapshot, initialElement), null, 2);
-        } else if (mutations.length) {
-            const changes = [...new Set(mutations.map(serializeMutation))];
-            reason =
-                `Initial element has mutated ${mutations.length} times:\n` +
-                JSON.stringify(changes, null, 2);
-        }
-        if (reason) {
-            throw new Error(
-                `Potential non deterministic behavior found in ${delay}ms for trigger ${this.trigger}.\n${reason}`
-            );
-        }
     }
 
     get describeWhyIFailed() {

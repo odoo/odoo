@@ -30,7 +30,7 @@ export class TourAutomatic {
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
         enableEventLogs(this.debugMode);
-        const { stepDelay, observeDelay } = this.config;
+        const { stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => [
@@ -58,9 +58,6 @@ export class TourAutomatic {
                             ? 9999999
                             : step.timeout || this.timeout || 10000,
                     action: async (trigger) => {
-                        if (step.observe && this.debugMode) {
-                            await step.checkForUndeterminisms(trigger, observeDelay);
-                        }
                         this.allowUnload = false;
                         if (!step.skipped && step.expectUnloadPage) {
                             this.allowUnload = true;
