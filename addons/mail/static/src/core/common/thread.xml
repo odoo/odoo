@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': this.env.inChatter?.aside, 'o-pb-3_5': !this.env.inChatter?.aside, 'ps-2 pe-3': this.env.inDiscussApp and !this.ui.isSmall, 'o-focused': this.state.isFocused }" t-att-data-transient="this.props.thread.isTransient" t-custom-ref="messages" tabindex="-1" t-on-focusin="this.onFocusin" t-on-focusout="this.onFocusout">
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': this.env.inChatter?.aside, 'o-pb-3_5': !this.env.inChatter?.aside, 'ps-2 pe-3': this.env.inDiscussApp and !this.ui.isSmall, 'o-focused': this.props.thread.isFocused }" t-att-data-transient="this.props.thread.isTransient" t-custom-ref="messages" tabindex="-1" t-on-focusin="this.onFocusin" t-on-focusout="this.onFocusout">
         <t t-if="!this.props.thread.isEmpty or this.props.thread.loadOlder or this.props.thread.hasLoadingFailed" name="content">
             <div class="o-mail-Thread-content d-flex flex-column position-relative flex-grow-1 bg-inherit" t-att-class="{'justify-content-end': !this.env.inChatter and this.props.thread.model !== 'mail.box'}">
                 <span class="position-absolute w-100 invisible" t-att-class="this.props.order === 'asc' ? 'bottom-0' : 'top-0'" t-custom-ref="present-treshold" t-att-style="`height: Min(${this.PRESENT_THRESHOLD}px, 100%)`"/>
