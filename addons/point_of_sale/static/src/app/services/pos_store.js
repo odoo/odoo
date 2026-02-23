@@ -929,16 +929,20 @@ export class PosStore extends WithLazyGetterTrap {
         if (keepGoing === false) {
             return;
         }
-
-        const pack_lot_ids = await this.configureNewOrderLine(
-            productTemplate,
-            vals,
-            values,
-            order,
-            options,
-            configure
-        );
-
+        let pack_lot_ids = {};
+        if (this.requiresOrderLineConfiguration(configure, opts.code, values.product_tmpl_id)) {
+            pack_lot_ids = await this.configureNewOrderLine(
+                productTemplate,
+                vals,
+                values,
+                order,
+                options,
+                configure
+            );
+            if (!pack_lot_ids) {
+                return;
+            }
+        }
         // Handle price unit
         this.handlePriceUnit(values, order, vals.price_unit);
 
@@ -999,7 +1003,9 @@ export class PosStore extends WithLazyGetterTrap {
 
         return order.getSelectedOrderline();
     }
-
+    requiresOrderLineConfiguration(configure, code, product) {
+        return (configure || code) && product.isTracked();
+    }
     async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
         // In the case of a product with tracking enabled, we need to ask the user for the lot/serial number.
         // It will return an instance of pos.pack.operation.lot
