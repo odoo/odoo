@@ -28,10 +28,15 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="this.state.payment and this.confirmedOrder.state !== 'paid'" 
+                <div t-if="this.state.payment and this.confirmedOrder.state !== 'paid'"
                     class="px-4 py-3 m-n1 rounded-bottom rounded-4 border border-light bg-light text-body fw-bold" style="max-width: 95%; text-wrap: pretty;">
                     Pay
-                    <span class="fw-bolder" t-out="this.selfOrder.formatMonetary(this.confirmedOrder.amount_total || 0)"/>
+                    <t t-if="this.selfOrder.config.self_ordering_mode == 'kiosk' and this.selfOrder.models['pos.payment.method'].find((pm) => pm.is_cash_count)">
+                        by cash
+                    </t>
+                    <t t-else="">
+                        <span class="fw-bolder" t-out="this.selfOrder.formatMonetary(this.confirmedOrder.amount_total || 0)"/>
+                    </t>
                     at the counter
                 </div>
                 <div class="bg-white w-100 w-md-auto py-4 px-5 rounded-4 border border-light">
