@@ -352,7 +352,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         config = self.env['pos.config'].browse(pos_config_id)
         product_variant = self.env['product.product'].browse(product_variant_id) if product_variant_id else False
-        template_or_variant = product_variant or self.product_variant_id
+        template_or_variants = product_variant or self.product_variant_ids
 
         # Tax related
         tax_to_use = self.env['account.tax']
@@ -383,17 +383,17 @@ class ProductTemplate(models.Model):
             pricelists = config.available_pricelist_ids
         else:
             pricelists = config.pricelist_id
-        price_per_pricelist_id = pricelists._price_get(template_or_variant, quantity) if pricelists else False
+        price_per_pricelist_id = pricelists._price_get(product_variant or self, quantity) if pricelists else False
         pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
 
         # Warehouses
         warehouse_list = [
             {'id': w.id,
             'name': w.name,
-            'available_quantity': template_or_variant.with_context({'warehouse_id': w.id}).qty_available,
-            'free_qty': template_or_variant.with_context({'warehouse_id': w.id}).free_qty,
-            'forecasted_quantity': template_or_variant.with_context({'warehouse_id': w.id}).virtual_available,
-            'uom': template_or_variant.uom_name}
+            'available_quantity': sum(template_or_variants.with_context({'warehouse_id': w.id}).mapped('qty_available')),
+            'free_qty': sum(template_or_variants.with_context({'warehouse_id': w.id}).mapped('free_qty')),
+            'forecasted_quantity': sum(template_or_variants.with_context({'warehouse_id': w.id}).mapped('virtual_available')),
+            'uom': template_or_variants.uom_id.name}
             for w in self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)])]
 
         if config.picking_type_id.warehouse_id:
