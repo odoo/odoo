@@ -30,6 +30,20 @@ patch(Thread.prototype, {
             () => [this.props.thread.livechatVisitorMember?.im_status]
         );
     },
+    /** @override */
+    applyScrollContextually(thread) {
+        super.applyScrollContextually(...arguments);
+        if (thread.channel?.composerHidden && this.shouldMarkAsReadOnScroll(thread)) {
+            thread.markAsRead();
+        }
+    },
+    /** @override */
+    shouldMarkAsReadOnScroll(thread) {
+        if (thread.channel?.composerHidden) {
+            return this.isAtBottom && !thread.channel?.markedAsUnread && !thread.markingAsRead;
+        }
+        return super.shouldMarkAsReadOnScroll(...arguments);
+    },
     get showVisitorDisconnected() {
         return (
             this.store.self.notEq(this.props.thread.livechatVisitorMember?.persona) &&

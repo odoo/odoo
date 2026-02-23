@@ -2,13 +2,15 @@ import {
     click,
     contains,
     openDiscuss,
+    onRpcBefore,
     openFormView,
     setupChatHub,
+    scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
@@ -208,4 +210,56 @@ test("livechat: non-member can close immediately", async () => {
     await contains(".o-mail-ChatWindow");
     await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("Mark closed conversation as read when scrolling to bottom", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        livechat_end_dt: serializeDate(luxon.DateTime.now()),
+    });
+    for (let i = 0; i <= 5; i++) {
+        pyEnv["mail.message"].create({
+            author_guest_id: guestId,
+            body: "test message".repeat(100),
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    onRpcBefore("/discuss/channel/mark_as_read", () => expect.step("mark_as_read"));
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow .o-mail-Message", { count: 6 });
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await expect.waitForSteps(["mark_as_read"]);
+});
+
+test("Mark auto-open conversation as read when session ends", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId,
+        body: "test message",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    onRpcBefore("/discuss/channel/mark_as_read", () => expect.step("mark_as_read"));
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow .o-mail-Message:has(:text('test message'))");
+    await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id: channelId }));
+    await expect.waitForSteps(["mark_as_read"]);
 });
