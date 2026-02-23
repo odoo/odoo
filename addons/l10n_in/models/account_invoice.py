@@ -721,6 +721,8 @@ class AccountMove(models.Model):
 
     def _get_sync_stack(self, container):
         stack, update_containers = super()._get_sync_stack(container)
+        if all(move.country_code != 'IN' for move in self):
+            return stack, update_containers
         _tax_container, invoice_container, misc_container = update_containers()
         moves = invoice_container['records'] + misc_container['records']
         stack.append((9, self._sync_l10n_in_gstr_section(moves)))

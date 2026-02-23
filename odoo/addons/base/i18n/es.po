@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2026-01-13 15:34+0000\n"
+"PO-Revision-Date: 2026-02-19 12:29+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base/es/>"
 "\n"
@@ -691,6 +691,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Usa las impresoras iMin ePOS sin la caja IoT en el punto de venta\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -756,6 +759,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        Mejora el chat en directo con agentes de IA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -819,6 +825,33 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Agrega un libro de informe de IVA, que es un requisito legal en Argentina. "
+"El libro contiene información detallada del IVA de ventas y compras que se "
+"hicieron durante un periodo de tiempo. \n"
+"* Agrega un informe de resumen del IVA que se utiliza para analizar la "
+"facturación.\n"
+"* Agrega la funcionalidad de un libro digital de IVA que nos permite generar "
+"archivos TXT para importarlos a ARCA, estos son los que implementamos:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Documentación oficial ARCA\n"
+"\n"
+"* Libro de IVA digital - diseño de registros https://www.afip.gob.ar/"
+"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - diseño de registros (igual que el libro de IVA digital): https://"
+"www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - especificaciones (proporciona más información sobre cómo dar "
+"formato a los números y cómo llenar los campos numéricos y alfanuméricos): "
+"https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-"
+"Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -826,6 +859,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Añadir la exportación del informe fiscal de IVA Simple.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -900,6 +935,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Enviar y recibir documentos a través de la red Nemhandel en formato OIOUBL "
+"2.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1247,6 +1285,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Transferencias de cuentas\n"
+"===========================\n"
+"Un modelo auxiliar para gestionar transferencias entre cuentas.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1575,6 +1617,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Integración entre Contabilidad y Gastos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1582,6 +1626,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Integración entre Flota y Contabilidad\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -2660,6 +2706,8 @@ msgid ""
 "\n"
 "Accounting returns for Sweden\n"
 msgstr ""
+"\n"
+"Declaraciones para Suecia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2752,6 +2800,80 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Añade un nuevo modelo denominado «Tipo de identificación», que amplíe la "
+"funcionalidad del campo de Número de Identificación Fiscal (NIF) del "
+"contacto y permita que el usuario identifique (eventualmente una factura) a "
+"los contactos no solo con su Número de Identificación fiscal (NIF) sino con "
+"otros tipos de identificaciones como documento nacional, pasaporte, "
+"identificación extranjera, etc. Al instalar este módulo, verás dos campos en "
+"la vista de formulario de contactos:\n"
+"\n"
+"* Tipo de identificación\n"
+"* Número de identificación\n"
+"\n"
+"Este comportamiento es un requisito común para algunos países "
+"latinoamericanos como Argentina y Chile. Si tu localización tiene estos "
+"requisitos, entonces debes depender de este módulo y definir en tu módulo de "
+"localización los tipos de identificación que se utilizan en tu país. Por lo "
+"general, este tipo de identificaciones las definen las autoridades "
+"gubernamentales que regulan las operaciones fiscales, por ejemplo:\n"
+"\n"
+"* ARCA en Argentina define el DNI, CUIT (Número de Identificación Fiscal "
+"para entidades legales conocido como Clave Única de Identificación "
+"Tributaria), CUIL (número de identificación fiscal para personas naturales "
+"conocido como Código Único de Identificación Laboral) y otros 80 tipos de "
+"identificación válidos.\n"
+"\n"
+"Cada identificación contiene esta información:\n"
+"\n"
+"* nombre: nombre corto de la identificación\n"
+"* descripción: podría ser el mismo nombre corto o un nombre largo\n"
+"*country_id: el país al que pertenece esta identificación\n"
+"*is_vat: identifica este registro como el número de identificación fiscal "
+"correspondiente para el país específico.\n"
+"* secuencia: nos permite ordenar los tipos de identificación según los más "
+"utilizados.\n"
+"* activo: podemos activar o desactivar identificaciones para que sea más "
+"fácil para nuestros clientes.\n"
+"\n"
+"Con el fin de hacer que este módulo sea compatible con entornos multiempresa "
+"donde hay empresas que no necesitan o no admiten este requisito, añadimos "
+"tipos de identificación genéricos y reglas genéricas para administrar la "
+"información de contacto y hacerla transparente para el usuario cuando solo "
+"use el Número de Identificación Fiscal (NIF) como lo conocíamos "
+"anteriormente.\n"
+"\n"
+"Identificaciones genéricas:\n"
+"\n"
+"* Identificación Fiscal: la identificación fiscal o el Número de "
+"Identificación Fiscal se seleccionará como tipo de identificación de forma "
+"predeterminada, por lo que el usuario solo tendrá que añadir el número de "
+"identificación fiscal relacionado.\n"
+"* Pasaporte\n"
+"* Identificación extranjera (documento nacional extranjero)\n"
+"\n"
+"Reglas al crear un nuevo contacto: solo veremos los tipos de identificación "
+"que son significativos, teniendo en cuenta estas reglas:\n"
+"\n"
+"* Si el contacto no tiene establecida la dirección del país: mostrará los "
+"tipos de identificación genéricos más los definidos en el país de la empresa "
+"relacionada del contacto (si el contacto no tiene una empresa específica, "
+"mostrará los tipos de identificación relacionados con la del usuario actual)"
+"\n"
+"\n"
+"* Si el contacto tiene la dirección del país: mostrará los tipos de "
+"identificación genéricos más los definidos para el país del contacto.\n"
+"\n"
+"Al crear una nueva empresa, se establecerá en el contacto relacionado "
+"siempre el tipo de identificación is_vat del país relacionado.\n"
+"\n"
+"Puedes revisar y activar todos los tipos de identificación definidos en el "
+"menú «Contactos / Configuración / Tipo de identificación».\n"
+"\n"
+"Este módulo es compatible con el módulo base_vat para poder validar los "
+"Números de Identificación Fiscal (NIF) para cada país que tenga o no la "
+"posibilidad de administrar varios tipos de identificación.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -2771,6 +2893,20 @@ msgid ""
 "- the option 'automatic_invoice' is enabled in the website settings "
 "(\"Invoice automatically on payment\")\n"
 msgstr ""
+"\n"
+"Añade una pestaña adicional en el proceso de pago del sitio web/comercio "
+"electrónico con los campos mexicanos:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"La pestaña adicional solo aparece si:\n"
+"\n"
+"- la empresa vinculada al sitio web es mexicana\n"
+"- la opción «automatic_invoice» está activada en los ajustes del sitio web "
+"(«Factura en automático al pagar»)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2875,6 +3011,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language for the lots and serial numbers\n"
 msgstr ""
+"\n"
+"Añade el árabe como idioma secundario para los lotes y números de serie\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -2883,6 +3021,9 @@ msgid ""
 "Adds Arabic as a secondary language on your invoice, credit note, debit "
 "note, vendor bill, and refund bill\n"
 msgstr ""
+"\n"
+"Añade el árabe como idioma secundario en tus facturas, notas de crédito, "
+"notas de débito, facturas de proveedores y facturas de reembolso\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -2890,6 +3031,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language on your receipt\n"
 msgstr ""
+"\n"
+"Añade el árabe como segundo idioma en tus recibos\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2983,6 +3126,8 @@ msgid ""
 "\n"
 "Adds the ability to set folder templates on products.\n"
 msgstr ""
+"\n"
+"Añade la posibilidad de configurar plantillas de carpetas en los productos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -3855,6 +4000,12 @@ msgid ""
 "well.\n"
 "It should be renamed later to ai_documents_automation.\n"
 msgstr ""
+"\n"
+"Clasifica tus documentos automáticamente.\n"
+"Este módulo solo se utiliza para ordenar documentos automáticamente y no "
+"puede usarse para otras funciones relacionadas con documentos de IA, ya que "
+"también depende de base_automation.\n"
+"Debe renombrarse más adelante como ai_documents_automation.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -4085,6 +4236,8 @@ msgid ""
 "\n"
 "Base module for the Cambodian reports\n"
 msgstr ""
+"\n"
+"Módulo base para los informes de Camboya\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kr_reports
@@ -4230,6 +4383,93 @@ msgid ""
 "requirements and reduces manual interaction with the SFTP portal.\n"
 "\n"
 msgstr ""
+"\n"
+"Reglas de nómina belgas.\n"
+"======================\n"
+"\n"
+"    * Información del empleado\n"
+"    * Contratos del empleado\n"
+"    * Contratos basados en un pasaporte\n"
+"    * Subsidios y deducciones\n"
+"    * Configuración de sueldo base, bruto o neto\n"
+"    * Recibos de nómina del empleado\n"
+"    * Registro mensual de nómina\n"
+"    * Integración con gestión de permisos\n"
+"    * Cálculo salarial, ONSS, retención de impuestos, manutención infantil, "
+"etc.­\n"
+"\n"
+"Firma DmfA automática\n"
+"========================\n"
+"\n"
+"Requisitos previos:\n"
+"--------------\n"
+"\n"
+"- Necesitas un certificado digital compatible con el gobierno belga que haya "
+"sido emitido por\n"
+"  GlobalSign. Consulta la siguiente página: https://shop.globalsign.com/en/"
+"belgian-government-services\n"
+"\n"
+"- Genera los archivos de certificado desde tu certificado SSL (.pfx) "
+"necesarios para\n"
+"  crear un usuario técnico (.cer) y autenticarse de forma remota en la ONSS "
+"(.pem). En un sistema UNIX,\n"
+"  puedes usar los siguientes comandos:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"-  Antes de usar el servicio web REST de la seguridad social, tienes que "
+"crear una cuenta\n"
+"  para ti o para tu cliente y configurar la seguridad. (El procedimiento "
+"completo\n"
+"  está disponible en https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Crea un usuario técnico y activa un canal SFTP: el cliente debe crear un "
+"usuario técnico en el servicio en línea\n"
+"    de gestión de acceso. Sigue este procedimiento: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Configura tu cliente SFTP: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Al final del procedimiento debes contar con tu número de expedidor ONSS. "
+"Puedes\n"
+"    proporcionarlo en los ajustes de Nómina junto con el archivo .pem y la "
+"contraseña correspondiente, si aplica.\n"
+"\n"
+"Sincronizar DmfA con el portal ONSS\n"
+"===============================\n"
+"\n"
+"Automatiza la sincronización de las declaraciones DmfA ONSS\n"
+"con el portal SFTP oficial de Bélgica.\n"
+"\n"
+"- Sube los archivos FO, FS y GO a la carpeta correspondiente del entorno "
+"ONSS\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Consulta las carpetas OUT (OUT, OUTTEST, OUTTEST-S) para los archivos "
+"devueltos.\n"
+"- Vincula los archivos recibidos con las declaraciones y empleados,\n"
+"  cuando aplique.\n"
+"\n"
+"Funciones técnicas incluidas:\n"
+"- Conexión segura mediante clave privada y credenciales de usuario técnico.\n"
+"-  Análisis de archivos XML para ACRF y notificaciones.\n"
+"- Gestión de errores y registro de directorios inexistentes o archivos con "
+"formato incorrecto.\n"
+"\n"
+"Esta función asegura el cumplimiento de los requisitos de declaración "
+"electrónica del ONSS\n"
+" y reduce la interacción manual con el portal SFTP.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -4450,6 +4690,12 @@ msgid ""
 "An option on the suggested answers can be activated to make them lead-"
 "generating.\n"
 msgstr ""
+"\n"
+"Integración entre Encuestas y CRM.\n"
+"Permite la creación de una oportunidad a partir de una encuesta cuando el "
+"participante selecciona respuestas que generan leads.\n"
+"Se puede activar una opción en las respuestas sugeridas para que generen "
+"oportunidades.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_sms
@@ -4580,6 +4826,9 @@ msgid ""
 "Bridge module integrating the Belgian accounting reports\n"
 "with the Belgian HR Payroll module\n"
 msgstr ""
+"\n"
+"Módulo de enlace que integra los informes contables belgas\n"
+"con el módulo de nómina y recursos humanos belga\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -4643,6 +4892,8 @@ msgid ""
 "\n"
 "Chart Of Account and Taxes for Cambodia.\n"
 msgstr ""
+"\n"
+"Plan de cuentas e impuestos para Camboya.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg
@@ -5511,6 +5762,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Guatemala\n"
 msgstr ""
+"\n"
+"Implementación de la facturación electrónica para Guatemala\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_edi
@@ -6268,6 +6521,11 @@ msgid ""
 "\n"
 "This module add completed course events to resume for employees.\n"
 msgstr ""
+"\n"
+"Eventos y habilidades para RR. HH.\n"
+"============================\n"
+"\n"
+"Este módulo añade los cursos completados al currículum de los empleados.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_expense
@@ -6357,6 +6615,20 @@ msgid ""
 "- add products on tasks\n"
 "\n"
 msgstr ""
+"\n"
+"Gestión de servicios de campo\n"
+"=========================\n"
+"Este módulo añade las funciones necesarias para una gestión moderna de los "
+"servicios de campo.\n"
+"Instala las siguientes aplicaciones:\n"
+"- Proyecto\n"
+"- Partes de horas\n"
+"\n"
+"Añade las siguientes opciones:\n"
+"- informes sobre tareas\n"
+"- aplicación FSM con vista personalizada para técnicos in situ\n"
+"- añadir productos a las tareas\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_accountant
@@ -6373,6 +6645,8 @@ msgid ""
 "\n"
 "Fiscal Categories Data for Belgium\n"
 msgstr ""
+"\n"
+"Datos de categorías fiscales para Bélgica\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_nilvera_einvoice
@@ -6519,6 +6793,100 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Crea diarios en Odoo para generar facturas electrónicas de clientes y "
+"envíala a la ARCA (a través de los servicios web).\n"
+"Las opciones disponibles son:\n"
+"\n"
+"    * Factura electrónica - Web Service\n"
+"    * Comprobante de exportación - Web Service\n"
+"    * Bono fiscal electrónico - Web Service\n"
+"\n"
+"En los diarios electrónicos, al validar una factura, esta se valida tanto en "
+"Odoo como en ARCA. Esta validación\n"
+"se hace de forma inmediata y se recibe uno de los siguientes estados desde "
+"ARCA: «aprobado/aprobado con observaciones/rechazado». Si la factura\n"
+"es rechazada por ARCA, no se contabilizará en el sistema y aparecerá una "
+"notificación con los detalles del error (motivo por el que la rechazaron)\n"
+"junto con una sugerencia sobre la posible causa del problema.\n"
+"\n"
+"Para auditorías y solución de incidencias, se añade un menú «Consulta de "
+"facturas de ARCA», que permite consultar las facturas\n"
+"enviadas previamente a ARCA y el último número utilizado, lo que resulta "
+"útil para detectar posibles problemas de sincronización de secuencias entre "
+"Odoo y ARCA.\n"
+"\n"
+"    NOTA: desde la vista de formulario del diario es posible forzar una "
+"sincronización entre las secuencias de Odoo y cada uno de los tipos de "
+"documentos en\n"
+"    los últimos números registrados en la ARCA.\n"
+"\n"
+"Se ha añadido una funcionalidad en las facturas de proveedores que se puede "
+"configurar en los ajustes de contabilidad para poder verificar\n"
+"en ARCA si las facturas de proveedores son válidas "
+"(para más información, consulta la descripción de los ajustes).\n"
+"\n"
+"Configuración:\n"
+"\n"
+"1. Ir a Contabilidad > Ajustes > sección de localización argentina. \n"
+"\n"
+"    1.1. Configura el modo Web Service de ARCA:\n"
+"\n"
+"    * Entorno de prueba para usar certificados de demostración que se "
+"utilizarán para realizar pruebas y emitir facturas\n"
+"      no reales en ARCA. Este entorno solo es para prueba. Es el entorno "
+"predeterminado en las bases de datos de demostración, por lo que no "
+"necesitarás configurarlo\n"
+"      (por lo general, en ARCA se llama entorno de homologación).\n"
+"    * Entorno de producción para generar certificados reales y facturas "
+"legales en ARCA.\n"
+"\n"
+"    1.2. Configura tu certificado ARCA: si estás en una base de datos de "
+"demostración, ya estará configurado de forma predeterminada. Si estás\n"
+"         en un entorno de producción, solo necesitas subir tu certificado de "
+"ARCA.\n"
+"\n"
+"    1.3. De forma opcional, puedes definir si quieres habilitar la "
+"verificación de facturas de proveedor en ARCA.\n"
+"\n"
+"2. Crea diarios de ventas que representarán cada uno de tus PdV de ARCA "
+"(disponible en el portal de la ARCA) que quieras usar en Odoo.\n"
+"\n"
+"    2.1. El campo «Usar Documentos» está configurado de forma predeterminada;"
+" no lo cambies.\n"
+"    2.2. Configura el sistema ARCA POS para uno de los electrónicos.\n"
+"\n"
+"        * Factura electrónica - Web Service\n"
+"        * Bono fiscal electrónico - Web Service\n"
+"        * Comprobante de exportación - Web Service\n"
+"\n"
+"    2.3. Configura el número PdV de ARCA y la dirección PdV de ARCA según lo "
+"que tengas configurado en tu portal ARCA.\n"
+"\n"
+"    NOTA: puedes usar el botón «Comprobar PdV disponibles en ARCA» desde el "
+"formulario del diario para verificar qué puntos de venta pueden utilizarse "
+"para crear los diarios.\n"
+"\n"
+"Dirígete a http://www.afip.gob.ar/fe/ayuda.asp para obtener más información "
+"sobre la facturación electrónica en Argentina\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"\n"
+"Los servicios web implementados son los más comunes:\n"
+"\n"
+"* wsfev1 - «Factura electrónica» \n"
+"* wsbfev1 - «Bono fiscal electrónico» \n"
+"* wsfexv1 - «Factura de exportación electrónica» \n"
+"* wscdc - «Constatación de comprobantes» \n"
+"\n"
+"Para consultar la información de desarrollo, dirígete a http://"
+"www.afip.gob.ar/fe/documentos/"
+"WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -15563,6 +15931,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Correo electrónico\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15572,16 +15941,21 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-key text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope text-primary\" title="
+"\"Iniciar sesión / Correo\" invisible=\"login != email\"/>\n"
+"                                    <i class=\"fa fa-fw fa-key text-primary\""
+" title=\"Iniciar sesión\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-phone text-primary\" title=\"Correo electrónico\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Teléfono\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -15663,6 +16037,13 @@ msgid ""
 "                                            Update if compromised.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                            Cambiar contraseña\n"
+"                                        </span>\n"
+"                                        <span class=\"text-muted\">\n"
+"                                            Actualizar si se trata de una "
+"contraseña en riesgo.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15739,6 +16120,9 @@ msgid ""
 "                                            Connect external services.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Conectar servicios externos.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -15895,7 +16279,7 @@ msgstr "<span>Nombre</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "<span>No diff available</span>"
-msgstr ""
+msgstr "<span>No hay diferencias disponibles</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -15974,7 +16358,7 @@ msgstr "<strong>Etiqueta</strong>"
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid ""
 "<strong>Let's first confirm it's you. Enter your current password:</strong>"
-msgstr ""
+msgstr "<strong>Confirmemos que eres tú. Introduce tu contraseña:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16260,7 +16644,7 @@ msgstr "Un proveedor de pagos para Latinoamérica."
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_iyzico
 msgid "A payment provider covering Turkey."
-msgstr ""
+msgstr "Un proveedor de pagos que opera en Turquía."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_mercado_pago
@@ -16270,7 +16654,7 @@ msgstr "Un proveedor de pagos que cubre varios países de Latinoamérica."
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_redsys
 msgid "A payment provider covering the Spanish market."
-msgstr ""
+msgstr "Un proveedor de pagos que cubre el mercado español."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_xendit
@@ -16404,12 +16788,12 @@ msgstr "IA"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_auto_install
 msgid "AI Auto Install"
-msgstr ""
+msgstr "Instalación automática de IA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_documents
 msgid "AI Documents"
-msgstr ""
+msgstr "Documentos con IA"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_documents_account
@@ -16426,7 +16810,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_livechat
 msgid "AI Livechat"
-msgstr ""
+msgstr "Chat en directo con IA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
@@ -16451,7 +16835,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_crm
 msgid "AI crm"
-msgstr ""
+msgstr "IA y CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_crm_livechat
@@ -16834,7 +17218,7 @@ msgstr "Informes contables para Brasil"
 #: model:ir.module.module,shortdesc:base.module_account_accountant_fleet
 #: model:ir.module.module,shortdesc:base.module_account_fleet
 msgid "Accounting/Fleet bridge"
-msgstr "Enlace entre Flota y Contabilidad"
+msgstr "Integración entre Flota y Contabilidad"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id

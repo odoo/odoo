@@ -42,51 +42,95 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             '_text': 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
         }
 
-    def _get_address_node(self, vals):
-        address_node = super()._get_address_node(vals)
-        partner = vals['partner']
+    def _ubl_get_partner_address_node(self, vals, partner):
+        # EXTENDS account.edi.xml.ubl_bis3
+        node = super()._ubl_get_partner_address_node(vals, partner)
 
-        if partner._name == 'res.bank':
-            state = partner.state
-        else:
-            state = partner.state_id
+        if not partner.state_id:
+            return node
 
-        if state:
-            address_node['cbc:CountrySubentity']['_text'] = partner.country_code + '-' + state.code
+        node['cbc:CountrySubentity']['_text'] = f'{partner.country_code}-{partner.state_id.code}'
 
-            # Romania requires the CityName to be in the format of "SECTORX" if the address state is in Bucharest.
-            if state.code == 'B' and partner.city:
-                address_node['cbc:CityName']['_text'] = get_formatted_sector_ro(partner.city)
+        # Romania requires the CityName to be in the format of "SECTORX" if the address state is in Bucharest.
+        if partner.state_id.code == 'B' and partner.city:
+            node['cbc:CityName']['_text'] = get_formatted_sector_ro(partner.city)
 
-        return address_node
+        return node
 
-    def _get_party_node(self, vals):
-        party_node = super()._get_party_node(vals)
-        commercial_partner = vals['partner'].commercial_partner_id
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
 
-        # Use the default VAT if the VAT is not filled or just has a placeholder
         if not _has_vat(commercial_partner.vat):
-            if vals['role'] == 'supplier' and commercial_partner.company_registry:
-                # Use company_registry (Company ID) as the VAT replacement
-                vat_replacement = commercial_partner.company_registry
+            if commercial_partner.company_registry:
+                vals['party_node']['cac:PartyTaxScheme'] = [{
+                    'cbc:CompanyID': {'_text': commercial_partner.company_registry},
+                    'cac:TaxScheme': {
+                        'cbc:ID': {'_text': 'VAT' if commercial_partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'},
+                    },
+                }]
             else:
-                vat_replacement = DEFAULT_VAT
+                vals['party_node']['cac:PartyTaxScheme'] = []
 
-            party_node['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text'] = vat_replacement
-            party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = (
-                'VAT' if vat_replacement[:2].isalpha() else 'NOT_EU_VAT'
-            )
-            party_node['cac:PartyLegalEntity']['cbc:CompanyID']['_text'] = vat_replacement
+    def _ubl_add_accounting_supplier_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_supplier_party_legal_entity_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
 
-        return party_node
+        if not _has_vat(commercial_partner.vat):
+            if commercial_partner.company_registry:
+                vals['party_node']['cac:PartyLegalEntity'] = [{
+                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:CompanyID': {
+                        '_text': commercial_partner.company_registry,
+                        'schemeID': None,
+                    },
+                }]
+            else:
+                vals['party_node']['cac:PartyLegalEntity'] = []
+
+    def _ubl_add_accounting_customer_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_customer_party_tax_scheme_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if not _has_vat(commercial_partner.vat):
+            vals['party_node']['cac:PartyTaxScheme'] = [{
+                'cbc:CompanyID': {'_text': DEFAULT_VAT},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'VAT' if commercial_partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'},
+                },
+            }]
+
+    def _ubl_add_accounting_customer_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_customer_party_legal_entity_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if not _has_vat(commercial_partner.vat):
+            vals['party_node']['cac:PartyLegalEntity'] = [{
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': DEFAULT_VAT,
+                    'schemeID': None,
+                },
+            }]
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
     # -------------------------------------------------------------------------
 
     def _export_invoice_constraints(self, invoice, vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        constraints = super()._export_invoice_constraints(invoice, vals)
+        # OVERRIDE 'account.edi.xml.ubl_bis3': don't apply Peppol rules
+        constraints = self.env['account.edi.xml.ubl_20']._export_invoice_constraints(invoice, vals)
+        constraints.update(
+            self._invoice_constraints_cen_en16931_ubl(invoice, vals)
+        )
 
         # Default VAT is only allowed for the receiver (customer), not the provider (supplier)
         supplier = vals['supplier'].commercial_partner_id

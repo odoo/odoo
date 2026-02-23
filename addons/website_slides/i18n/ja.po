@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-11 17:42+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -194,15 +194,6 @@ msgid ""
 msgstr ""
 "<a href=\"/contactus\" class=\"btn btn-primary rounded-circle "
 "o_translate_inline\">お問い合わせ</a>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
-msgid ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">Return to the course.</a>"
-msgstr ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">コースに戻ります。</a>"
 
 #. module: website_slides
 #. odoo-python
@@ -4823,6 +4814,7 @@ msgstr "ピボット"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
 msgstr "お願いします。"
 
@@ -4843,16 +4835,6 @@ msgid "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson"
 msgstr ""
 "このレッスンに投票するには %(a_login_open)sログイン%(a_login_close)s してくだ"
 "さい"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid ""
-"Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
-"class=\"fw-bold o_translate_inline\"> login </a> to share this"
-msgstr ""
-"これをシェアするには<a t-attf-href=\"/odoo?"
-"redirect=#{request.httprequest.url}\" class=\"fw-bold o_translate_inline\">ロ"
-"グイン </a> してください"
 
 #. module: website_slides
 #. odoo-python
@@ -5272,6 +5254,11 @@ msgstr "Google Driveから取り込む"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml:0
 msgid "Retry"
 msgstr "再試行"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
+msgid "Return to the course."
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -7277,6 +7264,7 @@ msgstr "参加"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "ログイン"
 
@@ -7361,6 +7349,7 @@ msgstr "アクセスを要求する"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
 msgstr "これを共有する"
 
@@ -7395,6 +7384,21 @@ msgstr "{{ user.name }}が {{ object.slide_category }} を共有しました!"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">未分類</span>"
+
+#~ msgid ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">Return to the course.</a>"
+#~ msgstr ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">コースに戻ります。</a>"
+
+#~ msgid ""
+#~ "Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
+#~ "class=\"fw-bold o_translate_inline\"> login </a> to share this"
+#~ msgstr ""
+#~ "これをシェアするには<a t-attf-href=\"/odoo?"
+#~ "redirect=#{request.httprequest.url}\" class=\"fw-bold "
+#~ "o_translate_inline\">ログイン </a> してください"
 
 #~ msgid "<i class=\"fa fa-comments\"/> Comments ("
 #~ msgstr "<i class=\"fa fa-comments\"/> コメント ("

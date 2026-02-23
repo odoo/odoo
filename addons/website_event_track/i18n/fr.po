@@ -7,14 +7,14 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-10-23 09:15+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-19 12:30+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "website_event_track/fr/>\n"
 "Language: fr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -76,15 +76,6 @@ msgstr "10 idées de meubles DIY pour les débutants absolus"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 trucs et astuces de menuiserie pour les débutants"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Page d’accueil</a>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1863,15 +1854,8 @@ msgstr "Activités futures"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"Préparez-vous et\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">inscrivez-vous dès maintenant à vos conférences "
-"préférées.</a>"
+msgid "Get prepared and"
+msgstr "Préparez-vous et"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1922,6 +1906,11 @@ msgstr "Haute"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "La plus élevée"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Page d'accueil"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -2332,7 +2321,7 @@ msgstr "Basse"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track31
 msgid "Lunch"
-msgstr "Déjeuner"
+msgstr "Lunch"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
@@ -3650,6 +3639,12 @@ msgid "minutes after Track start"
 msgstr "minutes après le début de la session"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "inscrivez-vous à vos présentations favorites maintenant."
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "commence dans"
@@ -3658,6 +3653,23 @@ msgstr "commence dans"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "commence le"
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Page d’accueil</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "Préparez-vous et\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">inscrivez-vous dès maintenant à vos "
+#~ "conférences préférées.</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3805,14 +3817,8 @@ msgstr "commence le"
 #~ msgid "Filter Tracks..."
 #~ msgstr "Filtrer les sessions...."
 
-#~ msgid "Get prepared and"
-#~ msgstr "Préparez-vous et"
-
 #~ msgid "Group By"
 #~ msgstr "Regrouper par"
-
-#~ msgid "Home page"
-#~ msgstr "Page d'accueil"
 
 #~ msgid "No results found"
 #~ msgstr "Aucun résultat trouvé"
@@ -3881,9 +3887,6 @@ msgstr "commence le"
 #~ "                            intéressante et peut être utile au\n"
 #~ "                            public, nous envisagerons de\n"
 #~ "                            l'inclure dans le programme."
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "inscrivez-vous à vos présentations favorites maintenant."
 
 #~ msgid "search."
 #~ msgstr "recherche."

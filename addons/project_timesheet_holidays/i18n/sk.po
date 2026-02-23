@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
+# * project_timesheet_holidays
 #
 # Translators:
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-#
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2022\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-02-16 05:03+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"project_timesheet_holidays/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -44,7 +46,7 @@ msgstr "Nastavenia konfigurácie"
 #. module: project_timesheet_holidays
 #: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Vytvoriť úlohu"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
@@ -55,7 +57,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovaný názov"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -71,7 +73,7 @@ msgstr "Zamestnanec"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -92,14 +94,14 @@ msgstr "Projekt"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Detaily zdroja voľných dní"
+msgstr "Detaily voľných dní zdroja"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
-msgstr "Požiadavka"
+msgstr "Úloha"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
@@ -108,6 +110,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Predvolený projekt používaný pri automatickom generovaní výkazov pracovného "
+"času prostredníctvom žiadostí o voľno. Pre každý typ voľna môžete "
+"individuálne určiť iný projekt."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -115,6 +120,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Predvolená úloha používaná pri automatickom generovaní výkazov pracovného "
+"času prostredníctvom žiadostí o voľno. Pre každý typ voľna môžete "
+"individuálne určiť inú úlohu."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -130,7 +138,7 @@ msgstr "Voľné dni"
 #: code:addons/project_timesheet_holidays/models/hr_leave.py:0
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 msgid "Time Off (%(index)s/%(total)s)"
-msgstr ""
+msgstr "Voľno (%(index)s/%(total)s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
@@ -141,7 +149,7 @@ msgstr "Voľné dni úloha"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Počet typov voľných dní"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
@@ -158,12 +166,23 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Na nastavenie nových úloh použite tieto kľúčové slová v názve:\n"
+"\n"
+"        30h Prideliť úlohe 30 hodín\n"
+"        #tags Nastaviť značky úlohy\n"
+"        @user Prideliť úlohu používateľovi\n"
+"        ! Nastaviť úlohu ako strednú prioritu\n"
+"        !! Nastaviť úlohu ako vysokú prioritu\n"
+"        !!! Nastavte úlohe naliehavú prioritu\n"
+"\n"
+"        Uistite sa, že používate správny formát a poradie, napr. Vylepšiť "
+"konfiguračnú obrazovku 5h #bug #v16 @Jano !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "View Time Off"
-msgstr ""
+msgstr "Zobraziť voľno"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -172,12 +191,15 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Pre úlohu, ktorá je prepojená s typom voľna, nemôžete vytvárať výkazy "
+"pracovného času. Na požiadanie o nové voľno použite aplikáciu Voľno."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid "You cannot delete timesheets that are linked to global time off."
 msgstr ""
+"Nemôžete odstrániť pracovné výkazy, ktoré sú prepojené s globálnym voľnom."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -186,6 +208,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Nemôžete vymazať pracovné výkazy, ktoré sú prepojené so žiadosťami o voľno. "
+"Žiadosť o voľno zrušte v aplikácii Voľno."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -194,12 +218,14 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Pracovné výkazy, ktoré sú prepojené so žiadosťami o voľno, nie je možné "
+"upravovať. Na úpravu žiadostí o voľno použite aplikáciu Voľno."
 
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/__init__.py:0
 msgid "allow_timesheets"
-msgstr ""
+msgstr "allow_timesheets"
 
 #~ msgid ""
 #~ "Both the internal project and task are required to generate a timesheet "

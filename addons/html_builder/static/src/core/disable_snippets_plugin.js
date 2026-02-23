@@ -143,7 +143,7 @@ export class DisableSnippetsPlugin extends Plugin {
                 dropAreaEls.push(
                     ...this.dependencies.dropzone.getSelectorSiblings(editableAreaEls, rootEl, {
                         selector: dropNear,
-                        excludeNearParent,
+                        excludeParent: excludeNearParent,
                     })
                 );
             }

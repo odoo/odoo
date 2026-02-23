@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-02-02 15:30+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
@@ -35,8 +35,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
@@ -162,20 +162,6 @@ msgstr "50%"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66%"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Cadastre-se</a>\n"
-"                    <span class=\"align-middle\">para acompanhar seu pedido."
-"</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -375,6 +361,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">Já tem uma conta?</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -583,40 +574,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Clique aqui</a>\n"
-"                            </strong> se você quiser mesclar seu carrinho "
-"anterior com o carrinho atual."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Clique aqui</a>\n"
-"                            </strong> se quiser restaurar seu carrinho "
-"anterior. O carrinho atual será substituído pelo anterior."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1639,6 +1596,11 @@ msgid ""
 msgstr ""
 "Clique em <i>'Novo'</i> no canto superior direito para criar seu primeiro "
 "produto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Clique aqui"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5235,6 +5197,11 @@ msgid "Sidebar"
 msgstr "Barra lateral"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Sign In"
@@ -6467,6 +6434,18 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "na categoria \""
@@ -6556,6 +6535,49 @@ msgstr "termos &amp; condições"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Cadastre-se</a>\n"
+#~ "                    <span class=\"align-middle\">para acompanhar seu "
+#~ "pedido.</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Clique aqui</a>\n"
+#~ "                            </strong> se você quiser mesclar seu carrinho "
+#~ "anterior com o carrinho atual."
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Clique aqui</a>\n"
+#~ "                            </strong> se quiser restaurar seu carrinho "
+#~ "anterior. O carrinho atual será substituído pelo anterior."
 
 #~ msgid "&amp; Shipping"
 #~ msgstr "&amp; Expedição"
@@ -6781,9 +6803,6 @@ msgstr ""
 
 #~ msgid "City"
 #~ msgstr "Cidade"
-
-#~ msgid "Click here"
-#~ msgstr "Clique aqui"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Calcule custos de expedição e envie com a Easypost"

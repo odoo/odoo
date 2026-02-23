@@ -35,6 +35,17 @@ class SaleOrder(models.Model):
             )
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
+    def _get_free_qty(self, product):
+        """Override of `website_sale_stock` to consider the maximum available quantity across
+        all in-store warehouses when no delivery method is set on the order yet."""
+        if (
+            self.website_id.warehouse_id
+            and self.website_id.in_store_dm_id
+            and not self.carrier_id
+        ):
+            return self.website_id.sudo()._get_max_in_store_product_available_qty(product)
+        return super()._get_free_qty(product)
+
     def _set_delivery_method(self, delivery_method, rate=None):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
         delivery method is not in-store anymore. """
@@ -164,15 +175,3 @@ class SaleOrder(models.Model):
                     )
                 free_qty -= ol.product_uom_id._compute_quantity(line_qty_in_uom, product.uom_id)
         return insufficient_stock_data
-
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
-        """ Override of `website_sale_stock` to skip the verification when click and collect
-        is activated. The quantity is verified later. """
-        product = self.env['product.product'].browse(product_id)
-        if (
-            product.is_storable
-            and not product.allow_out_of_stock_order
-            and self.website_id.in_store_dm_id
-        ):
-            return new_qty, ''
-        return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)

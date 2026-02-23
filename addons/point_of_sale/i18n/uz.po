@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11408,7 +11408,7 @@ msgstr "Soliqlar bilan umumiy narx:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #, fuzzy
 msgid "Total VAT:"
 msgstr "Jami QQS:"
@@ -11786,11 +11786,17 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 #, fuzzy
 msgid "VAT"
 msgstr "QQS"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#, fuzzy
+msgid "VAT:"
+msgstr "QQS:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12118,6 +12124,14 @@ msgid ""
 msgstr ""
 "'%(picking_type)s'ni arxivlay olmaysiz, chunki u '%(config)s' POS "
 "konfiguratsiyasida ishlatilmoqda."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -12686,7 +12700,3 @@ msgstr "foydalanish"
 #~ msgstr ""
 #~ "Birlashtirilgan hisob-faktura(lar) yaratib bo‘lmadi, chunki quyidagi "
 #~ "buyurtmalar uchun hisob-faktura yozib bo‘lmaydi.  %s"
-
-#, fuzzy
-#~ msgid "VAT:"
-#~ msgstr "QQS:"

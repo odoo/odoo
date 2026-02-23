@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-02-13 09:19+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-20 17:17+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "website_slides/de/>\n"
@@ -195,15 +195,6 @@ msgstr ""
 "o_translate_inline\">Kontakt</a>"
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
-msgid ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">Return to the course.</a>"
-msgstr ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">Kehren Sie zurück zum Kurs.</a>"
-
-#. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "<b>%s</b> is requesting access to this course."
@@ -253,7 +244,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo,<br/><br/>\n"
+"        Guten Tag,<br/><br/>\n"
 "        Sie wurden zur Teilnahme an einem neuen Kurs eingeladen: <t t-"
 "out=\"object.channel_id.name or ''\">Grundlagen der Gartenarbeit</t>.\n"
 "    </p>\n"
@@ -274,7 +265,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo,<br/><br/>\n"
+"        Guten Tag,<br/><br/>\n"
 "        Sie wurden eingeladen, sich folgenden Kurs anzusehen: <t t-"
 "out=\"object.channel_id.name or ''\">Grundlagen der Gartenarbeit</t>.\n"
 "    </p>\n"
@@ -319,7 +310,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        <p style=\"margin: 0px;\">Hallo <t t-"
+"                        <p style=\"margin: 0px;\">Guten Tag <t t-"
 "out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Herzlichen Glückwunsch!</b></p>\n"
 "                        <p>Sie haben den Kurs <b t-"
@@ -389,7 +380,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        Hallo<br/><br/>\n"
+"                        Guten Tag<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat "
 "das <strong t-out=\"object.name or ''\">Dokument</strong> mit Ihnen "
 "geteilt!\n"
@@ -464,7 +455,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        Hallo,<br/><br/>\n"
+"                        Guten Tag,<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat "
 "das <t t-out=\"object.slide_category or ''\">Dokument</t> <strong t-"
 "out=\"object.name or ''\">Bäume</strong> mit Ihnen geteilt!\n"
@@ -543,7 +534,7 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;"
 "\">\n"
-"                        Hallo,<br/><br/>\n"
+"                        Guten Tag,<br/><br/>\n"
 "                        es gibt neue Inhalte in dem Kurs <strong t-"
 "out=\"object.channel_id.name or ''\">Bäume, Holz und Gärten</strong>, den "
 "Sie belegen:<br/><br/>\n"
@@ -4877,6 +4868,7 @@ msgstr "Pivot"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
 msgstr "Bitte"
 
@@ -4898,15 +4890,6 @@ msgid "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson"
 msgstr ""
 "Bitte %(a_login_open)smelden Sie sich an%(a_login_close)s, um über diesen "
 "Unterricht anzustimmen"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid ""
-"Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
-"class=\"fw-bold o_translate_inline\"> login </a> to share this"
-msgstr ""
-"Bitte <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
-"class=\"fw-bold o_translate_inline\">melden Sie sich an</a>, um"
 
 #. module: website_slides
 #. odoo-python
@@ -5326,6 +5309,11 @@ msgstr "Von Google Drive abrufen"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml:0
 msgid "Retry"
 msgstr "Wiederholen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
+msgid "Return to the course."
+msgstr "Zurück zum Kurs"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -7367,6 +7355,7 @@ msgstr "beitreten"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "melden Sie sich an,"
 
@@ -7451,6 +7440,7 @@ msgstr ", um Zugriff zu beantragen"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
 msgstr ", um diesen"
 
@@ -7485,6 +7475,20 @@ msgstr "{{ user.name }} hat {{ object.slide_category }} mit Ihnen geteilt!"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└<span class=\"ms-1\">Nicht kategorisiert</span>"
+
+#~ msgid ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">Return to the course.</a>"
+#~ msgstr ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">Kehren Sie zurück zum Kurs.</a>"
+
+#~ msgid ""
+#~ "Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
+#~ "class=\"fw-bold o_translate_inline\"> login </a> to share this"
+#~ msgstr ""
+#~ "Bitte <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
+#~ "class=\"fw-bold o_translate_inline\">melden Sie sich an</a>, um"
 
 #~ msgid "<i class=\"fa fa-comments\"/> Comments ("
 #~ msgstr "<i class=\"fa fa-comments\"/> Kommentare ("
@@ -7783,9 +7787,6 @@ msgstr "└<span class=\"ms-1\">Nicht kategorisiert</span>"
 
 #~ msgid "Restrict publishing to this website."
 #~ msgstr "Beschränken Sie die Veröffentlichung auf dieser Website."
-
-#~ msgid "Return to the course."
-#~ msgstr "Zurück zum Kurs"
 
 #~ msgid "Save & Publish"
 #~ msgstr "Speichern & Veröffentlichen"

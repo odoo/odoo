@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2025-12-20 09:53+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -134,19 +134,6 @@ msgstr "<span class=\"o_stat_text\">Satisfecho</span>"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Sessions</span>"
 msgstr "<span class=\"o_stat_text\">Sesiones</span>"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid ""
-"<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</"
-"span>\n"
-"                                <span groups=\"!"
-"im_livechat.im_livechat_group_manager\">View Channel</span>"
-msgstr ""
-"<span groups=\"im_livechat.im_livechat_group_manager\">Configurar canal</"
-"span>\n"
-"                                <span groups=\"!"
-"im_livechat.im_livechat_group_manager\">Ver canal</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -613,6 +600,11 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Configure Channel"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
@@ -651,6 +643,8 @@ msgid "Countries"
 msgstr "Países"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_country_id
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
@@ -660,6 +654,12 @@ msgstr "Países"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Country"
 msgstr "País"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
+msgid "Country & Language"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -1461,6 +1461,8 @@ msgid "Lang of the visitor of the channel."
 msgstr "Idioma del visitante al canal."
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_lang_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__lang_id
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_looking_for_help_view_search
@@ -2945,6 +2947,11 @@ msgid "User's raw answer"
 msgstr "Respuestas sin editar del usuario"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "View Channel"
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
@@ -3243,6 +3250,17 @@ msgstr "segundos"
 #: model:ir.model,name:im_livechat.model_ir_websocket
 msgid "websocket message handling"
 msgstr "gestión de mensajes de WebSocket"
+
+#~ msgid ""
+#~ "<span groups=\"im_livechat.im_livechat_group_manager\">Configure Channel</"
+#~ "span>\n"
+#~ "                                <span groups=\"!"
+#~ "im_livechat.im_livechat_group_manager\">View Channel</span>"
+#~ msgstr ""
+#~ "<span groups=\"im_livechat.im_livechat_group_manager\">Configurar canal</"
+#~ "span>\n"
+#~ "                                <span groups=\"!"
+#~ "im_livechat.im_livechat_group_manager\">Ver canal</span>"
 
 #~ msgid "% Happy"
 #~ msgstr "% de satisfacción"

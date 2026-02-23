@@ -26,13 +26,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Camille Dantinne <cmd@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 16:10+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-20 17:17+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/sv/>\n"
 "Language: sv\n"
@@ -40,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -165,15 +166,6 @@ msgstr "50%"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -357,6 +349,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -564,28 +561,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
 msgstr ""
 
 #. module: website_sale
@@ -809,7 +784,7 @@ msgstr "Tillbehör"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Action"
-msgstr "Åtgärder"
+msgstr "Åtgärd"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_needaction
@@ -1544,6 +1519,11 @@ msgstr ""
 "Klicka <i>'Ny'</i> uppe i högra hörnet för att skapa din första produkt."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Klicka här"
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
@@ -1860,7 +1840,7 @@ msgstr "Skapad den"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Creation Date"
-msgstr "Skapad datum"
+msgstr "Skapad den"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5127,6 +5107,11 @@ msgid "Sidebar"
 msgstr "Sidofält"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Registrera dig"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Logga in"
@@ -6338,6 +6323,20 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "om du vill slå ihop din tidigare kundvagn till nuvarande kundvagn."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"om du vill återställa din tidigare kundvagn. Din nuvarande kundvagn kommer "
+"att ersättas med din tidigare kundvagn."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "i kategori \""
@@ -6672,9 +6671,6 @@ msgstr ""
 #~ msgid "City"
 #~ msgstr "Stad"
 
-#~ msgid "Click here"
-#~ msgstr "Klicka här"
-
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Beräkna leveranskostnad och skicka med Easypost"
 
@@ -7006,9 +7002,6 @@ msgstr ""
 #~ msgid "Show Empty Cart"
 #~ msgstr "Visa tom kundvagn"
 
-#~ msgid "Sign Up"
-#~ msgstr "Registrera dig"
-
 #~ msgid "Slanted"
 #~ msgstr "Sned"
 
@@ -7154,16 +7147,6 @@ msgstr ""
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "eCommerce Butik"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "om du vill slå ihop din tidigare kundvagn till nuvarande kundvagn."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "om du vill återställa din tidigare kundvagn. Din nuvarande kundvagn "
-#~ "kommer att ersättas med din tidigare kundvagn."
 
 #~ msgid "item(s))"
 #~ msgstr "sak(er)"

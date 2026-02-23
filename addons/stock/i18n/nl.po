@@ -13,11 +13,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-13 15:51+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-18 17:58+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/stock/nl/>"
-"\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/stock/nl/"
+">\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -870,12 +870,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> Op voorraad</span>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
-#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
-msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
-msgstr "<span groups=\"!uom.group_uom\">Aanwezige voorraad</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6465,7 +6459,9 @@ msgstr "Kantoorstoel"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
@@ -7850,7 +7846,7 @@ msgstr "Hoeveelheden uitgepakt"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
@@ -12385,6 +12381,9 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Leveringsorder (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
+#~ msgstr "<span groups=\"!uom.group_uom\">Aanwezige voorraad</span>"
 
 #~ msgid "<strong>Customer Address</strong>"
 #~ msgstr "<strong>Klant Adres</strong>"

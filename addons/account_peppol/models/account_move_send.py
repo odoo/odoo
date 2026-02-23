@@ -24,13 +24,6 @@ class AccountMoveSend(models.AbstractModel):
             default_sending_methods.add('peppol')
         return default_sending_methods
 
-    @api.model
-    def _get_move_constraints(self, move):
-        constraints = super()._get_move_constraints(move)
-        if move._is_exportable_as_self_invoice():
-            constraints.pop('not_sale_document', None)
-        return constraints
-
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
@@ -187,6 +180,11 @@ class AccountMoveSend(models.AbstractModel):
                         builder._description
                     )
                     continue
+
+                if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
+                    self._postprocess_invoice_ubl_xml(invoice, invoice_data)
+                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
                 if len(xml_file) > 64000000:
                     invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)

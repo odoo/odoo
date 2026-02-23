@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2026-01-05 12:57+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -193,20 +193,6 @@ msgstr "50 %"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">قم بالتسجيل</a>\n"
-"                    <span class=\"align-middle\">حتى تتمكن من متابعة طلبك.</"
-"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -405,6 +391,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr "<span class=\"align-middle\">لديك حساب بالفعل؟</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -626,40 +617,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">اضغط هنا</a>\n"
-"                            </strong> إذا أردت دمج عربة التسوق السابقة مع "
-"عربة التسوق الحالية."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">اضغط هنا</a>\n"
-"                            </strong> إذا أردت استعادة عربة التسوق السابقة. "
-"سيتم استبدال عربة التسوق الحالية بعربة التسوق السابقة الخاصة بك."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1685,6 +1642,11 @@ msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
 "انقر على <i>'جديد'</i> في الزاوية العلوية إلى اليسار لإنشاء منتجك الأول."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "انقر هنا"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5274,6 +5236,11 @@ msgid "Sidebar"
 msgstr "الشريط الجانبي"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "التسجيل"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "تسجيل الدخول"
@@ -6508,6 +6475,20 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "إذا كنت تريد دمج عربة تسوقك السابقة مع عربة التسوق الحالية."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"إذا كنت تريد استعادة عربة تسوقك السابقة. سيتم استبدال العربة الحالية "
+"بالسابقة."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "في الفئة \""
@@ -6597,6 +6578,49 @@ msgstr "الشروط والأحكام"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+#~ "                    <span class=\"align-middle\">to follow your order.</"
+#~ "span>"
+#~ msgstr ""
+#~ "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+#~ "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+#~ "class=\"btn btn-primary o_translate_inline\">قم بالتسجيل</a>\n"
+#~ "                    <span class=\"align-middle\">حتى تتمكن من متابعة طلبك."
+#~ "</span>"
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=merge\">Click here</a>\n"
+#~ "                            </strong> if you want to merge your previous "
+#~ "cart into current cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">اضغط هنا</a>\n"
+#~ "                            </strong> إذا أردت دمج عربة التسوق السابقة مع "
+#~ "عربة التسوق الحالية."
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">اضغط هنا</a>\n"
+#~ "                            </strong> إذا أردت استعادة عربة التسوق "
+#~ "السابقة. سيتم استبدال عربة التسوق الحالية بعربة التسوق السابقة الخاصة بك."
 
 #~ msgid ""
 #~ "\"Optional\" allows guests to register from the order confirmation email "
@@ -6904,9 +6928,6 @@ msgstr ""
 
 #~ msgid "City"
 #~ msgstr "المدينة"
-
-#~ msgid "Click here"
-#~ msgstr "انقر هنا"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "حساب تكاليف الشحن والشحن عبر Easypost"
@@ -7324,9 +7345,6 @@ msgstr ""
 #~ msgid "Show b2b Fields"
 #~ msgstr "إظهار حقول b2b "
 
-#~ msgid "Sign Up"
-#~ msgstr "التسجيل"
-
 #~ msgid "Slanted"
 #~ msgstr "مائل "
 
@@ -7510,16 +7528,6 @@ msgstr ""
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "المتجر الإلكتروني "
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "إذا كنت تريد دمج عربة تسوقك السابقة مع عربة التسوق الحالية."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "إذا كنت تريد استعادة عربة تسوقك السابقة. سيتم استبدال العربة الحالية "
-#~ "بالسابقة."
 
 #~ msgid "item(s))"
 #~ msgstr "عنصر (عناصر)) "

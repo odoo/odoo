@@ -4,6 +4,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from lxml import etree
+from unittest.mock import patch
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
 from odoo.tools import file_open, misc
@@ -815,29 +816,6 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
-    def test_partner_name_in_xml(self):
-        """
-        Test that invoice contacts without specific names use their parent partner's
-        name in the XML output, avoiding the 'Invoice address' suffix from display_name.
-        """
-        partner = self.env['res.partner'].create({
-            'parent_id': self.partner_a.id,
-            'type': 'invoice'
-        })
-        invoice = self.env['account.move'].create({
-            'partner_id': partner.id,
-            'move_type': 'out_invoice',
-            'invoice_date': "2025-12-23",
-            'invoice_date_due': "2025-12-31",
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-        })
-        invoice.action_post()
-
-        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
-        xml_tree = etree.fromstring(xml_content)
-        partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
-        self.assertEqual(partner_name.text, 'partner_a')
-
     def test_import_vendor_bill_empty_description(self):
         with misc.file_open(f'{self.test_module}/tests/test_files/bis3/test_vendor_bill_empty_description.xml', 'rb') as file:
             file_read = file.read()
@@ -847,3 +825,28 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         }).id
         imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment_id)
         self.assertTrue(imported_bill)
+
+    def test_generate_pdf_when_xml_does_not_provide_one(self):
+        def _run_wkhtmltopdf(*args, **kwargs):
+            return file_open(f'{self.test_module}/tests/test_files/invoice_example.pdf', 'rb').read()
+
+        file_path = f"{self.test_module}/tests/test_files/bis3_bill_example_without_embedded_attachment.xml"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        # Import the document that doesn't contain an embedded PDF
+        with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
+            bill = self._import_as_attachment_on(
+                journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),
+                attachment=xml_attachment,
+            )
+
+        self.assertTrue(bill)
+
+        # Ensure the created move has 2 attachments: the original XML and a generated PDF
+        self.assertEqual(len(bill.attachment_ids), 2)
+        self.assertTrue(any('pdf' in attachment.mimetype for attachment in bill.attachment_ids))

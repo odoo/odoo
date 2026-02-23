@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 18:35+0000\n"
-"PO-Revision-Date: 2026-02-11 17:40+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-02-16 13:51+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/account/"
 "it/>\n"
@@ -77,6 +77,14 @@ msgstr ""
 "        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
 "        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -217,6 +225,12 @@ msgid ""
 msgstr ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Fatturati, %"
 "(quantity_delivered)s Consegnati a %(unit_price)s ognuno"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -1758,14 +1772,8 @@ msgstr "<span>€ <span class=\"oe_currency_value\">19.250,00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<span>1.00</span>\n"
-"                                                        <span "
-"groups=\"uom.group_uom\">Units</span>"
+msgid "<span>1.00</span>"
 msgstr ""
-"<span>1,00</span>\n"
-"                                                        <span "
-"groups=\"uom.group_uom\">Unità</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5941,6 +5949,8 @@ msgid "Chart of accounts set!"
 msgstr "Piano dei conti configurato!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Controlla"
@@ -11866,6 +11876,7 @@ msgstr "Registro:"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Registri"
 
@@ -18436,6 +18447,14 @@ msgstr ""
 "contabili correlate."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "L'azienda a cui appartiene la riga di ripartizione."
@@ -18977,6 +18996,14 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Il saldo aperto (%s) non corrisponde al saldo di chiusura specificato."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20191,6 +20218,11 @@ msgid "Unit Price:"
 msgstr "Prezzo unitario:"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Units"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
 msgstr "Unità e imballaggi"
@@ -21321,6 +21353,8 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Non è possibile modificare l'importo di un pagamento con più righe di "
+"liquidità."
 
 #. module: account
 #. odoo-python
@@ -21713,6 +21747,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Non è possibile invertire la tipologia di un documento con una sequenza "
+"numerica esistente."
 
 #. module: account
 #. odoo-python
@@ -22536,6 +22572,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fattura in autofatturazione (Rif {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "<span>1.00</span>\n"
+#~ "                                                        <span "
+#~ "groups=\"uom.group_uom\">Units</span>"
+#~ msgstr ""
+#~ "<span>1,00</span>\n"
+#~ "                                                        <span "
+#~ "groups=\"uom.group_uom\">Unità</span>"
 
 #~ msgid ""
 #~ "<br/>\n"

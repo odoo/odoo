@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2025-12-22 13:39+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -171,15 +171,6 @@ msgstr "50%"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66%"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -365,6 +356,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -573,28 +569,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
 msgstr ""
 
 #. module: website_sale
@@ -1547,6 +1521,11 @@ msgid ""
 msgstr ""
 "Feu clic a <i>'Nou'</i> a la cantonada superior dreta per crear el vostre "
 "primer producte."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Fes clic aquí"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5129,6 +5108,11 @@ msgid "Sidebar"
 msgstr "Barra lateral"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Registrar-se"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "Inicia sessió"
@@ -6343,6 +6327,20 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "Si voleu fusionar la vostra cistella prèvia amb l'actual."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"Si voleu restaurar la cistella anterior. La vostra cistella actual serà "
+"substituida per la cistella anterior."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "a la categoria \""
@@ -6758,9 +6756,6 @@ msgstr ""
 
 #~ msgid "City"
 #~ msgstr "Ciutat"
-
-#~ msgid "Click here"
-#~ msgstr "Fes clic aquí"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Calcular despeses d'enviament i envia-ho amb Easypost"
@@ -7187,9 +7182,6 @@ msgstr ""
 #~ msgid "Show b2b Fields"
 #~ msgstr "Mostra els camps b2b"
 
-#~ msgid "Sign Up"
-#~ msgstr "Registrar-se"
-
 #~ msgid "Slanted"
 #~ msgstr "Inclinada"
 
@@ -7375,16 +7367,6 @@ msgstr ""
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "Botiga d'eCommerce"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "Si voleu fusionar la vostra cistella prèvia amb l'actual."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "Si voleu restaurar la cistella anterior. La vostra cistella actual serà "
-#~ "substituida per la cistella anterior."
 
 #~ msgid "item(s))"
 #~ msgstr "element(s))"

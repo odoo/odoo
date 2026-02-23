@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 21:58+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -152,15 +152,6 @@ msgstr "50 %"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
 msgid "66 %"
 msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -344,6 +335,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -550,34 +546,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">คลิกที่นี่</a>\n"
-"                            </strong> หากคุณต้องการคืนสินค้าในรถเข็นเดิม "
-"รถเข็นปัจจุบันของคุณจะถูกแทนที่ด้วยรถเข็นเดิม"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1588,6 +1556,11 @@ msgstr "คลิก & เก็บ"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr "คลิก <i>'ใหม่'</i> ที่มุมบนขวาเพื่อสร้างสินค้าชิ้นแรกของคุณ"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "คลิกที่นี้"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5147,6 +5120,11 @@ msgid "Sidebar"
 msgstr "แถบด้านข้าง"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "ลงชื่อ"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
 msgstr "ลงชื่อเข้าใช้"
@@ -6350,6 +6328,19 @@ msgid "hours."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "หากคุณต้องการรวมข็นสินค้าก่อนหน้าของคุณเข้ากับรถเข็นสินค้าปัจจุบัน"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"หากคุณต้องการคืนค่ารถเข็นก่อนหน้าของคุณ รถเข็นปัจจุบันของคุณจะถูกแทนที่ด้วยรถเข็นก่อนหน้าของคุณ"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "ในหมวดหมู่"
@@ -6439,6 +6430,21 @@ msgstr "ข้อกำหนดและเงื่อนไข"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">Click here</a>\n"
+#~ "                            </strong> if you want to restore your "
+#~ "previous cart. Your current cart will be replaced with your previous cart."
+#~ msgstr ""
+#~ "<strong>\n"
+#~ "                                <a class=\"o_translate_inline\" t-attf-"
+#~ "href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+#~ "&amp;revive_method=squash\">คลิกที่นี่</a>\n"
+#~ "                            </strong> หากคุณต้องการคืนสินค้าในรถเข็นเดิม "
+#~ "รถเข็นปัจจุบันของคุณจะถูกแทนที่ด้วยรถเข็นเดิม"
 
 #~ msgid "&amp; Shipping"
 #~ msgstr "และการจัดส่ง"
@@ -6677,9 +6683,6 @@ msgstr ""
 
 #~ msgid "City"
 #~ msgstr "เมือง"
-
-#~ msgid "Click here"
-#~ msgstr "คลิกที่นี้"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "คำนวณค่าขนส่งและจัดส่งด้วย Easypost"
@@ -7004,9 +7007,6 @@ msgstr ""
 #~ msgid "Show Empty Cart"
 #~ msgstr "แสดงรถเข็นว่างเปล่า"
 
-#~ msgid "Sign Up"
-#~ msgstr "ลงชื่อ"
-
 #~ msgid "Slanted"
 #~ msgstr "เอียง"
 
@@ -7150,15 +7150,6 @@ msgstr ""
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "ร้านค้าอีคอมเมิร์ซ"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "หากคุณต้องการรวมข็นสินค้าก่อนหน้าของคุณเข้ากับรถเข็นสินค้าปัจจุบัน"
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "หากคุณต้องการคืนค่ารถเข็นก่อนหน้าของคุณ รถเข็นปัจจุบันของคุณจะถูกแทนที่ด้วยรถเข็นก่อนหน้าของคุณ"
 
 #~ msgid "item(s))"
 #~ msgstr "รายการ"
