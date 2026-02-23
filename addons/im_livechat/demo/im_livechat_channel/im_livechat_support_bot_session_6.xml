@@ -8,6 +8,7 @@
             <field name="name">Visitor #306, Support</field>
             <field name="anonymous_name">Visitor #306</field>
             <field name="create_date" eval="datetime.now() - timedelta(minutes=6)"/>
+            <field name="livechat_end_dt" eval="datetime.now() + timedelta(seconds=20)"/>
         </record>
         <record id="support_bot_session_6_member_bot_demo" model="discuss.channel.member">
             <field name="partner_id" ref="support_bot_operator_partner_demo"/>
