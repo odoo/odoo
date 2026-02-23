@@ -58,21 +58,26 @@
                     </button>
                 </t>
                 <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
-                <div t-if="props.channel?.invitationLink" class="input-group">
-                    <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
-                    <button class="btn btn-primary px-2 o-py-0_5" t-on-click="() => this.props.channel.copyInvitationLink()">
-                        <i class="fa fa-copy"/>
-                    </button>
+                <t t-if="props.channel?.invitationLink">
+                    <div class="input-group">
+                        <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="props.channel.invitationLink" readonly="" disabled="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <button class="btn btn-primary px-2 o-py-0_5" t-on-click="() => this.props.channel.copyInvitationLink()">
+                            <i class="fa fa-copy"/>
+                        </button>
+                    </div>
+                </t>
+                <div t-if="props.channel?.accessRestrictedToGroupText or props.channel?.invitationLink" class="mt-2 smaller ms-1 gap-1 d-flex align-items-center">
+                    <span class="text-muted me-1" t-esc="props.channel.accessRestrictedToGroupText"/>
+                    <span class="flex-grow-1"/>
                     <button
-                        t-if= "['owner', 'admin'].includes(props.channel.self_member_id?.channel_role)"
-                        class="btn btn-secondary px-2 o-py-0_5"
+                        t-if="['owner', 'admin'].includes(props.channel.self_member_id?.channel_role)"
+                        class="btn btn-link btn-sm px-2 o-py-0_5 opacity-75 opacity-100-hover me-n2 d-flex align-items-center gap-1 align-self-start flex-shrink-0"
                         t-on-click="onClickGenerateNewLink"
-                        title="Generate new invite link"
                     >
-                        <i class="fa fa-refresh"/>
+                        <i class="fa fa-refresh opacity-75"/>
+                        Generate new invite link
                     </button>
                 </div>
-                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
             </div>
         </div>
     </t>
