@@ -78,6 +78,37 @@
             <field name="perm_read" eval="False"/>
         </record>
 
+        <record model="ir.rule" id="ir_attachment_public_rule">
+            <field name="name">read public attachments</field>
+            <field name="model_id" ref="model_ir_attachment"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('public', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="ir_attachment_access_read_rule">
+            <field name="name">read res_model</field>
+            <field name="model_id" ref="model_ir_attachment"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_read', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="ir_attachment_res_access_write">
+            <field name="name">write res_model</field>
+            <field name="model_id" ref="model_ir_attachment"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_write', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
         <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
         <!-- Remove me? users never create those directly -->
         <record model="ir.rule" id="ir_ui_view_custom_personal">
