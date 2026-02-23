@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -45,10 +45,14 @@ class ResConfigSettings(models.TransientModel):
     email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
+    use_klipy = fields.Boolean("Use Klipy")
+    klipy_api_key = fields.Char("GIF API Key")
+    tenor_api_key_deprecated = fields.Char("Tenor API key (deprecated)")
     tenor_api_key = fields.Char(
         'Tenor API key',
         config_parameter='discuss.tenor_api_key',
-        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup\n"
+        "/!\\ Tenor shuts down on June 30 2026, please use Klipy instead instead https://klipy.com/migrate",
     )
     tenor_content_filter = fields.Selection(
         [('high', 'High'),
@@ -93,3 +97,19 @@ class ResConfigSettings(models.TransientModel):
 
     def open_mail_templates(self):
         return self.env['ir.actions.actions']._for_xml_id('mail.action_email_template_tree_all')
+
+    def set_values(self):
+        super().set_values()
+        value = f"KLIPY:{self.klipy_api_key}" if self.klipy_api_key else (self.tenor_api_key_deprecated or "")
+        self.env["ir.config_parameter"].sudo().set_param("discuss.tenor_api_key", value)
+
+    @api.model
+    def get_values(self):
+        res = super().get_values()
+        raw = self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key", "")
+        is_klipy = raw.startswith("KLIPY:")
+        res.update({
+            "klipy_api_key": raw[6:] if is_klipy else "",
+            "tenor_api_key_deprecated": raw if not is_klipy else "",
+        })
+        return res
