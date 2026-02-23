@@ -1,9 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { patchBrowserNotification, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { start, startServer } from "@mail/../tests/mail_test_helpers";
+import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
+import { describe, expect, mockPermission, test } from "@odoo/hoot";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
-import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
 describe.current.tags("desktop");
@@ -12,7 +12,7 @@ defineLivechatModels();
 test("Preserves force hide of of livechat looking for help", async () => {
     // From dev tools can force hide a category like "looking for help", by setting `DiscussAppCategory.hidden = true`
     localStorage.setItem("mail.sidebar_category_im_livechat.category_need_help_hidden", "true");
-    patchBrowserNotification("default");
+    mockPermission("notifications", "prompt");
     const LOOKING_FOR_HELP_CATEGORY_HIDDEN_LS = makeRecordFieldLocalId(
         DiscussAppCategory.localId("im_livechat.category_need_help"),
         "hidden"
