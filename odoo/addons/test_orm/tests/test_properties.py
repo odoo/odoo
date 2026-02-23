@@ -4,7 +4,7 @@ import unittest
 from collections import abc
 from unittest.mock import patch
 
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase, users

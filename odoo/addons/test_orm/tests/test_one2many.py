@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.exceptions import MissingError, UserError
 
-from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
 
 class One2manyCase(TransactionExpressionCase):

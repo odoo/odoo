@@ -6,7 +6,7 @@ from odoo import Command
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class test_search(TransactionCase):
+class TestSearch(TransactionCase):
 
     def patch_order(self, model, order):
         self.patch(self.registry[model], '_order', order)
