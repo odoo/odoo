@@ -996,27 +996,14 @@ overridden by modules), because:
     <xpath expr="(//img)[3]" position="replace">
         <img alt="" src="/web/image/website.s_company_team_image_3" class="img img-fluid d-block h-100" data-name="Image" data-index="2"/>
     </xpath>
-    <xpath expr="//div[hasclass('carousel-indicators')]" position="replace">
-        <div class="carousel-indicators">
-            <button data-bs-target="#slideshow_sample"
-                    data-bs-slide-to="0"
-                    class="o_not_editable d-flex overflow-hidden active">
-                <span class="visually-hidden">Carousel indicator</span>
-                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_1" aria-hidden="true"/>
-            </button>
-            <button data-bs-target="#slideshow_sample"
-                    data-bs-slide-to="1"
-                    class="o_not_editable d-flex overflow-hidden">
-                <span class="visually-hidden">Carousel indicator</span>
-                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_2" aria-hidden="true"/>
-            </button>
-            <button data-bs-target="#slideshow_sample"
-                    data-bs-slide-to="2"
-                    class="o_not_editable d-flex overflow-hidden">
-                <span class="visually-hidden">Carousel indicator</span>
-                <img class="object-fit-cover w-100 h-100" src="/web/image/website.s_company_team_image_3" aria-hidden="true"/>
-            </button>
-        </div>
+    <xpath expr="(//div[hasclass('carousel-indicators')]//button)[1]//img" position="attributes">
+        <attribute name="src">/web/image/website.s_company_team_image_1</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-indicators')]//button)[2]//img" position="attributes">
+        <attribute name="src">/web/image/website.s_company_team_image_2</attribute>
+    </xpath>
+    <xpath expr="(//div[hasclass('carousel-indicators')]//button)[3]//img" position="attributes">
+        <attribute name="src">/web/image/website.s_company_team_image_3</attribute>
     </xpath>
 </template>
 

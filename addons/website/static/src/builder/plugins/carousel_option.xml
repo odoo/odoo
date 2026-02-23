@@ -24,10 +24,10 @@
     </t>
 
     <BuilderRow label.translate="Autoplay">
-        <BuilderSelect dataAttributeAction="'bsRide'">
-            <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
-            <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
+        <BuilderSelect action="'setAutoplay'">
+            <BuilderSelectItem id="'auto_after_first_hover'" actionParam="{ bsRide: 'true', ariaLive: 'off' }">After First Hover</BuilderSelectItem>
+            <BuilderSelectItem id="'auto_always'" actionParam="{ bsRide: 'carousel', ariaLive: 'off' }">Always</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ bsRide: 'false', ariaLive: 'polite' }">Never</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 

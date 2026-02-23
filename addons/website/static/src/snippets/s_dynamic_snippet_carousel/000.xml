@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
         <div class="o_carousel_arrow_wrap align-items-center pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+            <a t-attf-href="##{unique_id}" class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" t-attf-aria-controls="#{unique_id}_inner" aria-label="Previous" title="Previous">
                 <span class="o_carousel_arrow oi oi-chevron-left p-3"/>
                 <span class="visually-hidden">Previous</span>
             </a>
         </div>
         <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
-            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+            <a t-attf-href="##{unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" t-attf-aria-controls="#{unique_id}_inner" aria-label="Next" title="Next">
                 <span class="o_carousel_arrow oi oi-chevron-right p-3"/>
                 <span class="visually-hidden">Next</span>
             </a>
@@ -20,7 +20,9 @@
         <div t-att-id="this.unique_id" t-attf-class="carousel slide d-flex flex-column-reverse #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
              t-att-data-bs-interval="slideIndexGenerator.length > minControlValue ? this.interval : 0"
-             t-att-data-bs-ride="slideIndexGenerator.length > minControlValue and 'carousel'">
+             t-att-data-bs-ride="slideIndexGenerator.length > minControlValue and 'carousel'"
+             role="region"
+             aria-roledescription="carousel">
             <!-- Controls and indicators are set before the content so that they
                  are focused in priority when navigating the page with tab. -->
             <!-- Controls -->
@@ -32,11 +34,13 @@
             <!-- Content -->
             <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
-            <div class="carousel-inner w-100 mx-auto" role="listbox"
-                 aria-label="Carousel">
+            <div class="carousel-inner w-100 mx-auto"
+                 t-attf-id="#{unique_id}_inner"
+                 aria-label="Carousel"
+                 aria-live="off">
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
                     <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>
-                    <div t-attf-class="carousel-item #{this.extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="option">
+                    <div t-attf-class="carousel-item #{this.extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="group" aria-roledescription="slide">
                         <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
                             <t t-set="rowOffset" t-value="slideOffset + (rowIndex_index * rowSize)"/>
                             <t t-if="rowOffset &lt; this.data.length">
