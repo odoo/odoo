@@ -83,7 +83,7 @@ class MailThreadBlacklist(models.AbstractModel):
     def _compute_is_blacklisted(self):
         # TODO : Should remove the sudo as compute_sudo defined on methods.
         # But if user doesn't have access to mail.blacklist, doen't work without sudo().
-        blacklist = set(self.env['mail.blacklist'].sudo().search([
+        blacklist = set(self.env['mail.blacklist'].sudo().with_context(active_test=True).search([
             ('email', 'in', self.mapped('email_normalized'))]).mapped('email'))
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
