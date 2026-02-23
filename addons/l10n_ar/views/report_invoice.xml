@@ -88,6 +88,7 @@
             <t t-set="custom_footer">
                 <div class="row">
                     <div name="footer_left_column" class="col-8 text-start">
+                        <span t-field="o.company_id.report_footer"/>
                     </div>
                     <div name="footer_right_column" class="col-4 text-end">
                         <div name="pager" t-if="report_type == 'pdf'">
