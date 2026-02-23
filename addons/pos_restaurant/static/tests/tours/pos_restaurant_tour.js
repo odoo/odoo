@@ -523,8 +523,10 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
             Chrome.waitRequest(),
             Dialog.bodyIs("Preparation Printer: The printer is not reachable."),
             Dialog.confirm(),
+            FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
+            ProductScreen.payButtonNotHighlighted(),
             ProductScreen.fireCourseButtonHighlighted("Course 2"),
             checkPreparationTicketData([], {
                 visibleInDom: ["Course 2"],
@@ -535,9 +537,11 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
             Chrome.waitRequest(),
             Dialog.bodyIs("Printer: The printer is not reachable."),
             Dialog.confirm(),
+            FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             Chrome.isSynced(),
+            ProductScreen.payButtonNotHighlighted(),
             ProductScreen.fireCourseButtonHighlighted("Course 3"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
                 visibleInDom: ["Course 3"],
