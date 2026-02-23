@@ -517,7 +517,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         customer = vals['customer']
         supplier = vals['supplier']
         if (
-            customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+            invoice
+            and invoice.invoice_date
+            and customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
             and supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
             and supplier.country_id != customer.country_id
         ):
