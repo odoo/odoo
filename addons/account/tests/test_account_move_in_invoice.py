@@ -2964,3 +2964,39 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         moves.invoice_line_ids._compute_tax_ids()
         self.assertEqual(invoice.invoice_line_ids.tax_ids, account_tax)
         self.assertEqual(receipt.invoice_line_ids.tax_ids, account_tax)
+
+    def test_reverse_and_create_invoice_copied_main_attachment(self):
+        attachment_vals = [{'name': 'Attachment', 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': b''}]
+        attachment = self.env['ir.attachment'].create(attachment_vals)
+        move1, move2 = self.env['account.move'].create([
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-01',
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.00,
+                    'discount': 10,
+                })],
+                'attachment_ids': [Command.set(attachment.ids)],
+                'message_main_attachment_id': attachment.id,
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-01',
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100.00,
+                    'discount': 10,
+                })],
+            },
+        ])
+        (move1 + move2).action_post()
+
+        move1_reversal = self._reverse_invoice(move1, is_modify=True)
+        self.assertRecordValues(move1_reversal.message_main_attachment_id, attachment_vals)
+        move2_reversal = self._reverse_invoice(move2, is_modify=True)
+        self.assertFalse(move2_reversal.message_main_attachment_id)
