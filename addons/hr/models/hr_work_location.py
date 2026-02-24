@@ -17,7 +17,8 @@ class HrWorkLocation(models.Model):
     location_type = fields.Selection([
         ('home', 'Home'),
         ('office', 'Office'),
-        ('other', 'Other')], string='Icon', default='office', required=True)
+        ('other', 'Other')], string='Location Type', default='office', required=True)
+    icon = fields.Char(compute='_compute_icon')
     address_id = fields.Many2one('res.partner', string="Work Address", check_company=True)
     location_number = fields.Char()
 
@@ -29,3 +30,13 @@ class HrWorkLocation(models.Model):
             raise UserError(self.env._("You cannot delete locations that are being used by your employees"))
         exceptions_using_location = self.env['hr.employee.location'].search([('work_location_id', 'in', self.ids)])
         exceptions_using_location.unlink()
+
+    @api.depends('location_type')
+    def _compute_icon(self):
+        for record in self:
+            if record.location_type == 'office':
+                record.icon = 'fa-building-o'
+            elif record.location_type == 'home':
+                record.icon = 'fa-home'
+            else:
+                record.icon = None
