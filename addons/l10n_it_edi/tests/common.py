@@ -125,11 +125,11 @@ class TestItEdi(AccountTestInvoicingCommon):
 
         cls.module = 'l10n_it_edi'
 
-    def _assert_export_invoice(self, invoice, filename):
+    def _assert_export_invoice(self, invoice, filename, pdf_values=None):
         path = f'{self.module}/tests/export_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             expected_tree = etree.fromstring(fd.read())
-        xml = invoice._l10n_it_edi_render_xml()
+        xml = invoice._l10n_it_edi_render_xml(pdf_values=pdf_values)
         invoice_etree = etree.fromstring(xml)
         try:
             self.assertXmlTreeEqual(invoice_etree, expected_tree)

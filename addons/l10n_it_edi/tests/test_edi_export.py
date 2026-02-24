@@ -649,3 +649,23 @@ class TestItEdiExport(TestItEdi):
         invoice_b.action_post()
         (invoice_b.line_ids + credit_note.line_ids).filtered(lambda line: line.account_type in ('asset_receivable')).reconcile()
         self._assert_export_invoice(credit_note, 'invoice_exclude_postdated_moves.xml')
+
+    def test_export_attachment(self):
+        invoice_a = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                })
+            ],
+        })
+        invoice_a.action_post()
+        self._assert_export_invoice(invoice_a, 'invoice_with_attachment.xml', pdf_values={
+            'name': 'hello.pdf',
+            'raw': b'hello darkness my old friend',
+        })
