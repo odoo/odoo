@@ -63,62 +63,56 @@
                 </t>
                 <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
             </t>
+            <t t-set="information_block" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                    <strong class="d-block mt-3">Shipping Address</strong>
+                    <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+            </t>
+            <t t-set="address">
+                <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                    <t name="address_not_same_as_shipping">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
+                    <t name="address_same_as_shipping">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t name="no_shipping">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
+                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
             <t t-call="web.external_layout"
                 forced_vat="o.fiscal_position_id.foreign_vat"
-                layout_document_title="layout_document_title">
+                layout_document_title="layout_document_title"
+                information_block="information_block"
+                address="address">
                 <t t-set="o" t-value="o.with_context(lang=lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
-                <div class="row">
-                    <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
-                        <div class="col-6">
-                            <t t-set="information_block">
-                                <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
-                                    <strong class="d-block mt-3">Shipping Address</strong>
-                                    <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                                </div>
-                            </t>
-                        </div>
-                        <div class="col-6" name="address_not_same_as_shipping">
-                            <t t-set="address">
-                                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                                <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                                </div>
-                                <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                                    ICE: <a t-field="o.partner_id.company_registry"/>
-                                </div>
-                            </t>
-                        </div>
-                    </t>
-                    <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
-                        <div class="offset-col-6 col-6" name="address_same_as_shipping">
-                            <t t-set="address">
-                                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                                <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                                </div>
-                                <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                                    ICE: <a t-field="o.partner_id.company_registry"/>
-                                </div>
-                            </t>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <div class="offset-col-6 col-6" name="no_shipping">
-                            <t t-set="address">
-                                <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                                <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
-                                </div>
-                                <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                                    ICE: <a t-field="o.partner_id.company_registry"/>
-                                </div>
-                            </t>
-                        </div>
-                    </t>
-                </div>
                 <div class="clearfix invoice_main">
                     <div class="page mb-4">
                         <div class="oe_structure"></div>
