@@ -23,7 +23,7 @@
         <BomOverviewTable
             uomName="uomName"
             showOptions="state.showOptions"
-            currentWarehouseId="state.currentWarehouse.id"
+            currentWarehouseId="state.currentWarehouse?.id"
             data="state.bomData"
             precision="state.precision"
             changeFolded.bind="onChangeFolded"/>
