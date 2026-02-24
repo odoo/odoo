@@ -265,6 +265,8 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
         values = self._prepare_registration_new_values(event, **post)
+        if not values:
+            return values
         return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
 
     def _process_attendees_form(self, event, form_details):
