@@ -19,6 +19,7 @@ Quick reference for deploying and updating Odoo 18 on the IONOS VPS.
 
 | Domain | Type |
 |--------|------|
+| `books.ovoco.co` | Production (subdomain) |
 | `test.ovoco.co` | Test / staging |
 | `test.morelmediastudio.com` | Test / staging |
 | `test.i84mobile.com` | Test / staging |
