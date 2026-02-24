@@ -105,6 +105,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_number': f'BANK{company.id}34567890',
                 'partner_id': company.root_id.partner_id.id,
                 'journal_id': 'bank',
+                'allow_out_payment': True,
             },
         }
 

@@ -22,6 +22,7 @@ class TestDDT(TestSaleCommon):
         cls.env['res.partner.bank'].create({
             'account_number': 'IT60X0542811101000000123456',
             'partner_id': cls.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
         cls.partner_a.write({
             'street': 'Piazza Guglielmo Marconi 5',

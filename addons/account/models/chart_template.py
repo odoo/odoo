@@ -271,6 +271,7 @@ class AccountChartTemplate(models.AbstractModel):
             self_ctx = self.with_context(
                 default_company_id=company.id,
                 allowed_company_ids=[company.id],
+                install_mode=True,
             ).sudo()
             demo_data = self_ctx._get_chart_template_data(company.chart_template, demo=True)
             self_ctx.with_context(skip_pdf_attachment_generation=True)._load_data(demo_data)

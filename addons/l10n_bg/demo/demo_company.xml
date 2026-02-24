@@ -22,6 +22,7 @@
         <field name="account_number">BG24IORT80949894218256</field>
         <field name="partner_id" ref="base.partner_demo_company_bg"/>
         <field name="company_id" ref="base.demo_company_bg"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
