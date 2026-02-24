@@ -73,6 +73,10 @@ body, .o_web_client {
   font-weight: 600 !important;
 }
 
+.btn {
+    --btn-color: var(--o-active-option-text-color) !important;
+}
+
 /* Navigation bar */
 
 .o_main_navbar {
@@ -116,6 +120,16 @@ body, .o_web_client {
     background-color: var(--o-header-view-background-color) !important;
     color: var(--o-header-view-text-color) !important;
 }
+
+.o-mail-discussSidebarBgColor {
+    background-color: var(--o-web-client-background-color) !important;
+}
+
+.o-mail-DiscussSidebar-item.o-active {
+    background-color: var(--o-web-client-background-color) !important;
+}
+
+/* Kanban Format */
 
 .o_list_view .o_list_table .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record {
     background-color: var(--o-view-background-color) !important;
