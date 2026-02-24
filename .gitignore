@@ -6,6 +6,7 @@ _build/
 !.gitignore
 !.github
 !.mailmap
+!.vscode
 # compiled python files
 *.py[co]
 __pycache__/
@@ -49,3 +50,9 @@ package.json
 /man/
 /share/
 /src/
+/venv/
+
+# environment files (but keep examples)
+!.env.example
+deploy/.env
+!deploy/.env.example

@@ -1,0 +1,79 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo 18: Start Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/odoo-bin",
+            "args": [
+                "--config=${workspaceFolder}/odoo.conf",
+                "--dev=reload,xml"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Odoo 18: Start (with debugger)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/odoo-bin",
+            "args": [
+                "--config=${workspaceFolder}/odoo.conf",
+                "--dev=reload,xml",
+                "--limit-time-real=99999",
+                "--limit-time-cpu=99999"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "justMyCode": false
+        },
+        {
+            "name": "Odoo 18: Update Module",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/odoo-bin",
+            "args": [
+                "--config=${workspaceFolder}/odoo.conf",
+                "-u", "${input:moduleName}",
+                "--stop-after-init"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+        {
+            "name": "Odoo 18: Scaffold New Module",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/odoo-bin",
+            "args": [
+                "scaffold",
+                "${input:newModuleName}",
+                "${workspaceFolder}/custom_addons"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "moduleName",
+            "description": "Module name to update (e.g., sale, my_module)",
+            "type": "promptString"
+        },
+        {
+            "id": "newModuleName",
+            "description": "New module name to scaffold",
+            "type": "promptString"
+        }
+    ]
+}

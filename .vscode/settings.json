@@ -1,0 +1,33 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/addons",
+        "${workspaceFolder}/custom_addons",
+        "${workspaceFolder}/odoo"
+    ],
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--load-plugins=pylint_odoo",
+        "--disable=all",
+        "--enable=anomalous-backslash-in-string,api-one-deprecated,attribute-deprecated,class-camelcase,dangerous-default-value,dangerous-view-replace-wo-priority,duplicate-id-csv,duplicate-key,duplicate-xml-fields,duplicate-xml-record-id,except-pass,invalid-commit,manifest-required-author,method-required-super,missing-newline-at-end-of-file,missing-return,pointless-statement,pointless-string-statement,redundant-modulename-xml,sql-injection,translation-field,translation-required,use-vim-comment,wrong-tabs-instead-of-spaces,xml-syntax-error"
+    ],
+    "editor.rulers": [79, 120],
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.associations": {
+        "*.xml": "xml"
+    },
+    "[python]": {
+        "editor.tabSize": 4
+    },
+    "[xml]": {
+        "editor.tabSize": 4
+    },
+    "[javascript]": {
+        "editor.tabSize": 4
+    }
+}

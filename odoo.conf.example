@@ -1,0 +1,43 @@
+[options]
+; ============================================================
+; Odoo 18 Development Configuration (Windows 11)
+; ============================================================
+
+; --- Database ---
+db_host = localhost
+db_port = 5432
+db_user = odoo
+db_password = odoo
+; db_name = odoo18dev
+; db_filter = odoo18dev
+
+; --- Paths ---
+; Update these paths to match your Windows installation
+; addons_path = C:\odoo\otech\addons,C:\odoo\otech\custom_addons,C:\odoo\otech\odoo\addons
+addons_path = addons,custom_addons,odoo/addons
+
+; --- Server ---
+http_port = 8069
+; longpolling_port = 8072
+xmlrpc_interface = 0.0.0.0
+
+; --- Logging ---
+log_level = info
+; log_file = /var/log/odoo/odoo.log
+logrotate = True
+
+; --- Security ---
+admin_passwd = admin
+; list_db = True
+
+; --- Performance ---
+; workers = 0
+; max_cron_threads = 1
+limit_time_cpu = 600
+limit_time_real = 1200
+
+; --- Development ---
+; dev_mode = reload,xml
+
+; --- Default Apps ---
+default_productivity_apps = True
