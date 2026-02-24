@@ -327,7 +327,7 @@ class StockPicking(models.Model):
                             indicates a client error (4xx), or if a server error occurs (500).
         :return: None
         """
-        with _get_nilvera_client(self.env._, self.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company) as client:
             response = client.request(
                 "POST",
                 endpoint='/edespatch/Send/Xml',
