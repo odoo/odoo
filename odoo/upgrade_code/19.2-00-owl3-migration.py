@@ -290,9 +290,11 @@ MAIL_WHITELIST = {
     "mail.Composer.suggestionEmoji": {'option'},  # dynamic t-call
     "mail.RottingStatusBarDurationField": {'item'},  # dynamic t-call
 }
-EVENT_WHITELIST = {
+MISC_WHITELIST = {
     "pos_event.QuestionInputs": {'questions', 'stateObject'},  # Var above t-call
     "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
+    "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
+    "hr_calendar.CalendarCommonRenderer.buttonWorklocation": {'multiCalendar'},  # Nested t-inherits with a xpath t-call
 }
 
 ACCOUNT_WHITELIST = {
@@ -318,7 +320,7 @@ def upgrade_this(file_manager, log_info, log_error):
         "crm.ColumnProgress": {'bar'},  # Nested inherit
         "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     }  # vars defined inside template, eg. using t-set
-    white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | EVENT_WHITELIST
+    white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | MISC_WHITELIST
 
     # Iteration 1: Gather all variables
     aggregator = VariableAggregator()
