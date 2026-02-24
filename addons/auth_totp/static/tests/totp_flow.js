@@ -121,7 +121,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 
 registry.category("web_tour.tours").add('totp_login_enabled', {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
     isActive: ["body:not(:has(input#login))"],
@@ -194,7 +193,6 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 
 registry.category("web_tour.tours").add('totp_login_device', {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
     isActive: ["body:not(:has(input#login))"],
@@ -352,7 +350,6 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 ]});
 
 registry.category("web_tour.tours").add('totp_admin_disables', {
-    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',
     trigger: '[data-menu-xmlid="base.menu_administration"]',

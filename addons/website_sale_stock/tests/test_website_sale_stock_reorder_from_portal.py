@@ -45,4 +45,4 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
         cls._add_product_qty_to_wh(cls.partially_available_product.id, 3, stock_loc_id)
 
     def test_website_sale_stock_reorder_from_portal_stock(self):
-        self.start_tour("/", 'website_sale_stock_reorder_from_portal', login='admin')
+        self.start_tour("/my/orders", 'website_sale_stock_reorder_from_portal', login='admin')

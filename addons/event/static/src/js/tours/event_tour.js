@@ -7,7 +7,6 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('event_tour', {
-    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["enterprise"],
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',

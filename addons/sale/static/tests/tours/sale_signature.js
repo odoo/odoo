@@ -3,7 +3,6 @@ import { redirect } from "@web/core/utils/urls";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
-    url: '/my/quotes',
     steps: () => [
     {
         content: "open the test SO",

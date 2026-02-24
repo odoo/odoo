@@ -55,7 +55,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.link(combo_b.id),
             ],
         )
-        self.start_tour('/', 'sale_combo_configurator', login='salesman')
+        self.start_tour('/odoo', 'sale_combo_configurator', login='salesman')
 
     def test_sale_combo_configurator_with_optional_products(self):
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
@@ -87,7 +87,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             ],
             'optional_product_ids': [Command.link(optional_product.id)],
         })
-        self.start_tour('/', 'sale_combo_configurator_with_optional_products', login='salesman')
+        self.start_tour('/odoo', 'sale_combo_configurator_with_optional_products', login='salesman')
 
         order = self.env['sale.order'].search([('partner_id.name', '=', 'Test Partner')], limit=1)
         self.assertTrue(order, "A new Sale order should be created.")
@@ -168,9 +168,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.link(combo_with_multiple_unconfigurable_items.id),
             ],
         )
-        self.start_tour(
-            '/', 'sale_combo_configurator_preselect_single_unconfigurable_items', login='salesman'
-        )
+        self.start_tour('/odoo', 'sale_combo_configurator_preselect_single_unconfigurable_items', login='salesman')
 
     def test_sale_combo_configurator_preconfigure_unconfigurable_ptals(self):
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
@@ -209,8 +207,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             type='combo',
             combo_ids=[Command.link(combo.id)],
         )
-        self.start_tour(
-            '/', 'sale_combo_configurator_preconfigure_unconfigurable_ptals', login='salesman'
+        self.start_tour('/odoo', 'sale_combo_configurator_preconfigure_unconfigurable_ptals', login='salesman'
         )
 
     def _create_combo_from_attribute(self, attribute, product_name, combo_name):

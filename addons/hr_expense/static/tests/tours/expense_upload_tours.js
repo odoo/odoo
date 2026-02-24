@@ -1,9 +1,9 @@
-    import { registry } from "@web/core/registry";
-    import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
 
-    registry.category("web_tour.tours").add('hr_expense_test_tour', {
-        url: "/odoo",
-        steps: () => [stepUtils.showAppsMenuItem(),
+registry.category("web_tour.tours").add("hr_expense_test_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
@@ -78,12 +78,13 @@
         {
             content: "Missing Upload button in Expenses Analysis > List View",
             trigger: ".o_button_upload_expense",
-        }
-    ]});
+        },
+    ],
+});
 
-    registry.category("web_tour.tours").add('hr_expense_access_rights_test_tour', {
-        url: "/odoo",
-        steps: () => [stepUtils.showAppsMenuItem(),
+registry.category("web_tour.tours").add("hr_expense_access_rights_test_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
@@ -101,11 +102,12 @@
         },
         {
             content: "Click Submit to Manager Button",
-            trigger: '.o_expense_submit',
+            trigger: ".o_expense_submit",
             run: "click",
         },
         {
-            content: 'Verify the expense is submitted',
+            content: "Verify the expense is submitted",
             trigger: '.o_arrow_button_current:contains("Submitted")',
         },
-    ]});
+    ],
+});

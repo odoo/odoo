@@ -14,7 +14,7 @@ class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
         utm_source = self.env['utm.source'].create({'name': 'Source'})
         # change action to create opportunity
         self.start_tour(self.env['website'].get_client_action_url('/contactus', True), 'website_crm_pre_tour', login='admin')
-        self.start_tour("/?utm_source=Source&utm_medium=Medium&utm_campaign=New campaign", 'website_crm_tour')
+        self.start_tour('/contactus?utm_source=Source&utm_medium=Medium&utm_campaign=New campaign', 'website_crm_tour')
 
         # check result
         record = self.env['crm.lead'].search([('description', '=', '<p>### TOUR DATA ###</p>')])
@@ -43,12 +43,12 @@ class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
         self.start_tour(self.env['website'].get_client_action_url('/contactus', True), 'website_crm_pre_tour', login=user_login)
 
         with odoo.tests.RecordCapturer(self.env['crm.lead']) as capt:
-            self.start_tour("/", "website_crm_catch_logged_partner_info_tour", login=user_login)
+            self.start_tour("/contactus", "website_crm_catch_logged_partner_info_tour", login=user_login)
         self.assertEqual(capt.records.partner_id, user_partner)
 
         # edited contact us partner info : do not propagate partner_id on lead
         with odoo.tests.RecordCapturer(self.env['crm.lead']) as capt:
-            self.start_tour("/", "website_crm_tour", login=user_login)
+            self.start_tour("/contactus", "website_crm_tour", login=user_login)
         self.assertFalse(capt.records.partner_id)
 
         # check partner has not been changed

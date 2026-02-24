@@ -3,7 +3,6 @@ import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 import { submitCouponCode } from "@website_sale_loyalty/../tests/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale_loyalty.gift_card', {
-    url: '/shop',
     steps: () => [
         // Add a small drawer to the order (50$)
         ...wsTourUtils.addToCart({ productName: "TEST - Small Drawer", expectUnloadPage: true }),

@@ -49,7 +49,6 @@ function applyForAJob(jobName, application) {
 }
 
 registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
-    url: '/jobs',
     steps: () => [
     ...applyForAJob('Guru', {
         name: 'John Smith',

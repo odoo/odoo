@@ -5,7 +5,6 @@ import * as passkeyLib from "@auth_passkey/../lib/simplewebauthn";
 let unpatchPasskeyRegistrationPortal;
 
 registry.category("web_tour.tours").add("passkeys_portal_create", {
-    url: "/my/security",
     steps: () => [
         {
             content: "Ensure there are no passkeys already",
@@ -93,7 +92,6 @@ registry.category("web_tour.tours").add("passkeys_portal_create", {
 });
 
 registry.category("web_tour.tours").add("passkeys_portal_rename", {
-    url: "/my/security",
     steps: () => [
         {
             content: "Ensure there is one passkey",
@@ -125,7 +123,6 @@ registry.category("web_tour.tours").add("passkeys_portal_rename", {
 });
 
 registry.category("web_tour.tours").add("passkeys_portal_delete", {
-    url: "/my/security",
     steps: () => [
         {
             content: "Ensure there is one passkey",

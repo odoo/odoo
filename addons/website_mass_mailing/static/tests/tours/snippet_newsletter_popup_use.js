@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
-    url: '/',
     steps: () => [
     {
         content: "Check the modal is not yet opened and force it opened",

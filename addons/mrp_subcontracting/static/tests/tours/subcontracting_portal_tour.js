@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('subcontracting_portal_tour', {
-    url: '/my/productions',
     steps: () => [
         {
             trigger: 'table > tbody > tr a:has(span:contains(WH/IN/00))',

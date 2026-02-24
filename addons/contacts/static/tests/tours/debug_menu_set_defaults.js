@@ -3,7 +3,6 @@
     import { delay } from "@web/core/utils/concurrency";
 
     registry.category("web_tour.tours").add('debug_menu_set_defaults', {
-        url: '/odoo?debug=1',
         steps: () => [
             ...stepUtils.goToAppSteps('contacts.menu_contacts', "Open the contacts menu"),
             {

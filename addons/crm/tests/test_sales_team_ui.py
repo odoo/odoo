@@ -16,7 +16,7 @@ class TestUi(HttpCase, SalesTeamCommon):
         self.sale_manager.sudo().group_ids -= self.env.ref("base.group_multi_company")
         self.env['ir.config_parameter'].sudo().set_bool('sales_team.membership_multi', True)
 
-        self.start_tour("/", "create_crm_team_tour", login="salesmanager")
+        self.start_tour("/odoo", "create_crm_team_tour", login="salesmanager")
 
         created_team = self.env["crm.team"].search([("name", "=", "My CRM Team")])
         self.assertTrue(bool(created_team))

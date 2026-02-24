@@ -4,7 +4,6 @@ import { boundariesIn } from "@html_editor/utils/position";
 import { setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
 registry.category("web_tour.tours").add('mailing_editor_theme', {
-    url: '/odoo',
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

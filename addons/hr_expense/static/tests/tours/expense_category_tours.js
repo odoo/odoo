@@ -1,9 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
-
 registry.category("web_tour.tours").add("change_expense_category_price_tour", {
-    url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),
         {
@@ -111,7 +109,9 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
             run: () => {
                 const warning = document.querySelector(".modal");
                 if (warning) {
-                    throw new Error("Warning should not be displayed when changing the price of a category with no linked expense.");
+                    throw new Error(
+                        "Warning should not be displayed when changing the price of a category with no linked expense."
+                    );
                 }
             },
         },
@@ -123,6 +123,6 @@ registry.category("web_tour.tours").add("change_expense_category_price_tour", {
         {
             content: "Wait until we are back to the list view",
             trigger: ".o_list_view",
-        }
+        },
     ],
 });

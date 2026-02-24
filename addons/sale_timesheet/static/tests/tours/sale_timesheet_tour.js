@@ -5,7 +5,6 @@ import * as tourUtils from "@sale/js/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
-    url: '/odoo',
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),

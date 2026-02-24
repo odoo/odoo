@@ -5,7 +5,6 @@ import * as passkeyLib from "../lib/simplewebauthn";
 let unpatchPasskeyVerify;
 
 registry.category("web_tour.tours").add('passkeys_tour_verify', {
-    url: '/odoo',
     steps: () => [
         {
             content: 'Open user account menu',

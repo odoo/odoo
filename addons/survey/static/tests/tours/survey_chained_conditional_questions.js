@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey_chained_conditional_questions', {
-    url: '/survey/start/3cfadce3-3f7e-41da-920d-10fa0eb19527',
     steps: () => [
     {
         content: 'Click on Start',

@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
-    url: '/odoo?debug=tests',
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

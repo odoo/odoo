@@ -22,4 +22,4 @@ class TestTimeOffCardTour(HttpCase):
             'allocation_type': 'regular',
             'type_request_unit': 'half_day',
         })
-        self.start_tour('/', 'time_off_card_tour', login='admin')
+        self.start_tour('/odoo', 'time_off_card_tour', login='admin')

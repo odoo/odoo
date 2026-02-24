@@ -142,7 +142,6 @@ var profileSteps = [{
 }];
 
 registry.category("web_tour.tours").add('certification_member_failure', {
-    url: '/slides',
     steps: () => [].concat(
         startCertificationSurvey,
         failCertificationSteps,
@@ -154,7 +153,6 @@ registry.category("web_tour.tours").add('certification_member_failure', {
 });
 
 registry.category("web_tour.tours").add('certification_member_success', {
-    url: '/slides',
     steps: () => [].concat(
         startCertificationSurvey,
         succeedCertificationSteps,

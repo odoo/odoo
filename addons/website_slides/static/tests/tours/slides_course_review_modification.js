@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("course_review_modification", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: "/slides",
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",
@@ -255,7 +254,6 @@ registry.category("web_tour.tours").add("course_review_modification", {
 
 registry.category("web_tour.tours").add("course_review_modification_by_admin", {
     undeterministicTour_doNotCopy: true,
-    url: "/slides",
     steps: () => [
         {
             trigger: "a:text(Basics of Gardening - Test)",
@@ -272,7 +270,7 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']"
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
         },
         {
             trigger:

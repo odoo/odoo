@@ -127,4 +127,4 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             sales_order.message_partner_ids,
             'Do not automatically set customer as follower, will be suggested recipient')
 
-        self.start_tour("/", 'sale_signature', login="portal")
+        self.start_tour("/my/quotes", 'sale_signature', login="portal")

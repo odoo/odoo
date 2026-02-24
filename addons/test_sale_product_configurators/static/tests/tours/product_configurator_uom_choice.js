@@ -3,12 +3,11 @@ import { stepUtils } from "@web_tour/tour_utils";
 import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add('sale_product_configurator_uom_tour', {
-    url: '/odoo',
+registry.category("web_tour.tours").add("sale_product_configurator_uom_tour", {
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
-        ...tourUtils.selectCustomer('Tajine Saucisse'),
+        ...tourUtils.selectCustomer("Tajine Saucisse"),
         ...tourUtils.selectPricelist("Custom pricelist (TEST)"),
         ...tourUtils.addProduct("Customizable Desk (TEST)"),
         configuratorTourUtils.assertProductPrice("Customizable Desk (TEST)", "750.00"),
@@ -39,6 +38,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_uom_tour', {
             trigger: 'span[name="amount_total"]:contains("8,700.00")',
             run: "click",
         },
-        ...stepUtils.saveForm()
-    ]
+        ...stepUtils.saveForm(),
+    ],
 });

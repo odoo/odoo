@@ -2,7 +2,6 @@ import { accountTourSteps } from "@account/js/tours/account";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('invoice_payments_widget_exchange_tour', {
-    url: "/odoo",
     steps: () => [
     ...accountTourSteps.goToAccountMenu("Go to Invoicing"),
     {

@@ -36,7 +36,6 @@ function openAccountSettingsTab() {
 }
 
 registry.category("web_tour.tours").add('totp_admin_self_invite', {
-    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), ...openAccountSettingsTab(), {
     content: "open the user's form",
     trigger: "td.o_data_cell:contains(admin)",
@@ -51,7 +50,6 @@ registry.category("web_tour.tours").add('totp_admin_self_invite', {
 }]});
 
 registry.category("web_tour.tours").add('totp_admin_invite', {
-    url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), ...openAccountSettingsTab(), {
     content: "open the user's form",
     trigger: "td.o_data_cell:contains(test_user)",

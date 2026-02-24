@@ -32,7 +32,7 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
 
     def test_addremove(self):
         db = get_db_name()
-        self.start_tour('/odoo', 'apikeys_tour_setup', login=self.user_test.login)
+        self.start_tour('/odoo?debug=1', 'apikeys_tour_setup', login=self.user_test.login)
         self.assertEqual(len(self.user_test.api_key_ids), 1, "the test user should now have a key")
 
         [(_, [key], [])] = self.messages
@@ -46,12 +46,12 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
             r['login'], self.user_test.login,
             "the key should be usable as a way to perform RPC calls"
         )
-        self.start_tour('/odoo', 'apikeys_tour_teardown', login=self.user_test.login)
+        self.start_tour('/odoo?debug=1', 'apikeys_tour_teardown', login=self.user_test.login)
 
     def test_apikeys_totp(self):
         db = get_db_name()
         self.install_totphook()
-        self.start_tour('/odoo', 'apikeys_tour_setup', login=self.user_test.login)
+        self.start_tour('/odoo?debug=1', 'apikeys_tour_setup', login=self.user_test.login)
         self.start_tour('/odoo', 'totp_tour_setup', login=self.user_test.login)
         [(_, [key], [])] = self.messages  # pylint: disable=unbalanced-tuple-unpacking
         uid = self.xmlrpc_common.authenticate(db, self.user_test.login, key, {})

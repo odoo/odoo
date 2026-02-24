@@ -6,7 +6,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 
 registerBackendAndFrontendTour("question_tour", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: '/forum/1',
 }, () => [{
     trigger: ".o_wforum_ask_btn",
     tooltipPosition: "left",

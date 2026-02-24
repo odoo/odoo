@@ -24,11 +24,11 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             cls.env.company.country_id.enforce_cities = False
 
     def test_01_portal_load_tour(self):
-        self.start_tour("/", 'portal_load_homepage', login="portal")
+        self.start_tour("/my", 'portal_load_homepage', login="portal")
 
     def test_02_portal_load_tour_cant_edit_vat(self):
         willis = self.user_portal
-        self.start_tour("/", 'portal_load_homepage', login="portal")
+        self.start_tour("/my", 'portal_load_homepage', login="portal")
         self.assertEqual(willis.phone, "+1 555 666 7788")
 
     def test_03_skip_to_content(self):

@@ -190,7 +190,6 @@ var browseBackSteps = [{
 }];
 
 registry.category("web_tour.tours").add('wevent_register', {
-    url: '/event',
     steps: () => [].concat(
         initTourSteps('Online Reveal'),
         browseTalksSteps,

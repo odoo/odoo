@@ -3,7 +3,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("event_configurator_tour", {
-    url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),

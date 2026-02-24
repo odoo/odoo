@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', {
-    url: '/odoo',
     steps: () => [
     stepUtils.showAppsMenuItem(), {
         content: "Select the 'Email Marketing' app.",

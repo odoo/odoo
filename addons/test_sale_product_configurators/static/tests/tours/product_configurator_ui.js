@@ -7,7 +7,6 @@ import * as tourUtils from "@sale/js/tours/tour_utils";
 // The pricelist is tested on the other tours.
 
 registry.category("web_tour.tours").add('sale_product_configurator_tour', {
-    url: '/odoo',
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),

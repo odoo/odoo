@@ -23,7 +23,7 @@ class TestUi(odoo.tests.HttpCase):
         self.assertEqual(self.env['res.partner'].new().function, False)
 
         # TDE: to activate again after freeze
-        # self.start_tour("/odoo", 'debug_menu_set_defaults', login="admin")
+        # self.start_tour("/odoo?debug=1", 'debug_menu_set_defaults', login="admin")
 
     def test_vat_label_string(self):
         """ Test changing the vat_label field of the user company_id.

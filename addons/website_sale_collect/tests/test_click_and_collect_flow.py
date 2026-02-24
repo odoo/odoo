@@ -29,7 +29,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         Test the basic flow of buying with click and collect as a public user with more than
         one delivery method available
         """
-        self.start_tour('/', 'website_sale_collect_widget')
+        self.start_tour('/shop', 'website_sale_collect_widget')
 
     def test_default_location_is_set_for_pick_up_in_store(self):
         """
@@ -39,7 +39,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         self.env['delivery.carrier'].search([]).active = False
         self.in_store_dm.active = True
         self.in_store_dm.is_published = True
-        self.start_tour('/', 'website_sale_collect_buy_product_default_location_pick_up_in_store')
+        self.start_tour('/shop', 'website_sale_collect_buy_product_default_location_pick_up_in_store')
 
     def test_cash_on_delivery_resets_on_in_store_type(self):
         """

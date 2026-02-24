@@ -3,7 +3,6 @@ import { patch } from "@web/core/utils/patch";
 import * as passkeyLib from "../lib/simplewebauthn";
 
 registry.category("web_tour.tours").add('passkeys_tour_login', {
-    url: '/web/login',
     steps: () => [
         {
             content: "Inject authenticator data",

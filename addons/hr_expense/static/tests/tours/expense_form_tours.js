@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('create_expense_no_employee_access_tour', {
-    url: "/odoo",
     steps: () => [
     ...stepUtils.goToAppSteps('hr_expense.menu_hr_expense_root', "Go to the Expenses app"),
     {
@@ -52,7 +51,6 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
 ]});
 
 registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
-    url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),
         {

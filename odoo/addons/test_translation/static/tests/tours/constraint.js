@@ -2,7 +2,6 @@
     import { stepUtils } from "@web_tour/tour_utils";
 
     registry.category("web_tour.tours").add('sql_constraint', {
-        url: '/odoo/action-test_translation.action_constraint?debug=1',
         steps: () => [
     {
         content: "wait web client",

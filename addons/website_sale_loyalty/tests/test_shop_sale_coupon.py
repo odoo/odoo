@@ -206,7 +206,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         })
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
-        self.start_tour('/', 'website_sale_loyalty.gift_card', login='admin')
+        self.start_tour('/shop', 'website_sale_loyalty.gift_card', login='admin')
 
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')

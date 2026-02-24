@@ -113,7 +113,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        self.start_tour("/", 'event_buy_last_ticket')
+        self.start_tour("/event", 'event_buy_last_ticket')
 
     def test_pricelists_different_currencies(self):
         self.env.user.group_ids += self.env.ref('product.group_product_pricelist')

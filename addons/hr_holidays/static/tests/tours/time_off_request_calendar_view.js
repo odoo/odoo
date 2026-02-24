@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("time_off_request_calendar_view", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
@@ -14,7 +13,9 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
             content: "Click on the first Thursday of the year",
             trigger: ".fc-daygrid-day.fc-day-thu",
             run: () => {
-                const el = document.querySelector(".fc-daygrid-day.fc-day-thu:not(.fc-day-disabled)").firstChild;
+                const el = document.querySelector(
+                    ".fc-daygrid-day.fc-day-thu:not(.fc-day-disabled)"
+                ).firstChild;
                 el.scrollIntoView();
 
                 const fromPosition = el.getBoundingClientRect();

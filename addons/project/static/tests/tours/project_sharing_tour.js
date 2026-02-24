@@ -132,14 +132,12 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }];
 
 registry.category("web_tour.tours").add('project_sharing_tour', {
-    url: '/odoo',
     steps: () => {
         return projectSharingSteps;
     }
 });
 
 registry.category("web_tour.tours").add("portal_project_sharing_tour", {
-    url: "/my/projects",
     steps: () => {
         // The begining of the project sharing feature
         const projectSharingStepIndex = projectSharingSteps.findIndex(s => s?.id === 'project_sharing_feature');
@@ -148,7 +146,6 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour", {
 });
 
 registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour", {
-    url: "/my/projects",
     steps: () => [{
         trigger: 'table > tbody > tr a:has(span:contains("Project Sharing"))',
         content: 'Click on the portal project.',
