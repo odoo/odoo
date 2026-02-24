@@ -21,7 +21,7 @@ class LabourRequisition(models.TransientModel):
     task_id = fields.Many2one('project.task', 'Task')
     requisition_line_ids = fields.One2many('labour.requisition.wizard.line', 'requisition_id', string='Requisition Order')
     from_date = fields.Date('From Date', default=str(datetime.now() + timedelta(days=-30)).split(' ')[0], required=True)
-    to_date = fields.Date('To Date', default=str(fields.datetime.now() + timedelta(days=1)).split(' ')[0], required=True)
+    to_date = fields.Date('To Date', default=lambda self: fields.Date.context_today(self) + timedelta(days=1), required=True)
     material = fields.Many2one('product.product')
     is_use = fields.Boolean(' ')
 

@@ -16,7 +16,7 @@
 
                         <group>
                             <group>
-                                <field name="category_id" attrs="{'required': [('is_library_task','=',True)]}"/>
+                                <field name="category_id" required="is_library_task"/>
                                 <field name="material_cost"/>
                                 <field name="min_qty" context="{'default_min_qty':1}"/>
                                 <field name="total_cost"/>

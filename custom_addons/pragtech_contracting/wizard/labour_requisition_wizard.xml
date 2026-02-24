@@ -5,7 +5,6 @@
         <record id="labour_requisition_wizard_form_view" model="ir.ui.view">
             <field name="name">Labour Requisitions</field>
             <field name="model">labour.requisition.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Labour Requisition">
                     <sheet>
@@ -57,8 +56,8 @@
                                         <field name="me_sequence" invisible="1"/>
                                         <field name="Requisition_as_on_date" readonly="True"/>
                                         <field name="estimation_id" readonly="True"/>
-                                        <field name="current_req_qty" attrs="{'readonly': [('is_use', '=', False)]}"/>
-                                        <field name="specification" attrs="{'readonly': [('is_use', '=', False)]}"/>
+                                        <field name="current_req_qty" readonly="not is_use"/>
+                                        <field name="specification" readonly="not is_use"/>
                                     </tree>
                                 </field>
 
@@ -91,7 +90,6 @@
         <record id="labour_requisition_wizard_tree_view" model="ir.ui.view">
             <field name="name">labour.requisition.wizard.tree</field>
             <field name="model">labour.requisition.wizard.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="is_use"/>
@@ -122,7 +120,6 @@
         <record id="requisition_wizard_for_work_order" model="ir.ui.view">
             <field name="name">workorder.requisition.wizard.form</field>
             <field name="model">labour.requisition.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Requisition Order form">
                     <sheet>
@@ -163,8 +160,8 @@
                                         <field name="project_wbs" readonly="True" invisible="1" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
                                         <field name="requisition_qty" readonly="True"/>
                                         <field name="total_ordered_qty" readonly="True"/>
-                                        <field name="current_order_qty" attrs="{'readonly': [('is_use','=',False)]}"/>
-                                        <field name="specification" attrs="{'readonly': [('is_use','=',False)]}"/>
+                                        <field name="current_order_qty" readonly="not is_use"/>
+                                        <field name="specification" readonly="not is_use"/>
                                         <field name="is_red" invisible="1"/>
                                     </tree>
                                 </field>

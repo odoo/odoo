@@ -21,7 +21,7 @@ class WizardWorkCompletion(models.TransientModel):
     task_id = fields.Many2one('project.task', 'Task')
     completion_task_line_ids = fields.One2many('wizard.work.completion.task', 'work_completion_id', string='Requisition Order')
     from_date = fields.Date('From Date', default=str(datetime.now() + timedelta(days=-30)).split(' ')[0], required=True)
-    to_date = fields.Date('To Date', default=str(fields.datetime.now() + timedelta(days=1)).split(' ')[0], required=True)
+    to_date = fields.Date('To Date', default=lambda self: fields.Date.context_today(self) + timedelta(days=1), required=True)
     is_use = fields.Boolean(' ')
 
     task_date_type = fields.Selection([('planned', 'Planned'), ('actual', 'Actual')], string='Task Date Type', default='planned')

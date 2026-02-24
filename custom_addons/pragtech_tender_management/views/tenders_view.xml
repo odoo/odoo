@@ -9,15 +9,15 @@
                 <form string="Tenders Tender">
 
                     <header>
-                        <button name="action_tender_submit" string="SUBMIT" type="object" states="draft" class="oe_highlight"/>
-                        <button name="action_tender_approve" string="Approve" type="object" states="submitted" class="oe_highlight" groups="pragtech_tender_management.custom_sales_group_manager"/>
-                        <button name="action_tender_cancel" string="Reject" type="object" states="submitted" class="oe_highlight"/>
+                        <button name="action_tender_submit" string="SUBMIT" type="object" invisible="state != 'draft'" class="oe_highlight"/>
+                        <button name="action_tender_approve" string="Approve" type="object" invisible="state != 'submitted'" class="oe_highlight" groups="pragtech_tender_management.custom_sales_group_manager"/>
+                        <button name="action_tender_cancel" string="Reject" type="object" invisible="state != 'submitted'" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approve"/>
                     </header>
 
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('state','in',['draft', 'submitted','rejected'])]}"/>
+                            <field name="is_published" widget="website_redirect_button" invisible="state in ('draft', 'submitted', 'rejected')"/>
                             <button name="action_view_bids" type="object" icon="fa-tasks" class="oe_stat_button">
                                 <field name="count_bids" widget="statinfo" string="Bids"/>
                             </button>
@@ -192,7 +192,6 @@
         <record id="dept_form" model="ir.ui.view">
             <field name="name">Department Form</field>
             <field name="model">res.department</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Department">
                     <sheet>
@@ -209,7 +208,6 @@
         <record id="dept_tree" model="ir.ui.view">
             <field name="name">Department Tree</field>
             <field name="model">res.department</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Department">
                     <field name="name"/>
@@ -231,7 +229,6 @@
         <record id="rating_qustionnaire_form" model="ir.ui.view">
             <field name="name">Rating Qustionnaire Form</field>
             <field name="model">tender.questions</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cost Code">
                     <sheet>
@@ -251,7 +248,6 @@
         <record id="rating_qustionnaire_tree" model="ir.ui.view">
             <field name="name">Rating Qustionnaire Tree</field>
             <field name="model">tender.questions</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
@@ -275,7 +271,6 @@
         <record id="dept_job_type_form" model="ir.ui.view">
             <field name="name">job.type</field>
             <field name="model">job.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Job Type">
                     <sheet>
@@ -292,7 +287,6 @@
         <record id="dept_job_type_tree" model="ir.ui.view">
             <field name="name">job.type</field>
             <field name="model">job.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job Type">
                     <field name="name"/>
@@ -321,7 +315,7 @@
                         <button name="action_approve"
                                 string="Approve"
                                 type="object"
-                                states="draft" class="oe_highlight"/>
+                                invisible="state != 'draft'" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
                     </header>
 

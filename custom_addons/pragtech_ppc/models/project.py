@@ -2,6 +2,7 @@
 
 import datetime
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ProjectProject(models.Model):
@@ -18,7 +19,7 @@ class ProjectProject(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     street = fields.Char('Street')
     street2 = fields.Char('Street2')
-    zip = fields.Char('Zip', size=24, change_default=True)
+    zip = fields.Char('Zip', change_default=True)
     city = fields.Char('City')
     state_id = fields.Many2one('res.country.state', 'State', ondelete='restrict', store=True)
     country_id = fields.Many2one('res.country', 'Country', ondelete='restrict')
@@ -166,38 +167,15 @@ class StateMaster(models.Model):
     foreclosed = fields.Boolean('Foreclosed')
     amend_and_draft = fields.Boolean('Amend And Draft')
 
-    def stage_uniq(self):
-        draft_list = []
-        approve_list = []
-        forclose_list = []
-        amend_draft_list = []
-        stage_obj_draft = self.env['stage.master'].search([('draft', '=', True)])
-        for stage in stage_obj_draft:
-            draft_list.append(stage.id)
-            if len(set(draft_list)) > 1:
-                return False
-
-        stage_obj_approved = self.env['stage.master'].search([('approved', '=', True)])
-        for stage in stage_obj_approved:
-            approve_list.append(stage.id)
-            if len(set(approve_list)) > 1:
-                return False
-
-        stage_obj_forclosed = self.env['stage.master'].search([('foreclosed', '=', True)])
-        for stage in stage_obj_forclosed:
-            forclose_list.append(stage.id)
-            if len(set(forclose_list)) > 1:
-                return False
-
-        stage_obj_amend_draft = self.env['stage.master'].search([('amend_and_draft', '=', True)])
-        for stage in stage_obj_amend_draft:
-            amend_draft_list.append(stage.id)
-            if len(set(amend_draft_list)) > 1:
-                return False
-
-        return True
-
-    _constraints = [
-        (stage_uniq, 'The draft, approved, foreclosed, amend_and_draft state must be unique!', ['draft', 'approved', 'foreclosed', 'amend_and_draft'])
-    ]
+    @api.constrains('draft', 'approved', 'foreclosed', 'amend_and_draft')
+    def _check_stage_uniq(self):
+        for record in self:
+            if record.draft and self.search_count([('draft', '=', True)]) > 1:
+                raise ValidationError('The draft state must be unique!')
+            if record.approved and self.search_count([('approved', '=', True)]) > 1:
+                raise ValidationError('The approved state must be unique!')
+            if record.foreclosed and self.search_count([('foreclosed', '=', True)]) > 1:
+                raise ValidationError('The foreclosed state must be unique!')
+            if record.amend_and_draft and self.search_count([('amend_and_draft', '=', True)]) > 1:
+                raise ValidationError('The amend_and_draft state must be unique!')
 

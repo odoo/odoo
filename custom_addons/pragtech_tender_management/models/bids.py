@@ -19,7 +19,7 @@ class BidsBids(models.Model):
     bids_country_id = fields.Many2one('res.country', string='Country')
     bids_user_id = fields.Many2one('res.partner', 'Responsible')
     bids_top_rank = fields.Integer('Ranking')
-    bids_start_date = fields.Datetime("Start Date", default=fields.Datetime.today)
+    bids_start_date = fields.Datetime("Start Date", default=fields.Datetime.now)
     bids_end_date = fields.Datetime("End Date")  # no start and end = always active
     bids_line_id = fields.One2many('bids.bids.line', 'line_id')
     bids_labour_id = fields.One2many('bids.labour', 'bids_labour_id')

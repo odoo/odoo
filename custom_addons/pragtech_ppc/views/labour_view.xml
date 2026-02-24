@@ -25,15 +25,15 @@
                         </group>
 
                         <notebook>
-                            <page name="labours" string="Labours" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                            <page name="labours" string="Labours" invisible="is_labour">
                                 <field name="labour_ids" context="{'default_is_labour': True,'default_parent_id':parent_labour_id}" domain="[('is_labour','=',True)]">
                                 </field>
                             </page>
-                            <page name="labours_groups" string="Labour Group" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                            <page name="labours_groups" string="Labour Group" invisible="is_labour">
                                 <field name="labour_group_ids" context="{'default_is_labour': False,'default_parent_id':parent_group_id}">
                                 </field>
                             </page>
-                            <page name="child_groups" string="Labour Child Group" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                            <page name="child_groups" string="Labour Child Group" invisible="is_labour">
                                 <field name="child_ids2" context="{'default_is_labour': False,'default_parent_id':parent_id}">
                                 </field>
                             </page>

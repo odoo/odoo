@@ -17,7 +17,7 @@ class Transaction(models.Model):
             for st_id in st_ids:
                 return st_id.id
 
-    name = fields.Char('Transaction No.', states={'draft': [('readonly', False)]}, copy=False, )
+    name = fields.Char('Transaction No.', copy=False)
     project_id = fields.Many2one('project.project', string='Project', required=True)
     project_wbs = fields.Many2one('project.task', 'project WBS Name', domain=[('is_wbs', '=', True), ('is_task', '=', False)], required=False)
     sub_project = fields.Many2one('sub.project', 'Sub Project', required=False)

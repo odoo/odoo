@@ -9,8 +9,8 @@
                 <form string="Bids Bids">
 
                     <header>
-                        <button name="action_bids_under_review" string="Under Review" type="object" states="submitted" class="oe_highlight"/>
-                        <button name="action_bids_won" string="Won" type="object" states="under_review" class="oe_highlight"/>
+                        <button name="action_bids_under_review" string="Under Review" type="object" invisible="state != 'submitted'" class="oe_highlight"/>
+                        <button name="action_bids_won" string="Won" type="object" invisible="state != 'under_review'" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="submitted,under_review,won,lost"/>
                     </header>
 

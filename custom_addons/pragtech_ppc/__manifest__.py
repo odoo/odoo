@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Construction Project Planning and Controlling',
-    'version': '16.0.1.0.6',
+    'version': '18.0.1.0.0',
     'author': 'Pragmatic TechSoft Pvt Ltd.',
     'website': "www.pragtech.co.in",
     'category': 'Construction',

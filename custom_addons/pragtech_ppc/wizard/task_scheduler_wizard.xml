@@ -62,9 +62,9 @@
                     <group>
                         <field name="update_action"/>
                         <field name="updated_date"
-                               attrs="{'invisible': ['|','|','|', ('update_action', '=', 'status'), ('update_action', '=', 'completion'), ('update_action', '=', 'plannedstart_actualstart'), ('update_action', '=', 'plannedfinish_actualfinish')]}"/>
-                        <field name="updated_status" attrs="{'invisible': [('update_action', '!=', 'status')]}"/>
-                        <field name="updated_percent" attrs="{'invisible': [('update_action', '!=', 'completion')]}"/>
+                               invisible="update_action == 'status' or update_action == 'completion' or update_action == 'plannedstart_actualstart' or update_action == 'plannedfinish_actualfinish'"/>
+                        <field name="updated_status" invisible="update_action != 'status'"/>
+                        <field name="updated_percent" invisible="update_action != 'completion'"/>
                         <field name="note" readonly="1"/>
                     </group>
                     <group>

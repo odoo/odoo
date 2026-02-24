@@ -5,11 +5,10 @@
         <record id="retention_form_view" model="ir.ui.view">
             <field name="name">Retention</field>
             <field name="model">retention.release</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Retention">
                     <header>
-                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" invisible="flag"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
 
@@ -40,7 +39,7 @@
                             <button name="compute_retentions" type="object" class="fa fa-search" string="Search"/>
                         </div>
 
-                        <field name="release_line_ids" attrs="{'readonly':[('state','=','paid')]}">
+                        <field name="release_line_ids" readonly="state == 'paid'">
                             <tree editable="bottom" create="0">
                                 <field name="is_use" nolabel="1"/>
                                 <field name="project_id" readonly="1"/>

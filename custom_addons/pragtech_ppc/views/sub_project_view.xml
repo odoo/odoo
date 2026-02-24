@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="change_state" string="Change Stage" type="object" class="oe_highlight" attrs="{'invisible': [('flag','=',True)]}" invisible="0"/>
+                        <button name="change_state" string="Change Stage" type="object" class="oe_highlight" invisible="flag"/>
                     </header>
                     <sheet>
                         <group>

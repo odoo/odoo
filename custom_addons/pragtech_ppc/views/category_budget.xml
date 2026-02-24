@@ -41,7 +41,7 @@
                                         <field name="remark"/>
                                         <field name="stage_id" readonly="1"/>
                                         <field name="flag" invisible="1"/>
-                                        <button string="Change Stage" name="change_state" type="object" class="oe-hielight" attrs="{'invisible': [('flag', '!=', False)]}"/>
+                                        <button string="Change Stage" name="change_state" type="object" class="oe-hielight" invisible="flag"/>
                                     </tree>
                                 </field>
                             </page>

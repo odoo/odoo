@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Odoo Construction Expense Management',
-    'version': '16.0.0',
+    'version': '18.0.1.0.0',
     'author': 'Pragmatic TechSoft Pvt Ltd.',
     "website": "http://www.pragtech.co.in",
     'category': 'Expense',

@@ -213,7 +213,7 @@ class LabourRequisition(models.Model):
     group_id = fields.Many2one('project.task', 'Group')
     task_id = fields.Many2one('project.task', 'Task')
     flag = fields.Boolean('Flag', default=False)
-    partner_id = fields.Many2one('res.partner', string='Contractor', change_default=True, track_visibility='always')
+    partner_id = fields.Many2one('res.partner', string='Contractor', change_default=True, tracking=True)
     requisition_date = fields.Date('Date', default=fields.date.today(), required=True)
     requirement_date = fields.Date('Requirement Date')
     procurement_date = fields.Date('Procurement Date')
@@ -303,7 +303,7 @@ class LabourRequisitionLine(models.Model):
     group_id = fields.Many2one('project.task', 'Group')
     task_id = fields.Many2one('project.task', 'Task')
     flag = fields.Boolean('Flag', default=False)
-    partner_id = fields.Many2one('res.partner', string='Contractor', required=True, change_default=True, track_visibility='always')
+    partner_id = fields.Many2one('res.partner', string='Contractor', required=True, change_default=True, tracking=True)
     requisition_date = fields.Date('Date', default=fields.date.today(), required=True)
     requirement_date = fields.Date('Requirement Date')
     procurement_date = fields.Date('Procurement Date')
@@ -370,22 +370,22 @@ class LabourQuotation(models.Model):
                 'views': [[view_id, 'form']],
             }
 
-    name = fields.Char('Order Reference', required=True, select=True, copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, copy=False, default='New')
     origin = fields.Char('Source Document', copy=False,
                          help='Reference of the document that generated this purchase order request (e.g. a sale order or an internal procurement request)')
 
-    date_order = fields.Datetime('Quotation Date', required=True, select=True, copy=False, default=fields.Datetime.now(),
+    date_order = fields.Datetime('Quotation Date', required=True, copy=False, default=fields.Datetime.now(),
                                  help='Depicts the date where the Quotation should be validated and converted into a purchase order.')
-    partner_id = fields.Many2one('res.partner', string='Contractor', required=True, change_default=True, track_visibility='always')
+    partner_id = fields.Many2one('res.partner', string='Contractor', required=True, change_default=True, tracking=True)
     partner_ref = fields.Char('Vendor Reference', copy=False, help="Reference of the sales order or bid sent by the vendor."
                                                                    "It's used to do the matching when you receive the"
                                                                    "products as this reference is usually written on the"
                                                                    "delivery order sent by your vendor.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
-                             string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+                             string='Status', readonly=True, copy=False, index=True, tracking=True, default='draft')
     order_line = fields.One2many('labour.quotation.line', 'order_id', string='Order Lines', copy=True)
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
     valid_till = fields.Datetime('Valid Till')
@@ -397,7 +397,7 @@ class LabourQuotation(models.Model):
     use_in_quotation = fields.Boolean('Use In Quotation')
     delivery_schedule = fields.Datetime(string='Delivery Schedule')
     host_name = fields.Char(string='Host Name')
-    stage_id = fields.Many2one('stage.master', 'Stage', default=_default_stage, readonly=True, track_visibility='onchange')
+    stage_id = fields.Many2one('stage.master', 'Stage', default=_default_stage, readonly=True, tracking=True)
     flag = fields.Boolean('Flag', default=False)
     mesge_ids = fields.One2many('mail.messages', 'res_id', string='Massage', domain=lambda self: [('model', '=', self._name)])
 
@@ -445,7 +445,7 @@ class LabourQuotationLine(models.Model):
 
     name = fields.Text(string='Description')
     labour_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1)
-    date_planned = fields.Datetime(string='Scheduled Date', select=True)
+    date_planned = fields.Datetime(string='Scheduled Date', )
     taxes_id = fields.Many2many('account.tax', 'labour_quot_line_tax_rel', 'labour_quot_line_id', 'tax_id', string='Taxes')
     labour_uom = fields.Many2one('uom.uom', string='Units', required=True)
     labour_id = fields.Many2one('labour.master', string='Labour', required=True)
@@ -456,7 +456,7 @@ class LabourQuotationLine(models.Model):
     price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
 
     work_class = fields.Many2one('labour.work.classification', 'Work Class')
-    order_id = fields.Many2one('labour.quotation', string='Order Reference', select=True, required=True, ondelete='cascade')
+    order_id = fields.Many2one('labour.quotation', string='Order Reference', required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', domain=[('account_type', '=', 'normal')])
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', stored=True, string='State')

@@ -1,6 +1,6 @@
 {
     'name': 'Construction Sub Contracting Management',
-    'version': '16.0.1.0.5',
+    'version': '18.0.1.0.0',
     'category': 'Construction',
     'author': 'Pragmatic TechSoft Pvt Ltd.',
     'summary': 'This Module Adds a drop-down for service links in systray Bookmarks odoo bookmarks Construction Sub-Contracting Management construction contracting construction management odoo construction',

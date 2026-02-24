@@ -5,12 +5,11 @@
         <record id="labour_requisitions_form_view" model="ir.ui.view">
             <field name="name">Labour Requisition</field>
             <field name="model">labour.requisition</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
                         <button name="change_state" type="object" string="Change Stage" class="oe_highlight"
-                                attrs="{'invisible': [('state','not in','draft')]}"/>
+                                invisible="state not in ('draft',)"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
 
@@ -41,7 +40,7 @@
                                 <field name="total_ordered_qty" readonly="True"/>
                                 <field name="balance_qty" readonly="True"/>
                                 <field name="Requisition_as_on_date" readonly="True"/>
-                                <field name="current_req_qty" attrs="{'readonly': [('flag', '=', True)]}"/>
+                                <field name="current_req_qty" readonly="flag"/>
                             </group>
                         </group>
 
@@ -58,7 +57,7 @@
                         <group>
                             <group string="Other Info">
                                 <field name="status"/>
-                                <field name="specification" attrs="{'readonly': [('flag', '=', True)]}"/>
+                                <field name="specification" readonly="flag"/>
                             </group>
                             <group>
                                 <field name="priority"/>
@@ -120,7 +119,6 @@
         <record id="labour_requisition_tree" model="ir.ui.view">
             <field name="name">Labour Requisitions</field>
             <field name="model">labour.requisition</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree create="false">
                     <field name="estimation_id" readonly="True" invisible="1"/>

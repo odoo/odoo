@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Labour Quotation">
                     <header>
-                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible': [('state','not in','draft')]}"/>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" invisible="state not in ('draft',)"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -28,7 +28,7 @@
                             </group>
                             <group>
                                 <field name="date_order"/>
-                                <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
+                                <field name="origin" invisible="not origin"/>
                                 <field name="company_id" groups="base.group_multi_company"
                                        options="{'no_create': True}"/>
                                 <field name="valid_till"/>

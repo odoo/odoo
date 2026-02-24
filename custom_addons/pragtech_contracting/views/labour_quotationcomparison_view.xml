@@ -5,11 +5,10 @@
         <record id="labour_quotation_comparison_form_view" model="ir.ui.view">
             <field name="name">labour.quotation.comparison.view</field>
             <field name="model">labour.quotation.comparison</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Comparison Details">
                     <header>
-                        <button name="confirm_action" type="object" string="confirm" class="oe_highlight" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>
+                        <button name="confirm_action" type="object" string="confirm" class="oe_highlight" invisible="state not in ('draft',)"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
 
@@ -22,22 +21,22 @@
 
                         <group>
                             <group>
-                                <field name="project_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                                <field name="sub_project" domain="[('project_id', '=', project_id)]" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                                <field name="project_wbs_id" attrs="{'readonly': [('state', '=', 'confirm')]}"
+                                <field name="project_id" readonly="state == 'confirm'"/>
+                                <field name="sub_project" domain="[('project_id', '=', project_id)]" readonly="state == 'confirm'"/>
+                                <field name="project_wbs_id" readonly="state == 'confirm'"
                                        domain="[('project_id', '!=', False), ('project_id', '=', project_id), ('sub_project', '=', sub_project), ('is_wbs', '=', True)]"/>
                             </group>
 
                             <group>
-                                <field name="from_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                                <field name="to_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="from_date" readonly="state == 'confirm'"/>
+                                <field name="to_date" readonly="state == 'confirm'"/>
                             </group>
                         </group>
 
                         <group>
                             <group string="Labour List">
                                 <div style="margin-top: 2px; margin-left: 10px;">
-                                    <field name="labour_line" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                    <field name="labour_line" readonly="state == 'confirm'">
                                         <tree create="false" delete="false" editable="bottom">
                                             <field name="labour_id"/>
                                             <field name="is_labour"/>
@@ -49,7 +48,7 @@
 
                             <group string="Contractor List">
                                 <div style="margin-top: 2px;margin-left: 10px;">
-                                    <field name="contractor_line" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                    <field name="contractor_line" readonly="state == 'confirm'">
                                         <tree create="false" delete="false" editable="bottom">
                                             <field name="contractor_id"/>
                                             <field name="is_contractor"/>
@@ -61,7 +60,7 @@
 
                         <group>
                             <div align="right">
-                                <button name="compute_labour_quotation_details" type="object" class="fa fa-search" string="Search Quotation" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                                <button name="compute_labour_quotation_details" type="object" class="fa fa-search" string="Search Quotation" invisible="state in ('confirm',)"/>
                             </div>
                         </group>
 
@@ -92,13 +91,13 @@
 
                         <group>
                             <div align="right">
-                                <button name="compute_selected_quotations" type="object" class="fa fa-plus" string="Add" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                                <button name="compute_selected_quotations" type="object" class="fa fa-plus" string="Add" invisible="state in ('confirm',)"/>
                             </div>
                         </group>
 
                         <group string="Labour Particulars">
                             <div style="margin-top: 15px;margin-right: 10px">
-                                <field name="labour_quotation_comp_particular" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <field name="labour_quotation_comp_particular" nolabel="1" readonly="state == 'confirm'">
                                     <tree create="false" delete="false" editable="bottom">
                                         <field name="is_approve"/>
                                         <field name="labour_id" readonly="1"/>
@@ -116,7 +115,7 @@
                                 </h2>
                                 <group>
                                     <group>
-                                        <field name="quotation_comp_contractor1" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                        <field name="quotation_comp_contractor1" nolabel="1" readonly="state == 'confirm'">
                                             <tree create="false" delete="false" editable="bottom" colors="blue:is_approve==True">
                                                 <field name="is_approve" invisible="0"/>
                                                 <field name="labour_id" invisible="1"/>
@@ -129,7 +128,7 @@
                                     </group>
 
                                     <group>
-                                        <field name="labour_quotation_comp_tax_details1" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                        <field name="labour_quotation_comp_tax_details1" nolabel="1" readonly="state == 'confirm'">
                                             <tree create="false" delete="false" editable="bottom">
                                                 <field name="contractor_id" invisible="1"/>
                                                 <field name="labour_id" invisible="1"/>
@@ -143,19 +142,19 @@
                                         <field name="total_contractor1"/>
                                     </group>
                                     <group>
-                                        <button name="get_taxes1" string="Calculate All Taxes" type="object" class="oe_link" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                                        <button name="get_taxes1" string="Calculate All Taxes" type="object" class="oe_link" invisible="state in ('confirm',)"/>
                                     </group>
                                 </group>
 
                             </div>
                         </group>
 
-                        <group name="contractor2" attrs="{'invisible': [('contractor2', '=', False)]}">
+                        <group name="contractor2" invisible="not contractor2">
                             <div>
                                 <h2>
                                     <field name="contractor2" nolabel="1" readonly="1"/>
                                 </h2>
-                                <field name="quotation_comp_contractor2" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <field name="quotation_comp_contractor2" readonly="state == 'confirm'">
                                     <tree create="false" delete="false" editable="bottom" colors="blue:is_approve==True">
                                         <field name="is_approve"/>
                                         <field name="labour_id" invisible="1"/>
@@ -166,7 +165,7 @@
                                     </tree>
                                 </field>
 
-                                <field name="labour_quotation_comp_tax_details2" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <field name="labour_quotation_comp_tax_details2" nolabel="1" readonly="state == 'confirm'">
                                     <tree create="false" delete="false" editable="bottom">
                                         <field name="contractor_id" invisible="1"/>
                                         <field name="labour_id" invisible="1"/>
@@ -201,7 +200,6 @@
         <record id="labour_quotation_comparison_tree_view" model="ir.ui.view">
             <field name="name">labour.quotation.comparison.tree</field>
             <field name="model">labour.quotation.comparison</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="sequence_name"/>

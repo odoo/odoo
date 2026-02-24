@@ -18,11 +18,10 @@
         <record id="debit_form_view" model="ir.ui.view">
             <field name="name">Debit Recovery</field>
             <field name="model">debit.recovery</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Debit">
                     <header>
-                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" invisible="flag"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -31,21 +30,21 @@
                             </h1>
 
                             <group colspan="4" col="4">
-                                <field name="project_id" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="sub_project" domain="[('project_id','=',project_id)]" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="project_wbs" domain="[('project_id','=',project_id),('sub_project','=',sub_project)]" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="company_id" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="project_id" readonly="flag"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="flag"/>
+                                <field name="project_wbs" domain="[('project_id','=',project_id),('sub_project','=',sub_project)]" readonly="flag"/>
+                                <field name="company_id" readonly="flag"/>
                             </group>
 
                             <group colspan="4" col="4">
-                                <field name="workorder_id" attrs="{'readonly':[('flag','=',True)]}" domain="['|','|',('project_id','=',project_id),('sub_project','=',sub_project),('project_wbs','=',project_wbs)]"/>
-                                <field name="contractor_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('contractor','=',True)]"/>
+                                <field name="workorder_id" readonly="flag" domain="['|','|',('project_id','=',project_id),('sub_project','=',sub_project),('project_wbs','=',project_wbs)]"/>
+                                <field name="contractor_id" readonly="flag" domain="[('contractor','=',True)]"/>
                                 <field name="stage_id"/>
                                 <field name="flag" invisible="1"/>
                             </group>
 
                             <div align="right">
-                                <button name="compute_debit" type="object" class="fa fa-search" string="Search" attrs="{'invisible':[('flag','=',True)]}"/>
+                                <button name="compute_debit" type="object" class="fa fa-search" string="Search" invisible="flag"/>
                             </div>
 
                             <field name="debit_line_ids">
@@ -61,7 +60,7 @@
                                     <field name="total_recovery" readonly="1"/>
                                     <field name="payment_mode"/>
                                     <field name="condition" invisible="1"/>
-                                    <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
+                                    <field name="bank_name" invisible="payment_mode == 'cash'"/>
                                     <field name="payment_refrence" readonly="1"/>
                                     <field name="transaction_date" readonly="1"/>
                                 </tree>

@@ -6,7 +6,6 @@
         <record id="work_order_types_view" model="ir.ui.view">
             <field name="name">work.order.form</field>
             <field name="model">work.order.types</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -26,7 +25,6 @@
         <record id="work_order_tree_view" model="ir.ui.view">
             <field name="name">work.order.tree</field>
             <field name="model">work.order.types</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
@@ -158,7 +156,7 @@
                 <form string="Work Order">
                     <header>
                         <button name="change_state" type="object" string="Change Stage" class="oe_highlight"
-                                groups="pragtech_contracting.group_asst_manager,pragtech_contracting.group_manager" attrs="{'invisible': [('state','not in','draft')]}"/>
+                                groups="pragtech_contracting.group_asst_manager,pragtech_contracting.group_manager" invisible="state not in ('draft',)"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
 
@@ -177,18 +175,18 @@
 
                         <group>
                             <group>
-                                <field name="partner_id" attrs="{'readonly': [('state','not in','draft')]}" context="{'search_default_contractor':1, 'default_contractor':1, 'default_customer':0}"
+                                <field name="partner_id" readonly="state not in ('draft',)" context="{'search_default_contractor':1, 'default_contractor':1, 'default_customer':0}"
                                        domain="[('contractor','=',True),'|',('contractor_status','=','trial'),('contractor_status','=','approved')]"/>
-                                <field name="project_id" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                <field name="sub_project" attrs="{'readonly': [('state','not in','draft')]}" domain="[('project_id','=',project_id)]"/>
-                                <field name="project_wbs" attrs="{'readonly': [('state','not in','draft')]}" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"
+                                <field name="project_id" readonly="state not in ('draft',)"/>
+                                <field name="sub_project" readonly="state not in ('draft',)" domain="[('project_id','=',project_id)]"/>
+                                <field name="project_wbs" readonly="state not in ('draft',)" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"
                                        domain="[('project_id','=',project_id),('sub_project','=',sub_project),('is_wbs', '=', True),('is_task','=',False),('is_group', '=',False)]"/>
                                 <field name="flag" invisible="1"/>
                             </group>
 
                             <group>
                                 <field name="stage_id" readonly="1"/>
-                                <field name="date_order" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                <field name="date_order" readonly="state not in ('draft',)"/>
                                 <field name="valid_till" invisible="1"/>
                                 <field name="revision" readonly="1"/>
                             </group>
@@ -224,7 +222,7 @@
                         <notebook>
                             <page string="Work Order line">
                                 <field name="order_line" context="{'default_project_wbs':project_wbs}"
-                                       domain="[('quantity', '>', 0)]" attrs="{'readonly': [('state','not in','draft')]}">
+                                       domain="[('quantity', '>', 0)]" readonly="state not in ('draft',)">
                                     <tree domain="[('quantity', '>', '0')]">
                                         <field name="requisition_id" invisible="1"/>
                                         <field name="name"/>
@@ -271,17 +269,17 @@
 
                             <page string="Other Information">
                                 <group>
-                                    <field name="commencement_date" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="completion_date" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="maximum_advance" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="retention" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="tds_account" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="wo_type" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="title" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="wct_account" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="wct_percent" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="billed_amount" attrs="{'readonly': [('state','not in','draft')]}"/>
-                                    <field name="currency_id" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="commencement_date" readonly="state not in ('draft',)"/>
+                                    <field name="completion_date" readonly="state not in ('draft',)"/>
+                                    <field name="maximum_advance" readonly="state not in ('draft',)"/>
+                                    <field name="retention" readonly="state not in ('draft',)"/>
+                                    <field name="tds_account" readonly="state not in ('draft',)"/>
+                                    <field name="wo_type" readonly="state not in ('draft',)"/>
+                                    <field name="title" readonly="state not in ('draft',)"/>
+                                    <field name="wct_account" readonly="state not in ('draft',)"/>
+                                    <field name="wct_percent" readonly="state not in ('draft',)"/>
+                                    <field name="billed_amount" readonly="state not in ('draft',)"/>
+                                    <field name="currency_id" readonly="state not in ('draft',)"/>
                                 </group>
                             </page>
 

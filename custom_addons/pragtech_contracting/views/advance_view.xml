@@ -20,11 +20,10 @@
         <record id="advance_form_view" model="ir.ui.view">
             <field name="name">advance</field>
             <field name="model">advance.recovery</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Debit">
                     <header>
-                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" invisible="flag"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -35,18 +34,18 @@
 
                         <group>
                             <group>
-                                <field name="company_id" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="sub_project" domain="[('project_id','=',project_id)]" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="contractor_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('contractor','=',True)]"/>
+                                <field name="company_id" readonly="flag"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="flag"/>
+                                <field name="contractor_id" readonly="flag" domain="[('contractor','=',True)]"/>
                             </group>
                             <group>
-                                <field name="project_id" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="workorder_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('state','=','confirm')]"/>
+                                <field name="project_id" readonly="flag"/>
+                                <field name="workorder_id" readonly="flag" domain="[('state','=','confirm')]"/>
                                 <field name="stage_id"/>
                                 <field name="flag" invisible="1"/>
                             </group>
 
-                            <button name="compute_advance" type="object" class="oe_left fa fa-search" style="matgin-left:550px" string="Search" attrs="{'invisible':[('flag','=',True)]}"/>
+                            <button name="compute_advance" type="object" class="oe_left fa fa-search" style="matgin-left:550px" string="Search" invisible="flag"/>
                         </group>
 
                         <field name="advance_line_ids">
@@ -62,8 +61,8 @@
                                 <field name="this_bill_recovery" readonly="0"/>
                                 <field name="total_recovery" readonly="1"/>
                                 <field name="payment_mode"/>
-                                <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
-                                <field name="payment_refrence" attrs="{'readonly': [('payment_mode','in','cash')]}"/>
+                                <field name="bank_name" invisible="payment_mode == 'cash'"/>
+                                <field name="payment_refrence" readonly="payment_mode == 'cash'"/>
                                 <field name="transaction_date" readonly="1"/>
                             </tree>
                         </field>
@@ -90,8 +89,8 @@
                                 <field name="total_recovery" readonly="1"/>
                                 <field name="payment_mode"/>
                                 <field name="condition" invisible="1"/>
-                                <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
-                                <field name="payment_refrence" attrs="{'readonly': [('payment_mode','in','cash')]}"/>
+                                <field name="bank_name" invisible="payment_mode == 'cash'"/>
+                                <field name="payment_refrence" readonly="payment_mode == 'cash'"/>
                                 <field name="transaction_date" readonly="1"/>
                             </tree>
                         </field>

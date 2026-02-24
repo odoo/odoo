@@ -20,11 +20,10 @@
         <record id="credit_form_view" model="ir.ui.view">
             <field name="name">credit Recovery</field>
             <field name="model">credit.recovery</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Debit">
                     <header>
-                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" invisible="flag"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -35,11 +34,11 @@
 
                         <group>
                             <group>
-                                <field name="company_id" attrs="{'readonly':[('flag','=',True)]}"/>
-                                <field name="sub_project" domain="[('project_id','=',project_id)]" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="company_id" readonly="flag"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="flag"/>
                             </group>
                             <group>
-                                <field name="project_id" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="project_id" readonly="flag"/>
                                 <field name="stage_id"/>
                                 <field name="flag" invisible="1"/>
                             </group>
@@ -47,18 +46,18 @@
 
                         <group>
                             <group>
-                                <field name="contractor_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('contractor','=',True)]"/>
+                                <field name="contractor_id" readonly="flag" domain="[('contractor','=',True)]"/>
                                 <field name="stage_id"/>
                             </group>
                             <group>
-                                <field name="workorder_id" domain="[('state','=','confirm')]" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="workorder_id" domain="[('state','=','confirm')]" readonly="flag"/>
                             </group>
                         </group>
 
-                        <button name="compute_credit" type="object" class="oe_right fa fa-search" string="Search" attrs="{'invisible':[('flag', '=', True)]}"/>
+                        <button name="compute_credit" type="object" class="oe_right fa fa-search" string="Search" invisible="flag"/>
                         <br/>
 
-                        <field name="credit_line_ids" attrs="{'readonly':[('flag','=',True)]}">
+                        <field name="credit_line_ids" readonly="flag">
                             <tree editable="bottom" create="false" delete="false">
                                 <field name="is_use"/>
                                 <field name="credit_id" readonly="1"/>
@@ -72,8 +71,8 @@
                                 <field name="total_recovery" readonly="1"/>
                                 <field name="payment_mode"/>
                                 <field name="condition" invisible="1"/>
-                                <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
-                                <field name="payment_refrence" attrs="{'readonly': [('payment_mode','in','cash')]}"/>
+                                <field name="bank_name" invisible="payment_mode == 'cash'"/>
+                                <field name="payment_refrence" readonly="payment_mode == 'cash'"/>
                                 <field name="transaction_date" readonly="1"/>
                             </tree>
                         </field>

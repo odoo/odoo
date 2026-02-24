@@ -185,9 +185,9 @@ class Task(models.Model):
     is_task = fields.Boolean('Task')
     category_id = fields.Many2one('task.category', 'Category')
     sub_category_id = fields.Many2one('task.sub.category', 'Sub Category')
-    material_cost = fields.Float(compute='calculate_material_cost', string='Material Cost', method=True)
+    material_cost = fields.Float(compute='calculate_material_cost', string='Material Cost')
     min_qty = fields.Integer('Minimum Qty')
-    labour_cost = fields.Float(compute='calculate_labour_cost', string='Labour Cost', method=True)
+    labour_cost = fields.Float(compute='calculate_labour_cost', string='Labour Cost')
     parent_task_id = fields.Many2one('project.task', 'Parent Group', store=True)
     parent_group_id = fields.Many2one('project.task', 'Parent Group')
     task_ids = fields.One2many('project.task', 'parent_task_id')
@@ -893,9 +893,9 @@ class WBSTaskGroup(models.Model):
     _name = 'wbs.task.group'
     _description = 'WBS Task Group'
 
-    name = fields.Char('Group Title', track_visibility='onchange', size=128, required=True, select=True)
-    date_start = fields.Datetime('Starting Date', select=True, copy=False, store=True, compute='_get_start_date')
-    date_end = fields.Datetime('Ending Date', select=True, copy=False, store=True, compute='_get_end_date')
+    name = fields.Char('Group Title', tracking=True, required=True)
+    date_start = fields.Datetime('Starting Date', copy=False, store=True, compute='_get_start_date')
+    date_end = fields.Datetime('Ending Date', copy=False, store=True, compute='_get_end_date')
     project_wbs_id = fields.Many2one('project.wbs', string='Project')
     task_id = fields.Many2many('project.task', 'task_project_rel1', 'task_wbs_id', 'project_wbs_id')
 

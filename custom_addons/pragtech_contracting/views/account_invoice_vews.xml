@@ -9,9 +9,9 @@
 			<field name="arch" type="xml">
 				<field name="invoice_payments_widget" position="after">
 					<field name="ra_bill_invoice" invisible="1"/>
-					<field name="recovery_sum" readonly="1" attrs="{'invisible':[('ra_bill_invoice','=', False)]}"/>
-					<field name="credit_sum" readonly="1" attrs="{'invisible':[('ra_bill_invoice','=', False)]}"/>
-					<field name="retention_amt" readonly="1" attrs="{'invisible':['|',('ra_bill_invoice','=', False),('retention_amt','=',0.00)]}"/>
+					<field name="recovery_sum" readonly="1" invisible="not ra_bill_invoice"/>
+					<field name="credit_sum" readonly="1" invisible="not ra_bill_invoice"/>
+					<field name="retention_amt" readonly="1" invisible="not ra_bill_invoice or retention_amt == 0.00"/>
 				</field>
 			</field>
 		</record>

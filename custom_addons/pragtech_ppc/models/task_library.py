@@ -12,9 +12,9 @@ class ProjectTaskLibrary(models.Model):
     is_library_task = fields.Boolean('Library Task')
     category_id = fields.Many2one('task.category', 'Category')
     sub_category_id = fields.Many2one('task.sub.category', 'Sub Category')
-    material_cost = fields.Float(compute='_calculate_material_cost', default='0.0', string='Material Cost', method=True)
+    material_cost = fields.Float(compute='_calculate_material_cost', default='0.0', string='Material Cost')
     min_qty = fields.Integer('Minimum Qty', required=True)
-    labour_cost = fields.Float(compute="calculate_labour_cost", string="Labour Cost", method=True)
+    labour_cost = fields.Float(compute="calculate_labour_cost", string="Labour Cost")
     date_start = fields.Date('Start Date')
     date_end = fields.Date('End Date')
     parent_task_id = fields.Many2one('project.task.library', 'Parent Group')
@@ -26,7 +26,7 @@ class ProjectTaskLibrary(models.Model):
     task_material_line = fields.One2many('material.library', 'task_library_id', string='Task Material Lines')
     task_labour_line = fields.One2many('labour.library', 'task_library_id', string='Task labour Lines')
     uom_id = fields.Many2one('uom.uom', 'Unit', required=True)
-    total_cost = fields.Float(compute='_get_total_cost', string='Total Cost', help='Sum of material cost and labour cost', method=True)
+    total_cost = fields.Float(compute='_get_total_cost', string='Total Cost', help='Sum of material cost and labour cost')
 
     def _get_total_cost(self):
         for this in self:

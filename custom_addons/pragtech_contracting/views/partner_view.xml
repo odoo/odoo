@@ -74,11 +74,11 @@
                 <xpath expr="/form/sheet/div[1]" position="before">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="%(pragtech_contracting.act_res_partner_work_order)d"
-                                type="action" attrs="{'invisible': [('contractor', '=', False)]}" icon="fa-shopping-cart">
+                                type="action" invisible="not contractor" icon="fa-shopping-cart">
                             <field string="WorkOrders" name="work_order_count" widget="statinfo"/>
                         </button>
                         <button class="oe_stat_button" name="%(pragtech_contracting.act_res_partner_ra_bill)d"
-                                type="action" attrs="{'invisible': [('contractor', '=', False)]}" icon="fa-shopping-cart">
+                                type="action" invisible="not contractor" icon="fa-shopping-cart">
                             <field string="RA Bill" name="contractor_bill_count" widget="statinfo"/>
                         </button>
                     </div>
@@ -102,7 +102,7 @@
                 </xpath>
 
                 <xpath expr="//page[@name='internal_notes']" position="after">
-                    <page string="Contractor Information" attrs="{'invisible': [('contractor', '!=', True)]}">
+                    <page string="Contractor Information" invisible="not contractor">
                         <group colspan="4" col="4">
                             <field name="cst_no"/>
                             <field name="vat_no"/>
@@ -115,23 +115,23 @@
                             <field name="organization_type"/>
                             <field name="contractor_status"/>
                             <field name="status_remark"/>
-                            <field name="trial_allowed" attrs="{'invisible': [('contractor_status','!=','trial')]}"/>
+                            <field name="trial_allowed" invisible="contractor_status != 'trial'"/>
                             <field name="turn_over"/>
-                            <field name="trial_used" attrs="{'invisible': [('contractor_status', '!=', 'trial')]}"/>
+                            <field name="trial_used" invisible="contractor_status != 'trial'"/>
                             <field name="number_of_employees"/>
                             <field name="inbusiness_since"/>
                             <field name="registration_date"/>
-                            <field name="esic_no" attrs="{'invisible': [('contractor', '!=', True)]}"/>
-                            <field name="lwmf_no" attrs="{'invisible': [('contractor', '!=', True)]}"/>
-                            <field name="wct_no" attrs="{'invisible': [('contractor', '!=', True)]}"/>
-                            <field name="shop_act_no" attrs="{'invisible': [('contractor', '!=', True)]}"/>
-                            <field name="shop_act_expiry_date" attrs="{'invisible': [('contractor', '!=', True)]}"/>
-                            <field name="pf_code_registration_no" attrs="{'invisible': [('contractor', '!=', True)]}"/>
+                            <field name="esic_no" invisible="not contractor"/>
+                            <field name="lwmf_no" invisible="not contractor"/>
+                            <field name="wct_no" invisible="not contractor"/>
+                            <field name="shop_act_no" invisible="not contractor"/>
+                            <field name="shop_act_expiry_date" invisible="not contractor"/>
+                            <field name="pf_code_registration_no" invisible="not contractor"/>
                         </group>
 
                         <separator string="Category Information"/>
                         <group colspan="4" col="4">
-                            <field name="labour_category" attrs="{'invisible': [('contractor', '!=', True)]}" widget="many2many_tags"/>
+                            <field name="labour_category" invisible="not contractor" widget="many2many_tags"/>
                         </group>
 
                     </page>

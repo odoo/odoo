@@ -76,7 +76,7 @@ class RABill(models.Model):
     retention_amount = fields.Float('Retention', help="Retention amount of workorder=(retn *100)/untaxed amt", compute='get_wo_retension_amt')
 
     # account.invoice.tax to account.tax
-    tax_line_ids = fields.One2many('account.tax', 'rabill_id', string='Tax Lines', oldname='tax_line', readonly=True, states={'draft': [('readonly', False)]}, copy=True)
+    tax_line_ids = fields.One2many('account.tax', 'rabill_id', string='Tax Lines', copy=True)
 
     mesge_ids = fields.One2many('mail.messages', 'res_id', string='Massage', domain=lambda self: [('model', '=', self._name)])
 

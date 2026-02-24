@@ -20,7 +20,7 @@ class TendersTenders(models.Model):
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
     user_id = fields.Many2one('res.partner', 'Responsible')
-    start_date = fields.Datetime("Bid from", default=fields.Datetime.today)
+    start_date = fields.Datetime("Bid from", default=fields.Datetime.now)
     end_date = fields.Datetime("Bid to")  # no start and end = always active
     top_rank = fields.Char('Top rank')
     tender_line_id = fields.One2many('tenders.tenders.line', 'line_id')
@@ -69,7 +69,6 @@ class TendersTenders(models.Model):
                 'res_model': 'bids.bids',
                 'type': 'ir.actions.act_window',
                 'view_mode': 'tree',
-                'view_type': 'form',
                 'view_id': tree_view_id,
                 'domain': [('tender_id', '=', bids)],
                 'views': [
@@ -149,11 +148,8 @@ class TendersTendersLine(models.Model):
 
     @api.onchange('product_id')
     def product_id_change(self):
-        vals = {}
         if self.product_id:
-            vals = {'line_description': self.product_id.name}
-
-        return {'value': vals}
+            self.line_description = self.product_id.name
 
 
 class TendersLabour(models.Model):
@@ -192,13 +188,8 @@ class TendersLabour(models.Model):
 
     @api.onchange('tender_labour_labour_id')
     def labour_details(self):
-        vals_labour = {}
         if self.tender_labour_labour_id:
-            vals_labour = {
-                'labour_description': self.tender_labour_labour_id.labour_description
-            }
-
-        return {'value': vals_labour}
+            self.labour_description = self.tender_labour_labour_id.labour_description
 
 
 class LaboursLabours(models.Model):
@@ -259,13 +250,8 @@ class TendersOverheads(models.Model):
 
     @api.onchange('tender_overhead_overhead_id')
     def overhead_details(self):
-        vals_overhead = {}
         if self.tender_overhead_overhead_id:
-            vals_overhead = {
-                'overhead_description': self.tender_overhead_overhead_id.overhead_description
-            }
-
-        return {'value': vals_overhead}
+            self.overhead_description = self.tender_overhead_overhead_id.overhead_description
 
 
 class ResDepartment(models.Model):
@@ -292,13 +278,8 @@ class Question(models.Model):
 
     @api.onchange('tender_question_id')
     def questionnaire_details(self):
-        vals_question = {}
         if self.tender_question_id:
-            vals_question = {
-                'type': self.tender_question_id.type
-            }
-
-        return {'value': vals_question}
+            self.type = self.tender_question_id.type
 
 
 class JobType(models.Model):
