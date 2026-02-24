@@ -31,14 +31,14 @@
                             onValidate.bind="renameThread"
                             value="thread.displayName || ''"
                         />
-                        <t t-if="thread.channel?.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
+                        <t t-if="thread.channel?.allowDescription and (thread.channel?.allowEditDescription or thread.description)">
                             <div class="flex-shrink-0 mx-1 py-2 border-start"/>
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
                                 className="attClassObjectToString(threadDescriptionAttClass)"
-                                enabled="thread.is_editable"
+                                enabled="thread.channel?.allowEditDescription"
                                 onValidate.bind="updateThreadDescription"
-                                placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                                placeholder="thread.channel?.allowEditDescription ? autogrowDescriptionPlaceholder : ''"
                                 value="thread.description or ''"
                             />
                         </t>
