@@ -252,8 +252,8 @@ class AccountChartTemplate(models.AbstractModel):
         if not isinstance(companies, models.BaseModel):
             companies = self.env['res.company'].browse(companies)
         for company in companies:
-            self.sudo()._load_data(self._get_demo_data(company), ignore_duplicates=True)
-            self._post_load_demo_data(company)
+            self.with_context(install_mode=True).sudo()._load_data(self._get_demo_data(company), ignore_duplicates=True)
+            self.with_context(install_mode=True)._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data, force_create=True):
         """Pre-process the data in case of reloading the chart of accounts.
