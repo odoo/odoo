@@ -215,9 +215,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                         )
 
                         # Generate price diff account move lines if needed.
-                        price_diff_account = False
-                        if product.cost_method == 'standard':
-                            price_diff_account = product.categ_id.property_price_difference_account_id
+                        price_diff_account = product._get_price_diff_account()
                         if price_diff_account:
                             qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
                             diff_label = _('%(order)s - %(order_line)s; price difference for %(product)s',

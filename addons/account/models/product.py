@@ -204,6 +204,10 @@ class ProductTemplate(models.Model):
         included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
         return included_computed_price['total_excluded']
 
+    def _get_price_diff_account(self):
+        self.ensure_one()
+        return False
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -337,3 +341,6 @@ class ProductProduct(models.Model):
             if len(name) > 4:
                 sorted_domains.append((20, Domain('name', 'ilike', name)))
         return sorted_domains
+
+    def _get_price_diff_account(self):
+        return self.product_tmpl_id._get_price_diff_account()
