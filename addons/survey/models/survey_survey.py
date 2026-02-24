@@ -386,13 +386,16 @@ class SurveySurvey(models.Model):
 
     @api.depends_context('uid')
     def _compute_allowed_survey_types(self):
-        """Assign static mapping of allowed survey types and respective icons depending on users groups."""
-        self.allowed_survey_types = {
-            'survey': 'fa-edit',
-            'live_session': 'fa-bar-chart-o',
-            'assessment': "fa-mortar-board",
-            'custom': 'fa-paint-brush',
-        } if self.env.user.has_group('survey.group_survey_user') else {}
+        """Assign static array of allowed survey types depending on users groups."""
+        # List of keys allowed for selection; icons are now mapped
+        # separately in the view via the 'icon_mapping' option.
+        # Implementation example in: addons/survey/views/survey_survey_views.xml:53
+        self.allowed_survey_types = [
+            'survey',
+            'live_session',
+            'assessment',
+            'custom',
+        ] if self.env.user.has_group('survey.group_survey_user') else []
 
     @api.onchange('survey_type')
     def _onchange_survey_type(self):

@@ -30,7 +30,7 @@
         <field name="arch" type="xml">
             <form string="Resume">
                 <sheet>
-                    <field name="line_type_id" widget="selection_badge"/>
+                    <field name="line_type_id" widget="badges_many2one"/>
                     <div class="oe_title">
                         <label for="name" string="Title"/>
                         <h1>
@@ -390,15 +390,14 @@
                 <sheet>
                     <group>
                         <field name="employee_id" widget="many2one_avatar_employee" invisible="not context.get('show_employee', False)"/>
-                        <field name="skill_type_id" widget="selection_badge" string="Category"/>
-                        <field name="skill_id" widget="selection_badge"
+                        <field name="skill_type_id" widget="badges_many2one" string="Category"/>
+                        <field name="skill_id" widget="badges_many2one"
                             context="{'default_skill_type_id': skill_type_id}"
                             domain="[('skill_type_id', '=', skill_type_id)]"
                             invisible="not skill_type_id"/>
                         <field name="skill_level_id"
-                            readonly="not skill_id" widget="selection_badge"
+                            readonly="not skill_id" widget="badges_many2one"
                             invisible="levels_count &lt;= 1"
-                            options="{'no_open': True, 'no_create': True}"
                             context="{'default_skill_type_id': skill_type_id}"/>
                         <label for="valid_from" string="Validity" class="me-1" invisible="not is_certification"/>
                         <div class="d-flex flex-row" invisible="not is_certification">
