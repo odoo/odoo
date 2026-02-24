@@ -46,7 +46,8 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
-import { lastLeaf } from "@html_editor/utils/dom_traversal";
+import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { rightPos } from "@html_editor/utils/position";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const EDIT_CLICK_TYPE = {
@@ -197,6 +198,7 @@ export class Composer extends Component {
                 }
                 if (focus && this.editor) {
                     this.editor.shared.selection.focusEditable();
+                    this.editor.shared.selection.selectAroundNonEditable();
                 }
             },
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
@@ -257,10 +259,25 @@ export class Composer extends Component {
                 return;
             }
             setElementContent(this.editor.editable, composerHtml);
-            this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+            this.setEditorCursorEnd();
             this.editor.shared.history.addStep();
         });
         void composerProxy.composerHtml; // start observing
+    }
+
+    setEditorCursorEnd() {
+        const lastNode = lastLeaf(this.editor?.editable);
+        if (!lastNode) {
+            return;
+        }
+        const nonEditableAncestor = closestElement(lastNode, (el) => !el.isContentEditable);
+        if (nonEditableAncestor && this.editor.editable.contains(nonEditableAncestor)) {
+            const [anchorNode, anchorOffset] = rightPos(nonEditableAncestor);
+            this.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
+        } else {
+            this.editor.shared.selection.setCursorEnd(lastNode);
+        }
+        this.editor.shared.selection.selectAroundNonEditable();
     }
 
     get areAllActionsDisabled() {
@@ -305,7 +322,7 @@ export class Composer extends Component {
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
             onEditorReady: () => {
-                this.editor.shared.selection.setCursorEnd(lastLeaf(this.editor.editable));
+                this.setEditorCursorEnd();
                 this.editor.shared.history.addStep();
             },
         };
