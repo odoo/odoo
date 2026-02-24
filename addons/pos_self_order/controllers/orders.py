@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
-from odoo import Command, http, fields, _
+from odoo import Command, http, _
 from odoo.http import request
-from odoo.tools import float_round
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
@@ -19,34 +18,23 @@ class PosSelfOrderController(http.Controller):
         pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
         pos_session = pos_config.current_session_id
 
-        # Create the order
         ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
         sequence_number = order.get('sequence_number')
         if not sequence_number:
             sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
         order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
-        fiscal_position = (
-            pos_config.takeaway_fp_id
-            if is_takeaway
-            else pos_config.default_fiscal_position_id
-        )
-
-        if 'picking_type_id' in order:
-            del order['picking_type_id']
-
-        order['name'] = order_reference
         order['pos_reference'] = order_reference
-        order['sequence_number'] = sequence_number
-        order['user_id'] = request.session.uid
-        order['date_order'] = str(fields.Datetime.now())
-        order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False
+        order['name'] = order_reference
 
-        self._check_records(pos_config, order)
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
-        line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
+        # Create a safe copy of the order with only the necessary fields for order creation to
+        # avoid potential security issues and to reduce the payload size
+        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, table)
+        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
-        self._verify_line_price(line_ids, pos_config)
+        # Recompute all prices from newly created lines to ensure price correctness and
+        # avoid potential manipulation from the frontend
+        order_ids.recompute_prices()
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
@@ -71,49 +59,7 @@ class PosSelfOrderController(http.Controller):
         }
 
     def _verify_line_price(self, lines, pos_config, takeaway=False):
-        pricelist = pos_config.pricelist_id
-        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
-
-        for line in lines:
-            product = line.product_id
-            lst_price = pricelist._get_product_price(product, quantity=line.qty) if pricelist else product.lst_price
-            selected_attributes = line.attribute_value_ids
-            lst_price += sum(selected_attributes.mapped('price_extra'))
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
-            lst_price += price_extra
-
-            fiscal_pos = pos_config.default_fiscal_position_id
-            if takeaway and pos_config.takeaway_fp_id:
-                fiscal_pos = pos_config.takeaway_fp_id
-
-            if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
-                remaining_total = lst_price
-                factor = lst_price / original_total if original_total > 0 else 1
-
-                for i, pos_order_line in enumerate(line.combo_line_ids):
-                    child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
-                    remaining_total -= price_unit
-
-                    if i == len(line.combo_line_ids) - 1:
-                        price_unit += remaining_total
-
-                    selected_attributes = pos_order_line.attribute_value_ids
-                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
-
-                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
-                    pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
-
-                    pos_order_line.write({
-                        'price_unit': price_unit,
-                        'price_subtotal': pdetails.get('total_excluded'),
-                        'price_subtotal_incl': pdetails.get('total_included'),
-                        'price_extra': price_extra_child,
-                        'tax_ids': child_product.taxes_id,
-                    })
-                lst_price = 0
+        lines.order_id.recompute_prices()
 
     @http.route('/pos-self-order/remove-order', auth='public', type='json', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
