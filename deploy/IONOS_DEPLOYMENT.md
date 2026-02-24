@@ -11,8 +11,12 @@ Quick reference for deploying and updating Odoo 18 on the IONOS VPS.
 | **Provider** | IONOS VPS (Cloud Server) |
 | **OS** | Ubuntu |
 | **User** | `root` |
-| **Odoo Location** | `/opt/ovoco` |
-| **Deploy Config** | `/opt/ovoco/deploy/` |
+| **Odoo Source** | `/opt/odoo/odoo18/` |
+| **Custom Addons** | `/opt/odoo/custom/addons/` |
+| **Odoo Config** | `/etc/odoo.conf` |
+| **Odoo Venv** | `/opt/odoo/venv/` |
+| **Odoo Service** | `odoo.service` (systemd) |
+| **Odoo Log** | `/var/log/odoo/odoo.log` |
 | **Nginx Config** | `/etc/nginx/sites-available/odoo` |
 
 ### Domains Hosted
@@ -40,98 +44,114 @@ ssh root@YOUR_VPS_IP
 
 ---
 
-## 2. Push Code Updates
+## 2. Deploy Custom Modules
 
-### Option A: Git Pull (Recommended)
+Custom modules live in `/opt/odoo/custom/addons/` on the VPS. This path is
+already in the `addons_path` in `/etc/odoo.conf`.
 
-From the VPS:
-
-```bash
-cd /opt/ovoco
-git pull origin main      # or whatever branch you're deploying
-```
-
-If this is the first time, clone the repo:
-
-```bash
-cd /opt
-git clone https://github.com/lindyjan/ovoco.git
-cd ovoco
-```
-
-### Option B: SCP from Windows
+### Option A: SCP from Windows (Quickest for a Single Module)
 
 From PowerShell on your local machine:
 
 ```powershell
-# Push the whole project
-scp -r C:\Projects\ovoco root@YOUR_VPS_IP:/opt/ovoco
+# Push a single custom module
+scp -r C:\Projects\ovoco\custom_addons\your_module root@YOUR_VPS_IP:/opt/odoo/custom/addons/
 
-# Or push just custom_addons (faster for module-only changes)
-scp -r C:\Projects\ovoco\custom_addons root@YOUR_VPS_IP:/opt/ovoco/custom_addons
+# Push all custom modules
+scp -r C:\Projects\ovoco\custom_addons\* root@YOUR_VPS_IP:/opt/odoo/custom/addons/
 ```
 
-### Option C: rsync (Best for Incremental Updates)
+### Option B: rsync (Best for Incremental Updates)
 
 ```bash
 # From your local machine (Git Bash or WSL)
-rsync -avz --exclude='.git' --exclude='venv' --exclude='__pycache__' \
-  /c/Projects/ovoco/ root@YOUR_VPS_IP:/opt/ovoco/
+rsync -avz --exclude='__pycache__' \
+  /c/Projects/ovoco/custom_addons/ root@YOUR_VPS_IP:/opt/odoo/custom/addons/
+```
+
+### Option C: Git (If Custom Addons Have Their Own Repo)
+
+```bash
+# On the VPS
+cd /opt/odoo/custom/addons
+git clone https://github.com/lindyjan/ovoco.git -b main temp_clone
+cp -r temp_clone/custom_addons/* /opt/odoo/custom/addons/
+rm -rf temp_clone
+```
+
+### After Deploying
+
+Fix ownership so the `odoo` user can read the files:
+
+```bash
+chown -R odoo:odoo /opt/odoo/custom/addons/
 ```
 
 ---
 
-## 3. Rebuild and Restart Odoo
+## 3. Restart Odoo
 
 After pushing code changes:
 
 ```bash
-cd /opt/ovoco/deploy
+# Restart the Odoo service
+systemctl restart odoo
 
-# Rebuild the Docker image (picks up new code/dependencies)
-docker compose build
+# Check it started cleanly
+systemctl status odoo
 
-# Restart with the new image
-docker compose up -d
-
-# Watch the logs to confirm it started cleanly
-docker compose logs -f odoo
+# Watch the logs
+tail -f /var/log/odoo/odoo.log
 ```
 
 Press `Ctrl+C` to stop following logs.
 
-### Quick Restart (No Code Changes to Core Odoo)
-
-If you only changed files in `custom_addons/` (which is bind-mounted), you
-don't need to rebuild:
-
-```bash
-cd /opt/ovoco/deploy
-docker compose restart odoo
-```
-
 ---
 
-## 4. Update a Specific Module
+## 4. Install or Update a Module
 
-After pushing module changes, tell Odoo to reload it:
+After deploying module files to the VPS:
+
+### Install a New Module
+
+1. Restart Odoo: `systemctl restart odoo`
+2. Go to **Apps** in the Odoo web UI
+3. Click **Update Apps List** (enable Developer Mode first if needed)
+4. Search for your module and click **Install**
+
+Enable Developer Mode at: `https://your-domain.com/web?debug=1`
+
+### Update an Existing Module (Command Line)
 
 ```bash
-cd /opt/ovoco/deploy
+# Stop the running Odoo service
+systemctl stop odoo
 
-# Update a single module
-docker compose exec odoo odoo --config=/etc/odoo/odoo.conf \
-  -d YOUR_DATABASE_NAME -u your_module_name --stop-after-init
+# Run the update command as the odoo user
+sudo -u odoo /opt/odoo/venv/bin/python3 /opt/odoo/odoo18/odoo-bin \
+  -c /etc/odoo.conf \
+  -d YOUR_DATABASE_NAME \
+  -u your_module_name \
+  --stop-after-init
 
 # Update multiple modules
-docker compose exec odoo odoo --config=/etc/odoo/odoo.conf \
-  -d YOUR_DATABASE_NAME -u module1,module2 --stop-after-init
+sudo -u odoo /opt/odoo/venv/bin/python3 /opt/odoo/odoo18/odoo-bin \
+  -c /etc/odoo.conf \
+  -d YOUR_DATABASE_NAME \
+  -u module1,module2 \
+  --stop-after-init
 
-# Restart after updating
-docker compose restart odoo
+# Start Odoo back up
+systemctl start odoo
 ```
 
 > Replace `YOUR_DATABASE_NAME` with your actual Odoo database name.
+
+### List Available Databases
+
+```bash
+sudo -u postgres psql -l
+```
 
 ---
 
@@ -145,7 +165,7 @@ own nginx server block. The config is at `/etc/nginx/sites-available/odoo`.
 - All domains proxy to `127.0.0.1:8069` (Odoo) and `127.0.0.1:8072` (websocket/longpolling)
 - Each domain has an HTTP block (port 80) that redirects to HTTPS
 - Each domain has an HTTPS block (port 443) with its own SSL certificate
-- Odoo uses `dbfilter` or manual database selection to serve the right database per domain
+- Odoo uses `dbfilter = %d` to serve the right database per domain
 
 ### Editing the Nginx Config
 
@@ -271,34 +291,30 @@ systemctl status certbot.timer
 ### Backup
 
 ```bash
-cd /opt/ovoco/deploy
-
 # Backup a specific database
-docker compose exec db pg_dump -U odoo YOUR_DATABASE_NAME > ~/backup_$(date +%F).sql
+sudo -u postgres pg_dump YOUR_DATABASE_NAME > ~/backup_$(date +%F).sql
 
 # Backup all databases
-docker compose exec db pg_dumpall -U odoo > ~/backup_all_$(date +%F).sql
+sudo -u postgres pg_dumpall > ~/backup_all_$(date +%F).sql
 ```
 
 ### Restore
 
 ```bash
-cd /opt/ovoco/deploy
-
 # Restore a specific database
-docker compose exec -T db psql -U odoo YOUR_DATABASE_NAME < ~/backup_2025-01-15.sql
+sudo -u postgres psql YOUR_DATABASE_NAME < ~/backup_2025-01-15.sql
 ```
 
 ### Backup Odoo Filestore
 
-The filestore (uploaded files, attachments) lives in a Docker volume:
+The filestore (uploaded files, attachments) is stored on disk:
 
 ```bash
-# Find the volume path
-docker volume inspect ovoco_odoo-web-data
+# The filestore is typically at:
+ls /opt/odoo/.local/share/Odoo/filestore/
 
 # Copy the filestore to a backup location
-docker cp odoo18-app:/var/lib/odoo ~/odoo-filestore-backup
+cp -r /opt/odoo/.local/share/Odoo/filestore/ ~/odoo-filestore-backup/
 ```
 
 ---
@@ -306,16 +322,17 @@ docker cp odoo18-app:/var/lib/odoo ~/odoo-filestore-backup
 ## 8. Viewing Logs
 
 ```bash
-cd /opt/ovoco/deploy
-
-# Follow Odoo logs
-docker compose logs -f odoo
-
-# Follow database logs
-docker compose logs -f db
+# Follow Odoo logs (live)
+tail -f /var/log/odoo/odoo.log
 
 # Last 100 lines
-docker compose logs --tail=100 odoo
+tail -100 /var/log/odoo/odoo.log
+
+# Search for errors
+grep -i error /var/log/odoo/odoo.log | tail -20
+
+# Odoo service status
+systemctl status odoo
 
 # Nginx logs
 tail -f /var/log/nginx/odoo.access.log
@@ -330,20 +347,23 @@ tail -f /var/log/nginx/odoo.error.log
 # SSH in
 ssh root@YOUR_VPS_IP
 
-# Pull latest code and redeploy
-cd /opt/ovoco && git pull && cd deploy && docker compose build && docker compose up -d
+# Restart Odoo
+systemctl restart odoo
 
-# Quick restart (custom_addons changes only)
-cd /opt/ovoco/deploy && docker compose restart odoo
+# Stop Odoo
+systemctl stop odoo
 
-# Check what's running
-docker compose ps
+# Start Odoo
+systemctl start odoo
 
-# Stop everything
-docker compose down
+# Check Odoo status
+systemctl status odoo
 
-# Stop everything AND delete data (careful!)
-docker compose down -v
+# View Odoo config
+cat /etc/odoo.conf
+
+# List databases
+sudo -u postgres psql -l
 
 # Check disk space
 df -h
@@ -374,18 +394,20 @@ Here's the full workflow from making changes locally to seeing them live:
    ```bash
    ssh root@YOUR_VPS_IP
    ```
-5. **Pull and deploy**:
-   ```bash
-   cd /opt/ovoco
-   git pull origin main
-   cd deploy
-   docker compose build    # skip if only custom_addons changed
-   docker compose up -d
+5. **Copy custom modules to the VPS** (from a second PowerShell window):
+   ```powershell
+   scp -r C:\Projects\ovoco\custom_addons\* root@YOUR_VPS_IP:/opt/odoo/custom/addons/
    ```
-6. **Update modules if needed**:
+6. **Fix ownership and restart**:
    ```bash
-   docker compose exec odoo odoo --config=/etc/odoo/odoo.conf \
-     -d YOUR_DATABASE_NAME -u your_module_name --stop-after-init
-   docker compose restart odoo
+   chown -R odoo:odoo /opt/odoo/custom/addons/
+   systemctl restart odoo
    ```
-7. **Verify** by visiting your domain in the browser
+7. **Install/update modules if needed**:
+   ```bash
+   systemctl stop odoo
+   sudo -u odoo /opt/odoo/venv/bin/python3 /opt/odoo/odoo18/odoo-bin \
+     -c /etc/odoo.conf -d YOUR_DATABASE_NAME -u your_module_name --stop-after-init
+   systemctl start odoo
+   ```
+8. **Verify** by visiting your domain in the browser
