@@ -955,6 +955,13 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if tax_total_keys['tax_total_key'] and tax_total_keys['tax_total_key']['is_withholding']:
             tax_total_keys['tax_total_key'] = None
 
+        tax_category_key = tax_total_keys['tax_category_key']
+        if (
+            tax_category_key
+            and tax_category_key['tax_category_code'] == 'E'
+            and not tax_category_key.get('tax_exemption_reason')
+            ):
+            tax_category_key['tax_exemption_reason'] = _("Exempt from tax")
         # In case of multi-currencies, there will be 2 TaxTotals but the one expressed in
         # foreign currency must not have any TaxSubtotal.
         company_currency = vals['company'].currency_id
