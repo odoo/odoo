@@ -2098,3 +2098,50 @@ class TestReports(TestReportsCommon):
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [0.0, 2.0])
         self.env['report.stock.report_reception'].action_assign(out_move.ids, [1.0], picking_in.move_ids.ids)
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [1.0, 2.0])
+
+    def test_aggregated_quantities_partial_and_over_delivery(self):
+        """
+        Test that aggregated product quantities preserve the original demand
+        and quantity done during a partial or over delivery.
+        """
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'uom_id': self.ref('uom.product_uom_unit'),
+                'product_uom_qty': 10.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+        # -------------------------
+        # Partial delivery (6 / 10)
+        # -------------------------
+        delivery.move_ids.quantity = 6
+        delivery.move_ids.picked = True
+        wizard_vals = delivery.button_validate()
+        wizard = Form(
+            self.env[wizard_vals['res_model']]
+            .with_context(wizard_vals['context'])
+        )
+        wizard.save().process_cancel_backorder()
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 10)
+        self.assertEqual(aggregated[0]['quantity'], 6)
+        # -------------------------
+        # Over-delivery (12 / 10)
+        # -------------------------
+        delivery.move_line_ids.quantity = 12
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 10)
+        self.assertEqual(aggregated[0]['quantity'], 12)
+        # -------------------------
+        # Over-delivery (10 / 0)
+        # -------------------------
+        delivery.move_ids.product_uom_qty = 0
+        delivery.move_line_ids.quantity = 10
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 0)
+        self.assertEqual(aggregated[0]['quantity'], 10)
