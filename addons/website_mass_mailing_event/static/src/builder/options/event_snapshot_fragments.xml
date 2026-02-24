@@ -99,17 +99,17 @@
     </t>
 
     <t t-name="website_mass_mailing_event.event_address_template">
-        <t t-set="has_city" t-value="address.city"/>
-        <t t-set="has_state" t-value="state and country and country.state_required"/>
+        <t t-set="has_city" t-value="this.address.city"/>
+        <t t-set="has_state" t-value="this.state and this.country and this.country.state_required"/>
 
         <span class="fa fa-map-marker"></span> <t t-if="has_city">
-            <t t-out="address.city"/><t t-if="address.country_id">, </t>
+            <t t-out="this.address.city"/><t t-if="this.address.country_id">, </t>
         </t>
         <t t-if="has_state">
-            <t t-out="state.code"/>,
+            <t t-out="this.state.code"/>,
         </t>
-        <t t-if="country">
-            <t t-out="country.name"/>
+        <t t-if="this.country">
+            <t t-out="this.country.name"/>
         </t>
     </t>
 </templates>
