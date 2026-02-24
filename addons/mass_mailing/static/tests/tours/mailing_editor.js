@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: "click",
 }, {
     content: 'wait for the editor to be rendered',
-    trigger: '[name="body_arch"] :iframe .o_savable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
+    trigger: '[name="body_arch"] :iframe .o_savable[data-editor-message="Drag blocks here"]',
 }, {
     trigger: '.o_snippet[name="Text"] button',
     content: 'Click the "Text" snippet category to drop a snippet in the editor',

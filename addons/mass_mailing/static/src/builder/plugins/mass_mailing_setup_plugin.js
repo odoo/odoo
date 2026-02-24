@@ -18,7 +18,7 @@ export class MassMailingSetupPlugin extends Plugin {
         const wrapperTd = this.editable.querySelector(".o_mail_wrapper_td");
         wrapperTd?.classList.add("oe_empty");
         wrapperTd?.setAttribute("data-editor-message-default", true);
-        wrapperTd?.setAttribute("data-editor-message", _t("DRAG BUILDING BLOCKS HERE"));
+        wrapperTd?.setAttribute("data-editor-message", _t("Drag blocks here"));
     }
 
     cleanForSave(root) {

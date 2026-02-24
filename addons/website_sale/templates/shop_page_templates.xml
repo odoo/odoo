@@ -326,8 +326,8 @@
                                 </h1>
                                 <t t-if="category">
                                     <t t-set='editor_msg'>
-                                        Drag building blocks here to customize the header for
-                                        "<t t-out='category.name'/>" category.
+                                        Drag blocks here to customize the header of
+                                        the "<t t-out='category.name'/>" category
                                     </t>
                                     <div
                                         id="category_header"
@@ -338,7 +338,7 @@
                                 </t>
                                 <t t-else="">
                                     <t t-set="editor_msg">
-                                        Drag building blocks here to customize the header for the shop page.
+                                        Drag blocks here to customize the Shop page header
                                     </t>
                                     <div
                                         id="oe_structure_products_header_shop"
@@ -531,8 +531,8 @@
                             </div>
                             <t t-if="category">
                                 <t t-set='footer_editor_message'>
-                                    Drag building blocks here to customize the footer for
-                                    "<t t-out='category.name'/>" category.
+                                    Drag blocks here to customize the footer of
+                                    the "<t t-out='category.name'/>" category
                                 </t>
                                 <div
                                     class="mb16"

@@ -362,8 +362,7 @@ export class DropZonePlugin extends Plugin {
             "oe_drop_zone",
             "oe_insert",
             "oe_sanitized_drop_zone",
-            "text-center",
-            "text-uppercase"
+            "text-center"
         );
         const messageEl = this.document.createElement("p");
         messageEl.textContent = _t("For technical reasons, this block cannot be dropped here");

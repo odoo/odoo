@@ -9,10 +9,9 @@
             <t t-out="0"/>
 
             <!-- Droppable-area shared across all blog's pages -->
-            <t t-set="oe_structure_blog_footer_description">Visible in all blogs' pages</t>
             <div class="oe_structure oe_empty oe_structure_not_nearest"
                 id="oe_structure_blog_footer"
-                t-att-data-editor-sub-message="oe_structure_blog_footer_description"/>
+                data-editor-message.translate="Drag blocks here to add them on all blogs"/>
         </div>
     </t>
 </template>
@@ -239,9 +238,7 @@ list of filtered posts (by date or tag).
     <t t-if="not opt_blog_post_regular_cover">
         <t t-call="website_blog.blog_post_info"/>
     </t>
-    <t t-set="editor_message">WRITE HERE OR DRAG BUILDING BLOCKS</t>
     <div t-field="blog_post.content"
-        t-att-data-editor-message="editor_message"
         t-attf-class="o_wblog_post_content_field #{'o_wblog_read_text' if opt_blog_post_readable else ''}"/>
 
     <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted">

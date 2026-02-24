@@ -11,7 +11,7 @@ registerWebsitePreviewTour(
             trigger: "div[data-container-title='Website'] div.we-bg-options-container",
         },
         {
-            content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",
+            content: "Click on the empty 'Drag blocks here' area.",
             trigger: ":iframe main > .oe_structure.oe_empty",
             run: "click",
         },

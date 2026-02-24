@@ -64,10 +64,9 @@
                                                     open positions
                                                 </t>
                                             </h5>
-                                            <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                             <div class="oe_empty text-muted mb16"
-                                                 t-field="job.description"
-                                                 t-att-data-editor-message="job_desc_edition_placeholder"/>
+                                                 data-editor-message.translate="Insert a Job Description..."
+                                                 t-field="job.description"/>
                                             <div class="o_job_infos d-flex flex-column">
                                                 <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
                                                 <div t-if="job.department_id"
@@ -163,10 +162,8 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-8 pb32" itemprop="description">
-                                <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                 <div class="lead"
-                                    t-field="job.description"
-                                    t-att-data-editor-message="job_desc_edition_placeholder"/>
+                                    t-field="job.description"/>
                             </div>
                             <div class="col-lg-3 offset-lg-1 pb32">
                                 <div t-field="job.website_rating"/>
