@@ -220,7 +220,9 @@ test("Can see records on PIVOT cells", async function () {
         for (const [xc, formula] of Object.entries(cells)) {
             // let's check the cell formula is what we expect
             const cell = getCell(model, xc, firstSheetId);
-            const content = !cell.isFormula ? cell?.content : cell?.compiledFormula.toFormulaString(model.getters);
+            const content = !cell.isFormula
+                ? cell?.content
+                : cell?.compiledFormula.toFormulaString(model.getters);
             expect(content).toBe(formula, {
                 message: `${xc} on the first sheet is ${formula}`,
             });
@@ -276,6 +278,31 @@ test("Can see records on PIVOT cells", async function () {
     // set the function in A3 such as the data cells matches the ones in the first sheet
     setCellContent(model, "A3", `=PIVOT("1",,,FALSE,,FALSE)`, "42");
     await checkCells(data_cells);
+});
+
+test("Can see records of a pivot cell with references as parameters", async function () {
+    const actions = [];
+    const fakeActionService = {
+        doAction: (actionRequest, options = {}) => {
+            expect.step("doAction");
+            actions.push(actionRequest);
+        },
+    };
+    mockService("action", fakeActionService);
+    const { env, model } = await createSpreadsheetWithPivot({ pivotType: "static" });
+    setCellContent(model, "A1", `1`);
+    setCellContent(model, "B1", '=PIVOT.VALUE(1,"probability:avg","bar",TRUE,"foo",A1)');
+    selectCell(model, "B1");
+    let action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(action.isVisible(env)).toBe(true);
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    setCellContent(model, "G7", "=B1");
+    selectCell(model, "G7");
+    action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(action.isVisible(env)).toBe(true);
+    await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(actions[0]).toEqual(actions[1], { message: "both actions are the same" });
+    expect.verifySteps(["doAction", "doAction"]);
 });
 
 test("Cannot see records of pivot formula without value", async function () {
