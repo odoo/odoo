@@ -612,7 +612,7 @@ test("mentions and special mentions are kept when editing message", async () => 
     });
     await click(".o-mail-Message [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer-html", {
-        text: "Hello @Mitchell Admin and @everyone",
+        text: "Hello \uFEFF@Mitchell Admin\uFEFF and \uFEFF@everyone",
         contains: [
             ["a.o_mail_redirect[contenteditable=false]", { text: "@Mitchell Admin" }],
             ["a.o-discuss-mention[contenteditable=false]", { text: "@everyone" }],
@@ -624,9 +624,10 @@ test("mentions and special mentions are kept when editing message", async () => 
             ".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"
         ),
     };
+    const paragraph = editor.editable.querySelector("div.o-paragraph");
     setSelection({
-        anchorNode: editor.editable.querySelector("div.o-paragraph"),
-        anchorOffset: 4 /* at the end = after 4 nodes: "Hello" <first mention> "and" <second mention> */,
+        anchorNode: paragraph,
+        anchorOffset: paragraph.childNodes.length,
     });
     await htmlInsertText(editor, " abc");
     await click(".o-mail-Message button", { text: "save" });
