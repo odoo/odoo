@@ -30,19 +30,33 @@ list of filtered posts (by date or tag).
     <t t-call="website_blog.index"
         head="head">
 
-        <!-- Check for active options: the stored value may be used in sub-templates too  -->
-        <t t-set="opt_blog_split_grid_view" t-value="is_view_active('website_blog.opt_blog_split_grid_view')"/>
-        <t t-set="opt_blog_bordered_grid_view" t-value="is_view_active('website_blog.opt_blog_bordered_grid_view')"/>
+        <!-- Resolve active display options.
+             Per-blog overrides (blog.blog_layout / blog.blog_page_container) take priority
+             over the global website-level ir.ui.view toggles (is_view_active).
+             False on the field means "not set → fall back to the global setting".
+             These variables are also used in sub-templates (posts_loop, sidebar, etc.). -->
+
+        <!-- Cache the per-blog layout once to avoid repeated field access. -->
+        <t t-set="_blog_layout" t-value="blog.blog_layout if blog else False"/>
+
+        <!-- Layout flags: use the per-blog value when set, else the global view toggle. -->
+        <t t-set="opt_blog_split_grid_view"    t-value="(_blog_layout == 'split_grid')    if _blog_layout else is_view_active('website_blog.opt_blog_split_grid_view')"/>
+        <t t-set="opt_blog_bordered_grid_view" t-value="(_blog_layout == 'bordered_grid') if _blog_layout else is_view_active('website_blog.opt_blog_bordered_grid_view')"/>
+        <t t-set="opt_blog_simple_list_view"   t-value="(_blog_layout == 'simple_list')   if _blog_layout else is_view_active('website_blog.opt_blog_simple_list_view')"/>
+        <t t-set="opt_blog_compact_list_view"  t-value="(_blog_layout == 'compact_list')  if _blog_layout else is_view_active('website_blog.opt_blog_compact_list_view')"/>
+        <t t-set="opt_blog_list_view"          t-value="(_blog_layout == 'list')          if _blog_layout else is_view_active('website_blog.opt_blog_list_view')"/>
+        <t t-set="opt_blog_large_list_view"    t-value="(_blog_layout == 'large_list')    if _blog_layout else is_view_active('website_blog.opt_blog_large_list_view')"/>
+
+        <!-- Sub-options: always global (cards / promoted post only apply to the grid family). -->
         <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design') and not opt_blog_split_grid_view and not opt_blog_bordered_grid_view"/>
         <t t-set="opt_blog_promoted_post" t-value="is_view_active('website_blog.opt_blog_promoted_post')"/>
-        <t t-set="opt_blog_simple_list_view" t-value="is_view_active('website_blog.opt_blog_simple_list_view')"/>
-        <t t-set="opt_blog_compact_list_view" t-value="is_view_active('website_blog.opt_blog_compact_list_view')"/>
-        <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
-        <t t-set="opt_blog_large_list_view" t-value="is_view_active('website_blog.opt_blog_large_list_view')"/>
         <t t-set="opt_blog_sidebar_show" t-value="False"/>
         <t t-set="opt_posts_loop_show_stats" t-value="is_view_active('website_blog.opt_posts_loop_show_stats')"/>
+        <!-- Derived: grid view is active when no list/large/simple/compact variant is. -->
         <t t-set="opt_blog_grid_view" t-value="not opt_blog_simple_list_view and not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view"/>
-        <t t-set="opt_blog_fullwidth" t-value="is_view_active('website_blog.opt_blog_fullwidth')"/>
+
+        <!-- Container width: use per-blog value when set, else global view toggle. -->
+        <t t-set="opt_blog_fullwidth" t-value="(blog.blog_page_container == 'fluid') if (blog and blog.blog_page_container) else is_view_active('website_blog.opt_blog_fullwidth')"/>
         <t t-set="opt_posts_loop_show_date" t-value="is_view_active('website_blog.opt_posts_loop_show_date')"/>
         <!-- Date format: determined by the active format option (MMM dd is the default) -->
         <t t-set="opt_posts_loop_date_format" t-value="
@@ -76,12 +90,30 @@ list of filtered posts (by date or tag).
             search="original_search or search"
             additional_classes.f="mt-3"/>
 
-        <section id="o_wblog_index_content">
-            <div t-attf-class="#{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'} #{opt_blog_split_grid_view and 'gx-0' or ''} #{(opt_blog_simple_list_view and not opt_blog_sidebar_show) and 'o_container_small' or ''}">
+        <!-- data-blog-id: read by the builder's onSave to know which blog.blog to update.
+             Empty on the all-blogs homepage → builder skips per-blog save.
+             o_wblog_post_opt_layout_*: mirrors the *effective* layout as a CSS class so
+             the builder's classAction can read/write it and onSave can harvest it.
+             When the blog has no per-blog override, we derive the class from the
+             active global view toggle so the sidebar reflects the actual layout.
+             o_wblog_post_opt_container_fluid: mirrors effective container width. -->
+        <t t-set="_effective_layout_class"
+           t-value="'o_wblog_post_opt_layout_' + blog.blog_layout if (blog and blog.blog_layout) else
+                    'o_wblog_post_opt_layout_split_grid' if opt_blog_split_grid_view else
+                    'o_wblog_post_opt_layout_bordered_grid' if opt_blog_bordered_grid_view else
+                    'o_wblog_post_opt_layout_simple_list' if opt_blog_simple_list_view else
+                    'o_wblog_post_opt_layout_compact_list' if opt_blog_compact_list_view else
+                    'o_wblog_post_opt_layout_list' if opt_blog_list_view else
+                    'o_wblog_post_opt_layout_large_list' if opt_blog_large_list_view else
+                    ''"/>
+        <section id="o_wblog_index_content"
+            t-att-data-blog-id="blog and str(blog.id) or ''"
+            t-attf-class="#{_effective_layout_class} #{opt_blog_fullwidth and 'o_wblog_post_opt_container_fluid' or ''}">
+            <div t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'} #{is_split_grid_sticky and 'gx-0' or ''} #{(opt_blog_simple_list_view and not opt_blog_sidebar_show) and 'o_container_small' or ''}">
                 <div t-if="original_search and posts" class="alert alert-warning mt8">
                     No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
                 </div>
-                <div t-attf-class="row #{opt_blog_split_grid_view and 'gx-0' or ''}">
+                <div t-attf-class="row #{is_split_grid_sticky and 'gx-0' or ''}">
                     <div id="o_wblog_posts_loop_container" class="col">
 
                         <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>

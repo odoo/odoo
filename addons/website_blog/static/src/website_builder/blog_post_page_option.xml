@@ -4,23 +4,39 @@
 <t t-name="website_blog.blogPostPageOption">
 
     <BuilderContext action="'websiteConfig'">
-        <t t-if="!this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')">
+        <t t-if="(!state.isOnBlogPage and !this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')) or (state.isOnBlogPage and !this.isActiveItem('blog_layout_simple_list_opt') and !this.isActiveItem('blog_layout_split_grid_opt'))">
             <!-- Blogs Posts Layout -->
             <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Layout</div>
             <hr class="mx-2 mt-0 mb-2"/>
 
             <BuilderRow label.translate="Content Width">
                 <BuilderButtonGroup>
-                    <BuilderButton
-                        title.translate="Regular"
+                    <t t-if="state.isOnBlogPage">
+                        <BuilderButton
+                            title.translate="Regular"
+                            classAction="''"
+                            applyTo="'#o_wblog_index_content'"
+                            iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                        />
+                        <BuilderButton
+                            title.translate="Full"
+                            classAction="'o_wblog_post_opt_container_fluid'"
+                            applyTo="'#o_wblog_index_content'"
+                            iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                        />
+                    </t>
+                    <t t-else="">
+                        <BuilderButton
+                            title.translate="Regular"
                             actionParam="{views: []}"
                             iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
-                    />
-                    <BuilderButton
+                        />
+                        <BuilderButton
                             title.translate="Full"
                             actionParam="{views: ['website_blog.opt_blog_fullwidth']}"
                             iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
-                    />
+                        />
+                    </t>
                 </BuilderButtonGroup>
             </BuilderRow>
         </t>
@@ -36,83 +52,199 @@
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
         </BuilderRow>
 
-        <!-- Posts Options -->
-        <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Posts</div>
+        <!-- Style: global setting for the all-blogs homepage -->
+        <t t-if="!state.isOnBlogPage">
+            <BuilderRow label.translate="Style">
+                <BuilderSelect>
+                    <BuilderSelectItem
+                        id="'blog_posts_grid_opt'"
+                        actionParam="{views: []}"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Thumbnails
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_posts_bordered_grid_opt'"
+                        actionParam="{views: ['website_blog.opt_blog_bordered_grid_view']}"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Grid
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem id="'blog_posts_split_grid_opt'" actionParam="{views: ['website_blog.opt_blog_split_grid_view']}">
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Split
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem id="'blog_posts_simple_list_opt'" actionParam="{views: ['website_blog.opt_blog_simple_list_view']}">
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Minimal
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem id="'blog_posts_compact_list_opt'" actionParam="{views: ['website_blog.opt_blog_compact_list_view']}">
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Compact
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem id="'blog_posts_list_opt'" actionParam="{views: ['website_blog.opt_blog_list_view']}">
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Regular
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem id="'blog_posts_large_list_opt'" actionParam="{views: ['website_blog.opt_blog_large_list_view']}">
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Large
+                        </div>
+                    </BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+
+            <!-- Size -->
+            <t t-if="this.isActiveItem('blog_posts_bordered_grid_opt') or (this.isActiveItem('blog_posts_grid_opt') and !this.isActiveItem('blog_posts_promoted_opt'))">
+                <BuilderRow label.translate="Size" level="1">
+                    <BuilderSelect>
+                        <BuilderSelectItem id="'blog_posts_columns_2_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_2']}">2 Columns</BuilderSelectItem>
+                        <BuilderSelectItem id="'blog_posts_columns_3_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_3']}">3 Columns</BuilderSelectItem>
+                        <BuilderSelectItem id="'blog_posts_columns_4_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_4']}">4 Columns</BuilderSelectItem>
+                    </BuilderSelect>
+                </BuilderRow>
+            </t>
+
+            <!-- Promote latest Post -->
+            <t t-if="this.isActiveItem('blog_posts_grid_opt') and !this.isActiveItem('blog_posts_split_grid_opt') and !this.isActiveItem('blog_posts_bordered_grid_opt')">
+                <BuilderRow
+                    label.translate="Promote last"
+                    tooltip.translate="Emphasize the most recent post in the blog posts list"
+                    level="1"
+                >
+                    <BuilderCheckbox
+                        id="'blog_posts_promoted_opt'"
+                        actionParam="{views: ['website_blog.opt_blog_promoted_post']}"
+                    />
+                </BuilderRow>
+            </t>
+
+            <!-- Cards Design -->
+            <t t-if="this.isActiveItem('blog_posts_grid_opt')">
+                <BuilderRow label.translate="Cards Design" level="1">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
+                </BuilderRow>
+            </t>
+        </t>
+
+        <!-- Style: per-blog override for a specific blog's page.
+             Uses classAction targeting #o_wblog_index_content; the selected class is
+             persisted to blog.blog_layout via /blog/config on document save. -->
+        <t t-if="state.isOnBlogPage">
+            <BuilderRow label.translate="Style">
+                <BuilderSelect applyTo="'#o_wblog_index_content'">
+                    <BuilderSelectItem
+                        id="'blog_layout_grid_opt'"
+                        classAction="''"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Thumbnails
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_bordered_grid_opt'"
+                        classAction="'o_wblog_post_opt_layout_bordered_grid'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Grid
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_split_grid_opt'"
+                        classAction="'o_wblog_post_opt_layout_split_grid'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-apps me-2"/>
+                            Split
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_simple_list_opt'"
+                        classAction="'o_wblog_post_opt_layout_simple_list'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Minimal
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_compact_list_opt'"
+                        classAction="'o_wblog_post_opt_layout_compact_list'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Compact
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_list_opt'"
+                        classAction="'o_wblog_post_opt_layout_list'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Regular
+                        </div>
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        id="'blog_layout_large_list_opt'"
+                        classAction="'o_wblog_post_opt_layout_large_list'"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="oi oi-view-list me-2"/>
+                            Large
+                        </div>
+                    </BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+
+            <!-- Size -->
+            <t t-if="this.isActiveItem('blog_layout_grid_opt') or this.isActiveItem('blog_layout_bordered_grid_opt')">
+                <BuilderRow label.translate="Size" level="1">
+                    <BuilderSelect>
+                        <BuilderSelectItem id="'blog_posts_columns_2_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_2']}">2 Columns</BuilderSelectItem>
+                        <BuilderSelectItem id="'blog_posts_columns_3_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_3']}">3 Columns</BuilderSelectItem>
+                        <BuilderSelectItem id="'blog_posts_columns_4_opt'" actionParam="{views: ['website_blog.opt_blog_grid_columns_4']}">4 Columns</BuilderSelectItem>
+                    </BuilderSelect>
+                </BuilderRow>
+            </t>
+
+            <!-- Promote latest Post -->
+            <t t-if="this.isActiveItem('blog_layout_grid_opt')">
+                <BuilderRow
+                    label.translate="Promote last"
+                    tooltip.translate="Emphasize the most recent post in the blog posts list"
+                    level="1"
+                >
+                    <BuilderCheckbox
+                        id="'blog_posts_promoted_opt'"
+                        actionParam="{views: ['website_blog.opt_blog_promoted_post']}"
+                    />
+                </BuilderRow>
+            </t>
+        </t>
+
+        <!-- Text & content Options -->
+        <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Text &amp; content</div>
         <hr class="mx-2 mt-0 mb-2"/>
 
-        <BuilderRow label.translate="Style">
-            <BuilderSelect>
-                <BuilderSelectItem
-                    id="'blog_posts_grid_opt'"
-                    actionParam="{views: []}"
-                >
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-apps me-2"/>
-                        Thumbnails
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'blog_posts_bordered_grid_opt'"
-                    actionParam="{views: ['website_blog.opt_blog_bordered_grid_view']}"
-                >
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-apps me-2"/>
-                        Grid
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem id="'blog_posts_split_grid_opt'" actionParam="{views: ['website_blog.opt_blog_split_grid_view']}">
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-apps me-2"/>
-                        Split
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem id="'blog_posts_simple_list_opt'" actionParam="{views: ['website_blog.opt_blog_simple_list_view']}">
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-view-list me-2"/>
-                        Minimal
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem id="'blog_posts_compact_list_opt'" actionParam="{views: ['website_blog.opt_blog_compact_list_view']}">
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-view-list me-2"/>
-                        Compact
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem id="'blog_posts_list_opt'" actionParam="{views: ['website_blog.opt_blog_list_view']}">
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-view-list me-2"/>
-                        Regular
-                    </div>
-                </BuilderSelectItem>
-                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_large_list_view']}">
-                    <div class="d-flex align-items-center">
-                        <i class="oi oi-view-list me-2"/>
-                        Large
-                    </div>
-                </BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-
-        <!-- Promote latest Post -->
-        <t t-if="this.isActiveItem('blog_posts_grid_opt') and !this.isActiveItem('blog_posts_split_grid_opt') and !this.isActiveItem('blog_posts_bordered_grid_opt')">
-            <BuilderRow
-                label.translate="Promote last"
-                tooltip.translate="Emphasize the most recent post in the blog posts list"
-                level="1"
-            >
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_promoted_post']}"/>
-            </BuilderRow>
-        </t>
-
-        <t t-if="this.isActiveItem('blog_posts_grid_opt')">
-            <BuilderRow label.translate="Cards Design" level="1">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cards_design']}"/>
-            </BuilderRow>
-        </t>
-
-        <!-- Post Cover -->
+        <!-- Cover image -->
         <t t-if="!this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_compact_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')">
-            <BuilderRow label.translate="Post Cover" level="1">
+            <BuilderRow label.translate="Cover image">
                 <BuilderCheckbox
                     actionParam="{views: ['website_blog.opt_posts_loop_show_cover']}"/>
             </BuilderRow>

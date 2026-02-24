@@ -7,7 +7,7 @@
 <template id="blogs_nav" name="Blogs Bar Template">
     <t t-set="wblog_all_title_string">All Blogs</t>
 
-    <div t-attf-class="#{(opt_blog_fullwidth or opt_blog_split_grid_view) and 'container-fluid' or 'container'}">
+    <div t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'}">
         <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="visually-hidden">Blog Posts</h1>
         <div class="oe_structure" id="oe_structure_blog_nav_0"/>
         <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap py-4 #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
@@ -134,7 +134,7 @@
 <template id="post_author">
     <div class="o_not_editable">
         <t t-out="blog_post.author_name"/><span
-            t-if="opt_posts_loop_show_date and (opt_blog_list_view or opt_blog_large_list_view or (opt_blog_grid_view and not opt_blog_cards_design))"
+            t-if="opt_posts_loop_show_date and (opt_blog_list_view or opt_blog_large_list_view or opt_blog_grid_view)"
             t-att-class="(opt_blog_list_view or opt_blog_large_list_view) and 'd-lg-none' or ''"
         >&#44;</span>
     </div>
