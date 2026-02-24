@@ -272,7 +272,25 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
+<<<<<<< c5214570bd3a348286a29a5dfb06c7e9a5d1ba02
         })
+||||||| 14d43f0fb5b362fee0f1be3d859d88cbe50d1544
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        values = self._prepare_registration_new_values(event, **post)
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
+=======
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        values = self._prepare_registration_new_values(event, **post)
+        if not values:
+            return values
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
+>>>>>>> 1546f07e2c2057081750ed6230a285b09cee443d
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
