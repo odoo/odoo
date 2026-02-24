@@ -150,6 +150,12 @@ class ProductTemplate(models.Model):
         })
         return accounts
 
+    def _get_price_diff_account(self):
+        price_diff_account = super()._get_price_diff_account()
+        if self.cost_method == 'standard':
+            price_diff_account = self.categ_id.property_price_difference_account_id
+        return price_diff_account
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
