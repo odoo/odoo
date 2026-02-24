@@ -2948,11 +2948,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.setOrder(this.getEmptyOrder());
         this.mobile_pane = "right";
     }
-
-    get showSaveOrderButton() {
-        return this.config.raw.trusted_config_ids.length > 0;
-    }
-
     canEditPayment(order) {
         return order.nb_print === 0;
     }
