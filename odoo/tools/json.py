@@ -72,4 +72,6 @@ def json_default(obj):
         return obj.decode()
     if isinstance(obj, fields.Domain):
         return list(obj)
+    if (as_dict_func := getattr(obj, 'as_dict', None)) and callable(as_dict_func):
+        return as_dict_func()
     return str(obj)
