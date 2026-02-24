@@ -2592,10 +2592,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
     }
 
-    get showSaveOrderButton() {
-        return true;
-    }
-
     get isSelectedLineCombo() {
         return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
     }
