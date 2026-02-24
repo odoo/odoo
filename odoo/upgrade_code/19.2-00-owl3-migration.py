@@ -888,7 +888,7 @@ ACCOUNT_WHITELIST = {
     "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
     "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
 }
-THIS_TARGETS = ["ai"]
+THIS_TARGETS = ["hr"]
 
 
 def upgrade_this(file_manager, log_info, log_error):

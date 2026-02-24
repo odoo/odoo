@@ -192,8 +192,9 @@ def is_inside_inherit(node: etree._Element):
 
 
 def get_inheritance_chain(template_name, inherit_map):
-    chain = []
+    chain = [inherit_map.get(template_name)]
     current = template_name
+
     seen = set()
 
     while current in inherit_map:
@@ -385,14 +386,14 @@ class TemplateCompiler:
         self.node_vars = set()
         self.warning_vars = set()
 
-    def _map_nested_inherits_vars(self, template_name):
-        chain = get_inheritance_chain(template_name, self.inherit_map)
+    def _map_nested_inherits_vars(self):
+        chain = get_inheritance_chain(self.current_template, self.inherit_map)
         if chain:
-            for nested_inherit in chain:
+            for nested_inherit in chain[:1]:
                 self.nested_inherit_vars |= set(self.all_vars.get(nested_inherit, {}))
 
     def fix_rendering_context(self, root: etree._ElementTree):
-        template_nodes = set(root.xpath("descendant-or-self::*[@t-name]"))
+        template_nodes = root.xpath("descendant-or-self::*[@t-name]")
         if template_nodes:
             for template in template_nodes:
                 self.current_template = template.attrib.get("t-name") or self.template_path
@@ -418,6 +419,13 @@ class TemplateCompiler:
 
         if not isinstance(node.tag, str):
             return True  # eg. comments
+
+        if is_inside_inherit(node):
+            chain = get_inheritance_chain(self.current_template, self.inherit_map)
+            for parent in chain:
+                if parent in self.excluded_templates:
+                    return True  # Don't refactor template inheriting renderAt templates
+
         if not self.modules:
             return False
 
@@ -488,9 +496,10 @@ class TemplateCompiler:
     def _set_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
         if is_inside_inherit(node):
-            target = is_inside_inherit(node)[0].get("t-inherit")
-            self._map_nested_inherits_vars(target)
 
+            self._map_nested_inherits_vars()
+
+            target = is_inside_inherit(node)[0].get("t-inherit")
             self.node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
             self.warning_vars = self.t_call_outer_vars.get(target, set())
 
@@ -1733,6 +1742,7 @@ def run_test_exclude_modules(test):
     path = test.get("path", False)
 
     aggregator = VariableAggregator()
+    aggregator.inherit_map = {'web.abc': 'web.xyz'}
     return update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
 
 
@@ -1756,6 +1766,30 @@ test_exclude_templates = [
             <templates id="template" xml:space="preserve">
                 <t t-name="web.xyz"> <t t-out="value"/> </t>
                 <t t-name="web.abc"> <t t-out="this.value"/> </t>
+            </templates>
+        """,
+    },
+    {
+        "name": "exclude nested templates",
+        "excluded_templates": {'web.xyz'},
+        "content": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="foo"/> </t>
+                <t t-name="web.abc" t-inherit="web.xyz" t-inherit-mode="primary">
+                    <xpath expr="//t[@t-if='bar']" position="after">
+                        <t t-out="baz"/>
+                    </xpath>
+                </t>
+            </templates>
+        """,
+        "expected": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="foo"/> </t>
+                <t t-name="web.abc" t-inherit="web.xyz" t-inherit-mode="primary">
+                    <xpath expr="//t[@t-if='bar']" position="after">
+                        <t t-out="baz"/>
+                    </xpath>
+                </t>
             </templates>
         """,
     },
@@ -1883,7 +1917,7 @@ test_vars = [
 # ------------------------------------------------------------------------------
 
 
-def run_test_vars_collection(test):
+def run_test_aggregator(test):
     aggregator = VariableAggregator()
 
     if "inside_vars" in test:
@@ -1898,10 +1932,17 @@ def run_test_vars_collection(test):
     update_etree(test["content"], callback)
 
     # Convert defaultdicts to standard dicts for clean printing/comparison
-    clean_inside_vars = dict(aggregator.all_vars)
-    clean_outside_vars = dict(aggregator.t_call_vars)
-    clean_t_call_outer = dict(aggregator.t_call_outer_vars)
-    return f"All vars: {clean_inside_vars} | t-call-inner: {clean_outside_vars} | t-call-outer: {clean_t_call_outer}"
+    result = {}
+    if aggregator.all_vars:
+        result["all_vars"] = dict(aggregator.all_vars)
+    if aggregator.t_call_vars:
+        result["t_call_inner"] = dict(aggregator.t_call_vars)
+    if aggregator.t_call_outer_vars:
+        result["t_call_outer"] = dict(aggregator.t_call_outer_vars)
+    if aggregator.inherit_map:
+        result["inherit_map"] = dict(aggregator.inherit_map)
+
+    return result
 
 
 test_vars_collection = [
@@ -1910,7 +1951,7 @@ test_vars_collection = [
         "outside_vars": defaultdict(set),
         "inside_vars": {"abc": {"a"}},
         "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
-        "expected": """All vars: {'abc': {'a'}, 'web.xyz': {'b'}} | t-call-inner: {} | t-call-outer: {}"""
+        "expected": {"all_vars": {'abc': {'a'}, 'web.xyz': {'b'}}},
     },
     {
         "name": "t-slot-scope-vars",
@@ -1930,7 +1971,7 @@ test_vars_collection = [
     </div>
 </t>
         """,
-        "expected": """All vars: {'web.Many2XAutocomplete': {'optionScope'}} | t-call-inner: {} | t-call-outer: {}"""
+        "expected": {"all_vars": {'web.Many2XAutocomplete': {'optionScope'}}},
     },
     {
         "name": "t-call",
@@ -1942,7 +1983,26 @@ test_vars_collection = [
     <t t-call="mail.xyz"> <t t-set="inside" t-value="a"/> </t>
 </t>
         """,
-        "expected": """All vars: {'web.xyz': {'outside'}} | t-call-inner: {'mail.xyz': {'inside'}} | t-call-outer: {'mail.xyz': {'outside'}}"""
+        "expected": {
+            "all_vars": {'web.xyz': {'outside'}},
+            "t_call_inner": {'mail.xyz': {'inside'}},
+            "t_call_outer": {'mail.xyz': {'outside'}}
+        },
+    },
+    {
+        "name": "Nested Inherites",
+        "excluded_templates": {'web.xyz'},
+        "content": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.xyz"> <t t-out="foo"/> </t>
+                <t t-name="web.abc" t-inherit="web.xyz" t-inherit-mode="primary">
+                    <xpath expr="//t[@t-if='bar']" position="after">
+                        <t t-out="baz"/>
+                    </xpath>
+                </t>
+            </templates>
+        """,
+        "expected": {'all_vars': {'web.xyz': set(), 'web.abc': set()}, 'inherit_map': {'web.abc': 'web.xyz'}},
     },
 ]
 
@@ -1950,7 +2010,8 @@ test_vars_collection = [
 # ------------------------------------------------------------------------------
 
 
-WHITELIST = ["xpath targetting non t attributes"]
+WHITELIST = []
+# WHITELIST = ["exclude nested templates"]
 
 
 def run_test_group(name, tests, func):
@@ -1988,7 +2049,7 @@ if __name__ == "__main__":
         ("xpaths", test_external_xpath, run_test_specific_modules),
         ("excluded templates", test_exclude_templates, run_test_exclude_modules),
         ("external vars", test_vars, run_test_vars),
-        ("vars aggregator", test_vars_collection, run_test_vars_collection),
+        ("vars aggregator", test_vars_collection, run_test_aggregator),
     ]:
         s, f = run_test_group(name, test_group, func)
         total_success += s
