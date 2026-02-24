@@ -890,5 +890,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         """Unchecking Manufacture to Resupply should keep manufacture_to_resupply disabled."""
         manufacture_route = self.warehouse.manufacture_pull_id.route_id
         self.warehouse.manufacture_to_resupply = False
+        # Invalidate recordset to avoid cached `manufacture_to_resupply`
+        self.warehouse.invalidate_recordset(["manufacture_to_resupply"])
         self.assertFalse(self.warehouse.manufacture_to_resupply)
         self.assertNotIn(self.warehouse, manufacture_route.warehouse_ids)
