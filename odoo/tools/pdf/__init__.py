@@ -150,6 +150,19 @@ def fill_form_fields_pdf(writer, form_fields):
     :return: a filled PDF datastring
     '''
     writer.set_need_appearances_writer()
+
+    pypdf_version = parse_version(pypdf.__version__)
+    if pypdf_version >= parse_version('3.13.0'):
+        catalog = writer._root_object
+        if "/Fields" not in catalog.get('/AcroForm'):
+            catalog.update({
+                NameObject("/AcroForm"): writer._add_object(
+                    DictionaryObject({
+                        NameObject("/Fields"): ArrayObject()
+                    })
+                )
+            })
+
     for page in writer.pages:
         writer.update_page_form_field_values(page, form_fields)
 
