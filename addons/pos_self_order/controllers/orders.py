@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
-from odoo import http, fields, _
+from odoo import http, _
 from odoo.http import request
-from odoo.tools import float_round
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
@@ -11,41 +9,29 @@ from odoo.tools import consteq
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
-        pos_config, _ = self._verify_authorization(access_token, table_identifier, order)
+        pos_config, table = self._verify_authorization(access_token, table_identifier, order)
         pos_session = pos_config.current_session_id
-        preset_id = order['preset_id'] if pos_config.use_presets else False
-        preset_id = pos_config.env['pos.preset'].browse(preset_id) if preset_id else False
-
-        if not preset_id and pos_config.use_presets:
-            raise BadRequest("Invalid preset")
 
         # Create the order
-        tracking_prefix, ref_prefix = self._get_prefixes(device_type)
-        sequence_number = order.get('sequence_number')
-        pos_reference = order.get('pos_reference')
-        tracking_number = order.get('tracking_number')
-        if not (sequence_number and pos_reference and tracking_number):
-            pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
+        existing_order = pos_config.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+        if not existing_order.exists():
+            tracking_prefix, ref_prefix = self._get_prefixes(device_type)
+            sequence_number = order.get('sequence_number')
+            pos_reference = order.get('pos_reference')
+            tracking_number = order.get('tracking_number')
+            if not (sequence_number and pos_reference and tracking_number):
+                pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
 
-        if 'picking_type_id' in order:
-            del order['picking_type_id']
+            order['pos_reference'] = pos_reference
+            order['tracking_number'] = tracking_number
+            order['sequence_number'] = sequence_number
 
-        if 'name' in order:
-            del order['name']
-
-        order['pos_reference'] = pos_reference
-        order['tracking_number'] = tracking_number
-        order['sequence_number'] = sequence_number
-        order['user_id'] = request.session.uid
-        order['date_order'] = str(fields.Datetime.now())
-        order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
-        order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
-
-        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
-        line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
+        # Create a safe copy of the order with only the necessary fields for order creation to
+        # avoid potential security issues and to reduce the payload size
+        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, table)
+        results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
-
-        self._verify_line_price(line_ids, pos_config, preset_id)
+        order_ids.recompute_prices()
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
@@ -82,47 +68,8 @@ class PosSelfOrderController(http.Controller):
             'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(config_id.id), load=False),
         }
 
-    def _verify_line_price(self, lines, pos_config, preset_id):
-        pricelist = preset_id.pricelist_id or pos_config.pricelist_id if preset_id else pos_config.pricelist_id
-        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
-
-        for line in lines:
-            product = line.product_id
-            lst_price = pricelist._get_product_price(product, quantity=line.qty) if pricelist else product.lst_price
-            selected_attributes = line.attribute_value_ids
-            lst_price += sum(selected_attributes.mapped('price_extra'))
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
-            lst_price += price_extra
-
-            fiscal_pos = preset_id.fiscal_position_id or pos_config.default_fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-            if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
-                remaining_total = lst_price
-                factor = lst_price / original_total if original_total > 0 else 1
-
-                for i, pos_order_line in enumerate(line.combo_line_ids):
-                    child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
-                    remaining_total -= price_unit
-
-                    if i == len(line.combo_line_ids) - 1:
-                        price_unit += remaining_total
-
-                    selected_attributes = pos_order_line.attribute_value_ids
-                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
-
-                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
-                    pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
-
-                    pos_order_line.write({
-                        'price_unit': price_unit,
-                        'price_subtotal': pdetails.get('total_excluded'),
-                        'price_subtotal_incl': pdetails.get('total_included'),
-                        'price_extra': price_extra_child,
-                        'tax_ids': child_product.taxes_id,
-                    })
-                lst_price = 0
+    def _verify_line_price(self, lines, pos_config, takeaway=False):
+        lines.order_id.recompute_prices()
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None):

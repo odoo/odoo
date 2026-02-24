@@ -75,3 +75,9 @@ class PosOrder(models.Model):
                 'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id.id), load=False),
             }
         })
+
+    @api.model
+    def _check_pos_order(self, pos_config, order, table=None):
+        data = super()._check_pos_order(pos_config, order, table)
+        data['use_self_order_online_payment'] = order.get('use_self_order_online_payment')
+        return data
