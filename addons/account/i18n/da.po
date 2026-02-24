@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:38+0000\n"
-"PO-Revision-Date: 2026-02-14 18:01+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/account/"
 "da/>\n"
@@ -83,6 +83,14 @@ msgstr ""
 "        f.eks. 180 / (1 - 10%) = 200 (med moms)\n"
 "        f.eks. 200 * (1 - 10%) = 180 (uden moms)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4567,6 +4575,8 @@ msgid "Chart of accounts set!"
 msgstr "Kontoplan sat!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Tjek"
@@ -9854,6 +9864,7 @@ msgstr "Journal:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Journaler"
 
@@ -15652,6 +15663,14 @@ msgid ""
 msgstr "Forretningspartneren har opdateret alle tilhørende bogføringer."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Virksomheden denne distributions linje tilhører."
@@ -16292,6 +16311,14 @@ msgstr "Restbeløbet på en journalpost udtrykt i selskabets valuta."
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Den løbende balance (%s) stemmer ikke med den angivne slutbalance."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18618,6 +18645,7 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Beløbet kan ikke ændres på en betaling, der har flere likviditetslinjer."
 
 #. module: account
 #. odoo-python
@@ -19010,6 +19038,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Du kan ikke ændre dokumenttypen på et dokument, der allerede har fået "
+"tildelt et sekvensnummer."
 
 #. module: account
 #. odoo-python

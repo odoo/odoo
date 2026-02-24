@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-02-14 09:25+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/account/"
@@ -71,6 +71,14 @@ msgstr ""
 "-内税率: 税額は価格に含まれています:\n"
 "例: 180 / (1-10％) = 200 (課税後の価格)\n"
 "例: 200 * (1-10％) = 180 (課税前の価格)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4505,6 +4513,8 @@ msgid "Chart of accounts set!"
 msgstr "勘定科目表設定済！"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "確認"
@@ -9739,6 +9749,7 @@ msgstr "仕訳:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "仕訳帳"
 
@@ -15481,6 +15492,14 @@ msgid ""
 msgstr "関連するすべての会計仕訳に対して商業取引先が更新されました"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "この配分明細に属する会社。"
@@ -16099,6 +16118,14 @@ msgstr "会社通貨で表示される仕訳明細の残額。"
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "残高（%s）が、指定された終了残高と一致しない。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python

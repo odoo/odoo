@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:38+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-01-24 09:14+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/account/"
@@ -108,6 +108,14 @@ msgstr ""
 "        p. ex.: 180 / (1 - 10%) = 200 (preu no inclòs)\n"
 "        p. ex.: 200 * (1 - 10%) = 180 (preu inclòs)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4609,6 +4617,8 @@ msgid "Chart of accounts set!"
 msgstr "Pla comptable configurat"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Comprovar"
@@ -9926,6 +9936,7 @@ msgstr "Diari:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Diaris"
 
@@ -15780,6 +15791,14 @@ msgstr ""
 "relacionats."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "La companyia a la que pertany aquesta línia de distribució."
@@ -16431,6 +16450,14 @@ msgstr ""
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
 "El saldo en execució (%s) no coincideix amb el saldo final especificat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python

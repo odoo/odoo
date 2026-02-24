@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-14 09:13+0000\n"
+"POT-Creation-Date: 2026-02-20 18:39+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/sale/hi/>\n"
 "Language: hi\n"
@@ -673,13 +673,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
-"company-specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr "<span class=\"flex-grow-1\">/ महीना </span> "
@@ -918,7 +911,8 @@ msgid ""
 msgstr ""
 "प्रॉडक्ट कॉन्फ़िगरेशन के अनुसार, डिलीवर की गई मात्रा को ऑटोमैटिक तरीके से कैलकुलेट करें:\n"
 "  - मैन्युअल: मात्रा को लाइन पर मैन्युअल रूप से सेट करें\n"
-"  - एनालिटिक फ्रॉम एक्सपेंसेस: जितने खर्चे दर्ज किए गए हैं, उनकी कुल संख्या ही डिलीवरी मात्रा होगी\n"
+"  - एनालिटिक फ्रॉम एक्सपेंसेस: जितने खर्चे दर्ज किए गए हैं, उनकी कुल संख्या ही डिलीवरी "
+"मात्रा होगी\n"
 "  - टाइमशीट: मात्रा इस सेल लाइन से जुड़े टास्क पर दर्ज किए गए घंटों का योग है\n"
 "  - स्टॉक मूव्स: मात्रा पुष्टि की गई पिकिंग से आती है\n"
 
@@ -1189,7 +1183,7 @@ msgstr "अटैचमेंट काउंट"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "एट्रिब्यूट वैल्यू"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
@@ -2804,7 +2798,7 @@ msgstr "लेट एक्टिविटी"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr ""
+msgstr "लीड का समय"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3620,7 +3614,7 @@ msgstr "उत्पाद श्रेणी"
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "प्रॉडक्ट डॉक्यूमेंट"
 
 #. module: sale
 #. odoo-javascript
@@ -5030,6 +5024,9 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"यह रिपोर्ट आपके सेल्स ऑर्डर्स का विश्लेषण करती है. यह सेल्स रेवेन्यू की जांच कर उसे सेल्समैन, पार्टनर या "
+"प्रॉडक्ट के अनुसार क्रमबद्ध करती है. बिना इनवॉइस वाली सेल्स के लिए इसका उपयोग करें. टर्नओवर देखने के लिए "
+"अकाउंटिंग में 'इनवॉइस एनालिसिस' रिपोर्ट देखें।"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5295,6 +5292,11 @@ msgstr ""
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Values set here are company-specific."
 msgstr ""
 
 #. module: sale
@@ -5592,8 +5594,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} "
-"(रेफ़रेंस {{ object.name or 'n/a' }})"
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (रेफ़रेंस "
+"{{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
