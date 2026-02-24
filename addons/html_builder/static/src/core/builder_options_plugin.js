@@ -377,15 +377,12 @@ export class BuilderOptionsPlugin extends Plugin {
         const previousElementToIdAndStateMap = new Map(
             this.lastContainers.map((c) => [c.element, { id: c.id, folded: c.folded }])
         );
-        const keepUnfolded = this.lastContainers.some((c) => c.element === element);
         let containers = reactive(
             [...elementToOptions]
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({
                     id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
-                    folded: keepUnfolded
-                        ? previousElementToIdAndStateMap.get(element)?.folded ?? true
-                        : true,
+                    folded: previousElementToIdAndStateMap.get(element)?.folded ?? true,
                     element,
                     options: Options,
                     optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
