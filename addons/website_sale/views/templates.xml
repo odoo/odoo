@@ -2365,7 +2365,18 @@
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
             <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
-                <t t-call="website_sale.product_price"/>
+                <div>
+                    <t t-call="website_sale.product_price"/>
+                    <small 
+                        t-if="combination_info.get('base_unit_price')"
+                        class="ms-1 text-muted o_base_unit_price_wrapper d-none"
+                    >
+                        <t
+                            t-call="website_sale.base_unit_price"
+                            base_unit_price="combination_info['base_unit_price']"
+                        />
+                    </small>
+                </div>
             </div>
         </xpath>
     </template>
