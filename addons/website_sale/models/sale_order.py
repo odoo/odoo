@@ -907,3 +907,6 @@ class SaleOrder(models.Model):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()
         self._recompute_prices()
+
+    def _allow_express_checkout(self):
+        return True
