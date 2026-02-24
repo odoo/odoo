@@ -281,7 +281,12 @@ export class Action {
     _dropdown(action) {}
     /** Determines whether this action opens a dropdown on selection. */
     get dropdown() {
-        return this._dropdown(this.params) ?? this.definition.dropdown;
+        return (
+            this._dropdown(this.params) ??
+            (typeof this.definition.dropdown === "function"
+                ? this.definition.dropdown.call(this, this.params)
+                : this.definition.dropdown)
+        );
     }
 
     /** @param {Action} action @returns {Component|undefined} */
