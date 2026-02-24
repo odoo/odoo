@@ -994,6 +994,7 @@
             <field name="name">End of Collaboration</field>
             <field name="model_id" ref="model_hr_employee"/>
             <field name="binding_model_id" ref="model_hr_employee"/>
+            <field name="binding_view_types">form</field>
             <field name="group_ids" eval="[Command.link(ref('hr.group_hr_user'))]"/>
             <field name="state">code</field>
             <field name="code">
