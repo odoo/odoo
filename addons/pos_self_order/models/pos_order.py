@@ -82,11 +82,17 @@ class PosOrder(models.Model):
             config._notify('ORDER_STATE_CHANGED', {})
 
     def _send_self_order_receipt(self):
-        if self.email:
-            try:
-                self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, False, False)
-            except UserError as e:
-                _logger.warning("Error while sending email: %s", e.args[0])
+        self.ensure_one()
+        if (
+            self.state not in ('paid', 'done')
+            or not self.email
+            or not self.preset_id.mail_template_id
+        ):
+            return
+        try:
+            self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, False, False)
+        except UserError as e:
+            _logger.warning("Error while sending email: %s", e.args[0])
 
     def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
         self.ensure_one()
@@ -109,6 +115,7 @@ class PosOrder(models.Model):
             }
         })
         if payment_result == 'Success':
+            self._send_self_order_receipt()
             self._send_order()
 
     def _load_pos_self_data_fields(self, config):
