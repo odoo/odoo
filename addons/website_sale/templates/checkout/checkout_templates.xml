@@ -40,7 +40,9 @@
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t
                     t-if="(website.account_on_checkout != 'mandatory' or
-                            not website.is_public_user()) and show_shorter_cart_summary"
+                            not website.is_public_user()) and
+                            show_shorter_cart_summary and
+                            website_sale_order._allow_express_checkout()"
                     t-call="payment.express_checkout"
                 />
                 <t t-if="current_website_checkout_step_href == '/shop/payment'">
