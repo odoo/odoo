@@ -85,11 +85,11 @@ class SaleOrder(models.Model):
         :rtype: str | None
         """
         required_address_fields = ['city', 'country_id', 'email', 'name', 'street']
-        if self.partner_id.country_id.code not in const.COUNTRIES_WITHOUT_ZIPCODE:
+        if self.partner_shipping_id.country_id.code not in const.COUNTRIES_WITHOUT_ZIPCODE:
             required_address_fields.append('zip')
         missing_fields = [
-            self.partner_id._fields[field_name]
-            for field_name in required_address_fields if not self.partner_id[field_name]
+            self.partner_shipping_id._fields[field_name]
+            for field_name in required_address_fields if not self.partner_shipping_id[field_name]
         ]
         if missing_fields:
             translated_field_names = [f._description_string(self.env) for f in missing_fields]

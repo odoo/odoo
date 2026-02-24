@@ -925,3 +925,6 @@ class SaleOrder(models.Model):
                 partners_to_archive |= commercial_partner + commercial_partner.child_ids
 
         partners_to_archive.active = False
+
+    def _allow_express_checkout(self):
+        return True
