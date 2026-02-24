@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
             order.dropship_picking_count = dropship_count
 
     def action_view_delivery(self):
-        return self._get_action_view_picking(self.picking_ids.filtered(lambda p: not p.is_dropship))
+        return self._get_action_view_picking(self.order_line.move_ids.picking_id.filtered(lambda p: not p.is_dropship))
 
     def action_view_dropship(self):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
