@@ -20,7 +20,7 @@ class AccountEdiUBL(models.AbstractModel):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
 
         additional_docs = super()._import_attachments(invoice, tree)
-        if additional_docs or not invoice.is_purchase_document():
+        if additional_docs or invoice.message_main_attachment_id or not invoice.is_purchase_document():
             return additional_docs
         try:
             invoices_by_odoo_xmlid = 'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo'
