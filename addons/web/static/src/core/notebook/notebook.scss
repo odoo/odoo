@@ -25,6 +25,7 @@
     }
 
     .nav-item {
+        white-space: var(--Notebook-white-space, nowrap);
         margin: 0 -1px 0 0;
 
         &.disabled {
@@ -69,8 +70,14 @@
     }
 
     &.vertical {
-        li a {
-            text-align: left;
+        --Notebook-white-space : normal;
+
+        li {
+            word-wrap: break-word;
+
+            button {
+                text-align: left;
+            }
         }
 
         .o_notebook_headers {
