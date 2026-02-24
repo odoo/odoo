@@ -1219,11 +1219,11 @@ class PurchaseOrder(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('purchase_ok', '=', True)
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        res = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            res[product.id] |= self._get_product_price_and_data(product)
-        return res
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        product_data = super()._get_product_catalog_product_data(product)
+        seller_data = self._get_product_catalog_seller_data(product)
+        product_data.update(seller_data)
+        return product_data
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
@@ -1243,44 +1243,52 @@ class PurchaseOrder(models.Model):
             grouped_lines[line.product_id] |= line
         return grouped_lines
 
-    def _get_product_price_and_data(self, product):
-        """ Fetch the product's data used by the purchase's catalog.
+    def _get_product_catalog_seller_data(self, product, **kwargs):
+        """ This function will return a dict containing the price of the product,
+        UoM display name , and the seller's data if found.
 
-        :return: the product's price and, if applicable, the minimum quantity to
-                 buy and the product's packaging data.
+        :param object product: Recordset of `product.product`.
         :rtype: dict
+        :return: A dict with the following structure:
+            {
+                'price': float,
+                'uomDisplayName': string,
+                'uomId' : int,
+                'sellerUomFactor': float (optional),
+                'productUomDisplayName': string (optional),
+                'min_qty': float (optional)
+            }
         """
         self.ensure_one()
+        product.ensure_one()
+        uom_id = kwargs.get('uom_id', False)
         product_infos = {
-            'price': product.standard_price,
-            'uomDisplayName': product.uom_id.display_name
+            'price':  product.standard_price,
+            **self._get_product_catalog_uom_data(product, uom_id or product.uom_id),
         }
-        params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
-        seller = product._select_seller(
-            partner_id=self.partner_id,
-            quantity=None,
-            date=self.date_order and self.date_order.date(),
-            uom_id=product.uom_id,
-            ordered_by='min_qty',
-            params=params
-        )
-        if seller:
-            product_uom = (seller.product_id or seller.product_tmpl_id).uom_id
-            price = seller.price_discounted
-            if seller.currency_id != self.currency_id:
-                price = seller.currency_id._convert(price, self.currency_id)
-            if seller.uom_id != product_uom:
-                # The discounted price is expressed in the product's UoM, not in the vendor
-                # price's UoM, so we need to convert it into to match the displayed UoM.
-                price = product_uom._compute_price(price, seller.uom_id)
-                product_infos.update(sellerUomFactor=seller.uom_id.factor / product_uom.factor)
-            product_infos.update(
-                price=price,
-                min_qty=seller.min_qty,
-                uomDisplayName=seller.uom_id.display_name,
+        if self.partner_id:
+            seller = product._select_seller(
+                partner_id=self.partner_id,
+                quantity=None,
+                date=self.date_order and self.date_order.date(),
+                uom_id=uom_id,
+                ordered_by='min_qty',
+                params={'order_id': self, 'force_uom': kwargs.get('force_uom', False)}
             )
-
+            if seller:
+                seller_price = seller.currency_id._convert(
+                    from_amount=seller.price_discounted,
+                    to_currency=product.currency_id,
+                    company=product.company_id,
+                    round=False
+                )
+                product_infos.update(
+                    self._get_product_catalog_uom_data(product, seller.uom_id),
+                    price=product.uom_id._compute_price(seller_price, seller.uom_id),
+                    min_qty=seller.min_qty,
+                    sellerUomFactor=seller.uom_id.factor / product.uom_id.factor,
+                )
         return product_infos
 
     def get_acknowledge_url(self):
@@ -1366,7 +1374,7 @@ class PurchaseOrder(models.Model):
             if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:
-                price_unit = self._get_product_price_and_data(pol.product_id)['price']
+                price_unit = pol.price_unit_discounted
                 pol.unlink()
                 return price_unit
             else:

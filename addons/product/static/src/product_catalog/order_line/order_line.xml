@@ -43,7 +43,7 @@
                     t-on-focus="this._onFocus"
                 />
                 <span
-                    t-if="this.env.displayUoM"
+                    t-if="this.props.uomDisplayName"
                     class="input-group-text d-block rounded-0 text-truncate cursor-default"
                     t-out="this.props.uomDisplayName" t-att-title="this.props.uomDisplayName"
                 />

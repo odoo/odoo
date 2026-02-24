@@ -1950,7 +1950,7 @@ class SaleOrderLine(models.Model):
                 "quantity": self.product_uom_qty,
                 "price": self._get_discounted_price(),
                 "readOnly": (self.order_id._is_readonly() or bool(self.combo_item_id)),
-                "uomDisplayName": self.product_uom_id.display_name,
+                **self.order_id._get_product_catalog_uom_data(self.product_id, self.product_uom_id),
             }
         if self:
             self.product_id.ensure_one()

@@ -55,33 +55,16 @@ class ProductCatalogMixin(models.AbstractModel):
         return {}
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        """ Returns a dict containing the products' data. Those data are for products who aren't in
+        """ Returns a dict containing the products' data. This is for products that aren't in
         the record yet. For products already in the record, see `_get_product_catalog_lines_data`.
 
-        For each product, its id is the key and the value is another dict with all needed data.
-        By default, the price is the only needed data but each model is free to add more data.
-        Must be overrided by each model using this mixin.
+        For each product, we call `_get_product_catalog_product_data` that sets every individual product's data
 
         :param products: Recordset of `product.product`.
-        :param dict kwargs: additional values given for inherited models.
         :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'productId': int
-                'quantity': float (optional)
-                'productType': string
-                'price': float
-                'uomDisplayName': string
-                'code': string (optional)
-                'readOnly': bool (optional)
-            }
         """
         return {
-            product.id: {
-                'productType': product.type,
-                'uomDisplayName': product.uom_id.display_name,
-                'code': product.code if product.code else '',
-            }
+            product.id: self._get_product_catalog_product_data(product, **kwargs)
             for product in products
         }
 
@@ -91,16 +74,6 @@ class ProductCatalogMixin(models.AbstractModel):
                                  of `product.product` ids.
         :param dict kwargs: additional values given for inherited models.
         :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'productId': int
-                'quantity': float (optional)
-                'productType': string
-                'price': float
-                'uomDisplayName': string
-                'code': string (optional)
-                'readOnly': bool (optional)
-            }
         """
         order_line_info = {}
 
@@ -110,23 +83,21 @@ class ProductCatalogMixin(models.AbstractModel):
                'productType': product.type,
                'code': product.code if product.code else '',
             }
-            if not order_line_info[product.id]['uomDisplayName']:
+            if self.env['res.groups']._is_feature_enabled('uom.group_uom') and not order_line_info[product.id]['uomDisplayName']:
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
 
         default_data = self._default_order_line_values(child_field)
         products = self.env['product.product'].browse(product_ids)
-        product_data = self._get_product_catalog_order_data(products, **kwargs)
+        products_data = self._get_product_catalog_order_data(products, **kwargs)
 
-        for product_id, data in product_data.items():
+        for product_id, data in products_data.items():
             if product_id in order_line_info:
                 continue
             order_line_info[product_id] = {**default_data, **data}
-
         return order_line_info
 
     def _get_action_add_from_catalog_extra_context(self):
         return {
-            'display_uom': self.env.user.has_group('uom.group_uom'),
             'product_catalog_order_id': self.id,
             'product_catalog_order_model': self._name,
         }
@@ -150,3 +121,29 @@ class ProductCatalogMixin(models.AbstractModel):
         :rtype: float
         """
         return 0.0
+
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        """ This function is called within `_get_product_catalog_order_data` to return a dict
+        with all the product's info needed for the catalog.
+        :rtype: dict
+        """
+        return {
+            'productType': product.type,
+            'price': product.standard_price,
+            'code': product.code if product.code else '',
+            **self._get_product_catalog_uom_data(product, product.uom_id)
+        }
+
+    def _get_product_catalog_uom_data(self, product, uom):
+        res = {
+            'uomId': uom.id,
+        }
+        if not self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            return res
+
+        res.update({
+            'uomDisplayName': uom.display_name,
+            'productUomFactor': product.uom_id.factor / uom.factor,
+            'productUomDisplayName': product.uom_id.display_name,
+        })
+        return res

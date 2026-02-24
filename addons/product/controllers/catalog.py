@@ -17,13 +17,16 @@ class ProductCatalogController(Controller):
         :return: A dict with the following structure:
             {
                 product.id: {
-                    'productId': int
-                    'quantity': float (optional)
-                    'price': float
-                    'uomDisplayName': string
+                    'price': float,
+                    'uomDisplayName': string,
+                    'uomId': int,
                     'productUomFactor': float (optional),
-                    'code': string (optional)
-                    'readOnly': bool (optional)
+                    'sellerUomFactor': float (optional),
+                    'quantity': float (optional)
+                    'productType': string,
+                    'productUomDisplayName': string (optional),
+                    'code': string (optional),
+                    'readOnly': bool (optional),
                 }
             }
         """

@@ -3875,14 +3875,12 @@ class AccountMoveLine(models.Model):
         if self:
             self.product_id.ensure_one()
             return {
-                **self[0].move_id._get_product_price_and_data(self[0].product_id),
                 'quantity': self.quantity,
                 'readOnly': self.move_id._is_readonly() or len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
-                'uomId': self[0].product_uom_id.id,
-                'productUomFactor': self[0].product_id.uom_id.factor / self[0].product_uom_id.factor,
                 'price': self[0].price_unit,
-                'productUomDisplayName': self.product_id.uom_id.display_name,
+                **self.move_id._get_product_catalog_uom_data(
+                    self.product_id, self[0].product_uom_id
+                ),
             }
         return {
             'quantity': 0,

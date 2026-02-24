@@ -203,5 +203,5 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
         })
-        catalog_info = purchase_order._get_product_price_and_data(supplier_info.product_tmpl_id.product_variant_ids[0])
+        catalog_info = purchase_order._get_product_catalog_seller_data(supplier_info.product_tmpl_id.product_variant_ids[0])
         self.assertEqual(catalog_info['price'], 100.0)

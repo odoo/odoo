@@ -23,7 +23,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             orderId: this.props.record.context.product_catalog_order_id,
             orderResModel: this.props.record.context.product_catalog_order_model,
             digits: this.props.record.context.product_catalog_digits,
-            displayUoM: this.props.record.context.display_uom,
             precision: this.props.record.context.precision,
             productId: this.props.record.resId,
             addProduct: this.addProduct.bind(this),

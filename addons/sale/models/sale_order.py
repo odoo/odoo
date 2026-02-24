@@ -2570,22 +2570,26 @@ class SaleOrder(models.Model):
     # === CATALOG === #
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        pricelist = self.pricelist_id._get_products_price(
+        res = super()._get_product_catalog_order_data(products, **kwargs)
+        prices = self.pricelist_id._get_products_price(
             quantity=1.0,
             products=products,
             currency=self.currency_id,
             date=self.date_order,
             **kwargs,
         )
-        res = super()._get_product_catalog_order_data(products, **kwargs)
-        has_warning_group = self.env.user.has_group("sale.group_warning_sale")
         for product in products:
-            res[product.id]["price"] = pricelist.get(product.id)
-            if product.sale_line_warn_msg and has_warning_group:
-                res[product.id]["warning"] = product.sale_line_warn_msg
+            res[product.id]["price"] = prices.get(product.id)
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):  # noqa: ARG002
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        product_data = super()._get_product_catalog_product_data(product)
+        has_warning_group = self.env["res.groups"]._is_feature_enabled("sale.group_warning_sale")
+        if product.sale_line_warn_msg and has_warning_group:
+            product_data.update(warning=product.sale_line_warn_msg)
+        return product_data
+
+    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
         if section_id is None:
             section_id = (

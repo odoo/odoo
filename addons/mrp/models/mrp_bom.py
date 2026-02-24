@@ -516,16 +516,6 @@ class MrpBom(models.Model):
 
         return {**default_data, **new_default_data}
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            product_catalog[product.id] |= self._get_product_price_and_data(product)
-        return product_catalog
-
-    def _get_product_price_and_data(self, product):
-        self.ensure_one()
-        return {'price': product.standard_price}
-
     def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
         if not child_field:
             return {}
@@ -834,8 +824,9 @@ class MrpBomLine(models.Model):
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:
             self.product_id.ensure_one()
+            price = self[0].product_id.uom_id._compute_price(self.product_id.standard_price, self[0].uom_id)
             return {
-                **self[0].bom_id._get_product_price_and_data(self[0].product_id),
+                'price': price,
                 'quantity': self[0].product_qty,
                 'readOnly': len(self) > 1,
                 'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
@@ -911,8 +902,9 @@ class MrpBomByproduct(models.Model):
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:
             self.product_id.ensure_one()
+            price = self[0].product_id.uom_id._compute_price(self.product_id.standard_price, self[0].uom_id)
             return {
-                **self[0].bom_id._get_product_price_and_data(self[0].product_id),
+                'price': price,
                 'quantity': self[0].product_qty,
                 'readOnly': len(self) > 1,
                 'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
