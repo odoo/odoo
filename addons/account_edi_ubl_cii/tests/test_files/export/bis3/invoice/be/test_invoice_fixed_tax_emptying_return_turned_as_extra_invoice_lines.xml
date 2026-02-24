@@ -104,10 +104,10 @@
 		</cac:PayeeFinancialAccount>
 	</cac:PaymentMeans>
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID="EUR">12.23</cbc:TaxAmount>
+		<cbc:TaxAmount currencyID="EUR">2.10</cbc:TaxAmount>
 		<cac:TaxSubtotal>
-			<cbc:TaxableAmount currencyID="EUR">58.23</cbc:TaxableAmount>
-			<cbc:TaxAmount currencyID="EUR">12.23</cbc:TaxAmount>
+			<cbc:TaxableAmount currencyID="EUR">10.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">2.10</cbc:TaxAmount>
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>21.0</cbc:Percent>
@@ -116,29 +116,32 @@
 				</cac:TaxScheme>
 			</cac:TaxCategory>
 		</cac:TaxSubtotal>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">1.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>E</cbc:ID>
+				<cbc:Percent>0.0</cbc:Percent>
+				<cbc:TaxExemptionReason>Exempt from tax</cbc:TaxExemptionReason>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal>
-		<cbc:LineExtensionAmount currencyID="EUR">58.23</cbc:LineExtensionAmount>
-		<cbc:TaxExclusiveAmount currencyID="EUR">58.23</cbc:TaxExclusiveAmount>
-		<cbc:TaxInclusiveAmount currencyID="EUR">70.46</cbc:TaxInclusiveAmount>
+		<cbc:LineExtensionAmount currencyID="EUR">11.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">11.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">13.10</cbc:TaxInclusiveAmount>
 		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
-		<cbc:PayableAmount currencyID="EUR">70.46</cbc:PayableAmount>
+		<cbc:PayableAmount currencyID="EUR">13.10</cbc:PayableAmount>
 	</cac:LegalMonetaryTotal>
 	<cac:InvoiceLine>
 		<cbc:ID>___ignore___</cbc:ID>
-		<cbc:InvoicedQuantity unitCode="C62">10.0</cbc:InvoicedQuantity>
-		<cbc:LineExtensionAmount currencyID="EUR">58.23</cbc:LineExtensionAmount>
-		<cac:AllowanceCharge>
-			<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-			<cbc:AllowanceChargeReasonCode>ADK</cbc:AllowanceChargeReasonCode>
-			<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
-			<cbc:MultiplierFactorNumeric>1.09</cbc:MultiplierFactorNumeric>
-			<cbc:Amount currencyID="EUR">0.63</cbc:Amount>
-			<cbc:BaseAmount currencyID="EUR">57.60</cbc:BaseAmount>
-		</cac:AllowanceCharge>
+		<cbc:InvoicedQuantity unitCode="C62">2.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">10.00</cbc:LineExtensionAmount>
 		<cac:Item>
-			<cbc:Description>Test Product</cbc:Description>
-			<cbc:Name>Test Product</cbc:Name>
+			<cbc:Name>product_a</cbc:Name>
 			<cac:ClassifiedTaxCategory>
 				<cbc:ID>S</cbc:ID>
 				<cbc:Percent>21.0</cbc:Percent>
@@ -148,7 +151,44 @@
 			</cac:ClassifiedTaxCategory>
 		</cac:Item>
 		<cac:Price>
-			<cbc:PriceAmount currencyID="EUR">5.76</cbc:PriceAmount>
+			<cbc:PriceAmount currencyID="EUR">5.0</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>___ignore___</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">-1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">0.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>product_a</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>E</cbc:ID>
+				<cbc:Percent>0.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">0.0</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>___ignore___</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">1.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>Vidange</cbc:Description>
+			<cbc:Name>Vidange</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>E</cbc:ID>
+				<cbc:Percent>0.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">1.0</cbc:PriceAmount>
 		</cac:Price>
 	</cac:InvoiceLine>
 </Invoice>
