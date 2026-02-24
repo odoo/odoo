@@ -43,8 +43,19 @@
                     t-on-change="this.env.setQuantity"
                     t-on-focus="this._onFocus"
                 />
+                <select t-if="this.hasMultipleUoms"
+                    class="input-group-text form-select rounded-0"
+                    t-att-style="this.uomSelectStyle"
+                    t-on-change="this.onUomChange"
+                >
+                    <option t-foreach="this.props.availableUoms" t-as="uom" t-key="uom.id"
+                        t-att-value="uom.id"
+                        t-att-selected="uom.id === this.props.uomId"
+                        t-out="uom.name"
+                    />
+                </select>
                 <span
-                    t-if="this.props.uomDisplayName"
+                    t-elif="this.props.uomDisplayName"
                     class="input-group-text d-block rounded-0 text-truncate cursor-default"
                     t-out="this.props.uomDisplayName" t-att-title="this.props.uomDisplayName"
                 />

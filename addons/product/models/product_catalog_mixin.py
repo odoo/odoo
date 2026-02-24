@@ -85,6 +85,10 @@ class ProductCatalogMixin(models.AbstractModel):
             }
             if self.env['res.groups']._is_feature_enabled('uom.group_uom') and not order_line_info[product.id]['uomDisplayName']:
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
+            if not order_line_info[product.id].get('uomId'):
+                order_line_info[product.id]['uomId'] = product.uom_id.id
+            if not order_line_info[product.id].get('availableUoms'):
+                order_line_info[product.id]['availableUoms'] = product._get_available_uoms().read(['name', 'factor'])
 
         default_data = self._default_order_line_values(child_field)
         products = self.env['product.product'].browse(product_ids)
@@ -131,6 +135,7 @@ class ProductCatalogMixin(models.AbstractModel):
             'productType': product.type,
             'price': product.standard_price,
             'code': product.code if product.code else '',
+            'availableUoms': product._get_available_uoms().read(['name', 'factor']),
             **self._get_product_catalog_uom_data(product, product.uom_id)
         }
 

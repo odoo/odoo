@@ -30,6 +30,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
+            setUom: this.setUom.bind(this),
             childField: this.props.record.context.child_field,
         });
     }
@@ -80,13 +81,31 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
-            uom_id: this.productCatalogData.uomId,
+            uom_id: this.productCatalogData.uomId || false,
         };
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    async setUom(uomId) {
+        if (this.productCatalogData.readOnly) {
+            return;
+        }
+        const data = this.productCatalogData;
+        const newUom = data.availableUoms.find(u => u.id === uomId);
+        const oldUom = data.availableUoms.find(u => u.id === data.uomId);
+        if (newUom && oldUom) {
+            data.uomId = newUom.id;
+            data.uomDisplayName = newUom.name;
+            if (data.productUomFactor !== undefined) {
+                data.productUomFactor = data.productUomFactor * oldUom.factor / newUom.factor;
+            }
+            const price = await this._updateQuantityAndGetPrice();
+            data.price = parseFloat(price);
+        }
+    }
 
     updateQuantity(quantity) {
         if (this.productCatalogData.readOnly) {

@@ -597,10 +597,15 @@ class PurchaseOrderLine(models.Model):
         if self:
             self.product_id.ensure_one()
             catalog_info = self[0].order_id._get_product_catalog_seller_data(self.product_id)
+            available_uoms = self.product_id._get_available_uoms() | self.product_id.seller_ids.uom_id
             catalog_info.update(
                 quantity=self[0].product_qty,
                 price=self[0].price_unit_discounted,
                 readOnly=self[0].order_id._is_readonly() or len(self) > 1,
+                availableUoms=[
+                    {'id': uom.id, 'name': uom.display_name, 'factor': uom.factor}
+                    for uom in available_uoms
+                ],
                 **self[0].order_id._get_product_catalog_uom_data(self.product_id, self[0].uom_id),
             )
             return catalog_info

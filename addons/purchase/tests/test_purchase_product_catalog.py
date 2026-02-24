@@ -104,7 +104,8 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['result'], company_product_price)
 
-        purchase_order.order_line[0].uom_id = self.env.ref('uom.product_uom_pack_6')
+        pack_6_uom = self.env.ref('uom.product_uom_pack_6')
+        purchase_order.order_line[0].uom_id = pack_6_uom
         resp = self.make_jsonrpc_request(
             route='/product/catalog/update_order_line_info',
             params={
@@ -113,7 +114,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
                     'product_id': other_product.id,
                     'quantity': 2,
                     'res_model': 'purchase.order',
-                    'uom_id': other_product.uom_id.id,
+                    'uom_id': pack_6_uom.id,
                 },
             headers={'Content-Type': 'application/json'},
         )

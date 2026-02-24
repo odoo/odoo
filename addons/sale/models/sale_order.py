@@ -2696,9 +2696,10 @@ class SaleOrder(models.Model):
         """Update sale order line information for a given product or create a
         new one if none exists yet.
 
-        :param int product_id: The product, as a `product.product` id.
+        :param record product: The product, as a `product.product` record.
         :param int quantity: The quantity selected in the catalog.
         :param int section_id: The id of section selected in the catalog.
+        :param record uom: The UoM selected in the catalog, as a `uom.uom` record.
         :return: The unit price of the product, based on the pricelist of the sale order and the
                  quantity selected.
         :rtype: float
@@ -2710,6 +2711,8 @@ class SaleOrder(models.Model):
             )
         )
         if sol:
+            if uom and sol.product_uom_id != uom:
+                sol.product_uom_id = uom.id
             if quantity != 0:
                 sol.product_uom_qty = quantity
             elif self.state in ["draft", "sent"]:

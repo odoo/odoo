@@ -1954,16 +1954,22 @@ class SaleOrderLine(models.Model):
             }
         """
         if len(self) == 1:
+            available_uoms = self.product_id._get_available_uoms()
             return {
                 "quantity": self.product_uom_qty,
                 "price": self._get_discounted_price(),
                 "readOnly": (self.order_id._is_readonly() or bool(self.combo_item_id)),
                 **self.order_id._get_product_catalog_uom_data(self.product_id, self.product_uom_id),
+                "availableUoms": [
+                    {"id": uom.id, "name": uom.display_name, "factor": uom.factor}
+                    for uom in available_uoms
+                ],
             }
         if self:
             self.product_id.ensure_one()
             order_line = self[0]
             order = order_line.order_id
+            available_uoms = self.product_id._get_available_uoms()
             return {
                 "readOnly": True,
                 "price": order.pricelist_id._get_product_price(
@@ -1981,6 +1987,11 @@ class SaleOrderLine(models.Model):
                     )
                 ),
                 "uomDisplayName": self.product_id.uom_id.display_name,
+                "uomId": self.product_id.uom_id.id,
+                "availableUoms": [
+                    {"id": uom.id, "name": uom.display_name, "factor": uom.factor}
+                    for uom in available_uoms
+                ],
             }
         return {
             "quantity": 0
