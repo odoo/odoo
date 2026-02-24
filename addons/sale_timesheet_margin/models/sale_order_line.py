@@ -13,7 +13,7 @@ class SaleOrderLine(models.Model):
         # for which the recomputation was triggered by a depency from another override of _compute_purchase_price
         service_non_timesheet_sols = self.filtered(
             lambda sol: not sol.is_expense and sol.is_service and
-            sol.product_id.service_policy == 'ordered_prepaid' and
+            sol.product_id.service_policy in ['ordered_prepaid', 'delivered_manual', 'delivered_milestones'] and
             sol.state == 'sale' and sol.purchase_price != 0
         )
         timesheet_sols = self.filtered(

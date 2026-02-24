@@ -25,6 +25,30 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'project_id': False,
             'taxes_id': False,
         })
+        self.product_2 = self.env['product.product'].create({
+            'name': "Delivered Manual Service",
+            'list_price': 1.0,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': uom_day_id,
+            'default_code': 'SERV-ORDERED-DAY',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'taxes_id': False,
+        })
+        self.product_3 = self.env['product.product'].create({
+            'name': "Delivered Milestones Service",
+            'list_price': 1.0,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': uom_day_id,
+            'default_code': 'SERV-ORDERED-DAY',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'taxes_id': False,
+        })
         self.employee_manager.hourly_cost = 10
 
     def test_sale_timesheet_margin(self):
@@ -65,8 +89,8 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
 
     def test_no_recompute_purchase_price_not_timesheet(self):
         """
-        check that if a sale order line is linked to a task but the service is ordered_prepaid,
-        adding a timesheet line does not trigger a recomputation of purchase_price.
+        check that if a sale order line is linked to a task but the service is ordered_prepaid, delivered_manual
+        or delivered_milestones, adding a timesheet line does not trigger a recomputation of purchase_price.
         We also check that the pruchase price of new sale order lines added after the confirmation
         is computed correctly.
         """
@@ -77,6 +101,22 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'uom_id': self.ref('uom.product_uom_unit'),
             'service_type': 'timesheet',
             'service_policy': 'ordered_prepaid',
+            'service_tracking': 'task_global_project',
+            'project_id': project.id,
+            'standard_price': 2,
+        })
+        self.product_2.write({
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'service_type': 'timesheet',
+            'service_policy': 'delivered_manual',
+            'service_tracking': 'task_global_project',
+            'project_id': project.id,
+            'standard_price': 2,
+        })
+        self.product_3.write({
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'service_type': 'timesheet',
+            'service_policy': 'delivered_milestones',
             'service_tracking': 'task_global_project',
             'project_id': project.id,
             'standard_price': 2,
@@ -96,6 +136,16 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
                     'product_id': self.product_1.id,
                     'price_unit': 1.0,
                     'product_uom_qty': 1.0,
+            }),
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'price_unit': 1.0,
+                    'product_uom_qty': 1.0,
+            }),
+                Command.create({
+                    'product_id': self.product_3.id,
+                    'price_unit': 1.0,
+                    'product_uom_qty': 1.0,
             })],
             'partner_id': self.partner_b.id,
             'partner_invoice_id': self.partner_b.id,
@@ -111,12 +161,34 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'amount': 1,
             'employee_id': self.employee_manager.id,
             'project_id': project.id,
-            'task_id': sale_order.order_line.task_id.id,
+            'task_id': sale_order.order_line[0].task_id.id,
             'account_id': self.analytic_account_sale.id,
-            'so_line': sale_order.order_line.id,
+            'so_line': sale_order.order_line[0].id,
+        })
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line 333',
+            'unit_amount': 2,
+            'amount': 1,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': sale_order.order_line[1].task_id.id,
+            'account_id': self.analytic_account_sale.id,
+            'so_line': sale_order.order_line[1].id,
+        })
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line 444',
+            'unit_amount': 2,
+            'amount': 1,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': sale_order.order_line[2].task_id.id,
+            'account_id': self.analytic_account_sale.id,
+            'so_line': sale_order.order_line[2].id,
         })
         self.env.flush_all()
         self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_1).purchase_price, 3)
+        self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_2).purchase_price, 3)
+        self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_3).purchase_price, 3)
         sale_order.order_line = [Command.create({
             'product_id': simple_service.id,
             'price_unit': 1.0,
