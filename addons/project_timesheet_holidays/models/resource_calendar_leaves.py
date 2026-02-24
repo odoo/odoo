@@ -241,6 +241,7 @@ class ResourceCalendarLeaves(models.Model):
             ('company_id', '=', self.company_id.id),
             ('date_from', '<=', self.date_to),
             ('date_to', '>=', self.date_from),
+            ('state', '=', 'validate'),
         ]
         if self.calendar_id:
             leave_domain += [('resource_calendar_id', 'in', [False, self.calendar_id.id])]
