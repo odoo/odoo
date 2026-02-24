@@ -1,0 +1,1630 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * om_hr_payroll
+# 
+# Translators:
+# zbik2607 <darek@krokus.com.pl>, 2018
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2018
+# Paweł Michoń <michon.pawel@wp.pl>, 2018
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
+# Maja Stawicka <mjstwck@wp.pl>, 2018
+# Martin Trigaux, 2018
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2018
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
+# Maksym <ms@myodoo.pl>, 2018
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:42
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+" selected employee(s) based on the dates and credit note specified on "
+"Payslips Run.</span>"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Address</strong>"
+msgstr "<strong>Adres</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Authorized signature</strong>"
+msgstr "<strong>Podpis autoryzujący</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Bank Account</strong>"
+msgstr "<strong>Konto bankowe</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Date From:</strong>"
+msgstr "<strong>Data od:</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Date From</strong>"
+msgstr "<strong>Data od</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Date To:</strong>"
+msgstr "<strong>Data do:</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Date To</strong>"
+msgstr "<strong>Data do</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Designation</strong>"
+msgstr "<strong>Designation</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Email</strong>"
+msgstr "<strong>Email</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Identification No</strong>"
+msgstr "<strong>Numer identyfikacyjny</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Name</strong>"
+msgstr "<strong>Nazwa</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "<strong>Reference</strong>"
+msgstr "<strong>Odnośnik</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Register Name:</strong>"
+msgstr "<strong>Nazwa funduszu:</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "<strong>Total</strong>"
+msgstr "<strong>Suma</strong>"
+
+#. module: om_hr_payroll
+#: model_terms:ir.actions.act_window,help:om_hr_payroll.action_contribution_register_form
+msgid ""
+"A contribution register is a third party involved in the salary\n"
+"            payment of the employees. It can be the social security, the\n"
+"            state or anyone that collect or inject money on payslips."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_account_accountant
+msgid "Account Accountant"
+msgstr "Konto Księgowy"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "Księgowość"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "Informacje księgowe"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__active
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: om_hr_payroll
+#: model_terms:ir.actions.act_window,help:om_hr_payroll.action_contribution_register_form
+msgid "Add a new contribution register"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Dodaj notatkę wewnetrzną ..."
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contract_advantage_template_view_form
+msgid "Advantage Name"
+msgstr "Nazwa dodatku"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "Wszystkie reguły podrzędne"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.ALW
+msgid "Allowance"
+msgstr ""
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "Zawsze prawda"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__amount
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Amount"
+msgstr "Kwota"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_select
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "Rodzaj Kwoty"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "Co rok"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "Pojawi się w pasku"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr ""
+"Ta reguła będzie zastosowana, jeśli warunek będzie True (prawda). Warunek "
+"może wyglądać tak: basic > 1000."
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.BASIC
+msgid "Basic"
+msgstr "Podstawowe"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_basic
+msgid "Basic Salary"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
+msgid "Belgium Payroll"
+msgstr ""
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "Co 2 miesiące"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Co dwa tygodnie"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "Obliczenia"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "Anuluj"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "Anuluj Pasek wypłaty"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:96
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__category_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__category_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Reguły podrzędne"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__child_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__child_ids
+msgid "Child Salary Rule"
+msgstr "Podrzędne reguły wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__children_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__children_ids
+msgid "Children"
+msgstr "Podrzędne"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "Definicja podrzędnych"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Choose a Payroll Localization"
+msgstr ""
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "Zamknij"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__code
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Code"
+msgstr "Kod"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payroll_structure_view_kanban
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_view_kanban
+msgid "Code:"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "Firmy"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__company_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.COMP
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Składki firmowe"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Obliczenia"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Oblicz listę"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_select
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_select
+msgid "Condition Based on"
+msgstr "Warunek oparty o"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Warunki"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: om_hr_payroll
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "Konfiguracja"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "Potwierdź"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__contract_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "Contract"
+msgstr "Kontrakt"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.hr_contract_advantage_template_action
+#: model:ir.ui.menu,name:om_hr_payroll.hr_contract_advantage_template_menu_action
+msgid "Contract Advantage Templates"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "Składka"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__register_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "Rejestr składek"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Pozycje funduszy paska wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_action_hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "Rejestry składek"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__create_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__create_uid
+msgid "Created by"
+msgstr "Utworzona przez"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__create_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__credit_note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__credit_note
+msgid "Credit Note"
+msgstr "Korekta"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__date_from
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__date_start
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__date_from
+msgid "Date From"
+msgstr "Data Początkowa"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__date_to
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__date_end
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__date_to
+msgid "Date To"
+msgstr "Data Końcowa"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.DED
+msgid "Deduction"
+msgstr "Potrącenie"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__default_value
+msgid "Default value for this advantage"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract__schedule_pay
+msgid "Defines the frequency of the wage payment."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__note
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__note
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "Opis"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Szczegóły wg kategorii reguł wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__details_by_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Details by Salary Rule Category"
+msgstr "Szcegóły przez kategorie zasad wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register__display_name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "Wykonano"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Wykonane listy płac"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "Pasek wykonany"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "Projekt"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Projekty list płac"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "Projekt listy płac"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__employee_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__employee_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "Pracownik"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "Umowa pracownika"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "Funkcja pracownika"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "Paski wypłat"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_contract_advantage_template
+msgid "Employee's Advantage on Contract"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Employee's working schedule."
+msgstr "Czas pracy pracownika"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__employee_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Pracownicy"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:92
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:189
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "Ewentualny podmiot zewnętrzny związany z wynagrodzeniem pracownika."
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_fix
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_fix
+msgid "Fixed Amount"
+msgstr "Kwota stała"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "Na przykład, wprowadź 50.0 dla oprocentowania 50%"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/report/report_contribution_register.py:35
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "Brakuje treści formularza, tego raportu nie można wydrukować"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_fr_hr_payroll
+msgid "French Payroll"
+msgstr "Francuskie wynagrodzenie"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "Ogólne"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Generuj"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Generuj paski wypłat"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generuj odcinki wypłaty dla wybranych pracowników"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:182
+#, python-format
+msgid "Global Leaves"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:om_hr_payroll.GROSS
+msgid "Gross"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "Grupuj wg"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register__id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details__id
+msgid "ID"
+msgstr "ID"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_run__credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr ""
+"Zaznaczone oznacza, że wszystkie wygenerowane tutaj paski są paskami korekt."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr ""
+"Jeśli nie chcesz widzieć reguły płacowej na listach, ale nie chcesz jej "
+"usuwać, to odznacz pole aktywne."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_res_config_settings__module_l10n_in_hr_payroll
+msgid "Indian Payroll"
+msgstr "Indyjskie wynagrodzenie"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip__credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr "Oznacza, ze ten pasek jest zwrotem z innego paska"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "Dane wejściowe"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__input_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__input_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "Wprowadzanie"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__note
+msgid "Internal Note"
+msgstr "Notatka wewnętrzna"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_view_kanban
+msgid "Is a Blocking Reason?"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__quantity
+msgid ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"To jest stosowane do obliczeń. Np. Reguła prowizji sprzedażowej 1% "
+"wynagrodzenia podstawowego może być wyrażona jako  result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_contribution_register____last_update
+#: model:ir.model.fields,field_description:om_hr_payroll.field_report_hr_payroll_report_payslip_details____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__write_uid
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_employees__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__write_date
+#: model:ir.model.fields,field_description:om_hr_payroll.field_payslip_lines_contribution_register__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule_category__parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr ""
+"Łączenie kategorii wynagrodzenia do jego kategorii nadrzędnej jest stosowane"
+" tylko do celów raportowych."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__lower_bound
+msgid "Lower Bound"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract_advantage_template__lower_bound
+msgid "Lower bound authorized by the employer for this advantage"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__paid
+msgid "Made Payment Order ? "
+msgstr "Wykonano polecenie płatności ? "
+
+#. module: om_hr_payroll
+#: model:res.groups,name:om_hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Menedżer"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range_max
+msgid "Maximum Range"
+msgstr "Zakres maksymalny"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range_min
+msgid "Minimum Range"
+msgstr "Zakres minimalny"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "Różne"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "Miesięcznie"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__name
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__name
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule.category,name:om_hr_payroll.NET
+msgid "Net"
+msgstr "Netto"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr ""
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:201
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Zwykłe dni robocze płatne 100%"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "Notatki"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__number_of_days
+msgid "Number of Days"
+msgstr "Liczba dni"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__number_of_hours
+msgid "Number of Hours"
+msgstr "Liczba godzin"
+
+#. module: om_hr_payroll
+#: model:res.groups,name:om_hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Urzędnik"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "Inne parametry"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__parent_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule_category__parent_id
+msgid "Parent"
+msgstr "Nadrzędny"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__parent_rule_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "Reguła wynagrodzenia nadrzędnego"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__payslip_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__slip_id
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__payslip_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Pay Slip"
+msgstr "Pasek wypłaty"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "Lista płac"
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "Pasek wypłaty szczegółowo"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "Pozycje paska wypłaty"
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "Pozycje paska wg funduszy"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Pozycje paska wypłaty wg Rejestru Składek"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "PaySlip Name"
+msgstr "Nazwa paska"
+
+#. module: om_hr_payroll
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_root
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll"
+msgstr "Wynagrodzenie"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_report_hr_payroll_report_contribution_register
+msgid "Payroll Contribution Register Report"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll Entries"
+msgstr "Zapisy wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "Struktura wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Payroll rules that apply to your country"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.actions.report,name:om_hr_payroll.action_report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "Pasek wypłaty"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:82
+#, python-format
+msgid "Payslip 'Date From' must be earlier 'Date To'."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_run
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__payslip_run_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "Listy płac"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__payslip_count
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "Wyliczenia Paska wypłaty szczegółowo"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_employee__payslip_count
+msgid "Payslip Count"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_report_hr_payroll_report_payslip_details
+msgid "Payslip Details Report"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Wejścia Paska wypłaty"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__input_line_ids
+msgid "Payslip Inputs"
+msgstr "Dane do paska wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_line
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "Pozycja paska wypłaty"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__line_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "Pozycje paska wypłaty"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Payslip Lines by Contribution Register"
+msgstr "Pozycje paska wg funduszy"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__name
+msgid "Payslip Name"
+msgstr "Nazwa paska"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "Dni robocze paska"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_employee__slip_ids
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__slip_ids
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.payroll_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "Paski płac"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payslip_run
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "Generowanie Listy płac"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Listy płac wg pracowników"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_percentage
+msgid "Percentage (%)"
+msgstr "Procentowo (%)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_percentage_base
+msgid "Percentage based on"
+msgstr "Procentowo bazując na"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "Okres"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.res_config_settings_view_form
+msgid "Post payroll slips in accounting"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "Drukuj"
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:hr.salary.rule,name:om_hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__amount_python_compute
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__amount_python_compute
+msgid "Python Code"
+msgstr "Kod Python"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_python
+msgid "Python Condition"
+msgstr "Warunek Python"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Wyrażenie Python"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__quantity
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__quantity
+msgid "Quantity"
+msgstr "Ilość"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+msgid "Quantity/Rate"
+msgstr "Ilość/Przelicznik"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Quantity/rate"
+msgstr "Ilość/Przelicznik"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Kwartalnie"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "Zakres"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__condition_range
+msgid "Range Based on"
+msgstr "Zakres bazujący na"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__rate
+msgid "Rate (%)"
+msgstr "Przelicznik (%)"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__code
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__number
+msgid "Reference"
+msgstr "Odnośnik"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "Korekta"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:102
+#, python-format
+msgid "Refund: "
+msgstr "Refundacja: "
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contribution_register__register_line_ids
+msgid "Register Line"
+msgstr "Pozycja funduszu"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "Odrzucone"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__salary_rule_id
+msgid "Rule"
+msgstr "Reguła"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "Kategorie wynagrodzeń"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "Obliczanie wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_category_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "Kategorie Reguł wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "Kategoria reguły wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_rule_input__input_id
+msgid "Salary Rule Input"
+msgstr "Wejście Reguły wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payroll_structure__rule_ids
+#: model:ir.ui.menu,name:om_hr_payroll.menu_action_hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_list
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_salary_rule_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "Reguły wynagrodzenia"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:403
+#: code:addons/om_hr_payroll/models/hr_payslip.py:453
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "Wynagrodzenie %s dla %s"
+
+#. module: om_hr_payroll
+#: model:ir.model,name:om_hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__struct_id
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payroll_structure_tree
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "Struktura wynagrodzenia"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "Struktury wynagrodzeń"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__schedule_pay
+msgid "Scheduled Pay"
+msgstr "Zaplanowane płatności"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Szukaj list płac"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Szukaj pozycji pasków"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Szukaj pasków"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Szukaj według reguł wynagrodzenia"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Półrocznie"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_input__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_worked_days__sequence
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_salary_rule__sequence
+msgid "Sequence"
+msgstr "Numeracja"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "Ustaw jako projekt"
+
+#. module: om_hr_payroll
+#: model:ir.actions.act_window,name:om_hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.menu,name:om_hr_payroll.menu_hr_payroll_global_settings
+msgid "Settings"
+msgstr "Ustawienia"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "Stany"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__state
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_run__state
+msgid "Status"
+msgstr "Status"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip__struct_id
+msgid "Structure"
+msgstr "Struktura"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_rule_input__code
+msgid "The code that can be used in the salary rules"
+msgstr "Kod, który może być używany przy tworzeniu reguł płac"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_select
+msgid "The computation method for the rule amount."
+msgstr "Metoda obliczania dla wartości reguły."
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_worked_days__contract_id
+msgid "The contract for which applied this input"
+msgstr "Umowa, której dotyczą wprowadzone dane"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "Maksymalna wartość dla tej reguły"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "Wartość minimalna dla tej reguły"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_payslip_line__total
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_contribution_register
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.report_payslip_details
+msgid "Total"
+msgstr "Suma"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "Suma dni roboczych"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract_advantage_template__upper_bound
+msgid "Upper Bound"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_contract_advantage_template__upper_bound
+msgid "Upper bound authorized by the employer for this advantage"
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__sequence
+msgid "Use to arrange calculation sequence"
+msgstr "Stosuj do kolejności obliczeń"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr "Stosowane do wyświetlenia reguły płacowej na pasku"
+
+#. module: om_hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "Oczekiwanie"
+
+#. module: om_hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "Tygodniowo"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "Dzień roboczy"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "Dni robocze"
+
+#. module: om_hr_payroll
+#: model_terms:ir.ui.view,arch_db:om_hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "Dni robocze i dane do wprowadzenia"
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,field_description:om_hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Working Schedule"
+msgstr "Godziny pracy"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:211
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr ""
+"Reguła wynagrodzenia %s (%s) zawiera niepoprawną podstawę procentu lub "
+"ilość."
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:218
+#, python-format
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "Niepoprawny kod python dla reguły wynagrodzenia %s (%s)."
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:240
+#, python-format
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "Niepoprawny warunek python dla reguły wynagrodzenia %s (%s)."
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:204
+#, python-format
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "Reguła wynagrodzenia %s (%s) zawiera niepoprawną ilość."
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:234
+#, python-format
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "Niepoprawny warunek zakresu dla reguły wynagrodzenia %s (%s)."
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_salary_rule.py:36
+#, python-format
+msgid "You cannot create a recursive salary structure."
+msgstr ""
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:127
+#, python-format
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr ""
+"Nie możesz usuwać paska, który nie jest w stanie Projekt lub Anulowane"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#, python-format
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Musisz wybrać pracowników do generacji pasków"
+
+#. module: om_hr_payroll
+#: code:addons/om_hr_payroll/models/hr_payslip.py:525
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr ""
+
+#. module: om_hr_payroll
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,help:om_hr_payroll.field_hr_salary_rule__amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "rezultat będzie zależny od zmiennej"

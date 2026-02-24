@@ -1,0 +1,20 @@
+<odoo>
+    <menuitem
+            id="real_estate_root_menu"
+            name="Real Estate"
+            web_icon="app_one,static/description/icon.png"
+    />
+
+    <menuitem
+            id="properties_menu"
+            name="Properties"
+            parent="real_estate_root_menu"
+    />
+
+    <menuitem
+            id="conf_menu"
+            name="Configurations"
+            parent="real_estate_root_menu"
+            groups="real_estate_property.property_manager_group"
+    />
+</odoo>
