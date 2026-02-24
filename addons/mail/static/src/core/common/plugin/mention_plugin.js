@@ -6,7 +6,6 @@ export class MentionPlugin extends Plugin {
     static id = "mention";
     static dependencies = ["baseContainer", "selection", "history"];
     resources = {
-        selectionchange_handlers: this.detectMentions.bind(this),
         is_node_editable_predicates: (node) => {
             for (const { selector } of this.MENTION_SELECTORS) {
                 if (closestElement(node, selector)) {
@@ -15,6 +14,9 @@ export class MentionPlugin extends Plugin {
             }
         },
         select_all_overrides: this.selectAll.bind(this),
+        selectionchange_handlers: this.detectMentions.bind(this),
+        selectors_for_feff_providers: () =>
+            this.MENTION_SELECTORS.map(({ selector }) => selector).join(", "),
     };
 
     setup() {
