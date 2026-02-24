@@ -700,7 +700,7 @@
             <field name="name">Improve</field>
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
-            <field name="unit_amount">10.00</field>
+            <field name="unit_amount">5.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_12'))]"/>
             <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
             <field name="so_line" ref="sale_line_12"/>
@@ -836,7 +836,7 @@
             <field name="name">Shifting</field>
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
-            <field name="unit_amount">10.00</field>
+            <field name="unit_amount">4.00</field>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_18'))]"/>
             <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
             <field name="so_line" ref="sale_line_18"/>
