@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="partner_view_acquisition_inherit">
+            <field name="name">partner.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group[@name='sale']/field[@name='user_id']" position="after">
+                    <field name="is_owner"/>
+                </xpath>
+
+                <xpath expr="//group[@name='purchase']" position="inside">
+                    <field name="is_agent_consultant"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Land Acquisition Form View -->
+        <record model="ir.ui.view" id="view_land_acquisition_form">
+            <field name="name">land_acquisition.form</field>
+            <field name="model">land.acquisition</field>
+            <field name="arch" type="xml">
+                <form string="Land Acquisition View">
+
+                    <header>
+                        <button name="check_availability" string="Check Availability" type="object"
+                                invisible="state in ('draft', 'book', 'sold', 'cancel')"
+                                class="btn-primary"/>
+                        <button name="trans_cancel"
+                                invisible="state in ('cancel', 'book', 'sold', 'new_draft')"
+                                type="object" string='Cancel' class="btn-primary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new_draft,draft,book,sold,cancel"
+                               clickable="True"/>
+                    </header>
+
+                    <sheet>
+                        <div class="row">
+                            <field name="image" widget='image' class="oe_left oe_avatar"/>
+                            <div class="oe_title mb24">
+                                <h1>
+                                    <field name="name" required="1" default_focus="1" autofocus="1"
+                                           placeholder="Property Name"/>
+                                    <br/>
+                                    <field name="ref_name" placeholder="Land Ref Name"/>
+                                </h1>
+                            </div>
+                        </div>
+
+                        <group readonly="state != 'new_draft'">
+                            <group>
+                                <field name="area_id"/>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <field name="street" placeholder="Street..." required="1"/>
+                                    <field name="street2" placeholder="Street2..."/>
+                                    <field name="township" placeholder="Township..."/>
+
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 35%%" required="1"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State"
+                                               style="width: 40%%" options='{"no_open": True}'/>
+                                        <field name="zip" placeholder="Zip" style="width: 25%%"/>
+                                    </div>
+                                    <field name="country_id" placeholder="Country" class="oe_no_button"
+                                           options='{"no_open": True, "no_create": True}' required="1"/>
+                                </div>
+
+                                <field name="latitude" string="Google Cordinates(Lat)"/>
+                                <field name="longitude" string="Google Cordinates(Long)"/>
+                                <field name="age_of_property" string="Property Creation Date"/>
+                                <field name="owner_total" invisible="1"/>
+                            </group>
+
+                            <group>
+                                <field name="is_lease"/>
+                                <field name="is_sale"/>
+                                <field name="sale_cost"
+                                       invisible="not is_sale" required="is_sale"/>
+                                <field name="parent_id" placeholder="Parent Property"/>
+                                <field name="type_id" required="1" placeholder="Property Type"/>
+                                <field name="income_acc_id" required="1"/>
+                                <field name="currency_id"/>
+                                <field name="website_house"/>
+                                <field name="video_url" placeholder="//www.youtube.com/embed/mwuPTI8AT7M?rel=0"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Rents, Rates &amp; Tenancy" invisible="not is_lease">
+                                <separator string="Property Rent"/>
+                                <group readonly="state != 'new_draft'">
+                                    <group>
+                                        <field name="lease_cost" required="is_lease"/>
+                                        <field name="start_date" required="is_lease"/>
+                                    </group>
+                                    <group>
+                                        <field name="rent_type" required="is_lease"/>
+                                        <field name="end_date" required="is_lease"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <page string="Nearest Places">
+                                <separator string="Nearest Places"/>
+                                <field name="nearby_ids" nolabel="1" readonly="state != 'new_draft'">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="distance"/>
+                                    </tree>
+
+                                    <form string="Documents">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="distance"/>
+                                            <field name="type"/>
+                                        </group>
+                                    </form>
+
+                                </field>
+                            </page>
+
+                            <page string="Photos &amp; Documents" name="Photos and Documents">
+                                <separator string="Photos"/>
+                                <field name="property_photo_ids" nolabel="1" readonly="state != 'new_draft'">
+                                    <tree string="Photos" editable="bottom">
+                                        <field name="photos_description"/>
+                                        <field name="doc_name" readonly="False" invisible="1"/>
+                                        <field name="photos" filename="doc_name" style="width:70%" widget="binary"/>
+                                    </tree>
+                                    <form string="Documents">
+                                        <group>
+                                            <field name="photos_description"/>
+                                            <field name="doc_name" readonly="False" invisible="1"
+                                                   required="1"/>
+                                            <field name="photos" filename="doc_name" widget="binary"/>
+                                        </group>
+                                    </form>
+                                </field>
+
+                                <newline/>
+                                <group>
+                                    <separator string="Documents"/>
+                                    <field name="contract_attachment_ids" nolabel="1" readonly="state != 'new_draft'">
+                                        <tree string="Documents" editable="bottom">
+                                            <field name="photos_description"/>
+                                            <field name="doc_name" readonly="False" invisible="1"/>
+                                            <field name="photos" filename="doc_name" style="width:70%" widget="binary"/>
+                                        </tree>
+                                        <form string="Documents">
+                                            <group>
+                                                <field name="photos_description"/>
+                                                <field name="doc_name" readonly="False" invisible="1"
+                                                       required="1"/>
+                                                <field name="photos" filename="doc_name" widget="binary"/>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+
+                            <page string="Similar Properties">
+                                <field name="similar_property_ids" nolabel="1"
+                                       readonly="state != 'new_draft'">
+                                    <tree string="similar property" editable="bottom">
+                                        <field name="ref_name"/>
+                                        <field name="name" string="Property Name"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Land Owners">
+                                <field name="owner_ids" readonly="state != 'new_draft'">
+                                    <tree string="Land Owners" editable="bottom">
+                                        <field name="partner_id" domain="([('is_owner','=',True)])"/>
+                                        <field name="partnership"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Description" name="description" tabindex="-1">
+                                <separator string="Property Overview"/>
+                                <field name="description" string="Property Overview" nolabel="1" tabindex="-1"
+                                       readonly="state != 'new_draft'"/>
+                                <separator string="Property Website Message"/>
+                                <field name="msg_static" nolabel="1" tabindex="-1"
+                                       readonly="state != 'new_draft'"/>
+                            </page>
+
+                        </notebook>
+                        <newline/>
+
+                        <separator string="Notes"/>
+                        <field name="note" nolabel="1" readonly="state != 'new_draft'"/>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <!-- Land Acquisition Tree view -->
+        <record id="view_land_acquisition_tree" model="ir.ui.view">
+            <field name="name">land_acquisition.tree</field>
+            <field name="model">land.acquisition</field>
+            <field name="arch" type="xml">
+                <tree string="Properties">
+                    <field name="ref_name"/>
+                    <field name="name" string="Property Name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action For Land Acquisition Views -->
+        <record id="action_land_acquisition_view" model="ir.actions.act_window">
+            <field name="name">Land Property</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">land.acquisition</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem name="Land Property"
+                  id="menu_land_property"
+                  parent="menu_land_property_sub"
+                  action="action_land_acquisition_view"
+                  sequence="1"/>
+
+    </data>
+</odoo>

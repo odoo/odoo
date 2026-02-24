@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_account_invoice_acqui_form_inherit">
+            <field name="name">view.account.invoice.prop.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <field name="invoice_payment_term_id" position="after">
+                    <field name="proposal_id" invisible="1"/>
+                </field>
+
+                <xpath expr="/form/sheet/notebook/page/field[@name='invoice_line_ids']/tree/field[@name='quantity']"
+                       position="before">
+                    <field name="is_lease" invisible="1"/>
+                    <field name="is_sale" invisible="1"/>
+                    <field name="proposal_id"/>
+                    <field name="from_date" string="From Date" invisible="is_sale"/>
+                    <field name="to_date" string="To Date" invisible="is_sale"/>
+                    <field name="unit" invisible="is_sale"/>
+                </xpath>
+
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='product_uom_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='price_unit']" position="attributes">
+                    <attribute name="string">Price</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="proposed_product_form_view" model="ir.ui.view">
+            <field name="name">product.template</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <field name="barcode" position="after">
+                    <field name="proposed_product"/>
+                </field>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <menuitem name="Land Acquisition" id="menu_land_acquisition_main"/>
+        <menuitem name="Land Property" id="menu_land_property_sub" parent="menu_land_acquisition_main" sequence="1"/>
+        <menuitem name="Configuration" id="menu_configuration_main" parent="menu_land_acquisition_main" sequence="2"/>
+        <menuitem name="Types" id="menu_types_main" parent="menu_configuration_main"/>
+        <!--	###################################################################
+                                        LOCATION VIEW
+                ###################################################################							-->
+
+        <!-- LOCATION Form View -->
+        <record id="location_form" model="ir.ui.view">
+            <field name="name">location.form</field>
+            <field name="model">locations</field>
+            <field name="arch" type="xml">
+                <form string="Location">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- LOCATION Tree View -->
+        <record id="location_tree" model="ir.ui.view">
+            <field name="name">location.tree</field>
+            <field name="model">locations</field>
+            <field name="arch" type="xml">
+                <tree string="Location">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- LOCATION Search View -->
+        <record model="ir.ui.view" id="location_view_search">
+            <field name="name">location.search</field>
+            <field name="model">locations</field>
+            <field name="arch" type="xml">
+                <search string="Location Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for LOCATION Views -->
+        <record id="action_location_view" model="ir.actions.act_window">
+            <field name="name">Location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">locations</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Location" id="menu_location" parent="menu_types_main" action="action_location_view"/>
+        <!--	###################################################################
+                                        Areas VIEW
+                ###################################################################							-->
+
+        <!-- Areas Form View -->
+        <record id="area_form" model="ir.ui.view">
+            <field name="name">area.form</field>
+            <field name="model">areas</field>
+            <field name="arch" type="xml">
+                <form string="Area">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="location_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Areas Tree View -->
+        <record id="area_tree" model="ir.ui.view">
+            <field name="name">area.tree</field>
+            <field name="model">areas</field>
+            <field name="arch" type="xml">
+                <tree string="Area">
+                    <field name="name"/>
+                    <field name="location_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Areas Search View -->
+        <record model="ir.ui.view" id="area_view_search">
+            <field name="name">area.search</field>
+            <field name="model">areas</field>
+            <field name="arch" type="xml">
+                <search string="Area Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for Areas Views -->
+        <record id="action_area_view" model="ir.actions.act_window">
+            <field name="name">Area</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">areas</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Area" id="menu_area" parent="menu_types_main" action="action_area_view"/>
+
+        <!--	###################################################################
+                                        PROPERTY TYPE VIEW
+                ###################################################################							-->
+        <record id="property_type_form" model="ir.ui.view">
+            <field name="name">property.type.form</field>
+            <field name="model">property.type</field>
+            <field name="arch" type="xml">
+                <form string="Property Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Property Type Tree View -->
+        <record id="property_type_tree" model="ir.ui.view">
+            <field name="name">property.type.tree</field>
+            <field name="model">property.type</field>
+            <field name="arch" type="xml">
+                <tree string="Property Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Property Type Search View -->
+        <record model="ir.ui.view" id="property_type_view_search">
+            <field name="name">property.type.search</field>
+            <field name="model">property.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Property">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for Property Tenancy Views -->
+        <record id="action_property_type_view" model="ir.actions.act_window">
+            <field name="name">Property Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">property.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Property Type" id="menu_property_type" parent="menu_types_main" action="action_property_type_view"/>
+
+        <!--	###################################################################
+                                        DOCUMENT TYPE VIEW
+                ###################################################################							-->
+
+        <record id="document_type_form" model="ir.ui.view">
+            <field name="name">document.type.form</field>
+            <field name="model">document.type</field>
+            <field name="arch" type="xml">
+                <form string="Document Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Document Type Tree View -->
+        <record id="Document_type_tree" model="ir.ui.view">
+            <field name="name">Document.type.tree</field>
+            <field name="model">document.type</field>
+            <field name="arch" type="xml">
+                <tree string="Document Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_document_type_view" model="ir.actions.act_window">
+            <field name="name">Documents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Documents" id="menu_document_type" parent="menu_types_main" action="action_document_type_view"/>
+
+        <!--	###################################################################
+                                        PLACE TYPE VIEW
+                ###################################################################							 -->
+
+        <!-- Place Type Search View -->
+        <record model="ir.ui.view" id="utility_type_view_search">
+            <field name="name">place.type.search</field>
+            <field name="model">place.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Place Type">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Place Type Form View -->
+        <record id="place_type_form" model="ir.ui.view">
+            <field name="name">place.type.form</field>
+            <field name="model">place.type</field>
+            <field name="arch" type="xml">
+                <form string="Place Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Place Type Tree View -->
+        <record id="place_type_tree" model="ir.ui.view">
+            <field name="name">place.type.tree</field>
+            <field name="model">place.type</field>
+            <field name="arch" type="xml">
+                <tree string="Place Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action for Place Type Views -->
+        <record id="action_place_type_view" model="ir.actions.act_window">
+            <field name="name">Place Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">place.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Place Type" id="menu_place_type" parent="menu_types_main" action="action_place_type_view"/>
+
+        <!--	###################################################################
+                                        view type VIEW
+                ###################################################################							-->
+
+        <!-- View type Form View -->
+        <record id="view_type_form" model="ir.ui.view">
+            <field name="name">view_type.form</field>
+            <field name="model">view.type</field>
+            <field name="arch" type="xml">
+                <form string="View Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- View type Tree View -->
+        <record id="view_type_tree" model="ir.ui.view">
+            <field name="name">view.type.tree</field>
+            <field name="model">view.type</field>
+            <field name="arch" type="xml">
+                <tree string="View Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- View type Search View -->
+        <record model="ir.ui.view" id="view_type_view_search">
+            <field name="name">view.type.search</field>
+            <field name="model">view.type</field>
+            <field name="arch" type="xml">
+                <search string="View Type Search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for View Type Views -->
+        <record id="action_view_type_view" model="ir.actions.act_window">
+            <field name="name">View Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">view.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="View Type" id="menu_view_type" parent="menu_types_main" action="action_view_type_view"/>
+
+    </data>
+</odoo>
+

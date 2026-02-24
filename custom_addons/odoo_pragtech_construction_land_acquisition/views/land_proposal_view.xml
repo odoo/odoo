@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Land Proposal Form View -->
+        <record id="view_land_proposal_form" model="ir.ui.view">
+            <field name="name">land_proposal.form</field>
+            <field name="model">land.proposal</field>
+            <field name="arch" type="xml">
+                <form string="Land proposal View">
+
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,book,sold,cancel" clickable="True"/>
+                        <button name="for_sale" string="For Sale" type="object" invisible="state in ('book', 'sold', 'cancel') or not is_sale" class="btn-primary"/>
+                        <button name="for_lease" string="For Lease" type="object" invisible="state in ('book', 'sold', 'cancel') or not is_lease" class="btn-primary"/>
+                        <button name="trans_cancel" type="object" string='Cancel' invisible="state == 'cancel'" class="btn-primary"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="acquisition_id" domain="([('state','=','draft')])" readonly="state != 'draft'" required="1"/>
+                                <field name="is_lease"/>
+                                <field name="lease_cost" invisible="not is_lease" readonly="state != 'draft'"/>
+                                <field name="rent_type" invisible="not is_lease" readonly="state != 'draft'"/>
+                                <field name="start_date" invisible="not is_lease" readonly="state != 'draft'"/>
+                                <field name="end_date" invisible="not is_lease" readonly="state != 'draft'"/>
+                            </group>
+
+                            <group>
+                                <field name="partner_id" readonly="state != 'draft'" required="1"/>
+                                <field name="is_sale"/>
+                                <field name="sale_cost" invisible="not is_sale" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Land Proposal Tree view -->
+        <record id="view_land_proposal_tree" model="ir.ui.view">
+            <field name="name">land_proposal.tree</field>
+            <field name="model">land.proposal</field>
+            <field name="arch" type="xml">
+                <tree string="Properties">
+                    <field name="name"/>
+                    <field name="acquisition_id"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action For Land Proposal Views -->
+        <record id="action_land_proposal_view" model="ir.actions.act_window">
+            <field name="name">Land Proposal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">land.proposal</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem name="Land Proposal"
+                  id="menu_land_proposal"
+                  parent="menu_land_property_sub"
+                  action="action_land_proposal_view"
+                  sequence="2"/>
+
+
+    </data>
+</odoo>
