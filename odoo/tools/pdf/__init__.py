@@ -173,13 +173,13 @@ def fill_form_fields_pdf(writer, form_fields):
     :return: a filled PDF datastring
     '''
 
+    pypdf_version = parse_version(pypdf.__version__)
+
     # This solves a known problem with PyPDF2, where with some pdf software, forms fields aren't
     # correctly filled until the user click on it, see: https://github.com/py-pdf/pypdf/issues/355
     if hasattr(writer, 'set_need_appearances_writer'):
         writer.set_need_appearances_writer()
-        is_upper_version_pypdf2 = True
     else:  # This method was renamed in PyPDF2 2.0
-        is_upper_version_pypdf2 = False
         catalog = writer._root_object
         # get the AcroForm tree
         if "/AcroForm" not in catalog:
@@ -188,12 +188,23 @@ def fill_form_fields_pdf(writer, form_fields):
             })
         writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
 
-    nbr_pages = len(writer.pages) if is_upper_version_pypdf2 else writer.getNumPages()
+    if pypdf_version >= parse_version('3.13.0'):
+        catalog = writer._root_object
+        if "/Fields" not in catalog.get('/AcroForm'):
+            catalog.update({
+                NameObject("/AcroForm"): writer._add_object(
+                    DictionaryObject({
+                        NameObject("/Fields"): ArrayObject()
+                    })
+                )
+            })
+
+    nbr_pages = len(writer.pages) if pypdf_version >= parse_version('1.28.0') else writer.getNumPages()
 
     for page_id in range(0, nbr_pages):
         page = writer.getPage(page_id)
 
-        if is_upper_version_pypdf2:
+        if pypdf_version >= parse_version('2.11.0'):
             writer.update_page_form_field_values(page, form_fields)
         else:
             # Known bug on previous versions of PyPDF2, fixed in 2.11
