@@ -359,6 +359,28 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot3.total_value, 110)
         self.assertEqual(self.lot3.standard_price, 10)
 
+    def test_change_standard_price_with_standard_costing_method(self):
+        """ Changing product's standard price will reevaluate all lots
+            even if the costing method is standard """
+        self.product.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self._make_in_move(self.product, 10, 0, lot_ids=[self.lot1, self.lot2])
+        self._make_in_move(self.product, 8, 0, lot_ids=[self.lot3])
+        self._make_in_move(self.product, 6, 0, lot_ids=[self.lot2, self.lot3])
+        self.assertEqual(self.lot1.total_value, 50)
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.total_value, 80)
+        self.assertEqual(self.lot2.standard_price, 10)
+        self.assertEqual(self.lot3.total_value, 110)
+        self.assertEqual(self.lot3.standard_price, 10)
+        self.product.product_tmpl_id.standard_price = 20
+
+        self.assertEqual(self.lot1.total_value, 100)
+        self.assertEqual(self.lot1.standard_price, 20)
+        self.assertEqual(self.lot2.total_value, 160)
+        self.assertEqual(self.lot2.standard_price, 20)
+        self.assertEqual(self.lot3.total_value, 220)
+        self.assertEqual(self.lot3.standard_price, 20)
+
     def test_value_multicompanies(self):
         """ Test having multiple layers on different companies give a correct value"""
         c1 = self.company
