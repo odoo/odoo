@@ -136,15 +136,7 @@
         </t>
 
         <!-- remove default partner address -->
-        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
-            <div name="address_not_same_as_shipping"/>
-        </xpath>
-        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
-            <div name="address_same_as_shipping"/>
-        </xpath>
-        <xpath expr="//div[@name='no_shipping']" position="replace">
-            <div name="no_shipping"/>
-        </xpath>
+        <t t-set="address" position="replace" />
 
         <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
 
