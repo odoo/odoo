@@ -627,6 +627,16 @@ class AccountMove(models.Model):
         string="Amount total in words",
         compute="_compute_amount_total_words",
     )
+    document_tax_mode = fields.Selection(
+        selection=[
+            ('tax_excluded', "Tax Excl."),
+            ('tax_included', "Tax Incl."),
+        ],
+        compute='_compute_document_tax_mode',
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
 
     # === Reverse feature fields === #
     reversed_entry_id = fields.Many2one(
@@ -1866,6 +1876,7 @@ class AccountMove(models.Model):
         'invoice_payment_term_id',
         'partner_id',
         'currency_id',
+        'document_tax_mode',
     )
     def _compute_tax_totals(self):
         """ Computed field used for custom widget's rendering.
@@ -2501,6 +2512,16 @@ class AccountMove(models.Model):
                     lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
                 ).no_followup = move.no_followup
 
+    @api.depends('company_id')
+    def _compute_document_tax_mode(self):
+        for move in self:
+            if not move.document_tax_mode:
+                if move.is_invoice(include_receipts=True):
+                    company = move.company_id or self.env.company
+                    move.document_tax_mode = company.account_price_include
+                else:
+                    move.document_tax_mode = None
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
@@ -2814,6 +2835,13 @@ class AccountMove(models.Model):
                     'message': _("You must specify the Profit Account (company dependent)")
                 }}
 
+    @api.onchange('document_tax_mode')
+    def _onchange_document_tax_mode(self):
+        for move in self:
+            # Managed here due to limitations of the account.move.line model in handling related fields
+            for line in move.invoice_line_ids:
+                line.document_tax_mode = move.document_tax_mode
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
@@ -2921,6 +2949,13 @@ class AccountMove(models.Model):
                 and move.invoice_currency_rate <= 0
             ):
                 raise ValidationError(_("The currency rate must be strictly positive."))
+
+    @api.constrains('document_tax_mode')
+    def _check_document_tax_mode(self):
+        """Ensure that when a move is a sale or purchase document the field is set."""
+        for move in self:
+            if move.is_invoice(include_receipts=True) and not move.document_tax_mode:
+                raise ValidationError(_("The document tax mode must be set."))
 
     # -------------------------------------------------------------------------
     # CATALOG
@@ -3343,7 +3378,7 @@ class AccountMove(models.Model):
         moves_values_before = {
             move: {
                 field: get_value(move, field)
-                for field in ('currency_id', 'partner_id', 'move_type', 'invoice_currency_rate', 'invoice_date')
+                for field in ('currency_id', 'partner_id', 'move_type', 'invoice_currency_rate', 'invoice_date', 'document_tax_mode')
             }
             for move in container['records']
             if move.state == 'draft'
@@ -3386,6 +3421,7 @@ class AccountMove(models.Model):
                 and (
                     field_has_changed(moves_values_before, move, 'currency_id')
                     or field_has_changed(moves_values_before, move, 'move_type')
+                    or field_has_changed(moves_values_before, move, 'document_tax_mode')
                 )
             ):
                 # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
@@ -4972,6 +5008,12 @@ class AccountMove(models.Model):
 
         return res
 
+    def _create_records_from_attachments_default_create_values(self):
+        '''The default for the tax mode for all imported invoices should be tax excluded'''
+        values = super()._create_records_from_attachments_default_create_values()
+        values['document_tax_mode'] = 'tax_excluded'
+        return values
+
     @contextmanager
     def _get_edi_creation(self):
         """Get an environment to import documents from other sources.
@@ -5729,6 +5771,7 @@ class AccountMove(models.Model):
                 'move_type': TYPE_REVERSE_MAP[move.move_type],
                 'reversed_entry_id': move.id,
                 'partner_id': move.partner_id.id,
+                'document_tax_mode': move.document_tax_mode,
             })
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,
@@ -6227,13 +6270,21 @@ class AccountMove(models.Model):
                 lines_to_recompute |= line
                 continue
             new_taxes = line._get_computed_taxes()
-            if line.tax_ids.filtered('price_include') != new_taxes.filtered('price_include'):
+
+            def filter_price_included(tax):
+                return tax._is_price_included(line.document_tax_mode)
+
+            taxes_price_include_before = line.tax_ids.flatten_taxes_hierarchy().filtered(filter_price_included)
+            taxes_price_include_after = new_taxes.flatten_taxes_hierarchy().filtered(filter_price_included)
+            if taxes_price_include_before != taxes_price_include_after:
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     line.price_unit,
                     line.tax_ids,
                     fiscal_position=line.move_id.fiscal_position_id,
                     product_taxes_after_fp=new_taxes,
+                    document_tax_mode=line.document_tax_mode,
                 )
+
         lines_to_recompute._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()

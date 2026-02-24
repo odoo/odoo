@@ -31,6 +31,7 @@ class PurchaseOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False)
     tax_ids = fields.Many2many('account.tax', string='Taxes', context={'active_test': False, 'hide_original_tax_ids': True})
+    document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
@@ -118,7 +119,7 @@ class PurchaseOrderLine(models.Model):
     technical_price_unit = fields.Float(help="Technical field for price computation", readonly=False, store=True,
                                         compute='_compute_price_unit_and_date_planned_and_name')
 
-    @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
+    @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount', 'document_tax_mode')
     def _compute_amount(self):
         AccountTax = self.env['account.tax']
         for line in self:
@@ -509,6 +510,7 @@ class PurchaseOrderLine(models.Model):
                     line.product_id.supplier_taxes_id,
                     line.tax_ids,
                     line.company_id,
+                    document_tax_mode=line.document_tax_mode,
                 )
                 price_unit = line.product_id.cost_currency_id._convert(
                     price_unit,
@@ -517,12 +519,23 @@ class PurchaseOrderLine(models.Model):
                     line.date_order or fields.Date.context_today(line),
                     False
                 )
-                line.price_unit = line.technical_price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.price_unit = line.technical_price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
+                    price_unit,
+                    line.product_id.supplier_taxes_id,
+                    line.uom_id,
+                    line.document_tax_mode,
+                )
 
             elif line.selected_seller_id:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode) if line.selected_seller_id else 0.0
                 price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-                line.price_unit = line.technical_price_unit = line.selected_seller_id.uom_id._compute_price(price_unit, line.uom_id)
+                line.price_unit = line.technical_price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
+                    line.selected_seller_id.uom_id._compute_price(price_unit, line.uom_id),
+                    line.product_id.supplier_taxes_id,
+                    line.uom_id,
+                    line.document_tax_mode,
+                )
                 line.discount = line.selected_seller_id.discount or 0.0
 
     @api.depends('product_id')
@@ -694,6 +707,7 @@ class PurchaseOrderLine(models.Model):
             'tax_ids': [(6, 0, self.tax_ids.ids)],
             'purchase_line_id': self.id,
             'is_downpayment': self.is_downpayment,
+            'document_tax_mode': self.document_tax_mode,
         }
         if self.is_downpayment and self.invoice_lines:
             res['account_id'] = self.invoice_lines.account_id[:1].id
@@ -736,7 +750,7 @@ class PurchaseOrderLine(models.Model):
         if seller:
             price_unit = (seller.uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price)
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
-            price_unit, product_taxes, taxes, company_id)
+            price_unit, product_taxes, taxes, company_id, self.document_tax_mode)
         else:
             price_unit = 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:

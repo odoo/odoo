@@ -7,7 +7,6 @@ from odoo.tools import format_amount, frozendict
 from odoo.tools.misc import split_every
 from odoo.tools.constants import PREFETCH_MAX
 
-
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
 
@@ -224,7 +223,8 @@ class ProductProduct(models.Model):
 
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
         is_refund_document=False, product_uom=None, product_currency=None,
-        product_price_unit=None, product_taxes=None, fiscal_position=None
+        product_price_unit=None, product_taxes=None, fiscal_position=None,
+        document_tax_mode=None,
     ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
@@ -261,12 +261,22 @@ class ProductProduct(models.Model):
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
 
+        # Apply document tax mode.
+        if document_tax_mode:
+            product_price_unit = self._adapt_price_unit_to_document_tax_mode(
+                product_price_unit,
+                product_taxes,
+                product_uom,
+                document_tax_mode,
+            )
+
         # Apply fiscal position.
         if product_taxes and fiscal_position:
             product_price_unit = self._get_tax_included_unit_price_from_price(
                 product_price_unit,
                 product_taxes,
                 fiscal_position=fiscal_position,
+                document_tax_mode=document_tax_mode,
             )
 
         # Apply currency rate.
@@ -279,6 +289,7 @@ class ProductProduct(models.Model):
         self, product_price_unit, product_taxes,
         fiscal_position=None,
         product_taxes_after_fp=None,
+        document_tax_mode=None,
     ):
         if not product_taxes:
             return product_price_unit
@@ -294,6 +305,7 @@ class ProductProduct(models.Model):
             product=self,
             original_taxes=product_taxes,
             new_taxes=product_taxes_after_fp,
+            document_tax_mode=document_tax_mode,
         )
 
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
@@ -301,6 +313,37 @@ class ProductProduct(models.Model):
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
+
+    @api.model
+    def _adapt_price_unit_to_document_tax_mode(
+        self,
+        product_price_unit,
+        product_taxes,
+        product_uom,
+        document_tax_mode,
+    ):
+        if document_tax_mode == self.company_id.account_price_include:
+            return product_price_unit
+        results = product_taxes._get_tax_details(
+            price_unit=product_price_unit,
+            quantity=1.0,
+            rounding_method='round_globally',
+            product=self,
+            product_uom=product_uom,
+            document_tax_mode=self.company_id.account_price_include,
+        )
+        if document_tax_mode == 'tax_included':
+            price_unit = results['total_included']
+            for tax in results['taxes_data']:
+                if tax['tax'].price_include_override == 'tax_excluded':
+                    price_unit -= tax['tax_amount']
+        else:
+            price_unit = results['total_excluded']
+            for tax in results['taxes_data']:
+                if tax['tax'].price_include_override == 'tax_included':
+                    price_unit += tax['tax_amount']
+
+        return price_unit
 
     # -------------------------------------------------------------------------
     # EDI

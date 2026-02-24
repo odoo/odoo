@@ -207,6 +207,7 @@ class SaleOrderLine(models.Model):
         check_company=True,
         domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
     )
+    document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -739,7 +740,14 @@ class SaleOrderLine(models.Model):
         price = line._get_display_price()
         product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
         price_unit = line.product_id._get_tax_included_unit_price_from_price(
-            price, product_taxes=product_taxes, fiscal_position=line.order_id.fiscal_position_id
+            price, product_taxes=product_taxes, fiscal_position=line.order_id.fiscal_position_id,
+            document_tax_mode=line.document_tax_mode,
+        )
+        price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
+            price_unit,
+            line.product_id.supplier_taxes_id,
+            line.product_uom_id,
+            line.document_tax_mode,
         )
         line.update({"price_unit": price_unit, "technical_price_unit": price_unit})
 
@@ -954,6 +962,7 @@ class SaleOrderLine(models.Model):
             "currency_id": self.order_id.currency_id or company.currency_id,
             "rate": self.order_id.currency_rate,
             "name": self.name,
+            "document_tax_mode": self.order_id.document_tax_mode,
         }
         if self._is_global_discount():
             base_values["special_type"] = "global_discount"
@@ -968,7 +977,7 @@ class SaleOrderLine(models.Model):
             "global_discount,"
         )
 
-    @api.depends("product_uom_qty", "discount", "price_unit", "tax_ids")
+    @api.depends("product_uom_qty", "discount", "price_unit", "tax_ids", "document_tax_mode")
     def _compute_amount(self):
         AccountTax = self.env["account.tax"]
         for line in self:
