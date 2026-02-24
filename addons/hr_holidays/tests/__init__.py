@@ -35,3 +35,4 @@ from . import test_leave_type_data
 from . import test_multi_contract
 from . import test_time_off_allocation_tour
 from . import test_flexible_resource_calendar
+from . import test_hr_leave_report
