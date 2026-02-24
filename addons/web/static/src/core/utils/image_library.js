@@ -1,6 +1,6 @@
 export async function saveSingleAttachment(
     env,
-    { attachment, targetRecord, targetFieldName, changeRecordName }
+    { attachment, targetRecord, targetFieldName, changeRecordName, setAttachmentId }
 ) {
     const attachmentRecord = (
         await retrieveAttachmentRecords(env, { attachmentIds: [attachment.id] })
@@ -8,18 +8,22 @@ export async function saveSingleAttachment(
     if (!attachmentRecord.raw) {
         return notifyURLAttachmentUploadFailed(env, { attachmentName: attachmentRecord.name });
     }
-    const update_data = {
-        [targetFieldName]: attachmentRecord.raw,
-    };
-    if (changeRecordName) {
-        update_data["name"] = attachmentRecord.name;
+
+    const update_data = {};
+    if (setAttachmentId) {
+        update_data[targetFieldName] = attachmentRecord;
+    } else {
+        update_data[targetFieldName] = attachmentRecord.raw;
+        if (changeRecordName) {
+            update_data["name"] = attachmentRecord.name;
+        }
     }
     await targetRecord.update(update_data);
 }
 
 export async function saveMultipleAttachments(
     env,
-    { attachments, targetRecord, targetFieldName, convertToWebp }
+    { attachments, targetRecord, targetFieldName, convertToWebp, setAttachmentId, forceCreate }
 ) {
     const imageList = targetRecord.data[targetFieldName];
     const supportedFields = ["image_1920", "image_1024", "image_512", "image_256", "image_128"];
@@ -34,16 +38,26 @@ export async function saveMultipleAttachments(
             await convertToWebpFormat(env, { attachmentRecord });
         }
         const activeFields = imageList.activeFields;
-        imageList.addNewRecord({ position: "bottom" }).then((record) => {
-            const updateData = {};
+        const updateData = {};
+        if (setAttachmentId) {
+            updateData["attachment_id"] = attachmentRecord.id;
+        } else {
             for (const field in activeFields) {
                 if (attachmentRecord.raw && supportedFields.includes(field)) {
                     updateData[field] = attachmentRecord.raw;
                     updateData["name"] = attachmentRecord.name;
                 }
             }
-            record.update(updateData);
-        });
+        }
+
+        if (forceCreate) {
+            imageList.linkTo(
+                await env.services.orm.call(imageList._config.resModel, "create", [updateData])
+            );
+        } else {
+            const record = await imageList.addNewRecord({ position: "bottom" });
+            await record.update(updateData);
+        }
     }
 }
 
