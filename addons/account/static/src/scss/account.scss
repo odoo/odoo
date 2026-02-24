@@ -2,3 +2,27 @@
     color: $o-gray-600 !important;
     background-color: $o-gray-200 !important;
 }
+.overlap_badge_tab {
+    position: absolute;
+    right: 0px;
+    top: -55px;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+.overlap_badge_tab > * {
+    pointer-events: auto;
+}
+// Special class for the document tax mode in account_move, sale_order and purchase_order
+// Ensuring the margin rules applied in .o_notebook are not broken by the .overlap_badge_tab
+.document_tax_mode + .o_field_widget .o_field_x2many.o_field_x2many_list .o_list_renderer{
+   @include media-only(screen) { 
+    --ListRenderer-margin-x: var(--Notebook-margin-x);
+    --ListRenderer-table-padding-x: var(--Notebook-padding-x);
+    margin-top: -16px;
+   }
+}
+.no-gap-badges > div {
+    gap: 0px !important;
+}

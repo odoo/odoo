@@ -144,7 +144,7 @@ class SaleOrderLine(models.Model):
         supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id in purchase_order.company_id.parent_ids)
         taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
         if supplierinfo:
-            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id)
+            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id, purchase_order.document_tax_mode)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id._convert(
                     price_unit,

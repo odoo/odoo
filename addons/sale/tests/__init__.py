@@ -20,6 +20,7 @@ from . import (
     test_sale_flow,
     test_sale_order,
     test_sale_order_product_catalog,
+    test_sale_order_tax_mode,
     test_sale_order_ui,
     test_sale_prices,
     test_sale_product_attribute_value_config,

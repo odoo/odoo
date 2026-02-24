@@ -717,7 +717,7 @@ class TestTaxesComputation(TestTaxCommon):
         # tax2
         # tax3                                          T
         tax1.is_base_affected = True
-        tax2.price_include = False
+        tax2.price_include_override = 'tax_excluded'
         tax2.include_base_amount = False
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,

@@ -1253,14 +1253,21 @@
                                     </div>
                                 </div>
                             </group>
+                            <div>
+                                <field name="document_tax_mode" class="d-md-none no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" data-hotkey="shift+t"/>
+                            </div>
                         </group>
                         <notebook>
                             <page id="invoice_tab"
                                   name="invoice_tab"
                                   string="Invoice Lines"
                                   invisible="move_type == 'entry'">
+                                <div class="position-relative document_tax_mode">
+                                    <field name="document_tax_mode" class="overlap_badge_tab d-none d-md-block no-gap-badges" widget="document_tax_mode_selector" nolabel="True" readonly="state != 'draft'" data-hotkey="shift+t"/>
+                                </div>
                                 <field name="invoice_line_ids"
                                        widget="product_label_section_and_note_field_o2m"
+                                       class="w-100 m-0 p-0"
                                        mode="list,kanban"
                                        context="{
                                            'default_move_type': context.get('default_move_type'),
@@ -1344,10 +1351,10 @@
                                                widget="percentage"
                                                groups="account.group_partial_purchase_deductibility"/>
                                         <field name="price_subtotal"
-                                               column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
+                                               column_invisible="parent.document_tax_mode == 'tax_included'"
                                                string="Amount"/>
                                         <field name="price_total"
-                                               column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
+                                               column_invisible="parent.document_tax_mode == 'tax_excluded'"
                                                string="Amount"/>
                                         <widget name="section_state"/>
                                         <!-- Others fields -->
@@ -1358,6 +1365,7 @@
                                         <field name="display_type" force_save="1" column_invisible="True"/>
                                         <field name="collapse_prices" column_invisible="True"/>
                                         <field name="collapse_composition" column_invisible="True"/>
+                                        <field name="document_tax_mode" column_invisible="True"/>
                                     </list>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
@@ -1376,10 +1384,10 @@
                                                                     </div>
                                                                     <div class="col-auto fw-bold float-end text-end">
                                                                         <field name="price_subtotal"
-                                                                               t-if="['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                               t-if="record.document_tax_mode.raw_value == 'tax_excluded'"
                                                                                string="Amount"/>
                                                                         <field name="price_total"
-                                                                               t-if="!['in_invoice', 'in_refund', 'in_receipt'].includes(record.move_type.raw_value)"
+                                                                               t-if="record.document_tax_mode.raw_value == 'tax_included'"
                                                                                string="Amount"/>
                                                                     </div>
                                                                 </div>
@@ -1414,6 +1422,7 @@
                                         <field name="company_currency_id"/>
                                         <field name="display_type" force_save="1"/>
                                         <field name="move_type"/>
+                                        <field name="document_tax_mode"/>
                                     </kanban>
 
                                     <!-- Form view to cover mobile use -->
