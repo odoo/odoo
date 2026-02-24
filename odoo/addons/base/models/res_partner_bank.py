@@ -202,3 +202,7 @@ class ResPartnerBank(models.Model):
     def _onchange_state_id(self):
         if self.state_id.country_id:
             self.country_id = self.state_id.country_id
+
+    def _user_can_trust(self):
+        self.ensure_one()
+        return True
