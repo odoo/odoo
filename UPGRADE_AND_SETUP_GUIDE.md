@@ -40,7 +40,7 @@ Download and install these on your Windows 11 machine:
 
 ## 2. Upgrade the Repository to Odoo 18
 
-Your current repo (`otech`) is on Odoo 17.0. Here's how to upgrade to 18:
+Your current repo (`ovoco`) is on Odoo 17.0. Here's how to upgrade to 18:
 
 ### Option A: Replace with Official Odoo 18 Source (Recommended for Clean Upgrade)
 
@@ -49,25 +49,25 @@ Your current repo (`otech`) is on Odoo 17.0. Here's how to upgrade to 18:
 cd C:\Projects  # or wherever you keep your code
 
 # 2. Rename your current repo as backup
-Rename-Item otech otech-v17-backup
+Rename-Item ovoco ovoco-v17-backup
 
 # 3. Clone the official Odoo 18 Community source
-git clone https://github.com/odoo/odoo.git --single-branch -b 18.0 --depth 1 otech
+git clone https://github.com/odoo/odoo.git --single-branch -b 18.0 --depth 1 ovoco
 
 # 4. Copy over your custom_addons from the old repo (if any)
-Copy-Item -Recurse otech-v17-backup\custom_addons\* otech\custom_addons\
+Copy-Item -Recurse ovoco-v17-backup\custom_addons\* ovoco\custom_addons\
 
 # 5. Copy the VS Code and deploy configs
-Copy-Item -Recurse otech-v17-backup\.vscode otech\.vscode
-Copy-Item -Recurse otech-v17-backup\deploy otech\deploy
-Copy-Item otech-v17-backup\odoo.conf otech\odoo.conf
+Copy-Item -Recurse ovoco-v17-backup\.vscode ovoco\.vscode
+Copy-Item -Recurse ovoco-v17-backup\deploy ovoco\deploy
+Copy-Item ovoco-v17-backup\odoo.conf ovoco\odoo.conf
 ```
 
 ### Option B: Add Odoo 18 as Upstream Remote (Preserves Git History)
 
 ```powershell
 # 1. Navigate to your repo
-cd C:\Projects\otech
+cd C:\Projects\ovoco
 
 # 2. Add the official Odoo repo as a remote
 git remote add upstream https://github.com/odoo/odoo.git
@@ -149,7 +149,7 @@ cd "C:\Program Files\PostgreSQL\16\bin"
 
 ```powershell
 # 1. Navigate to the Odoo project folder
-cd C:\Projects\otech
+cd C:\Projects\ovoco
 
 # 2. Create a virtual environment
 python -m venv venv
@@ -227,7 +227,7 @@ recommended extensions when you open the project. You can also install them manu
 ### Open the Project
 
 ```powershell
-cd C:\Projects\otech
+cd C:\Projects\ovoco
 code .
 ```
 
@@ -322,12 +322,12 @@ all third-party and custom modules go.
 
 ```powershell
 # Example: clone an OCA module
-cd C:\Projects\otech\custom_addons
+cd C:\Projects\ovoco\custom_addons
 git clone https://github.com/OCA/some-module.git -b 18.0 some_module
 ```
 
 2. **Or copy** the module folder directly:
-   - Simply drag and drop the module folder into `C:\Projects\otech\custom_addons\`
+   - Simply drag and drop the module folder into `C:\Projects\ovoco\custom_addons\`
 
 3. **Restart Odoo** and update the apps list:
    - Go to **Apps** menu
@@ -354,7 +354,7 @@ The OCA provides a module migrator:
 pip install odoo-module-migrator
 
 # Run the migrator on your custom module
-odoo-module-migrate --directory C:\Projects\otech\custom_addons\your_module --target-version 18.0
+odoo-module-migrate --directory C:\Projects\ovoco\custom_addons\your_module --target-version 18.0
 ```
 
 ### Manual Changes Required
@@ -422,8 +422,8 @@ docker compose version
 ```bash
 # On the VPS, clone your repo
 cd /opt
-git clone https://github.com/lindyjan/otech.git
-cd otech
+git clone https://github.com/lindyjan/ovoco.git
+cd ovoco
 git checkout 18.0   # or your branch
 ```
 
@@ -431,13 +431,13 @@ git checkout 18.0   # or your branch
 
 ```powershell
 # From your Windows machine
-scp -r C:\Projects\otech root@your-vps-ip:/opt/otech
+scp -r C:\Projects\ovoco root@your-vps-ip:/opt/ovoco
 ```
 
 ### Step 3: Configure Environment Variables
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Create .env from the example
 cp .env.example .env
@@ -450,7 +450,7 @@ nano .env
 ### Step 4: Update the Server Config
 
 ```bash
-nano /opt/otech/deploy/odoo-server.conf
+nano /opt/ovoco/deploy/odoo-server.conf
 
 # IMPORTANT: Update these values:
 # admin_passwd = YOUR_STRONG_MASTER_PASSWORD
@@ -460,7 +460,7 @@ nano /opt/otech/deploy/odoo-server.conf
 ### Step 5: Build and Start
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Build the Docker image
 docker compose build
@@ -577,7 +577,7 @@ docker compose restart odoo
 docker compose down
 
 # Update Odoo (pull latest code and rebuild)
-cd /opt/otech
+cd /opt/ovoco
 git pull
 cd deploy
 docker compose build

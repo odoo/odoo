@@ -11,8 +11,8 @@ Quick reference for deploying and updating Odoo 18 on the IONOS VPS.
 | **Provider** | IONOS VPS (Cloud Server) |
 | **OS** | Ubuntu |
 | **User** | `root` |
-| **Odoo Location** | `/opt/otech` |
-| **Deploy Config** | `/opt/otech/deploy/` |
+| **Odoo Location** | `/opt/ovoco` |
+| **Deploy Config** | `/opt/ovoco/deploy/` |
 | **Nginx Config** | `/etc/nginx/sites-available/odoo` |
 
 ### Domains Hosted
@@ -46,7 +46,7 @@ ssh root@YOUR_VPS_IP
 From the VPS:
 
 ```bash
-cd /opt/otech
+cd /opt/ovoco
 git pull origin main      # or whatever branch you're deploying
 ```
 
@@ -54,8 +54,8 @@ If this is the first time, clone the repo:
 
 ```bash
 cd /opt
-git clone https://github.com/lindyjan/otech.git
-cd otech
+git clone https://github.com/lindyjan/ovoco.git
+cd ovoco
 ```
 
 ### Option B: SCP from Windows
@@ -64,10 +64,10 @@ From PowerShell on your local machine:
 
 ```powershell
 # Push the whole project
-scp -r C:\Projects\otech root@YOUR_VPS_IP:/opt/otech
+scp -r C:\Projects\ovoco root@YOUR_VPS_IP:/opt/ovoco
 
 # Or push just custom_addons (faster for module-only changes)
-scp -r C:\Projects\otech\custom_addons root@YOUR_VPS_IP:/opt/otech/custom_addons
+scp -r C:\Projects\ovoco\custom_addons root@YOUR_VPS_IP:/opt/ovoco/custom_addons
 ```
 
 ### Option C: rsync (Best for Incremental Updates)
@@ -75,7 +75,7 @@ scp -r C:\Projects\otech\custom_addons root@YOUR_VPS_IP:/opt/otech/custom_addons
 ```bash
 # From your local machine (Git Bash or WSL)
 rsync -avz --exclude='.git' --exclude='venv' --exclude='__pycache__' \
-  /c/Projects/otech/ root@YOUR_VPS_IP:/opt/otech/
+  /c/Projects/ovoco/ root@YOUR_VPS_IP:/opt/ovoco/
 ```
 
 ---
@@ -85,7 +85,7 @@ rsync -avz --exclude='.git' --exclude='venv' --exclude='__pycache__' \
 After pushing code changes:
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Rebuild the Docker image (picks up new code/dependencies)
 docker compose build
@@ -105,7 +105,7 @@ If you only changed files in `custom_addons/` (which is bind-mounted), you
 don't need to rebuild:
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 docker compose restart odoo
 ```
 
@@ -116,7 +116,7 @@ docker compose restart odoo
 After pushing module changes, tell Odoo to reload it:
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Update a single module
 docker compose exec odoo odoo --config=/etc/odoo/odoo.conf \
@@ -270,7 +270,7 @@ systemctl status certbot.timer
 ### Backup
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Backup a specific database
 docker compose exec db pg_dump -U odoo YOUR_DATABASE_NAME > ~/backup_$(date +%F).sql
@@ -282,7 +282,7 @@ docker compose exec db pg_dumpall -U odoo > ~/backup_all_$(date +%F).sql
 ### Restore
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Restore a specific database
 docker compose exec -T db psql -U odoo YOUR_DATABASE_NAME < ~/backup_2025-01-15.sql
@@ -294,7 +294,7 @@ The filestore (uploaded files, attachments) lives in a Docker volume:
 
 ```bash
 # Find the volume path
-docker volume inspect otech_odoo-web-data
+docker volume inspect ovoco_odoo-web-data
 
 # Copy the filestore to a backup location
 docker cp odoo18-app:/var/lib/odoo ~/odoo-filestore-backup
@@ -305,7 +305,7 @@ docker cp odoo18-app:/var/lib/odoo ~/odoo-filestore-backup
 ## 8. Viewing Logs
 
 ```bash
-cd /opt/otech/deploy
+cd /opt/ovoco/deploy
 
 # Follow Odoo logs
 docker compose logs -f odoo
@@ -330,10 +330,10 @@ tail -f /var/log/nginx/odoo.error.log
 ssh root@YOUR_VPS_IP
 
 # Pull latest code and redeploy
-cd /opt/otech && git pull && cd deploy && docker compose build && docker compose up -d
+cd /opt/ovoco && git pull && cd deploy && docker compose build && docker compose up -d
 
 # Quick restart (custom_addons changes only)
-cd /opt/otech/deploy && docker compose restart odoo
+cd /opt/ovoco/deploy && docker compose restart odoo
 
 # Check what's running
 docker compose ps
@@ -364,7 +364,7 @@ Here's the full workflow from making changes locally to seeing them live:
 2. **Test locally** at `http://localhost:8069`
 3. **Commit and push** to GitHub:
    ```powershell
-   cd C:\Projects\otech
+   cd C:\Projects\ovoco
    git add .
    git commit -m "describe your changes"
    git push origin main
@@ -375,7 +375,7 @@ Here's the full workflow from making changes locally to seeing them live:
    ```
 5. **Pull and deploy**:
    ```bash
-   cd /opt/otech
+   cd /opt/ovoco
    git pull origin main
    cd deploy
    docker compose build    # skip if only custom_addons changed
