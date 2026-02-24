@@ -1227,6 +1227,8 @@ class PurchaseOrder(models.Model):
         product_data = super()._get_product_catalog_product_data(product)
         seller_data = self._get_product_catalog_seller_data(product)
         product_data.update(seller_data)
+        available_uoms = product._get_available_uoms() | product.seller_ids.uom_id
+        product_data['availableUoms'] = available_uoms.read(['name', 'factor'])
         return product_data
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
@@ -1362,9 +1364,10 @@ class PurchaseOrder(models.Model):
     ):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
-        :param int product_id: The product, as a `product.product` id.
+        :param record product_id: The product, as a `product.product` record.
         :param int quantity: The quantity selected in the catalog.
         :param int section_id: The id of section selected in the catalog.
+        :param record uom_id: The UoM selected in the catalog, as a `uom.uom` record.
         :return: The unit price of the product, based on the pricelist of the
                  purchase order and the quantity selected.
         :rtype: float
@@ -1375,6 +1378,16 @@ class PurchaseOrder(models.Model):
             and l.get_parent_section_line().id == section_id
         )
         if pol:
+            if uom and pol.uom_id != uom:
+                old_uom = pol.uom_id
+                pol.uom_id = uom.id
+                # For real records, _origin == self, so the compute method's
+                # _origin check always passes and skips price recomputation
+                # when there's no vendor pricelist. Convert the price manually.
+                if not pol.selected_seller_id:
+                    pol.price_unit = pol.technical_price_unit = old_uom._compute_price(
+                        pol.price_unit, pol.uom_id
+                    )
             if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:

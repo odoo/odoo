@@ -11,6 +11,7 @@ export class ProductCatalogOrderLine extends Component {
         productType: String,
         uomId: { type: Number, optional: true },
         uomDisplayName: { type: String, optional: true },
+        availableUoms: { type: Array, optional: true },
         productUomFactor: { type: Number, optional: true },
         productUomDisplayName: { type: String, optional: true },
         sellerUomFactor: { type: Number, optional: true },
@@ -18,6 +19,10 @@ export class ProductCatalogOrderLine extends Component {
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true },
     };
+
+    setup() {
+        this.hasMultipleUoms = this.props.availableUoms && this.props.availableUoms.length > 1;
+    }
 
     /**
      * Focus input text when clicked
@@ -58,6 +63,15 @@ export class ProductCatalogOrderLine extends Component {
         const digits = [false, this.env.precision];
         const options = { digits, decimalPoint: ".", thousandsSep: "" };
         return parseFloat(formatFloat(this.props.quantity, options));
+    }
+
+    get uomSelectStyle() {
+        const name = this.props.uomDisplayName || "";
+        return `width: ${name.length + 5}ch;`;
+    }
+
+    onUomChange(ev) {
+        this.env.setUom(parseInt(ev.target.value));
     }
 
     get showPrice() {

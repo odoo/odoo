@@ -80,6 +80,8 @@ export class ProductCatalogKanbanModel extends RelationalModel {
                 productType: "consu",
                 readOnly: false,
                 uomDisplayName: _t("Units"),
+                uomId: 1,
+                availableUoms: [{ id: 1, name: _t("Units") }],
             };
         }
         return sampleOrderLineInfo;
