@@ -19,33 +19,124 @@
     align-items: center;
     justify-content: center;
 
-    .o_nocontent_help {
-        @include o-nocontent-empty;
+    .o_nocontent_help .o_view_nocontent_img {
+        &:before {
+            --o-nocontent-img-width: 70px;
 
-        .o_view_nocontent_smiling_face:before {
-            @extend %o-nocontent-init-image;
-            width: 120px;
-            height: 140px;
-            background: transparent url(/web/static/img/smiling_face.svg) no-repeat center;
+            @extend %o-nocontent-default-image-init;
+        }
+        
+        &.o_nc_empty_folder {
+            @extend %o-nc-empty-folder;
         }
 
-        .o_view_nocontent_neutral_face:before {
-            @extend %o-nocontent-init-image;
-            width: 120px;
-            height: 140px;
-            background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
+        &.o_nc_thumb_up{
+            @extend %o-nc-thumb-up;
         }
 
-        .o_view_nocontent_empty_folder:before {
-            @extend %o-nocontent-empty-document;
+        &.o_nc_empty_small_box {
+            @extend %o-nc-empty-small-box;
         }
 
-        .o_empty_custom_dashboard {
-            min-height: 327px;
-            margin-left: -$grid-gutter-width/2;
-            margin-top: -$grid-gutter-width/2;
-            padding: 100px 0 0 137px;
-            background: transparent url(/web/static/img/graph_background.png) no-repeat 0 0;
+        &.o_nc_empty_letter {
+            @extend %o-nc-empty-letter;
+        }
+
+        &.o_nc_empty_box {
+            @extend %o-nc-empty-box;
+        }
+
+        &.o_nc_checklist{
+            @extend %o-nc-checklist;
+        }
+
+        &.o_nc_bubble{
+            @extend %o-nc-bubble;
+        }
+
+        &.o_nc_empty_search{
+            @extend %o-nc-empty-search;
+        }
+
+        &.o_nc_add_card{
+            @extend %o-nc-add-card;
+
+        }
+
+        &.o_nc_add_document {
+            @extend %o-nc-add-document;
+        }
+
+        &.o_nc_cellphone {
+            @extend %o-nc-cellphone;
+        }
+
+        &.o_nc_phone {
+            @extend %o-nc-phone;
+        }
+
+        &.o_nc_voyage {
+            @extend %o-nc-voyage;
+        }
+
+        &.o_nc_coffee{
+            @extend %o-nc-coffee;
+        }
+        
+        &.o_nc_tea {
+            @extend %o-nc-tea;
+        }
+
+        &.o_nc_paperplane {
+            @extend %o-nc-paperplane;
+        }
+
+        &.o_nc_magic_hat {
+            @extend %o-nc-magic-hat;
+        }
+
+        &.o_nc_pouf {
+            @extend %o-nc-pouf;
+        }
+
+        &.o_nc_ghost {
+            @extend %o-nc-ghost;
+        }
+
+        &.o_nc_signpost {
+            @extend %o-nc-signpost;
+        }
+
+        &.o_nc_letterbox {
+            @extend %o-nc-letterbox;
+        }
+
+        &.o_nc_cactus {
+            @extend %o-nc-cactus;
+        }
+
+        &.o_nc_leaves {
+            @extend %o-nc-leaves;
+        }
+
+        &.o_nc_hole {
+            @extend %o-nc-hole;
+        }
+
+        &.o_nc_calendar {
+            @extend %o-nc-calendar;
+        }
+        
+        &.o_nc_island {
+            @extend %o-nc-island;
+        }
+
+        &.o_nc_network_tower {
+            @extend %o-nc-network-tower;
+        }
+
+        &.o_nc_signature {
+            @extend %o-nc-signature;
         }
     }
 }
