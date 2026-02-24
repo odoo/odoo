@@ -1,6 +1,7 @@
 .o_notebook {
     --Notebook-margin-x: 0;
     --Notebook-padding-x: 0;
+    --Notebook-sidebar-size: 250px;
     --Notebook__link-border-color: transparent;
     --Notebook__link-border-color--active: #{$border-color};
     --Notebook__link-border-color--hover: #{$gray-200};
@@ -24,7 +25,6 @@
     }
 
     .nav-item {
-        white-space: nowrap;
         margin: 0 -1px 0 0;
 
         &.disabled {
@@ -69,12 +69,16 @@
     }
 
     &.vertical {
+        li a {
+            text-align: left;
+        }
+
         .o_notebook_headers {
             overflow-x: visible;
         }
 
         .nav {
-            width: max-content;
+            max-width: var(--Notebook-sidebar-size);
             border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin
         }
 
@@ -97,6 +101,9 @@
                 }
             }
         }
+    }
+    &.horizontal {
+        white-space: nowrap;
     }
 
     @include media-breakpoint-down(lg) {
