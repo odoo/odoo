@@ -48,6 +48,10 @@ class PosOrder(models.Model):
             if order.country_code == 'JO' and not order.l10n_jo_edi_pos_uuid:
                 order.l10n_jo_edi_pos_uuid = uuid.uuid4()
 
+    @api.onchange('l10n_jo_edi_pos_state')
+    def _onchange_l10n_jo_edi_pos_state(self):
+        self.l10n_jo_edi_pos_qr = False
+
     def _get_order_scope_code(self):
         return '0'
 
