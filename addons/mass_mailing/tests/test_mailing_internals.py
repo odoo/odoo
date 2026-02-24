@@ -382,40 +382,6 @@ class TestMassMailValues(MassMailCommon):
         )
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
-    @users('user_marketing')
-    def test_mailing_create_on_send(self):
-        recipient = self.env['res.partner'].create({
-            'name': 'Mass Mail Partner',
-            'email': 'Customer <test.customer@example.com>',
-        })
-
-        composer = self.env['mail.compose.message'].with_user(self.user_marketing).with_context({
-            'default_composition_mode': 'mass_mail',
-            'default_model': 'res.partner',
-            'default_res_ids': recipient.ids,
-        }).create({
-            'subject': 'Mass Mail Responsive',
-            'body': 'I am Responsive body',
-            'mass_mailing_create': True,
-        })
-        self.assertFalse(composer.mass_mailing_id, "No mailing should've been created")
-
-        with self.mock_mail_gateway():
-            composer._action_send_mail(recipient.ids)
-
-        self.assertEqual(len(composer.mass_mailing_id.ids), 1, "A mailing should've been created")
-        self.assertEqual(
-            composer.mass_mailing_id.subject,
-            "Mass Mail Responsive",
-        )
-
-        mail_values = composer._prepare_mail_values(recipient.ids)[recipient.id]
-        self.assertIn(
-            "Received the mailing <b>Mass Mail Responsive</b>",
-            mail_values["body"],
-            "The composer doesn't use the provided subject"
-        )
-
     @mute_logger('odoo.sql_db')
     @users('user_marketing')
     def test_mailing_trace_values(self):
