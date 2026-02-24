@@ -354,3 +354,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             create=True,
         ):
             self.start_tour(self_route, 'test_delete_mobile_order_from_backend')
+
+    def test_self_order_meal_do_not_change_tracking_number_on_sync(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.self_ordering_pay_after = 'meal'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_meal_do_not_change_tracking_number_on_sync')
