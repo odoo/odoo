@@ -288,6 +288,9 @@ class SaleOrderLine(models.Model):
         readonly=False,
         copy=False,
     )
+    qty_delivered_percent = fields.Float(
+        string="% Delivered", compute="_compute_qty_delivered_percent", readonly=False
+    )
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
@@ -1015,6 +1018,19 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             if not so_line.qty_delivered or so_line in delivered_qties:
                 so_line.qty_delivered = delivered_qties[so_line]
+
+    @api.depends("qty_delivered", "product_uom_qty")
+    def _compute_qty_delivered_percent(self):
+        for line in self:
+            if line.product_uom_qty:
+                line.qty_delivered_percent = 100 * (line.qty_delivered / line.product_uom_qty)
+            else:
+                line.qty_delivered_percent = 100
+
+    @api.onchange("qty_delivered_percent")
+    def _onchange_qty_delivered_percent(self):
+        for line in self:
+            line.qty_delivered = (line.qty_delivered_percent * line.product_uom_qty) / 100
 
     @api.depends("qty_delivered")
     @api.depends_context("accrual_entry_date")
@@ -1819,7 +1835,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
 
         billable_lines = self.order_id.order_line.filtered(
-            lambda line: line.product_type != 'combo' and self._is_line_in_section(line)
+            lambda line: line.product_type != "combo" and self._is_line_in_section(line)
         )
 
         if display_taxes:
