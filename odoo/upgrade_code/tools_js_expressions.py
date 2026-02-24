@@ -318,9 +318,12 @@ def prev_non_whitespace(tokens, i):
     return tokens[j] if j >= 0 else None
 
 
-T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")
+T_ATTR_RE = re.compile(r"@t-([\w-]+)='(.*?)'")  # For eg xpath=expr="[@t-if]"
+EVENT_ATTR_RE = re.compile(r"(@(?:onSelected|onChange)(?:\.[\w-]+)?)='(.*?)'")
 COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
 SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
+COMPONENT_TARGET_RE = re.compile(r"//([A-Z][\w\.-]*)")
+VALUE_ATTR_RE = re.compile(r"(@value)='(.*?)'")
 
 
 def iter_elements(root):
@@ -535,7 +538,11 @@ class TemplateCompiler:
 
         expr = node.get("expr")
         if expr:
-            return T_ATTR_RE.sub(repl, expr)
+            expr = T_ATTR_RE.sub(repl, expr)
+            if COMPONENT_TARGET_RE.search(expr):
+                expr = EVENT_ATTR_RE.sub(repl, expr)  # eg. //DropdownItem[@onSelected.bind='exportAuditReportToPDF']
+                expr = VALUE_ATTR_RE.sub(repl, expr)  # eg. //CheckBox[@value='includeArchived']"
+            return expr
         return node
 
     def _compile_expr(self, expr):
@@ -1066,6 +1073,7 @@ tests = [
 <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (this.showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.props.onParentMessageClick"/>
 """,
     },
+
     {
         "name": "t-on-keydown",
         "content": '<div t-on-keydown="onKeydown"/>',
@@ -1647,6 +1655,29 @@ test_external_xpath = [
 </templates>""",
     },
     {
+        "name": "xpath targetting non t attributes",
+        "content": """
+<t t-name="esg_csrd.OptionsDropdown" t-inherit="knowledge.OptionsDropdown" t-inherit-mode="extension">
+    <xpath expr="//DropdownItem[@onSelected.bind='exportAuditReportToPDF']" position="after"><A/></xpath>
+    <xpath expr="//DropdownItem[@onSelected='exportAuditReportToPDF']" position="after"><A/></xpath>
+    <xpath expr="//DropdownItem[@onChange.alike='isChecked']" position="after"><A/></xpath>
+    <xpath expr="//CheckBox[@value='includeArchived']" position="replace"><A/></xpath>
+    <xpath expr="//option[@value='includeArchived']" position="replace"><A/></xpath>
+    <xpath expr="//label[@for='includeArchived']" position="replace"><A/></xpath>
+</t>
+""",
+        "expected": """
+<t t-name="esg_csrd.OptionsDropdown" t-inherit="knowledge.OptionsDropdown" t-inherit-mode="extension">
+    <xpath expr="//DropdownItem[@onSelected.bind='this.exportAuditReportToPDF']" position="after"><A/></xpath>
+    <xpath expr="//DropdownItem[@onSelected='this.exportAuditReportToPDF']" position="after"><A/></xpath>
+    <xpath expr="//DropdownItem[@onChange.alike='this.isChecked']" position="after"><A/></xpath>
+    <xpath expr="//CheckBox[@value='this.includeArchived']" position="replace"><A/></xpath>
+    <xpath expr="//option[@value='includeArchived']" position="replace"><A/></xpath>
+    <xpath expr="//label[@for='includeArchived']" position="replace"><A/></xpath>
+</t>
+""",
+    },
+    {
         "name": "Replace x-path if they target bridge module",
         "inside_vars": defaultdict(set),
         "path": "",
@@ -1919,7 +1950,7 @@ test_vars_collection = [
 # ------------------------------------------------------------------------------
 
 
-WHITELIST = []
+WHITELIST = ["xpath targetting non t attributes"]
 
 
 def run_test_group(name, tests, func):
