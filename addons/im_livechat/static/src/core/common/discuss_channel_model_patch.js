@@ -25,6 +25,12 @@ const discussChannelPatch = {
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
     },
+    get allowEditDescription() {
+        return (
+            super.allowEditDescription ||
+            (this.channel_type === "livechat" && this.store.has_access_livechat)
+        );
+    },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
