@@ -407,10 +407,8 @@ class AccountEdiCommon(models.AbstractModel):
         tax_category_code = self._get_tax_category_code(customer, supplier, tax)
         tax_exemption_reason = tax_exemption_reason_code = None
 
-        if not tax:
+        if not tax or tax_category_code == 'E':
             tax_exemption_reason = _("Exempt from tax")
-        elif tax_category_code == 'E':
-            tax_exemption_reason = _('Articles 226 items 11 to 15 Directive 2006/112/EN')
         elif tax_category_code == 'G':
             tax_exemption_reason = _('Export outside the EU')
             tax_exemption_reason_code = 'VATEX-EU-G'
