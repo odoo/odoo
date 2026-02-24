@@ -618,7 +618,7 @@ class MrpProduction(models.Model):
                 continue
             relevant_move_state = production.move_raw_ids.filtered(lambda m: not (m.picked or float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding)))._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
-            if relevant_move_state == 'partially_available':
+            if relevant_move_state in ('confirmed', 'partially_available'):
                 if production.workorder_ids.operation_id and production.bom_id.ready_to_produce == 'asap':
                     production.reservation_state = production._get_ready_to_produce_state()
                 else:
@@ -1273,7 +1273,7 @@ class MrpProduction(models.Model):
         """
         self.ensure_one()
         operations = self.workorder_ids.operation_id
-        if len(operations) == 1:
+        if len(operations) == 1 or not self.move_raw_ids.operation_id:
             moves_in_first_operation = self.move_raw_ids
         else:
             first_operation = operations[0]

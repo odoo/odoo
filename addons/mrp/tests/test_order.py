@@ -4687,6 +4687,37 @@ class TestMrpOrder(TestMrpCommon):
         wos_to_set.write({'date_start': date_start, 'date_finished': date_finished})
         self.assertTrue(mo.workorder_ids[-1].show_json_popover)
 
+    def test_first_wo_readiness_drives_mo_availability(self):
+        """
+        MO with operations and components
+        Components are not available
+        First WO doesn't use any component
+        MO and first WO should both be ready to start
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'ready_to_produce': 'asap',
+            'operation_ids': [
+                Command.create({'name': 'Op1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'Op2', 'workcenter_id': self.workcenter_1.id}),
+            ],
+        })
+        bom.bom_line_ids = [Command.create({
+            'product_id': self.product_2.id,
+            'operation_id': bom.operation_ids[1].id,
+        })]
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+
+        self.assertEqual(mo.reservation_state, 'assigned', 'First WO does not need any component, MO should be ready to start')
+        self.assertEqual(mo.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo.workorder_ids[1].state, 'pending')
+
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):
