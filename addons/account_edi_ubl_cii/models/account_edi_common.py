@@ -693,15 +693,15 @@ class AccountEdiCommon(models.AbstractModel):
             amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
             reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
             reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
-            if charge_indicator.lower() == 'true':
-                charges.append({
-                    'amount': amount,
-                    'line_quantity': quantity,
-                    'reason': reason,
-                    'reason_code': reason_code,
-                })
-            else:
+            if charge_indicator.lower() == 'false':
                 discount_amount += amount
+                amount *= -1
+            charges.append({
+                'amount': amount,
+                'line_quantity': quantity,
+                'reason': reason,
+                'reason_code': reason_code,
+            })
         return discount_amount, charges
 
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
@@ -798,7 +798,9 @@ class AccountEdiCommon(models.AbstractModel):
         discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
 
         # price_unit
-        charge_amount = sum(d['amount'] for d in charges)
+        currency = self.env.company.currency_id
+        positive_charges = list(filter(lambda c: float_compare(c['amount'], 0, currency.decimal_places) > 0, charges))
+        charge_amount = sum(d['amount'] for d in positive_charges)
         allow_charge_amount = discount_amount - charge_amount
         if gross_price_unit is not None:
             price_unit = gross_price_unit / basis_qty
@@ -811,10 +813,11 @@ class AccountEdiCommon(models.AbstractModel):
 
         # discount
         discount = 0
-        currency = self.env.company.currency_id
         if not float_is_zero(delivered_qty * price_unit, currency.decimal_places) and price_subtotal is not None:
             inferred_discount = 100 * (1 - (price_subtotal - charge_amount) / currency.round(delivered_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
+            # If a discount is inferred from the charges, then the discount charges does not need to be added as invoice lines
+            charges = positive_charges
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200

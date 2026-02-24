@@ -1,6 +1,6 @@
 from odoo import _, models, tools
 from odoo.tools import html2plaintext
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_compare, float_round
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -279,6 +279,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity)
 
         discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
-        charge_amount = sum(d['amount'] for d in charges)
+        currency = self.env.company.currency_id
+        charge_amount = sum(d['amount'] if float_compare(d['amount'], 0, currency.decimal_places) > 0 else 0 for d in charges)
 
         return rebate + (discount_amount - charge_amount) / quantity

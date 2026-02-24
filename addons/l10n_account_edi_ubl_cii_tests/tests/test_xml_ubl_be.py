@@ -719,3 +719,27 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 ]
             }
         )
+
+    def test_import_unit_price_zero_but_charges(self):
+        """ Tests invoice lines with unit price set to zero but with allowance charges
+        """
+        subfolder = "tests/test_files/from_odoo"
+        # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
+        tax_21 = self.env.ref(f'account.{self.env.company.id}_attn_VAT-OUT-21-L')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_out_invoice_unit_price_zero_but_charges.xml',
+            move_type='out_invoice',
+            invoice_vals={
+                'amount_total': 18.15,
+                'amount_tax': 3.15,
+                'invoice_lines': [
+                    {
+                        'price_unit': price_unit,
+                        'quantity': 1,
+                        'discount': 0,
+                        'tax_ids': tax_21.ids,
+                    } for price_unit in [0, 10, 0, 20, -15]
+                ]
+            }
+        )
