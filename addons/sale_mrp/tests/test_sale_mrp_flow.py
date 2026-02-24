@@ -2613,7 +2613,9 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         """Test that a Sale Order with a kit product containing multiple identical components
         can be confirmed, and that the picking is created correctly. Then verify that the
         Sale Order can be cancelled and re-confirmed, resulting in a new picking with moves
-        properly linked to each BOM line. Finally, test returning a kit component for exchange."""
+        properly linked to each BOM line. Finally, test returning a kit component for exchange
+        and ensure the delivered quantity is correctly computed.
+        """
         # Create a kit product with two identical components by duplicating the first BOM line
         self.bom_kit_1.bom_line_ids = self.bom_kit_1.bom_line_ids[0]
         self.env['mrp.bom.line'].create([
@@ -2662,10 +2664,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         exchange_picking = so.picking_ids.filtered(lambda so: so.state == 'assigned')
         exchange_picking.button_validate()
         so.order_line._compute_qty_delivered()
-        # In the case where the kit has multiple identical components, only the first BOM line
-        # is linked to all moves (this is a known limitation).
-        self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids[0], "All moves in the exchange picking should be linked to the first BOM line.")
-        self.assertEqual(exchange_picking.move_ids.quantity, 2)
+        self.assertEqual(exchange_picking.move_ids.bom_line_id, self.bom_kit_1.bom_line_ids, "All moves in the exchange picking should be linked to it's corresponding BOM line.")
+        self.assertEqual(so.order_line.qty_delivered, 1, "Exchange return of a kit with identical components must correctly calculate the delivered quantity.")
 
     def test_delivery_after_splitting_production(self):
         """
