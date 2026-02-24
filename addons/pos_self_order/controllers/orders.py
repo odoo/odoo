@@ -16,7 +16,6 @@ class PosSelfOrderController(http.Controller):
         safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
-        preset_id = order_ids.preset_id
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
@@ -30,8 +29,6 @@ class PosSelfOrderController(http.Controller):
 
         if amount_total == 0:
             order_ids._process_saved_order(False)
-
-        if preset_id and preset_id.mail_template_id:
             order_ids._send_self_order_receipt()
 
         return self._generate_return_values(order_ids, pos_config)
