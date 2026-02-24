@@ -15,7 +15,7 @@
             &::-webkit-scrollbar {
                 display: none;
             }
-        }
+        }   
     }
 
     .nav {
@@ -69,12 +69,22 @@
     }
 
     &.vertical {
+           width:100%;
+           li{
+            width: 100%;
+            word-wrap: break-word;
+            button {
+                width: 100%;
+                word-wrap: break-word;
+                white-space: normal;
+                text-align: left;
+            }
+           } 
         .o_notebook_headers {
             overflow-x: visible;
         }
 
         .nav {
-            width: max-content;
             border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin
         }
 
