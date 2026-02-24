@@ -904,26 +904,27 @@ class StockMoveLine(models.Model):
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
                 packaging_qty_ordered = None
-                if backorders and not kwargs.get('strict'):
+                if not kwargs.get('strict'):
                     qty_ordered = move_line.move_id.product_uom_qty
-                    # Filters on the aggregation key (product, description and uom) to add the
-                    # quantities delayed to backorders to retrieve the original ordered qty.
-                    following_move_lines = backorders.move_line_ids.filtered(
-                        lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key'])
-                    )
-                    qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
+                    if backorders:
+                        # Filters on the aggregation key (product, description and uom) to add the
+                        # quantities delayed to backorders to retrieve the original ordered qty.
+                        following_move_lines = backorders.move_line_ids.filtered(
+                            lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key'])
+                        )
+                        qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
                     # Remove the done quantities of the other move lines of the stock move
                     previous_move_lines = move_line.move_id.move_line_ids.filtered(
                         lambda ml: line_key.startswith(self._get_aggregated_properties(move=ml.move_id)['line_key']) and ml.id != move_line.id
                     )
                     qty_ordered -= sum(m.uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines)
-                    packaging_qty_ordered = move_line.uom_id._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
+                    packaging_qty_ordered = uom._compute_quantity(qty_ordered, move_line.move_id.packaging_uom_id)
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
                     'quantity': quantity,
                     'packaging_quantity': packaging_quantity,
-                    'qty_ordered': qty_ordered or quantity,
-                    'packaging_qty_ordered': packaging_qty_ordered or packaging_quantity,
+                    'qty_ordered': qty_ordered if qty_ordered is not None else quantity,
+                    'packaging_qty_ordered': packaging_qty_ordered if packaging_qty_ordered is not None else packaging_quantity,
                     'product': move_line.product_id,
                 }
             else:
