@@ -1050,3 +1050,6 @@ class SaleOrder(models.Model):
             'sales': float_round(total_sales, precision_rounding=0.01),
             'visitors': visitor_count,
         }
+
+    def _allow_express_checkout(self):
+        return True

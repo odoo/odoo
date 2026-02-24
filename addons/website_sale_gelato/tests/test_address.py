@@ -31,3 +31,12 @@ class TestCheckoutAddress(GelatoCommon, WebsiteSaleCommon):
                 redirect.location,
                 f'/shop/address?partner_id={self.partner_street_too_long.id}&address_type=delivery',
             )
+
+    def test_do_not_allow_express_checkout_with_invalid_gelato_address(self):
+        self.gelato_order.partner_id = self.partner_missing_street
+        self.assertFalse(self.gelato_order._allow_express_checkout())
+
+    def test_allow_express_checkout_with_valid_gelato_address(self):
+        self.gelato_order.partner_id = self.partner_missing_street
+        self.gelato_order.partner_shipping_id.street = "Valid Street"
+        self.assertTrue(self.gelato_order._allow_express_checkout())
