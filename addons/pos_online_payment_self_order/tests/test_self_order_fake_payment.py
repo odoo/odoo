@@ -1,6 +1,6 @@
 import odoo.tests
-from odoo import Command
-
+from odoo import Command, fields
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.pos_online_payment_self_order.tests.test_self_order_mobile import (
     TestSelfOrderMobile,
 )
@@ -82,3 +82,59 @@ class TestSelfOrderFakePayment(TestSelfOrderMobile):
 
         self._fake_online_payment(order.id, order.access_token, self.payment_provider.id, exit_route="/", confirmation_page=False)
         self.assertEqual(order.state, 'paid')
+
+
+@odoo.tests.tagged("post_install", "-at_install")
+class TestSelfOrderFakePaymentMail(MailCase, TestSelfOrderMobile):
+    def test_online_payment_mobile_sends_mail_after_payment(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+            'use_presets': False,
+        })
+        self.out_preset.mail_template_id = self.env.ref('pos_self_order.takeout_email_template')
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        order = self.env['pos.order'].create({
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'date_order': fields.Datetime.now(),
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'source': 'mobile',
+            'state': 'draft',
+            'preset_id': self.out_preset.id,
+            'email': 'after.payment.self.order@test.com',
+            'lines': [Command.create({
+                'product_id': self.cola.id,
+                'qty': 1,
+                'price_unit': self.cola.lst_price,
+                'price_subtotal': self.cola.lst_price,
+                'price_subtotal_incl': self.cola.lst_price,
+                'tax_ids': [Command.set([self.default_tax15.id])],
+            })],
+        })
+        order.lines._onchange_amount_line_all()
+        order._compute_prices()
+        order._portal_ensure_token()
+
+        with self.mock_mail_gateway():
+            self.assertEqual(len(self._new_mails), 0)
+            self._fake_online_payment(
+                order.id,
+                order.access_token,
+                self.payment_provider.id,
+                exit_route="/",
+                confirmation_page=True,
+            )
+            order = self.env['pos.order'].browse(order.id)
+
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertEqual(self._new_mails.email_to, order.email)
+        self.assertIn('receipt', (self._new_mails.subject or '').lower())
