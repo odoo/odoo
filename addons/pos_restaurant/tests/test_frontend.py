@@ -749,6 +749,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_children_qty_updated_with_note')
+<<<<<<< 903f1c59ed47ed28e23c9084170f746994f4d3e4
 
     def test_future_orders_are_not_cancelled(self):
         """
@@ -803,3 +804,10 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(present_order.state, 'cancel')
         self.assertEqual(future_order.state, 'draft')
         self.assertEqual(future_order.session_id.id, False)
+||||||| 78834c197f7735762c627ddfb4b87a415daa47d0
+=======
+
+    def test_transfer_order_to_booked_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_transfer_order_to_booked_table', login="pos_user")
+>>>>>>> da352b7224cb407f4959d472c4f4fe1f729297e0

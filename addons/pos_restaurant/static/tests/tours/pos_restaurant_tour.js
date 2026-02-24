@@ -993,6 +993,7 @@ registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_no
             Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
         ].flat(),
 });
+<<<<<<< 903f1c59ed47ed28e23c9084170f746994f4d3e4
 
 registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
     steps: () =>
@@ -1004,3 +1005,32 @@ registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
             Dialog.confirm("Cancel Orders", ".btn-secondary"),
         ].flat(),
 });
+||||||| 78834c197f7735762c627ddfb4b87a415daa47d0
+=======
+
+registry.category("web_tour.tours").add("test_transfer_order_to_booked_table", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            //Transfer sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickBookTable(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlinesHaveNoChange("Coca-Cola"),
+            ProductScreen.orderLineHas("Coca-Cola", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+>>>>>>> da352b7224cb407f4959d472c4f4fe1f729297e0
