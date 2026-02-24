@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("indirect_subordinates_tour", {
         },
         {
             content: "Click Indirect Subordinates",
-            trigger: ".o_org_chart_popup a.o_employee_sub_redirect[data-type='indirect']",
+            trigger: ".o_org_chart_popup button.o_employee_sub_redirect[data-type='indirect']",
             run: "click",
         },
     ],
