@@ -210,7 +210,6 @@ export class ProductScreen extends Component {
             facingMode: "environment",
             onResult: (result) => {
                 this.barcodeReader.scan(result);
-                this.sound.play("beep");
             },
             onError: console.error,
             delayBetweenScan: 2000,
@@ -244,10 +243,11 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(code);
 
         if (!product) {
-            this.sound.play("error");
+            this.sound.play("scan-error");
             this.barcodeReader.showNotFoundNotification(code);
             return;
         }
+        this.sound.play("beep");
 
         await this.pos.addLineToCurrentOrder(
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
@@ -268,11 +268,13 @@ export class ProductScreen extends Component {
     async _barcodePartnerAction(code) {
         const partner = await this._getPartnerByBarcode(code);
         if (partner) {
+            this.sound.play("beep");
             if (this.currentOrder.getPartner() !== partner) {
                 this.pos.setPartnerToCurrentOrder(partner);
             }
             return;
         }
+        this.sound.play("scan-error");
         this.barcodeReader.showNotFoundNotification(code);
     }
     _barcodeDiscountAction(code) {
@@ -293,11 +295,13 @@ export class ProductScreen extends Component {
         const product = await this._getProductByBarcode(productBarcode);
 
         if (!product) {
+            this.sound.play("scan-error");
             this.barcodeReader.showNotFoundNotification(
                 parsed_results.find((element) => element.type === "product")
             );
             return;
         }
+        this.sound.play("beep");
         const vals = { product_id: product, product_tmpl_id: product.product_tmpl_id };
         if (
             qty &&
