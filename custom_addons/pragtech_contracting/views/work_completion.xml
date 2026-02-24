@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="work_completion_tree" model="ir.ui.view">
+            <field name="name">work.completion.tree</field>
+            <field name="model">work.completion</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="task_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                    <field name="total_percent"/>
+                    <field name="project_id"/>
+                    <field name="workorder_id"/>
+                    <field name="contractor_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_completion_line_tree" model="ir.ui.view">
+            <field name="name">work.completion.line.tree</field>
+            <field name="model">work.completion.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence" readonly="True"/>
+                    <field name="date_of_completion" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="completion_qty" sum="Total Qty" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="completion_percent" sum="Total Percentage" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="executed_by" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="completion_remark" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="bill" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="stage_id" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                    <field name="flag" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_completion_line_form" model="ir.ui.view">
+            <field name="name">work.completion.line.form</field>
+            <field name="model">work.completion.line</field>
+            <field name="arch" type="xml">
+                <form string="Work Completion Line">
+                    <group colspan="4" col="4">
+                        <field name="date_of_completion" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="completion_qty" sum="Total Qty" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="completion_percent" sum="Total Percentage" digits="[42,5]" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="executed_by" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="bill" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="completion_remark" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="stage_id" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                        <field name="flag" invisible="1"/>
+                    </group>
+
+                    <field name="compl_line_mesge_ids" nolabel="1">
+                        <tree create="false">
+                            <field name="date"/>
+                            <field name="author_id"/>
+                            <field name="to_stage"/>
+                            <field name="remark"/>
+                            <field name="res_id" invisible="1"/>
+                            <field name="model" invisible="1"/>
+                            <field name="is_use" invisible="1"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_completion_form" model="ir.ui.view">
+            <field name="name">work.completion.form</field>
+            <field name="model">work.completion</field>
+            <field name="arch" type="xml">
+                <form string="Work Completion">
+                    <sheet>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="workorder_id" readonly="1"/>
+                                <field name="contractor_id" readonly="1"/>
+                                <field name="project_wbs" readonly="1"/>
+                                <field name="task_id" readonly="1" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="forecast_completion"/>
+                                <field name="amt_to_release" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="workorder_line_id" readonly="1"/>
+                                <field name="project_id" readonly="1"/>
+                                <field name="sub_project" readonly="1"/>
+                                <field name="labour_id" readonly="1"/>
+                                <field name="estimated_qty" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <field name="order_line" context="{'tree_view_ref':'pragtech_contracting.work_completion_line_tree'}">
+                            <tree editable="bottom" attrs="{'readonly': [('flag', '!=', False)]}">
+                                <field name="sequence" readonly="True"/>
+                                <field name="date_of_completion" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                                <field name="completion_qty" sum="Total Qty" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                                <field name="completion_percent" sum="Total Percentage" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                                <field name="executed_by" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                                <field name="completion_remark" attrs="{'readonly': [('flag', '!=', False)]}"/>
+                                <field name="bill" readonly="1"/>
+                                <field name="stage_id" readonly="1"/>
+                                <field name="flag" invisible="1"/>
+                                <button id="change_state_line" string="Change Stage" name="change_state" type="object" class="oe_edit_only" attrs="{'invisible': [('flag', '!=', False)]}"/>
+                            </tree>
+                        </field>
+
+                        <group class="oe_subtotal_footer oe_right" colspan="4" name="sale_total">
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="total_percent"/>
+                            </div>
+
+                            <field name="total_percent" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            <button name="calculate_total" string="Update Total" type="object" class="oe_link"/>
+                        </group>
+
+                        <field name="mesge_ids">
+                            <tree>
+                                <field name="date"/>
+                                <field name="write_uid"/>
+                                <field name="remark"/>
+                            </tree>
+                        </field>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="work_completion_search" model="ir.ui.view">
+            <field name="name">work.completion.search</field>
+            <field name="model">work.completion</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="contractor_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="contractor_id" context="{'group_by':'contractor_id'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by':'sub_project'}"/>
+                        <filter string="Project Wbs" name="project_wbs" context="{'group_by':'project_wbs'}"/>
+                        <filter string="Task" name="task_id" context="{'group_by':'task_id'}"/>
+                        <filter string="WorkOrder" name="workorder_id" context="{'group_by':'workorder_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="work_completion_id" model="ir.actions.act_window">
+            <field name="name">View Task Completion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.completion</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a work Completion order.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="work_completion_id" id="menu_work_completion" parent="execution_sub_menu_task" sequence="6"/>
+
+    </data>
+</odoo>
+

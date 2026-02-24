@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Task Material Line Form View -->
+        <record id="task_material_line_form_view" model="ir.ui.view">
+            <field name="name">task.material.line.view</field>
+            <field name="model">task.material.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Task Material Line">
+                    <group colspan="4" col="4">
+                        <field name="material_line_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                        <field name="group_id"/>
+                        <field name="material_id"/>
+                        <field name="material_uom"/>
+                        <field name="material_uom_qty"/>
+                        <field name="material_rate"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- End Task Material Line Form View -->
+        <record id="material_library_form_view" model="ir.ui.view">
+            <field name="name">material.library.view</field>
+            <field name="model">material.library</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Material Library">
+                    <group colspan="4" col="4">
+                        <field name="material_id"/>
+                        <field name="material_rate"/>
+                        <field name="material_uom"/>
+                        <field name="material_uom_qty"/>
+                        <field name="task_library_id" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_form_inherited1" model="ir.ui.view">
+            <field name="name">view.product.form.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[1]/group" position="after">
+                    <group colspan="4" col="4">
+                        <field name="material_class"/>
+                        <field name="eoq"/>
+                        <field name="status"/>
+                        <field name="life"/>
+                    </group>
+                    <separator string="Brand"/>
+                    <field name="brand_ids"/>
+                    <separator string="Conversion Factor"/>
+                    <field name="conversion_uom_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="from_uom_id" options="{'no_open': True}"/>
+                            <field name="to_uom_id" options="{'no_open': True}"/>
+                            <field name="conversion_factor"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page[1]" position="after">
+                    <page string="Other Information">
+                        <group colspan="4" col="4">
+                            <field name="inspection_required"/>
+                            <field name="qa_certificate_required"/>
+                            <field name="qa_procedure_id"/>
+                            <field name="is_hazardous"/>
+                            <field name="po_lead_time"/>
+                            <field name="supplier_lead_time"/>
+                            <field name="total_lead_time"/>
+                            <field name="tolerance_limit"/>
+                            <field name="reorder_quantity"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="qa_procedure_form_view" model="ir.ui.view">
+            <field name="name">qa.procedure.form</field>
+            <field name="model">qa.procedure</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="qa_procedure_form">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="qa_procedure_tree_view" model="ir.ui.view">
+            <field name="name">qa.procedure.tree</field>
+            <field name="model">qa.procedure</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="qa_procedure_action" model="ir.actions.act_window">
+            <field name="name">Qa Procedure</field>
+            <field name="res_model">qa.procedure</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</odoo>
+	

@@ -1,0 +1,121 @@
+.calBox {
+  background-color: #999;
+  text-align: center;
+  color: white;
+  width:200px;
+  position:absolute;
+  padding-bottom: 10px;
+}
+
+.calElement,.calDayHeader  {
+  padding: 1px;
+  display: inline-block;
+  overflow:hidden;
+}
+
+.calDayHeader  {
+  padding: 4px;
+  display: inline-block;
+  background-color:#55b6c7
+}
+
+.calNav {
+  height: 20px;
+}
+
+.calNavBar {
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.25)
+}
+
+
+.calDay .calElement, .calDay .calDayHeader {
+  border: 1px solid transparent;
+}
+
+.calDay .calElement.holy {
+  /*background-color: rgba(236, 195, 176, 0.40);*/
+  color: #81d7e2;
+
+}
+
+.calDay .calDayHeader {
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.calElement.prev,
+.calElement.goToday,
+.calElement.next {
+  width: 16px;
+  height: 18px;
+  border: none;
+  margin-top: 0
+}
+.calElement.prev {
+  background: transparent url(img/prev.png) no-repeat 5px center;
+  float:left;
+}
+
+.calElement.goToday {
+  background: transparent url(img/today.png) no-repeat 5px center;
+  float:left;
+}
+
+.calElement.next {
+  background: transparent url(img/next.png) no-repeat 5px center;
+  float:right;
+}
+
+.calElement:hover{
+  background-color: transparent;
+  border:none;
+  cursor: pointer;
+  opacity: 0.6
+}
+
+.calDay .calElement .dayNumber {
+  font-size: 20px;
+}
+
+.calDay.calFullMonth .dayNumber {
+  font-size: 14px;
+}
+.calDay .calOutOfScope{
+  color: #b1b0b0;
+}
+
+.calElement.selected {
+  border: 1px solid #404040;
+}
+
+.calElement:hover {
+  background-color: #404040;
+  border: 1px solid #404040;
+  cursor: pointer;
+}
+
+
+.calElement.today {
+  border: 1px solid #c84e48;
+}
+
+
+.shortCuts {
+  /*border-top: 1px solid rgba(0, 0, 0, 0.25);*/
+  padding: 3px 0 6px;
+  background-color: rgba(97, 215, 232, 0.50)
+}
+
+.shortCuts span{
+    font-size: 11px;
+    border: 1px dotted #617777;
+    width: 23px;
+    display: inline-block;
+    cursor: pointer
+}
+
+.shortCuts span:hover {
+  background-color: rgba(0, 0, 0, 0.25)
+}
+

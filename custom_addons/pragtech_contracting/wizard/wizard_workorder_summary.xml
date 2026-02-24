@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="workorder_summary_wizard_form_view" model="ir.ui.view">
+            <field name="name">Work order summary</field>
+            <field name="model">wizard.wo.summary</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Work Order Summary">
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="project_wbs" domain="[('is_wbs', '=', True),('is_task','=',False),('is_group', '=',False)]"/>
+                                <field name="stage_id"/>
+                                <field name="from_date"/>
+                            </group>
+                            <group>
+                                <field name="sub_project"/>
+                                <field name="workorder_id"/>
+                                <field name="partner_id" domain="[('contractor','=',True)]"/>
+                                <field name="to_date"/>
+                            </group>
+                        </group>
+
+                        <div align="right">
+                            <button name="compute_workorders" type="object" class="fa fa-search" string="Search"/>
+                        </div>
+
+                        <field name="order_line">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="name" readonly="True"/>
+                                <field name="date_order" readonly="True"/>
+                                <field name="partner_id" readonly="True"/>
+                                <field name="project_id" readonly="True"/>
+                                <field name="sub_project" readonly="True"/>
+                                <field name="project_wbs" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                                <field name="stage_id" readonly="True"/>
+                                <field name="untaxed_amount" readonly="True"/>
+                                <field name="taxes" readonly="True"/>
+                                <field name="total" readonly="True"/>
+                            </tree>
+                        </field>
+                    </sheet>
+
+                    <footer>
+                        <button name="%(pragtech_contracting.action_report_work_order_summary)d" type="action" class="fa fa-print" string="Print"/>
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_summary_action" model="ir.actions.act_window">
+            <field name="name">Work Order Summary</field>
+            <field name="res_model">wizard.wo.summary</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="workorder_summary_wizard_form_view"/>
+        </record>
+
+    </data>
+</odoo>
+

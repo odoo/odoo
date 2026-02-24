@@ -1,0 +1,66 @@
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="view_hr_expense_form_inherit">
+			<field name="name">view.hr.expense.form.inherit</field>
+			<field name="model">hr.expense</field>
+			<field name="inherit_id" ref="hr_expense.hr_expense_view_form" />
+			<field name="arch" type="xml">
+				<field name="employee_id" position="before">
+					<field name="project_id" />
+				</field>
+				<xpath expr="//field[@name='product_id']" position="attributes">
+      				<attribute name="string">Product</attribute>
+				</xpath>
+				<xpath expr="//field[@name='reference']" position="attributes">
+      				<attribute name="groups"></attribute>
+      				<attribute name="attrs"></attribute>
+				</xpath>
+				<!-- <xpath expr="//form//sheet//group//group[3]" position="attributes">
+				    <attribute name="attrs"></attribute>
+				</xpath> -->
+				<xpath expr="//field[@name='unit_amount']" position="attributes">
+				    <attribute name="attrs"></attribute>
+				</xpath>
+				<xpath expr="//label[@for='quantity']" position="attributes">
+				    <attribute name="attrs"></attribute>
+				</xpath>
+				<xpath expr="//div" position="attributes">
+				    <attribute name="attrs"></attribute>
+				</xpath>
+			</field>
+		</record>
+        <record id="inherit_hr_expense_view_expenses_analysis_tree_view" model="ir.ui.view">
+			<field name="name">inherit.hr.expense.view.expenses.analysis.tree.view</field>
+			<field name="model">hr.expense</field>
+			<field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='product_id']" position="attributes">
+      				<attribute name="invisible">1</attribute>
+				</xpath>
+				<xpath expr="//field[@name='total_amount']" position="attributes">
+      				<attribute name="invisible">1</attribute>
+				</xpath>
+			</field>
+		</record>
+		<record id="inherit_view_hr_expense_sheet_tree_inherit" model="ir.ui.view">
+			<field name="name">inherit.view.hr.expense.sheet.tree.inherit</field>
+			<field name="model">hr.expense.sheet</field>
+			<field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='payment_state']" position="attributes">
+      				<attribute name="invisible">1</attribute>
+				</xpath>
+			</field>
+		</record>
+		<record id="view_hr_expense_sheet_form_inherit" model="ir.ui.view">
+			<field name="name">inherit.view.hr.expense.sheet.for.inherit</field>
+			<field name="model">hr.expense.sheet</field>
+			<field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//notebook//page//field//tree//field[@name='product_id']" position="attributes">
+      				<attribute name="string">Product</attribute>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

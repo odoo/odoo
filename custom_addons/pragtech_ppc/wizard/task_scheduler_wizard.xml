@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Start Task Scheduler -->
+        <record id="task_scheduler_form" model="ir.ui.view">
+            <field name="name">task.scheduler.form</field>
+            <field name="model">task.scheduler</field>
+            <field name="arch" type="xml">
+                <form string="Project Tasks Scheduler">
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+
+                            <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"
+                                   domain="[('project_id', '=', project_id), ('sub_project', '=', sub_project), ('is_wbs', '=', True)]"/>
+                            <field name="task_sub_category"/>
+                            <field name="tasks_having"/>
+                            <field name="from_date"/>
+                        </group>
+                        <group>
+                            <field name="sub_project" domain="[('project_id', '=', project_id)]"/>
+                            <field name="task_category"/>
+                            <field name="status"/>
+                            <field name="start_finish_dates" widget="selection" options="{'horizontal': true}"/>
+                            <field name="to_date"/>
+                        </group>
+                    </group>
+
+                    <group>
+                    </group>
+                    <group>
+                        <button name="compute_task_lines" type="object" class="fa fa-search" string="Search"/>
+                    </group>
+
+                    <div>
+                        <field name="is_use"/>
+                        <b>
+                            Select All
+                        </b>
+                    </div>
+
+                    <field name="scheduler_line_ids">
+                        <tree string="Scheduler Task" editable="bottom">
+                            <field name="update_action" invisible="1"/>
+                            <field name="is_use"/>
+                            <field name="task_id" readonly="1" context="{'form_view_ref': 'pragtech_ppc.project_task_form'}"/>
+                            <field name="is_billable" readonly="1"/>
+                            <field name="group_id" readonly="1"/>
+                            <field name="task_category" readonly="1"/>
+                            <field name="planned_start_date"/>
+                            <field name="planned_finish_date"/>
+                            <field name="current_status"/>
+                            <field name="actual_start_date"/>
+                            <field name="actual_finish_date"/>
+                            <field name="completion_percent"/>
+                        </tree>
+                    </field>
+
+                    <group>
+                    </group>
+                    <group>
+                        <field name="update_action"/>
+                        <field name="updated_date"
+                               attrs="{'invisible': ['|','|','|', ('update_action', '=', 'status'), ('update_action', '=', 'completion'), ('update_action', '=', 'plannedstart_actualstart'), ('update_action', '=', 'plannedfinish_actualfinish')]}"/>
+                        <field name="updated_status" attrs="{'invisible': [('update_action', '!=', 'status')]}"/>
+                        <field name="updated_percent" attrs="{'invisible': [('update_action', '!=', 'completion')]}"/>
+                        <field name="note" readonly="1"/>
+                    </group>
+                    <group>
+                        <footer>
+                            <button string="Update" name="Update_tasks" type="object"/>
+                            <button special="cancel" string="Cancel" class="btn-default"/>
+                        </footer>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="task_scheduler_tree" model="ir.ui.view">
+            <field name="name">task.scheduler.tree</field>
+            <field name="model">task.scheduler</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                    <field name="task_category"/>
+                    <field name="task_sub_category"/>
+                    <field name="status"/>
+                    <field name="tasks_having"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_task_scheduler_wiz" model="ir.actions.act_window">
+            <field name="name">Task Scheduler</field>
+            <field name="res_model">task.scheduler</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Task Scheduler" id="task_scheduler_id" parent="pragtech_ppc.execution_sub_menu_scheduler" action="action_task_scheduler_wiz"/>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Labour Group Form View -->
+        <record id="labour_group_form_view" model="ir.ui.view">
+            <field name="name">labour.master.form</field>
+            <field name="model">labour.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="labour_master_form">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="sub_category_id"/>
+                            <field name="work_class_id"/>
+                            <field name="type" readonly="1"/>
+                            <field name="rate" invisible="1"/>
+                            <field name="unit_no"/>
+                            <field name="is_labour" invisible="1"/>
+                            <field name="parent_labour_id" invisible="1"/>
+                            <field name="parent_group_id" invisible="1"/>
+                            <field name="parent_id" invisible="1"/>
+                            <field name="category_id" invisible="1"/>
+                        </group>
+
+                        <notebook>
+                            <page name="labours" string="Labours" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                                <field name="labour_ids" context="{'default_is_labour': True,'default_parent_id':parent_labour_id}" domain="[('is_labour','=',True)]">
+                                </field>
+                            </page>
+                            <page name="labours_groups" string="Labour Group" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                                <field name="labour_group_ids" context="{'default_is_labour': False,'default_parent_id':parent_group_id}">
+                                </field>
+                            </page>
+                            <page name="child_groups" string="Labour Child Group" attrs="{'invisible': [('is_labour', '!=', False)]}">
+                                <field name="child_ids2" context="{'default_is_labour': False,'default_parent_id':parent_id}">
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Labour Form View -->
+        <record id="labour_form_view" model="ir.ui.view">
+            <field name="name">labour.form</field>
+            <field name="model">labour.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Labour Form View">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sub_category_id"/>
+                                <field name="type" readonly="1" context="{'deault_type': 'labour'}"/>
+                                <field name="unit_no"/>
+                            </group>
+
+                            <group>
+                                <field name="category_id"/>
+                                <field name="work_class_id"/>
+                                <field name="rate"/>
+                                <field name="is_labour" invisible="1"/>
+                                <field name="parent_labour_id" invisible="1"/>
+                                <field name="parent_group_id" invisible="1"/>
+                                <field name="parent_id" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <field name="contractor_ids"/>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Labour Master Tree View -->
+        <record id="labour_master_tree_view" model="ir.ui.view">
+            <field name="name">labour.master.tree</field>
+            <field name="model">labour.master</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="sub_category_id"/>
+                    <field name="work_class_id"/>
+                    <field name="type"/>
+                    <field name="rate"/>
+                    <field name="unit_no"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Labour Master Search View -->
+        <record id="labour_master_search_view" model="ir.ui.view">
+            <field name="name">labour.master.search</field>
+            <field name="model">labour.master</field>
+            <field name="arch" type="xml">
+                <search string="labour_master_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_action" model="ir.actions.act_window">
+            <field name="name">Labour Master</field>
+            <field name="res_model">labour.master</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_type':'labour','default_is_labour':1}</field>
+            <field name="domain">[('is_labour','=',1)]</field>
+        </record>
+
+        <record id="action_labour_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="labour_action"/>
+            <field name="view_id" ref="labour_master_tree_view"/>
+        </record>
+
+        <record id="labour_group_action" model="ir.actions.act_window">
+            <field name="name">Labour Master</field>
+            <field name="res_model">labour.master</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="labour_group_form_view"/>
+            <field name="context">{'default_type':'group','default_is_labour':0'}</field>
+            <field name="domain">[('is_labour','!=',1)]</field>
+        </record>
+
+        <record id="action_labour_group_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="labour_group_action"/>
+            <field name="view_id" ref="labour_master_tree_view"/>
+        </record>
+
+        <record id="view_labour_group_hierarchy" model="ir.ui.view">
+            <field name="name">labour.group.hierarchy</field>
+            <field name="model">labour.master</field>
+            <field name="field_parent">child_ids2</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="sub_category_id"/>
+                    <field name="work_class_id"/>
+                    <field name="type"/>
+                    <field name="rate"/>
+                    <field name="unit_no"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_labour_group_tree_hierarchy" model="ir.actions.act_window">
+            <field name="name">Labour Grour Hierarchy</field>
+            <field name="res_model">labour.master</field>
+            <field name="view_id" ref="view_labour_group_hierarchy"/>
+            <field name="domain">[('parent_labour_id','=',False),('parent_group_id','=',False)]
+            </field>
+        </record>
+
+        <menuitem id="labour_header" parent="master_header" name="Labour" sequence="13" action='labour_action'/>
+        <menuitem id="labour_master_header_child" parent="labour_header" name="Labour" action='labour_action' sequence="1"/>
+        <menuitem id="labour_master_header_child1" parent="labour_header" name="Labour Group" action='labour_group_action' sequence="2"/>
+
+        <!-- End Labour master -->
+
+        <!-- start labour work class -->
+        <record id="labour_work_class_form_view" model="ir.ui.view">
+            <field name="name">labour.work.class.form</field>
+            <field name="model">labour.work.classification</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="labour_work_class_form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_work_class_tree_view" model="ir.ui.view">
+            <field name="name">labour.work.class.tree</field>
+            <field name="model">labour.work.classification</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_work_class_search_view" model="ir.ui.view">
+            <field name="name">labour.work.class.search</field>
+            <field name="model">labour.work.classification</field>
+            <field name="arch" type="xml">
+                <search string="labour_work_class_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_work_classification_action" model="ir.actions.act_window">
+            <field name="name">Labour Work Classification</field>
+            <field name="res_model">labour.work.classification</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- end labour work class -->
+
+        <!-- start labour rate master -->
+        <record id="labour_rate_master_form_view" model="ir.ui.view">
+            <field name="name">labour.rate.master.form</field>
+            <field name="model">labour.rate.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="labour_rate_master_form">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="status"/>
+                            <field name="date" invisible="1"/>
+                            <field name="user" invisible="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_work_class_tree_view" model="ir.ui.view">
+            <field name="name">labour.rate.master.tree</field>
+            <field name="model">labour.rate.master</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="status"/>
+                    <field name="date" invisible="1"/>
+                    <field name="user" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_rate_master_search_view" model="ir.ui.view">
+            <field name="name">labour.rate.master.search</field>
+            <field name="model">labour.rate.master</field>
+            <field name="arch" type="xml">
+                <search string="labour_rate_master_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_rate_master_action" model="ir.actions.act_window">
+            <field name="name">Labour Rate Master</field>
+            <field name="res_model">labour.rate.master</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="labour_rate_master_header_child" parent="labour_header" name="Labour Rate Master" action='labour_rate_master_action'/>
+
+        <record id="open_labour_from_hierarchy" model="ir.actions.act_window">
+            <field name="name">Project Complete</field>
+            <field name="res_model">labour.master</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_labour_group_hierarchy"/>
+            <field name="search_view_id" ref="labour_master_search_view"/>
+            <field name="domain">[('id','=',active_id)]</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>
+	

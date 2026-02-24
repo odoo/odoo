@@ -1,0 +1,230 @@
+<odoo>
+    <data>
+
+        <!-- start task category -->
+        <record id="task_category_form_view1" model="ir.ui.view">
+            <field name="name">task.category.form</field>
+            <field name="model">task.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="task_category_form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+
+                        <field name="sub_category_ids">
+                            <tree create="false" delete="false">
+                                <field name="name" readonly="True"/>
+                                <field name="description" readonly="True"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_category_tree_view" model="ir.ui.view">
+            <field name="name">task.category.tree</field>
+            <field name="model">task.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="task_category_search_view" model="ir.ui.view">
+            <field name="name">task.category.search</field>
+            <field name="model">task.category</field>
+            <field name="arch" type="xml">
+                <search string="task_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_category_action" model="ir.actions.act_window">
+            <field name="name">Task Category</field>
+            <field name="res_model">task.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Start task sub category -->
+        <record id="task_sub_category_form_view" model="ir.ui.view">
+            <field name="name">task.sub.category.form</field>
+            <field name="model">task.sub.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="task_sub_category_form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+
+                            <group>
+                                <field name="category_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_sub_category_tree_view" model="ir.ui.view">
+            <field name="name">task.sub.category.tree</field>
+            <field name="model">task.sub.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="task_sub_category_search_view" model="ir.ui.view">
+            <field name="name">task.sub.category.search</field>
+            <field name="model">task.sub.category</field>
+            <field name="arch" type="xml">
+                <search string="task_sub_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_sub_category_action" model="ir.actions.act_window">
+            <field name="name">Task Sub Category</field>
+            <field name="res_model">task.sub.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="task_category_header_child" parent="project_task_library" name="Category" action='task_category_action' sequence="4"/>
+
+        <menuitem id="task_sub_category_header_child" parent="project_task_library" name="Sub Category" action='task_sub_category_action' sequence="5"/>
+        <!-- End task sub category -->
+
+        <!-- Start Labour Category -->
+        <record id="labour_category_form_view" model="ir.ui.view">
+            <field name="name">labour.category.form</field>
+            <field name="model">labour.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="labour_category_form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+
+                        <field name="sub_category_ids">
+                            <tree create="false" delete="false">
+                                <field name="name" readonly="True"/>
+                                <field name="description" readonly="True"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_category_tree_view" model="ir.ui.view">
+            <field name="name">labour.category.tree</field>
+            <field name="model">labour.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_category_search_view" model="ir.ui.view">
+            <field name="name">labour.category.search</field>
+            <field name="model">labour.category</field>
+            <field name="arch" type="xml">
+                <search string="labour_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_category_action" model="ir.actions.act_window">
+            <field name="name">Labour Category</field>
+            <field name="res_model">labour.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="labour_category_header_child" parent="labour_header" name="Category" action='labour_category_action'/>
+
+        <!-- End Labour category -->
+
+        <!-- start labour sub category -->
+        <record id="labour_sub_category_form_view" model="ir.ui.view">
+            <field name="name">labour.sub.category.form</field>
+            <field name="model">labour.sub.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="category_id"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_sub_category_tree_view" model="ir.ui.view">
+            <field name="name">labour.sub.category.tree</field>
+            <field name="model">labour.sub.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_sub_category_search_view" model="ir.ui.view">
+            <field name="name">labour.sub.category.search</field>
+            <field name="model">labour.sub.category</field>
+            <field name="arch" type="xml">
+                <search string="labour_sub_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_sub_category_action" model="ir.actions.act_window">
+            <field name="name">Labour Sub Category</field>
+            <field name="res_model">labour.sub.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="labour_sub_category_header_child" parent="labour_header" name="Sub Category" action='labour_sub_category_action'/>
+        <!-- End Labour sub category -->
+
+    </data>
+</odoo>
+

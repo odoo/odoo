@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="recovery_tree_view" model="ir.ui.view">
+            <field name="name">advance.view.tree</field>
+            <field name="model">advance.recovery</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" readonly="1"/>
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="workorder_id"/>
+                    <field name="contractor_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="advance_form_view" model="ir.ui.view">
+            <field name="name">advance</field>
+            <field name="model">advance.recovery</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Debit">
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="company_id" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="contractor_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('contractor','=',True)]"/>
+                            </group>
+                            <group>
+                                <field name="project_id" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="workorder_id" attrs="{'readonly':[('flag','=',True)]}" domain="[('state','=','confirm')]"/>
+                                <field name="stage_id"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+
+                            <button name="compute_advance" type="object" class="oe_left fa fa-search" style="matgin-left:550px" string="Search" attrs="{'invisible':[('flag','=',True)]}"/>
+                        </group>
+
+                        <field name="advance_line_ids">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="is_use"/>
+                                <field name="advance_id" readonly="1"/>
+                                <field name="project_id" readonly="1"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="1"/>
+                                <field name="workorder_id" readonly="1"/>
+                                <field name="advance_amount" readonly="1"/>
+                                <field name="recovered_till_date" readonly="1"/>
+                                <field name="balance_amount" readonly="1"/>
+                                <field name="this_bill_recovery" readonly="0"/>
+                                <field name="total_recovery" readonly="1"/>
+                                <field name="payment_mode"/>
+                                <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
+                                <field name="payment_refrence" attrs="{'readonly': [('payment_mode','in','cash')]}"/>
+                                <field name="transaction_date" readonly="1"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <group>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_adv_rec" widget="monetary"/>
+                            </group>
+                        </group>
+                        <div class="clearfix"/>
+
+                        <field name="debit_adv_line_ids">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="is_use"/>
+                                <field name="debit_id" readonly="1"/>
+                                <field name="project_id" readonly="1"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="1"/>
+                                <field name="workorder_id" readonly="1"/>
+                                <field name="debit_note_amount" readonly="1"/>
+                                <field name="recovered_till_date" readonly="1"/>
+                                <field name="balance_amount" readonly="1"/>
+                                <field name="this_bill_recovery" readonly="0"/>
+                                <field name="total_recovery" readonly="1"/>
+                                <field name="payment_mode"/>
+                                <field name="condition" invisible="1"/>
+                                <field name="bank_name" attrs="{'invisible': [('payment_mode','in','cash')]}"/>
+                                <field name="payment_refrence" attrs="{'readonly': [('payment_mode','in','cash')]}"/>
+                                <field name="transaction_date" readonly="1"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <group>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_deb_rec" widget="monetary"/>
+                                <field name="total_payable" widget="monetary"/>
+                            </group>
+                        </group>
+                        <div class="clearfix"/>
+
+                        <notebook>
+                            <page string="Audit Trail">
+                                <field name="mesge_ids" nolabel="1">
+                                    <tree create="false">
+                                        <field name="date"/>
+                                        <field name="author_id"/>
+                                        <field name="to_stage"/>
+                                        <field name="remark"/>
+                                        <field name="res_id" invisible="1"/>
+                                        <field name="model" invisible="1"/>
+                                        <field name="is_use" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="advance_search" model="ir.ui.view">
+            <field name="name">advance.search</field>
+            <field name="model">advance.recovery</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="workorder_id"/>
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="contractor_id"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="Not Draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="contractor_id"
+                                context="{'group_by':'contractor_id'}"/>
+                        <filter string="Sub Project" name="sub_project"
+                                context="{'group_by':'sub_project'}"/>
+                        <filter string="Project WBS" name="project_wbs"
+                                context="{'group_by':'project_wbs'}"/>
+                        <filter string="Workorder" name="workorder_id" context="{'group_by':'workorder_id'}"/>
+                        <filter string="Company " name="company_id" context="{'group_by':'company_id'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by':'stage_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_advance" model="ir.actions.act_window">
+            <field name="name">Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">advance.recovery</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Debit Recovery.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

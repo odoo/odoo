@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="account_invoice_ra_bill_inherit2" model="ir.ui.view">
+			<field name="name">Contractor RA Bill</field>
+			<field name="model">account.move</field>
+			<field name="inherit_id" ref="account.view_move_form"/>
+			<field name="arch" type="xml">
+				<field name="invoice_payments_widget" position="after">
+					<field name="ra_bill_invoice" invisible="1"/>
+					<field name="recovery_sum" readonly="1" attrs="{'invisible':[('ra_bill_invoice','=', False)]}"/>
+					<field name="credit_sum" readonly="1" attrs="{'invisible':[('ra_bill_invoice','=', False)]}"/>
+					<field name="retention_amt" readonly="1" attrs="{'invisible':['|',('ra_bill_invoice','=', False),('retention_amt','=',0.00)]}"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</odoo>
+

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rabill_summary_wizard_form_view1" model="ir.ui.view">
+            <field name="name">Ra Bill summary</field>
+            <field name="model">wizard.rabill.summary</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Ra Bill Summary">
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="project_wbs" domain="[('is_wbs','=',True),('is_task','=',False),('is_group', '=',False)]"/>
+                                <field name="stage_id"/>
+
+                            </group>
+                            <group>
+                                <field name="sub_project"/>
+                                <field name="rabill_id"/>
+                                <field name="partner_id" domain="[('contractor','=',True)]"/>
+                            </group>
+                        </group>
+
+                        <div align="right">
+                            <button name="compute_workorders" type="object" class="fa fa-search" string="Search"/>
+                        </div>
+
+                        <field name="order_line">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="rabill_ids" readonly="True"/>
+                                <field name="project_id" readonly="True"/>
+                                <field name="sub_project" readonly="True"/>
+                                <field name="project_wbs" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                                <field name="workorder_id" readonly="True"/>
+                                <field name="stage_id" readonly="True"/>
+                                <field name="contractor_id" readonly="True"/>
+                                <field name="final_total_payable" readonly="True"/>
+                            </tree>
+                        </field>
+                    </sheet>
+
+                    <footer>
+                        <button name="%(pragtech_contracting.action_report_ra_bill_summary)d" type="action" class="fa fa-print" string="Print"/>
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="ra_bill_summary_action" model="ir.actions.act_window">
+            <field name="name">RA Bill Summary</field>
+            <field name="res_model">wizard.rabill.summary</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="rabill_summary_wizard_form_view1"/>
+        </record>
+
+    </data>
+</odoo>
+

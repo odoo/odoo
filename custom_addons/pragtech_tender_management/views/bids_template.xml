@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="show_bids_info" name="Show Bids Information">
+            <form action="/tenders/update" method="post">
+                <t t-call="website.layout">
+
+                    <t t-foreach="bid_for_current_user" t-as="o">
+                        <t t-foreach="tenderId" t-as="t1">
+                            <div class="col-sm-4">
+                                <h4>You
+                                    <span t-field="o.state" style="font-size: initial;"/>Bid
+                                </h4>
+                                <br/>
+                            </div>
+
+                            <h2>
+                                <center>Bid Information</center>
+                            </h2>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-2">
+                                        <b style="font-size: medium;">Bid Name:</b>
+                                        <br/>
+                                        <b style="font-size: medium;">Project Name:</b>
+                                        <br/>
+                                        <b style="font-size: medium;">Department:</b>
+                                        <br/>
+                                        <b style="font-size: medium;">Start Date:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">End Date:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Total:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Rank:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">State:</b>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <span t-field="o.name_of_bidder" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="o.bids_name" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <t t-foreach="t1.department" t-as="department">
+                                            <span t-field="department.name" style="font-size: initial;"/>
+                                        </t>
+                                        <br></br>
+
+                                        <span t-field="o.bids_start_date" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="o.bids_end_date" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="o.bids_all_total" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="o.bids_top_rank" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <t t-foreach="t1" t-as="t1_state">
+                                            <span t-field="t1_state.state" style="font-size: initial;"/>
+                                        </t>
+                                        <br></br>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <b style="font-size: medium;">Total Budget:</b>
+                                        <br/>
+                                        <b style="font-size: medium;">Earnest Money Deposit:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Performance Security Deposit:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Liquidated Damage:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Unliquidated Damage:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Pre-bid Meeting Date:</b>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span t-field="t1.total_budget" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="t1.earnest_money_deposit" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="t1.performance_security_deposit" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="t1.liquidated_damage" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="t1.unliquidated_damage" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="t1.pre_bid_meeting_date" style="font-size: initial;" t-att-class="pre_bid_meeting_date"/>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <b style="font-size: medium;">Pre-bid Meeting MOM:</b>
+                                        </div>
+                                        <div>
+                                            <span t-field="t1.pre_bid_meeting_mom" style="font-size: initial;"/>
+                                            <br></br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container">
+                                <table width="1150px" height="320px" id="material" class="table">
+                                    <thead>
+                                        <th class="table-danger" colspan="8">
+                                            <center>Material Details</center>
+                                        </th>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Measure of units</th>
+                                            <th>Last Price</th>
+                                            <th>Your Price</th>
+                                            <th>Amount</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.bids_line_id" t-as="bids_line_id">
+                                            <td>
+                                                <span t-field="bids_line_id.bids_product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.bids_description"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.bids_product_uom_qty"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.bids_product_uom"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.mat_your_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.mat_last_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.mat_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_line_id.mat_note"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <thead>
+                                        <th class="table-primary" colspan="8">
+                                            <center>Labour Details</center>
+                                        </th>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Measure of units</th>
+                                            <th>Last Price</th>
+                                            <th>Your Price</th>
+                                            <th>Amount</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.bids_labour_id" t-as="bids_labour_id">
+                                            <td>
+                                                <span t-field="bids_labour_id.labour_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_description"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_qty"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_product_uom"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_your_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_last_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_labour_id.bids_labour_note"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <thead>
+                                        <th class="table-success" colspan="8">
+                                            <center>Overhead Details</center>
+                                        </th>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Measure of units</th>
+                                            <th>Last Price</th>
+                                            <th>Your Price</th>
+                                            <th>Amount</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr t-foreach="o.bids_overhead_id" t-as="bids_overhead_id">
+                                            <td>
+                                                <span t-field="bids_overhead_id.overhead_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_description"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_qty"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_product_uom"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_your_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_last_price"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="bids_overhead_id.bids_overhead_note"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <thead>
+                                        <th class="table-success" colspan="8">
+                                            <center>Bids Questionnaire</center>
+                                        </th>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr t-foreach="o.bids_question_ids" t-as="question_id">
+                                            <td>
+                                                <span t-field="question_id.question"/>
+                                            </td>
+
+                                            <td>
+                                                <span t-field="question_id.answer"/>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br></br>
+                        </t>
+                    </t>
+                </t>
+            </form>
+        </template>
+
+    </data>
+</odoo>
+

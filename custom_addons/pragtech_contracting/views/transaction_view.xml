@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="Transaction_view_tree" model="ir.ui.view">
+            <field name="name">Transaction.view.tree</field>
+            <field name="model">transaction.transaction</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" readonly="1"/>
+                    <field name="transaction_type"/>
+                    <field name="amount"/>
+                    <field name="project_id"/>
+                    <field name="work_order_id"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_recovries" model="ir.actions.act_window">
+            <field name="name">Recoveries</field>
+            <field name="res_model">credit.recovery</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    This contractor has no work order. Click to create a new WO.
+                </p>
+                <p>
+                    Creating requisition is the first step of the work order flow. Once converted into a work order.
+                </p>
+            </field>
+        </record>
+
+        <record id="Transaction_view_form" model="ir.ui.view">
+            <field name="name">Transaction.view.form</field>
+            <field name="model">transaction.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Transaction">
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage"
+                                class="oe_highlight" attrs="{'invisible': [('state','not in','draft')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="get_bill_count" type="object" icon="fa-shopping-cart">
+                                <field string="Bills" name="bill_count" widget="statinfo"/>
+                            </button>
+
+                            <button class="oe_stat_button" name="get_recoveries" type="object" icon="fa-shopping-cart">
+                                <field string="Recoveries" name="recovered_count" widget="statinfo"/>
+                            </button>
+
+                            <button name="view_payment" type="object" class="oe_stat_button" string="View Payment" icon="fa-pencil-square-o"
+                                    attrs="{'invisible':['|',('state','=', 'draft'),('transaction_type','!=','advance')]}"/>
+                        </div>
+
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+
+                        <group>
+                            <group>
+                                <field name="project_id" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="partner_id" domain="[('contractor','=',True)]" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="work_order_id" domain="[('state','=','confirm'),('partner_id','=',partner_id)]" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="transaction_type" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="amount" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="stage_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]"
+                                       attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="bank_name" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="narration" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="transaction_remark" attrs="{'readonly':[('flag','=',True)]}"/>
+                                <field name="recovered_till_date" readonly="1"/>
+                                <field name="balance_amount" readonly="1"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Other Information">
+                                <group>
+                                    <group>
+                                        <field name="commencement_date" readonly="1"/>
+
+                                        <field name="maximum_advance" readonly="1"/>
+
+                                        <field name="wo_type" readonly="1"/>
+
+                                        <field name="wct_account" readonly="1"/>
+
+                                    </group>
+                                    <group>
+                                        <field name="completion_date" readonly="1"/>
+                                        <field name="tds_account" readonly="1"/>
+                                        <field name="title" readonly="1"/>
+                                        <field name="wct_percent" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+                        <notebook>
+                            <page string="Audit Trail">
+                                <field name="mesge_ids" nolabel="1">
+                                    <tree create="false">
+                                        <field name="date"/>
+                                        <field name="author_id"/>
+                                        <field name="to_stage"/>
+                                        <field name="remark"/>
+                                        <field name="res_id" invisible="1"/>
+                                        <field name="model" invisible="1"/>
+                                        <field name="is_use" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="transaction_search" model="ir.ui.view">
+            <field name="name">transaction.search</field>
+            <field name="model">transaction.transaction</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="work_order_id"/>
+                    <field name="partner_id"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="not draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="partner_id" context="{'group_by':'partner_id'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by':'sub_project'}"/>
+                        <filter string="Transaction  Type" name="transaction_type" context="{'group_by':'transaction_type'}"/>
+                        <filter string="Workorder" name="workorder_id" context="{'group_by':'work_order_id'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by':'stage_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="action_transaction" model="ir.actions.act_window">
+            <field name="name">Transaction</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">transaction.transaction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Transaction.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

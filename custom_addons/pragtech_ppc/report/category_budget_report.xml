@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="construction_report_header">
+
+        </template>
+
+        <template id="category_budget_custom_report_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="header">
+                            <div class="row">
+                                <div class="col-xs-3" align="left" id="company_name">
+                                    <span t-field="doc.project_id.user_id.company_id.logo_web"
+                                          t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-rounded&quot;}"/>
+                                </div>
+                                <div class="col-xs-9">
+                                    <br/>
+                                    <div align="center" style="font-size:18px">
+                                        <strong t-field="doc.project_id.user_id.company_id.name"></strong>
+                                    </div>
+
+                                    <div align="center" style="font-size:13px">
+                                        <span t-field="doc.project_id.user_id.company_id.street"></span>
+                                        <span>,</span>
+                                        <span t-field="doc.project_id.user_id.company_id.street2"></span>
+                                        <span t-field="doc.project_id.user_id.company_id.city"></span>
+                                        <span t-field="doc.project_id.user_id.company_id.zip"></span>
+                                    </div>
+                                    <div align="center" style="font-size:13px">
+                                        <span t-field="doc.project_id.user_id.company_id.company_registry"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div class="row" align="center">
+                            <h4>
+                                <span>
+                                    <strong>Category Wise Budget</strong>
+                                </span>
+                            </h4>
+                        </div>
+
+                        <table order="0" bordercolor="#cccccc" class="firsttable" style="border: 1px solid #808080;padding:3px">
+                            <div>
+                                <span>
+                                    <strong>Project:</strong>
+                                </span>
+                                <span t-field="doc.project_id"/>
+                                <span>-</span>
+                                <span t-field="doc.project_wbs"/>
+                            </div>
+                            <div>
+                                <strong>Builtup Area:</strong>
+                                <span t-field="doc.project_id.builtup_area"/>
+                            </div>
+                            <br/>
+                            <thead style="background-color:#000000">
+                                <tr style="background-color:#9F4D89">
+                                    <th style="border: 1px solid #808080;padding:3px;text-align: center" align="center">
+                                        Sr.No.
+                                    </th>
+                                    <th style="border: 1px solid #808080;padding:3px;text-align: center" align="center">
+                                        Category
+                                    </th>
+                                    <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="4">
+                                        Budgeted
+                                        <br/>
+                                        A
+                                    </th>
+                                    <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="4" align="center">
+                                        Estimated
+                                        <br/>
+                                        B
+                                    </th>
+
+                                    <th style="border: 1px solid #808080;padding:3px;text-align: center" align="center">
+                                        Remark
+                                    </th>
+                                </tr>
+
+                                <tr style="border: 1px solid #9F4D89;color:white">
+                                    <td style="border: 1px solid #808080;padding:3px"></td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        Built Up Area:
+                                        <span t-field="doc.project_id.builtup_area"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">Per Sq Ft.</td>
+                                    <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                    <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">Per Sq Ft.</td>
+                                    <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                    <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">Remark</td>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-set="sr_no" t-value="0"/>
+                                <t t-set="budgeted_sqft" t-value="0"/>
+                                <t t-set="budgeted_material" t-value="0"/>
+                                <t t-set="budgeted_labour" t-value="0"/>
+                                <t t-set="budgeted_total" t-value="0"/>
+
+                                <t t-set="estimated_sqft" t-value="0"/>
+                                <t t-set="estimated_material" t-value="0"/>
+                                <t t-set="estimated_labour" t-value="0"/>
+                                <t t-set="estimated_total" t-value="0"/>
+
+                                <tr t-foreach="doc.category_line_ids" t-as="s">
+                                    <t t-set="sr_no" t-value="sr_no+1"/>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="sr_no"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-field="s.task_category"/>
+                                    </td>
+                                    <!-- Budgeted -->
+                                    <td style="border: 1px solid #808080;padding:3px" t-if="doc.project_id.builtup_area!=0">
+                                        <span t-if="doc.project_id.builtup_area!=0" t-esc="(s.amount/doc.project_id.builtup_area)"/>
+                                        <t t-set="budgeted_sqft" t-value="((s.amount/doc.project_id.builtup_area)+budgeted_sqft)"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px" t-if="doc.project_id.builtup_area==0">
+                                        <span>0</span>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="budgeted_material" t-value="((s.amount*(s.labour_percent/100))+budgeted_material)"/>
+                                        <span t-esc="(s.amount*(s.labour_percent/100))"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="budgeted_labour" t-value="((s.amount*(s.material_percent/100))+budgeted_labour)"/>
+                                        <span t-esc="(s.amount*(s.material_percent/100))"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="budgeted_total" t-value="(s.amount+budgeted_total)"/>
+                                        <strong>
+                                            <span t-field="s.amount"/>
+                                        </strong>
+                                    </td>
+
+                                    <!-- Estimated -->
+                                    <td style="border: 1px solid #808080;padding:3px" t-if="doc.project_id.builtup_area!=0">
+                                        <t t-set="estimated_sqft"
+                                           t-value="(estimated_sqft+((s.material_cost+s.labour_cost)/doc.project_id.builtup_area))"/>
+
+                                        <span t-esc="(s.material_cost+s.labour_cost)/doc.project_id.builtup_area"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px" t-if="doc.project_id.builtup_area==0">
+                                        <span>0</span>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="estimated_material" t-value="(estimated_material+s.material_cost)"/>
+                                        <span t-field="s.material_cost"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="estimated_labour" t-value="(s.labour_cost+estimated_labour)"/>
+                                        <span t-field="s.labour_cost"/>
+                                    </td>
+
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <t t-set="estimated_total" t-value="(estimated_total+(s.material_cost+s.labour_cost))"/>
+                                        <strong>
+                                            <span t-esc="(s.material_cost+s.labour_cost)"/>
+                                        </strong>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-field="s.remark"/>
+                                    </td>
+                                </tr>
+                                <tr style="border: 1px solid #9F4D89">
+
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <strong>
+                                            Grand
+                                            <br/>
+                                            Total
+                                        </strong>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px"></td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="budgeted_sqft"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="budgeted_material"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="budgeted_labour"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="budgeted_total"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="estimated_sqft"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="estimated_material"/>
+                                    </td>
+
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="estimated_labour"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                        <span t-esc="estimated_total"/>
+                                    </td>
+                                    <td style="border: 1px solid #808080;padding:3px">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div class="footer">
+                            <span class="text-right">Created By:</span>
+                            <span t-field="doc.create_uid"/>
+                            <span class="text-left">On:</span>
+                            <span t-field="doc.create_date"/>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+
+        </template>
+
+        <template id="category_budget">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="pragtech_ppc.category_budget_custom_report_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+

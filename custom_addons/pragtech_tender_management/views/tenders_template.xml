@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="show_tenders_info" name="Show Tenders Information">
+            <form action="/tenders/update" method="post">
+                <t t-call="website.layout">
+
+                    <div>
+                        <t t-set="tender_line_list" t-value="[]"/>
+                        <t t-set="tender_labour_list" t-value="[]"/>
+                        <t t-set="tender_overhead_list" t-value="[]"/>
+                        <t t-set="questionnaire_list" t-value="[]"/>
+
+                        <div class="container" width="auto">
+                            <t t-foreach="main_object" t-as="tender">
+                                <h2>
+                                    <center>Tender Information</center>
+                                </h2>
+
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+
+                                    <div class="col-md-2">
+                                        <b style="font-size: medium;">Tender Name:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Project Name:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Department:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Bid from:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Bid to:</b>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <span t-field="tender.tender_name" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="tender.name" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="tender.department.name" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="tender.start_date" style="font-size: initial;"/>
+                                        <br></br>
+
+                                        <span t-field="tender.end_date" style="font-size: initial;"/>
+                                        <br></br>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <b style="font-size: medium;">Total Budget:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Earnest Money Deposit:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Performance Security Deposit:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Liquidated Damage:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Unliquidated Damage:</b>
+                                        <br></br>
+                                        <b style="font-size: medium;">Pre-bid Meeting Date:</b>
+                                        <br></br>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span t-field="tender.total_budget" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="tender.earnest_money_deposit" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="tender.performance_security_deposit" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="tender.liquidated_damage" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="tender.unliquidated_damage" style="font-size: initial;"/>
+                                        <br></br>
+                                        <span t-field="tender.pre_bid_meeting_date" style="font-size: initial;" t-att-class="pre_bid_meeting_date"/>
+                                        <br></br>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3">
+                                            <b style="font-size: medium;">Pre-bid Meeting MOM:</b>
+                                        </div>
+                                        <div>
+                                            <span t-field="tender.pre_bid_meeting_mom" style="font-size: initial;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <input type="hidden" name="tender_id" t-att-value="main_object.id"/>
+                            <table width="1150px" height="220px" id="material">
+                                <thead>
+                                    <th class="table-danger" colspan="7">
+                                        <center>Material</center>
+                                    </th>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+                                        <th>Last Price</th>
+                                        <th>Your Price</th>
+                                        <th>Amount</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr t-foreach="main_object.tender_line_id" t-as="line_id" t-att-id="tender_line_id">
+                                        <t t-set="tender_line_list" t-value="tender_line_list + [line_id.id]" t-class="tender_line_list_class"/>
+                                        <td t-att-id="'material_name-'+str(line_id.id)">
+                                            <span t-att-name="'material_name-'+str(line_id.id)" t-field="line_id.product_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-att-name="'line_description-'+str(line_id.id)" t-field="line_id.line_description"/>
+                                        </td>
+                                        <td t-att-id="'material_quantity-'+str(line_id.id)">
+                                            <span t-att-name="product_uom_qty" t-field="line_id.product_uom_qty"/>
+                                        </td>
+
+                                        <td t-att-id="'material_last_price-'+str(line_id.id)">
+                                            <span t-att-name="material_last_price" t-field="line_id.material_last_price"/>
+                                        </td>
+                                        <td t-att-id="'material_your_price-'+str(line_id.id)">
+                                            <input type="text" t-att-name="'material_your_price-'+str(line_id.id)" class="material_your_price" t-att-my_id="str(line_id.id)"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        </td>
+                                        <td t-att-id="'material_amount-'+str(line_id.id)">
+                                            <span id="material_amount" class="material_amount"/>
+                                            <input type="text" id="'material_amount_duplicate-'+str(line_id.id)" value="" t-att-name="'material_amount_duplicate-'+str(line_id.id)"
+                                                   class="material_input_amount"/>
+                                        </td>
+                                        <td t-att-id="'material_note-'+str(line_id.id)">
+                                            <input type="text" t-att-name="'material_note-'+str(line_id.id)"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="tender_line_list" t-att-value="tender_line_list"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                                <thead>
+                                    <th class="table-primary" colspan="7">
+                                        <center>Labour</center>
+                                    </th>
+                                    <tr>
+                                        <th>Labour</th>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+
+                                        <th>Last Price</th>
+                                        <th>Your Price</th>
+                                        <th>Amount</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr t-foreach="main_object.tender_labour_id" t-as="labour_id">
+                                        <t t-set="tender_labour_list" t-value="tender_labour_list + [labour_id.id]"/>
+                                        <td>
+                                            <span t-field="labour_id.tender_labour_labour_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_id.labour_description"/>
+                                        </td>
+                                        <td t-att-id="'labour_quantity-'+str(labour_id.id)">
+                                            <span t-field="labour_id.labour_qty"/>
+                                        </td>
+
+                                        <td t-att-id="'labour_last_price-'+str(labour_id.id)">
+                                            <span t-field="labour_id.labour_last_price"/>
+                                        </td>
+                                        <td t-att-id="'labour_your_price-'+str(labour_id.id)">
+                                            <input type="text" t-att-name="'labour_your_price-'+str(labour_id.id)" class="labour_your_price" t-att-my_id="str(labour_id.id)"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        </td>
+                                        <td t-att-id="'labour_amount-'+str(labour_id.id)">
+                                            <span id="labour_amount" class="labour_amount"/>
+                                            <input type="text" id="'labour_amount_duplicate-'+str(labour_id.id)" value="" t-att-name="'labour_amount_duplicate-'+str(labour_id.id)"
+                                                   class="labour_input_amount"/>
+                                        </td>
+                                        <td t-att-id="'labour_note-'+str(labour_id.id)">
+                                            <input type="text" t-att-name="'labour_note-'+str(labour_id.id)"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="tender_labour_list" t-att-value="tender_labour_list"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                                <thead>
+                                    <th class="table-success" colspan="7">
+                                        <center>Overhead</center>
+                                    </th>
+                                    <tr>
+                                        <th>Overhead</th>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+                                        <th>Last Price</th>
+                                        <th>Your Price</th>
+                                        <th>Amount</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr t-foreach="main_object.tender_overhead_id" t-as="overhead_id">
+                                        <t t-set="tender_overhead_list" t-value="tender_overhead_list + [overhead_id.id]"/>
+
+                                        <td>
+                                            <span t-field="overhead_id.tender_overhead_overhead_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_id.overhead_description"/>
+                                        </td>
+                                        <td t-att-id="'overhead_quantity-'+str(overhead_id.id)">
+                                            <span t-field="overhead_id.overhead_qty"/>
+                                        </td>
+
+                                        <td t-att-id="'overhead_last_price-'+str(overhead_id.id)">
+                                            <span t-field="overhead_id.overhead_last_price"/>
+                                        </td>
+                                        <td t-att-id="'overhead_your_price-'+str(overhead_id.id)">
+                                            <input type="text" t-att-name="'overhead_your_price-'+str(overhead_id.id)" class="overhead_your_price" t-att-my_id="str(overhead_id.id)"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"/>
+                                        </td>
+                                        <td t-att-id="'overhead_amount-'+str(overhead_id.id)">
+                                            <span id="overhead_amount" class="overhead_amount"/>
+                                            <input type="text" id="'overhead_amount_duplicate-'+str(overhead_id.id)" value="" t-att-name="'overhead_amount_duplicate-'+str(overhead_id.id)"
+                                                   class="overhead_input_amount"/>
+                                        </td>
+                                        <td t-att-id="'overhead_note-'+str(overhead_id.id)">
+                                            <input type="text" t-att-name="'overhead_note-'+str(overhead_id.id)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table width="1150px" height="220px" id="material">
+                                <thead>
+                                    <th class="table-success" colspan="7">
+                                        <center>Questionnaire</center>
+                                    </th>
+                                </thead>
+
+                                <tbody>
+                                    <tr t-foreach="main_object.tender_question_ids" t-as="que_id">
+                                        <tr t-foreach="que_id.tender_question_id" t-as="question_id">
+                                            <t t-set="questionnaire_list" t-value="questionnaire_list + [question_id.id]"/>
+                                            <td>
+                                                <span t-field="question_id.name"/>
+                                            </td>
+                                            <td t-att-id="'answer-'+str(question_id.id)">
+                                                <t t-if="question_id.type == 'text'">
+                                                    <textarea rows="3" cols="110" id="'answer-'+str(question_id.id)" value="" t-att-type="question_id.type" t-att-name="'answer-'+str(question_id.id)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <input id="'answer-'+str(question_id.id)" value="" t-att-type="question_id.type" t-att-name="'answer-'+str(question_id.id)"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="questionnaire_list" t-att-value="questionnaire_list"/>
+                                        </td>
+                                    </tr>
+
+                                    <th colspan="1"></th>
+                                    <th t-att-id="'total_amount-'+str(main_object.id)" style="text-align: -moz-center;">Total amount:
+                                        <span t-field="main_object.all_total" id="total_amount" t-att-class="total_amount"/>
+                                        <input type="text" id="total_amount_duplicate" name="total_amount_duplicate" class="total_input_amount"/>
+                                    </th>
+
+                                    <tr>
+                                        <th colspan="1"></th>
+                                        <th style="text-align: -moz-center;">
+                                            <input type="submit" value="Submit"/>
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" name="tender_overhead_list" t-att-value="tender_overhead_list"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <br></br>
+
+                        </div>
+                    </div>
+                </t>
+            </form>
+        </template>
+
+        <template id="list_tenders" name="Tenders List">
+            <td t-call="website.layout">
+                <div class="container">
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Deadline</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <h1>Tenders List</h1>
+                            <tr t-foreach="tendersproducts" t-as="publish_tender">
+                                <td>
+                                    <a itemprop="name" t-att-href="product_href" t-att-content="publish_tender.name" t-field="publish_tender.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="publish_tender.end_date"/>
+                                </td>
+                                <td>
+                                    <span t-field="publish_tender.top_rank"/>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </td>
+        </template>
+
+        <template id="list_all_tenders" name="All tenders">
+            <td t-call="website.layout">
+                <div class="container">
+                    <div class="container py-2 oe_website_sale">
+                        <div class="table-responsive">
+
+                            <t t-if="tendersproducts">
+                                <table class="table table-hover table-md">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Deadline</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <h1>All Published Tenders</h1>
+                                        <div>
+                                            <t t-set="tendersproducts123" t-value="'o_connected_user'"/>
+                                            <tr t-foreach="tendersproducts" t-as="publish_tender">
+                                                <t t-if="publish_tender">
+                                                    <td>
+                                                        <a itemprop="name" t-att-href="'tender/'+str(publish_tender.id)" t-att-content="publish_tender.name" t-field="publish_tender.name"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="publish_tender.end_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden" name="tender_id" t-att-value="publish_tender.id"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </div>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+
+                        <t t-if="not tendersproducts">
+                            <div class="text-center text-muted oe_product">
+                                <h3 class="css_editable_display mt8">No Tenders defined.</h3>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+            </td>
+        </template>
+
+    </data>
+</odoo>
+

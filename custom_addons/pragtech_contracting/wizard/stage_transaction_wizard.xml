@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Start Approval Wizard -->
+        <record model="ir.ui.view" id="approval_wizard_form_view_contracting">
+            <field name="name">approval.wizard.form</field>
+            <field name="model">approval.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Add Stages" class="oe_form_sheet_width_wider" style="width=10; height=10">
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="current_stage" readonly="1"/>
+                            </group>
+
+                            <group>
+                                <field name="new_stage" options="{'create': false, 'create_edit': false}"/>
+                                <field name="current_stage_seq" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="remark"/>
+                        </group>
+
+                        <footer>
+                            <button string="Update" name="update_status" type="object" class="fa fa-check"/>
+                            <button string="Reset" name="reset_status" type="object" class="fa fa-undo"/>
+                        </footer>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="action_approval_wizard" model="ir.actions.act_window">
+            <field name="name">State Approve</field>
+            <field name="res_model">approval.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- End Approval Wizard -->
+
+    </data>
+</odoo>
+

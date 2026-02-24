@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet" />
+<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+
+/* /loempia/static/src/css/description.css defined in bundle 'web.assets_frontend' */
+ font-family: "Open Sans", "Helvetica", Sans; font-weight: 300; color: #646464; background: white; font-size: 16px; .oe_styling_v8 .oe_website_contents{background: whitesmoke; padding-bottom: 1px;} .oe_styling_v8 b{font-weight: 600;} .oe_styling_v8 a{color: #21B799; text-decoration: none;} .oe_styling_v8 a.btn{color: white;} .oe_styling_v8 .oe_title_font{font-family: "Lato", "Open Sans", "Helvetica", Sans;} .oe_styling_v8 .oe_page{background: white; overflow: hidden; -webkit-border-radius: 1px; -moz-border-radius: 1px; -ms-border-radius: 1px; -o-border-radius: 1px; border-radius: 1px; -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);} .oe_styling_v8 .oe_emph{font-weight: 400;} .oe_styling_v8 .oe_dark{overflow: hidden; background: #efefef; box-shadow: none;} .oe_page{margin: 0px auto 64px auto; max-width: 992px;} .oe_row{width: 928px; margin-top: 16px; margin-bottom: 16px; margin-left: auto; margin-right: auto;} .oe_row.oe_fit{width: auto;} .oe_clearfix:after, .oe_row:after{content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;} [class*='oe_span']{float: left; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0 16px;} .oe_span12{width: 928px;} .oe_span10{width: 773px;} .oe_span9{width: 696px;} .oe_span8{width: 618px;} .oe_span6{width: 464px;} .oe_span4{width: 309px;} .oe_span3{width: 232px;} .oe_span2{width: 154px;} [class*='oe_span'].oe_fit{padding-left: 0px !important; padding-right: 0px !important;} [class*='oe_span'].oe_right{float: right;} .oe_row.oe_flex [class*='oe_span']{display: inline-block; float: none; vertical-align: top; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0 16px; width: auto;} .oe_row.oe_flex .oe_span12{max-width: 928px;} .oe_row.oe_flex .oe_span10{max-width: 769px;} .oe_row.oe_flex .oe_span9{max-width: 692px;} .oe_row.oe_flex .oe_span8{max-width: 614px;} .oe_row.oe_flex .oe_span6{max-width: 460px;} .oe_row.oe_flex .oe_span4{max-width: 305px;} .oe_row.oe_flex .oe_span3{max-width: 228px;} .oe_row.oe_flex .oe_span2{max-width: 150px;} .oe_mb0{margin-bottom: 0px !important;} .oe_mb4{margin-bottom: 4px !important;} .oe_mb8{margin-bottom: 8px !important;} .oe_mb16{margin-bottom: 16px !important;} .oe_mb32{margin-bottom: 32px !important;} .oe_mb48{margin-bottom: 48px !important;} .oe_mb64{margin-bottom: 64px !important;} .oe_mt0{margin-top: 0px !important;} .oe_mt4{margin-top: 4px !important;} .oe_mt8{margin-top: 8px !important;} .oe_mt16{margin-top: 16px !important;} .oe_mt32{margin-top: 32px !important;} .oe_mt48{margin-top: 48px !important;} .oe_mt64{margin-top: 64px !important;} .oe_mb0{margin-bottom: 0px !important;} .oe_mb4{margin-bottom: 4px !important;} .oe_mb8{margin-bottom: 8px !important;} .oe_mb16{margin-bottom: 16px !important;} .oe_mb32{margin-bottom: 32px !important;} .oe_mb64{margin-bottom: 64px !important;} .oe_rightfit{padding-right: 0px !important;} .oe_leftfit{padding-left: 0px !important;} .oe_leftalign{text-align: left;} .oe_rightalign{text-align: right;} .oe_centeralign{text-align: center;} .oe_centered{margin-left: auto; margin-right: auto;} .oe_hidden{display: none !important; opacity: 0 !important;} .oe_invisible{visibility: hidden !important;} .oe_transparent{opacity: 0 !important;} .oe_spaced{margin-top: 32px; margin-bottom: 32px;} .oe_more_spaced{margin-top: 64px; margin-bottom: 64px;} .oe_padded{padding-top: 16px; padding-bottom: 16px;} .oe_more_padded{padding-top: 32px; padding-bottom: 32px;} .oe_button{position: relative; bottom: 0; display: inline-block; cursor: pointer; color: white; -webkit-user-select: none; -moz-user-select: none; user-select: none;} .oe_styling_v8 .oe_button, .oe_styling_v8 a.oe_button{padding: 8px 14px; background: #21B799; color: white; -webkit-transition-property: bottom, background; -moz-transition-property: bottom, background; -o-transition-property: bottom, background; transition-property: bottom, background; -webkit-transition-duration: 250ms; -moz-transition-duration: 250ms; -o-transition-duration: 250ms; transition-duration: 250ms;} .oe_styling_v8 .oe_button:hover, .oe_styling_v8 a.oe_button:hover, .oe_styling_v8 .oe_button:active, .oe_styling_v8 a.oe_button:active{background: #1b9f85;} .oe_styling_v8 .oe_button.oe_big, .oe_styling_v8 a.oe_button.oe_big{font-size: 24px;} .oe_styling_v8 .oe_button.oe_bigger, .oe_styling_v8 a.oe_button.oe_bigger{font-size: 32px;} .oe_styling_v8 .oe_button.oe_small, .oe_styling_v8 a.oe_button.oe_small{font-size: 13px; padding: 2px 4px;} .oe_styling_v8 .oe_button.oe_medium, .oe_styling_v8 a.oe_button.oe_medium{padding: 5px 12px; font-size: 16px;} .oe_styling_v8 .oe_button.oe_tacky, .oe_styling_v8 a.oe_button.oe_tacky{background: #34495E;} .oe_styling_v8 .oe_button.oe_tacky:hover, .oe_styling_v8 a.oe_button.oe_tacky:hover, .oe_styling_v8 .oe_button.oe_tacky:active, .oe_styling_v8 a.oe_button.oe_tacky:active{background: #253544;} .oe_styling_v8 .oe_button.oe_disabled, .oe_styling_v8 a.oe_button.oe_disabled{background: #c8c8c8; cursor: default;} .oe_styling_v8 .oe_button.oe_disabled:hover, .oe_styling_v8 a.oe_button.oe_disabled:hover, .oe_styling_v8 .oe_button.oe_disabled:active, .oe_styling_v8 a.oe_button.oe_disabled:active{background: #c8c8c8;} .oe_styling_v8.oe_styling_black .oe_button{-webkit-box-shadow: 0px 2px 0px #463555; -moz-box-shadow: 0px 2px 0px #463555; box-shadow: 0px 2px 0px #463555;} .oe_styling_v8{} .oe_styling_v8 .oe_input{padding: 4px 7px; border-radius: 3px; border: solid 1px #d6d6d6; box-shadow: 0px 2px #e6e6e6; background: #fafafa; font-weight: 300; outline: none; -webkit-transition: all 150ms linear; -moz-transition: all 150ms linear; -o-transition: all 150ms linear; transition: all 150ms linear;} .oe_styling_v8 .oe_input:focus{border: solid 1px #969696; box-shadow: 0px 2px #d2d2d2;} .oe_styling_v8 .oe_input.oe_valid{background: #f2ffec; border-color: #b1ebb6; box-shadow: 0px 2px #e1f8e1; color: #0f610f;} .oe_styling_v8 .oe_input.oe_invalid{background: #fff2f2; border-color: #ebb1b1; box-shadow: 0px 2px #f8e1e1; color: #610f0f;} .oe_styling_v8 .oe_input.oe_big{padding: 8px 14px;} .oe_styling_v8 .oe_input_label{font-weight: 300; font-size: 16px;} .oe_styling_v8 .oe_input_label.oe_big{font-size: 20px;} .oe_styling_v8 .oe_textarea{width: 300px; height: 80px;} .oe_styling_v8 .oe_form_layout_table{width: 100%;} .oe_styling_v8 .oe_form_layout_table td{padding-bottom: 16px;} .oe_styling_v8 .oe_form_layout_table td:first-child{text-align: right; padding-right: 16px;} .text-alpha{color: #A24689 !important;} .oe_styling_v8 .oe_slogan{color: #333333; font-family: "Lato", "Open Sans", "Helvetica", Sans; margin-top: 32px; margin-bottom: 32px; text-align: center;} .oe_styling_v8 h1.oe_slogan{font-size: 64px; font-weight: 900; margin-top: 48px; margin-bottom: 48px;} .oe_styling_v8 h2.oe_slogan{font-size: 40px; font-weight: 300;} .oe_styling_v8 h3.oe_slogan{font-size: 26px; font-weight: 300; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50); opacity: 0.5;} .oe_styling_v8 h4.oe_slogan{font-size: 24px; font-weight: 300;} .oe_styling_v8 h4.oe_slogan:before, .oe_styling_v8 h4.oe_slogan:after{margin: 0 20px; content: ""; display: inline-block; width: 100px; height: 0px; border-top: solid 1px; vertical-align: middle; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30); opacity: 0.3;} .oe_styling_v8 h5.oe_slogan{font-weight: 300;} .oe_styling_v8 h2.oe_slogan + h3.oe_slogan{margin-top: -28px;} .oe_quote{margin: 8px; padding: 16px; background: rgba(0, 0, 0, 0.02); border: solid 1px rgba(0, 0, 0, 0.06); -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px;} .oe_quote .oe_q, .oe_quote q{margin: 10px; display: block; font-style: italic; text-align: center; font-size: 20px;} .oe_quote .oe_q:before, .oe_quote .oe_q:after, .oe_quote q:before, .oe_quote q:after{content: '"'; font-weight: 900; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20); opacity: 0.2;} .oe_quote cite{display: block; font-style: normal; margin-top: 16px;} .oe_quote .oe_photo{float: left; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; margin-right: 16px;} .oe_quote .oe_author{font-size: 20px; padding-top: 6px;} .oe_dark .oe_quote{background: white; border: 1px solid #f0f0ff;} .oe_picture{display: block; max-width: 84%; max-height: 400px; margin: 16px 8%;} .oe_screenshot{padding: 8px; background-color: white; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2); box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);} .oe_pic_ctr{position: relative;} .oe_pic_ctr > img.oe_picture{width: 100%; max-width: none; max-height: none; margin: 0;} .oe_pic_ctr > .oe_title{position: absolute; top: 15px; right: 38px;} .oe_styling_v8 .oe_pic_ctr > .oe_title{font-size: 64px; color: white; font-weight: 600; margin: 0; text-shadow: 0px 2px 0px #494949, 0px 2px 5px rgba(0, 0, 0, 0.33), 0px 0px 60px rgba(0, 0, 0, 0.22);} div.oe_demo{position: relative; border: 1px solid #dedede;} div.oe_demo span.oe_demo_play{top: 50%; left: 50%; width: 80px; height: 60px; margin-top: -30px; margin-left: -40px; display: block; position: absolute; background: url("/loempia/static/src/css/../img/layout/play-button.png") no-repeat left top transparent; pointer-events: none;} div.oe_demo img{max-width: 100%; width: 100%;} div.oe_demo div.oe_demo_footer{position: absolute; left: 0; background-color: rgba(162, 70, 137, 0.7); opacity: 0.85; bottom: -1px; width: 100%; padding-top: 7px; padding-bottom: 7px; color: white; font-size: 14px; font-weight: bold; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; pointer-events: none;} div.oe_demo:hover span.oe_demo_play{background: url("/loempia/static/src/css/../img/layout/play-button-over.png") no-repeat left top transparent;} .oe_styling_v8 .oe_container.oe_separator{height: 64px; margin-bottom: 16px; background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0.02))); background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02)); background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02)); background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02)); background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02)); -webkit-box-shadow: 0px -3px 10px -5px rgba(0, 0, 0, 0.1) inset; -moz-box-shadow: 0px -3px 10px -5px rgba(0, 0, 0, 0.1) inset; box-shadow: 0px -3px 10px -5px rgba(0, 0, 0, 0.1) inset; overflow-y: hidden;} .oe_row_tabs{text-align: center; margin-top: 0px; margin-bottom: 0px; padding-top: 21px;} .oe_row_tab{position: relative; min-width: 120px; padding: 8px; font-size: 20px; display: inline-block; margin: 0px -2px; border-top-left-radius: 4px; border-top-right-radius: 4px; border: solid 1px rgba(0, 0, 0, 0.1); border-bottom: none; background: #fafafa; background-image: +linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02)); box-shadow: 0px -3px 10px -5px rgba(0, 0, 0, 0.1) inset; cursor: pointer; -webkit-transition: all 250ms linear; -moz-transition: all 250ms linear; -o-transition: all 250ms linear; transition: all 250ms linear;} .oe_row_tab:hover{padding-bottom: 12px; top: -4px; background-color: white;} .oe_row_tab.oe_active{background-color: white; background-image: none; box-shadow: none; border-top-color: #8272b6; border-top-width: 2px; cursor: default;} .oe_row_tab.oe_active:hover{padding-bottom: 8px; top: 0asx;} .oe_calltoaction{height: 32px; margin-top: -32px; position: relative;} 
+
+
+	.oe_styling_v8 .oe_slogan {
+    color: #333333;
+    font-family: "Lato", "Open Sans", "Helvetica", Sans;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+	
+	.oe_slogan{text-align: center}
+	
+ .oe_dark {
+    overflow: hidden;
+    background: #efefef;
+    box-shadow: none;
+}
+	
+</style>
+
+
+</head>
+  
+  
+  
+  <body>    
+
+	  
+	  
+	<!-- START BOTTOM Collapsible Section Added BY Rohit -->	  
+	  
+<div class="collapse-bar" data-toggle="collapse" href="#collapse-maindiv" role="button" aria-expanded="true" aria-controls="collapse-maindiv" style="width: 50px;
+            height: 50px;
+            background: #45b974;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 100;
+            font-size: 20px;
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            box-shadow: 1px 2px 11px rgba(0, 0, 0, 0.3), -5px 7px 12px rgba(0, 0, 0, 0.22);
+            cursor: pointer;">
+            <i class="fa fa-bars"></i>
+        </div>
+	
+	
+	<div class="collapse show" id="collapse-maindiv" style="position: fixed; bottom: 10px; left: 10px; z-index: 1001;">
+            <div class="for_close" data-toggle="collapse" href="#collapse-maindiv" role="button" aria-expanded="true" aria-controls="collapse-maindiv" style="width: 25px;
+                height: 25px;
+                background: #45b974;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 100;
+                margin-left: auto;
+                font-size: 12px;
+                margin-bottom: -56px; position: relative;
+                z-index: 1000;
+                cursor: pointer;">
+                <i class="fa fa-times"></i>
+            </div>
+		
+		
+		
+            <div class="collapse-mainsec" style="width:250px;">
+                <div class="Prag-logo" style="text-align: center;">
+                    <a href="https://www.pragtech.co.in/" target="_blank"><img src="collapse-img/logo-header.png" style="width: 69%;" alt=""></a>
+                </div>
+                <div class="prag-secitems" style="
+                margin-top: -17px;
+                background-color: background:-webkit-gradient(linear,left top,right top,color-stop(0%,#22c273),color-stop(100%,#2bc1ca));
+    background: -webkit-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: -o-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: -ms-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: linear-gradient(106deg,#22c273 0%,#2bc1ca 100%);
+                border-radius: 10px 10px 10px 10px;
+                padding-bottom: 10px;
+                ">
+                    
+						
+					<div class="persec-block d-flex" style="padding: 10px; align-items: baseline; justify-content: space-around;	">	
+
+						<a href="https://www.youtube.com/channel/UCqhtDwG2Tf1aKonGGVzBy_w" target="_blank" style="text-decoration: none;font-size: 14px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/Youtube.gif" style="width: 40px;margin-top: 7px;" alt="">
+                            <span class="pt-2 font-weight-bold">Youtube</span>
+                        </a>
+						
+						<a href="http://blog.pragtech.co.in/" target="_blank" style="text-decoration: none;font-size: 14px;margin-right: 18px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/blogger-gif.gif" style="width: 40px;margin-top: -20px;" alt="">
+                            <span class="pt-2 font-weight-bold">Blogs</span>
+                        </a>
+                        <a href="https://www.pragtech.co.in/" target="_blank" style="text-decoration: none;font-size: 14px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/praglogo-animation.gif" style="width: 40px;margin-top: 7px;" alt="">
+                            <span class="pt-2 font-weight-bold">Website</span>
+                        </a>
+						
+                    </div>
+					
+					
+					<div class="persec-block d-flex" style="padding: 10px; align-items: baseline; justify-content: space-around;">
+
+                        <a href="https://www.pragtech.co.in/company/proposal-form.html?id=103&name=Odoo-Construction-Management" target="_blank" style="text-decoration: none;font-size: 14px;margin-right: 15px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/Demo-gif.gif" style="width: 40px;" alt="">
+                            <span class="pt-2 font-weight-bold">Demo</span>
+                        </a>
+						
+                        <a href="https://apps.odoo.com/apps/modules/browse?search=pragmatic" target="_blank" style="text-decoration: none;font-size: 14px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/allapp-gif.gif" style="width: 40px; margin-top: -20px;" alt="">
+                            <span class="pt-2 font-weight-bold">All Apps</span>
+                        </a>
+						
+			<a href="https://www.pragtech.co.in/company/proposal-form.html?id=310&name=support-odoo-construction-project-planning-and-controlling" target="_blank" style="text-decoration: none;font-size: 14px;" class="d-flex flex-column align-items-center text-white font-weight-light">
+                            <img src="collapse-img/support.gif" style="width: 40px;" alt="">
+                            <span class="pt-2 font-weight-bold">Support</span>
+                        </a>
+						
+					</div>
+
+					
+					
+					
+					
+                </div>
+            </div>
+        </div>
+	  
+	  
+<!-- END BOTTOM Collapsible Section Added BY Rohit -->	 	  
+
+
+
+<!--<section class="oe_container">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-push-2 col-sm-push-2 padding-none">
+            <h2 class="oe_slogan">Construction <b>Project Planning</b> and <b>Controlling</b></h2>
+            <p class="text-center">In this Odoo module is basically designed for Planning and Controlling of Project
+</p>
+        </div>
+  
+  <div style="width: 100%; float: left; text-align: center;"><a class="btn  red-btn btn-lg" target="_blank" href="http://www.pragtech.co.in/products/odoo-verticals/odoo-openerp-construction.html"
+               style="background-color: #ff0000; border-radius: 0px; color: #000; text-transform:uppercase; font-size:18px; margin-bottom: 15px;">
+                Learn More</a>
+  </div>
+    </div>
+</section>-->
+
+<!--Feedback Section Start-->
+	<section class="oe_container oe_dark rounded border border-success " style="padding-bottom:20px; border-radius:45px">
+  <div class="col-md-12 col-sm-12 col-xs-12 padding-none text-center mb32" style="border-radius:25px">
+     <h1 class="pt-4"> <strong>Our Customer Reviews</strong></h1>
+		</div> 
+	<div class="container">	
+	     <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12 pl-5 pr-5 mt-3 mb-3">
+          <h4 class="text-left pt-4" style="font-family:font-family: 'Lato', sans-serif"><br><b>"</b>Everything is ok with the services on my current project with Pragmatic.Experts informs me everything and keeps me updated on my project.<b>"</b></h4>
+			<p class="text-right mt30">- <strong> Glenn Harris </strong> <br>Director at HME Services Pty Ltd</p>
+          </div>
+        <div class="col-md-4 col-sm-4 col-xs-12 pl-5 pr-5 mt-3 mb-3 ml-auto">
+			<img class="" src="img/glenn_harris_customer.png" alt=" Glenn Harris" width="90%;"> </div>
+      </div>
+    </div>	
+</section>
+	<!--Feedback Section End--> 
+	  
+	  
+   <section class="oe_container">
+    <div class="xero_bg pt80 pb64"
+         style="background-image: url('ppc-bg.jpg'); background-size: cover; background-position: center center; height: auto;">
+
+        <div class="col-sm-8 col-md-8 col-xs-12 col-md-offset-2 col-sm-offset-2" style="background-color: rgba(0, 0, 0, 0.6);
+    padding: 21px;
+    text-align: center;">
+    
+            <h3 style="color:#fff; font-size: 35px;font-weight: 500;">Construction <b>Project Planning</b> and <b>Controlling</b></h3>
+     <p class="text-center" style="color: #fff;">In this Odoo module is basically designed for Planning and Controlling of Project
+</p>
+
+			<p style="color: #fff; font-size: 25px;">Our Pricing includes User Manual, 90 Days Support <span style="
+    color: #ff0;"><b>(Monday-Friday 10am to 7pm IST)</b></span> and One time Setup</p>
+<h3 style="color: #fff; margin-top:5px; ">We support for <b>English / French / Spanish at an additional cost</b></h3>
+<h4 style="color: #fff; font-weight:900;">works for community and enterprise editions </h4>
+
+
+
+            <a class="btn  red-btn btn-lg" target="_blank" href="https://www.pragtech.co.in/products/odoo-verticals/odoo-openerp-construction.html"
+               style="background-color: #ff0000; border-radius: 0px; color: #000; font-size:18px; margin-bottom: 15px;">
+                Learn More</a>
+                
+            <a class="btn yellow-btn btn-lg" style="background-color:#ffff00;
+    border-radius: 0px;
+    color: #000; font-size:18px; margin-bottom:15px;" target="_blank"
+               href="https://www.pragtech.co.in/company/proposal-form.html?id=103&name=Odoo-Construction-Management">View Demo </a>   
+			
+			<a class="btn yellow-btn btn-lg"
+               style="background-color:#22c273; border-radius: 0px; color: #000;  font-size:18px; margin-bottom: 15px; width:150px;"
+               target="_blank" href="https://www.pragtech.co.in/company/proposal-form.html?id=310&name=support-odoo-construction-project-planning-and-controlling">Support</a>
+			
+			
+<div style="background-color: #fff; color: red; font-weight: 800; padding: 10px; max-width: 500px; margin: auto;">Note:Extensively Tested on Odoo Vanilla with Ubuntu OS</div>				
+
+      </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        
+
+        <div class="col-md-8 col-sm-8 col-xs-12 offset-md-2 offset-sm-2 padding-none text-center mt32 mb32">
+			
+<!--<a href="https://www.pragtech.co.in/company/proposal-form.html?id=309&name=v13-odoo-construction-project-planning-and-controlling" target="_blank"> <img class="img-responsive" src="Odoo13-Launch-Advertising.gif" style="width:80%;"> </a>-->
+			
+<h2 class="oe_slogan">fundamental components in our <b>Project planning and controlling.</b></h2>
+           </div>
+       
+	<div class="row">	
+        <div class="col-md-7 col-sm-7 col-xs-12">   
+            <ul class="custom-bullet">
+                <li>Project</li>
+                <li>Sub Project</li>
+                <li>WBS (Work Breakdown Structure)</li>
+                <li>Task Groups</li>
+                <li>Task</li>
+            </ul>
+          </div>  
+           
+        <div class="col-md-5 col-sm-5 col-xs-12">
+                <a target="_blank" href="https://youtu.be/Po-366bV1Dw"><img class="img-responsive oe_screenshot" src="PPC-screencast.jpg"
+                                                                           style="width:100%;"></a>
+            </div>   
+     </div>       
+
+        
+
+   </div>
+</section>
+
+
+<section class="oe_container ">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan"><b>Project View:</b></h2>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1">
+           <p><b>After placing the google map api key, you will be able to see the google map in Odoo.</b>
+           <ul>
+           	<li><b>Setting:</b> Company name, Project Address, Project category, etc</li>
+           	<li><b>Sub Project:</b>Sub projects defined for current Project</li>
+           	<li><b>Site Info:</b>Saleable Area, Built Up Area, Plot Area, Site Contact No, etc.</li>
+           	<li><b>Documents:</b> Project document of any type can be uploaded.</li>
+           </ul>
+           
+           </p>
+            <img class="img-responsive oe_screenshot" src="img/gantt-chart1.jpg">
+            
+        </div>
+
+    </div>
+</section>
+
+
+<section class="oe_container oe_dark">
+    <div class="oe_row" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan">Sub <b>Project View:</b></h2>
+        </div>
+
+        <div class="col-md-10 col-sm-12 col-md-offset-1 mt20 mb20 padding-none">
+            <p class="text-center">We can define sub project for the particular project.</p>
+            <img src="img/gantt-chart2.jpg" alt="" width="100%"/>
+        </div>
+
+
+    </div>
+</section>
+
+	<section class="oe_container">
+	<h2 style="color: #091E42;font-family: &quot;Montserrat&quot;;text-align: center;margin: 25px auto;text-transform: uppercase;" class="oe_slogan">
+         <b>Related Products</b>
+      </h2>
+
+<div id="slide-top" class="row carousel slide mt64 mb32" data-ride="carousel">
+   <!-- The slideshow -->
+   <div class="carousel-inner">
+      <div class="carousel-item active">
+         <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_purchase/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/construction-management.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Purchase Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		 
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/consctruction-contracting.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Sub Contracting Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting_reports/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-contracting.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Construction Contracting Reports
+                  </h4>
+               </div>
+            </a>
+         </div>
+	   </div>
+	   
+	   <div class="carousel-item">
+		  
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_ppc_ganttchart/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-gantt-chart.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Project Planning and Gantt Chart
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_purchase_reports/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/Construction Purchase Report.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Purchase Reports
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting_transactions/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-contracting-transaction.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Contracting Transactions
+                  </h4>
+               </div>
+            </a>
+         </div>
+		   </div>
+		  
+	   <div class="carousel-item">
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_tender_management/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/tender-management.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Tender Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		   
+		   <!--<div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_ppc/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/construction-ppc.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Project Planning and Controlling
+                  </h4>
+               </div>
+            </a>
+         </div>-->
+		   </div>
+
+      </div>
+	   
+	   
+      
+      
+
+   <!-- Left and right controls -->
+   <a class="carousel-control-prev" href="#slide-top" data-slide="prev" style="left:-25px;width: 35px;color: #000;">
+   <span class="carousel-control-prev-icon"><i class="fa fa-chevron-left" style="font-size:24px"></i></span>
+   </a>
+   <a class="carousel-control-next" href="#slide-top" data-slide="next" style="right:-25px;width: 35px;color: #000;">
+   <span class="carousel-control-next-icon"><i class="fa fa-chevron-right" style="font-size:24px"></i></span>
+   </a>
+</div>
+
+</section>
+
+<section class="oe_container ">
+    <div class="oe_row" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan">Project <b>WBS:</b></h2>
+        </div>
+
+        <div class="col-md-10 col-sm-12 col-md-offset-1 mt20 mb20 padding-none">
+            <p>Project WBS is Work Breakdown Structure.Here we can define required resources ie. Material and labour for particular
+             Project.Also we define actual and planned start and finish dates here.<br/><br/>
+After selection of tasks from library, it will create resources details in Estimated Material and Estimated Labour Section.
+</p>
+            <img src="img/gantt-chart3.jpg" alt="" width="100%"/>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+<section class="oe_container oe_dark ">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan"><b>Group:</b></h2>
+            <p class="text-center">N number of groups and tasks can be added under group.
+</p>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced">
+            <img class="img-responsive oe_screenshot" src="img/gantt-chart4.jpg">  
+        </div>
+
+    </div>
+</section>
+
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan"><b>Task:</b></h2>
+            <p class="text-center">Resources are manpower and material which can be added in task.</p>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced">
+            <img class="img-responsive oe_screenshot" src="img/gantt-chart5.jpg">  
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+<!--<section class="oe_container ">
+    <div class="oe_row" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-push-2 col-sm-push-2 padding-none">
+			<h2 class="oe_slogan"><b>Multilevel Approval</b> of Transactions:</h2>
+            <p style="text-align: center;">
+            	Configurable multi Level approval of all transactions as per company authorization matrix. <br/><br/>
+            	Define approval stages for each transaction:
+            </p>
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-12 mt20 mb20 padding-none">
+            <img src="img/Construction_ppc-7.jpg" alt="" width="100%"/>
+        </div>
+        
+        
+      <div class="col-md-6 col-sm-6 col-xs-12 mt20 mb20 padding-none">
+            <img src="img/Construction_ppc-8.jpg" alt="" width="100%"/>
+        </div>
+
+</section>-->
+
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2 padding-none">
+            <!-- <h3 style="color:#34495E; font-weight:bold;" class="oe_slogan">Our Pricing includes User Manual, 1 Month Support and One time Setup</h3>-->
+            <h2 class="oe_slogan"><b>Multilevel Approval</b> of Transactions:</h2>
+            <p class="text-center">Configurable multi Level approval of all transactions as per company authorization matrix. <br/><br/>
+            	Define approval stages for each transaction:</p>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced" style="margin-bottom: 15px;">
+            <img class="img-responsive oe_screenshot" src="img/Construction_ppc-7.jpg">  
+        </div>
+        
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced" style="margin-bottom: 15px;">
+            <img class="img-responsive oe_screenshot" src="img/Construction_ppc-8.jpg">  
+        </div>
+        
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced" style="margin-bottom: 15px;">
+            <img class="img-responsive oe_screenshot" src="img/Construction_ppc-9.jpg">  
+        </div>
+        
+        <div class="col-xs-12 col-sm-10 col-md-10 col-sm-offset-1 col-md-offset-1 oe_spaced" style="margin-bottom: 15px;">
+            <img class="img-responsive oe_screenshot" src="img/Construction_ppc-10.jpg">  
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+<!--<section class="oe_container ">
+    <div class="oe_row" style="max-width:100%;">
+  
+      <div class="col-md-6 col-sm-6 col-xs-12 mt20 mb20 padding-none">
+            <img src="img/Construction_ppc-9.jpg" alt="" width="100%"/>
+        </div>
+       
+       <div class="col-md-6 col-sm-6 col-xs-12 mt20 mb20 padding-none">
+            <img src="img/Construction_ppc-10.jpg" alt="" width="100%"/>
+        </div>
+  </div>
+</section>-->
+
+
+<section class="oe_container">
+	<h2 style="color: #091E42;font-family: &quot;Montserrat&quot;;text-align: center;margin: 25px auto;text-transform: uppercase;" class="oe_slogan">
+         <b>Related Products</b>
+      </h2>
+
+<div id="slide-bottom" class="row carousel slide mt64 mb32" data-ride="carousel">
+   <!-- The slideshow -->
+   <div class="carousel-inner">
+      <div class="carousel-item active">
+         <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_purchase/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/construction-management.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Purchase Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		 
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/consctruction-contracting.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Sub Contracting Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;
+            ">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting_reports/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-contracting.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Construction Contracting Reports
+                  </h4>
+               </div>
+            </a>
+         </div>
+	   </div>
+	   
+	   <div class="carousel-item">
+		  
+		 <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_ppc_ganttchart/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-gantt-chart.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Project Planning and Gantt Chart
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_purchase_reports/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/Construction Purchase Report.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Purchase Reports
+                  </h4>
+               </div>
+            </a>
+         </div>
+		  
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_contracting_transactions/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/constrcution-contracting-transaction.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Contracting Transactions
+                  </h4>
+               </div>
+            </a>
+         </div>
+		   </div>
+		  
+	   <div class="carousel-item">
+		  <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_tender_management/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/tender-management.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Odoo Tender Management
+                  </h4>
+               </div>
+            </a>
+         </div>
+		   
+		   <!--<div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;">
+            <a href="https://apps.odoo.com/apps/modules/12.0/pragtech_ppc/" target="_blank">
+               <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;">
+                  <img class="img img-responsive center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/construction-ppc.jpg">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">
+                     Construction Project Planning and Controlling
+                  </h4>
+               </div>
+            </a>
+         </div>-->
+		   </div>
+
+      </div>
+	   
+	   
+      
+      
+
+   <!-- Left and right controls -->
+   <a class="carousel-control-prev" href="#slide-bottom" data-slide="prev" style="left:-25px;width: 35px;color: #000;">
+   <span class="carousel-control-prev-icon"><i class="fa fa-chevron-left" style="font-size:24px"></i></span>
+   </a>
+   <a class="carousel-control-next" href="#slide-bottom" data-slide="next" style="right:-25px;width: 35px;color: #000;">
+   <span class="carousel-control-next-icon"><i class="fa fa-chevron-right" style="font-size:24px"></i></span>
+   </a>
+</div>
+
+</section>
+
+
+<section class="oe_container oe_dark" style="padding-left:15px!important; padding-right:15px!important;">
+    <div class="oe_row" style="max-width:100%;">
+        <div class="col-md-8 col-sm-8 col-xs-12 offset-md-2 offset-sm-2 padding-none text-center">
+           <h2 class="oe_slogan" style="font-size: 35px; margin-bottom: 10px;"><b>Contact / Support</b></h2>
+			<span><b>(Monday-Friday 10am to 7pm IST)</b></span>
+            <h2 style="margin-top:10px; color:#0aab77; font-weight: 600;">Pragmatic Techsoft Pvt. Ltd.</h2>
+			<a class="btn yellow-btn btn-lg"
+               style="background-color:#0aab77; border-radius: 0px; color: #fff; width: 150px; font-size:18px;"
+               target="_blank" href="https://www.pragtech.co.in/company/proposal-form.html?id=310&name=support-odoo-construction-project-planning-and-controlling">Support </a>
+			
+            <hr style="border-top: 1px solid #e4e4e4; margin-bottom: 5px;">
+        </div>
+        
+       <div class="row"> 
+        <div class="col-md-7 col-sm-7 col-xs-12 mt32" style="display: table-cell;">
+             
+              <p style="font-size:16px;"><b>Pragmatic</b> is a global open source enterprise software development, 
+            consulting and products company. Our philosophy is to use Open Source
+             tools and technologies to provide cost effective and green solutions for our customers.</p>
+        
+           <p style="font-size:16px;">We are a dynamic and fast growing company committed towards creating
+            value for our customers. Located in Pune, India the educational and IT 
+            hub of western India, we take pride in delivering rapid, customized open
+             source enterprise applications following agile and lean software methods.
+              Whether you are developing an application from scratch, working on an existing
+               application or porting your application to a new platform or framework, we can meet your business needs.</p> 
+
+            
+             <p class="oe_mt32" style="font-size:16px;">If you need any help or want more additional features, you may contact us through:</p>
+              <div style="text-align: center;"><a href="http://www.pragtech.co.in"><img src="logo.png"></a></div>
+             <div class="row">
+				 
+             	<div class="col-md-6 col-sm-6 col-xs-12" style="text-align: center;">
+             	
+            	<a style="color:#ed143d; font-size: 17px;" href="mailto:sales@pragtech.co.in"> <i class="fa fa-envelope" style="font-size:19px;" aria-hidden="true"></i> sales@pragtech.co.in</a><br/>
+            	</div>
+               
+               <div class="col-md-6 col-sm-6 col-xs-12" style="text-align: center;">
+              
+                <a style="color:#ed143d; font-size: 17px;" href="https://www.pragtech.co.in/"><i class="fa fa-globe" style="font-size:19px;" aria-hidden="true"></i> www.pragtech.co.in</a><br/>
+				 </div>
+             </div>
+		</div>
+        
+        <div class="col-md-5 col-sm-5 col-xs-12 mt32 pull-right pt32" style="display: table-cell;     background-color: background:-webkit-gradient(linear,left top,right top,color-stop(0%,#22c273),color-stop(100%,#2bc1ca));
+    background: -webkit-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: -o-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: -ms-linear-gradient(344deg,#22c273 0%,#2bc1ca 100%);
+    background: linear-gradient(106deg,#22c273 0%,#2bc1ca 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#22c273',endColorstr='#2bc1ca',GradientType=1);">
+           
+          
+          
+            <h3 style="text-align: center;"><b>Our solutions focus on your problems</b></h3>
+            <ul style="line-height: 30px; font-size:15px;  padding-left: 20px; list-style-type:none; text-decoration: none; color:#fff; text-transform: uppercase;">
+            	<li list-style-type:>► <a style="color:#fff;" target="_blank" href="http://www.pragtech.co.in/services/customization-implementation-service/odoo-openerp/odoo-openerp-implementation-methodology.html">Odoo Implementation</a></li>
+            	<!--<li list-style-type:>► <a style="color:#fff;" href="http://www.pragtech.co.in/contact.html" target="_blank">Odoo Support</a></li>-->
+            	<li list-style-type:>► <a style="color:#fff;" target="_blank" href="http://www.pragtech.co.in/services/customization-implementation-service/odoo-openerp.html">Odoo Customization</a></li>
+                <li>► <a style="color:#fff;" href="http://www.pragtech.co.in/technologies/odoo-openerp/odoo-11-features.html">ERP Development and Implementation</a></li>
+                <li>► <a style="color:#fff;" href="https://ipaas.pragtech.co.in/">Odoo Ipass Cloud</a></li>
+                <li>► <a style="color:#fff;" href="http://www.pragtech.co.in/products/other-products/odoo-voice-bring-artificial-intelligence-ai-to-odoo-platform.html">AI for Odoo</a></li>
+                <li>► <a style="color:#fff;" href="https://store.pragtech.co.in/shop">Odoo Apps</a></li>
+                <li>► <a style="color:#fff;" href="https://aws.amazon.com/marketplace/seller-profile?id=6559afc1-9219-494e-b8d0-831be5da3b1e">Aws Marketplace Products</a></li>
+                <li>► <a style="color:#fff;" href="https://businessengines.co.in/">Business Engines</a></li>
+            </ul>
+            
+            <h3 style="text-align: center; margin-bottom: 25px;"><b>Get In Touch</b></h3>
+            <h2 style="text-align: center; margin-top: 12px;">
+                        <a style="color:#fff; margin-right: 10px;" href="https://www.facebook.com/pragmatic.co.in" target="new">
+                          <i class="fa fa-facebook-square" style="font-size:28px;"></i>
+                        </a>
+                        <a style="color:#fff; margin-right: 10px;" href="https://twitter.com/Pragmatic_Tech" target="new">
+                          <i class="fa fa-twitter" style="font-size:28px;"></i>
+                        </a>
+                        <a style="color:#fff; margin-right: 10px;" href="https://www.linkedin.com/company/228353" target="new">
+                          <i class="fa fa-linkedin" style="font-size:28px;"></i>
+                        </a>
+                        <a style="color:#fff; margin-right: 10px;" href="https://www.youtube.com/user/PragmaticVideos" target="new">
+                          <i class="fa fa-youtube-play" style="font-size:28px;"></i>
+                        </a>
+                        <a style="color:#fff; margin-right: 10px;" href="https://plus.google.com/u/0/104748260070453259356" target="new" rel="publisher">
+                          <i class="fa fa-google-plus-square" style="font-size:28px;"></i>
+                        </a>
+                        <a style="color:#fff; margin-right: 10px;" href="http://blog.pragtech.co.in/" target="new" rel="publisher">
+                          <i class="fab fa-blogger" style="font-size:28px;"></i>
+                        </a>
+                  </h2>
+
+		</div>
+		   
+		   
+	</div>	
+		
+</section>
+
+
+
+
+
+</body>
+
+
+</html>

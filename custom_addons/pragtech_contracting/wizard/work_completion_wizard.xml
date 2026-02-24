@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="work_requisition_wizard_form_view" model="ir.ui.view">
+            <field name="name">Work Completion</field>
+            <field name="model">wizard.work.completion</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Work Completion">
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="project_wbs"
+                                       domain="[('project_id', '!=', False), ('project_id', '=', project_id), ('sub_project', '=', sub_project), ('is_wbs', '=', True), ('is_task', '=', False), ('is_group', '=', False)]"/>
+                                <field name="task_id" domain="[('project_wbs_id','=',project_wbs),('is_task','=',True)]" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="labour_id" domain="[('is_labour', '=', True)]"/>
+                                <field name="from_date"/>
+                            </group>
+                            <group>
+                                <field name="sub_project" domain="[('project_id', '=', project_id)]"/>
+                                <field name="workorder_id" domain="[('project_id', '=', project_id), ('sub_project', '=', sub_project), ('project_wbs', '=', project_wbs), ('state', '=', 'confirm')]"/>
+                                <field name="labour_category" widget="many2many_tags"/>
+                                <field name="completion"/>
+                                <field name="to_date"/>
+                            </group>
+
+                            <group>
+                            </group>
+                            <group>
+                                <button style="margin-left:515px" name="compute_task_lines" type="object" class="fa fa-search" string="Search"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Tasks">
+                                <field name="is_use"/>
+                                <b>Select All</b>
+
+                                <field name="completion_task_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="workorder_id" readonly="1"/>
+                                        <field name="workorder_line_id" readonly="1"/>
+                                        <field name="group_id" readonly="1"/>
+                                        <field name="task_id" readonly="1" context="{'form_view_ref': 'pragtech_ppc.project_task_form'}"/>
+                                        <field name="labour_id" readonly="1"/>
+                                        <field name="labour_uom_qty" readonly="1"/>
+                                        <field name="labour_uom" readonly="1"/>
+                                        <field name="labour_rate" readonly="1"/>
+                                        <button string="Create/View" name="complete_task" type="object"/>
+                                    </tree>
+                                </field>
+
+                                <footer>
+                                    <button special="cancel" string="Cancel" class="btn-default"/>
+                                </footer>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_req_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Work Completion</field>
+            <field name="res_model">wizard.work.completion</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="work_requisition_wizard_form_view"/>
+        </record>
+
+        <menuitem id="execution_sub_menu_task" name="Task Completion" parent="pragtech_ppc.execution_main_menu"/>
+
+        <menuitem name="Create Task Completion " id="work_req_menu1" parent="execution_sub_menu_task" action="work_req_wizard_action" sequence="5"/>
+
+    </data>
+</odoo>
+
+

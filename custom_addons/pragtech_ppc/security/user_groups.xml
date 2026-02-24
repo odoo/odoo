@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="module_management">
+            <field name="name">Contracting module access</field>
+            <field name="description">User access level for this module</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="group_user" model="res.groups">
+            <field name="name">Contracting Executive</field>
+            <field name="category_id" ref="pragtech_ppc.module_management"/>
+        </record>
+
+        <record id="group_sr_user" model="res.groups">
+            <field name="name">Contracting Sr.Executive</field>
+            <field name="category_id" ref="pragtech_ppc.module_management"/>
+        </record>
+
+        <record id="group_asst_manager" model="res.groups">
+            <field name="name">Contracting Asst. Manager</field>
+            <field name="category_id" ref="pragtech_ppc.module_management"/>
+        </record>
+
+        <record id="group_manager" model="res.groups">
+            <field name="name">Contracting Manager</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="pragtech_ppc.module_management"/>
+        </record>
+
+    </data>
+</odoo>
+

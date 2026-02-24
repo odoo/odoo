@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="tenders_labours_form_view" model="ir.ui.view">
+            <field name="name">tenders.labours.form.view</field>
+            <field name="model">tenders.labour</field>
+            <field name="arch" type="xml">
+                <form string="Labours">
+                    <sheet>
+                        <group>
+                            <field name="tender_labour_labour_id"/>
+                            <field name="labour_description" style="width:40%"/>
+                            <field name="labour_qty" style="width:8%"/>
+                            <field name="product_uom" style="width:10%"/>
+                            <field name="labour_last_price" style="width:40%"/>
+                            <field name="labour_your_price" style="width:40%"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tenders_labours_tree_view" model="ir.ui.view">
+            <field name="name">tenders.labours.tree.view</field>
+            <field name="model">tenders.labour</field>
+            <field name="arch" type="xml">
+                <tree string="Labours Project">
+                    <field name="labour_description"/>
+                    <field name="labour_qty"/>
+                    <field name="product_uom"/>
+                    <field name="labour_last_price"/>
+                    <field name="labour_your_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_labours_kanban" model="ir.ui.view">
+            <field name="name">labours.kanban</field>
+            <field name="model">tenders.labour</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="labour_description"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>
+                                            <field name="labour_description"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <field name="labour_last_price"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Your Price:</strong>
+                                    <field name="labour_your_price"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="tenders_labours_form_action" model="ir.actions.act_window">
+            <field name="name">Labours</field>
+            <field name="res_model">tenders.labour</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+    </data>
+</odoo>
+

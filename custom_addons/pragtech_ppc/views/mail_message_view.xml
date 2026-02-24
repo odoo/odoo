@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- mail.message tree: short view ! -->
+        <record model="ir.ui.view" id="view_messages_tree">
+            <field name="name">mail.messages.tree</field>
+            <field name="model">mail.messages</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="author_id"/>
+                    <field name="res_id"/>
+                    <field name="model"/>
+                    <field name="from_stage"/>
+                    <field name="to_stage"/>
+                    <field name="remark"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- mail.message form: short view ! -->
+        <record model="ir.ui.view" id="view_messages_form">
+            <field name="name">mail.messages.form</field>
+            <field name="model">mail.messages</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Messages">
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="author_id"/>
+                            <field name="res_id"/>
+                        </group>
+                        <group>
+                            <field name="from_stage"/>
+                            <field name="to_stage"/>
+                            <field name="remark"/>
+                            <field name="model"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

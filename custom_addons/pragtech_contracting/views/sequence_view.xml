@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">>
+
+        <record id="seq_labour_quotation" model="ir.sequence">
+            <field name="name">labour.quotation.sequence</field>
+            <field name="code">labour.quotation</field>
+            <field name="prefix">LQ</field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="seq_labour_requisition" model="ir.sequence">
+            <field name="name">labour.requisition.sequence</field>
+            <field name="code">labour.requisition</field>
+            <field name="prefix">REQ</field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="seq_work_order" model="ir.sequence">
+            <field name="name">work.order.sequence</field>
+            <field name="code">work.order</field>
+            <field name="prefix">WO</field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="seq_labour_quotation_comparison" model="ir.sequence">
+            <field name="name">labour.quotation.comparison.sequence</field>
+            <field name="code">labour.quotation.comparison</field>
+            <field name="prefix">LQC</field>
+            <field name="padding">1</field>
+            <field name="suffix">/%(day)s-%(month)s-%(year)s</field>
+        </record>
+
+        <record id="work_order_revision" model="ir.sequence">
+            <field name="name">work.order</field>
+            <field name="code">work.order.revision</field>
+            <field name="prefix"></field>
+            <field name="padding">0</field>
+        </record>
+
+        <record id="work_order_line" model="ir.sequence">
+            <field name="name">work.order.line</field>
+            <field name="code">work.order.line</field>
+            <field name="prefix"></field>
+            <field name="padding">0</field>
+        </record>
+
+        <record id="work_order_line_revision" model="ir.sequence">
+            <field name="name">purchase.order.line</field>
+            <field name="code">purchase.order.line</field>
+            <field name="prefix"></field>
+            <field name="padding">0</field>
+        </record>
+
+        <record id="work_completion_line_seq" model="ir.sequence">
+            <field name="name">work.completion.line</field>
+            <field name="code">work.completion.line</field>
+            <field name="prefix"></field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="ra_bill_sequence_no" model="ir.sequence">
+            <field name="name">RA Bill</field>
+            <field name="code">ra.bill</field>
+            <field name="prefix">BILL</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="ra_bill_sequence" model="ir.sequence">
+            <field name="name">work.completion</field>
+            <field name="code">work.completion</field>
+            <field name="prefix"></field>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Bellow three records are for same object- -->
+        <record id="transaction_advance" model="ir.sequence">
+            <field name="name">advance</field>
+            <field name="code">transaction.advance</field>
+            <field name="prefix">ADV</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="transaction_debit" model="ir.sequence">
+            <field name="name">DebitNote</field>
+            <field name="code">transaction.debit.note</field>
+            <field name="prefix">DEBIT</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="advance_recovey_independed_bill" model="ir.sequence">
+            <field name="name">IndependedBill</field>
+            <field name="code">advance.recovery.independed.of.bill</field>
+            <field name="prefix">ADV REC</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="debit_recovey_independent_bill" model="ir.sequence">
+            <field name="name">DebitIndependentBill</field>
+            <field name="code">debit.recovery.independent.of.bill</field>
+            <field name="prefix">DEB REC</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="credit_recovey_independent_bill" model="ir.sequence">
+            <field name="name">CreditIndependentBill</field>
+            <field name="code">credit.recovery.independent.of.bill</field>
+            <field name="prefix">CRE REC</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="recovey_independent_bill" model="ir.sequence">
+            <field name="name">IndependentBill</field>
+            <field name="code">recovery.independent.of.bill</field>
+            <field name="prefix">REC</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="journal_name" model="ir.sequence">
+            <field name="name">JournalName</field>
+            <field name="code">journal.name.contractor</field>
+            <field name="prefix">CSH/CONT</field>
+            <field name="padding">3</field>
+        </record>
+
+        <record id="seq_retention_release" model="ir.sequence">
+            <field name="name">retention.release</field>
+            <field name="code">retention.release</field>
+            <field name="prefix">RELEASE</field>
+            <field name="padding">4</field>
+        </record>
+
+    </data>
+</odoo>
+

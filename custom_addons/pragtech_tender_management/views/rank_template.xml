@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <template id="rank_template" name="Rank Template">
+            <t t-call="website.layout">
+                <div class="container" width="auto">
+                    <div>
+                        <h3>Thank you for being our vender</h3>
+                    </div>
+                    <div class="alert alert-success" style="width: 50%;">
+                        <h5 style="text-align: center;">Your Bid has been submitted successfully.</h5>
+                    </div>
+                    <div class="alert alert-danger" style="width: 50%;">
+                        <h1 style="text-align: center;">Your Rank:
+                            <span t-esc="rank"/>
+                        </h1>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

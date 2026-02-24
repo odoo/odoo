@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_incomplete_workorder_summary_document">
+            <t t-call="web.external_layout">
+                <t t-set="p" t-value="1"/>
+                <t t-set="o" t-value="o.with_context({})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="col-12">
+                        <div align="center">
+                            <h2>Incomplete Work Order Summary</h2>
+                        </div>
+                        <div>
+                            <div>
+                                <strong>Report Date:</strong>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y')"/>
+                            </div>
+                        </div>
+
+                        <![CDATA[&nbsp;]]>
+                        <t t-set="project" t-value="0"/>
+                        <t t-set="subproject" t-value="0"/>
+                        <t t-set="projectwbs" t-value="0"/>
+                        <t t-set="contractor" t-value="0"/>
+                        <t t-set="wo" t-value="0"/>
+                        <t t-foreach="o.order_line" t-as="line">
+
+                            <![CDATA[&nbsp;]]>
+                            <table class="table table-condensed">
+                                <t t-if="not o.check_condition(wo,line.name)">
+                                    <t t-set="wo" t-value="line.name"/>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <strong>Work Order</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>Completion ID</strong>
+                                            </th>
+                                            <th class="text-center">
+                                                <strong>Category</strong>
+                                            </th>
+                                            <th class="text-center">
+                                                <strong>Labour</strong>
+                                            </th>
+                                            <th class="text-center">
+                                                <strong>Task</strong>
+                                            </th>
+                                            <th class="text-center">
+                                                <strong>Quantity</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>Completed (%)</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </t>
+
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-if="line.completion_id" t-field="line.completion_id"/>
+                                            <span t-if="not line.completion_id">NA</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-if="line.completion_id" t-field="line.completion_id.labour_id.category_id"/>
+                                            <span t-if="not line.completion_id">NA</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-if="line.completion_id" t-field="line.completion_id.labour_id"/>
+                                            <span t-if="not line.completion_id">NA</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-if="line.completion_id" t-field="line.completion_id.task_id"/>
+                                            <span t-if="not line.completion_id">NA</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.completion_id.estimated_qty"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.completion_id.total_percent"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="oe_structure"/>
+
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+
+        <template id="report_incomplete_workorder_summary">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="pragtech_contracting.report_incomplete_workorder_summary_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+

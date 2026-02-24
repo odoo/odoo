@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_work_order_summary" model="ir.actions.report">
+            <field name="name">Work Order summary</field>
+            <field name="model">wizard.wo.summary</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_workorder_summary</field>
+            <field name="report_file">pragtech_contracting.report_workorder_summary</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_wizard_wo_summary"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="summary_landscape" model="report.paperformat">
+            <field name="name">RaBill Summary</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_report_ra_bill_summary" model="ir.actions.report">
+            <field name="name">RaBill Summary</field>
+            <field name="model">wizard.rabill.summary</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_rabill_summary</field>
+            <field name="report_file">pragtech_contracting.report_rabill_summary</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_wizard_rabill_summary"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_incomplete_wo" model="ir.actions.report">
+            <field name="name">Incomplete Work Order</field>
+            <field name="model">wizard.incomplete.wo</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_incomplete_workorder_summary</field>
+            <field name="report_file">pragtech_contracting.report_incomplete_workorder_summary</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_wizard_incomplete_wo"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_contractor_payment" model="ir.actions.report">
+            <field name="name">Contractor Payment Report</field>
+            <field name="model">wizard.contractor.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_contractor_payment</field>
+            <field name="report_file">pragtech_contracting.report_contractor_payment</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_wizard_contractor_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_grn" model="ir.actions.report">
+            <field name="name">Unbilled GRN Report</field>
+            <field name="model">wizard.grn.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_grn</field>
+            <field name="report_file">pragtech_contracting.report_grn</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_wizard_grn_report"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
+

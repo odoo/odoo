@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <record model="ir.module.category" id="module_management">
+            <field name="name">Contracting module access</field>
+            <field name="description">User access level for this module</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <!-- Security groups -->
+        <record id="group_user" model="res.groups">
+            <field name="name">Contracting Executive</field>
+            <field name="category_id" ref="pragtech_contracting.module_management"/>
+        </record>
+
+        <record id="group_sr_user" model="res.groups">
+            <field name="name">Contracting Sr.Executive</field>
+            <field name="category_id" ref="pragtech_contracting.module_management"/>
+        </record>
+
+        <record id="group_asst_manager" model="res.groups">
+            <field name="name">Contracting Asst. Manager</field>
+            <field name="category_id" ref="pragtech_contracting.module_management"/>
+        </record>
+
+        <record id="group_manager" model="res.groups">
+            <field name="name">Contracting Manager</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="pragtech_contracting.module_management"/>
+        </record>
+
+        <!--  Access rule for work order orderliness -->
+        <record model='ir.rule' id="executive_wo_line_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo Line Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_wo_line_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo Line Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_wo_line_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo Line asst_mngr</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="group_manager_wo_line_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo Line group Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rules for wo requisition in work order -->
+        <record model='ir.rule' id="executive_wo_req_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo req Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_wo_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_wo_req_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo req Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_wo_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_manager_wo_req_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo req asst Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_wo_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="group_manager_wo_req_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw Wo req Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_wo_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+
+        <!-- ra bill line -->
+        <record model='ir.rule' id="executive_ra_bill_line_authorized_users_rw">
+            <field name="name">Only authorized users can rw ra_bill_line Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_ra_bill_line_authorized_users_rw">
+            <field name="name">Only authorized users can rw ra_bill_line Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("category_id", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_manager_ra_bill_line_authorized_users_rw">
+            <field name="name">Only authorized users can rw ra_bill_line asst Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="group_manager_ra_bill_line_authorized_users_rw">
+            <field name="name">Only authorized users can ra_bill_line Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill_line"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- labour requisition -->
+        <record model='ir.rule' id="executive_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour_requisition Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour_requisition Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("category_id", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_manager_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour_requisition asst Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="group_manager_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour_requisition Manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("task_category", "in", [c.id for c in user.task_category_ids])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!--Access rule for Labour Quotation Comparison  -->
+        <record model='ir.rule' id="executive_labour_quotation_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour quotation comparison Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_quotation_comparison"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_labour_quotation_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour quotation comparison Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_quotation_comparison"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_labour_quotation_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour quotation comparison asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_quotation_comparison"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_labour_quotation_comparision_authorized_users_rw">
+            <field name="name">Only authorized users can rw labour quotation comparison manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_quotation_comparison"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for work order -->
+        <record model='ir.rule' id="executive_work_order_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Order Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_work_order_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Order Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_work_order_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Order asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_work_order_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Order manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_order"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for RA Bill -->
+        <record model='ir.rule' id="executive_ra_bill_authorized_users_rw">
+            <field name="name">Only authorized users can rw Ra Bill Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_ra_bill_authorized_users_rw">
+            <field name="name">Only authorized users can rw Ra Bill Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_ra_bill_authorized_users_rw">
+            <field name="name">Only authorized users can rw Ra Bill asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_ra_bill_authorized_users_rw">
+            <field name="name">Only authorized users can rw Ra Bill manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_ra_bill"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for Transaction -->
+        <record model='ir.rule' id="executive_transaction_transaction_authorized_users_rw">
+            <field name="name">Only authorized users can rw Transaction Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_transaction_transaction"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_transaction_transaction_authorized_users_rw">
+            <field name="name">Only authorized users can rw Transaction Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_transaction_transaction"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_transaction_transaction_authorized_users_rw">
+            <field name="name">Only authorized users can rw Transaction asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_transaction_transaction"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_transaction_transaction_authorized_users_rw">
+            <field name="name">Only authorized users can rw Transaction manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_transaction_transaction"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for Debit Recovery -->
+        <record model='ir.rule' id="executive_debit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Debit Recovery Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_debit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_debit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Debit Recovery Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_debit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_debit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Debit Recovery asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_debit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_debit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Debit Recovery manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_debit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for Advance Recovery -->
+        <record model='ir.rule' id="executive_advance_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Advance Recovery Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_advance_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_advance_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Advance Recovery Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_advance_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_advance_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Advance Recovery asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_advance_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_advance_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Advance Recovery manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_advance_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for Credit Recovery -->
+        <record model='ir.rule' id="executive_credit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Credit Recovery Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_credit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_credit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Credit Recovery Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_credit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_credit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Credit Recovery asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_credit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_credit_recovery_authorized_users_rw">
+            <field name="name">Only authorized users can rw Credit Recovery manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_credit_recovery"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for labour requisition -->
+        <record model='ir.rule' id="executive_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw Labour Requisition Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw Labour Requisition Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw Labour Requisition asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_labour_requisition_authorized_users_rw">
+            <field name="name">Only authorized users can rw Labour Requisition manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_labour_requisition"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <!-- Access rule for Task Completion -->
+        <record model='ir.rule' id="executive_work_completion_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Completion Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_completion"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="sr_executive_work_completion_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Completion Sr.Executive</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_completion"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_sr_user'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="asst_mngr_work_completion_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Completion asst manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_completion"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_asst_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+        <record model='ir.rule' id="mngr_work_completion_authorized_users_rw">
+            <field name="name">Only authorized users can rw Work Completion manager</field>
+            <field name="model_id" ref="pragtech_contracting.model_work_completion"/>
+            <field name="groups" eval="[(4,ref('pragtech_contracting.group_manager'))]"></field>
+            <field name="domain_force">[("project_id", "in", [p.id for p in user.project_id])]</field>
+            <field name="perm_read">0</field>
+            <field name="perm_write">0</field>
+            <field name="perm_unlink">1</field>
+            <field name="perm_create">0</field>
+        </record>
+
+    </data>
+</odoo>
+

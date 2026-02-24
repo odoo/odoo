@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="stage_master_form_view" model="ir.ui.view">
+            <field name="name">stage.master.form</field>
+            <field name="model">stage.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form create="0" delete="0" multi_edit="0" edit="0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <field name="draft"/>
+                            <field name="approved"/>
+                            <field name="foreclosed"/>
+                            <field name="amend_and_draft"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stage_master_search_view" model="ir.ui.view">
+            <field name="name">stage.master.search</field>
+            <field name="model">stage.master</field>
+            <field name="arch" type="xml">
+                <search string="Stage Transaction">
+                    <field name="name"/>
+                    <field name="draft"/>
+                    <field name="approved"/>
+                    <field name="foreclosed"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="stage_master_tree_view" model="ir.ui.view">
+            <field name="name">stage.master.tree</field>
+            <field name="model">stage.master</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0" multi_edit="0" edit="0">
+                    <field name="name"/>
+                    <field name="draft"/>
+                    <field name="approved"/>
+                    <field name="foreclosed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stage_master_action" model="ir.actions.act_window">
+            <field name="name">Stages Master</field>
+            <field name="res_model">stage.master</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+        <menuitem id="master_header" parent="project.menu_project_config" name="Masters" sequence="1"/>
+        <menuitem action="stage_master_action" id="menu_state_master" name="Stages Master" parent="master_header"/>
+
+        <!-- State Transaction Master Starts Here -->
+        <record id="stage_transaction_form_view1" model="ir.ui.view">
+            <field name="name">stage.transaction.form</field>
+            <field name="model">stage.transaction</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="from_stage"/>
+                                <field name="model"/>
+                            </group>
+
+                            <group>
+                                <field name="to_stage"/>
+                                <field name="groups"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stage_transaction_search_view" model="ir.ui.view">
+            <field name="name">stage.transaction.search</field>
+            <field name="model">stage.transaction</field>
+            <field name="arch" type="xml">
+                <search string="Stage Transaction">
+                    <field name="from_stage"/>
+                    <field name="to_stage"/>
+                    <field name="model"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="stage_transaction_tree_view" model="ir.ui.view">
+            <field name="name">stage.transaction.tree</field>
+            <field name="model">stage.transaction</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="from_stage"/>
+                    <field name="to_stage"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stage_transaction_action" model="ir.actions.act_window">
+            <field name="name">Stages Transaction</field>
+            <field name="res_model">stage.transaction</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <record id="1open_view_project_all" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="project.edit_project"/>
+
+            <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p>
+                <p>
+                    Organize your activities (plan tasks, track issues, invoice
+                    timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="stage_transaction_action" id="menu_state_transaction_master" name="Stages Transaction" parent="master_header"/>
+
+    </data>
+</odoo>
+

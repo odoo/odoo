@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="labour_quotation_comparison_form_view" model="ir.ui.view">
+            <field name="name">labour.quotation.comparison.view</field>
+            <field name="model">labour.quotation.comparison</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Comparison Details">
+                    <header>
+                        <button name="confirm_action" type="object" string="confirm" class="oe_highlight" attrs="{'invisible': [('state', 'not in', 'draft')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="sequence_name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="project_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="sub_project" domain="[('project_id', '=', project_id)]" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="project_wbs_id" attrs="{'readonly': [('state', '=', 'confirm')]}"
+                                       domain="[('project_id', '!=', False), ('project_id', '=', project_id), ('sub_project', '=', sub_project), ('is_wbs', '=', True)]"/>
+                            </group>
+
+                            <group>
+                                <field name="from_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                <field name="to_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Labour List">
+                                <div style="margin-top: 2px; margin-left: 10px;">
+                                    <field name="labour_line" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                        <tree create="false" delete="false" editable="bottom">
+                                            <field name="labour_id"/>
+                                            <field name="is_labour"/>
+                                        </tree>
+                                    </field>
+
+                                </div>
+                            </group>
+
+                            <group string="Contractor List">
+                                <div style="margin-top: 2px;margin-left: 10px;">
+                                    <field name="contractor_line" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                        <tree create="false" delete="false" editable="bottom">
+                                            <field name="contractor_id"/>
+                                            <field name="is_contractor"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </group>
+                        </group>
+
+                        <group>
+                            <div align="right">
+                                <button name="compute_labour_quotation_details" type="object" class="fa fa-search" string="Search Quotation" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                            </div>
+                        </group>
+
+                        <group string="Labour Quotation Details">
+                            <div>
+                                <field name="labour_quotation_details">
+                                    <tree create="false" delete="false" editable="bottom">
+                                        <field name="is_use" readonly="0"/>
+                                        <field name="contractor_id"/>
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="labour_id"/>
+                                        <field name="labour_qty"/>
+                                        <field name="labour_uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                        <field name="tax_percent" invisible="1"/>
+                                        <field name="tax"/>
+                                        <field name="negotiated_rate"/>
+                                        <field name="price_subtotal"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </group>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="total_amount">
+                            <field name="total_amount"/>
+                        </group>
+
+                        <group>
+                            <div align="right">
+                                <button name="compute_selected_quotations" type="object" class="fa fa-plus" string="Add" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                            </div>
+                        </group>
+
+                        <group string="Labour Particulars">
+                            <div style="margin-top: 15px;margin-right: 10px">
+                                <field name="labour_quotation_comp_particular" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                    <tree create="false" delete="false" editable="bottom">
+                                        <field name="is_approve"/>
+                                        <field name="labour_id" readonly="1"/>
+                                        <field name="price_expt" readonly="1"/>
+                                        <field name="labour_qty"/>
+                                        <field name="labour_uom" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </group>
+                        <group name="contractor1">
+                            <div style="margin-top: 15px; margin-right: 10px">
+                                <h2>
+                                    <field name="contractor1" nolabel="1" readonly="1"/>
+                                </h2>
+                                <group>
+                                    <group>
+                                        <field name="quotation_comp_contractor1" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                            <tree create="false" delete="false" editable="bottom" colors="blue:is_approve==True">
+                                                <field name="is_approve" invisible="0"/>
+                                                <field name="labour_id" invisible="1"/>
+                                                <field name="contractor_id" invisible="1"/>
+                                                <field name="negotiated_rate"/>
+                                                <field name="tax_id" invisible="1"/>
+                                                <field name="amount" readonly="1"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+
+                                    <group>
+                                        <field name="labour_quotation_comp_tax_details1" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                            <tree create="false" delete="false" editable="bottom">
+                                                <field name="contractor_id" invisible="1"/>
+                                                <field name="labour_id" invisible="1"/>
+                                                <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                                <field name="tax"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="total_contractor1"/>
+                                    </group>
+                                    <group>
+                                        <button name="get_taxes1" string="Calculate All Taxes" type="object" class="oe_link" attrs="{'invisible': [('state', 'in', ('confirm'))]}"/>
+                                    </group>
+                                </group>
+
+                            </div>
+                        </group>
+
+                        <group name="contractor2" attrs="{'invisible': [('contractor2', '=', False)]}">
+                            <div>
+                                <h2>
+                                    <field name="contractor2" nolabel="1" readonly="1"/>
+                                </h2>
+                                <field name="quotation_comp_contractor2" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                    <tree create="false" delete="false" editable="bottom" colors="blue:is_approve==True">
+                                        <field name="is_approve"/>
+                                        <field name="labour_id" invisible="1"/>
+                                        <field name="contractor_id" invisible="1"/>
+                                        <field name="negotiated_rate"/>
+                                        <field name="tax_id" invisible="1"/>
+                                        <field name="amount" readonly="1"/>
+                                    </tree>
+                                </field>
+
+                                <field name="labour_quotation_comp_tax_details2" nolabel="1" attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                    <tree create="false" delete="false" editable="bottom">
+                                        <field name="contractor_id" invisible="1"/>
+                                        <field name="labour_id" invisible="1"/>
+                                        <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                        <field name="tax"/>
+                                    </tree>
+                                </field>
+
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="total_contractor2"/>
+                                </group>
+
+                            </div>
+                        </group>
+                        <group col="1">
+                            <group string="Terms and Conditions">
+                                <div>
+                                    <field name="description1" placeholder="External note..."/>
+                                    <field name="description2" placeholder="External note..."/>
+                                    <field name="description3" placeholder="External note..."/>
+                                    <field name="description4" placeholder="External note..."/>
+                                </div>
+                            </group>
+                        </group>
+
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_quotation_comparison_tree_view" model="ir.ui.view">
+            <field name="name">labour.quotation.comparison.tree</field>
+            <field name="model">labour.quotation.comparison</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence_name"/>
+                    <field name="project_wbs_id"/>
+                    <field name="project_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_quotation_comparison_search" model="ir.ui.view">
+            <field name="name">labour.quotation.comparison.search</field>
+            <field name="model">labour.quotation.comparison</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="project_wbs_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <separator/>
+                    <filter name="Confirmed" string="Confirmed" domain="[('state', '=', 'confirm')]"/>
+                    <filter name="Not Confirmed" string="Not Confirmed" domain="[('state', '=', 'draft')]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by': 'sub_project'}"/>
+                        <filter string="Project Wbs" name="project_wbs_id" context="{'group_by': 'project_wbs_id'}"/>
+                        <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_quotation_comparison_action" model="ir.actions.act_window">
+            <field name="name">Labour Quotation Comparison</field>
+            <field name="res_model">labour.quotation.comparison</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="labour_quotation_comparison_id" parent="pragtech_contracting.labour_menu_id" sequence="2" name="Labour Quotation Comparison" action="labour_quotation_comparison_action"/>
+
+        <!-- Labour ContractorInfo Starts here -->
+        <record id="labour_supplier_form_view" model="ir.ui.view">
+            <field name="name">labour.contractorinfo.form.view</field>
+            <field name="model">labour.contractorinfo</field>
+            <field name="arch" type="xml">
+
+                <form string="Contractor Information">
+                    <sheet>
+                        <group>
+
+                            <group string="Contractor">
+                                <field name="name" readonly="1" context="{'default_customer': 0, 'search_default_contractor': 1, 'default_contractor': 1}"/>
+                                <field name="product_name" readonly="1"/>
+                                <field name="date"/>
+                                <field name="labour_id" readonly="1"/>
+                            </group>
+                            <group string="Price List">
+                                <field name="min_qty" class="oe_inline" readonly="1"/>
+                                <field name="unit" readonly="1"/>
+                                <label for="price" readonly="1"/>
+                                <div>
+                                    <field name="price" class="oe_inline" readonly="1"/>
+                                </div>
+
+                                <field name="is_active" readonly="1"/>
+                            </group>
+
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_contractor_tree_view">
+            <field name="name">labour.contractor.tree.view</field>
+            <field name="model">labour.contractorinfo</field>
+            <field name="arch" type="xml">
+                <tree default_order='create_date desc'>
+                    <field name="name"/>
+                    <field name="labour_id"/>
+                    <field name="min_qty"/>
+                    <field name="price" string="Price"/>
+                    <field name="date"/>
+                    <field name="is_active" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_price_trend_search_view" model="ir.ui.view">
+            <field name="name">labour.contractorinfo.search.form</field>
+            <field name="model">labour.contractorinfo</field>
+            <field name="arch" type="xml">
+                <search string="Contractor">
+                    <field name="name"/>
+                    <field name="min_qty"/>
+                    <field name="price"/>
+                    <field name="date"/>
+                    <separator/>
+                    <filter name="Active" string="Active" domain="[('is_active','=',True)]"/>
+                    <filter name="Not Ative" string="Not Active" domain="[('is_active','=',False)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="contractor" name="project" context="{'group_by':'name'}"/>
+                        <filter name="date" string="date"/>
+                        <separator/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="labour_contractorrinfo_graph">
+            <field name="name">labour.contractorinfo.graph</field>
+            <field name="model">labour.contractorinfo</field>
+            <field name="arch" type="xml">
+                <graph string="Labour contractorinfo">
+                    <field name="name"/>
+                    <field name="price" type="measure"/>
+                    <field name="date" interval="day" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_labour_contractorinfo_pivot">
+            <field name="name">labour.contractorinfo.pivot</field>
+            <field name="model">labour.contractorinfo</field>
+            <field name="arch" type="xml">
+                <pivot string="Labour contractorinfo">
+                    <field name="date" interval="day" type="row"/>
+                    <field name="price" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="labour_price_trend_action" model="ir.actions.act_window">
+            <field name="name">Labour Price Trend</field>
+            <field name="res_model">labour.contractorinfo</field>
+            <field name="view_mode">tree,form,search,graph,pivot</field>
+        </record>
+
+        <menuitem name="Labour Price Trend" id="labour_price_trend" parent="labour_menu_id" action="labour_price_trend_action" sequence="7"/>
+
+        <!-- Labour ContractorInfo Ends here -->
+
+    </data>
+</odoo>
+

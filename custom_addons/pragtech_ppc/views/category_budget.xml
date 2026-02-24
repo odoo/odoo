@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="category_budget_form_view" model="ir.ui.view">
+            <field name="name">category.budget.form.view1</field>
+            <field name="model">category.budget</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Category Budget">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"
+                                       domain="[('project_id','=',project_id), ('sub_project','=',sub_project), ('is_wbs','=',True)]"/>
+                            </group>
+
+                            <group>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]"/>
+                                <field name="builtup_area" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Category Budget Line">
+                                <field name="category_line_ids" context="{'default_quantity': builtup_area}">
+                                    <tree editable="bottom">
+                                        <field name="task_category"/>
+                                        <field name="quantity" sum="Quantity"/>
+                                        <field name="rate" sum="Rate"/>
+                                        <field name="amount" sum="Total Amount"/>
+                                        <field name="labour_cost"/>
+                                        <field name="material_cost"/>
+                                        <field name="labour_percent"/>
+                                        <field name="material_percent"/>
+                                        <field name="labourbudget_used"/>
+                                        <field name="materialbudget_used"/>
+                                        <field name="labourbudget_remaining"/>
+                                        <field name="materialbudget_remaining"/>
+                                        <field name="remark"/>
+                                        <field name="stage_id" readonly="1"/>
+                                        <field name="flag" invisible="1"/>
+                                        <button string="Change Stage" name="change_state" type="object" class="oe-hielight" attrs="{'invisible': [('flag', '!=', False)]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="category_budget_tree_view" model="ir.ui.view">
+            <field name="name">category.budget.tree.view1</field>
+            <field name="model">category.budget</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_category_budget_search" model="ir.ui.view">
+            <field name="name">category.budget.search</field>
+            <field name="model">category.budget</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Category Budget">
+                    <field name="project_id"/>
+                    <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                    <filter string="Project" name="project" domain="[]" context="{'group_by': 'project_id'}"/>
+                    <filter string="Sub Project" name="sub project" domain="[]" context="{'group_by': 'sub_project'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="wbs_budget_form_view" model="ir.ui.view">
+            <field name="name">wbs.budget.form.view1</field>
+            <field name="model">wbs.budget</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wbs Budget">
+
+                    <group colspan="4" col="4">
+                        <field name="project_id"/>
+                        <field name="project_wbs" context="{'form_view_ref': 'pragtech_ppc.project_task_inherited_form_wbs1'}"
+                               domain="[('project_id','=',project_id),('is_wbs','=',True)]"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Wbs Budget Line">
+                            <field name="wbs_budget_line_ids">
+                                <tree editable="bottom">
+                                    <field name="quantity"/>
+                                    <field name="rate"/>
+                                    <field name="amount"/>
+                                    <field name="labour_percent"/>
+                                    <field name="material_percent"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="wbs_budget_tree_view" model="ir.ui.view">
+            <field name="name">wbs.budget.tree.view1</field>
+            <field name="model">wbs.budget</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="project_id"/>
+                    <field name="project_wbs" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>
+

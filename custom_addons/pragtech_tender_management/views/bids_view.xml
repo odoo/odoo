@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="bids_form_view" model="ir.ui.view">
+            <field name="name">bids.form.view</field>
+            <field name="model">bids.bids</field>
+            <field name="arch" type="xml">
+                <form string="Bids Bids">
+
+                    <header>
+                        <button name="action_bids_under_review" string="Under Review" type="object" states="submitted" class="oe_highlight"/>
+                        <button name="action_bids_won" string="Won" type="object" states="under_review" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="submitted,under_review,won,lost"/>
+                    </header>
+
+                    <sheet>
+                        <group>
+                            <field name="tender_id" style="width:40%" readonly="True">
+                                <tree editable="bottom">
+                                    <field name="tender_name"/>
+                                </tree>
+                            </field>
+
+                            <field name="name_of_bidder" style="width:40%" readonly="True"/>
+                            <field name="bids_name" style="width:40%" readonly="True"/>
+                            <label for="bids_street" string="Location"/>
+
+                            <div class="o_address_format">
+                                <field name="bids_street" placeholder="Street..." class="o_address_street" style="width:40%" readonly="True"/>
+                                <field name="bids_street2" placeholder="Street 2..." class="o_address_street" style="width:40%" readonly="True"/>
+                                <field name="bids_city" placeholder="City" class="o_address_city" style="width:12%" readonly="True"/>
+                                <field name="bids_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' style="width:15%" readonly="True"/>
+                                <field name="bids_zip" placeholder="ZIP" class="o_address_zip" style="width:9%" readonly="True"/>
+                                <field name="bids_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' style="width:40%" readonly="True"/>
+                            </div>
+
+                            <field name="bids_user_id" style="width:40%" readonly="True"/>
+                            <field name="bids_start_date" style="width:40%" readonly="True"/>
+                            <field name="bids_end_date" style="width:40%" readonly="True"/>
+                            <field name="bids_all_total" style="width:40%" readonly="True"/>
+                            <field name="bids_top_rank" style="width:40%" readonly="True"/>
+                        </group>
+
+                        <notebook>
+                            <page name="pag1" string="Material">
+                                <field name="bids_line_id">
+                                    <tree editable="bottom">
+                                        <field name="bids_product_id" readonly="True"/>
+                                        <field name="bids_description" readonly="True"/>
+                                        <field name="bids_product_uom_qty" readonly="True"/>
+                                        <field name="bids_product_uom" readonly="True"/>
+                                        <field name="mat_your_price" readonly="True"/>
+                                        <field name="mat_last_price" readonly="True"/>
+                                        <field name="mat_note" readonly="True"/>
+                                        <field name="mat_amount" readonly="True"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="pag2" string="Labour">
+                                <field name="bids_labour_id">
+                                    <tree editable="bottom">
+                                        <field name="labour_id" readonly="True"/>
+                                        <field name="bids_labour_description" readonly="True"/>
+                                        <field name="bids_labour_qty" readonly="True"/>
+                                        <field name="bids_labour_product_uom" readonly="True"/>
+                                        <field name="bids_labour_your_price" readonly="True"/>
+                                        <field name="bids_labour_last_price" readonly="True"/>
+                                        <field name="bids_labour_note" readonly="True"/>
+                                        <field name="bids_labour_amount" readonly="True"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="pag3" string="Overhead">
+                                <field name="bids_overhead_id">
+                                    <tree editable="bottom">
+                                        <field name="overhead_id" readonly="True"/>
+                                        <field name="bids_overhead_description" readonly="True"/>
+                                        <field name="bids_overhead_qty" readonly="True"/>
+                                        <field name="bids_overhead_product_uom" readonly="True"/>
+                                        <field name="bids_overhead_your_price" readonly="True"/>
+                                        <field name="bids_overhead_last_price" readonly="True"/>
+                                        <field name="bids_overhead_note" readonly="True"/>
+                                        <field name="bids_overhead_amount" readonly="True"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="pag5" string="Bids Questionnaires">
+                                <field name="bids_question_ids">
+                                    <tree editable="bottom">
+                                        <field name="question"/>
+                                        <field name="answer"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bids_tree_view" model="ir.ui.view">
+            <field name="name">bids.tree.view</field>
+            <field name="model">bids.bids</field>
+            <field name="arch" type="xml">
+                <tree string="Tenders Tender">
+                    <field name="bids_name"/>
+                    <field name="bids_city"/>
+                    <field name="bids_country_id"/>
+                    <field name="tender_id"/>
+                    <field name="name_of_bidder"/>
+                    <field name="bids_start_date"/>
+                    <field name="bids_end_date"/>
+                    <field name="bids_all_total"/>
+                    <field name="bids_top_rank"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bids_form_action_update" model="ir.actions.act_window">
+            <field name="name">Bids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">bids.bids</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="bids_main_menu" parent="tenders_menu" name="Bids Main Menu" action="bids_form_action_update" sequence="2"/>
+
+    </data>
+</odoo>
+

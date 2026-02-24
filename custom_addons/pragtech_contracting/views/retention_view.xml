@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="retention_form_view" model="ir.ui.view">
+            <field name="name">Retention</field>
+            <field name="model">retention.release</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Retention">
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('flag','=',True)]}"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                                <field name="project_id" domain="[('company_id','=',company_id)]"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]"/>
+                                <field name="project_wbs" domain="[('project_id','=',project_id),('sub_project','=',sub_project)]"/>
+                            </group>
+                            <group>
+                                <field name="contractor_id" domain="[('contractor','=',True),('company_id','=',company_id)]"/>
+                                <field name="workorder_id" domain="[('state','=','confirm')]"/>
+                                <field name="stage_id"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <br/>
+                        <div align="right">
+                            <button name="compute_retentions" type="object" class="fa fa-search" string="Search"/>
+                        </div>
+
+                        <field name="release_line_ids" attrs="{'readonly':[('state','=','paid')]}">
+                            <tree editable="bottom" create="0">
+                                <field name="is_use" nolabel="1"/>
+                                <field name="project_id" readonly="1"/>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="1"/>
+                                <field name="workorder_id" readonly="1"/>
+                                <field name="wo_amount" readonly="1"/>
+                                <field name="bill_amount" readonly="1"/>
+                                <field name="total_retention" readonly="1"/>
+                                <field name="computed_retention" readonly="1"/>
+                                <field name="release_till_date" readonly="1"/>
+                                <field name="balance_retention" readonly="1"/>
+                                <field name="current_release_amt"/>
+                            </tree>
+                        </field>
+
+                        <notebook>
+                            <page string="Audit Trail">
+                                <field name="mesge_ids" nolabel="1">
+                                    <tree create="false">
+                                        <field name="date"/>
+                                        <field name="author_id"/>
+                                        <field name="to_stage"/>
+                                        <field name="remark"/>
+                                        <field name="res_id" invisible="1"/>
+                                        <field name="model" invisible="1"/>
+                                        <field name="is_use" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="retention_search" model="ir.ui.view">
+            <field name="name">Retention.search</field>
+            <field name="model">retention.release</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="workorder_id"/>
+                    <field name="company_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="not draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="company_id"
+                                context="{'group_by':'company_id'}"/>
+                        <filter string="Sub Project" name="sub_project"
+                                context="{'group_by':'sub_project'}"/>
+                        <filter string="Workorder" name="workorder_id"
+                                context="{'group_by':'workorder_id'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by':'stage_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="retention_view_tree" model="ir.ui.view">
+            <field name="name">Retention.view.tree</field>
+            <field name="model">retention.release</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="workorder_id"/>
+                    <field name="contractor_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="retention_view_form" model="ir.ui.view">
+            <field name="name">Retention Form view</field>
+            <field name="model">release.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group colspan="4" col="4">
+                        <field name="is_use"/>
+                        <field name="project_id" readonly="1"/>
+                        <field name="sub_project" domain="[('project_id','=',project_id)]" readonly="1"/>
+                        <field name="workorder_id" readonly="1"/>
+                        <field name="wo_amount" readonly="1"/>
+                        <field name="bill_amount" readonly="1"/>
+                        <field name="total_retention" readonly="1"/>
+                        <field name="computed_retention" readonly="1"/>
+                        <field name="release_till_date" readonly="1"/>
+                        <field name="balance_retention" readonly="1"/>
+                        <field name="current_release_amt"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_retention" model="ir.actions.act_window">
+            <field name="name">Retention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">retention.release</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Transaction.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

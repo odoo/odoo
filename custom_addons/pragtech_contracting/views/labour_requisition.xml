@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="labour_requisitions_form_view" model="ir.ui.view">
+            <field name="name">Labour Requisition</field>
+            <field name="model">labour.requisition</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight"
+                                attrs="{'invisible': [('state','not in','draft')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <h1>
+                            <field name="name" readonly="True"/>
+                        </h1>
+
+                        <group>
+                            <group>
+                                <field name="project_id" readonly="True"/>
+                                <field name="sub_project" readonly="True"/>
+                                <field name="project_wbs" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                                <field name="group_id" readonly="True"/>
+                                <field name="task_id" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="task_category"/>
+                                <field name="work_class"/>
+                                <field name="stage_id" readonly="True"/>
+                                <field name="Requisition_as_on_date" readonly="True"/>
+                                <field name="estimation_id" readonly="True"/>
+                                <field name="flag" invisible="True"/>
+                            </group>
+                            <group>
+                                <field name="labour_id" readonly="True"/>
+                                <field name="unit" readonly="True"/>
+                                <field name="rate" readonly="True"/>
+                                <field name="quantity" readonly="True"/>
+                                <field name="total_ordered_qty" readonly="True"/>
+                                <field name="balance_qty" readonly="True"/>
+                                <field name="Requisition_as_on_date" readonly="True"/>
+                                <field name="current_req_qty" attrs="{'readonly': [('flag', '=', True)]}"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Requisition Info">
+                                <field name="requisition_date"/>
+                                <field name="procurement_date"/>
+                            </group>
+                            <group>
+                                <field name="requirement_date"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Other Info">
+                                <field name="status"/>
+                                <field name="specification" attrs="{'readonly': [('flag', '=', True)]}"/>
+                            </group>
+                            <group>
+                                <field name="priority"/>
+                                <field name="remark"/>
+                            </group>
+                        </group>
+
+                        <separator string="Audit Trail"/>
+                        <field name="mesge_ids" nolabel="1">
+                            <tree create="false">
+                                <field name="date"/>
+                                <field name="author_id"/>
+                                <field name="to_stage"/>
+                                <field name="remark"/>
+                                <field name="res_id" invisible="1"/>
+                                <field name="model" invisible="1"/>
+                                <field name="is_use" invisible="1"/>
+                            </tree>
+                        </field>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_requisition_search_view_master" model="ir.ui.view">
+            <field name="name">requisition.search</field>
+            <field name="model">labour.requisition</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs"/>
+                    <field name="labour_category"/>
+                    <field name="labour_id"/>
+                    <field name="task_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                    <field name="task_category"/>
+                    <field name="state" filter_domain="[('state','=','draft')]"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="Not Date" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by':'sub_project'}"/>
+                        <filter string="Project Wbs" name="project_wbs" context="{'group_by':'project_wbs'}"/>
+                        <filter string="Requisition Date" name="requisition_date" context="{'group_by':'requisition_date'}"/>
+                        <filter string="labour category" name="labour_category" context="{'group_by':'labour_category'}"/>
+                        <filter string="labour id" name="labour_id" context="{'group_by':'labour_id'}"/>
+                        <filter string="task id" name="task_id" context="{'group_by':'task_id'}"/>
+                        <filter string="task category" name="task_category" context="{'group_by':'task_category'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by':'stage_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_requisition_tree" model="ir.ui.view">
+            <field name="name">Labour Requisitions</field>
+            <field name="model">labour.requisition</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="estimation_id" readonly="True" invisible="1"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                    <field name="labour_category"/>
+                    <field name="labour_id"/>
+                    <field name="task_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                    <field name="task_category"/>
+                    <field name="unit"/>
+                    <field name="quantity"/>
+                    <field name="specification"/>
+                    <field name="requirement_date"/>
+                    <field name="Requisition_as_on_date"/>
+                    <field name="current_req_qty"/>
+                    <field name="stage_id"/>
+                    <field name="me_sequence" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_labour_requisition" model="ir.actions.act_window">
+            <field name="name">Labour Requisition</field>
+            <field name="res_model">labour.requisition</field>
+            <field name="context">{'search_default_state':'draft','search_default_project': True}</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <menuitem name="View Labour Requisition" id="labour_req"
+                  parent="pragtech_ppc.execution_sub_menu" action="action_labour_requisition"
+                  sequence="4"/>
+        <!-- state change to labour requisition -->
+
+        <record id="action_state_change_labour_requisition" model="ir.actions.act_window">
+            <field name="name">Change State</field>
+            <field name="res_model">approval.wizard</field>
+            <field name="binding_model_id" ref="model_labour_requisition"/>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+
+    </data>
+</odoo>
+

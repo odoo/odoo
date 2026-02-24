@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="tenders_form_view" model="ir.ui.view">
+            <field name="name">tenders.form.view</field>
+            <field name="model">tenders.tenders</field>
+            <field name="arch" type="xml">
+                <form string="Tenders Tender">
+
+                    <header>
+                        <button name="action_tender_submit" string="SUBMIT" type="object" states="draft" class="oe_highlight"/>
+                        <button name="action_tender_approve" string="Approve" type="object" states="submitted" class="oe_highlight" groups="pragtech_tender_management.custom_sales_group_manager"/>
+                        <button name="action_tender_cancel" string="Reject" type="object" states="submitted" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approve"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('state','in',['draft', 'submitted','rejected'])]}"/>
+                            <button name="action_view_bids" type="object" icon="fa-tasks" class="oe_stat_button">
+                                <field name="count_bids" widget="statinfo" string="Bids"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title oe_inline">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" readonly="1" force_save="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="tender_name"/>
+                                <field name="department"/>
+
+                                <label for="street" string="Location"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="city" placeholder="City" class="o_address_city" style="width:40%"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' style="width:40%"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" style="width:16%"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+
+                                <field name="user_id"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="top_rank" readonly="True"/>
+                            </group>
+
+                            <group>
+                                <field name="total_budget"/>
+                                <field name="earnest_money_deposit"/>
+                                <field name="performance_security_deposit"/>
+                                <field name="liquidated_damage"/>
+                                <field name="unliquidated_damage"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="documents" string="Documents">
+                                <field name="documents_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="datas" widget="binary" string="Download"/>
+                                        <field name="file_size" string="Document" invisible="1"/>
+                                    </tree>
+
+                                    <form>
+                                        <sheet>
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1>
+                                                <field name="name" string="Title"/>
+                                            </h1>
+                                            <group>
+                                                <group>
+                                                    <field name="type" invisible="1"/>
+                                                    <field name="datas" filename="name"/>
+                                                    <field name="mimetype" invisible="1" groups="base.group_no_one"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+
+                            <page name="pag4" string="Pre-Bid Meeeting Details">
+                                <group>
+                                    <field name="pre_bid_meeting_date"/>
+                                    <field name="pre_bid_meeting_mom"/>
+                                </group>
+                            </page>
+
+                            <page name="enquiries" string="Enquiries">
+                                <field name="enquiries_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="contractor_id"/>
+                                        <field name="job_type"/>
+                                        <field name="date"/>
+                                        <field name="submission_date"/>
+                                        <field name="total_score"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="pag5" string="Tender Questionnaires">
+                                <field name="tender_question_ids">
+                                    <tree>
+                                        <field name="tender_question_id"/>
+                                        <field name="type"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="tender_question_id"/>
+                                            <field name="type"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tenders_tree_view" model="ir.ui.view">
+            <field name="name">tenders.tree.view</field>
+            <field name="model">tenders.tenders</field>
+            <field name="arch" type="xml">
+                <tree string="Tender Tender">
+                    <field name="name"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="user_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="top_rank"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tenders_kanban" model="ir.ui.view">
+            <field name="name">tenders.kanban</field>
+            <field name="model">tenders.tenders</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <field name="tender_name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>
+                                            <field name="tender_name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <field name="country_id"/>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <strong>Deadline:</strong>
+                                    <field name="end_date"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="tenders_form_action" model="ir.actions.act_window">
+            <field name="name">Tenders</field>
+            <field name="res_model">tenders.tenders</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="tenders_menu" name="Tenders"/>
+        <menuitem id="tenders_main_menu" parent="tenders_menu" name="Tenders Main Menu" action="tenders_form_action" sequence="1"/>
+        <menuitem id="configuration_menu" name="Configuration" parent="tenders_menu" sequence="3"/>
+
+        <record id="dept_form" model="ir.ui.view">
+            <field name="name">Department Form</field>
+            <field name="model">res.department</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Department">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dept_tree" model="ir.ui.view">
+            <field name="name">Department Tree</field>
+            <field name="model">res.department</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Department">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dept_action" model="ir.actions.act_window">
+            <field name="name">Department</field>
+            <field name="res_model">res.department</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to define a new Department.</p>
+            </field>
+        </record>
+
+        <menuitem id="dept_menu" name="Department" parent="configuration_menu" action="dept_action"/>
+
+        <record id="rating_qustionnaire_form" model="ir.ui.view">
+            <field name="name">Rating Qustionnaire Form</field>
+            <field name="model">tender.questions</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Cost Code">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rating_qustionnaire_tree" model="ir.ui.view">
+            <field name="name">Rating Qustionnaire Tree</field>
+            <field name="model">tender.questions</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="questionnaire_menu_action" model="ir.actions.act_window">
+            <field name="name">Questionnaire</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tender.questions</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to define a new Rating Qustionnaire.</p>
+            </field>
+        </record>
+
+        <menuitem id="questionnaire_menu" name="Questionnaire" parent="configuration_menu" action="questionnaire_menu_action"/>
+
+        <record id="dept_job_type_form" model="ir.ui.view">
+            <field name="name">job.type</field>
+            <field name="model">job.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Job Type">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dept_job_type_tree" model="ir.ui.view">
+            <field name="name">job.type</field>
+            <field name="model">job.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Job Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dept_job_type" model="ir.actions.act_window">
+            <field name="name">Job Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">job.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to define a new Department.</p>
+            </field>
+        </record>
+
+        <menuitem id="menu_job_type" name="Job Type" parent="configuration_menu" action="dept_job_type"/>
+
+        <record id="tenders_enquiries_form_view" model="ir.ui.view">
+            <field name="name">tender.enquiries.view</field>
+            <field name="model">tender.enquiries</field>
+            <field name="arch" type="xml">
+                <form string="Tenders Enquiries">
+                    <header>
+                        <button name="action_approve"
+                                string="Approve"
+                                type="object"
+                                states="draft" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approve"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title oe_inline">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" readonly="1" force_save="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="tender_id" required="1" domain="[('state', '=', 'submitted')]"/>
+                                <field name="contractor_id"/>
+                                <field name="total_score"/>
+                            </group>
+
+                            <group>
+                                <field name="submission_date"/>
+                                <field name="job_type"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Questions">
+                                <field name="tender_enquiry_ids">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="question_id" readonly="1" force_save="1"/>
+                                        <field name="score" sum="Score"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tenders_enquiries_tree_view" model="ir.ui.view">
+            <field name="name">tender.enquiries.view</field>
+            <field name="model">tender.enquiries</field>
+            <field name="arch" type="xml">
+                <tree string="Tender Enquiries">
+                    <field name="name"/>
+                    <field name="tender_id"/>
+                    <field name="contractor_id"/>
+                    <field name="submission_date"/>
+                    <field name="job_type"/>
+                    <field name="total_score"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="enquiry_form_action" model="ir.actions.act_window">
+            <field name="name">Enquiry</field>
+            <field name="res_model">tender.enquiries</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+                id="tenders_enquiry_menu"
+                parent="tenders_menu"
+                name="Enquiry"
+                action="enquiry_form_action"
+                sequence="1"/>
+
+        <record id="tender_res_partner_action_customer" model="ir.actions.act_window">
+            <field name="name">Contractor</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <menuitem
+                id="tenders_contactor_menu"
+                parent="tenders_menu"
+                name="Contractor"
+                action="tender_res_partner_action_customer"
+                sequence="1"/>
+
+        <record id="tenders_estimation_form_view" model="ir.ui.view">
+            <field name="name">tender.estimation.view</field>
+            <field name="model">tender.estimation</field>
+            <field name="arch" type="xml">
+                <form string="Tenders Estimation">
+
+                    <sheet>
+                        <div class="oe_title oe_inline">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" readonly="1" force_save="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="enquiry_id" domain="[('state', '=', 'approve')]" required="1"/>
+                                <field name="tender_id"/>
+                                <field name="contractor_id"/>
+                                <field name="total_estimation"/>
+                            </group>
+                            <group>
+                                <field name="reviewer_id"/>
+                                <field name="submission_date"/>
+                            </group>
+                        </group>
+
+                        <separator string="Materials"/>
+                        <field name="tenders_estimation_material_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="product_id" required="1"/>
+                                <field name="name" required="1"/>
+                                <field name="remarks"/>
+                                <field name="qty" required="1"/>
+                                <field name="product_uom"/>
+                                <field name="rate" required="1"/>
+                                <field name="total_rate" sum="Total Rate"/>
+                            </tree>
+                        </field>
+
+                        <separator string="Labour"/>
+                        <field name="tenders_estimation_labour_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="product_id" required="1"/>
+                                <field name="name" required="1"/>
+                                <field name="remarks"/>
+                                <field name="qty" required="1"/>
+                                <field name="product_uom"/>
+                                <field name="rate" required="1"/>
+                                <field name="total_rate" sum="Total Rate"/>
+                            </tree>
+                        </field>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tenders_estimation_tree_view" model="ir.ui.view">
+            <field name="name">tender.estimation.view</field>
+            <field name="model">tender.estimation</field>
+            <field name="arch" type="xml">
+                <tree string="Tender Estimation">
+                    <field name="name"/>
+                    <field name="tender_id"/>
+                    <field name="contractor_id"/>
+                    <field name="submission_date"/>
+                    <field name="reviewer_id"/>
+                    <field name="total_estimation"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="estimation_form_action" model="ir.actions.act_window">
+            <field name="name">Estimation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tender.estimation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+                id="tenders_estimation_menu"
+                parent="tenders_menu"
+                name="Estimation"
+                action="estimation_form_action"
+                sequence="1"/>
+
+    </data>
+</odoo>
+

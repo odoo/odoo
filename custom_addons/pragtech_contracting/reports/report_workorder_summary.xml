@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_workorder_summary_document">
+            <t t-call="web.external_layout">
+                <t t-set="p" t-value="1"/>
+                <t t-set="o" t-value="o.with_context({})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="col-12">
+                        <div align="center">
+                            <h2>Work Order Summary</h2>
+                        </div>
+
+                        <div>
+                            <div>
+                                <strong>Report Date:</strong>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y')"/>
+                            </div>
+                        </div>
+
+                        <![CDATA[&nbsp;]]>
+                        <t t-set="project" t-value="0"/>
+                        <t t-set="subproject" t-value="0"/>
+                        <t t-set="projectwbs" t-value="0"/>
+                        <t t-set="contractor" t-value="0"/>
+
+                        <t t-foreach="o.order_line" t-as="line">
+                            <div>
+                                <div class="col-xs-6">
+                                    <strong>Project :</strong>
+                                    <span t-field="line.project_id"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong>Subproject :</strong>
+                                    <span t-if="line.sub_project" t-field="line.name.sub_project"/>
+                                    <t t-set="subproject" t-value="line.name.sub_project.id"/>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="col-xs-6">
+                                    <strong>Project Wbs :</strong>
+                                    <span t-if="line.name.project_wbs" t-field="line.name.project_wbs"/>
+                                    <t t-set="projectwbs" t-value="line.name.project_wbs.id"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong>Contractor :</strong>
+                                    <span t-if="line.name.partner_id" t-field="line.name.partner_id"/>
+                                    <t t-set="contractor" t-value="line.name.partner_id.id"/>
+                                </div>
+                            </div>
+
+                            <![CDATA[&nbsp;]]>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Work Order</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Category</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Labour</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Task</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Est. Qty.</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Rate</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Taxes</strong>
+                                        </th>
+                                        <th class="text-right">
+                                            <strong>Subtotal</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <t t-foreach="line.name.order_line" t-as="l">
+                                        <tr>
+                                            <td class="text-center">
+                                                <span t-field="line.name"/>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <span t-field="l.category_id"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.labour_id"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.task_id"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.quantity"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.rate"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.work_tax"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-xs-8 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr class="border-black">
+                                            <td>
+                                                <strong>Retention</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="line.name.retention"/>
+                                            </td>
+                                            <td>
+                                                <strong>Untaxed</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="line.name.amount_untaxed" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                            </td>
+
+                                            <td>
+                                                <strong>Taxes</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="line.name.amount_tax" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                            </td>
+
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="line.name.amount_total" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="oe_structure"/>
+
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_workorder_summary">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="pragtech_contracting.report_workorder_summary_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+

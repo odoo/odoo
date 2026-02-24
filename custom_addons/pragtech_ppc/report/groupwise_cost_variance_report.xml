@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="groupwise_cost_variance_report_document">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="doc"/>
+
+                <div class="page">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-3" align="left" id="company_name">
+                                <span t-field="doc.user_id.company_id.logo_web"
+                                      t-field-options="{&quot;widget&quot;: &quot;image&quot;, &quot;class&quot;: &quot;img-rounded&quot;}"/>
+                            </div>
+                            <div class="col-xs-9">
+                                <br/>
+                                <div align="center" style="font-size:18px">
+                                    <strong t-field="doc.user_id.company_id.name"></strong>
+                                </div>
+
+                                <div align="center" style="font-size:13px">
+                                    <span t-field="doc.user_id.company_id.street"></span>
+                                    <span>,</span>
+                                    <span t-field="doc.user_id.company_id.street2"></span>
+                                    <span t-field="doc.user_id.company_id.city"></span>
+                                    <span t-field="doc.user_id.company_id.zip"></span>
+                                </div>
+                                <div align="center" style="font-size:13px">
+                                    <span t-field="doc.user_id.company_id.company_registry"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <div class="row">
+                        <h4 align="center">
+                            <span align="center">
+                                <strong>GroupWise Budget</strong>
+                            </span>
+                        </h4>
+                    </div>
+
+                    <table order="0" bordercolor="#cccccc" class="firsttable" style="border: 1px solid #808080;padding:3px">
+                        <thead>
+                            <tr style="background-color:#9F4D89" class="color_td">
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" align="center">
+                                    Sr.No.
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" align="center">
+                                    Task
+                                    Category Name
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Budgeted Cost
+                                    <br/>
+                                    (A)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Estimated Cost
+                                    <br/>
+                                    (B)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" class="">
+                                    EST.Cost Of Completed Work
+                                    <br/>
+                                    (C)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Actual Cost Of Completed Work
+                                    <br/>
+                                    (D)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Cost Variance
+                                    <br/>
+                                    (E=C-D)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Estimated Cost of Task in Progress
+                                    <br/>
+                                    (F)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Actual Cost of Task in Progress
+                                    <br/>
+                                    (G)
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Balance Estimate
+                                    <br/>
+                                    (H=B-(D+G))
+                                </th>
+                                <th style="border: 1px solid #808080;padding:3px;text-align: center" colspan="3" align="center">
+                                    Balance Budget
+                                    <br/>
+                                    (I=A-(D+G))
+                                </th>
+                            </tr>
+
+                            <tr style="border: 1px solid black">
+                                <td style="border: 1px solid #808080;padding:3px"></td>
+                                <td style="border: 1px solid #808080;padding:3px"></td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">Material</td>
+                                <td style="border: 1px solid #808080;padding:3px">Labour</td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;white-space:nowrap" t-esc="doc.get_category(doc)">Balance Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+
+                            <!-- To calculate grand total -->
+                            <t t-set="budgeted_material" t-value="0"/>
+                            <t t-set="budgeted_labour" t-value="0"/>
+                            <t t-set="budgeted_total" t-value="0"/>
+
+                            <t t-set="estimated_material" t-value="0"/>
+                            <t t-set="estimated_labour" t-value="0"/>
+                            <t t-set="estimated_total" t-value="0"/>
+
+                            <t t-set="completed_estimated_material" t-value="0"/>
+                            <t t-set="completed_estimated_labour" t-value="0"/>
+                            <t t-set="completed_estimated_total" t-value="0"/>
+
+                            <t t-set="actual_completed_material" t-value="0"/>
+                            <t t-set="actual_completed_labour" t-value="0"/>
+                            <t t-set="actual_completed_total" t-value="0"/>
+
+                            <t t-set="var_material" t-value="0"/>
+                            <t t-set="var_labour" t-value="0"/>
+                            <t t-set="var_total" t-value="0"/>
+
+                            <t t-set="estimated_inprogress_material" t-value="0"/>
+                            <t t-set="estimated_inprogress_labour" t-value="0"/>
+                            <t t-set="estimated_inprogress_total" t-value="0"/>
+
+                            <t t-set="actual_inprogress_material" t-value="0"/>
+                            <t t-set="actual_inprogress_labour" t-value="0"/>
+                            <t t-set="actual_inprogress_total" t-value="0"/>
+
+                            <t t-set="balance_estimate_material" t-value="0"/>
+                            <t t-set="balance_estimate_labour" t-value="0"/>
+                            <t t-set="balance_estimate_total" t-value="0"/>
+
+                            <t t-set="balance_budget_i" t-value="0"/>
+
+                            <t t-set="var" t-value="0" t-as="m"/>
+                            <t t-set="sr_no" t-value="0"/>
+                            <tr t-foreach="doc.category_list" t-as="s">
+                                <t t-set="sr_no" t-value="sr_no+1"/>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="sr_no"/>
+                                </td>
+
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="doc.category_list[var]"/>
+                                </td>
+
+                                <!-- Budgeted Cost -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="budgeted_material"
+                                       t-value="(budgeted_material+(doc.get_material_budgeted(doc,doc.category_list[var])))"/>
+                                    <span t-esc="doc.get_material_budgeted(doc,doc.category_list[var])"/>
+                                </td>
+
+                                <td style="border: 1px solid #808080;padding:3px;text-align: center">
+                                    <t t-set="budgeted_labour" t-value="(budgeted_labour+(doc.get_labour_budgeted(doc,doc.category_list[var])))"/>
+                                    <span t-esc="doc.get_labour_budgeted(doc,doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+
+                                    <t t-set="budged_cost"
+                                       t-value="(doc.get_labour_budgeted(doc,doc.category_list[var]))+doc.get_material_budgeted(doc,doc.category_list[var])"/>
+                                    <t t-set="budgeted_total" t-value="(budgeted_total+budged_cost)"/>
+                                    <strong>
+                                        <span t-esc="(doc.get_labour_budgeted(doc,doc.category_list[var]))+doc.get_material_budgeted(doc,doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Estimated Cost -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="estimated_material"
+                                       t-value="estimated_material+(doc.get_material_estimated_budget(doc.category_list[var]))"/>
+                                    <span t-esc="doc.get_material_estimated_budget(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="estimated_labour_cost" t-value="(doc.get_labour_estimated_budget(doc.category_list[var]))"/>
+                                    <t t-set="estimated_labour" t-value="estimated_labour+estimated_labour_cost"/>
+                                    <span t-esc="doc.get_labour_estimated_budget(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="estimated_total"
+                                       t-value="estimated_total+doc.get_material_estimated_budget(doc.category_list[var])+doc.get_labour_estimated_budget(doc.category_list[var])"/>
+                                    <strong>
+                                        <span t-esc="doc.get_material_estimated_budget(doc.category_list[var])+doc.get_labour_estimated_budget(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- EST.Cost Of Completed Work -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="completed_estimated_material"
+                                       t-value="completed_estimated_material+doc.get_completed_work_material_estimate(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_completed_work_material_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="completed_estimated_labour"
+                                       t-value="completed_estimated_labour+(doc.get_completed_work_labour_estimate(doc.category_list[var]))"/>
+                                    <span t-esc="doc.get_completed_work_labour_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <t t-set="completed_estimated_total"
+                                       t-value="completed_estimated_total+(doc.get_completed_work_material_estimate(doc.category_list[var])+doc.get_completed_work_labour_estimate(doc.category_list[var]))"/>
+                                    <strong>
+                                        <span t-esc="doc.get_completed_work_material_estimate(doc.category_list[var])+doc.get_completed_work_labour_estimate(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Actual Cost Of Completed Work -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_completed_material"
+                                       t-value="actual_completed_material+(doc.get_material_actual_cost_of_completed(doc.category_list[var]))"/>
+                                    <span t-esc="doc.get_material_actual_cost_of_completed(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_completed_labour"
+                                       t-value="actual_completed_labour+doc.get_material_actual_cost_of_completed(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_material_actual_cost_of_completed(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_completed_cost" t-value="(doc.get_material_actual_cost_of_completed(doc.category_list[var]))"/>
+                                    <t t-set="actual_completed_total"
+                                       t-value="actual_completed_total+(doc.get_material_actual_cost_of_completed(doc.category_list[var])+doc.get_material_actual_cost_of_completed(doc.category_list[var]))"/>
+                                    <strong>
+                                        <span t-esc="doc.get_material_actual_cost_of_completed(doc.category_list[var])+doc.get_material_actual_cost_of_completed(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Cost Variance -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="var_material" t-value="var_material+doc.material_cost_variance(doc.category_list[var])"/>
+                                    <span t-esc="doc.material_cost_variance(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="var_labour" t-value="var_labour+doc.labour_cost_variance(doc.category_list[var])"/>
+                                    <span t-esc="doc.labour_cost_variance(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <t t-set="var_total"
+                                       t-value="var_total+doc.labour_cost_variance(doc.category_list[var])+doc.material_cost_variance(doc.category_list[var])"/>
+                                    <strong>
+                                        <span t-esc="doc.labour_cost_variance(doc.category_list[var])+doc.material_cost_variance(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Estimated Cost of Task in Progress -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="estimated_inprogress_material"
+                                       t-value="estimated_inprogress_material+doc.get_inprogress_work_material_estimate(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_inprogress_work_material_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <t t-set="estimated_inprogress_labour"
+                                       t-value="estimated_inprogress_labour+doc.get_inprogress_work_labour_estimate(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_inprogress_work_labour_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="estimated_inprogress_total"
+                                       t-value="estimated_inprogress_total+doc.get_inprogress_work_material_estimate(doc.category_list[var])+doc.get_inprogress_work_labour_estimate(doc.category_list[var])"/>
+                                    <strong>
+                                        <span t-esc="doc.get_inprogress_work_material_estimate(doc.category_list[var])+doc.get_inprogress_work_labour_estimate(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Actual Cost of Task in Progress -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_inprogress_material"
+                                       t-value="actual_inprogress_material+doc.get_material_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_material_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_inprogress_labour"
+                                       t-value="actual_inprogress_labour+doc.get_labour_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_labour_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="actual_inprogress_cost"
+                                       t-value="doc.get_labour_actual_cost_of_inprogress(doc.category_list[var])+doc.get_material_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                    <t t-set="actual_inprogress_total" t-value="actual_inprogress_cost+actual_inprogress_total"/>
+                                    <strong>
+                                        <span t-esc="doc.get_labour_actual_cost_of_inprogress(doc.category_list[var])+doc.get_material_actual_cost_of_inprogress(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Balance Estimate -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="balance_estimate_material"
+                                       t-value="balance_estimate_material+doc.get_material_balance_estimate(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_material_balance_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="balance_estimate_labour"
+                                       t-value="balance_estimate_labour+doc.get_labour_balance_estimate(doc.category_list[var])"/>
+                                    <span t-esc="doc.get_labour_balance_estimate(doc.category_list[var])"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="balance_estimate_total"
+                                       t-value="balance_estimate_total+doc.get_labour_balance_estimate(doc.category_list[var])+doc.get_material_balance_estimate(doc.category_list[var])"/>
+                                    <strong>
+                                        <span t-esc="doc.get_labour_balance_estimate(doc.category_list[var])+doc.get_material_balance_estimate(doc.category_list[var])"/>
+                                    </strong>
+                                </td>
+
+                                <!-- Balance Budget -->
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <t t-set="balance_budget_i"
+                                       t-value="balance_budget_i+(budged_cost-(actual_inprogress_cost+actual_completed_cost))"/>
+                                    <span t-esc="(budged_cost-(actual_inprogress_cost+actual_completed_cost))"/>
+                                    <t t-set="var" t-value="var+1"/>
+                                </td>
+                            </tr>
+
+                            <tr style="border: 1px solid black">
+                                <td style="border: 1px solid #808080;padding:3px">Grand Total</td>
+                                <td style="border: 1px solid #808080;padding:3px"></td>
+                                <td style="border: 1px solid #808080;padding:3px">
+                                    <span t-esc="budgeted_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px ;text-align: right">
+                                    <span t-esc="budgeted_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="budgeted_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="estimated_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="estimated_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="estimated_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="completed_estimated_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="completed_estimated_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="completed_estimated_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="actual_completed_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="actual_completed_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="actual_completed_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="var_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="var_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="var_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="estimated_inprogress_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="estimated_inprogress_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="estimated_inprogress_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="actual_inprogress_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="actual_inprogress_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="actual_inprogress_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="balance_estimate_material"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <span t-esc="balance_estimate_labour"/>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;text-align: right">
+                                    <strong>
+                                        <span t-esc="balance_estimate_total"/>
+                                    </strong>
+                                </td>
+                                <td style="border: 1px solid #808080;padding:3px;white-space:nowrap">
+                                    <span t-esc="balance_budget_i"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                    <div class="footer">
+                        <span class="text-right">Created By:</span>
+                        <span t-field="doc.create_uid"/>
+                        <span class="text-left">On:</span>
+                        <span t-field="doc.create_date"/>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+
+        <template id="groupwise_cost_variance_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="pragtech_ppc.groupwise_cost_variance_report_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+				

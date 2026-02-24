@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rabill_form_view" model="ir.ui.view">
+            <field name="name">RA Bill</field>
+            <field name="model">ra.bill</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible':[('state','=','paid')]}"/>
+                        <button name="compute_data" type="object" string="Compute Data" class="oe_highlight" attrs="{'invisible':[('state','=','paid')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_ra_bill" type="object" class="oe_stat_button" string="View Vendor Bill" icon="fa-pencil-square-o" attrs="{'invisible':[('state','=', 'draft')]}"/>
+                        </div>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1" attrs="{'invisible':[('state','=', 'draft')]}"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="project_id" attrs="{'readonly':[('state','=','paid')]}"/>
+                                <field name="project_wbs" attrs="{'readonly':[('state','=','paid')]}"
+                                       domain="[('project_id','!=',False),('project_id','=',project_id),('sub_project','=',sub_project),('is_wbs', '=', True),('is_task','=',False),('is_group', '=',False)]"/>
+                                <field name="contractor_id" domain="[('contractor','=',True)]"/>
+                            </group>
+                            <group>
+                                <field name="sub_project" domain="[('project_id','=',project_id)]"/>
+                                <field name="stage_id" readonly="1"/>
+                                <field name="workorder_id" attrs="{'readonly':[('state','=','paid')]}" domain="[('project_id','=',project_id),('state','=','confirm')]"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="wo_total_amt" readonly="1"/>
+                                <field name="wo_balance_debit" readonly="1"/>
+                                <field name="pan_no" readonly="1"/>
+                                <field name="contact_person_id" readonly="1"/>
+                                <field name="retention_percent" readonly="1"/>
+                                <field name="retention_held_in_any_bill" invisible="1"/>
+                                <field name="hold_retention" invisible="1"
+                                       attrs="{'readonly':[('state','=','paid')],'invisible':['|',('retention_percent','=',0),('retention_held_in_any_bill','=',True)]}"/>
+                            </group>
+                            <group>
+                                <field name="till_date_billed" readonly="1"/>
+                                <field name="wo_balance_advance" readonly="1"/>
+                                <field name="service_tax_no" readonly="1"/>
+                                <field name="mobile" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <field name="rabill_line_ids">
+                            <tree create="0" editable="bottom">
+                                <field name="contractor_id" readonly="1"/>
+                                <field name="task_id" readonly="1" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="labour_id" readonly="1"/>
+                                <field name="workorder_id" readonly="1"/>
+                                <field name="workorder_line_id" readonly="1"/>
+                                <field name="basic_amount" readonly="1"/>
+                                <field name="tax_ids" readonly="1"/>
+                                <field name="taxed_amount" readonly="1"/>
+                                <field name="work_completion_sequence" readonly="1"/>
+                                <field name="work_completion_line_sequence" readonly="1"/>
+                                <field name="completion_percent" readonly="1"/>
+                                <field name="estimated_qty" readonly="1"/>
+                                <field name="completed_qty" readonly="1"/>
+                                <field name="amt_to_release" readonly="1"/>
+                                <field name="this_bill_amount" readonly="1"/>
+                            </tree>
+                        </field>
+
+                        <group col="6" class="mt-2 mt-md-0" style="margin-bottom: 20px;">
+                            <group colspan="4">
+                            </group>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="total_payable_amt" widget="monetary" readonly="1"/>
+                                <field name="retention_amount" widget="monetary" readonly="1"/>
+                            </group>
+                            <div class="clearfix"/>
+                        </group>
+
+                        <field name="tax_line_ids">
+                            <tree editable="bottom" create="0" delete="0">
+                                <field name="name"/>
+                                <field name="base_amount"/>
+                                <field name="amount" sum="sum"/>
+                            </tree>
+                        </field>
+
+                        <group col="6" class="mt-2 mt-md-0">
+                            <group colspan="4">
+                            </group>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="final_total_payable" widget="monetary" readonly="1"/>
+                            </group>
+                            <div class="clearfix"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Audit Trail">
+                                <field name="mesge_ids" nolabel="1">
+                                    <tree create="false">
+                                        <field name="date"/>
+                                        <field name="author_id"/>
+                                        <field name="to_stage"/>
+                                        <field name="remark"/>
+                                        <field name="res_id" invisible="1"/>
+                                        <field name="model" invisible="1"/>
+                                        <field name="is_use" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <record id="rabill_line_form" model="ir.ui.view">
+            <field name="name">rabill.line.form</field>
+            <field name="model">ra.bill.line</field>
+            <field name="arch" type="xml">
+                <form string="Ra Bill Line">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="contractor_id"/>
+                                <field name="task_id"/>
+                                <field name="labour_id"/>
+                                <field name="workorder_line_id"/>
+                                <field name="work_completion_sequence"/>
+                                <field name="work_completion_line_sequence"/>
+                                <field name="category_id"/>
+                                <field name="rabill_id"/>
+                                <field name="remark"/>
+                                <field name="group_id"/>
+                                <field name="category_id"/>
+                            </group>
+                            <group>
+                                <field name="basic_amount"/>
+                                <field name="taxed_amount"/>
+                                <field name="completion_percent"/>
+                                <field name="estimated_qty"/>
+                                <field name="completed_qty"/>
+                                <field name="this_bill_amount"/>
+                                <field name="quantity"/>
+                                <field name="rate"/>
+                                <field name="retention"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rabill_advance_recovery_form" model="ir.ui.view">
+            <field name="name">rabill.advance.recovery.form</field>
+            <field name="model">advance.recovery.line</field>
+            <field name="arch" type="xml">
+                <form string="Ra Bill advance recovery">
+                    <group>
+                        <group>
+                            <field name="advance_id"/>
+                            <field name="transaction_date"/>
+                            <field name="advance_recovery_line_id"/>
+                            <field name="bill_id"/>
+                            <field name="bank_name"/>
+                        </group>
+                        <group>
+                            <field name="payment_mode"/>
+                            <field name="payment_refrence"/>
+                            <field name="advance_amount"/>
+                            <field name="recovered_till_date"/>
+                            <field name="balance_amount"/>
+                            <field name="total_recovery"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="rabill_debit_recovery_form" model="ir.ui.view">
+            <field name="name">rabill.debit.recovery.form</field>
+            <field name="model">debit.recovery.line</field>
+            <field name="arch" type="xml">
+                <form string="Ra Bill debit recovery">
+                    <group>
+                        <group>
+                            <field name="debit_id"/>
+                            <field name="transaction_date"/>
+                            <field name="debit_adv_line_id"/>
+                            <field name="debit_recovery_line_id"/>
+                            <field name="bill_id"/>
+                            <field name="bank_name"/>
+                        </group>
+                        <group>
+                            <field name="payment_mode"/>
+                            <field name="payment_refrence"/>
+                            <field name="debit_note_amount"/>
+                            <field name="recovered_till_date"/>
+                            <field name="balance_amount"/>
+                            <field name="total_recovery"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="rabill_credit_recovery_form" model="ir.ui.view">
+            <field name="name">rabill.credit.recovery.form</field>
+            <field name="model">credit.recovery.line</field>
+            <field name="arch" type="xml">
+                <form string="Ra Bill credit recovery">
+                    <group>
+                        <group>
+                            <field name="credit_id"/>
+                            <field name="transaction_date"/>
+                            <field name="credit_rev_line_id"/>
+
+                            <field name="bill_id"/>
+                            <field name="bank_name"/>
+                        </group>
+                        <group>
+                            <field name="payment_mode"/>
+                            <field name="payment_refrence"/>
+                            <field name="credit_note_amount"/>
+                            <field name="recovered_till_date"/>
+                            <field name="balance_amount"/>
+                            <field name="total_recovery"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="rabill_tree_view" model="ir.ui.view">
+            <field name="name">RA Bill</field>
+            <field name="model">ra.bill</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="sub_project" domain="[('project_id','=',project_id)]"/>
+                    <field name="project_wbs" domain="[('project_id','=',project_id)]"/>
+                    <field name="workorder_id" domain="[('project_id','=',project_id)]"/>
+                    <field name="final_total_payable"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ra_bill_search" model="ir.ui.view">
+            <field name="name">ra.bill.search</field>
+            <field name="model">ra.bill</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="work_completion_sequence"/>
+                    <field name="workorder_line_id"/>
+                    <field name="labour_id"/>
+                    <field name="task_id"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="not draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="partner_id" context="{'group_by':'contractor_id'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by':'sub_project'}"/>
+                        <filter string="Project Wbs" name="project_wbs" context="{'group_by':'project_wbs'}"/>
+                        <filter string="Workorder" name="workorder_id" context="{'group_by':'workorder_id'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by':'stage_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for RA bill -->
+        <record id="ra_bill_action" model="ir.actions.act_window">
+            <field name="name">RA Bill</field>
+            <field name="res_model">ra.bill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_report_ra_bill" model="ir.actions.report">
+            <field name="name">RA Bill</field>
+            <field name="model">ra.bill</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pragtech_contracting.report_invoice</field>
+            <field name="report_file">pragtech_contracting.report_invoice</field>
+            <field name="binding_model_id" ref="pragtech_contracting.model_ra_bill"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <menuitem name="RA Bill" id="ra_bill_menu" action="ra_bill_action" parent="labour_menu_id" sequence="6"/>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,179 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="stage_transaction_work_order_types" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_work_order_types')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_work_order_line" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_work_order_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_project" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('project.model_project_project')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_category" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_project_category')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_sub_project" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_sub_project')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_task_user" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('project.model_report_project_task_user')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_task_type" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('project.model_project_task_type')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_task_library" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_project_task_library')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_project_task" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('project.model_project_task')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+
+        <record id="stage_transaction_project_tags'" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('project.model_project_tags')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_requisition" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_labour_requisition')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_requisition_wizard_line" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_labour_requisition_wizard_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_requisition_wizard" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_labour_requisition_wizard')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+        <record id="stage_transaction_labour_requisition_line'" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_labour_requisition_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+        <record id="stage_transaction_labour_quotation_line" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_labour_quotation_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+        <record id="stage_transaction_labour_quotation_details'" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_labour_quotation_details')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_quotation_comparison" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_labour_quotation_comparison')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_quotation" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_ppc.model_labour_quotation')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_labour_quotation_compare_particular" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_labour_quotation_compare_particular')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_purchase_order" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('purchase.model_purchase_order')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_purchase_order_line" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('purchase.model_purchase_order_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_wizard_work_completion" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_wizard_work_completion')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_wizard_work_completion_task" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_wizard_work_completion_task')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_model_work_completion" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_work_completion')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+        <record id="stage_transaction_work_completion_line" model="stage.transaction">
+            <field name="to_stage" eval="ref('pragtech_ppc.stage_Approve')"/>
+            <field name="from_stage" eval="ref('pragtech_ppc.stage_draft')"/>
+            <field name="model" eval="ref('pragtech_contracting.model_work_completion_line')"/>
+            <field name="groups" eval="ref('base.group_system')"/>
+        </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,222 @@
+<odoo>
+    <data>
+
+        <!-- Start Project Task Library -->
+        <record id="project_task_library_form" model="ir.ui.view">
+            <field name="name">project.task.library.form</field>
+            <field name="model">project.task.library</field>
+            <field name="arch" type="xml">
+                <form string="Project Tasks Library">
+                    <sheet>
+                        <div class="oe_title oe_inline">
+                            <h1>
+                                <field name="name" placeholder='Library Task'/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="category_id" attrs="{'required': [('is_library_task','=',True)]}"/>
+                                <field name="material_cost"/>
+                                <field name="min_qty" context="{'default_min_qty':1}"/>
+                                <field name="total_cost"/>
+                                <field name="parent_task_id" invisible="1"/>
+                                <field name="parent_group_id" invisible="1"/>
+                                <field name="parent_id" invisible="1"/>
+                                <field name="is_library_task" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="sub_category_id"/>
+                                <field name="labour_cost"/>
+                                <field name="uom_id"/>
+                            </group>
+
+                            <notebook>
+                                <page name="material_groups" string="Material">
+                                    <field name="task_material_line">
+                                        <tree editable="bottom">
+                                            <field name="material_id"/>
+                                            <field name="material_uom"/>
+                                            <field name="material_uom_qty"/>
+                                            <field name="material_rate"/>
+                                            <field name="subtotal" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page name="labour_groups" string="Labour">
+                                    <field name="task_labour_line">
+                                        <tree editable="bottom">
+                                            <field name="labour_id" domain="[('is_labour','=',True)]"/>
+                                            <field name="labour_uom"/>
+                                            <field name="labour_uom_qty"/>
+                                            <field name="labour_rate"/>
+                                            <field name="subtotal" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_task_library_tree" model="ir.ui.view">
+            <field name="name">project_task.library.tree</field>
+            <field name="model">project.task.library</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="task_material_line"/>
+                    <field name="task_labour_line"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="sub_category_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_task_library_search" model="ir.ui.view">
+            <field name="name">project_task.library.search</field>
+            <field name="model">project.task.library</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="sub_category_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Parent Group" name="parent_task_id" context="{'group_by':'parent_task_id'}"/>
+                        <filter string="Category" name="category_id" context="{'group_by':'category_id'}"/>
+                        <filter string="Minimum Quantity" name="min_qty" context="{'group_by':'min_qty'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_task_library" model="ir.actions.act_window">
+            <field name="name">Tasks Library</field>
+            <field name="res_model">project.task.library</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="project_task_library_form"/>
+            <field name="context">{'default_is_library_task':True,'default_min_qty':1}</field>
+            <field name="domain">[('is_library_task','=',1)]</field>
+            <field name="help" type="html">
+                <p>Create Task</p>
+            </field>
+        </record>
+
+        <record id="action_task_library_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_task_library"/>
+            <field name="view_id" ref="project_task_library_tree"/>
+        </record>
+
+        <record id="project_task_group_library_form" model="ir.ui.view">
+            <field name="name">project.task.group.library.form</field>
+            <field name="model">project.task.library</field>
+            <field name="arch" type="xml">
+                <form string="Project Tasks Group Library">
+                    <sheet>
+                        <h1>
+                            <field name="name" string="Group Title" placeholder='Library Task Group'/>
+                        </h1>
+
+                        <group>
+                            <group>
+                                <field name="parent_group_id" invisible="1"/>
+                                <field name="parent_id" invisible="1"/>
+                                <field name="is_library_task" invisible="1"/>
+                            </group>
+
+                            <notebook>
+                                <page name="task" string="Library Task">
+                                    <field name="task_ids"
+                                           context="{'form_view_ref':'pragtech_ppc.project_task_library_form', 'tree_view_ref':'pragtech_ppc.project_task_library_tree','default_min_qty':'1','default_is_library_task':True}"/>
+                                </page>
+                                <page name="task" string="Library Group">
+                                    <field name="group_ids"
+                                           context="{'default_min_qty':1,'tree_view_ref':'pragtech_ppc.project_task_group_library_tree'}"/>
+                                </page>
+                                <page name="child_groups" string="child Group" invisible="1">
+                                    <field name="child_ids2"/>
+                                </page>
+                            </notebook>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_task_group_library_tree" model="ir.ui.view">
+            <field name="name">project_task.library.tree</field>
+            <field name="model">project.task.library</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="task_ids"/>
+                    <field name="group_ids"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="sub_category_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_task_group_library" model="ir.actions.act_window">
+            <field name="name">Tasks Group Library</field>
+            <field name="res_model">project.task.library</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_is_library_task':False,'default_min_qty':1}</field>
+            <field name="domain">[('is_library_task','=',0),('parent_id','=',False)]</field>
+            <field name="view_id" ref="project_task_group_library_form"/>
+            <field name="help" type="html">
+                <p>Create Group</p>
+            </field>
+        </record>
+
+        <record id="action_task_group_library_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_task_group_library"/>
+            <field name="view_id" ref="project_task_group_library_tree"/>
+        </record>
+
+        <record id="view_project_task_library_hierarchy" model="ir.ui.view">
+            <field name="name">project.task.library.hierarchy</field>
+            <field name="model">project.task.library</field>
+            <field name="field_parent">child_ids2</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_project_task_library_hierarchy" model="ir.actions.act_window">
+            <field name="name">Task Library Hierarchy</field>
+            <field name="res_model">project.task.library</field>
+            <field name="view_id" ref="view_project_task_library_hierarchy"/>
+            <field name="domain">[('parent_task_id','=',False),('parent_group_id','=',False)]
+            </field>
+        </record>
+
+        <record id="open_task_library_hierarchy" model="ir.actions.act_window">
+            <field name="name">Project Complete</field>
+            <field name="res_model">project.task.library</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_project_task_library_hierarchy"/>
+            <field name="domain">[('id','=',active_id)]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="project_task_library" parent="master_header" name="Tasks Library" sequence="14" action="action_task_library"/>
+
+        <menuitem action="action_task_library" id="menu_action_project_task_library" parent="project_task_library" sequence="1"/>
+
+    </data>
+</odoo>
+

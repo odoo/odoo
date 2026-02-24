@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="labour_quotation_form" model="ir.ui.view">
+            <field name="name">labour.quotation.form</field>
+            <field name="model">labour.quotation</field>
+            <field name="arch" type="xml">
+                <form string="Labour Quotation">
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight" attrs="{'invisible': [('state','not in','draft')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="partner_id" context="{'search_default_contractor':1, 'default_contractor':1, 'default_customer':0}"
+                                       domain="[('contractor','=',True),'|',('contractor_status','=','trial'),('contractor_status','=','approved')]"/>
+                                <field name="partner_ref"/>
+                                <field name="currency_id"/>
+                                <field name="stage_id"/>
+                            </group>
+                            <group>
+                                <field name="date_order"/>
+                                <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_create': True}"/>
+                                <field name="valid_till"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Labour Quotation">
+                                <field name="order_line">
+                                    <tree>
+                                        <field name="labour_category"/>
+                                        <field name="labour_id"/>
+                                        <field name="labour_qty"/>
+                                        <field name="labour_uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="discount"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                        <field name="taxed_amount"/>
+                                        <field name="net_rate"/>
+                                    </tree>
+
+                                    <form string="Labour Order Line">
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="labour_category"/>
+                                                    <field name="labour_id"/>
+                                                    <label for="labour_qty"/>
+                                                    <div>
+                                                        <field name="labour_qty" class="oe_inline"/>
+                                                        <span class="oe_inline">&#160;</span>
+                                                        <field name="labour_uom" class="oe_inline"/>
+                                                    </div>
+                                                    <field name="price_unit"/>
+                                                    <field name="negotiated_rate"/>
+                                                    <field name="discount"/>
+                                                    <field name="credit_period"/>
+                                                    <field name="work_class"/>
+                                                </group>
+                                                <group>
+                                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                                    <field name="retention"/>
+                                                    <field name="st_per"/>
+                                                    <field name="vat_on_per"/>
+                                                    <field name="vat_per"/>
+                                                    <field name="st_on_per"/>
+                                                    <field name="payment_schedule"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+
+                                <notebook>
+                                    <page string="Audit Trail">
+                                        <group>
+                                            <group>
+                                                <div>
+                                                    <field name="mesge_ids" nolabel="1">
+                                                        <tree create="false">
+                                                            <field name="date"/>
+                                                            <field name="author_id"/>
+                                                            <field name="to_stage"/>
+                                                            <field name="remark"/>
+                                                            <field name="res_id" invisible="1"/>
+                                                            <field name="model" invisible="1"/>
+                                                            <field name="is_use" invisible="1"/>
+                                                        </tree>
+                                                    </field>
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <div>
+                                                </div>
+                                            </group>
+                                        </group>
+                                    </page>
+                                </notebook>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="labour_quotation_search" model="ir.ui.view">
+            <field name="name">labour.quotation.search</field>
+            <field name="model">labour.quotation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="origin"/>
+
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="No draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Contractor" name="partner_id" context="{'group_by':'partner_id'}"/>
+                        <filter string="Source Document" name="origin" context="{'group_by':'origin'}"/>
+                        <filter string="State" name="state" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="labour_quotation_tree" model="ir.ui.view">
+            <field name="name">labour.quotation.tree</field>
+            <field name="model">labour.quotation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="origin"/>
+                    <field name="amount_untaxed"/>
+                    <field name="amount_total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_quotation_line_tree" model="ir.ui.view">
+            <field name="name">labour.quotation.line.tree</field>
+            <field name="model">labour.quotation.line</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="order_id"/>
+                    <field name="labour_id"/>
+                    <field name="price_unit"/>
+                    <field name="labour_qty"/>
+                    <field name="basic_amount"/>
+                    <field name="discount"/>
+                    <field name="taxes_id"/>
+                    <field name="taxed_amount"/>
+                    <field name="labour_uom"/>
+                    <field name="price_subtotal" widget="monetary"/>
+                    <field name="date_planned" widget="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="labour_quotation_id" model="ir.actions.act_window">
+            <field name="name">Labour Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">labour.quotation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a labour quotation.
+                </p>
+                <p>
+                    The labour quotation is the quotation of labour.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="contracting_menu" name="Contracting" sequence="20"/>
+        <menuitem name="Labour" id="labour_menu_id" parent="contracting_menu" sequence="3"/>
+        <menuitem name="Labour" id="labour_menu_id" parent="contracting_menu"/>
+
+        <menuitem action="labour_quotation_id" id="menu_labour_quotation" parent="labour_menu_id" sequence="1"/>
+
+    </data>
+</odoo>
+

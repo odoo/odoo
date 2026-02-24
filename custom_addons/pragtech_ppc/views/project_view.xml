@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_form_inherited1" model="ir.ui.view">
+            <field name="name">view.project.form.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form//sheet" position="before">
+                    <field name="flag" invisible="1"/>
+                    <div>
+                        <button name="change_state" string="Change Stage" class="oe_highlight"
+                                type="object" attrs="{'invisible':[('flag', '=', True)]}" style="margin-left:10px;"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//form//sheet//notebook//page[1]" position="after">
+                    <page string="Message">
+                        <field name="mesge_ids" nolabel="1">
+                            <tree create="false">
+                                <field name="date"/>
+                                <field name="author_id"/>
+                                <field name="to_stage"/>
+                                <field name="remark"/>
+                                <field name="res_id" invisible="1"/>
+                                <field name="model" invisible="1"/>
+                                <field name="is_use" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="Address Details">
+                        <group>
+                            <!--<field name="stage_id"/>-->
+                            <field name="code"/>
+                            <field name="company_id"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <field name="active_duplicate"/>
+                            <label for="street" string="Address"/>
+                            <div>
+                                <field name="street" placeholder="Street..."/>
+                                <field name="street2" placeholder="Street 2..."/>
+                                <div class="address_format">
+                                    <field name="city" placeholder="City" style="width: 40%"/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 20%"/>
+                                </div>
+                                <field name="country_id" placeholder="Country" class="oe_no_button"/>
+                            </div>
+                            <field name="project_category"/>
+                            <field name="flag" invisible="1"/>
+                        </group>
+                    </page>
+
+                    <page string="Project Consultant Information">
+                        <group>
+                            <group>
+                                <field name="architect"/>
+                                <field name="legal_adviser"/>
+                            </group>
+                            <group>
+                                <field name="consultant"/>
+                                <field name="engineer_incharge"/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <page string="Sub Project Information">
+                        <field name="subproject_ids" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page string="Site Information">
+                        <group>
+                            <group>
+                                <field name="saleable_area"/>
+                                <field name="carpet_area"/>
+                                <field name="site_specifications"/>
+                                <field name="site_contact_no"/>
+                                <field name="total_construction_cost"/>
+                            </group>
+
+                            <group>
+                                <field name="builtup_area"/>
+                                <field name="plot_area"/>
+                                <field name="site_contact_person"/>
+                                <field name="construction_cost_per_SFT"/>
+                                <field name="fsi"/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <page string="Other Information">
+                        <group>
+                            <group name="other information">
+                                <field name="vat"/>
+                                <field name="tdr"/>
+                                <field name="sanction_no"/>
+                                <field name="start_date"/>
+                                <field name="date_ids"/>
+                            </group>
+
+                            <group>
+                                <field name="cst"/>
+                                <field name="lbt_location_id"/>
+                                <field name="file_name"/>
+                                <field name="finish_date"/>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <page string="Documents">
+                        <field name="attachment_line_ids"/>
+                    </page>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_config_custom" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="project.view_project_project_filter"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p>
+                <p>
+                    Organize your activities (plan tasks, track issues, invoice timesheet) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="open_view_project_all_config_custom" id="menu_projects_custom" name="Projects" parent="project.menu_project_management" sequence="1"/>
+
+        <!-- Hiding Default Project Menu -->
+        <record id="make_invisible" model="res.groups">
+            <field name="name">Invisible</field>
+        </record>
+
+        <record model="ir.ui.menu" id="project.menu_projects_config">
+            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+        </record>
+
+        <record id="sanction_form_view" model="ir.ui.view">
+            <field name="name">sanction_form.view</field>
+            <field name="model">sanction.date</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sanction Details">
+                    <group>
+                        <group>
+                            <field name="sanction_date"/>
+                        </group>
+                        <group>
+                            <field name="sanction_no"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="sanction_tree_view" model="ir.ui.view">
+            <field name="name">sanction.tree</field>
+            <field name="model">sanction.date</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sanction_date"/>
+                    <field name="sanction_no"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="transaction_status_form_view" model="ir.ui.view">
+            <field name="name">transaction.status.view</field>
+            <field name="model">transaction.status</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transaction Status Details">
+                    <group colspan="4" col="4">
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="transaction_status_tree_view" model="ir.ui.view">
+            <field name="name">transaction.status.tree</field>
+            <field name="model">transaction.status</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Transaction Status Details">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_category_form_view" model="ir.ui.view">
+            <field name="name">project.category.form</field>
+            <field name="model">project.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="project_category_form">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_category_tree_view" model="ir.ui.view">
+            <field name="name">project.category.tree</field>
+            <field name="model">project.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_category_action" model="ir.actions.act_window">
+            <field name="name">project Category</field>
+            <field name="res_model">project.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="stage_master_form_view" model="ir.ui.view">
+            <field name="name">stage.master.form</field>
+            <field name="model">stage.master</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form create="0" delete="0" multi_edit="0" edit="0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <field name="draft"/>
+                            <field name="approved"/>
+                            <field name="foreclosed"/>
+                            <field name="amend_and_draft"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stage_master_search_view" model="ir.ui.view">
+            <field name="name">stage.master.search</field>
+            <field name="model">stage.master</field>
+            <field name="arch" type="xml">
+                <search string="Stage Transaction">
+                    <field name="name"/>
+                    <field name="draft"/>
+                    <field name="approved"/>
+                    <field name="foreclosed"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="stage_master_tree_view" model="ir.ui.view">
+            <field name="name">stage.master.tree</field>
+            <field name="model">stage.master</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0" multi_edit="0" edit="0">
+                    <field name="name"/>
+                    <field name="draft"/>
+                    <field name="approved"/>
+                    <field name="foreclosed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stage_master_action" model="ir.actions.act_window">
+            <field name="name">Stages Master</field>
+            <field name="res_model">stage.master</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <menuitem action="stage_master_action" id="menu_state_master" name="Stages Master" parent="master_header"/>
+
+        <!-- State Transaction Master Starts Here -->
+        <record id="stage_transaction_form_view" model="ir.ui.view">
+            <field name="name">stage.transaction.form</field>
+            <field name="model">stage.transaction</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="from_stage"/>
+                            <field name="to_stage"/>
+                            <field name="model"/>
+                            <field name="groups"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stage_transaction_search_view" model="ir.ui.view">
+            <field name="name">stage.transaction.search</field>
+            <field name="model">stage.transaction</field>
+            <field name="arch" type="xml">
+                <search string="Stage Transaction">
+                    <field name="from_stage"/>
+                    <field name="to_stage"/>
+                    <field name="model"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="stage_transaction_tree_view" model="ir.ui.view">
+            <field name="name">stage.transaction.tree</field>
+            <field name="model">stage.transaction</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="from_stage"/>
+                    <field name="to_stage"/>
+                    <field name="model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stage_transaction_action" model="ir.actions.act_window">
+            <field name="name">Stages Transaction</field>
+            <field name="res_model">stage.transaction</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <record id="1open_view_project_all" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="project.edit_project"/>
+            <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p>
+                <p>
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <!-- State Transaction Master ends Here -->
+
+    </data>
+</odoo>
+

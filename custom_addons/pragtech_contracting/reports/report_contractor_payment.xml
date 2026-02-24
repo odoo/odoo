@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_contractor_payment_document">
+            <t t-call="web.external_layout">
+                <t t-set="p" t-value="1"/>
+                <t t-set="o" t-value="o.with_context({})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="col-12">
+                        <div align="center">
+                            <h2>Contractor Payment Summary</h2>
+                        </div>
+                        <div>
+                            <div>
+                                <strong>Report Date:</strong>
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y')"/>
+                            </div>
+                        </div>
+
+                        <![CDATA[&nbsp;]]>
+                        <t t-set="contractor" t-value="0"/>
+
+                        <t t-foreach="o.order_line" t-as="line">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Work Order</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Contractor</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Project</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>SubProject</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Project WBS</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Bill Created</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Bill paid</strong>
+                                        </th>
+                                        <th class="text-center">
+                                            <strong>Bill Remaining</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.workorder_id"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.partner_id"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.project_id"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.sub_project"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.project_wbs"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.bill_created"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.bill_paid"/>
+                                        </td>
+                                        <td class="text-center" style="width:12%">
+                                            <span t-field="line.bill_balance"/>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                            <div class="oe_structure"/>
+
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_contractor_payment">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="pragtech_contracting.report_contractor_payment_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_rabill_summary_document">
+            <t t-call="web.external_layout">
+                <t t-set="p" t-value="1"/>
+                <t t-set="o" t-value="o.with_context({})"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="col-12">
+                        <div align="center">
+                            <h2>RA Bill Summary</h2>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div>
+                            <strong>Report Date:</strong>
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y')"/>
+                        </div>
+                        <t t-set="project" t-value="0"/>
+                        <t t-set="subproject" t-value="0"/>
+                        <t t-set="projectwbs" t-value="0"/>
+                        <t t-set="contractor" t-value="0"/>
+                        <t t-set="workorder" t-value="0"/>
+                    </div>
+
+                    <![CDATA[&nbsp;]]>
+                    <t t-foreach="o.order_line" t-as="line">
+                        <div>
+                            <div class="col-xs-6">
+                                <strong>Project :</strong>
+                                <span t-field="line.project_id"/>
+                            </div>
+                            <div t-if="line.rabill_ids.sub_project" class="col-xs-6">
+                                <strong>Subproject :</strong>
+                                <span t-field="line.rabill_ids.sub_project"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div t-if="line.rabill_ids.project_wbs" class="col-xs-6">
+                                <strong>Project Wbs :</strong>
+                                <span t-field="line.rabill_ids.project_wbs"/>
+                                <t t-set="projectwbs" t-value="line.rabill_ids.project_wbs.id"/>
+                            </div>
+                            <div t-if="line.rabill_ids.contractor_id" class="col-xs-6">
+                                <strong>Contractor :</strong>
+                                <span t-field="line.rabill_ids.contractor_id"/>
+                                <t t-set="contractor" t-value="line.rabill_ids.contractor_id.id"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div t-if="line.rabill_ids.workorder_id" class="col-xs-6">
+                                <strong>Work Order :</strong>
+                                <span t-field="line.rabill_ids.workorder_id"/>
+                                <t t-set="workorder" t-value="line.rabill_ids.workorder_id.id"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>RaBill</strong>
+                                <span t-if="line.rabill_ids" t-field="line.rabill_ids"/>
+                            </div>
+                        </div>
+
+                        <![CDATA[&nbsp;]]>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Contractor</th>
+                                    <th class="text-right">Task</th>
+                                    <th class="text-right">Labour</th>
+                                    <th class="text-right">Basic Amount</th>
+                                    <th class="text-right">Taxes</th>
+                                    <th class="text-right">Completion Detail No</th>
+                                    <th class="text-right">Completion Percent</th>
+                                    <th class="text-right">Estimated Quantiy</th>
+                                    <th class="text-right">Completed Quantity</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="invoice_tbody">
+                                <tr t-foreach="line.rabill_ids.rabill_line_ids" t-as="l">
+                                    <td class="text-right">
+                                        <span t-field="l.contractor_id"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.task_id"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.labour_id"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.basic_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.taxed_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.work_completion_line_sequence"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.completion_percent"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.estimated_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.completed_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.this_bill_amount" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-set="total_advance" t-value="0"/>
+                        <t t-set="total_debit" t-value="0"/>
+                        <t t-set="total_credit" t-value="0"/>
+                        <t t-foreach="line.rabill_ids.advance_recovery_ids" t-as="ad">
+                            <t t-set="total_advance" t-value="total_advance+ad.this_bill_recovery"/>
+                        </t>
+                        <t t-foreach="line.rabill_ids.debit_note_ids" t-as="dn">
+                            <t t-set="total_debit" t-value="total_debit + dn.this_bill_recovery"/>
+                        </t>
+                        <t t-foreach="line.rabill_ids.credit_note_ids" t-as="cn">
+                            <t t-set="total_credit" t-value="total_credit + cn.this_bill_recovery"/>
+                        </t>
+
+                        <div class="row">
+                            <div class="col-xs-8 pull-left">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td>
+                                            <strong>Subtotal</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.rabill_ids.total_payable_amt" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <strong>Retention</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.rabill_ids.retention_amount" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <strong>Advance</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_advance" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <strong>Debit</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_debit" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <strong>Credit</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="total_credit" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="line.rabill_ids.final_total_payable" t-field-options="{&quot;widget&quot;: &quot;False&quot;}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div class="oe_structure"/>
+
+                </div>
+            </t>
+        </template>
+
+
+        <template id="report_rabill_summary">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="pragtech_contracting.report_rabill_summary_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
+

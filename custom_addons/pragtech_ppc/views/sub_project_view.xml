@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sub_project_form_view" model="ir.ui.view">
+            <field name="name">sub.project.form</field>
+            <field name="model">sub.project</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="change_state" string="Change Stage" type="object" class="oe_highlight" attrs="{'invisible': [('flag','=',True)]}" invisible="0"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="budget_applicable"/>
+                                <field name="start_date"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="project_id"/>
+                                <field name="stage_id"/>
+                                <field name="end_date"/>
+                            </group>
+
+                            <field name="wbs_id" context="{'form_view_ref' : 'pragtech_ppc.project_task_inherited_form_wbs1'}" readonly="1">
+                                <tree create="false" domain="[('is_wbs','=',1),('is_task','=',0),('is_group','=',0)]">
+                                    <field name="name"/>
+                                    <field name="project_id"/>
+                                    <field name="planed_start_date"/>
+                                    <field name="planned_finish_date"/>
+                                </tree>
+                            </field>
+
+                            <field name="mesge_ids" nolabel="1">
+                                <tree create="false">
+                                    <field name="date"/>
+                                    <field name="author_id"/>
+                                    <field name="to_stage"/>
+                                    <field name="remark"/>
+                                    <field name="res_id" invisible="1"/>
+                                    <field name="model" invisible="1"/>
+                                    <field name="is_use" invisible="1"/>
+                                </tree>
+                            </field>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="sub_project_tree_view" model="ir.ui.view">
+            <field name="name">sub.project.tree</field>
+            <field name="model">sub.project</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="budget_applicable"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sub_project_action" model="ir.actions.act_window">
+            <field name="name">Sub Projects</field>
+            <field name="res_model">sub.project</field>
+            <field name="view_mode">tree,form,search</field>
+        </record>
+
+        <menuitem name="Sub Projects" id="sub_projects_id" parent="project.menu_project_management" action="sub_project_action" sequence="2"/>
+
+    </data>
+</odoo>
+

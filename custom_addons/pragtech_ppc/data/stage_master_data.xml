@@ -1,0 +1,26 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="stage_draft" model="stage.master">
+            <field name="name">Draft</field>
+            <field name="draft" eval="True"/>
+        </record>
+
+        <record id="stage_Approve" model="stage.master">
+            <field name="name">Approve</field>
+            <field name="approved" eval="True"/>
+        </record>
+
+        <record id="stage_foreclosed" model="stage.master">
+            <field name="name">Foreclosed</field>
+            <field name="foreclosed" eval="True"/>
+        </record>
+
+        <record id="stage_amend_and_draft" model="stage.master">
+            <field name="name">Amend And Draft</field>
+            <field name="amend_and_draft" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
+

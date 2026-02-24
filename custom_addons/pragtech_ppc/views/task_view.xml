@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Start Project task -->
+        <record id="project_task_form" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <!-- Please do not change name as access right are depends on name -->
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <form string="Project Tasks">
+                    <sheet>
+                        <h1>
+                            <field name="name" string="Task Title" placeholder="Task..."/>
+                        </h1>
+                        <group>
+                            <group colspan="4" col="4">
+                                <field name="category_id"/>
+                                <field name="sub_category_id"/>
+                                <field name="material_cost"/>
+                                <field name="labour_cost"/>
+                                <field name="min_qty" context="{'default_min_qty': 1}"/>
+                                <field name="parent_task_id" invisible="0"/>
+                                <field name="planed_start_date" required="1"/>
+                                <field name="planned_finish_date" required="1"/>
+                                <field name="actual_start_date"/>
+                                <field name="actual_finish_date"/>
+                                <field name="status"/>
+                                <field name="library_task_id" readonly="1"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="percentage" readonly="1"/>
+                                <field name="parent_group_id" invisible="1"/>
+                                <field name="parent_id" invisible="1" force_save="1"/>
+                                <field name="is_task" invisible="1"/>
+                            </group>
+
+                            <notebook>
+                                <page name="material_groups" string="Material">
+                                    <field name="task_material_line">
+                                        <tree editable="bottom">
+                                            <field name="material_id"/>
+                                            <field name="material_uom"/>
+                                            <field name="material_uom_qty" sum="Quantity"/>
+                                            <field name="material_rate" sum="rate"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page name="labour_groups" string="Labour">
+                                    <field name="task_labour_line">
+                                        <tree editable="bottom">
+                                            <field name="labour_id" domain="[('is_labour', '=', True)]"/>
+                                            <field name="labour_uom"/>
+                                            <field name="labour_uom_qty" sum="Quantity"/>
+                                            <field name="labour_rate" sum="rate"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Task Labour Line Form View -->
+        <record id="task_labour_line_form_view" model="ir.ui.view">
+            <field name="name">task.labour.line.view</field>
+            <field name="model">task.labour.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Task Labour Line">
+                    <group colspan="4" col="4">
+                        <field name="labour_id"/>
+                        <field name="labour_uom"/>
+                        <field name="labour_uom_qty"/>
+                        <field name="labour_rate"/>
+                        <field name="labour_line_id" context="{'form_view_ref': 'pragtech_ppc.project_task_form'}"/>
+                        <field name="group_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Start wbs task group -->
+        <record id="wbs_task_group_form" model="ir.ui.view">
+            <field name="name">wbs.task.group.form</field>
+            <field name="model">wbs.task.group</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="wbs_task_group_form">
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="name" placeholder="Group Title..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                    </group>
+                    <notebook>
+                        <page string="Tasks">
+                            <field name="task_id" context="{'form_view_ref': 'pragtech_ppc.project_task_form'}"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="wbs_task_group_tree" model="ir.ui.view">
+            <field name="name">wbs.task.group.tree</field>
+            <field name="model">wbs.task.group</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </tree>
+
+            </field>
+        </record>
+        <!-- End wbs task group -->
+
+        <!-- start task category -->
+        <record id="task_category_form_view" model="ir.ui.view">
+            <field name="name">task.category.form</field>
+            <field name="model">task.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="task_category_form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_category_tree_view" model="ir.ui.view">
+            <field name="name">task.category.tree</field>
+            <field name="model">task.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="task_category_search_view" model="ir.ui.view">
+            <field name="name">task.category.search</field>
+            <field name="model">task.category</field>
+            <field name="arch" type="xml">
+                <search string="task_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_category_action" model="ir.actions.act_window">
+            <field name="name">Task Category</field>
+            <field name="res_model">task.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- End task Category -->
+
+        <!-- Start task sub category -->
+        <record id="task_sub_category_form_view" model="ir.ui.view">
+            <field name="name">task.sub.category.form</field>
+            <field name="model">task.sub.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="task_sub_category_form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+
+                            <group>
+                                <field name="category_id"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_sub_category_tree_view" model="ir.ui.view">
+            <field name="name">task.sub.category.tree</field>
+            <field name="model">task.sub.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="task_sub_category_search_view" model="ir.ui.view">
+            <field name="name">task.sub.category.search</field>
+            <field name="model">task.sub.category</field>
+            <field name="arch" type="xml">
+                <search string="task_sub_category_search">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_sub_category_action" model="ir.actions.act_window">
+            <field name="name">Task Sub Category</field>
+            <field name="res_model">task.sub.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="project_task_tree" model="ir.ui.view">
+            <field name="name">project.task.tree</field>
+            <!-- Please do not change name as access right are depends on name -->
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Task Title"/>
+                    <field name="task_material_line"/>
+                    <field name="task_labour_line"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="sub_category_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_task_group_tree" model="ir.ui.view">
+            <field name="name">project_task.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Group Title"/>
+                    <field name="task_ids"/>
+                    <field name="group_ids"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="sub_category_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_task_group_form" model="ir.ui.view">
+            <field name="name">project.task.library.form</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <form string="Project Tasks Group">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" string="Group Title" placeholder="Group..."/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="planed_start_date" required="1"/>
+                                <field name="parent_group_id" invisible="1"/>
+                                <field name="percentage" invisible="1"/>
+                                <field name="project_id" invisible="1"/>
+                                <field name="sub_project" invisible="1"/>
+                                <field name="wbs_name" invisible="1"/>
+                                <field name="parent_task_id" invisible="1"/>
+                                <field name="parent_id" invisible="1" force_save="1"/>
+                                <field name="min_qty" invisible="1"/>
+                                <field name="is_task" invisible="1"/>
+                                <field name="is_task" invisible="1"/>
+                                <field name="wbs_start_date" required="0"/>
+                                <field name="company_id" options="{'no_create': True}"/><!--  groups="base.group_multi_company"  -->
+                            </group>
+                            <group>
+                                <field name="planned_finish_date" required="1"/>
+                                <field name="wbs_end_date" required="0"/>
+                            </group>
+
+                            <notebook>
+                                <page string="Tasks">
+                                    <field name="task_ids"
+                                           context="{'form_view_ref': 'pragtech_ppc.project_task_form', 'tree_view_ref': 'pragtech_ppc.project_task_tree', 'default_min_qty': '1', 'default_is_task': True}">
+                                        <tree create="false" delete="false">
+                                            <field name="name" string="Task Title"/>
+                                            <field name="task_labour_line"/>
+                                            <field name="category_id" invisible="1"/>
+                                            <field name="sub_category_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Groups">
+                                    <field name="group_ids"
+                                           context="{'default_is_wbs': False, 'default_min_qty': '1', 'tree_view_ref': 'pragtech_ppc.project_task_group_tree', 'form_view_ref': 'pragtech_ppc.project_task_group_form'}">
+                                        <tree>
+                                            <field name="name" string="Group Title"/>
+                                            <field name="task_ids"/>
+                                            <field name="group_ids"/>
+                                            <field name="category_id" invisible="1"/>
+                                            <field name="sub_category_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                                <page string="Project Task Library">
+                                    <button name="create_wbs_task" string="Create WBS Task" type="object"
+                                            class="oe_highlight"/>
+                                    <field name="project_child_task_library_ids"
+                                           context="{'project_id': project_id, 'wbs': name, 'tree_view_ref': 'pragtech_ppc.project_task_library_tree',
+                                                     'form_view_ref': 'pragtech_ppc.project_task_library_form', 'default_min_qty': '1'}"
+                                           domain="[('is_library_task', '=', True)]" force_save="1"/>
+                                </page>
+
+                                <page string="child Group" invisible="1">
+                                    <field name="child_ids2">
+                                        <tree>
+                                            <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                                            <field name="name"/>
+                                            <field name="date_deadline" invisible="context.get('deadline_visible', True)"/>
+                                        </tree>
+                                    </field>
+                                </page>
+
+                            </notebook>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Start Project WBS -->
+        <record id="project_task_inherited_form_wbs1" model="ir.ui.view">
+            <field name="name">project.wbs</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <form string="task_wbs_form">
+                     <header>
+                        <button name="action_apply" type="object" string="Apply" class="oe_highlight" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="depend_id" invisible="1"/>
+                                 <field name="day_count" invisible="1"/>
+                                <field name="project_id" required="True"/>
+                                <field name="sub_project" required="True"/>
+                                <!-- Added company_id -->
+                                <field name="company_id" options="{'no_create': True}"/><!-- groups="base.group_multi_company" -->
+                                <field name="actual_cost" invisible="0"/>
+                                <field name="is_wbs" invisible="1"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="planed_start_date" required="1"/>
+                                <field name="planned_finish_date" required="1"/>
+                                <field name="completion_date" invisible="1"/>
+                                <field name="actual_finish_date" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="wbs_task_group" string="WBS Task Group" invisible="1">
+                                <field name="wbs_task_ids" string="Group"
+                                       context="{'default_is_group': 1, 'default_is_task': 0, 'default_project_id': project_id, 'default_sub_project': sub_project, 'default_wbs_name': name, 'default_is_wbs': 0, 'form_view_ref': 'pragtech_ppc.project_task_group_form', 'tree_view_ref': 'pragtech_ppc.project_task_group_tree'}">
+                                    <tree colors="blue:is_task==False" delete="0">
+                                        <field name="name" string="Group Title"/>
+                                        <field name="task_ids"/>
+                                        <field name="group_ids"/>
+                                        <field name="category_id" invisible="1" required="True"/>
+                                        <field name="sub_category_id" invisible="1"/>
+                                        <field name="is_task" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            
+                            <page name="wbs_task_group_new" string="WBS Task Group">
+                                <field name="project_child_task_library_ids"
+                                         />
+                            </page>
+
+                            <page string="Estimated Labour">
+                                <field name="labour_estimate_line">
+                                    <tree create="true" delete="true">
+                                        <field name="name"/>
+                                        <field name="group_id"/>
+                                        <field name="labour_line_id"/>
+                                        <field name="labour_id"/>
+                                        <field name="labour_uom_qty"/>
+                                        <field name="labour_uom"/>
+                                        <field name="labour_rate"/>
+                                        <field name="requisition_till_date"/>
+                                        <field name="balanced_requisition"/>
+                                        <field name="sub_total" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Estimated Material">
+                                <field name="material_estimate_line">
+                                    <tree create="true" delete="true">
+                                        <field name="name"/>
+                                        <field name="group_id"/>
+                                        <field name="material_line_id" context="{'form_view_ref': 'pragtech_ppc.project_task_form'}"/>
+                                        <field name="material_id"/>
+                                        <field name="material_uom_qty"/>
+                                        <field name="material_uom"/>
+                                        <field name="material_rate"/>
+                                        <field name="requisition_till_date"/>
+                                        <field name="balanced_requisition"/>
+                                        <field name="sub_total" sum="Total"/>
+                                        <field name="material_category" invisible="1"/>
+                                        <field name="task_category" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Project Task Library" invisible="1">
+                                <button name="create_wbs_task_group" string="Create WBS Task Group" type="object" class="oe_highlight"/>
+                                <field name="project_task_library_ids"
+                                       context="{'tree_view_ref': 'pragtech_ppc.project_task_library_tree', 'form_view_ref': 'pragtech_ppc.project_task_library_form', 'project_id': project_id, 'name': name}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="project_task_inherited_tree_wbs1" model="ir.ui.view">
+            <field name="name">project.task.tree.inherit.wbs</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="planed_start_date"/>
+                    <field name="planned_finish_date"/>
+                    <field name="actual_start_date"/>
+                    <field name="actual_finish_date"/>
+                    <field name="actual_cost"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Project Wbs action -->
+        <record id="act_project_task1" model="ir.actions.act_window">
+            <field name="name">Project Wbs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_is_task': False,'wbs_action': True, 'default_is_wbs': True}</field>
+            <field name="domain">[('is_wbs', '=' ,1), ('is_task', '=', 0)]</field>
+            <field name="view_id" ref="project_task_inherited_form_wbs1"/>
+        </record>
+
+        <record id="category_budget_action_menu1" model="ir.actions.act_window">
+            <field name="name">Category Budget</field>
+            <field name="res_model">category.budget</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="wbs_budget_action_menu1" model="ir.actions.act_window">
+            <field name="name">Wbs Budget</field>
+            <field name="res_model">wbs.budget</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Category Budget-menu and action starts -->
+        <menuitem name="Category Budget" id="category_budget_menu_id" parent="project.menu_project_management" action="category_budget_action_menu1"/>
+
+        <record id="action_wbs_form_view" model="ir.actions.act_window">
+            <field name="view_mode">form</field>
+            <field name="res_model">project.task</field>
+            <field name="view_id" ref="project_task_inherited_form_wbs1"/>
+        </record>
+
+        <record id="action_wbs_trees_view" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="act_project_task1"/>
+            <field name="view_id" ref="project_task_inherited_tree_wbs1"/>
+        </record>
+
+        <menuitem name="Project WBS" id="project_wbs_header_childs" parent="project.menu_project_management" action="act_project_task1" sequence="3"/>
+
+        <!-- project wbs hierarchy starts here -->
+        <record id="project_task_hierarchy_tree_wbs1" model="ir.ui.view">
+            <field name="name">project.task.tree.hierarchy.wbs</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids2</field>
+            <field name="arch" type="xml">
+                <tree string="Child Tasks">
+                    <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                    <field name="name"/>
+                    <field name="planned_hours" invisible="context.get('set_visible', False)"/>
+                    <field name="date_deadline" invisible="context.get('deadline_visible', True)"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_project_wbs_hierarchy" model="ir.actions.act_window">
+            <field name="name">Project WBS Group Hierarchy</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('parent_task_id', '=', False), ('parent_group_id', '=', False), ('parent_id', '=', False)]
+            </field>
+        </record>
+
+        <record id="project_task_search" model="ir.ui.view">
+            <field name="name">project.task.search</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="category_id" context="{'group_by': 'category_id'}"/>
+                        <filter string="Parent Task Id" name="parent_task_id" context="{'group_by': 'parent_task_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_task_new_form" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="project_task_form"/>
+            <field name="context">{'default_is_task': True, 'default_min_qty': 1}</field>
+            <field name="domain">[('is_task', '=', 1)]</field>
+            <field name="help" type="html">
+                <p>Create Task</p>
+            </field>
+        </record>
+
+        <record id="action_task_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_task_new_form"/>
+            <field name="view_id" ref="project_task_tree"/>
+        </record>
+
+        <record id="action_task_group_new_form" model="ir.actions.act_window">
+            <field name="name">Project Tasks Group</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">form,tree,gantt</field>
+
+            <!--<field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>-->
+
+            <field name="context">{'default_is_task': False, 'default_min_qty': 1, 'default_is_wbs': False}</field>
+            <field name="domain">[('is_task', '=', 0),('is_wbs', '=', 0)]</field>
+            <field name="view_id" ref="pragtech_ppc.project_task_group_form"/>
+            <field name="help" type="html">
+                <p>Create Group</p>
+            </field>
+        </record>
+
+        <record id="action_task_group_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_task_group_new_form"/>
+            <field name="view_id" ref="project_task_group_tree"/>
+        </record>
+
+        <record id="view_project_task_hierarchy" model="ir.ui.view">
+            <field name="name">project.task.hierarchy</field>
+            <field name="model">project.task</field>
+            <field name="field_parent">child_ids2</field>
+            <field name="arch" type="xml">
+                <tree string="Project Task Hierarchy">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_project_task_hierarchy" model="ir.actions.act_window">
+            <field name="name">Project Hierarchy</field>
+            <field name="res_model">project.task</field>
+            <field name="view_id" ref="view_project_task_hierarchy"/>
+            <field name="domain">[('parent_task_id', '=', False), ('parent_group_id', '=', False)]
+            </field>
+        </record>
+
+        <record id="open_project_task_from_hierarchy" model="ir.actions.act_window">
+            <field name="name">Project Complete</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_project_task_hierarchy"/>
+            <field name="domain">[('id', '=', active_id)]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem action="project.action_view_task"
+                  id="project.menu_action_view_task"
+                  groups="pragtech_ppc.make_invisible"
+                  parent="project.menu_project_management"
+                  sequence="5"/>
+
+    </data>
+</odoo>
+

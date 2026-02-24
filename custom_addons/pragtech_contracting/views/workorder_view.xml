@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form view for Work Order types -->
+        <record id="work_order_types_view" model="ir.ui.view">
+            <field name="name">work.order.form</field>
+            <field name="model">work.order.types</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="status"/>
+                        </group>
+
+                        <field name="remark"/>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view for Work Order types -->
+        <record id="work_order_tree_view" model="ir.ui.view">
+            <field name="name">work.order.tree</field>
+            <field name="model">work.order.types</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action for PO types menu -->
+        <record id="work_order_types_action" model="ir.actions.act_window">
+            <field name="name">Work Order Types</field>
+            <field name="res_model">work.order.types</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="work_order_line_form_to_cancel_req" model="ir.ui.view">
+            <field name="name">work.order.line.form.req</field>
+            <field name="model">work.order.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="requisition_id" readonly="True"/>
+                    <field name="wo_requisition_line_ids">
+                        <tree create="false" editable="bottom">
+                            <field name="requisition_id" readonly="True"/>
+                            <field name="project_id" readonly="True"/>
+                            <field name="group_id" readonly="True"/>
+                            <field name="task_id" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                            <field name="labour_id" readonly="True"/>
+                            <field name="quantity" readonly="True"/>
+                            <field name="Requisition_as_on_date" readonly="True"/>
+                            <field name="current_order_qty"/>
+                            <field name="qty_to_cancel"/>
+                            <field name="rate" readonly="True"/>
+                            <field name="specification"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="workorder_action_transaction" model="ir.actions.act_window">
+            <field name="name">Transaction</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">transaction.transaction</field>
+            <field name="domain">[('work_order_id','=',active_id),('flag','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a Transaction.
+                </p>
+            </field>
+        </record>
+
+        <!-- start Work Order -->
+        <record id="work_order_line_form" model="ir.ui.view">
+            <field name="name">work.order.line.form</field>
+            <field name="model">work.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Work Order Line">
+                    <sheet>
+
+                        <group>
+                            <group>
+                                <field name="amount_to_release" invisible="1"/>
+                                <field name="category_id"/>
+                                <field name="task_category"/>
+                                <field name="task_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="vat_per"/>
+                                <field name="st_per"/>
+                                <field name="vat_on_per"/>
+                                <field name="st_on_per"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="work_tax" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                <field name="discount"/>
+                            </group>
+
+                            <group>
+                                <field name="labour_id"/>
+                                <field name="revision" readonly="1"/>
+                                <field name="rate"/>
+                                <field name="quantity"/>
+                                <field name="original_quantity" invisible="1"/>
+                                <field name="start_date"/>
+                                <field name="completion_date"/>
+                                <field name="specification"/>
+                                <field name="project_wbs" invisible="0"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="payment_schedule" string="Payment Schedule">
+                                <field name="payment_schedule_line_ids" context="{'default_project_wbs':project_wbs}">
+                                    <tree editable="bottom">
+                                        <field name="project_wbs" invisible="0"/>
+                                        <field name="task_id" readonly="0" domain="[('is_task','=',True)]"
+                                               context="{'form_view_ref':'pragtech_ppc.project_task_form','search_view_ref':'pragtech_ppc.project_task_search'}"/>
+                                        <field name="amount_to_release" sum="Total"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page name="requisitions" string="Requisitions">
+                                <field name="wo_requisition_line_ids">
+                                    <tree create="false" delete="false">
+                                        <field name="requisition_id" readonly="True"/>
+                                        <field name="project_id" readonly="True"/>
+                                        <field name="group_id" readonly="True"/>
+                                        <field name="task_id" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                        <field name="labour_id" readonly="True"/>
+                                        <field name="quantity" readonly="True"/>
+                                        <field name="Requisition_as_on_date" readonly="True"/>
+                                        <field name="current_order_qty"/>
+                                        <field name="rate" readonly="True"/>
+                                        <field name="specification"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_form" model="ir.ui.view">
+            <field name="name">work.order.form</field>
+            <field name="model">work.order</field>
+            <field name="arch" type="xml">
+                <form string="Work Order">
+                    <header>
+                        <button name="change_state" type="object" string="Change Stage" class="oe_highlight"
+                                groups="pragtech_contracting.group_asst_manager,pragtech_contracting.group_manager" attrs="{'invisible': [('state','not in','draft')]}"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="%(pragtech_contracting.workorder_action_transaction)d" icon="fa-shopping-cart">
+                                <field string="Transactions" name="transaction_count" widget="statinfo"/>
+                            </button>
+                        </div>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" string='Work Order' readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="partner_id" attrs="{'readonly': [('state','not in','draft')]}" context="{'search_default_contractor':1, 'default_contractor':1, 'default_customer':0}"
+                                       domain="[('contractor','=',True),'|',('contractor_status','=','trial'),('contractor_status','=','approved')]"/>
+                                <field name="project_id" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                <field name="sub_project" attrs="{'readonly': [('state','not in','draft')]}" domain="[('project_id','=',project_id)]"/>
+                                <field name="project_wbs" attrs="{'readonly': [('state','not in','draft')]}" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"
+                                       domain="[('project_id','=',project_id),('sub_project','=',sub_project),('is_wbs', '=', True),('is_task','=',False),('is_group', '=',False)]"/>
+                                <field name="flag" invisible="1"/>
+                            </group>
+
+                            <group>
+                                <field name="stage_id" readonly="1"/>
+                                <field name="date_order" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                <field name="valid_till" invisible="1"/>
+                                <field name="revision" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <button name="%(pragtech_contracting.add_requisition_on_work_order)d" string="Add Requisition" class="fa fa-plus"
+                                    type="action" context="{'project_id': project_id, 'stage_id': stage_id, 'project_wbs': project_wbs, 'sub_project': sub_project}"/>
+                        </group>
+
+                        <field name="wo_requisition_line" colors="#FF0000:is_red==True current_order_qty==0" invisible="1">
+                            <tree editable="bottom"
+                                  colors="#FF0000:is_red==True;#e86a87:current_order_qty==0"
+                                  create="false" delete="false">
+                                <field name="is_red" invisible="True"/>
+                                <field name="work_order_line_id" invisible="1"/>
+                                <field name="requisition_id" readonly="True"/>
+                                <field name="project_id" readonly="True"/>
+                                <field name="project_wbs" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_inherited_form_wbs1'}"/>
+                                <field name="group_id" readonly="True"/>
+                                <field name="task_id" readonly="True" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                <field name="labour_id" readonly="True"/>
+                                <field name="unit" readonly="True"/>
+                                <field name="quantity" readonly="True"/>
+                                <field name="requisition_qty" readonly="True"/>
+                                <field name="total_ordered_qty" readonly="True"/>
+                                <field name="current_order_qty"/>
+                                <field name="rate" readonly="True"/>
+                                <field name="specification"/>
+                            </tree>
+                        </field>
+
+                        <notebook>
+                            <page string="Work Order line">
+                                <field name="order_line" context="{'default_project_wbs':project_wbs}"
+                                       domain="[('quantity', '>', 0)]" attrs="{'readonly': [('state','not in','draft')]}">
+                                    <tree domain="[('quantity', '>', '0')]">
+                                        <field name="requisition_id" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="category_id"/>
+                                        <field name="labour_id"/>
+                                        <field name="task_id" context="{'form_view_ref':'pragtech_ppc.project_task_form'}"/>
+                                        <field name="quantity"/>
+                                        <field name="rate"/>
+                                        <field name="work_tax" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="material_amount"/>
+                                        <field name="specification"/>
+                                        <field name="amount_to_release" invisible="1"/>
+                                    </tree>
+                                </field>
+
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+
+                                <notebook>
+                                    <page string="Audit Trail">
+                                        <field name="mesge_ids" nolabel="1">
+                                            <tree create="false">
+                                                <field name="date"/>
+                                                <field name="author_id"/>
+                                                <field name="to_stage"/>
+                                                <field name="remark"/>
+                                                <field name="res_id" invisible="1"/>
+                                                <field name="model" invisible="1"/>
+                                                <field name="is_use" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </page>
+
+                            <page string="Other Information">
+                                <group>
+                                    <field name="commencement_date" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="completion_date" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="maximum_advance" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="retention" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="tds_account" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="wo_type" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="title" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="wct_account" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="wct_percent" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="billed_amount" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                    <field name="currency_id" attrs="{'readonly': [('state','not in','draft')]}"/>
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="work_order_tree" model="ir.ui.view">
+            <field name="name">work.order.tree</field>
+            <field name="model">work.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs"/>
+                    <field name="stage_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_line_tree" model="ir.ui.view">
+            <field name="name">work.order.line.tree</field>
+            <field name="model">work.order.line</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="labour_id"/>
+                    <field name="start_date"/>
+                    <field name="completion_date"/>
+                    <field name="quantity"/>
+                    <field name="rate"/>
+                    <field name="discount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="work_order_search" model="ir.ui.view">
+            <field name="name">work.order.search</field>
+            <field name="model">work.order</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="project_id"/>
+                    <field name="sub_project"/>
+                    <field name="project_wbs"/>
+                    <filter name="draft" string="Draft" domain="[('stage_id.draft','=',True)]"/>
+                    <filter name="not draft" string="Not Draft" domain="[('stage_id.draft','=',False)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Contractor" name="partner_id" context="{'group_by':'partner_id'}"/>
+                        <filter string="Date" name="date_order" context="{'group_by':'date_order'}"/>
+                        <filter string="Sub Project" name="sub_project" context="{'group_by': 'sub_project'}"/>
+                        <filter string="Project Wbs" name="project_wbs" context="{'group_by': 'project_wbs'}"/>
+                        <filter string="stage" name="stage_id" context="{'group_by': 'stage_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="work_order_action" model="ir.actions.act_window">
+            <field name="name">Work Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a work order.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="work_order_action" id="menu_work_order" parent="labour_menu_id" sequence="4"/>
+
+        <report
+                string="Work Order"
+                id="action_report_work_order"
+                model="work.order"
+                report_type="qweb-pdf"
+                name="pragtech_contracting.report_workorder"
+                file="pragtech_contracting.report_workorder"
+        />
+
+    </data>
+</odoo>
+
