@@ -103,6 +103,7 @@ class SaleOrder(models.Model):
             and base_line['record']._name == 'pos.order.line'
         ):
             pos_order_line = base_line['record']
+            so_line_values['product_id'] = base_line['product_id'].id
             so_line_values['name'] = _(
                 "Down payment (ref: %(order_reference)s on \n %(date)s)",
                 order_reference=pos_order_line.name,
