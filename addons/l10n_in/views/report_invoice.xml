@@ -15,13 +15,13 @@
         <xpath expr="//div[@id='partner_vat_no_shipping']" position="attributes">
             <attribute name="t-if" add="o.company_id.l10n_in_is_gst_registered" separator="and"/>
         </xpath>
-        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
-        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='address_same_as_shipping']" position="inside">
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
-        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='no_shipping']" position="inside">
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
 
