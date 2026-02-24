@@ -251,15 +251,17 @@ class CRMLeadMiningRequest(models.Model):
         }
         try:
             response = self._iap_contact_mining(params, timeout=300)
+
+            if response.get('credit_error'):
+                self.error_type = 'credits'
+                self.state = 'error'
+                return False
+
             if not response.get('data'):
                 self.error_type = 'no_result'
                 return False
 
             return response['data']
-        except iap_tools.InsufficientCreditError as e:
-            self.error_type = 'credits'
-            self.state = 'error'
-            return False
         except Exception as e:
             raise UserError(_("Your request could not be executed: %s", e))
 
