@@ -419,7 +419,7 @@ export class SearchModel extends EventBus {
      */
     get context() {
         if (!this._context) {
-            this._context = makeContext([this.globalContext, this._getContext()]);
+            this._context = makeContext([user.context, this.globalContext, this._getContext()]);
         }
         return deepCopy(this._context);
     }
@@ -1757,7 +1757,7 @@ export class SearchModel extends EventBus {
      */
     _getContext() {
         const groups = this._getGroups();
-        const contexts = [user.context];
+        const contexts = [];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const context = this._getSearchItemContext(activeItem);
@@ -2225,7 +2225,7 @@ export class SearchModel extends EventBus {
         if (gs.length) {
             localOrderBy = gs.flatMap((g) => g());
         }
-        const context = makeContext([this._getContext(), localContext]);
+        const context = makeContext([user.context, this._getContext(), localContext]);
         const userContext = user.context;
         for (const key in context) {
             if (key in userContext || /^search(panel)?_default_/.test(key)) {
