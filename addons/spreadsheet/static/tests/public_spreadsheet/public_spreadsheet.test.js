@@ -1,4 +1,4 @@
-import { contains, mockService } from "@web/../tests/web_test_helpers";
+import { contains, mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { expect, test } from "@odoo/hoot";
 
@@ -7,6 +7,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_fi
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { freezeOdooData } from "@spreadsheet/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { browser } from "@web/core/browser/browser";
 
 defineSpreadsheetModels();
 
@@ -64,6 +65,25 @@ test("click close button in filter panel will close the panel", async function (
     await contains(".o-public-spreadsheet-filters-close-button").click();
     expect(fixture.querySelector(".o-public-spreadsheet-filter-button")).toBeVisible();
     expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
+});
+
+test("public spreadsheet activates sheet from URL param", async function () {
+    const sheetId2 = "sheet2";
+    const { model } = await createModelWithDataSource({
+        spreadsheetData: {
+            sheets: [
+                { id: "sheet1", name: "Sheet1" },
+                { id: sheetId2, name: "Sheet2" },
+            ],
+        },
+    });
+    data = await freezeOdooData(model);
+    patchWithCleanup(browser.location, {
+        href: `${browser.location.href}?sheet_id=${sheetId2}`,
+    });
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet", false);
+    const activeTab = fixture.querySelector(".o-all-sheets .o-sheet-list .o-sheet.active");
+    expect(activeTab).toHaveText("Sheet2");
 });
 
 test.tags("desktop");

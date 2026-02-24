@@ -1,5 +1,6 @@
 import { useChildSubEnv, useState } from "@web/owl2/utils";
 import { Component, markRaw, onWillStart } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 
@@ -74,6 +75,18 @@ export class PublicReadonlySpreadsheet extends Component {
             // eslint-disable-next-line no-import-assign
             spreadsheet.__DEBUG__ = spreadsheet.__DEBUG__ || {};
             spreadsheet.__DEBUG__.model = this.model;
+        }
+
+        // Activate sheet from URL `sheet_id` param and remove it after use.
+        const url = new URL(browser.location.href);
+        const sheetId = url.searchParams.get("sheet_id");
+        if (sheetId) {
+            this.model.dispatch("ACTIVATE_SHEET", {
+                sheetIdFrom: this.model.getters.getActiveSheetId(),
+                sheetIdTo: sheetId,
+            });
+            url.searchParams.delete("sheet_id");
+            browser.history.replaceState({}, "", url.pathname + url.search);
         }
     }
 
