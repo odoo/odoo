@@ -56,7 +56,7 @@ export class SelfOrder extends Reactive {
         this.currency = this.config.currency_id;
 
         this.markupDescriptions();
-        this.access_token = this.config.access_token;
+        this.access_token = odoo.access_token;
         this.lastEditedProductId = null;
         this.currentProduct = 0;
         this.currentTable = null;
