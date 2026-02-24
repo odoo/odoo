@@ -89,7 +89,10 @@ export class SplitBillScreen extends Component {
     }
 
     async paySplittedOrder() {
-        const totalQty = this.currentOrder.lines.reduce((sum, line) => sum + line.qty, 0);
+        const totalQty = this.currentOrder.lines.reduce(
+            (sum, line) => sum + (line.isGlobalDiscountApplicable() ? line.qty : 0),
+            0
+        );
         const selectedQty = this.getNumberOfProducts();
 
         if (selectedQty > 0 && selectedQty < totalQty) {

@@ -150,9 +150,9 @@ patch(PosStore.prototype, {
         for (const coupon of order._code_activated_coupon_ids) {
             programsToCheck.add(coupon.program_id.id);
         }
-        const programs = [...programsToCheck].map((programId) =>
-            this.models["loyalty.program"].get(programId)
-        );
+        const programs = [...programsToCheck]
+            .map((programId) => this.models["loyalty.program"].get(programId))
+            .filter(Boolean);
         const pointsAddedPerProgram = order.pointsForPrograms(programs);
         for (const program of this.models["loyalty.program"].getAll()) {
             // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
@@ -364,6 +364,14 @@ patch(PosStore.prototype, {
                 )
             );
         });
+    },
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        const result = await super.addLineToOrder(vals, order, opts, configure);
+        if (this.models["loyalty.program"]?.length) {
+            await this.updatePrograms();
+            this.updateRewards();
+        }
+        return result;
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         if (!vals.product_tmpl_id && vals.product_id) {

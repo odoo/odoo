@@ -21,35 +21,35 @@ describe("pos.order - loyalty", () => {
     test("getOrderlines, _get_reward_lines and _get_regular_order_lines", async () => {
         const store = await setupPosEnv();
 
-        const order = await getFilledOrder(store);
-        const [line1, line2] = order.getOrderlines();
-        line1.update({ is_reward_line: true });
-        line2.update({ is_reward_line: false, refunded_orderline_id: 123 });
+        const order = store.addNewOrder();
+        const reward = store.models["loyalty.reward"].get(1);
+        const regularLine = await addProductLineToOrder(store, order);
+        const rewardLine = await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            reward_id: reward,
+        });
 
         // Verify getOrderlines method
         const orderedLines = order.getOrderlines();
-
-        expect(orderedLines[0]).toBe(line2);
-        expect(orderedLines[1]).toBe(line1);
-        expect(orderedLines[0].is_reward_line).toBe(false);
+        expect(orderedLines[0].id).toBe(regularLine.id);
+        expect(orderedLines[1].id).toBe(rewardLine.id);
+        expect(orderedLines[0].is_reward_line).toBeEmpty();
         expect(orderedLines[1].is_reward_line).toBe(true);
-        expect(order.getLastOrderline()).toBe(line2);
+        expect(order.getLastOrderline().id).toBe(regularLine.id);
 
         // Verify _get_reward_lines method
         const rewardLines = order._get_reward_lines();
 
-        expect(rewardLines).toEqual([line1]);
-        expect(rewardLines[0].is_reward_line).toBe(true);
+        expect(rewardLines.length).toBe(1);
+        expect(rewardLines[0].id).toBe(rewardLine.id);
 
         // Verify _get_regular_order_lines
-        const regularLine = await addProductLineToOrder(store, order);
-
-        expect(order.getOrderlines().length).toBe(3);
+        expect(order.getOrderlines().length).toBe(2);
 
         const regularLines = order._get_regular_order_lines();
 
-        expect(regularLines.length).toBe(2);
-        expect(regularLines[1].id).toBe(regularLine.id);
+        expect(regularLines.length).toBe(1);
+        expect(regularLines[0].id).toBe(regularLine.id);
     });
 
     test("setPricelist", async () => {
@@ -114,6 +114,12 @@ describe("pos.order - loyalty", () => {
         // Get loyalty card #1 which program_id = 1 (loyalty)
         const card = models["loyalty.card"].get(1);
 
+        await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            coupon_id: card,
+            points_cost: 5,
+        });
+
         order.uiState.couponPointChanges = {
             1: {
                 coupon_id: 1,
@@ -121,12 +127,6 @@ describe("pos.order - loyalty", () => {
                 points: 25,
             },
         };
-
-        await addProductLineToOrder(store, order, {
-            is_reward_line: true,
-            coupon_id: card,
-            points_cost: 5,
-        });
 
         expect(order._getRealCouponPoints(card.id)).toBe(30);
     });
@@ -150,11 +150,11 @@ describe("pos.order - loyalty", () => {
         order.processGiftCard("GIFT9999", 100, expirationDate);
 
         const couponChanges = Object.values(order.uiState.couponPointChanges);
-        expect(couponChanges.length).toBe(1);
-        expect(couponChanges[0].code).toBe("GIFT9999");
-        expect(couponChanges[0].points).toBe(100);
-        expect(couponChanges[0].expiration_date).toBe(expirationDate);
-        expect(couponChanges[0].manual).toBe(true);
+        expect(couponChanges.length).toBe(3);
+        expect(couponChanges[2].code).toBe("GIFT9999");
+        expect(couponChanges[2].points).toBe(100);
+        expect(couponChanges[2].expiration_date).toBe(expirationDate);
+        expect(couponChanges[2].manual).toBe(true);
     });
 
     test("_getDiscountableOnOrder", async () => {

@@ -9,6 +9,8 @@ definePosModels();
 test("validateOrder", async () => {
     const store = await setupPosEnv();
     const models = store.models;
+    store.updatePrograms = async () => {};
+    store.updateRewards = () => {};
     const order = store.addNewOrder();
     const fastPaymentMethod = order.config.fast_payment_method_ids[0];
 
@@ -19,11 +21,6 @@ test("validateOrder", async () => {
     // Get loyalty reward #1 - type = "discount"
     const reward = models["loyalty.reward"].get(1);
 
-    order.uiState.couponPointChanges = {
-        [card.id]: { coupon_id: card.id, program_id: loyaltyProgram.id, points: 100 },
-        "-1": { coupon_id: -1, program_id: loyaltyProgram.id, points: 30, partner_id: 1 },
-    };
-
     await addProductLineToOrder(store, order, {
         coupon_id: card,
         is_reward_line: true,
@@ -31,6 +28,10 @@ test("validateOrder", async () => {
         points_cost: 60,
     });
 
+    order.uiState.couponPointChanges = {
+        [card.id]: { coupon_id: card.id, program_id: loyaltyProgram.id, points: 100 },
+        "-1": { coupon_id: -1, program_id: loyaltyProgram.id, points: 30, partner_id: 1 },
+    };
     const validation = new OrderPaymentValidation({
         pos: store,
         orderUuid: store.getOrder().uuid,
