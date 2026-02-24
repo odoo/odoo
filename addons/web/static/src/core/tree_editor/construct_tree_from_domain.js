@@ -35,6 +35,7 @@ function _constructTree(ASTs, distributeNot = false, negate = false) {
         tree.negate = negate;
         tree.operator = toValue(operatorAST);
         tree.value = toValue(valueAST);
+        tree.isProperty = false;
         if (["any", "not any"].includes(tree.operator)) {
             try {
                 tree.value = constructTreeFromDomain(formatAST(valueAST), distributeNot);
