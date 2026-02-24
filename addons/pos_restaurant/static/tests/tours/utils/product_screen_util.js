@@ -63,3 +63,14 @@ export function bookOrReleaseTable() {
         },
     ];
 }
+
+export function clickBookTable() {
+    return [
+        ProductScreen.clickReview(),
+        {
+            content: "click book table",
+            trigger: ".product-screen .book-table",
+            run: "click",
+        },
+    ];
+}
