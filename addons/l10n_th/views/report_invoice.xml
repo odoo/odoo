@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+        <xpath expr="//t[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
             <span t-out="o.partner_id.l10n_th_branch_name"/>
         </xpath>
 
-        <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+        <xpath expr="//t[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
             <span t-out="o.partner_id.l10n_th_branch_name"/>
         </xpath>
-        <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+        <xpath expr="//t[@name='no_shipping']//span[@t-field='o.partner_id.vat']" position="after">
             <span t-out="o.partner_id.l10n_th_branch_name"/>
         </xpath>
         <t name="invoice_title" position="replace">

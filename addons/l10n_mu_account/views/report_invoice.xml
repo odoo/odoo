@@ -24,13 +24,13 @@
             <t name="cancelled_proforma_invoice_title">Cancelled Proforma VAT Invoice</t>
         </t>
 
-        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
             <span t-field="o.partner_id.company_registry"/>
         </xpath>
-        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='address_same_as_shipping']" position="inside">
             <span t-field="o.partner_id.company_registry"/>
         </xpath>
-        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+        <xpath expr="//t[@name='no_shipping']" position="inside">
             <span t-field="o.partner_id.company_registry"/>
         </xpath>
 
