@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import uuid
 from freezegun import freeze_time
 from unittest.mock import patch
 
+from cryptography.fernet import Fernet
+
 from odoo import fields, sql_db, tools, Command
 from odoo.exceptions import ValidationError
 from odoo.tests import new_test_user, tagged
+
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
+from odoo.addons.account_edi_proxy_client.tests.test_account_edi_proxy_client import TestAccountEdiProxyUser
 
 import logging
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdiImport(TestItEdi):
+class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
     """ Main test class for the l10n_it_edi vendor bills XML import"""
 
     fake_test_content = """<?xml version="1.0" encoding="UTF-8"?>
@@ -616,3 +621,23 @@ class TestItEdiImport(TestItEdi):
                 },
             ],
         }], applied_xml)
+
+    def test_decrypt_invoice_from_IAP(self):
+        filename = "IT123456789012_10001.xml"
+        invoice_content = "Invoice content here"
+        invoice_content_bytes = invoice_content.encode()
+        Move = self.env['account.move'].with_company(self.company)
+
+        symm_encrypted_invoice = Fernet(self.symmetric_key).encrypt(invoice_content_bytes)
+
+        result = Move._l10n_it_edi_check_and_decrypt_content(
+            filename=filename,
+            content=base64.b64encode(symm_encrypted_invoice),
+            key=base64.b64encode(self.asymm_encrypted_symmetric_key),
+            proxy_user=self.base_proxy_user,
+        )
+
+        self.assertTrue(result)
+        result_filename, result_content = result
+        self.assertEqual(result_filename, filename)
+        self.assertEqual(result_content, invoice_content_bytes)
