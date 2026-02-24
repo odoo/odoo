@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillDestroy, onWillUpdateProps, xml } from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -30,9 +30,11 @@ export class Image extends Component {
         alt: { type: String, optional: true },
         attrs: { type: Object, optional: true },
         svgCheck: { type: Boolean, optional: true },
+        lazyLoad: { type: Boolean, optional: true },
     };
     static defaultProps = {
         svgCheck: true,
+        lazyLoad: false,
     };
     static template = xml`
         <t t-if="state.loaded">
@@ -52,19 +54,64 @@ export class Image extends Component {
                 t-att-alt="props.alt"
                 t-att="props.attrs"/>
         </t>
+        <span t-elif="props.lazyLoad" t-ref="lazy"
+            style="display:inline-block;width:100%;aspect-ratio:1;"/>
         `;
 
     setup() {
         this.svgRef = useRef("svg");
+        this.lazyRef = useRef("lazy");
         this.svg = {};
         this.state = useState({ loaded: false });
+        this.observer = null;
 
-        onWillStart(async () => this.handleImgLoad(this.props.src));
+        onWillStart(async () => {
+            if (!this.props.lazyLoad || this.isCached(this.props.src)) {
+                await this.handleImgLoad(this.props.src);
+            }
+        });
         onWillUpdateProps(async (nextProps) => {
             if (this.props.src !== nextProps.src) {
                 await this.handleImgLoad(nextProps.src);
             }
         });
+        onWillDestroy(() => {
+            if (this.observer) {
+                this.observer.disconnect();
+            }
+        });
+
+        // Set up IntersectionObserver for lazy loading after the
+        // placeholder <span> is mounted in the DOM.
+        useLayoutEffect(
+            (lazyEl) => {
+                if (!lazyEl) {
+                    return;
+                }
+                if ("IntersectionObserver" in window) {
+                    const observer = new IntersectionObserver(
+                        (entries) => {
+                            for (const entry of entries) {
+                                if (entry.isIntersecting) {
+                                    this.handleImgLoad(this.props.src);
+                                    observer.disconnect();
+                                    this.observer = null;
+                                }
+                            }
+                        },
+                        { rootMargin: "100px" }
+                    );
+                    this.observer = observer;
+                    observer.observe(lazyEl);
+                    return () => observer.disconnect();
+                } else {
+                    // Fallback: load immediately if observer not available
+                    this.handleImgLoad(this.props.src);
+                }
+            },
+            () => [this.lazyRef.el]
+        );
+
         useLayoutEffect(
             (imgLoaded) => {
                 if (imgLoaded && this.isSvg(this.props.src) && this.svg.children.length) {
@@ -90,7 +137,7 @@ export class Image extends Component {
         }
         if (this.env.imgGroup) {
             this.env.imgGroup.addImgProm(prom);
-            this.env.imgGroup.loaded.then(() => {
+            this.env.imgGroup.getLoaded().then(() => {
                 this.state.loaded = true;
             });
         } else {
@@ -120,5 +167,13 @@ export class Image extends Component {
             fill: svgEl.getAttribute("fill") || "",
             children: svgEl.children,
         };
+    }
+
+    /**
+     * Check if the SVG for the given src is already in the cache.
+     * Used to skip lazy loading deferral for previously fetched images.
+     */
+    isCached(src) {
+        return this.isSvg(src) && JSON.stringify(src) in svgCache.cache;
     }
 }

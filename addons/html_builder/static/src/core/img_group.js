@@ -9,15 +9,13 @@ export class ImgGroup extends Component {
     };
 
     setup() {
-        this.load = () => {};
         this.imgProms = [];
         this.loadImgs = batched(this._loadImgs.bind(this));
+        this.loaded = Promise.resolve();
 
         useSubEnv({
             imgGroup: {
-                loaded: new Promise((resolve) => {
-                    this.load = resolve;
-                }),
+                getLoaded: () => this.loaded,
                 addImgProm: (promise) => {
                     this.imgProms.push(promise);
                     this.loadImgs();
@@ -27,7 +25,9 @@ export class ImgGroup extends Component {
     }
 
     async _loadImgs() {
-        await Promise.all(this.imgProms);
-        this.load();
+        const proms = this.imgProms;
+        this.imgProms = [];
+        this.loaded = Promise.all(proms);
+        await this.loaded;
     }
 }
