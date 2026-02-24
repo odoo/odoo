@@ -1763,7 +1763,13 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         tax_category_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
-        tax_subtotal_key = tax_category_key
+        tax_subtotal_key = {
+            'currency': tax_category_key['currency'],
+            'is_withholding': tax_category_key['is_withholding'],
+            'tax_category_code': tax_category_key['tax_category_code'],
+            'scheme_id': tax_category_key['scheme_id'],
+            'percent': tax_category_key['percent'],
+        } if tax_category_key else None
         if tax_category_key:
             tax_total_key = {
                 'is_withholding': tax_category_key['is_withholding'],
