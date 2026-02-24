@@ -18,6 +18,7 @@
     --o-main-text-color: #e0e0e0;
     --o-secondary-text-color: #a0a0a0;
     --o-header-view-text-color: #FFFFFF;
+    --o-active-option-text-color: #24c162;
 
     /* --- Borders and Separators --- */
     --o-border-color: #444444;
@@ -53,7 +54,7 @@ html {
 }
 
 a {
-    color: #64b5f6 !important;
+    color: var(--o-active-option-text-color) !important;
 }
 
 /* --- Login & Database Selector Specific Overrides --- */
@@ -75,14 +76,19 @@ body, .o_web_client {
 .o_main_navbar {
     background: var(--o-main-navbar-background-color) !important;
     border: none;
+    font-family: 'Montserrat', sans-serif !important;
+    font-style: normal !important;
+    font-size: large;
+    font-weight: 900 !important;
 }
 
 .o_main_navbar .o_menu_sections .o_nav_entry {
-    background: var(--o-navbar-background-color) !important;
+    background: var(--o-main-navbar-background-color) !important;
 }
 
 .o_main_navbar .o_menu_sections .dropdown-toggle {
-    background: var(--o-navbar-background-color-toogle) !important;
+    /*background: var(--o-navbar-background-color-toogle) !important;*/
+    background: var(--o-main-navbar-background-color) !important;
 }
 
 /* Style the "Card" (The white box containing the login form or DB list) */
