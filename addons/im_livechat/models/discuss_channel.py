@@ -217,6 +217,13 @@ class DiscussChannel(models.Model):
         store.bus_send()
         return result
 
+    def channel_change_description(self, description):
+        self.ensure_one()
+        if self.channel_type == "livechat" and self.env.user.has_access_livechat:
+            # sudo: discuss.channel - live chat users can update description of accessible live chat channels.
+            return super(DiscussChannel, self.sudo()).channel_change_description(description)
+        return super().channel_change_description(description)
+
     @api.depends("livechat_end_dt")
     def _compute_duration(self):
         for record in self:

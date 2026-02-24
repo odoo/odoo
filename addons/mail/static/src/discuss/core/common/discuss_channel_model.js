@@ -101,6 +101,9 @@ export class DiscussChannel extends Record {
     get allowDescription() {
         return this.allowDescriptionTypes.includes(this.channel_type);
     }
+    get allowEditDescription() {
+        return this.thread.is_editable;
+    }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
     }

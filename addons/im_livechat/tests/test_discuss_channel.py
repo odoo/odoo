@@ -98,6 +98,23 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         ):
             channel.description = "Description of the conversation"
 
+    def test_livechat_description_editable_by_non_member_operator(self):
+        operator = new_test_user(
+            self.env,
+            "operator_non_member",
+            groups="base.group_user,im_livechat.im_livechat_group_user",
+        )
+        self.livechat_channel.user_ids |= operator
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.assertNotIn(operator.partner_id, channel.channel_member_ids.partner_id)
+        self.assertTrue(operator.has_access_livechat)
+        channel.with_user(operator).channel_change_description("Updated by non-member operator")
+        self.assertEqual(channel.description, "Updated by non-member operator")
+
     def test_livechat_note_sync_to_internal_user_bus(self):
         """Test that a livechat note is sent to the internal user bus."""
         data = self.make_jsonrpc_request(
