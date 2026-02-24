@@ -849,3 +849,29 @@ registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_no
             Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_transfer_order_to_booked_table", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            //Transfer sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickBookTable(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlinesHaveNoChange("Coca-Cola"),
+            ProductScreen.orderLineHas("Coca-Cola", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
