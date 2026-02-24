@@ -210,7 +210,7 @@ export const accountTaxHelpers = {
                 batch.reduce((sum, batch_tax) => sum + batch_tax.amount, 0) / 100.0;
             const to_price_excluded_factor =
                 total_percentage !== -1 ? 1 / (1 + total_percentage) : 0.0;
-            return (raw_base * to_price_excluded_factor * tax.amount) / 100.0;
+            return (float_round((raw_base * to_price_excluded_factor), precision_rounding=0.01) * tax.amount) / 100.0;
         }
 
         if (tax.amount_type === "division") {
