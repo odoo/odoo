@@ -20316,3 +20316,38 @@ test(`widget column visibility with column_invisible attribute`, async () => {
     expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2);
     expect(`.o_data_row .test_widget`).toHaveCount(0);
 });
+
+test(`x2many list: create control supports hotkey`, async () => {
+    Foo._records[0].o2m = [1];
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="o2m">
+                        <list editable="bottom">
+                            <control>
+                                <create string="Add a line"/>
+                                <create string="Add a note" data-hotkey="n"/>
+                                <button type="object" name="custom_button" string="Catalog" data-hotkey="k"/>
+                            </control>
+                            <field name="name"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    expect(queryAllTexts(`.o_field_x2many_list_row_add button`)).toEqual([
+        "Add a line",
+        "Add a note",
+        "Catalog",
+    ]);
+    expect(`.o_field_x2many_list_row_add button:eq(0)`).not.toHaveAttribute("data-hotkey");
+    expect(`.o_field_x2many_list_row_add button:eq(1)`).toHaveAttribute("data-hotkey", "n");
+    expect(`.o_field_x2many_list_row_add button:eq(2)`).toHaveAttribute("data-hotkey", "k");
+});

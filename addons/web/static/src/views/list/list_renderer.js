@@ -162,7 +162,7 @@ export class ListRenderer extends Component {
 
         this.controls = this.props.archInfo.controls.length
             ? this.props.archInfo.controls
-            : [{ type: "create", string: _t("Add a line") }];
+            : [{ type: "create", string: _t("Add a line"), hotkey: "shift+l" }];
         this.deleteControl = this.controls.find((control) => control.type === "delete") || {};
 
         this.cellToFocus = null;

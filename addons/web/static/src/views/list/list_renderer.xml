@@ -152,6 +152,7 @@
                             t-if="control.type === 'create' and !this.evalColumnInvisible(control.invisible)"
                             t-attf-class="btn btn-link #{control_index !== 0 ? 'ml16' : ''}"
                             t-att-tabindex="this.props.list.editedRecord ? '-1' : '0'"
+                            t-att-data-hotkey="control.hotkey || false"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
                             <t t-out="control.string"/>
@@ -161,6 +162,7 @@
                             className="`${control.className} ${control_index !== 0 ? 'ml16' : ''}`"
                             clickParams="control.clickParams"
                             icon="control.icon"
+                            attrs="control.attrs"
                             record="this.props.list"
                             string="control.string"
                             title="control.title"
