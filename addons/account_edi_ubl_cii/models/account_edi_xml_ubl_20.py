@@ -172,7 +172,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'journal': invoice.journal_id,
 
             'use_company_currency': False,  # If true, use the company currency for the amounts instead of the invoice currency
-            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
+            'fixed_taxes_as_allowance_charges': False,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
         })
 
     def _dispatch_base_lines_recycling_contribution_taxes(self, base_lines, company, vals):
