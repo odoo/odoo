@@ -86,7 +86,7 @@ class TestBasic(TransactionCase):
     def test_readonly_save(self):
         """ Should not save readonly fields unless they're force_save
         """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+        f = Form(self.env['test_testing_utilities.a'], view='test_tests.non_normalized_attrs')
 
         f.f1 = '1'
         f.f2 = 987
@@ -99,7 +99,7 @@ class TestBasic(TransactionCase):
     def test_attrs(self):
         """ Checks that attrs/modifiers with non-normalized domains work
         """
-        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+        f = Form(self.env['test_testing_utilities.a'], view='test_tests.non_normalized_attrs')
 
         # not readonly yet, should work
         f.f2 = 5
@@ -284,7 +284,7 @@ class TestM2M(TransactionCase):
         self.assertEqual(r.m2m, a)
 
     def test_attr(self):
-        f = Form(self.env['test_testing_utilities.e'], view='test_testing_utilities.attrs_using_m2m')
+        f = Form(self.env['test_testing_utilities.e'], view='test_tests.attrs_using_m2m')
         with self.assertRaises(AssertionError):
             f.count = 5
         f.m2m.add(self.env['test_testing_utilities.sub2'].create({'name': 'ok'}))
@@ -305,7 +305,7 @@ class TestO2M(TransactionCase):
         """ Tests that the o2m proxy allows adding, removing and editing o2m
         records
         """
-        with Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_parent') as f:
+        with Form(self.env['test_testing_utilities.parent'], view='test_tests.o2m_parent') as f:
             f.subs.new().save()
             f.subs.new().save()
             f.subs.new().save()
@@ -319,7 +319,7 @@ class TestO2M(TransactionCase):
         )
         self.assertEqual(r.v, 5)
 
-        with Form(r, view='test_testing_utilities.o2m_parent') as f:
+        with Form(r, view='test_tests.o2m_parent') as f:
             with f.subs.new() as sub:
                 sub.value = 5
             f.subs.new().save()
@@ -335,7 +335,7 @@ class TestO2M(TransactionCase):
         )
         self.assertEqual(r.v, 10)
 
-        with Form(r, view='test_testing_utilities.o2m_parent') as f, \
+        with Form(r, view='test_tests.o2m_parent') as f, \
             f.subs.edit(index=0) as sub,\
             self.assertRaises(AssertionError):
                 sub.name = "whop whop"
@@ -344,8 +344,8 @@ class TestO2M(TransactionCase):
         """ Tests the o2m proxy when the list view is editable rather than
         delegating to a separate form view
         """
-        f = Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_parent_ed')
-        custom_tree = self.env.ref('test_testing_utilities.editable_external')
+        f = Form(self.env['test_testing_utilities.parent'], view='test_tests.o2m_parent_ed')
+        custom_tree = self.env.ref('test_tests.editable_external')
 
         self.assertEqual(
             [el.get('name') for el in f._view['tree'].xpath('//field[@name="subs"]/list//field')],
@@ -378,7 +378,7 @@ class TestO2M(TransactionCase):
         """ Tests the o2m proxy when the list and form views are provided
         inline rather than fetched separately
         """
-        with Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_parent_inline') as f:
+        with Form(self.env['test_testing_utilities.parent'], view='test_tests.o2m_parent_inline') as f:
             with f.subs.new() as s:
                 s.value = 42
 
@@ -392,7 +392,7 @@ class TestO2M(TransactionCase):
 
     def test_o2m_parent_context(self):
         """ Test the o2m form with a context on the field that uses 'parent'. """
-        view = 'test_testing_utilities.o2m_parent_context'
+        view = 'test_tests.o2m_parent_context'
         with Form(self.env['test_testing_utilities.parent'], view=view) as f:
             with f.subs.new() as s:
                 s.value = 42
@@ -471,7 +471,7 @@ class TestO2M(TransactionCase):
         r = self.env['test_testing_utilities.parent'].create({
             'subs': [Command.create({})]
         })
-        f = Form(r, view='test_testing_utilities.o2m_parent_readonly')
+        f = Form(r, view='test_tests.o2m_parent_readonly')
 
         with self.assertRaises(AssertionError):
             f.subs.new()
@@ -495,7 +495,7 @@ class TestO2M(TransactionCase):
         )
 
     def test_o2m_dyn_onchange(self):
-        f = Form(self.env['test_testing_utilities.onchange_parent'], view='test_testing_utilities.m2o_onchange_view')
+        f = Form(self.env['test_testing_utilities.onchange_parent'], view='test_tests.m2o_onchange_view')
 
         with f.line_ids.new() as new_line:
             new_line.dummy = 42
@@ -540,11 +540,11 @@ class TestO2M(TransactionCase):
         self.assertEqual(len(r.line_ids), 1)
 
     def test_o2m_self_recursive(self):
-        Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
+        Form(self.env['test_testing_utilities.recursive'], view='test_tests.o2m_recursive_relation_view')
 
     def test_o2m_readonly(self):
         Model = self.env['test_testing_utilities.parent']
-        with Form(Model, view='test_testing_utilities.o2m_modifier') as form:
+        with Form(Model, view='test_tests.o2m_modifier') as form:
             with form.subs.new() as line:
                 line.value = 5
                 # this makes 'value' readonly
@@ -554,7 +554,7 @@ class TestO2M(TransactionCase):
 
     def test_o2m_readonly_parent(self):
         Model = self.env['test_testing_utilities.parent']
-        with Form(Model, view='test_testing_utilities.o2m_modifier_parent') as form:
+        with Form(Model, view='test_tests.o2m_modifier_parent') as form:
             with form.subs.new() as line:
                 line.value = 5
             # this makes 'value' readonly on lines
@@ -565,7 +565,7 @@ class TestO2M(TransactionCase):
 
     def test_o2m_external_readonly_parent(self):
         Model = self.env['test_testing_utilities.ref']
-        with Form(Model, view='test_testing_utilities.o2m_modifier_ref') as form:
+        with Form(Model, view='test_tests.o2m_modifier_ref') as form:
             with form.subs.new() as line:
                 line.a = 1
                 line.b = 2
@@ -586,7 +586,7 @@ class TestO2M(TransactionCase):
         create = self.env['test_testing_utilities.sub'].create
         a, b, c = create({'v': 1}), create({'v': 2}), create({'v': 3})
 
-        with Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_widget_m2m') as f:
+        with Form(self.env['test_testing_utilities.parent'], view='test_tests.o2m_widget_m2m') as f:
             f.subs.add(a)
             f.subs.add(b)
             f.subs.add(c)

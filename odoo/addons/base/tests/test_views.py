@@ -5186,7 +5186,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'stock_landed_costs',
             'stock_picking_batch',
             'survey',
-            'test_testing_utilities',
+            'test_tests',
             'timesheet_grid',
             'uom',
             'utm',

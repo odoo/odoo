@@ -136,13 +136,6 @@ class Test_Testing_UtilitiesG(models.Model):
     m2m = fields.Many2many('test_testing_utilities.sub3', readonly=True)
 
 
-class Test_Testing_UtilitiesSub3(models.Model):
-    _name = 'test_testing_utilities.sub3'
-    _description = 'Testing Utilities Subtraction 3'
-
-    name = fields.Char()
-
-
 class Test_Testing_UtilitiesParent(models.Model):
     _name = 'test_testing_utilities.parent'
     _description = 'Testing Utilities Parent'

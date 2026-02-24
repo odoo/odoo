@@ -315,3 +315,44 @@ class TestRequestRemainingAfterFirstCheck(TestRequestRemainingCommon):
             log_catcher.output,
             [Like('... Trying to open a test cursor for /test_tests/tests/test_cases.py:TestRequestRemainingAfterFirstCheck.test_requests_a while already in a test /test_tests/tests/test_cases.py:TestRequestRemainingAfterFirstCheck.test_requests_b')],
         )
+
+
+@tagged('at_install', '-post_install')
+class TestEnv(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestEnv, cls).setUpClass()
+        user = cls.env['res.users'].create({
+            'name': 'superuser',
+            'login': 'superuser',
+            'password': 'superuser',
+            'group_ids': [(6, 0, cls.env.user.group_ids.ids)],
+        })
+        cls.env = cls.env(user=user)
+
+        # make sure there is at least another environment in the current transaction
+        cls.sudo_env = cls.env(su=True)
+
+    def test_env_company_part_01(self):
+        """
+        The main goal of the test is actually to check the values of the
+        environment after this test execution (see test_env_company_part_02)
+        """
+        company = self.env['res.company'].create({
+            "name": "Test Company",
+        })
+        self.env.user.write({
+            'company_id': company.id,
+            'company_ids': [(4, company.id), (4, self.env.company.id)],
+        })
+        self.assertEqual(self.env.company, self.env.user.company_id)
+        self.assertTrue(self.env.company.exists())
+        self.assertEqual(self.sudo_env.company, self.env.user.company_id)
+        self.assertTrue(self.sudo_env.company.exists())
+
+    def test_env_company_part_02(self):
+        self.assertEqual(self.env.company, self.env.user.company_id)
+        self.assertTrue(self.env.company.exists())
+        self.assertEqual(self.sudo_env.company, self.env.user.company_id)
+        self.assertTrue(self.sudo_env.company.exists())
