@@ -7,8 +7,36 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { changesToOrder } from "@point_of_sale/app/models/utils/order_change";
 
 patch(PosStore.prototype, {
+    getFiredCourseLineUuids(order) {
+        if (!order.hasCourses()) {
+            return new Set();
+        }
+        return new Set(
+            order.courses
+                .filter((course) => course.fired)
+                .flatMap((course) => course.lines.map((line) => line.uuid))
+        );
+    },
+    filterOrderChangeByLineUuids(orderChange, lineUuids) {
+        if (!lineUuids.size) {
+            return {
+                ...orderChange,
+                new: [],
+                cancelled: [],
+                noteUpdate: [],
+            };
+        }
+        const keepLine = (line) => lineUuids.has(line.uuid) || lineUuids.has(line.combo_parent_uuid);
+        return {
+            ...orderChange,
+            new: orderChange.new.filter(keepLine),
+            cancelled: orderChange.cancelled.filter(keepLine),
+            noteUpdate: orderChange.noteUpdate.filter(keepLine),
+        };
+    },
     /**
      * @override
      */
@@ -110,7 +138,42 @@ patch(PosStore.prototype, {
         if (!opts.cancelled) {
             categoryCount = this.getCategoryCount(order);
         }
-        const result = await super.sendOrderInPreparation(order, opts);
+        const shouldPrintOnlyFiredCourses =
+            this.config.module_pos_restaurant &&
+            order.hasCourses() &&
+            !opts.cancelled &&
+            !opts.explicitReprint &&
+            !opts.byPassPrint;
+
+        let filteredOrderChange;
+        if (shouldPrintOnlyFiredCourses && this.config.printerCategories.size) {
+            const firedLineUuids = this.getFiredCourseLineUuids(order);
+            filteredOrderChange = this.filterOrderChangeByLineUuids(
+                changesToOrder(order, this.config.printerCategories, opts.cancelled),
+                firedLineUuids
+            );
+        }
+
+        const result = await super.sendOrderInPreparation(order, {
+            ...opts,
+            byPassPrint: shouldPrintOnlyFiredCourses || opts.byPassPrint,
+        });
+
+        if (filteredOrderChange) {
+            const hasChanges =
+                filteredOrderChange.new.length ||
+                filteredOrderChange.cancelled.length ||
+                filteredOrderChange.noteUpdate.length ||
+                filteredOrderChange.internal_note ||
+                filteredOrderChange.general_customer_note;
+            if (hasChanges) {
+                order.uiState.lastPrints.push(filteredOrderChange);
+                const isPrinted = await this.printChanges(order, [filteredOrderChange], false);
+                if (isPrinted && !this.models["pos.prep.display"]?.length) {
+                    await this.syncAllOrders({ orders: [order] });
+                }
+            }
+        }
 
         if (this.config.module_pos_restaurant && categoryCount.length) {
             const categorySummary = categoryCount
@@ -949,24 +1012,39 @@ patch(PosStore.prototype, {
             firedCourseId: course.id,
             byPassPrint: true,
         });
-        await this.printCourseTicket(course);
+        const isPrinted = await this.printCourseTicket(course);
+        if (isPrinted && !this.models["pos.prep.display"]?.length) {
+            await this.syncAllOrders({ orders: [order] });
+        }
         return true;
     },
     async printCourseTicket(course) {
         try {
+            const noteUpdateLines = course.lines.map((line) => ({
+                uuid: line.uuid,
+                name: line.getFullProductName(),
+                basic_name: line.product_id.name,
+                isCombo: Boolean(line?.combo_line_ids?.length),
+                combo_parent_uuid: line?.combo_parent_id?.uuid,
+                product_id: line.getProduct().id,
+                attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                quantity: line.getQuantity(),
+                note: line.getNote(),
+                customer_note: line.getCustomerNote(),
+            }));
             const changes = {
                 new: [],
                 cancelled: [],
-                noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+                noteUpdate: noteUpdateLines,
                 noteUpdateTitle: _t("Course %s fired", "" + course.index),
-                printNoteUpdateData: false,
             };
             this.getOrder().uiState.lastPrints.push(changes);
-            await this.printChanges(this.getOrder(), [changes], false);
+            return await this.printChanges(this.getOrder(), [changes], false);
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
                 e,
             ]);
+            return false;
         }
     },
     async transferLinesToCourse() {

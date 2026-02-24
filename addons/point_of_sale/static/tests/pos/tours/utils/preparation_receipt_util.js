@@ -37,9 +37,19 @@ export async function generateFireCourseReceipts() {
     const orderChange = {
         new: [],
         cancelled: [],
-        noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+        noteUpdate: course.lines.map((line) => ({
+            uuid: line.uuid,
+            name: line.getFullProductName(),
+            basic_name: line.product_id.name,
+            isCombo: Boolean(line?.combo_line_ids?.length),
+            combo_parent_uuid: line?.combo_parent_id?.uuid,
+            product_id: line.getProduct().id,
+            attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+            quantity: line.getQuantity(),
+            note: line.getNote(),
+            customer_note: line.getCustomerNote(),
+        })),
         noteUpdateTitle: _t("Course %s fired", "" + course.index),
-        printNoteUpdateData: false,
     };
     return await generateReceiptsToPrint(order, orderChange);
 }
