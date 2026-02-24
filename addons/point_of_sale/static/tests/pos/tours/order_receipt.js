@@ -39,6 +39,12 @@ registry.category("web_tour.tours").add("test_receipt_data", {
                     if (!html.innerHTML.includes("This is a test footer for receipt")) {
                         throw new Error("Receipt footer not found in generated HTML");
                     }
+                    const configNameOccurrences = Array.from(html.querySelectorAll("td")).filter(
+                        (el) => el.textContent.trim() === data.config.name
+                    );
+                    if (configNameOccurrences.length > 1) {
+                        throw new Error("Config name appears more than once in generated HTML");
+                    }
 
                     try {
                         await posmodel.data.call("pos.order", "get_order_frontend_receipt_data", [

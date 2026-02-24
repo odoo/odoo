@@ -5,27 +5,19 @@
             <table class="w-100 text-small mt-2">
                 <tbody name="company_info">
                     <tr>
-                        <td class="text-start" t-out="company['name']" />
-                        <td class="text-end">
-                            Tel. <t t-out="config['phone']" />
+                        <td class="text-start top w-60" >
+                            <div t-out="config['name']"/>
+                            <div t-out="config['receipt_address']"/>
+                        </td>
+
+                        <td class="text-end top w-40" >
+                            <div>Tel: <t t-out="config['phone']"/></div>
+                            <div t-out="config['email']"/>
+                            <div t-out="config['website']"/>
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-start" t-out="config['receipt_address']" />
-                    </tr>
-                    <tr>
-                        <td class="text-start" t-out="config['email']">
-                        </td>
-                        <td class="text-end" t-out="config['website']" />
-                    </tr>
-                    <tr>
-                        <td class="text-start" t-out="company['name']" />
-                        <td class="text-end">
-                            Tel. <t t-out="company['phone']" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-start" t-if="company.get('vat') and extra_data.get('vat_label')" name="company_info_vat">
+                        <td colspan="2" class="text-start" t-if="company.get('vat') and extra_data.get('vat_label')" name="company_info_vat">
                             <t t-out="extra_data['vat_label']" />: <t t-out="company['vat']" />
                         </td>
                     </tr>
