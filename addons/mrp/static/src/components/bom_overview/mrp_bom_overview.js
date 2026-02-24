@@ -162,8 +162,10 @@ export class BomOverviewComponent extends Component {
         let reportName = "mrp.report_bom_structure?docids=" + this.activeId +
                          "&mode=" + this.state.showOptions.mode +
                          "&quantity=" + (this.state.bomQuantity || 1) +
-                         "&unfolded_ids=" + JSON.stringify(Array.from(this.unfoldedIds)) +
-                         "&warehouse_id=" + (this.state.currentWarehouse ? this.state.currentWarehouse.id : false);
+                         "&unfolded_ids=" + JSON.stringify(Array.from(this.unfoldedIds));
+        if (this.state.currentWarehouse) {
+            reportName += "&warehouse_id=" + this.state.currentWarehouse.id;
+        }
         if (printAll) {
             reportName += "&all_variants=1";
         } else if (this.showVariants && this.state.currentVariantId) {

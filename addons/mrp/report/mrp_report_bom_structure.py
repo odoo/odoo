@@ -89,7 +89,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if self.env.context.get('warehouse_id'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
-            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
+            warehouses = self.get_warehouses()
+            warehouse = self.env['stock.warehouse'].browse(warehouses[0]['id']) if warehouses else self.env['stock.warehouse']
 
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
         return {
@@ -523,7 +524,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if self.env.context.get('warehouse_id'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
         else:
-            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
+            warehouses = self.get_warehouses()
+            warehouse = self.env['stock.warehouse'].browse(warehouses[0]['id']) if warehouses else self.env['stock.warehouse']
 
         level = 1
         data = self._get_bom_data(bom, warehouse, product=product, line_qty=qty, level=0)
@@ -617,7 +619,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         found_rules = []
         if self._need_special_rules(product_info, parent_bom, parent_product):
             found_rules = self._find_special_rules(product, product_info, bom, parent_bom, parent_product)
-        if not found_rules:
+        if not found_rules and warehouse:
             found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
