@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
         """
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        return self.product_variant_id._is_sold_out()
+        return not self.product_variant_id or self.product_variant_id._is_sold_out()
 
     def _website_show_quick_add(self):
         return (
