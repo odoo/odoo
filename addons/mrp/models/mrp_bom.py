@@ -532,10 +532,12 @@ class MrpBom(models.Model):
         lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
         return lines.grouped('product_id')
 
-    def _update_order_line_info(self, product_id, quantity, *, child_field=False, **kwargs):
+    def _update_order_line_info(self, product, quantity, uom, *, child_field=False, **kwargs):
         if not child_field:
             return 0
-        entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)
+        entity = self[child_field].filtered(lambda line: line.product_id.id == product.id)
+        bom_line_uom_id = entity.uom_id if entity else uom or product.uom_id
+        price_unit = product.uom_id._compute_price(product.standard_price, bom_line_uom_id)
         if entity:
             if quantity != 0:
                 entity.product_qty = quantity
@@ -544,12 +546,13 @@ class MrpBom(models.Model):
         elif quantity > 0:
             command = Command.create({
                 'product_qty': quantity,
-                'product_id': product_id,
+                'product_id': product.id,
                 'sequence': (self[child_field][-1:].sequence or 1) + 1,
+                'uom_id': bom_line_uom_id.id,
             })
             self.write({child_field: [command]})
 
-        return self.env['product.product'].browse(product_id).standard_price
+        return price_unit
 
     # -------------------------------------------------------------------------
     # DOCUMENT
@@ -833,16 +836,12 @@ class MrpBomLine(models.Model):
             self.product_id.ensure_one()
             return {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
-                'quantity': sum(
-                    self.mapped(
-                        lambda line: line.uom_id._compute_quantity(
-                            qty=line.product_qty,
-                            to_unit=line.uom_id,
-                        )
-                    )
-                ),
+                'quantity': self[0].product_qty,
                 'readOnly': len(self) > 1,
                 'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
+                'uomId': self[0].uom_id.id,
+                'productUomDisplayName': self[0].product_id.uom_id.display_name,
+                'productUomFactor': self[0].product_id.uom_id.factor / self[0].uom_id.factor,
             }
         return {
             'quantity': 0,
@@ -914,16 +913,12 @@ class MrpBomByproduct(models.Model):
             self.product_id.ensure_one()
             return {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
-                'quantity': sum(
-                    self.mapped(
-                        lambda line: line.uom_id._compute_quantity(
-                            qty=line.product_qty,
-                            to_unit=line.uom_id,
-                        )
-                    )
-                ),
+                'quantity': self[0].product_qty,
                 'readOnly': len(self) > 1,
                 'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
+                'uomId': self[0].uom_id.id,
+                'productUomDisplayName': self[0].product_id.uom_id.display_name,
+                'productUomFactor': self[0].product_id.uom_id.factor / self[0].uom_id.factor,
             }
         return {
             'quantity': 0,

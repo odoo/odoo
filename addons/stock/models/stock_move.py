@@ -2655,16 +2655,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.product_id.ensure_one()
         return {
             **parent_record._get_product_price_and_data(self.product_id),
-            'quantity': sum(
-                self.mapped(
-                    lambda line: line.uom_id._compute_quantity(
-                        qty=line.product_qty,
-                        to_unit=line.uom_id,
-                    ),
-                ),
-            ),
+            'quantity': self[0].product_uom_qty,
             'readOnly': len(self) > 1,
             'uomDisplayName': len(self) == 1 and self.uom_id.display_name or self.product_id.uom_id.display_name,
+            'uomId': self[0].uom_id.id,
+            'productUomFactor': self[0].product_id.uom_id.factor / self[0].uom_id.factor,
         }
 
     def _visible_quantity(self):

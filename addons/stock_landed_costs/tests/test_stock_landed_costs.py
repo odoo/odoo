@@ -228,13 +228,15 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'partner_id': self.partner_a.id
         })
         account_move._update_order_line_info(
-            product_id=self.landed_cost.id,
-            quantity=1
+            product=self.landed_cost,
+            quantity=1,
+            uom=account_move.product_uom_id,
         )
         self.assertTrue(account_move.invoice_line_ids.is_landed_costs_line, "The landed cost should appear in the move line.")
         account_move._update_order_line_info(
-            product_id=self.product.id,
-            quantity=1
+            product=self.product,
+            quantity=1,
+            uom=account_move.product_uom_id,
         )
         move_line_no_landed = account_move.line_ids.filtered(lambda line: line.product_id == self.product)
         self.assertFalse(move_line_no_landed.is_landed_costs_line, "The landed cost should not be set to True.")

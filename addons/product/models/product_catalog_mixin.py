@@ -138,14 +138,15 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         return False
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(self, product, quantity, uom, **kwargs):
         """ Update the line information for a given product or create a new one if none exists yet.
         Must be overrided by each model using this mixin.
-        :param int product_id: The product, as a `product.product` id.
+        :param object product: Recordset of `product.product`.
         :param int quantity: The product's quantity.
+        :param int uom: Recordset of `uom.uom`.
         :param dict kwargs: additional values given for inherited models.
         :return: The unit price of the product, based on the pricelist of the
-                 purchase order and the quantity selected.
+                 order and the quantity selected.
         :rtype: float
         """
-        return 0
+        return 0.0

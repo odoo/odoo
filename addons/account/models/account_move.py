@@ -2947,19 +2947,20 @@ class AccountMove(models.Model):
         return grouped_lines
 
     def _update_order_line_info(
-        self, product_id, quantity, *, section_id=False, child_field='line_ids', **kwargs
+        self, product, quantity, uom, *, section_id=False, child_field='line_ids', **kwargs
     ):
         """ Update account_move_line information for a given product or create a
         new one if none exists yet.
-        :param int product_id: The product, as a `product.product` id.
-        :param int quantity: The quantity selected in the catalog
+        :param object product: Recordset of `product.product`.
+        :param int quantity: The quantity selected in the catalog.
+        :param object uom: Recordset of `uom.uom`.
         :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
         move_line = self.line_ids.filtered(
-            lambda line: line.product_id.id == product_id
+            lambda line: line.product_id.id == product.id
             and line.get_parent_section_line().id == section_id,
         )
         if move_line:
@@ -2978,8 +2979,9 @@ class AccountMove(models.Model):
             move_line = self.env['account.move.line'].create({
                 'move_id': self.id,
                 'quantity': quantity,
-                'product_id': product_id,
+                'product_id': product.id,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
+                'product_uom_id': uom.id,
             })
         return move_line.price_unit
 

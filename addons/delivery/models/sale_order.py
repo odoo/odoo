@@ -290,15 +290,15 @@ class SaleOrder(models.Model):
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
-        """Override of `sale` to recompute the delivery prices.
+    def _update_order_line_info(self, *args, **kwargs):
+        """ Override of `sale` to recompute the delivery prices.
 
-        :param int product_id: The product, as a `product.product` id.
-        :return: The unit price price of the product, based on the pricelist of the sale order and
+        :param object product_id: Recordset of `product.product`.
+        :return: The unit price of the product, based on the pricelist of the sale order and
                  the quantity selected.
         :rtype: float
         """
-        price_unit = super()._update_order_line_info(product_id, quantity, **kwargs)
+        price_unit = super()._update_order_line_info(*args, **kwargs)
         if self:
             self.onchange_order_line()
         return price_unit

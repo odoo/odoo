@@ -13,7 +13,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     setup() {
         super.setup();
-        this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
+        this.debouncedUpdateQuantity = useDebounced(this._onQuantityChange, 500, {
             execBeforeUnmount: true,
         });
         this._pendingUpdate = Promise.resolve();
@@ -59,7 +59,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     // Data Exchanges
     //--------------------------------------------------------------------------
 
-    async _updateQuantity() {
+    async _onQuantityChange() {
         const price = await this._updateQuantityAndGetPrice();
         this.productCatalogData.price = parseFloat(price);
     }
@@ -81,7 +81,8 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
-        }
+            uom_id: this.productCatalogData.uomId,
+        };
     }
 
     //--------------------------------------------------------------------------

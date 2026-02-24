@@ -7,7 +7,7 @@ from odoo.addons.product.controllers.catalog import ProductCatalogController
 class ProjectPurchaseCatalogController(ProductCatalogController):
 
     @route()
-    def product_catalog_update_order_line_info(self, res_model, order_id, product_id, quantity=0, **kwargs):
+    def product_catalog_update_order_line_info(self, *args, **kwargs):
         """ Override to update context with project_id.
 
         :param string res_model: The order model.
@@ -19,4 +19,4 @@ class ProjectPurchaseCatalogController(ProductCatalogController):
         """
         if (project_id := kwargs.get('project_id')):
             request.update_context(project_id=project_id)
-        return super().product_catalog_update_order_line_info(res_model, order_id, product_id, quantity, **kwargs)
+        return super().product_catalog_update_order_line_info(*args, **kwargs)

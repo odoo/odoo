@@ -21,8 +21,8 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
     addProduct() {
         const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
         let quantity_to_add = Math.max(min_qty, suggested_qty, 1);
-        if (this.productCatalogData.uomFactor) {
-            quantity_to_add = Math.ceil(quantity_to_add / this.productCatalogData.uomFactor);
+        if (this.productCatalogData.sellerUomFactor) {
+            quantity_to_add = Math.ceil(quantity_to_add / this.productCatalogData.sellerUomFactor);
         }
         super.addProduct(quantity_to_add);
     }

@@ -1940,6 +1940,9 @@ class SaleOrderLine(models.Model):
                 'price': float,
                 'readOnly': bool,
                 'uomDisplayName': String,
+                'uomId': int,
+                'productUomFactor': float (optional),
+                'productUomDisplayName': string (optional),
             }
         """
         if len(self) == 1:

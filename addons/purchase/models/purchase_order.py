@@ -1274,7 +1274,7 @@ class PurchaseOrder(models.Model):
                 # The discounted price is expressed in the product's UoM, not in the vendor
                 # price's UoM, so we need to convert it into to match the displayed UoM.
                 price = product_uom._compute_price(price, seller.uom_id)
-                product_infos.update(uomFactor=seller.uom_id.factor / product_uom.factor)
+                product_infos.update(sellerUomFactor=seller.uom_id.factor / product_uom.factor)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
@@ -1346,7 +1346,7 @@ class PurchaseOrder(models.Model):
             line._update_date_planned(date)
 
     def _update_order_line_info(
-        self, product_id, quantity, *, section_id=False, child_field='order_line', **kwargs
+        self, product, quantity, uom, *, section_id=False, child_field='order_line', **kwargs
     ):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
@@ -1359,7 +1359,7 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         pol = self.order_line.filtered(
-            lambda l: l.product_id.id == product_id
+            lambda l: l.product_id.id == product.id
             and l.get_parent_section_line().id == section_id
         )
         if pol:
@@ -1374,18 +1374,11 @@ class PurchaseOrder(models.Model):
         elif quantity > 0:
             pol = self.env['purchase.order.line'].create({
                 'order_id': self.id,
-                'product_id': product_id,
+                'product_id': product.id,
                 'product_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-            if pol.selected_seller_id:
-                # Fix the PO line's price on the seller's one.
-                seller = pol.selected_seller_id
-                price = seller.price
-                if seller.currency_id != self.currency_id:
-                    price = seller.currency_id._convert(price, self.currency_id)
-                pol.price_unit = pol.technical_price_unit = price
-                pol.discount = seller.discount
+            pol.uom_id = uom  # Trigger seller computation
         return pol.price_unit_discounted
 
     def _get_default_create_section_values(self):

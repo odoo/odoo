@@ -48,6 +48,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
                     "order_id": self.res_id,
                     "product_id": product.id,
                     "quantity": quantity,
+                    "uom_id": product.uom_id.id,
                     **kwargs,
                 }
             },
