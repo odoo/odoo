@@ -227,11 +227,6 @@ class ProjectProject(models.Model):
     def get_create_edit_project_ids(self):
         return []
 
-    def _convert_project_uom_to_timesheet_encode_uom(self, time):
-        uom_from = self.company_id.project_time_mode_id
-        uom_to = self.env.company.timesheet_encode_uom_id
-        return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
-
     def action_project_timesheets(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
         if not self.env.context.get('from_embedded_action'):

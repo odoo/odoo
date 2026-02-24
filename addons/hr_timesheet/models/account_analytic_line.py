@@ -216,6 +216,7 @@ class AccountAnalyticLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         user_timezone = self.env.tz
+        uom_hour_id = self.env.ref('uom.product_uom_hour').id
         # Before creating a timesheet, we need to put a valid employee_id in the vals
         default_user_id = self._default_user()
         user_ids = []
@@ -259,7 +260,7 @@ class AccountAnalyticLine(models.Model):
             })
 
             if not vals.get('product_uom_id'):
-                vals['product_uom_id'] = company.project_time_mode_id.id
+                vals['product_uom_id'] = uom_hour_id
 
             if not vals.get('name'):
                 vals['name'] = '/'
@@ -303,8 +304,6 @@ class AccountAnalyticLine(models.Model):
                 if not vals.get('company_id'):
                     company = HrEmployee_sudo.browse(employee_in_id).company_id
                     vals['company_id'] = company.id
-                if not vals.get('product_uom_id'):
-                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
                 if employee_in_id in valid_employee_per_id:
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
                     continue
@@ -328,8 +327,6 @@ class AccountAnalyticLine(models.Model):
                 if not vals.get('company_id'):
                     company = HrEmployee_sudo.browse(employee_out_id).company_id
                     vals['company_id'] = company.id
-                if not vals.get('product_uom_id'):
-                    vals['product_uom_id'] = company.project_time_mode_id.id if company else self.env['res.company'].browse(vals.get('company_id', self.env.company.id)).project_time_mode_id.id
             else:  # ...and raise an error if they fail
                 raise ValidationError(error_msg)
 

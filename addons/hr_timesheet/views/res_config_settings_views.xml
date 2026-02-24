@@ -9,9 +9,6 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Timesheets" string="Timesheets" name="hr_timesheet" groups="hr_timesheet.group_timesheet_manager" id="timesheets">
                     <block title="Time Encoding" name="time_encoding_setting_container">
-                        <setting id="time_mode_setting" company_dependent="1" invisible="project_time_mode_id">
-                            <field name="project_time_mode_id" options="{'no_create': True, 'no_open': True}"/>
-                        </setting>
                         <setting company_dependent="1" help="Time unit used to record your timesheets" id="time_unit_timesheets_setting">
                             <field name="timesheet_encode_method" class="col-lg-5 ps-0" widget="radio"/>
                             <field name="is_encode_uom_days" invisible="1"/>

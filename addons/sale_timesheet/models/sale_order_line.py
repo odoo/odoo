@@ -22,10 +22,11 @@ class SaleOrderLine(models.Model):
         with_remaining_hours = self.env.context.get('with_remaining_hours') and not self.env.context.get('skip_remaining_hours', False)
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
             company = self.env.company
+            uom_hour = self.env.ref('uom.product_uom_hour')
             encoding_uom = company.timesheet_encode_uom_id
             is_hour = is_day = False
             unit_label = ''
-            if encoding_uom == self.env.ref('uom.product_uom_hour'):
+            if encoding_uom == uom_hour:
                 is_hour = True
                 unit_label = _('remaining')
             elif encoding_uom == self.env.ref('uom.product_uom_day'):
@@ -37,7 +38,7 @@ class SaleOrderLine(models.Model):
                     if is_hour:
                         remaining_time = f' ({format_duration(line.remaining_hours)} {unit_label})'
                     elif is_day:
-                        remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
+                        remaining_days = uom_hour._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = f' ({remaining_days:.02f} {unit_label})'
                     if self.env.context.get('formatted_display_name'):
                         name = f'{line.display_name} --{remaining_time}--'
@@ -94,16 +95,17 @@ class SaleOrderLine(models.Model):
     ###########################################
 
     def _convert_qty_company_hours(self, dest_company):
-        company_time_uom_id = dest_company.project_time_mode_id
-        allocated_hours = 0.0
+        uom_hour = self.env.ref('uom.product_uom_hour')
         product_uom = self.product_uom_id
         if product_uom == self.env.ref('uom.product_uom_unit'):
-            product_uom = self.env.ref('uom.product_uom_hour')
-        if product_uom != company_time_uom_id and product_uom._has_common_reference(company_time_uom_id):
-            allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id, rounding_method='HALF-UP')
-        else:
-            allocated_hours = self.product_uom_qty
-        return allocated_hours
+            product_uom = uom_hour
+        if product_uom != uom_hour and product_uom._has_common_reference(uom_hour):
+            return product_uom._compute_quantity(
+                self.product_uom_qty,
+                uom_hour,
+                rounding_method='HALF-UP',
+            )
+        return self.product_uom_qty
 
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()
@@ -114,7 +116,6 @@ class SaleOrderLine(models.Model):
                 'allow_timesheets': True,
             })
             return project
-        project_uom = self.company_id.project_time_mode_id
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_hour = self.env.ref('uom.product_uom_hour')
 
@@ -134,7 +135,7 @@ class SaleOrderLine(models.Model):
                     and line.product_id.service_tracking in ['task_in_project', 'project_only'] \
                     and line.product_id.project_template_id == self.product_id.project_template_id \
                     and line.product_uom_id.id in factor_per_id:
-                uom_factor = factor_per_id[line.product_uom_id.id] / project_uom.factor
+                uom_factor = factor_per_id[line.product_uom_id.id] / uom_hour.factor
                 allocated_hours += line.product_uom_qty * uom_factor
 
         project.write({
