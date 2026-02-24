@@ -69,6 +69,7 @@ class TestArCommon(AccountTestInvoicingCommon):
             'acc_number': '7982898111100056688080',
             'partner_id': cls.company_ri.partner_id.id,
             'company_id': cls.company_ri.id,
+            'allow_out_payment': True,
         })
 
         # ==== Partners / Customers ====

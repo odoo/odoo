@@ -697,7 +697,6 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-
         return result
 
     def _alias_get_creation_values(self):

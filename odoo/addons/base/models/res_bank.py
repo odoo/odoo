@@ -159,3 +159,7 @@ class ResPartnerBank(models.Model):
         """
         self.action_archive()
         return True
+
+    def _user_can_trust(self):
+        self.ensure_one()
+        return True
