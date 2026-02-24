@@ -806,6 +806,49 @@
         <field name="is_leave" eval="True"/>
     </record>
 
+    <record id="l10n_mx_work_entry_type_sunday_premium" model="hr.work.entry.type">
+        <field name="name">MX: Sunday Premium</field>
+        <field name="color">3</field>
+        <field name="code">MXSUNDAYPREMIUM</field>
+        <field name="sequence">10</field>
+        <field name="display_code">SP</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="amount_rate">0.25</field>
+        <field name="is_extra_hours" eval="True"/>
+    </record>
+
+    <record id="l10n_mx_work_entry_type_double_overtime" model="hr.work.entry.type">
+        <field name="name">MX: Double Overtime</field>
+        <field name="color">3</field>
+        <field name="code">MXOVERTIME200</field>
+        <field name="display_code">OT2</field>
+        <field name="sequence">11</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="amount_rate">2.0</field>
+        <field name="is_extra_hours" eval="True"/>
+    </record>
+    
+    <record id="l10n_mx_work_entry_type_triple_overtime" model="hr.work.entry.type">
+        <field name="name">MX: Triple Overtime</field>
+        <field name="color">3</field>
+        <field name="code">MXOVERTIME300</field>
+        <field name="sequence">12</field>
+        <field name="display_code">OT3</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="amount_rate">3.0</field>
+        <field name="is_extra_hours" eval="True"/>
+    </record>
+
+    <record id="l10n_mx_work_entry_type_rest_day_worked" model="hr.work.entry.type">
+        <field name="name">MX: Rest Day Worked</field>
+        <field name="color">3</field>
+        <field name="code">MXRESTDAYWORKED</field>
+        <field name="display_code">RDW</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="amount_rate">2.0</field>
+        <field name="is_extra_hours" eval="True"/>
+    </record>
+
 <!-- PL : Poland -->
     <record id="l10n_pl_work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name">Sick Time Off (Paid at 80%)</field>
