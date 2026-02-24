@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest import skip
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -8,7 +9,6 @@ from odoo.tests.common import tagged
 
 
 @tagged('-at_install', 'post_install')
-@skip('Temporary to fast merge new valuation')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -20,6 +20,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             ('company_id', '=', cls.env.company.id),
         ], limit=1)
 
+    @skip('Temporary to fast merge new valuation')
     def test_qty_received_does_sync_after_changing_validated_move_quantity(self):
         """ After validating a picking, if it is unlocked and has its move quantity modified,
         the underlying purchase order's qty_delivered value should reflect the change.
@@ -108,3 +109,48 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertTrue(po, "A Purchase Order should be created from the Sale Order.")
         self.assertEqual(po.project_id, project, "The project should be propagated from the Sale Order to the Purchase Order.")
+
+    @freeze_time('2025-02-15')
+    def test_purchase_order_date_and_interpolated_name(self):
+        self.env.user.group_ids |= self.quick_ref('sales_team.group_sale_salesman')
+        self.env['ir.sequence'].search([
+            ('code', '=', 'purchase.order'),
+        ]).write({
+            'use_date_range': True,
+            'prefix': 'P/%(y)s/%(month)s/',
+            'date_range_ids': [
+                Command.create({
+                    'date_from': '2025-02-01',
+                    'date_to': '2025-02-28',
+                    'number_next_actual': 15,
+                }),
+                Command.create({
+                    'date_from': '2025-03-01',
+                    'date_to': '2025-03-31',
+                    'number_next_actual': 1,
+                })
+            ]
+        })
+        dropship_product = self.env['product.product'].create({
+            'name': 'Dropship Product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+            })],
+            'route_ids': [Command.set([
+                self.env.ref('stock_dropshipping.route_drop_shipping').id
+            ])],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': dropship_product.id,
+                'product_uom_qty': 1.0,
+            })],
+            'commitment_date': '2025-03-15',  # March
+        })
+        so.action_confirm()
+        po = self.env['purchase.order'].search([
+            ('origin', '=', so.name),
+            ('partner_id', '=', self.partner_b.id),
+        ], limit=1)
+        self.assertEqual(po.name, 'P/25/02/00015')  # Should be based on the SO's date_order (February), not the commitment_date (March)

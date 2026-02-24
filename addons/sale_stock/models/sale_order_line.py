@@ -288,6 +288,7 @@ class SaleOrderLine(models.Model):
             'origin': self.order_id.name,
             'reference_ids': self.order_id.stock_reference_ids,
             'sale_line_id': self.id,
+            'date_order': self.order_id.date_order,
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_ids,
