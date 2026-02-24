@@ -922,7 +922,7 @@ export function makeActionManager(env, router = _router) {
                         if (controller.isMounted) {
                             return;
                         }
-                        pushState(nextStack);
+                        pushState(nextStack, { sync: true });
                     },
                 });
                 if (action.target !== "new") {

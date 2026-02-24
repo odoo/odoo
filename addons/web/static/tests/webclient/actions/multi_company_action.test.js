@@ -16,6 +16,7 @@ import {
 import { animationFrame } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { router } from "@web/core/browser/router";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -81,6 +82,17 @@ test("open record withtout the correct company (doAction)", async () => {
         });
     });
 
+    const _pushState = router.pushState;
+    patchWithCleanup(router, {
+        pushState: (state, options) => {
+            expect(browser.location.href).toBe("https://www.hoot.test/");
+            const res = _pushState(state, options);
+            expect.step("pushState");
+            expect(browser.location.href).toBe("http://example.com/odoo/res.partner/1");
+            return res;
+        },
+    });
+
     await mountWebClient();
     getService("action").doAction({
         type: "ir.actions.act_window",
@@ -90,7 +102,7 @@ test("open record withtout the correct company (doAction)", async () => {
     });
     await animationFrame();
     expect(cookie.get("cids")).toBe("1-2");
-    expect.verifySteps(["reload"]);
+    expect.verifySteps(["pushState", "reload"]);
     expect(browser.location.href).toBe("http://example.com/odoo/res.partner/1", {
         message: "url should contain the information of the doAction",
     });
