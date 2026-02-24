@@ -81,7 +81,7 @@ declare module "plugins" {
         on_removed_handlers: on_removed_handlers;
         on_replicated_handlers: on_replicated_handlers;
         on_saved_handlers: on_saved_handlers;
-        on_shape_computed_handlers: on_post_compute_shape_handlers;
+        on_shape_computed_handlers: on_shape_computed_handlers;
         on_snippet_dragged_handlers: on_snippet_dragged_handlers;
         on_snippet_dropped_handlers: on_snippet_dropped_handlers;
         on_snippet_dropped_near_handlers: on_snippet_dropped_near_handlers;

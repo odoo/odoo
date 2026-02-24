@@ -39,7 +39,7 @@ declare module "plugins" {
     import { delete_image_overrides, image_name_providers, ImageShared } from "@html_editor/main/media/image_plugin";
     import { ImagePostProcessShared, on_image_updated_handlers, on_image_processed_handlers, on_will_process_image_handlers } from "@html_editor/main/media/image_post_process_plugin";
     import { closest_savable_providers, ImageSaveShared, on_image_saved_handlers } from "@html_editor/main/media/image_save_plugin";
-    import { after_save_media_dialog_handlers, media_dialog_extra_tabs, MediaShared, on_media_added_handlers, on_will_save_media_dialog_handlers, on_media_replaced_handlers } from "@html_editor/main/media/media_plugin";
+    import { media_dialog_extra_tabs, MediaShared, on_media_added_handlers, on_media_dialog_saved_handlers, on_will_save_media_dialog_handlers, on_media_replaced_handlers } from "@html_editor/main/media/media_plugin";
     import { move_node_blacklist_selectors, move_node_whitelist_selectors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
     import { on_layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons, should_show_power_buttons_predicates } from "@html_editor/main/power_buttons_plugin";
