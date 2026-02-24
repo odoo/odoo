@@ -347,6 +347,7 @@ class CrmLead(models.Model):
         # as they do not have write access anymore on the lead itself, just specific
         # controllers and UI
         if operation == 'create' and res_ids and (not model_name or model_name == 'crm.lead'):
-            if all(lead.partner_assigned_id == self.env.user.partner_id for lead in self.browse(res_ids)):
+            leads = self.browse(res_ids).with_prefetch(self._prefetch_ids)  # force prefetch, lost otherwise with rebrowsing
+            if all(lead.partner_assigned_id == self.env.user.partner_id for lead in leads):
                 return 'read'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)

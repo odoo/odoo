@@ -50,15 +50,15 @@
 # Jessica Jakara, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-10 09:14+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/account/"
 "fi/>\n"
 "Language: fi\n"
@@ -111,6 +111,14 @@ msgstr ""
 "        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
 "        esim. 200 * (1 - 10 %) = 180 (hinta sisältyy)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4591,6 +4599,8 @@ msgid "Chart of accounts set!"
 msgstr "Tilikartta asetettu!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Tarkista"
@@ -9866,6 +9876,7 @@ msgstr "Päiväkirja:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Päiväkirjat"
 
@@ -15664,6 +15675,14 @@ msgstr ""
 "kirjanpitomerkintöihin."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Yritys, jolle tämä jakorivi kuuluu."
@@ -15818,6 +15837,14 @@ msgstr "Kirjauksen %(name)s (tunnus: %(id)s) on oltava luonnos."
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
 msgstr "Merkintä on suojattu muuttumattomalla hajautuksella."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr "Kirjaus käyttää toisen yrityksen tilejä (%(accounts_codes_names)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -16286,6 +16313,14 @@ msgstr "Kirjausrivin jännössumma, ilmoitettuna yrityksen valuutassa."
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Juokseva saldo (%s) ei vastaa määritettyä loppusaldoa."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18591,6 +18626,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr "Et voi muuttaa maksusummaa useilla likviditeettiriveillä."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18965,8 +19007,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "Et voi vaihtaa asiakirjan tyyppiä, kun se on jo kerran julkaistu."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr "Et voi vaihtaa asiakirjatyyppiä olemassa olevalla sekvenssinumerolla."
 
 #. module: account
 #. odoo-python
@@ -19095,6 +19138,8 @@ msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Voit käyttää näytteitä vain demotilassa. Kokeile sen sijaan ladata yksi "
+"laskuistasi."
 
 #. module: account
 #. odoo-python
@@ -19669,6 +19714,9 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Maksukuitti (viite {{ object.name or 'n/a' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "Et voi vaihtaa asiakirjan tyyppiä, kun se on jo kerran julkaistu."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

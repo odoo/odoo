@@ -1,4 +1,5 @@
 import logging
+from unittest.mock import patch
 
 from odoo import api
 from odoo.tests import tagged, get_db_name, HttpCase
@@ -18,10 +19,7 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
         @api.model
         def log(inst, *args, **kwargs):
             self.messages.append((inst, args, kwargs))
-        self.registry['ir.logging'].send_key = log
-        @self.addCleanup
-        def remove_callback():
-            del self.registry['ir.logging'].send_key
+        self.startPatcher(patch.object(self.registry['ir.logging'], 'send_key', log, create=True))
 
     def test_addremove(self):
         db = get_db_name()

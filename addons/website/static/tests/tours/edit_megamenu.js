@@ -273,6 +273,14 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
         run: "click",
     },
+    {
+        trigger: "body",
+        run: async () => {
+            const { promise, resolve } = Promise.withResolvers();
+            setTimeout(resolve, 200);
+            return promise;
+        },
+    },
     changeOption("MegaMenuLayout", "we-toggler"),
     {
         content: "Select Big Icons Subtitles mega menu",

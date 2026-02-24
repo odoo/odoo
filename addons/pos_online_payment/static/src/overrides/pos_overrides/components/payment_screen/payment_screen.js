@@ -132,6 +132,7 @@ patch(PaymentScreen.prototype, {
                         {
                             onClose: () => {
                                 onlinePaymentLine.onlinePaymentResolver(false);
+                                this.currentOrder.onlinePaymentData = {};
                             },
                         }
                     );

@@ -18,6 +18,7 @@ import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { isContentEditable } from "../../utils/dom_info";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -244,6 +245,7 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
     };
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
@@ -460,7 +462,11 @@ export class LinkPlugin extends Plugin {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
             const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
-            if (popoverEl && (!selectionData.documentSelection || popoverEl.contains(selectionData.documentSelection.anchorNode))) {
+            if (
+                popoverEl &&
+                (!selectionData.documentSelection ||
+                    popoverEl.contains(selectionData.documentSelection.anchorNode))
+            ) {
                 return;
             }
             this.overlay.close();
@@ -580,6 +586,12 @@ export class LinkPlugin extends Plugin {
      * @return {HTMLElement}
      */
     getOrCreateLink() {
+        const deepSelection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const anchorElement = deepSelection.anchorNode;
+        const focusElement = deepSelection.focusNode;
+        if (anchorElement === focusElement && !isContentEditable(anchorElement)) {
+            return;
+        }
         const selection = this.dependencies.selection.getEditableSelection();
         const linkElement = findInSelection(selection, "a");
         if (linkElement) {
@@ -831,6 +843,19 @@ export class LinkPlugin extends Plugin {
                 ev.preventDefault();
             }
         }
+        // Firefox: avoid corrupted selection inside link.
+        const selection = this.document.getSelection();
+        if (
+            ev.inputType === "insertText" &&
+            selection.isCollapsed &&
+            selection.anchorNode.nodeType === Node.TEXT_NODE &&
+            selection.anchorNode.parentElement.tagName === "A"
+        ) {
+            // Reset hidden internal selection state.
+            const offset = selection.anchorOffset;
+            selection.collapse(selection.anchorNode, 0);
+            selection.collapse(selection.anchorNode, offset);
+        }
         this.updateCurrentLinkSyncState();
     }
 
@@ -955,6 +980,25 @@ export class LinkPlugin extends Plugin {
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
+        return true;
+    }
+
+    handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
+        // Detect if selection is around FEFF after the end edge of a button.
+        if (startContainer !== endContainer || startOffset !== 0 || endOffset !== 1) {
+            return;
+        }
+        if (startContainer.nodeType !== Node.TEXT_NODE || startContainer.textContent != "\uFEFF") {
+            return;
+        }
+        if (!startContainer.previousSibling?.matches("a.btn")) {
+            return;
+        }
+        // Move before inner FEFF of the button.
+        this.dependencies.selection.setSelection({
+            anchorNode: startContainer.previousSibling,
+            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
         return true;
     }
 }

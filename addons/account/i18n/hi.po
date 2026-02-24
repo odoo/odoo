@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
 "PO-Revision-Date: 2026-01-30 16:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/account/hi/"
@@ -74,6 +74,14 @@ msgstr ""
 "        जैसे 180 / (1 - 10%) = 200 (कीमत शामिल नहीं है)\n"
 "        जैसे 200 * (1 - 10%) = 180 (कीमत शामिल है)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4375,6 +4383,8 @@ msgid "Chart of accounts set!"
 msgstr "खातों की सूची सेट है!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "जांच करें"
@@ -9630,6 +9640,7 @@ msgstr "जर्नल:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "जर्नल"
 
@@ -15386,6 +15397,14 @@ msgid ""
 msgstr "ग्राहक/सप्लायर की जानकारी से जुड़ी हुई सभी अकाउंटिंग एंट्रीज़ में बदल दी गई है."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "वह कंपनी जिसकी यह डिस्ट्रिब्यूशन लाइन है."
@@ -15540,6 +15559,14 @@ msgstr "एंट्री %(name)s (आईडी %(id)s) ड्रॉफ़्�
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
 msgstr "यह एंट्री एक खास हैश से सुरक्षित है जिसे बदला नहीं जा सकता."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15972,6 +15999,14 @@ msgstr "जर्नल आइटम पर जो बची हुई रकम
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "आपका अभी का बैलेंस (%s), बताए गए आखिरी बैलेंस से नहीं मिल रहा है."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18239,6 +18274,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -18613,8 +18655,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr "आप किसी भी 'फाइनल' हो चुके दस्तावेज़ का प्रकार नहीं बदल सकते."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19305,6 +19348,9 @@ msgstr "{{ object.company_id.name }} इनवॉइस (Ref {{ object.name or '
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} पेमेंट रसीद (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr "आप किसी भी 'फाइनल' हो चुके दस्तावेज़ का प्रकार नहीं बदल सकते."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

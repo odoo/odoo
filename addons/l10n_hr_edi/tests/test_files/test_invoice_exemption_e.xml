@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
-    <ext:UBLExtensions>
+  <ext:UBLExtensions>
     <ext:UBLExtension>
       <ext:ExtensionContent>
         <hrextac:HRFISK20Data>
@@ -13,7 +13,8 @@
                 <cbc:ID>E</cbc:ID>
                 <cbc:Name>HR:E</cbc:Name>
                 <cbc:Percent>0.0</cbc:Percent>
-                <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
+                <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
+                <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
                 <hrextac:HRTaxScheme>
                   <cbc:ID>VAT</cbc:ID>
                 </hrextac:HRTaxScheme>
@@ -145,7 +146,8 @@
       <cac:TaxCategory>
         <cbc:ID>E</cbc:ID>
         <cbc:Percent>0.0</cbc:Percent>
-        <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -173,7 +175,8 @@
         <cbc:ID>E</cbc:ID>
         <cbc:Name>HR:E</cbc:Name>
         <cbc:Percent>0.0</cbc:Percent>
-        <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-143</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>Exempt based on article 143 of Council Directive 2006/112/EC</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>

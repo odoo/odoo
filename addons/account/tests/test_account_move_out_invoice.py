@@ -1792,6 +1792,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         bank1 = self.env['res.partner.bank'].create({
             'acc_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
+            "allow_out_payment": True,
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -2644,6 +2645,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "bank_name": "FAKE",
             "acc_number": "1234567890",
             "partner_id": self.partner_a.id,
+            "allow_out_payment": True,
         })
 
         move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
@@ -4627,11 +4629,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "bank_name": "FAKE",
             "acc_number": "1234567890",
             "partner_id": company_1.partner_id.id,
+            "allow_out_payment": True,
         })
         bank_2 = self.env["res.partner.bank"].create({
             "bank_name": "FAKE 2",
             "acc_number": "1234567890",
             "partner_id": company_2.partner_id.id,
+            "allow_out_payment": True,
         })
         invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({
             "company_id": company_1.id,
@@ -5052,3 +5056,27 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             1050.0,
             msg="Price should be recomputed when tax inclusion rate changes (10% -> 5%)"
         )
+
+    def test_line_name_description(self):
+        """ Test line name is updated after product change """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 100.0,
+                'quantity': 1,
+            })],
+        })
+
+        move_form = Form(invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.product_id = self.product_a
+        move_form.save()
+
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'product_id': self.product_a.id,
+            'name': 'product_a',
+        }])

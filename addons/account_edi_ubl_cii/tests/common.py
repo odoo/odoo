@@ -9,6 +9,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.partner_be = cls._create_partner_be()
         cls.partner_lu_dig = cls._create_partner_lu_dig()
+        cls.partner_nl = cls._create_partner_nl()
         cls.partner_au = cls._create_partner_au()
 
     @classmethod
@@ -20,19 +21,25 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         return company
 
     @classmethod
+    def _create_partner_default_values(cls):
+        return {
+            'invoice_sending_method': 'manual',
+            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
+            'property_account_payable_id': cls.company_data['default_account_payable'].id,
+            'company_id': cls.company_data['company'].id,
+        }
+
+    @classmethod
     def _create_partner_be(cls, **kwargs):
         return cls.env['res.partner'].create({
+            **cls._create_partner_default_values(),
             'name': 'partner_be',
             'street': "Rue des Bourlottes 9",
             'zip': "1367",
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'company_registry': '0477472701',
-            'invoice_sending_method': 'manual',
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].id,
-            'company_id': cls.company_data['company'].id,
-            'bank_ids': [Command.create({'acc_number': 'BE90735788866632'})],
+            'bank_ids': [Command.create({'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.be').id,
             **kwargs,
         })
@@ -40,15 +47,13 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
     @classmethod
     def _create_partner_lu_dig(cls, **kwargs):
         return cls.env['res.partner'].create({
+            **cls._create_partner_default_values(),
             'name': "Division informatique et gestion",
             'street': "bd de la Foire",
             'zip': "L-1528",
             'city': "Luxembourg",
             'vat': None,
-            'invoice_sending_method': 'manual',
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].id,
-            'company_id': cls.company_data['company'].id,
+            'company_registry': None,
             'country_id': cls.env.ref('base.lu').id,
             'peppol_eas': '9938',
             'peppol_endpoint': '00005000041',
@@ -56,19 +61,33 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         })
 
     @classmethod
+    def _create_partner_nl(cls, **kwargs):
+        return cls.env['res.partner'].create({
+            'name': "partner_nl",
+            'street': "Kunststraat, 3",
+            'zip': "1000",
+            'city': "Amsterdam",
+            'vat': 'NL000099998B57',
+            'invoice_sending_method': 'manual',
+            'company_registry': None,
+            'company_id': cls.company_data['company'].id,
+            'country_id': cls.env.ref('base.nl').id,
+            'peppol_eas': '0106',
+            'peppol_endpoint': '77777677',
+            **kwargs,
+        })
+
+    @classmethod
     def _create_partner_au(cls, **kwargs):
         return cls.env['res.partner'].create({
+            **cls._create_partner_default_values(),
             'name': "partner_au",
             'street': "Parliament Dr",
             'zip': "2600",
             'city': "Canberra",
             'vat': '53 930 548 027',
-            'invoice_sending_method': 'manual',
-            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
-            'property_account_payable_id': cls.company_data['default_account_payable'].id,
-            'company_id': cls.company_data['company'].id,
             'country_id': cls.env.ref('base.au').id,
-            'bank_ids': [Command.create({'acc_number': '93999574162167'})],
+            'bank_ids': [Command.create({'acc_number': '93999574162167', 'allow_out_payment': True})],
             **kwargs,
         })
 
@@ -115,8 +134,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         return 'export'
 
     @classmethod
-    def _generate_invoice_ubl_file(cls, invoice):
-        cls.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+    def _generate_invoice_ubl_file(cls, invoice, **kwargs):
+        cls.env['account.move.send']._generate_and_send_invoices(invoice, **{'sending_methods': ['manual'], **kwargs})
 
     def _assert_invoice_ubl_file(self, invoice, filename):
         self.assertTrue(invoice.ubl_cii_xml_id)
@@ -149,7 +168,7 @@ class TestUblCiiBECommon(TestUblCiiCommon):
             'vat': 'BE0202239951',
             'company_registry': '0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [Command.create({'acc_number': 'BE15001559627230'})],
+            'bank_ids': [Command.create({'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
         })
         return company
 
@@ -157,17 +176,37 @@ class TestUblCiiBECommon(TestUblCiiCommon):
         return f'{super().subfolder()}/be'
 
 
+class TestUblCiiFRCommon(TestUblCiiCommon):
+
+    @classmethod
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
+
+        company.partner_id.write({
+            'street': "Rue Grand Port 1",
+            'zip': "35400",
+            'city': "Saint-Malo",
+            'vat': 'FR23334175221',
+            'country_id': cls.env.ref('base.fr').id,
+        })
+        return company
+
+    def subfolder(self):
+        return f'{super().subfolder()}/fr'
+
+
 class TestUblBis3Common(TestUblCiiCommon):
 
     @classmethod
-    def _create_partner_be(cls, **kwargs):
-        kwargs.setdefault('invoice_edi_format', 'ubl_bis3')
-        return super()._create_partner_be(**kwargs)
+    def _create_partner_default_values(cls):
+        values = super()._create_partner_default_values()
+        values['invoice_edi_format'] = 'ubl_bis3'
+        return values
 
     @classmethod
-    def _create_partner_lu_dig(cls, **kwargs):
+    def _create_partner_nl(cls, **kwargs):
         kwargs.setdefault('invoice_edi_format', 'ubl_bis3')
-        return super()._create_partner_lu_dig(**kwargs)
+        return super()._create_partner_nl(**kwargs)
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS

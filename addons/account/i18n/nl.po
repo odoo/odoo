@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 10:40+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-02-20 18:37+0000\n"
+"PO-Revision-Date: 2026-02-21 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/nl/"
 ">\n"
 "Language: nl\n"
@@ -74,6 +74,14 @@ msgstr ""
 "        Bijv. 180 / (1 - 10%) = 200 (exclusief btw)\n"
 "        Bijv. 200 * (1 - 10%) = 180 (inclusief btw)\n"
 "        "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"\n"
+"Please contact your administrator."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4586,6 +4594,8 @@ msgid "Chart of accounts set!"
 msgstr "Grootboekschema ingesteld!"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Check"
 msgstr "Controleren"
@@ -4973,7 +4983,7 @@ msgstr "Configureren"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Configureer je document lay-out"
+msgstr "Configureer de lay-out van je document"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -9893,6 +9903,7 @@ msgstr "Dagboek:"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.model.fields,field_description:account.field_account_report__filter_journals
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
 msgstr "Dagboeken"
 
@@ -13030,7 +13041,7 @@ msgstr "QR codes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15731,6 +15742,14 @@ msgid ""
 msgstr "De commerciële partner is bijgewerkt voor alle gerelateerde boekingen."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The company bank account linked to this invoice is not trusted, please "
+"double-check and trust it before confirming, or remove it"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Het bedrijf waartoe deze verdeelregel behoord."
@@ -15895,6 +15914,16 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "De invoer is beveiligd met een onveranderlijke hash."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+"De boeking maakt gebruik van rekeningen (%(accounts_codes_names)s) van een "
+"ander bedrijf."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 msgid ""
 "The expense is accounted for when a vendor bill is validated, except in "
@@ -15943,7 +15972,8 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"De fiscale positie bepaald de btw/rekeningen gebruikt voor dit contact."
+"De fiscale positie bepaalt de btw/rekeningen die worden gebruikt voor dit "
+"contact."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -16378,6 +16408,14 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr "Het lopende saldo (%s) komt niet overeen met het opgegeven eindsaldo."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The scheduled action 'Send Invoices automatically' is archived. You won't be "
+"able to send invoices in batch."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18719,6 +18757,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+msgid ""
+"You cannot change the amount of a payment with multiple liquidity lines."
+msgstr ""
+"Je kunt het bedrag van een betaling met meerdere liquiditeitslijnen niet "
+"wijzigen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -19111,9 +19158,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
-"Je kunt het type van een document niet wijzigen nadat het eenmaal is gepost."
+msgid ""
+"You cannot switch the type of a document with an existing sequence number."
+msgstr "Je kunt het type document met een bestaand volgnummer niet wijzigen."
 
 #. module: account
 #. odoo-python
@@ -19241,6 +19288,8 @@ msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Je kunt samples alleen gebruiken in demomodus. Probeer het door een van je "
+"facturen te uploaden."
 
 #. module: account
 #. odoo-python
@@ -19817,6 +19866,11 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Betaalbewijs (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "You cannot switch the type of a document which has been posted once."
+#~ msgstr ""
+#~ "Je kunt het type van een document niet wijzigen nadat het eenmaal is "
+#~ "gepost."
 
 #~ msgid ""
 #~ "This account is configured in %(journal_names)s journal(s) (ids %"

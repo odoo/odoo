@@ -26,7 +26,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -39,7 +39,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'ubl_bis3',
         })
@@ -380,6 +380,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         acc_bank = self.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         invoice = self._generate_move(
@@ -475,6 +476,16 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'amount_tax': 331.25,
                 'invoice_lines': [{'price_subtotal': x} for x in (25, 2800, -1500)],
             },
+        )
+        # source: base-creditnote-correction.xml with ignored LineExtensionAmount
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder,
+            filename='bis3_invoice_ignore_lineextensionamount.xml',
+            invoice_vals={
+                'amount_total': 1000,
+                'amount_tax': 0,
+                'invoice_lines': [{'price_subtotal': 1000}],
+            }
         )
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(

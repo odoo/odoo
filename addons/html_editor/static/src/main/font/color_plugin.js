@@ -17,6 +17,7 @@ import {
     isTextNode,
     isWhitespace,
     isZwnbsp,
+    PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
@@ -182,9 +183,11 @@ export class ColorPlugin extends Plugin {
                         .getTargetedNodes()
                         .filter(
                             (n) =>
-                                isTextNode(n) ||
-                                (mode === "backgroundColor" &&
-                                    n.classList.contains("o_selected_td"))
+                                (isTextNode(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
                         );
                     return hasAnyNodesColor(nodes, mode);
                 };
@@ -265,12 +268,12 @@ export class ColorPlugin extends Plugin {
         const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
                 .filter(Boolean)
         );
 
-        const getFonts = (selectedNodes) => {
-            return selectedNodes.flatMap((node) => {
+        const getFonts = (selectedNodes) =>
+            selectedNodes.flatMap((node) => {
                 let font =
                     closestElement(node, "font") ||
                     closestElement(
@@ -422,7 +425,6 @@ export class ColorPlugin extends Plugin {
                 }
                 return font;
             });
-        };
 
         for (const fieldNode of targetedFieldNodes) {
             this.colorElement(fieldNode, color, mode);

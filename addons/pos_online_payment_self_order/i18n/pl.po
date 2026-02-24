@@ -6,13 +6,14 @@
 # Wil Odoo, 2024
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 09:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-14 09:11+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "pos_online_payment_self_order/pl/>\n"
 "Language: pl\n"
@@ -50,7 +51,7 @@ msgstr "Zapłać"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Zapłać przy kasie"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -60,13 +61,13 @@ msgstr "Zapłać przy kasie, jeżeli puste"
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Payment Methods"
-msgstr "Metody wysyłania płatności"
+msgstr "Metody płatności"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 msgid "Payment in progress"
-msgstr ""
+msgstr "Płatność w toku"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -99,7 +100,7 @@ msgstr "Samodzielna płatność online"
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Nie można opłacić bieżącego zamówienia (być może zostało już opłacone)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -118,8 +119,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Metoda płatności online używana do samodzielnego zamawiania w konfiguracji "
+"PoS musi mieć co najmniej jednego opublikowanego dostawcę usług płatniczych "
+"obsługującego walutę tej konfiguracji PoS."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Skorzystaj z opcji samodzielnego składania zamówień i płatności online"

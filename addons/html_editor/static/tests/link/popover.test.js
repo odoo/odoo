@@ -674,6 +674,14 @@ describe("shortcut", () => {
             '<p><a href="http://test.com">li[]nk</a></p>'
         );
     });
+    test("should not create a link via shortcut for partial selection inside contenteditable false", async () => {
+        const { el } = await setupEditor(`<p contenteditable="false">T[e]st</p>`);
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        await click(".o_command_name:first");
+        expect(getContent(el)).toBe('<p contenteditable="false">T[e]st</p>');
+        expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+    });
 });
 
 describe("link preview", () => {

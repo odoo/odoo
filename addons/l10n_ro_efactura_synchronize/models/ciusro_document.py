@@ -126,3 +126,21 @@ class L10nRoEdiDocument(models.Model):
             'sent_invoices_refused_messages': sent_invoices_refused_messages,
             'received_bills_messages': received_bills_messages,
         }
+
+    @api.model
+    def _request_ciusro_xml_to_pdf(self, company, xml_data):
+        """
+        This method makes a 'transformare' request to get the official PDF of an invoice.
+        :param company: ``res.company`` object
+        :param xml_data: String of XML data to be sent
+        :return: response dict from E-Factura
+        """
+        return make_efactura_request(
+            session=requests,
+            company=company,
+            endpoint='transformare',
+            method='POST',
+            params={'standard': 'FACT1',
+                    'novld': 'DA'},
+            data=xml_data,
+        )

@@ -139,8 +139,8 @@ class AccountMoveLine(models.Model):
                     AND base_line.move_id = account_move_line.move_id
                     AND (
                         move.move_type != 'entry'
-                        OR
-                        sign(account_move_line.balance) = sign(base_line.balance * tax.amount * tax_rep.factor_percent)
+                        OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
+                        OR sign(account_move_line.balance) = sign(base_line.balance * tax.amount * tax_rep.factor_percent)
                     )
                     AND COALESCE(base_line.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
                     AND base_line.currency_id = account_move_line.currency_id

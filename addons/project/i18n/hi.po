@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 09:07+0000\n"
+"PO-Revision-Date: 2026-02-14 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/project/hi/"
 ">\n"
@@ -542,6 +542,16 @@ msgid ""
 "span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                                    <span invisible="
+"\"rating_status == 'periodic'\">जैसे ही टास्क उस स्टेज पर पहुंचेगा जहां रेटिंग ईमेल टेंप्लेट निर्धारि"
+"त है, वैसे ही रेटिंग का अनुरोध भेज दिया जाएगा..</span>\n"
+"                                                    <span invisible="
+"\"rating_status == 'stage'\">जब तक टास्क उस स्टेज पर रहेगा जहां रेटिंग ईमेल टेंप्लेट निर्धारित है"
+", तब तक रेटिंग अनुरोध भेजे जाते रहेंगे.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1302,6 +1312,12 @@ msgid ""
 "long as the task remains in the stage in which the rating email template is "
 "set."
 msgstr ""
+"जब कोई टास्क किसी निश्चित स्टेज पर पहुंचे, तो ग्राहकों को रेटिंग रिक्वेस्ट भेजकर उनका फीडबैक इकट्ठा करें. ऐसा "
+"करने के लिए, संबंधित स्टेज पर रेटिंग ईमेल टेम्पलेट परिभाषित करें.\n"
+"स्टेज बदलने पर रेटिंग: जब टास्क उस स्टेज पर पहुँचेगा जहाँ रेटिंग ईमेल टेम्पलेट सेट है, तो एक ईमेल अपने "
+"आप भेज दिया जाएगा.\n"
+"समय-समय पर रेटिंग: जब तक टास्क उस स्टेज पर रहेगा जहाँ रेटिंग ईमेल टेम्पलेट सेट है, तब तक नियमित अंतरा"
+"ल पर एक ईमेल अपने आप भेजा जाएगा।"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1759,7 +1775,7 @@ msgstr "माइलस्टोन पूरा होने पर, सेल�
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Delivered"
-msgstr ""
+msgstr "डिलीवर किया गया"
 
 #. module: project
 #. odoo-python
@@ -2555,7 +2571,7 @@ msgstr "आखिरी स्टेज अपडेट"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "आखिरी बार अपडेट हुआ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__write_uid
@@ -3834,7 +3850,7 @@ msgstr "थ्रेड आईडी रिकॉर्ड करें"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Recording"
-msgstr ""
+msgstr "रिकॉर्डिंग"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
@@ -3872,7 +3888,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "दस्तावेज़ से जुड़ी हुई आईडी"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
@@ -4109,7 +4125,7 @@ msgstr "अनुक्रम"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "कवर इमेज सेट करें"
 
 #. module: project
 #. odoo-python
@@ -4234,6 +4250,9 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"माइलस्टोन्स, टैग्स या किसी विशेष प्रॉपर्टी का उपयोग करके अपने टास्क को स्प्रिंट के अनुसार सॉर्ट करें. हर स्प्रिंट "
+"के अंत में, बस अपनी लिस्ट में बचे हुए टास्क को चुनें और माइलस्टोन, टैग या प्रॉपर्टी को एडिट करके उन सभी को "
+"एक साथ अगले स्प्रिंट में ले जाएं।"
 
 #. module: project
 #. odoo-javascript
@@ -4627,7 +4646,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Tests"
-msgstr ""
+msgstr "टेस्ट"
 
 #. module: project
 #. odoo-javascript
@@ -5102,7 +5121,7 @@ msgstr "असाइन नहीं किया"
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_container.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "अनफ़ॉलो करें"
 
 #. module: project
 #. odoo-python
@@ -5440,12 +5459,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "आपको %s पर असाइन किया गया है"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "आपको असाइन किया गया है"
 
 #. module: project
 #. odoo-python

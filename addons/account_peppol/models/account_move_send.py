@@ -200,6 +200,11 @@ class AccountMoveSend(models.AbstractModel):
                     )
                     continue
 
+                if invoice.invoice_pdf_report_id and self._needs_ubl_postprocessing(invoice_data):
+                    self._postprocess_invoice_ubl_xml(invoice, invoice_data)
+                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+
                 if len(xml_file) > 64000000:
                     invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
                     continue
@@ -270,6 +275,7 @@ class AccountMoveSend(models.AbstractModel):
 
                     if new_message.attachment_ids.ids:
                         self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                        new_message.attachment_ids.invalidate_recordset(['res_id', 'res_model'], flush=False)
                         new_message.attachment_ids.write({
                             'res_model': new_message._name,
                             'res_id': new_message.id,

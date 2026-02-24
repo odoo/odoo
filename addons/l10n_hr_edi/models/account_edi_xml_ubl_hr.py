@@ -63,7 +63,11 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         return nsmap
 
     def _export_invoice_constraints_new(self, invoice, vals):
-        constraints = super()._export_invoice_constraints_new(invoice, vals)
+        # OVERRIDE 'account.edi.xml.ubl_bis3': don't apply Peppol rules
+        constraints = self.env['account.edi.xml.ubl_20']._export_invoice_constraints(invoice, vals)
+        constraints.update(
+            self._invoice_constraints_cen_en16931_ubl_new(invoice, vals)
+        )
         constraints.update(
             self._invoice_constraints_eracun_new(invoice, vals)
         )
@@ -168,27 +172,45 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             })
 
     def _add_hr_extension_node(self, document_node):
-        tax_subtotals = document_node['cac:TaxTotal'][0]['cac:TaxSubtotal']
-        hr_tax_subtotals = []
+        """
+        This function constructs hrextac node from existing data within the document.
+        The structure mostly follows that of 'cac:TaxTotal' node of a UBL 2.1/BIS 3 document,
+        but requires additional data compared to the totals/subtotals nodes in UBL HR format.
+        To avoid making additional queries and possible desyncs, we calculate all the data
+        we need while assembling normal subtotals, then trim out the extra bits.
+        """
         cash_basis_line = False
-        for i in range(len(tax_subtotals)):
-            # Removing the HR-specific node from the normal subtotal where we calculate it
-            hr_tax_name = tax_subtotals[i]['cac:TaxCategory'][0].pop('cbc:Name')
-            cash_basis_flag = tax_subtotals[i]['cac:TaxCategory'][0].pop('hrextac:HRObracunPDVPoNaplati')  # Ensure pop() always runs
-            cash_basis_line = cash_basis_line or cash_basis_flag
-            new_item = {
-                'cbc:TaxableAmount': tax_subtotals[i]['cbc:TaxableAmount'],
-                'cbc:TaxAmount': tax_subtotals[i]['cbc:TaxAmount'],
-                'hrextac:HRTaxCategory': {
-                    'cbc:ID': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:ID'],
-                    'cbc:Name': hr_tax_name,
-                    'cbc:Percent': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:Percent'],
-                    'cbc:TaxExemptionReasonCode': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:TaxExemptionReasonCode'],
-                    'cbc:TaxExemptionReason': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:TaxExemptionReason'],
-                    'hrextac:HRTaxScheme': tax_subtotals[i]['cac:TaxCategory'][0]['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else {'_text': "OTH"},
-                }
-            }
-            hr_tax_subtotals.append(new_item)
+        tax_totals = document_node['cac:TaxTotal']
+        hr_tax_totals = []
+        for total in tax_totals:
+            tax_subtotals = total['cac:TaxSubtotal']
+            hr_tax_subtotals = []
+            for subtotal in tax_subtotals:
+                tax_categories = subtotal['cac:TaxCategory']
+                hr_tax_categories = []
+                for category in tax_categories:
+                    # Cash basis is document-wide, so we do not need to keep it for each category
+                    cash_basis_flag = category.pop('hrextac:HRObracunPDVPoNaplati')  # Ensure pop() always runs
+                    cash_basis_line = cash_basis_line or cash_basis_flag
+                    # Removing the HR-specific node from the normal subtotal where we calculate it
+                    hr_tax_name = category.pop('cbc:Name')
+                    hr_tax_categories.append({
+                        'cbc:ID': category['cbc:ID'],
+                        'cbc:Name': hr_tax_name,
+                        'cbc:Percent': category['cbc:Percent'],
+                        'cbc:TaxExemptionReasonCode': category['cbc:TaxExemptionReasonCode'],
+                        'cbc:TaxExemptionReason': category['cbc:TaxExemptionReason'],
+                        'hrextac:HRTaxScheme': category['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else {'_text': "OTH"},
+                    })
+                hr_tax_subtotals.append({
+                    'cbc:TaxableAmount': subtotal['cbc:TaxableAmount'],
+                    'cbc:TaxAmount': subtotal['cbc:TaxAmount'],
+                    'hrextac:HRTaxCategory': hr_tax_categories.copy(),
+                })
+            hr_tax_totals.append({
+                'cbc:TaxAmount': total['cbc:TaxAmount'],
+                'hrextac:HRTaxSubtotal': hr_tax_subtotals.copy(),
+            })
         out_of_scope_node = {
             'currencyID': document_node['cac:LegalMonetaryTotal']['cbc:TaxExclusiveAmount'].get('currencyID'),
             '_text': '0.00'     # Currently unsupported, a HR-specific workaround can potentially be made
@@ -199,10 +221,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                     'ext:ExtensionContent': {
                         'hrextac:HRFISK20Data': {
                             'hrextac:HRObracunPDVPoNaplati': cash_basis_line,
-                            'hrextac:HRTaxTotal': {
-                                'cbc:TaxAmount': document_node['cac:TaxTotal'][0]['cbc:TaxAmount'],
-                                'hrextac:HRTaxSubtotal': hr_tax_subtotals,
-                            },
+                            'hrextac:HRTaxTotal': hr_tax_totals,
                             'hrextac:HRLegalMonetaryTotal': {
                                 'cbc:TaxExclusiveAmount': document_node['cac:LegalMonetaryTotal']['cbc:TaxExclusiveAmount'],
                                 'hrextac:OutOfScopeOfVATAmount': out_of_scope_node,
@@ -215,9 +234,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
         super()._add_invoice_line_item_nodes(line_node, vals)
-        line = vals['base_line']['record']
         # HR-BR-25: Each item MUST have an item classification identifier from the Classification of Products
         # by Activities scheme: KPD (CPA) - listID "CG", except in the case of advance payment invoices.
+        line = vals['base_line']['record']
         line_node['cac:Item'].update({
             'cac:CommodityClassification': {
                 'cbc:ItemClassificationCode': {
@@ -227,39 +246,50 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             }
         })
 
-    def _get_party_node(self, vals):
-        party_node = super()._get_party_node(vals)
-        commercial_partner = vals['partner'].commercial_partner_id
+    def _ubl_add_party_identification_nodes(self, vals):
+        # EXTENDS account.edi.ubl_bis3
+        super()._ubl_add_party_identification_nodes(vals)
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
         if commercial_partner.l10n_hr_personal_oib:
             if commercial_partner.l10n_hr_business_unit_code:
-                party_node['cac:PartyIdentification']['cbc:ID'].update({
-                    '_text': '9934:' + commercial_partner.l10n_hr_personal_oib + '::HR99:' + commercial_partner.l10n_hr_business_unit_code
-                })
+                vals['party_node']['cac:PartyIdentification'] = [{
+                    'cbc:ID': {
+                        '_text': f'9934:{commercial_partner.l10n_hr_personal_oib}::HR99:{commercial_partner.l10n_hr_business_unit_code}',
+                        'schemeID': None,
+                    },
+                }]
             else:
-                party_node['cac:PartyIdentification']['cbc:ID'].update({
-                    '_text': '9934:' + commercial_partner.l10n_hr_personal_oib
-                })
+                vals['party_node']['cac:PartyIdentification'] = [{
+                    'cbc:ID': {
+                        '_text': f'9934:{commercial_partner.l10n_hr_personal_oib}',
+                        'schemeID': None,
+                    },
+                }]
         elif commercial_partner.company_registry:
-            party_node['cac:PartyIdentification']['cbc:ID'].update({
-                '_text': '0088:' + commercial_partner.company_registry
-            })
-        return party_node
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {
+                    '_text': f'0088:{commercial_partner.company_registry}',
+                    'schemeID': None,
+                },
+            }]
 
     def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
         super()._add_invoice_accounting_supplier_party_nodes(document_node, vals)
-        invoice = vals['invoice']
         # HR-BR-37: Invoice must contain HR-BT-4: Operator code in accordance with the Fiscalization Act.
         # HR-BR-9: Invoice must contain HR-BT-5: Operator OIB in accordance with the Fiscalization Act.
+        invoice = vals['invoice']
         document_node['cac:AccountingSupplierParty'].update({
-                'cac:SellerContact': {
-                    'cbc:ID': {
-                        '_text': invoice.l10n_hr_operator_oib
-                    },
-                    'cbc:Name': {
-                        '_text': invoice.l10n_hr_operator_name
-                    }
+            'cac:SellerContact': {
+                'cbc:ID': {
+                    '_text': invoice.l10n_hr_operator_oib
+                },
+                'cbc:Name': {
+                    '_text': invoice.l10n_hr_operator_name
                 }
-            })
+            }
+        })
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -268,6 +298,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             return
 
         tax = tax_data['tax']
+        hr_category = tax.l10n_hr_tax_category_id if tax else None
 
         # HR-BR-11: Each document-level expense (BG-21) that is not subject to VAT or is exempt from VAT must have
         # a document-level expense VAT category code (HR-BT-6) from table HR-TB-2 HR VAT category codes
@@ -279,9 +310,12 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             and not tax.amount
         ):
             grouping_key.update({
-                'tax_category_code': tax.l10n_hr_tax_category_id.code_untdid,
-                'tax_exemption_reason': tax.l10n_hr_tax_category_id.description,
+                'tax_category_code': tax.l10n_hr_tax_category_id.code_untdid
             })
+            # If account_edi_ubl_cii_tax_extension is installed and a value is specified, use that data, if not, override with HR data
+            tax_extension = 'ubl_cii_tax_exemption_reason_code' in tax._fields and tax.ubl_cii_tax_exemption_reason_code
+            if not tax_extension:
+                grouping_key.update({'tax_exemption_reason': hr_category.description})
 
         if tax.tax_exigibility == 'on_payment':
             invoice_legal_notes_str = html2plaintext(tax.invoice_legal_notes or '') or "Obračun po naplaćenoj naknadi"
@@ -327,6 +361,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         lines_values = []
         for line_tree in tree.iterfind(xpath):
             line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
+            if line_values is None:
+                continue
+
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
                 invoice, line_values, invoice.journal_id.type, tax_exigibility,
             )

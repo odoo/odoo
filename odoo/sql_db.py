@@ -841,7 +841,7 @@ def connection_info_for(db_or_uri, readonly=False):
     for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if readonly:
-            cfg = tools.config.get('db_replica_' + p, cfg)
+            cfg = tools.config.get('db_replica_' + p) or cfg
         if cfg:
             connection_info[p] = cfg
 

@@ -937,6 +937,10 @@ class TestCompute(common.TransactionCase):
             'email': 'mitchell.admin@example.com',
         })
 
+    def tearDown(self):
+        self.env['base.automation']._unregister_hook()
+        super().tearDown()
+
     def test_automation_form_view(self):
         automation_form = Form(self.env['base.automation'], view='base_automation.view_base_automation_form')
 

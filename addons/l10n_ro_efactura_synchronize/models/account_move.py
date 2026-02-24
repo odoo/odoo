@@ -1,4 +1,5 @@
 import requests
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -249,11 +250,29 @@ class AccountMove(models.Model):
                 'key_certificate': message['answer']['signature']['key_certificate'],
                 'attachment_raw': message['answer']['signature']['attachment_raw'],
             })
+            xml_attachment_raw = message['answer']['invoice']['attachment_raw']
             attachment_sudo = self.env['ir.attachment'].sudo().create(
-                bill._l10n_ro_edi_create_attachment_values(message['answer']['invoice']['attachment_raw'])
+                bill._l10n_ro_edi_create_attachment_values(xml_attachment_raw)
             )
             bill._extend_with_attachments(attachment_sudo)
-            bill.message_post(body=_("Synchronized with SPV from message %s", message['id']))
+            chatter_message = self.env._("Synchronized with SPV from message %s", message['id'])
+            if (bill.message_main_attachment_id.mimetype or '') != 'application/pdf':
+                pdf = self.env['l10n_ro_edi.document']._request_ciusro_xml_to_pdf(self.env.company, xml_attachment_raw)
+                if 'error' in pdf:
+                    bill.message_post(body=self.env._(
+                    "It was not possible to retrieve the PDF from the SPV for the following reason: %s",
+                    pdf['error']
+                    ))
+                else:
+                    pdf_attachment_id = self.env['ir.attachment'].sudo().create({
+                        'name': f"ciusro_{message['answer']['invoice']['name'].replace('/', '_')}.pdf",
+                        'raw': pdf['content'],
+                        'res_model': 'account.move',
+                        'res_id': bill.id,
+                    }).id
+                    bill.message_main_attachment_id = pdf_attachment_id
+                    chatter_message += Markup("<br/>%s") % self.env._("No PDF found: PDF imported from SPV.")
+            bill.message_post(body=chatter_message)
 
     def action_l10n_ro_edi_fetch_invoices(self):
         self._l10n_ro_edi_fetch_invoices()

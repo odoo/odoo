@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_gelato
+# * sale_gelato
 #
 # Translators:
 # Wil Odoo, 2025
 # Chloe Wang, 2025
 #
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-02-09 01:00+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"PO-Revision-Date: 2026-02-14 09:13+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-18/sale_gelato/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
@@ -67,6 +69,47 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    您好 <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>，<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        您好！我们很高兴通知您，您的订单已发出，正处于运输途"
+"中。\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value="
+"\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            物流追踪单号为：<a t-att-href=\"tracking_url\" "
+"t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            物流追踪单号为：\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as="
+"\"tracking_url\">\n"
+"                                    <a t-att-href=\"tracking_url\" t-out="
+"\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                           您好！我们很高兴通知您，您的订单已成功送达。\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    谢谢！\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-"
+"quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -193,7 +236,7 @@ msgstr "Gelato 传回订单。订单参考编号：%(reference)s。"
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr "Gelato：订单状态更性"
+msgstr "Gelato：订单状态更新"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
@@ -345,13 +388,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to confirm the order %s on Gelato."
-msgstr ""
+msgstr "无法确认 Gelato 上的订单 %s。"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to delete the order %s on Gelato."
-msgstr ""
+msgstr "无法删除 Gelato 上的 %s 订单。"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

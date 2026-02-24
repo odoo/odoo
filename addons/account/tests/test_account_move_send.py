@@ -693,6 +693,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2))
 
+    def test_invoice_multi_cron_disabled_alert(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        self.env.ref('account.ir_cron_account_move_send').active = False
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertTrue('account_send_cron_archived' in wizard.alerts)
+        self.assertEqual(wizard.alerts['account_send_cron_archived']['level'], 'warning')
+
     def test_invoice_multi_with_edi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
@@ -1105,7 +1113,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
     def test_get_sending_settings(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice)
-        
+
         expected_results = {
             'sending_methods': {'email'},
             'invoice_edi_format': False,

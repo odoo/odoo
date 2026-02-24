@@ -649,10 +649,15 @@ class BaseModel(metaclass=MetaModel):
     """
 
     # default values for _transient_vacuum()
-    _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
-    "maximum number of transient records, unlimited if ``0``"
-    _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
-    "maximum idle lifetime (in hours), unlimited if ``0``"
+    @lazy_classproperty
+    def _transient_max_count(cls):
+        """maximum number of transient records, unlimited if ``0``"""
+        return config.get('osv_memory_count_limit')
+
+    @lazy_classproperty
+    def _transient_max_hours(cls):
+        """maximum idle lifetime (in hours), unlimited if ``0``"""
+        return config.get('transient_age_limit')
 
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """

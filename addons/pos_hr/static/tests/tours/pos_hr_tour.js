@@ -318,3 +318,46 @@ registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: ".section-financials :contains('Margin')",
+            },
+            Dialog.confirm("Ok"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cost_and_margin_visibility_no_access", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Unlock Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
+            Dialog.confirm("Ok"),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            ProductScreen.clickInfoProduct("product_a"),
+            {
+                trigger: negate(".section-financials :contains('Margin')"),
+            },
+        ].flat(),
+});

@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.fields import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -117,3 +119,20 @@ class TestSaleOrder(ClickAndCollectCommon):
         )
         unavailable_ol = cart._get_unavailable_order_lines(self.warehouse_2.id)
         self.assertIn(self.storable_product.id, unavailable_ol.product_id.ids)
+
+    def test_archive_pick_up_location_address_after_ecommerce_creation(self):
+        """Store pickup location address should be archived if created on during eCommerce flow."""
+        wh_partner = self.warehouse.partner_id
+        new_so = self._create_in_store_delivery_order()
+        new_so._set_pickup_location(json.dumps({
+            'id': self.warehouse.id,
+            'name': wh_partner.name,
+            'street': "New test street",
+            'zip_code': wh_partner.zip,
+            'city': "New test city",
+            'state': wh_partner.state_id.code,
+            'country_code': wh_partner.country_code,
+        }))
+        new_so._action_confirm()
+        self.assertTrue(new_so.partner_shipping_id)
+        self.assertFalse(new_so.partner_shipping_id.active)

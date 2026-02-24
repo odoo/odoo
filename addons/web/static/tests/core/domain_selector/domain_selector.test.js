@@ -403,6 +403,26 @@ test("set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea", asy
     expect(getCurrentValue()).toBe("1");
 });
 
+test("ends_with stays selected", async () => {
+    await makeDomainSelector({
+        domain: `[['foo', '=', '']]`,
+        update: (domain) => {
+            expect.step(domain);
+        },
+    });
+
+    await selectOperator("ends_with");
+    expect.verifySteps(['[("foo", "=ilike", "%")]']);
+
+    expect(getCurrentOperator()).toBe("ends with");
+    await editValue("abc");
+    expect.verifySteps(['[("foo", "=ilike", "%abc")]']);
+
+    await selectOperator("starts_with");
+    expect(getCurrentOperator()).toBe("starts with");
+    expect.verifySteps(['[("foo", "=ilike", "abc%")]']);
+});
+
 test("operator fallback (mode readonly)", async () => {
     await makeDomainSelector({
         domain: `[['foo', 'like', 'kikou']]`,
