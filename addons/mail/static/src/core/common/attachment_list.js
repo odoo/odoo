@@ -12,6 +12,7 @@ import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
+import { useRef } from "@web/owl2/utils";
 
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
@@ -40,6 +41,7 @@ export class AttachmentList extends Component {
         super.setup();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
+        this.root = useRef("root");
         this.fileViewer = useFileViewer();
         this.actionsMenuState = useDropdownState();
         this.isMobileOS = isMobileOS();
@@ -82,9 +84,12 @@ export class AttachmentList extends Component {
             return this.props.unlinkAttachment(attachment);
         }
         this.dialog.add(ConfirmationDialog, {
-            title: _t('Delete Attachment'),
-            body: _t('Are you sure you want to delete "%s"?\nThis action cannot be undone.', attachment.name),
-            confirmLabel: _t('Delete Attachment'),
+            title: _t("Delete Attachment"),
+            body: _t(
+                'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
+                attachment.name
+            ),
+            confirmLabel: _t("Delete Attachment"),
             cancel: () => {},
             confirm: () => this.onConfirmUnlink(attachment),
         });
