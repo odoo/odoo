@@ -150,13 +150,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         # check manual tracking
         peppol_track_msg = self._new_msgs
         self.assertEqual(len(peppol_track_msg), 1)
-        tracking = [('Peppol status', 'Unchecked', 'Partner is not on Peppol', 'company_1_data')]
-        for track_bit in tracking[0]:
-            self.assertIn(track_bit, peppol_track_msg.body)
         self.assertMessageFields(peppol_track_msg, {
+            'body': '',
             'model': self.invalid_partner._name,
             'res_id': self.invalid_partner.id,
             'subtype_id': self.env.ref('mail.mt_note'),
+            'tracking_values': [('peppol_verification_state', 'selection', 'Unchecked', 'Partner is not on Peppol', {'company': self.env.company})],
         })
 
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')

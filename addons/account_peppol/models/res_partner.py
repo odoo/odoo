@@ -3,7 +3,6 @@
 import logging
 import requests
 from lxml import etree
-from markupsafe import Markup
 from hashlib import md5
 from urllib import parse
 
@@ -75,37 +74,6 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
-
-    def _log_verification_state_update(self, company, old_value, new_value):
-        # log the update of the peppol verification state
-        # we do this instead of regular tracking because of the customized message
-        # and because we want to log the change for every company in the db
-        if old_value == new_value:
-            return
-
-        peppol_verification_state_field = self._fields['peppol_verification_state']
-        selection_values = dict(peppol_verification_state_field.selection)
-        old_label = selection_values[old_value] if old_value else False  # get translated labels
-        new_label = selection_values[new_value] if new_value else False
-
-        # TDE FIXME: change to real tracking
-        body = Markup("""
-            <ul>
-                <li>
-                    <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                    <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                    <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                    <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({field})</span>
-                    <span class='o-mail-Message-trackingCompany ms-1 fst-italic text-muted'>({company})</span>
-                </li>
-            </ul>
-        """).format(
-            old=old_label,
-            new=new_label,
-            field=peppol_verification_state_field.string,
-            company=company.display_name,
-        )
-        self._message_log(body=body)
 
     @api.model
     def _get_participant_info(self, edi_identification):
@@ -283,7 +251,11 @@ class ResPartner(models.Model):
 
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value
-            self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
+            if old_value != new_value:
+                self._track_add(
+                    initial_values={self.id: {'peppol_verification_state': old_value}},
+                    end_values={self.id: {'peppol_verification_state': new_value}},
+                )
         return False
 
     @api.model
