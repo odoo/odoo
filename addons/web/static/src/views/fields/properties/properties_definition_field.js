@@ -95,6 +95,8 @@ export class PropertiesDefinitionField extends PropertiesField {
     }
 
     // In this case, we do not want to add the 'value' parameter, as this is a definition, and not a property
+    _setDefaultPropertyValue(propertyName) { }
+
     _toggleSeparatorValue(property, forceState) { }
 
     _isFolded(property) {
