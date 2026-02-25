@@ -976,3 +976,49 @@ class TestSequenceMixinConcurrency(TransactionCase):
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, 'CT/2016/01/0002'])
+
+
+@tagged('post_install', '-at_install')
+class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
+    def test_failed_import_bank_statement_cache_shouldnt_get_invalidated(self):
+        """ Ensure that even with a failed import, we mostly hit the sequence cache and don't create tons of savepoint"""
+        bank_journal = self.company.bank_journal_ids[:1]  # there could be several journal in some builds
+        fields_list = ['company_id.id', 'date', 'payment_ref', 'amount', 'journal_id.id']
+        data = [
+            [self.company.id, '2026-03-30', '10 euros', 10.0, bank_journal.id],
+            [self.company.id, '2026-03-30', '20 euros', 20.0, bank_journal.id],
+            [self.company.id, '2026-03-30', '50 euros', 50.0, bank_journal.id],
+        ]
+
+        # ensure the creation of those record will crashes when calling `load`
+        original_load_records_create = self.env['account.bank.statement.line']._load_records_create
+
+        def new_load_records_create(vals_list):
+            # only crash after a few attempts to trigger the sequence.mixin several time
+            if any(vals.get('payment_ref') == '50 euros' for vals in vals_list):
+                raise ValidationError("Load process intentionally interrupted for testing")
+            return original_load_records_create(vals_list)
+
+        # track call to the cache and the number of time it was empty
+        empty_cache_count = 0
+        original_get_sequence_cache = self.env['sequence.mixin']._get_sequence_cache
+
+        def count_empty_cache():
+            nonlocal empty_cache_count
+            cache = original_get_sequence_cache()
+            if not cache:
+                empty_cache_count += 1
+            return cache
+
+        with (
+            patch.object(self.env.registry['account.bank.statement.line'], '_load_records_create', side_effect=new_load_records_create),
+            patch.object(self.env.registry['sequence.mixin'], '_get_sequence_cache', side_effect=count_empty_cache),
+        ):
+            results = self.env['account.bank.statement.line'].load(fields_list, data)
+
+        self.assertEqual(empty_cache_count, 1, "The cache should have been filled the first time")
+        self.assertCountEqual(
+            [{k: v for k, v in m.items() if k in ('record', 'message')} for m in results["messages"]],
+            [{"record": 0, "message": "Load process intentionally interrupted for testing"},
+             {"record": 2, "message": "Load process intentionally interrupted for testing"}],
+        )
