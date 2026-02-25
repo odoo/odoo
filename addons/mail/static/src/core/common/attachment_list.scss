@@ -1,19 +1,31 @@
-$o-mail-attachment-height: 10em;
+.o-mail-AttachmentList-grid {
+    --gap: 12px;
+}
+
+.o-container {
+    container-name: attachments;
+    container-type: size;
+}
 
 .o-mail-AttachmentContainer {
-    &.o-inMessage.o-isImage:not(.o-inChatter) {
-        min-width: 13em;
-        min-height: $o-mail-attachment-height;
+    .o-mail-AttachmentCard-tumbnail-icon {
+        aspect-ratio: 18/11;
     }
-    &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
-        width: 13em;
-        height: $o-mail-attachment-height;
+    &.o-isImage {
+        border: $card-border-width solid $card-border-color;
+        img {
+            aspect-ratio: 12/10;
+        }
     }
-    background-color: $gray-200;
+}
 
-    @include media-breakpoint-down(sm) {
-        width: 12em;
-    }
+.only-one .o-mail-AttachmentContainer:first-child {
+    grid-column-start: 7;
+}
+
+.o-mail-AttachmentCard {
+    --card-border-radius: var(--border-radius-lg);
+    --card-inner-border-radius: var(--border-radius-lg);
 }
 
 .o-mail-AttachmentCard-image, .o-mail-Attachment-hover-image {
@@ -40,12 +52,10 @@ $o-mail-attachment-height: 10em;
     line-height: 1.25;
 }
 
-.o-mail-AttachmentImage.o-inMessage:not(.o-inComposer) {
-    max-height: 300px;
-}
-
-.o-mail-AttachmentImage.o-inComposer {
-    max-height: $o-mail-attachment-height;
+@container attachments (width < 300px) {
+    .grid .g-col-xxs-12 {
+        grid-column: auto/span 12;
+    }
 }
 
 .o-viewable {

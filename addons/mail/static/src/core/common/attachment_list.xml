@@ -2,69 +2,26 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList">
-        <div class="o-mail-AttachmentList overflow-y-auto d-flex flex-column mt-1"
-            t-att-class="{
-                'o-inComposer': this.env.inComposer,
-                'o-inChatWindow': this.env.inChatWindow,
-            }"
-            t-custom-ref="root"
-        >
-            <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.env.inComposer}" role="menu" >
+        <div class="o-mail-AttachmentList mt-1" t-att-class="{ 'o-container': env.inAttachmentPanel }" t-custom-ref="root">
+            <div class="o-mail-AttachmentList-grid grid" t-att-class="{'only-one': this.isInChatWindowAndIsAlignedRight and !this.env.inComposer and this.props.attachments.length === 1}" role="menu">
                 <div t-foreach="this.props.attachments" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
-                     class="o-mail-AttachmentContainer d-flex border position-relative rounded-3"
-                     t-att-title="attachment.name ? attachment.name : undefined"
+                     class="o-mail-AttachmentContainer position-relative g-col-6"
+                     t-att-title="attachment.name"
                      t-att-class="{
-                        'o-inMessage': this.env.inMessage,
-                        'o-inChatter': this.env.inChatter,
-                        'o-isImage': attachment.isImage,
+                        'o-isImage rounded-3': attachment.isImage,
                         'o-isUploading opacity-25': attachment.uploading,
                         'o-viewable': attachment.isViewable,
-                    }"
+                     }"
+                     t-attf-class="{{ this.gridSize }}"
                      tabindex="0"
                      t-att-data-mimetype="attachment.mimetype"
                      t-on-click="() => this.onClickAttachment(attachment)"
                      role="menuitem"
                 >
-                    <!-- display of image attachments-->
-                    <Gif
-                        t-if="attachment.mimetype === 'image/gif'"
-                        src="this.getImageUrl(attachment)"
-                        paused="attachment.gifPaused"
-                        alt="attachment.name"
-                        class="this.attClassObjectToString({
-                            'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
-                            'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
-                        })"
-                    />
-                    <img
-                        t-elif="attachment.isImage"
-                        class="o-mail-AttachmentImage img img-fluid w-100 rounded-3"
-                        t-att-class="{
-                            'o-inComposer': this.env.inComposer,
-                            'o-inMessage': this.env.inMessage,
-                            'o-inChatter object-fit-scale': this.env.inChatter,
-                            'object-fit-contain': !this.env.inChatter and this.env.inMessage,
-                            'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
-                        }"
-                        t-att-src="this.getImageUrl(attachment)"
-                        t-att-alt="attachment.name"
-                        t-on-load="this.onImageLoaded"
-                    />
-                    <!-- display of non image attachments -->
-                    <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
-                        <div class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative rounded-3 rounded-bottom-0" t-on-click="() => this.onClickAttachment(attachment)">
-                            <div t-if="!attachment.has_thumbnail" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                            <img t-else="" t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name"/>
-                        </div>
-                         <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
-                            <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                            <div t-if="attachment.name" class="text-truncate align-items-center fw-bold" t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
-                        </div>
-                    </div>
+                    <t t-if="attachment.mimetype === 'image/gif'" t-call="mail.AttachmentListGif"/>
+                    <t t-elif="attachment.isImage" t-call="mail.AttachmentListImage" />
+                    <t t-else="" t-call="mail.AttachmentListCard"/>
                     <!-- hover information (not for mobile view) -->
                     <div t-if="!this.isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-2 d-flex flex-column align-items-start o-opacity-hoverable opacity-100-hover opacity-0 rounded-3" t-att-class="{ 'o-image': attachment.isImage }">
                         <div class="d-flex flex-row align-items-start gap-2">
@@ -104,7 +61,7 @@
     </t>
 
     <t t-name="mail.Actions">
-        <div class="position-absolute end-0 p-1 o-text-white">
+        <div class="position-absolute top-0 end-0 p-1 o-text-white">
             <button t-if="this.props.actions.length === 1" class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" t-att-aria-label="this.props.actions[0].label" t-att-title="this.props.actions[0].label" role="menuitem" t-on-click.stop="this.props.actions[0].onSelect">
                 <i t-att-class="this.props.actions[0].icon"/>
             </button>
@@ -121,5 +78,57 @@
             </Dropdown>
         </div>
     </t>
-
+    <t t-name="mail.AttachmentListGif">
+        <Gif
+            src="getImageUrl(attachment)"
+            paused="attachment.gifPaused"
+            alt="attachment.name"
+            class="attClassObjectToString({
+                   'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
+                   'o-inMessage': this.env.inMessage,
+                   'o-inChatter object-fit-scale': this.env.inChatter,
+                   'object-fit-contain': !this.env.inChatter and this.env.inMessage,
+                   'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+            })"
+        />
+    </t>
+    <t t-name="mail.AttachmentListImage">
+        <img
+            class="o-mail-AttachmentImage img w-100 rounded-3"
+            t-att-class="{
+                'object-fit-scale': this.env.inChatter,
+                'object-fit-contain': !this.env.inChatter and this.env.inMessage,
+                'object-fit-cover': !this.env.inChatter and !this.env.inMessage,
+            }"
+            t-att-src="getImageUrl(attachment)"
+            t-att-alt="attachment.name"
+            t-on-load="onImageLoaded"
+        />
+    </t>
+    <t t-name="mail.AttachmentListCard">
+        <div class="o-mail-AttachmentCard card h-100">
+            <div t-if="!attachment.has_thumbnail" class="o-mail-AttachmentCard-tumbnail-icon d-flex h-100 align-items-center">
+                <div class="o_image flex-fill"
+                    role="menuitem" aria-label="Preview" t-att-tabindex="-1"
+                    t-att-aria-disabled="false"
+                    t-att-data-mimetype="attachment.mimetype" />
+            </div>
+            <img
+                t-else=""
+                t-att-src="attachment.thumbnailUrl"
+                t-att-alt="attachment.name"
+                class="card-img-top"
+            />
+            <div class="o-mail-AttachmentCard-info card-body d-flex align-items-center">
+                <div
+                    class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0"
+                    role="menuitem" aria-label="Preview" t-att-tabindex="-1"
+                    t-att-aria-disabled="false"
+                    t-att-data-mimetype="attachment.mimetype" />
+                <div t-if="attachment.name"
+                    class="text-truncate align-items-center fw-bold"
+                    t-out="this.props.messageSearch?.highlight(attachment.name) ?? attachment.name" />
+            </div>
+        </div>
+    </t>
 </templates>

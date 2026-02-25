@@ -164,4 +164,26 @@ export class AttachmentList extends Component {
     showUploaded(attachment) {
         return !attachment.isImage && !attachment.uploading && this.env.inComposer;
     }
+
+    get gridSize() {
+        if (this.env.inComposer) {
+            if (this.env.inChatter) {
+                return "g-col-md-3 g-col-lg-3 g-col-xxl-3";
+            }
+            if (this.env.inDiscussApp) {
+                return "g-col-md-2 g-col-lg-2 g-col-xxl-2";
+            }
+        }
+        if (this.env.inChatter) {
+            return "g-col-md-3 g-col-lg-3 g-col-xxl-4";
+        }
+        // Before inDiscussApp to avoid the return
+        if (this.env.inAttachmentPanel) {
+            return "g-col-xxs-12";
+        }
+        if (this.env.inDiscussApp) {
+            return "g-col-md-3 g-col-lg-3 g-col-xxl-3";
+        }
+        return "";
+    }
 }
