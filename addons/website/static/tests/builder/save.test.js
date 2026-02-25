@@ -24,6 +24,7 @@ import {
     getDragHelper,
     getDragMoveHelper,
     modifyText,
+    unfoldAllOptionsGroups,
     waitForEndOfOperation,
     wrapExample,
 } from "@html_builder/../tests/helpers";
@@ -207,7 +208,7 @@ test("reload save with target, then discard and edit again should not reselect t
     deferred.resolve();
     expect.verifySteps(["save"]);
     await animationFrame();
-    // NOTE: the goal of the following assertion is to ensure that the relaod is
+    // NOTE: the goal of the following assertion is to ensure that the reload is
     // completed. This relies on the "save" mocked for this test that does
     // nothing to save anything and the reload (mocked in `setupWebsiteBuilder`)
     // resets to initial content
@@ -217,6 +218,54 @@ test("reload save with target, then discard and edit again should not reselect t
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".o_edit_website_container button").click();
     expect(".o-website-builder_sidebar button[data-name=blocks]").toHaveClass("active");
+});
+
+test("reload should reopen the builder with the reloadable target, and the same unfolded groups", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step("save");
+        return true;
+    });
+    addActionOption({
+        testAction: class extends BuilderAction {
+            static id = "testAction";
+            reload = {};
+            apply({ editingElement }) {
+                editingElement.dataset.applied = "true";
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-option",
+        template: xml`<BuilderButton action="'testAction'"/>`,
+        reloadTarget: true,
+    });
+    addBuilderOption({
+        selector: ".parent-option",
+        template: xml`<BuilderButton classAction="'parent-option-applied'"/>`,
+    });
+    const deferred = Promise.withResolvers();
+    await setupWebsiteBuilder(`<div class="parent-option"><div class="test-option">b</div></div>`, {
+        delayReload: async () => await deferred.promise,
+    });
+    await contains(":iframe .test-option").click();
+    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(1);
+    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(1);
+    await unfoldAllOptionsGroups();
+    await contains("[data-action-id=testAction]").click();
+    expect(":iframe .test-option").toHaveAttribute("data-applied");
+    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(0);
+    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(2);
+    deferred.resolve();
+    expect.verifySteps(["save"]);
+    await animationFrame();
+    // NOTE: the goal of the following assertion is to ensure that the reload is
+    // completed. This relies on the "save" mocked for this test that does
+    // nothing to save anything and the reload (mocked in `setupWebsiteBuilder`)
+    // resets to initial content
+    expect(":iframe .test-option").not.toHaveAttribute("data-applied");
+
+    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(0);
+    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(2);
 });
 
 test("preview shouldn't let o_dirty", async () => {

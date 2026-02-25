@@ -773,8 +773,9 @@ export function useOperationWithReload(callApply, reload) {
                 env.editor.shared.history.addStep();
                 await env.editor.shared.savePlugin.save();
                 const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
+                const folded = env.editor.shared.builderOptions.getFolded(editingElement);
                 const url = reload.getReloadUrl?.();
-                await env.editor.config.reloadEditor({ target, url });
+                await env.editor.config.reloadEditor({ target, folded, url });
             }
         } finally {
             env.services.ui.unblock();
