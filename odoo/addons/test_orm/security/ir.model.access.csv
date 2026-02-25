@@ -207,3 +207,23 @@ access_test_unstored_inherits_shared_line,access_test_unstored_inherits_shared_l
 access_test_orm_schema,test_orm_schema,test_orm.model_test_orm_schema,base.group_user,1,1,1,1
 access_test_orm_schema_relations,test_orm_schema_relations,test_orm.model_test_orm_schema_relations,base.group_user,1,1,1,1
 access_test_orm_schema_index,test_orm_schema_index,test_orm.model_test_orm_schema_index,base.group_user,1,1,1,1
+"access_dummy_res_users_everyone","dummy_res_users all","model_dummy_res_users","base.group_everyone",1,0,0,0
+"access_dummy_res_users_employee","dummy_res_users all","model_dummy_res_users","base.group_user",1,1,0,0
+"access_dummy_res_users_group_erp_manager","dummy_res_users group_erp_manager","model_dummy_res_users","base.group_erp_manager",1,1,1,1
+"access_dummy_res_groups_group_erp_manager","dummy_res_groups group_erp_manager","model_dummy_res_groups","base.group_erp_manager",1,1,1,1
+"access_dummy_res_groups_group_user","dummy_res_groups group_user","model_dummy_res_groups",base.group_user,1,0,0,0
+"access_dummy_res_company_group_erp_manager","dummy_res_company group_erp_manager","model_dummy_res_company","base.group_erp_manager",1,1,1,1
+"access_dummy_res_company_everyone","dummy_res_company group_everyone","model_dummy_res_company",base.group_everyone,1,0,0,0
+"access_dummy_res_country_public","dummy_res_country group_user_all","model_dummy_res_country",base.group_everyone,1,0,0,0
+"access_dummy_res_country_group_user","dummy_res_country group_user","model_dummy_res_country","base.group_partner_manager",1,0,0,0
+"access_dummy_res_country_state_public","dummy_res_country_state group_user_all","model_dummy_res_country_state",base.group_everyone,1,0,0,0
+"access_dummy_res_country_state_group_user","dummy_res_country_state group_user","model_dummy_res_country_state","base.group_partner_manager",1,1,1,1
+"access_dummy_res_partner_public","dummy_res_partner group_everyone","model_dummy_res_partner","base.group_everyone",1,0,0,0
+"access_dummy_res_partner_group_user","dummy_res_partner group_user","model_dummy_res_partner","base.group_user",1,1,0,0
+"access_dummy_res_partner_group_partner_manager","dummy_res_partner group_partner_manager","model_dummy_res_partner","base.group_partner_manager",1,1,1,1
+"access_dummy_res_partner_type_group_user","dummy_res_partner_type group_user","model_dummy_res_partner_type","base.group_user",1,1,0,0
+"access_dummy_res_partner_type_group_partner_manager","dummy_res_partner_type group_partner_manager","model_dummy_res_partner_type","base.group_partner_manager",1,1,1,1
+"access_dummy_res_partner_bank_group_user","dummy_res_partner_bank group_user","model_dummy_res_partner_bank","base.group_user",1,0,0,0
+"access_dummy_res_partner_bank_group_partner_manager","dummy_res_partner_bank group_partner_manager","model_dummy_res_partner_bank","base.group_partner_manager",1,1,1,0
+"access_dummy_res_partner_category_group_user","dummy_res_partner_category group_user","model_dummy_res_partner_category","base.group_user",1,0,0,0
+"access_dummy_res_partner_category_group_partner_manager","dummy_res_partner_category group_partner_manager","model_dummy_res_partner_category","base.group_partner_manager",1,1,1,1

@@ -17,7 +17,154 @@ class TestAPI(SavepointCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super(TestAPI, cls).setUpClass()
-        cls._load_partners_set()
+
+        cls.dummy_partner = cls.env['dummy.res.partner'].create({
+            'name': 'Dummy partner'
+        })
+
+        cls.dummy_groups = cls.env['dummy.res.groups'].create([
+            {'name': 'Dummy group 1'},
+            {'name': 'Dummy group 2'},
+            {'name': 'Dummy group 3'},
+        ])
+
+        cls.dummy_user = cls.env['dummy.res.users'].create({
+            'name': 'Dummy user',
+            'partner_id': cls.dummy_partner.id,
+            'group_ids': [Command.set(cls.dummy_groups.ids)]
+        })
+
+        cls.dummy_company = cls.env['dummy.res.company'].create({
+            'name': 'Dummy company',
+        })
+
+        cls.dummy_country = cls.env['dummy.res.country'].create({
+            'name': 'Dummy country',
+        })
+
+        cls.dummy_state_1 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 1',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_2 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 2',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_3 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 3',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_4 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 4',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_5 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 5',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_6 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 6',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_state_7 = cls.env['dummy.res.country.state'].create({
+            'name': 'Dummy state 7',
+            'country_id': cls.dummy_country.id,
+        })
+
+        cls.dummy_types = cls.env['dummy.res.partner.type'].create([
+            {'name': 'Contact'},
+            {'name': 'Invoice'},
+            {'name': 'Delivery'},
+            {'name': 'Other'},
+        ])
+
+        cls.dummy_partner_category = cls.env['dummy.res.partner.category'].create({
+            'name': 'Sellers',
+        })
+        cls.dummy_partner_category_child_1 = cls.env['dummy.res.partner.category'].create({
+            'name': 'Office Supplies',
+            'parent_id': cls.dummy_partner_category.id,
+        })
+        cls.dummy_partner_category_child_2 = cls.env['dummy.res.partner.category'].create({
+            'name': 'Desk Manufacturers',
+            'parent_id': cls.dummy_partner_category.id,
+        })
+
+        cls.dummy_partners = cls.env['dummy.res.partner'].create([
+            {
+                'name': 'Inner Works',
+                'state_id': cls.dummy_state_1.id,
+                'category_id': [Command.set([cls.dummy_partner_category_child_1.id, cls.dummy_partner_category_child_2.id])],
+                'child_ids': [
+                    Command.create({'name': 'Sheila Ruiz'}),
+                    Command.create({'name': 'Wyatt Howard'}),
+                    Command.create({'name': 'Austin Kennedy'}),
+                ],
+            }, {
+                'name': 'Pepper Street',
+                'state_id': cls.dummy_state_2.id,
+                'child_ids': [
+                    Command.create({'name': 'Liam King'}),
+                    Command.create({'name': 'Craig Richardson'}),
+                    Command.create({'name': 'Adam Cox'})],
+            }, {
+                'name': 'AnalytIQ',
+                'state_id': cls.dummy_state_3.id,
+                'child_ids': [
+                    Command.create({'name': 'Pedro Boyd'}),
+                    Command.create({
+                        'name': 'Landon Roberts',
+                        'company_id': cls.dummy_company.id,
+                    }),
+                    Command.create({'name': 'Leona Shelton'}),
+                    Command.create({'name': 'Scott Kim'})
+                ],
+            }, {
+                'name': 'Urban Trends',
+                'state_id': cls.dummy_state_4.id,
+                'category_id': [Command.set([cls.dummy_partner_category_child_1.id, cls.dummy_partner_category_child_2.id])],
+                'child_ids': [
+                    Command.create({'name': 'Louella Jacobs'}),
+                    Command.create({'name': 'Albert Alexander'}),
+                    Command.create({'name': 'Brad Castillo'}),
+                    Command.create({'name': 'Sophie Montgomery'}),
+                    Command.create({'name': 'Chloe Bates'}),
+                    Command.create({'name': 'Mason Crawford'}),
+                    Command.create({'name': 'Elsie Kennedy'}),
+                ],
+            }, {
+                'name': 'Ctrl-Alt-Fix',
+                'state_id': cls.dummy_state_5.id,
+                'child_ids': [
+                    Command.create({'name': 'carole miller'}),
+                    Command.create({'name': 'Cecil Holmes'}),
+                ],
+            }, {
+                'name': 'Ignitive Labs',
+                'state_id': cls.dummy_state_6.id,
+                'child_ids': [
+                    Command.create({'name': 'Jonathan Webb'}),
+                    Command.create({'name': 'Clinton Clark'}),
+                    Command.create({'name': 'Howard Bryant'}),
+                ],
+            }, {
+                'name': 'Amber & Forge',
+                'state_id': cls.dummy_state_7.id,
+                'child_ids': [
+                    Command.create({'name': 'Mark Webb'}),
+                ],
+            }, {
+                'name': 'Rebecca Day',
+            }, {
+                'name': 'Gabriella Jennings',
+            }
+        ])
 
     def assertIsRecordset(self, value, model):
         self.assertIsInstance(value, models.BaseModel)
@@ -34,50 +181,50 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
-        domain = [('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)]
-        partners = self.env['res.partner'].search(domain)
+        domain = [('name', 'ilike', 'j'), ('id', 'in', self.dummy_partners.ids)]
+        partners = self.env['dummy.res.partner'].search(domain)
 
         # partners is a collection of browse records
         self.assertTrue(partners)
 
         # partners and its contents are instance of the model
-        self.assertIsRecordset(partners, 'res.partner')
-        for p in partners:
-            self.assertIsRecord(p, 'res.partner')
+        self.assertIsRecordset(partners, 'dummy.res.partner')
+        for dp in partners:
+            self.assertIsRecord(dp, 'dummy.res.partner')
 
     @mute_logger('odoo.models')
     def test_01_query_offset(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], offset=5)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)])[5:]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], offset=5)
+        partners2 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)])[5:]
+        self.assertIsRecordset(partners1, 'dummy.res.partner')
+        self.assertIsRecordset(partners2, 'dummy.res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('odoo.models')
     def test_02_query_limit(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc', limit=5)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc')[:5]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], order='id asc', limit=5)
+        partners2 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], order='id asc')[:5]
+        self.assertIsRecordset(partners2, 'dummy.res.partner')
+        self.assertIsRecordset(partners2, 'dummy.res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('odoo.models')
     def test_03_query_offset_limit(self):
         """ Build a recordset with offset and limit, and check equivalence. """
-        partners1 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc', offset=3, limit=7)
-        partners2 = self.env['res.partner'].search([('id', 'in', self.partners.ids)], order='id asc')[3:10]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], order='id asc', offset=3, limit=7)
+        partners2 = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], order='id asc')[3:10]
+        self.assertIsRecordset(partners1, 'dummy.res.partner')
+        self.assertIsRecordset(partners2, 'dummy.res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('odoo.models')
     def test_04_query_count(self):
         """ Test the search_count method. """
-        self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
+        self.cr.execute("SELECT COUNT(*) FROM dummy_res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
-        count2 = self.env['res.partner'].search_count([])
+        count2 = self.env['dummy.res.partner'].search_count([])
         self.assertIsInstance(count1, int)
         self.assertIsInstance(count2, int)
         self.assertEqual(count1, count2)
@@ -85,8 +232,8 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
-        domain = [('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)]
-        partners = self.env['res.partner'].search(domain)
+        domain = [('name', 'ilike', 'g'), ('id', 'in', self.dummy_partners.ids)]
+        partners = self.env['dummy.res.partner'].search(domain)
         self.assertTrue(partners)
         ids = partners.ids
 
@@ -95,56 +242,56 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(ids, partners.ids)
 
         # redo the search, and check that the result is now empty
-        partners2 = self.env['res.partner'].search(domain)
+        partners2 = self.env['dummy.res.partner'].search(domain)
         self.assertFalse(partners2)
 
     @mute_logger('odoo.models')
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
-        user = self.env.user
-        self.assertIsRecord(user, 'res.users')
-        self.assertIsRecord(user.partner_id, 'res.partner')
-        self.assertIsRecordset(user.group_ids, 'res.groups')
+        self.assertIsRecord(self.dummy_user, 'dummy.res.users')
+        self.assertIsRecord(self.dummy_user.partner_id, 'dummy.res.partner')
+        self.assertIsRecordset(self.dummy_user.group_ids, 'dummy.res.groups')
 
-        for name, field in self.partners._fields.items():
+        for name, field in self.dummy_partners._fields.items():
             if field.type == 'many2one':
-                for p in self.partners:
+                for p in self.dummy_partners:
                     self.assertIsRecord(p[name], field.comodel_name)
             elif field.type == 'reference':
-                for p in self.partners:
+                for p in self.dummy_partners:
                     if p[name]:
-                        self.assertIsRecord(p[name], field.comodel_name)
+                        self.assertIsInstance(p[name], models.BaseModel)
+                        self.assertIn(p[name]._name, list(field._selection.keys()))
             elif field.type in ('one2many', 'many2many'):
-                for p in self.partners:
+                for p in self.dummy_partners:
                     self.assertIsRecordset(p[name], field.comodel_name)
 
     @mute_logger('odoo.models')
     def test_07_null(self):
         """ Check behavior of null instances. """
         # select a partner without a parent
-        partner = self.env['res.partner'].search([('parent_id', '=', False), ('id', 'in', self.partners.ids)])[0]
+        partner = self.env['dummy.res.partner'].search([('parent_id', '=', False), ('id', 'in', self.dummy_partners.ids)])[0]
 
         # check partner and related null instances
         self.assertTrue(partner)
-        self.assertIsRecord(partner, 'res.partner')
+        self.assertIsRecord(partner, 'dummy.res.partner')
 
         self.assertFalse(partner.parent_id)
-        self.assertIsNull(partner.parent_id, 'res.partner')
+        self.assertIsNull(partner.parent_id, 'dummy.res.partner')
 
         self.assertIs(partner.parent_id.id, False)
 
         self.assertFalse(partner.parent_id.user_id)
-        self.assertIsNull(partner.parent_id.user_id, 'res.users')
+        self.assertIsNull(partner.parent_id.user_id, 'dummy.res.users')
 
         self.assertIs(partner.parent_id.user_id.name, False)
 
         self.assertFalse(partner.parent_id.user_id.group_ids)
-        self.assertIsRecordset(partner.parent_id.user_id.group_ids, 'res.groups')
+        self.assertIsRecordset(partner.parent_id.user_id.group_ids, 'dummy.res.groups')
 
     @mute_logger('odoo.models')
     def test_40_new_new(self):
         """ Call new-style methods in the new API style. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)])
+        partners = self.env['dummy.res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.dummy_partners.ids)])
         self.assertTrue(partners)
 
         # call method write on partners itself, and check its effect
@@ -155,7 +302,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_45_new_new(self):
         """ Call new-style methods on records (new API style). """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.partners.ids)])
+        partners = self.env['dummy.res.partner'].search([('name', 'ilike', 'g'), ('id', 'in', self.dummy_partners.ids)])
         self.assertTrue(partners)
 
         # call method write on partner records, and check its effects
@@ -169,7 +316,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)])
+        partners = self.env['dummy.res.partner'].search([('name', 'ilike', 'j'), ('id', 'in', self.dummy_partners.ids)])
         self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.env, self.env)
@@ -205,7 +352,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(p.env, demo_env)
 
         # demo user can read but not modify company data
-        demo_partner = self.env['res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
+        demo_partner = self.env['dummy.res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
         self.assertTrue(demo_partner.company_id, 'This partner is supposed to be linked to a company')
         demo_partner.company_id.name
         with self.assertRaises(AccessError):
@@ -221,7 +368,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
-        Partners = self.env['res.partner']
+        Partners = self.env['dummy.res.partner']
         pids = []
         data = {
             'partner One': ['Partner One - One', 'Partner One - Two'],
@@ -333,7 +480,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_60_prefetch(self):
         """ Check the record cache prefetching """
-        partners = self.env['res.partner'].search([('id', 'in', self.partners.ids)], limit=PREFETCH_MAX)
+        partners = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)], limit=PREFETCH_MAX)
         self.assertTrue(len(partners) > 1)
 
         # all the records in partners are ready for prefetching
@@ -368,7 +515,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_60_prefetch_model(self):
         """ Check the prefetching model. """
-        partners = self.partners
+        partners = self.dummy_partners
         self.assertGreater(len(partners), 5)
 
         prefetch_ids = partners._prefetch_ids
@@ -401,9 +548,9 @@ class TestAPI(SavepointCaseWithUserDemo):
         }
         vals1 = {
             'name': 'Non-empty relational fields',
-            'country_id': self.ref('base.be'),
+            'country_id': self.dummy_country.id,
             'bank_ids': [Command.create({'account_number': 'FOO42'})],
-            'category_id': [Command.link(self.partner_category.id)],
+            'category_id': [Command.link(self.dummy_partner_category.id)],
         }
         partners = partners.create([vals0, vals1])
         for partner in partners:
@@ -413,7 +560,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(set(partner.category_id._prefetch_ids), set(partners.category_id._prefetch_ids))
 
         # records concatenation, union, intersection, difference
-        partners = self.partners
+        partners = self.dummy_partners
         prefetch_ids = partners._prefetch_ids
         part = partners.browse(partners.ids[:5])
         ners = partners.browse(partners.ids[5:])
@@ -447,11 +594,11 @@ class TestAPI(SavepointCaseWithUserDemo):
         RECORDS = PREFETCH_MAX
         CHILDREN = 7
 
-        country = self.ref('base.be')
-        partners = self.env['res.partner'].create([{
+        country = self.dummy_country
+        partners = self.env['dummy.res.partner'].create([{
             'name': f'Partner {i}',
             'child_ids': [
-                Command.create({'name': f'Child {i} {j}', 'country_id': country})
+                Command.create({'name': f'Child {i} {j}', 'country_id': country.id})
                 for j in range(CHILDREN)],
         } for i in range(RECORDS)
         ])
@@ -510,7 +657,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
             self.assertEqual(set(fetched_ids), set(records._ids))
 
-            records = self.env['res.partner'].concat(*[partner.child_ids[0] for partner in partners])
+            records = self.env['dummy.res.partner'].concat(*[partner.child_ids[0] for partner in partners])
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
@@ -519,7 +666,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_60_prefetch_read(self):
         """ Check that reading a field computes it on self only. """
-        Partner = self.env['res.partner']
+        Partner = self.env['dummy.res.partner']
         field = Partner._fields['vat_label']
         self.assertTrue(field.compute and not field.store)
 
@@ -542,7 +689,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotIn('vat_label', partner2._cache)
 
     def test_60_reversed(self):
-        records = self.partners
+        records = self.dummy_partners
         self.assertGreater(len(records), 1)
 
         # check order
@@ -595,7 +742,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     def test_70_one(self):
         """ Check method one(). """
         # check with many records
-        ps = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
+        ps = self.env['dummy.res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.dummy_partners.ids)])
         self.assertTrue(len(ps) > 1)
         with self.assertRaises(ValueError):
             ps.ensure_one()
@@ -604,7 +751,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(len(p1), 1)
         self.assertEqual(p1.ensure_one(), p1)
 
-        p0 = self.env['res.partner'].browse()
+        p0 = self.env['dummy.res.partner'].browse()
         self.assertEqual(len(p0), 0)
         with self.assertRaises(ValueError):
             p0.ensure_one()
@@ -612,32 +759,32 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_contains(self):
         """ Test membership on recordset. """
-        p1 = self.partners[0]
-        ps = self.partners
+        p1 = self.dummy_partners[0]
+        ps = self.dummy_partners
         self.assertTrue(p1 in ps)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in dummy\.res\.partner.*"):
             _ = 42 in ps
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in dummy\.res\.partner.*"):
             _ = self.env['ir.ui.menu'] in ps
 
     @mute_logger('odoo.models')
     def test_80_lazy_contains(self):
         """ Test membership on recordset. """
-        p1 = lazy(lambda: self.partners[0])
-        ps = lazy(lambda: self.partners)
+        p1 = lazy(lambda: self.dummy_partners[0])
+        ps = lazy(lambda: self.dummy_partners)
         self.assertTrue(p1 in ps)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in res\.partner.*"):
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: 42 in dummy\.res\.partner.*"):
             _ = lazy(lambda: 42) in ps
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in res\.partner.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: ir\.ui\.menu.* in dummy\.res\.partner.*"):
             _ = lazy(lambda: self.env['ir.ui.menu']) in ps
 
     @mute_logger('odoo.models')
     def test_80_set_operations(self):
         """ Check set operations on recordsets. """
-        pa = self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)])
-        pb = self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)])
+        pa = self.env['dummy.res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.dummy_partners.ids)])
+        pb = self.env['dummy.res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.dummy_partners.ids)])
 
         self.assertTrue(pa)
         self.assertTrue(pb)
@@ -670,15 +817,15 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: dummy\.res\.partner.* \+ 'string'"):
             _ = ps + 'string'
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* \+ ir\.ui\.menu.*"):
             _ = ps + ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* - ir\.ui\.menu.*"):
             _ = ps - ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* & ir\.ui\.menu.*"):
             _ = ps & ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* \| ir\.ui\.menu.*"):
             _ = ps | ms
         with self.assertRaises(TypeError):
             _ = ps < ms
@@ -692,8 +839,8 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_lazy_set_operations(self):
         """ Check set operations on recordsets. """
-        pa = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.partners.ids)]))
-        pb = lazy(lambda: self.env['res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.partners.ids)]))
+        pa = lazy(lambda: self.env['dummy.res.partner'].search([('name', 'ilike', 'a'), ('id', 'in', self.dummy_partners.ids)]))
+        pb = lazy(lambda: self.env['dummy.res.partner'].search([('name', 'ilike', 'b'), ('id', 'in', self.dummy_partners.ids)]))
 
         self.assertTrue(pa)
         self.assertTrue(pb)
@@ -726,15 +873,15 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
-        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: res\.partner.* \+ 'string'"):
+        with self.assertRaisesRegex(TypeError, r"unsupported operand types in: dummy\.res\.partner.* \+ 'string'"):
             _ = ps + 'string'
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \+ ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* \+ ir\.ui\.menu.*"):
             _ = ps + ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* - ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* - ir\.ui\.menu.*"):
             _ = ps - ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* & ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* & ir\.ui\.menu.*"):
             _ = ps & ms
-        with self.assertRaisesRegex(TypeError, r"inconsistent models in: res\.partner.* \| ir\.ui\.menu.*"):
+        with self.assertRaisesRegex(TypeError, r"inconsistent models in: dummy\.res\.partner.* \| ir\.ui\.menu.*"):
             _ = ps | ms
         with self.assertRaises(TypeError):
             _ = ps < ms
@@ -748,7 +895,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_filter(self):
         """ Check filter on recordsets. """
-        ps = self.partners
+        ps = self.dummy_partners
         customers = ps.browse([p.id for p in ps if p.employee])
 
         # filter on a single field
@@ -764,7 +911,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_map(self):
         """ Check map on recordsets. """
-        ps = self.partners
+        ps = self.dummy_partners
         parents = ps.browse()
         for p in ps:
             parents |= p.parent_id
@@ -794,7 +941,7 @@ class TestAPI(SavepointCaseWithUserDemo):
     @mute_logger('odoo.models')
     def test_80_sorted(self):
         """ Check sorted on recordsets. """
-        ps = self.env['res.partner'].search([('id', 'in', self.partners.ids)])
+        ps = self.env['dummy.res.partner'].search([('id', 'in', self.dummy_partners.ids)])
 
         # sort by model order
         qs = ps[:len(ps) // 2] + ps[len(ps) // 2:]
@@ -810,7 +957,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
 
     def test_group_on(self):
-        p0, p1, p2 = self.env['res.partner'].create([
+        p0, p1, p2 = self.env['dummy.res.partner'].create([
             {'name': "bob", 'function': "guest"},
             {'name': "james", 'function': "host"},
             {'name': "rhod", 'function': "guest"}
