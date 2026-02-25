@@ -287,7 +287,7 @@ export async function setupWebsiteBuilder(
     patchWithCleanupImg();
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
-    if (isBrowserFirefox()) {
+    if (isBrowserFirefox() && !(iframe?.contentDocument.readyState === "complete")) {
         await originalIframeLoaded;
     }
     if (loadIframeBundles) {
