@@ -12,6 +12,8 @@ from odoo.tests.common import HttpCase
 from freezegun import freeze_time
 from contextlib import contextmanager
 
+from odoo.tools import mute_logger
+
 
 def patch_api(func):
     @patch.object(GoogleSync, '_google_insert', MagicMock(spec=GoogleSync._google_insert))
@@ -30,6 +32,10 @@ class TestSyncGoogle(HttpCase):
         cls.env.user.sudo().unpause_google_synchronization()
         cls.organizer_user = mail_new_test_user(cls.env, login="organizer_user")
         cls.attendee_user = mail_new_test_user(cls.env, login='attendee_user')
+
+        m = mute_logger('odoo.addons.auth_signup.models.res_users')
+        mute_logger.__enter__(m)  # noqa: PLC2801
+        cls.addClassCleanup(mute_logger.__exit__, m, None, None, None)
 
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):
