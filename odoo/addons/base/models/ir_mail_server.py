@@ -725,7 +725,7 @@ class IrMailServer(models.Model):
 
         # Do not actually send emails in testing mode!
         if self._is_test_mode():
-            _test_logger.info("skip sending email in test mode")
+            _test_logger.debug("skip sending email in test mode")
             return message['Message-Id']
 
         try:
