@@ -4,6 +4,11 @@ from collections import defaultdict
 
 import re
 
+TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
+INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
+LEADING_WHITESPACE_RE = re.compile(r'^\s*')
+TRAILING_WHITESPACE_RE = re.compile(r'\s*$')
+
 # ------------------------------------------------------------------------------
 # Constants
 # ------------------------------------------------------------------------------
@@ -210,6 +215,87 @@ def get_inheritance_chain(template_name, inherit_map):
 
 
 # ------------------------------------------------------------------------------
+# Template
+# ------------------------------------------------------------------------------
+
+class Template:
+    def __init__(self, name: str, skip_component_template: bool = False):
+        self.skip_component_template = skip_component_template
+        self.name = name
+        self.parent = None
+        self.children = set()
+        self.calls_from = set()
+        self.calls_to = set()
+        self.dynamic_calls_to = set()
+
+    def _get_dependencies(self, dependencies: list[str]):
+        for called_template in self.calls_from:
+            if called_template.name in dependencies:
+                continue
+            yield called_template.name
+            dependencies.append(called_template.name)
+            yield from called_template._get_dependencies(dependencies)
+        if self.parent is not None and self.parent.name not in dependencies:
+            yield self.parent.name
+            dependencies.append(self.parent.name)
+            yield from self.parent._get_dependencies(dependencies)
+
+    def get_dependencies(self):
+        return self._get_dependencies([])
+
+    def get_inherit_chain(self):
+        if self.parent is not None:
+            yield self.parent.name
+            yield from self.parent.get_inherit_chain()
+
+    def is_parent_component_template(self):
+        return self.parent is not None and self.parent.is_component_template()
+
+    def is_self_called(self):
+        if self.skip_component_template:
+            return False
+        for template in self.calls_from:
+            if template == self:
+                return True
+        return False
+
+    def is_called_by_component_template(self):
+        if self.skip_component_template:
+            return False
+        for template in self.calls_from:
+            if template == self:
+                continue
+            if template.is_component_template():
+                return True
+        return False
+
+    def is_component_template(self):
+        return not self.skip_component_template and self.is_parent_component_template() or self.is_called_by_component_template()
+
+    def set_parent(self, parent):
+        self.parent = parent
+        parent.children.add(self)
+
+    def add_dynamic_call_to_template(self, expr):
+        self.dynamic_calls_to.add(expr)
+
+    def add_call_to_template(self, template):
+        self.calls_to.add(template)
+        template.calls_from.add(self)
+
+
+class ComponentRootTemplate(Template):
+    def is_parent_component_template(self):
+        return not self.skip_component_template
+
+    def is_called_by_component_template(self):
+        return not self.skip_component_template
+
+    def is_component_template(self):
+        return not self.skip_component_template
+
+
+# ------------------------------------------------------------------------------
 # Variables
 # ------------------------------------------------------------------------------
 
@@ -220,11 +306,42 @@ class VariableAggregator:
         does not take nested inherits or t-call vars not instide the t-call on purpose.
     """
 
-    def __init__(self):
+    def __init__(self, component_templates: list[str] = list(), skip_component_template: bool = False):
+        self.all_templates = defaultdict()
+        self.skip_component_template = skip_component_template
+        for template_name in component_templates:
+            self.all_templates[template_name] = ComponentRootTemplate(template_name)
         self.all_vars = defaultdict(set)
         self.t_call_vars = defaultdict(set)
         self.t_call_outer_vars = defaultdict(set)
-        self.inherit_map = defaultdict(str)
+
+        self.inherit_map = defaultdict(str)  # TODO move to template parser
+        self.full_inherit_and_call_map = defaultdict(str)  # TODO Template parser
+
+    def add_template(self, template_name: str):
+        if template_name not in self.all_templates:
+            self.all_templates[template_name] = Template(template_name, self.skip_component_template)
+        return self.all_templates[template_name]
+
+    def link_templates(self, root: etree._ElementTree):
+        templates = root.xpath("descendant-or-self::*[@t-name]")
+        for template_node in templates:
+            template_name = template_node.attrib['t-name']
+            template = self.add_template(template_name)
+
+            if 't-inherit' in template_node.attrib:
+                inherit_template_name = template_node.attrib['t-inherit']
+                inherit_template = self.add_template(inherit_template_name)
+                template.set_parent(inherit_template)
+
+            calls_to_nodes = template_node.xpath("descendant-or-self::*[@t-call]")
+            for calls_to_node in calls_to_nodes:
+                called_template_name = calls_to_node.attrib['t-call']
+                if called_template_name.startswith('{{'):
+                    template.add_dynamic_call_to_template(called_template_name)
+                else:
+                    called_template = self.add_template(called_template_name)
+                    template.add_call_to_template(called_template)
 
     def aggregate_call_vars(self, root: etree._ElementTree):
         """
@@ -245,9 +362,7 @@ class VariableAggregator:
                 if var_name:
                     self.t_call_vars[template_name].add(var_name)
 
-            scope_nodes = call_node.xpath(
-                "ancestor::* | ancestor-or-self::*/preceding-sibling::*"
-            )
+            scope_nodes = call_node.xpath("ancestor::* | ancestor-or-self::*/preceding-sibling::*")
             self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
 
     def aggregate_inside_vars(self, root: etree._ElementTree):
@@ -256,23 +371,21 @@ class VariableAggregator:
             Does not take nested inherits into account (eg. <t t-name="web.ext" t-inherit="web.xyz"...
             --> web.ext variable set will not include web.xyz, handled with whitelist in upgrade_code)
         """
-        templates = root.xpath(
-            "descendant-or-self::*[@t-name] | descendant-or-self::template[@id]"
-        )
+        templates = root.xpath("descendant-or-self::*[@t-name]")
         for tpl in templates:
-            template_name = tpl.get("t-name") or tpl.get("id")
-            if not template_name:
-                continue
-
+            template_name = tpl.get("t-name")
             nodes = tpl.xpath("descendant-or-self::*[not(ancestor::*[@t-call])]")
             self.all_vars[template_name].update(self._extract_vars_from_nodes(nodes))
 
-            for node in nodes:
-                if is_inside_inherit(node):
-                    new_name = is_inside_inherit(node)[0].get("t-name", False)
-                    inherit_name = is_inside_inherit(node)[0].get("t-inherit", False)
-                    if new_name:  # Ignore extension inherits
-                        self.inherit_map[new_name] = inherit_name
+    def map_inherits_and_calls(self):
+        if self.all_templates:
+            for template_name in self.all_templates:
+
+                template = self.all_templates[template_name]
+                self.full_inherit_and_call_map[template_name] = list(template.get_dependencies())
+
+                if template.parent is not None:
+                    self.inherit_map[template_name] = template.parent.name
 
     @staticmethod
     def _extract_vars_from_nodes(nodes):
@@ -375,22 +488,18 @@ class TemplateCompiler:
         self.t_call_outer_vars = aggregator.t_call_outer_vars
         self.all_vars = aggregator.all_vars
         self.inherit_map = aggregator.inherit_map
+        self.full_inherit_and_call_map = aggregator.full_inherit_and_call_map  # TODO pass from new Template parser
+        self.all_templates = aggregator.all_templates
 
         self.modules = modules
         self.template_path = path
         self.current_template = path  # default to the file path but if inside a t-name takes that value
         self.excluded_templates = excluded_templates
+        self.warnings = []
 
         # Dynamic attributes can change on each nodes
-        self.nested_inherit_vars = set()
         self.node_vars = set()
         self.warning_vars = set()
-
-    def _map_nested_inherits_vars(self):
-        chain = get_inheritance_chain(self.current_template, self.inherit_map)
-        if chain:
-            for nested_inherit in chain[:1]:
-                self.nested_inherit_vars |= set(self.all_vars.get(nested_inherit, {}))
 
     def fix_rendering_context(self, root: etree._ElementTree):
         template_nodes = root.xpath("descendant-or-self::*[@t-name]")
@@ -496,15 +605,14 @@ class TemplateCompiler:
     def _set_node_vars(self, node: etree._Element, base_vars: set[str]) -> set[str]:
         """ If inside a t-inherit subtree, merge target template locals into the vars. """
         if is_inside_inherit(node):
-
-            self._map_nested_inherits_vars()
-
             target = is_inside_inherit(node)[0].get("t-inherit")
             self.node_vars = base_vars | (self.all_vars.get(target, set())) | self.t_call_vars.get(target, set())
-            self.warning_vars = self.t_call_outer_vars.get(target, set())
-
         else:
-            self.node_vars, self.warning_vars = base_vars, {}
+            self.node_vars = base_vars
+        # Now set warning vars
+        if self.full_inherit_and_call_map.get(self.current_template):
+            for parent in self.full_inherit_and_call_map.get(self.current_template):
+                self.warning_vars |= self.all_vars.get(parent, set())
 
     def _process_attribute(self, node: etree._Element):
         """ Static handler for <attribute> nodes processing """
@@ -519,16 +627,16 @@ class TemplateCompiler:
         xp_expr = xp[0].get("expr") if xp else ""
 
         if self._should_compile_attribute_node(attr_name, xp_expr):
-            if node.get("add", False):
-                node.set("add", self._compile_expr(node.get("add")))
-            if node.get("remove", False):
-                node.set("remove", self._compile_expr(node.get("remove")))
+            compile_expr = self._compile_expr
             if attr_name and attr_name.startswith("t-attf-"):
-                compiled = self._process_dynamic_string(txt)
-            else:
-                compiled = self._compile_expr(txt)
+                compile_expr = self._process_dynamic_string
 
-            node.text = etree.CDATA(compiled)
+            if node.get("add", False):
+                node.set("add", compile_expr(node.get("add")))
+            elif node.get("remove", False):
+                node.set("remove", compile_expr(node.get("remove")))
+            else:
+                node.text = etree.CDATA(compile_expr(txt))
 
     def _process_xpath_expr(self, node: etree._Element):
         def repl(match):
@@ -555,10 +663,8 @@ class TemplateCompiler:
         return node
 
     def _compile_expr(self, expr):
-        TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
-
-        leading_ws = len(expr) - len(expr.lstrip(" "))
-        trailing_ws = len(expr) - len(expr.rstrip(" "))
+        leading_ws = re.search(LEADING_WHITESPACE_RE, expr)[0]
+        trailing_ws = re.search(TRAILING_WHITESPACE_RE, expr)[0]
         stripped = expr.strip()
         if not stripped:
             return expr
@@ -621,10 +727,11 @@ class TemplateCompiler:
                     and next_tok.type == "COLON"
                 )
             ):
-                if tok.value in self.warning_vars:
-                    print("WARNING in template " + self.current_template + " : t-call-outer variable" + expr)  # noqa: T201
-                if tok.value in self.nested_inherit_vars:
-                    print("WARNING in template " + self.current_template + " : nested inherit variable" + expr)  # noqa: T201
+                if tok.value in self.t_call_outer_vars.get(self.current_template, {}):
+                    i += 1
+                    continue
+                elif tok.value in self.warning_vars:
+                    self.warnings.append("WARNING in template '" + self.current_template + "' : variable '" + tok.value + "' also defined in a far parent.")
                 if (
                     group_type == "LEFT_BRACE"
                     and prev_tok
@@ -639,18 +746,16 @@ class TemplateCompiler:
             i += 1
 
         compiled = "".join((t.value) for t in tokens)
-        return " " * leading_ws + compiled + " " * trailing_ws
+        return leading_ws + compiled + trailing_ws
 
     def _process_dynamic_string(self, str):
-        INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
-
         def repl(match):
             # Pick the captured group depending on which syntax matched
             expr = match.group(2) if match.group(2) is not None else match.group(3)
 
             # Preserve leading/trailing spaces inside the interpolation
-            leading_ws = len(expr) - len(expr.lstrip(" "))
-            trailing_ws = len(expr) - len(expr.rstrip(" "))
+            leading_ws = re.search(LEADING_WHITESPACE_RE, expr)[0]
+            trailing_ws = re.search(TRAILING_WHITESPACE_RE, expr)[0]
             stripped_expr = expr.strip()
             if not stripped_expr:
                 return match.group(0)  # empty expression → leave unchanged
@@ -658,9 +763,9 @@ class TemplateCompiler:
             compiled = self._compile_expr(stripped_expr)
             # Reconstruct using the original delimiters
             if match.group(2) is not None:
-                return f"#{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}"
+                return f"#{{{leading_ws}{compiled}{trailing_ws}}}"
             else:
-                return f"{{{{{' ' * leading_ws}{compiled}{' ' * trailing_ws}}}}}"
+                return f"{{{{{leading_ws}{compiled}{trailing_ws}}}}}"
 
         return INTERP_RE.sub(repl, str)
 
@@ -730,7 +835,7 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
     result = result.replace("><![CDATA[", ">").replace("]]>", "")
     result = result.replace("\u200b", "&#8203;")
     result = result.replace("&&", "&amp;&amp;")
-    return result
+    return result, compiler.warnings
 
 # ------------------------------------------------------------------------------
 # TESTS
@@ -738,7 +843,8 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
 
 
 def run_tests_main(test):
-    return update_template("", test["content"], [], VariableAggregator(), {})
+    res, warnings = update_template("", test["content"], [], VariableAggregator(skip_component_template=True), {})
+    return res
 
 
 tests = [
@@ -908,6 +1014,24 @@ tests = [
         "expected": '<div t-if="this.a or this.b gt this.c">aa</div>',
     },
     {
+        "name": "keep leading and trailing whitespaces",
+        "content": '''<div t-out="
+            a
+        ">aa</div>''',
+        "expected": '''<div t-out="
+            this.a
+        ">aa</div>''',
+    },
+    {
+        "name": "keep leading and trailing whitespaces in t-attf-",
+        "content": '''<div t-attf-style="background-color: {{
+            color
+        }}; border: {{     border     }}">aa</div>''',
+        "expected": '''<div t-attf-style="background-color: {{
+            this.color
+        }}; border: {{     this.border     }}">aa</div>''',
+    },
+    {
         "name": "simple xpath",
         "content": """
 <t t-name="sfsdg" t-inherit="web.ListView">
@@ -1001,7 +1125,7 @@ tests = [
         "content": """
 <t t-name="mail.RottingStatusBarDurationField" t-inherit="mail.StatusBarDurationField" t-inherit-mode="primary">
     <xpath expr="//span[@t-att-title='item.fullTimeInStage']" position="attributes">
-        <attribute name="t-attf-class" add="{{ props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "/>
+        <attribute name="t-attf-class" add="--o-mail-livechat-btn-color {{ props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "/>
         <attribute name="t-if" remove="(!props.record.data.is_rotting || !item.isSelected)" separator=" and "/>
     </xpath>
 </t>
@@ -1009,13 +1133,12 @@ tests = [
         "expected": """
 <t t-name="mail.RottingStatusBarDurationField" t-inherit="mail.StatusBarDurationField" t-inherit-mode="primary">
     <xpath expr="//span[@t-att-title='this.item.fullTimeInStage']" position="attributes">
-        <attribute name="t-attf-class" add="{{ this.props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "></attribute>
-        <attribute name="t-if" remove="(!this.props.record.data.is_rotting || !this.item.isSelected)" separator=" and "></attribute>
+        <attribute name="t-attf-class" add="--o-mail-livechat-btn-color {{ this.props.thread?.channel?.channel_type === 'ai_chat' ? 'ms-0' : '' }}" separator=" "/>
+        <attribute name="t-if" remove="(!this.props.record.data.is_rotting || !this.item.isSelected)" separator=" and "/>
     </xpath>
 </t>
 """,
     },
-
     {
         "name": "t-slot scope",
         "content": """
@@ -1146,6 +1269,49 @@ tests = [
 <t t-foreach="this.items" t-as="item" t-key="item.id">
     <div><t t-out="item.value"/></div>
 </t>
+""",
+    },
+    {
+        "name": "xml do not transform &apos;",
+        "content": """
+<templates>
+    <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
+         <xpath expr='//EmbeddedComponentToolbarButton[@name="&apos;copyToClipboard&apos;"]' position="before">
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.canPostMessages"
+                icon="'fa-envelope'"
+                label.translate="Send as Message"
+                onClick.bind="onClickSendAsMessage"
+            />
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.withHtmlField"
+                icon="'fa-pencil-square'"
+                label="htmlFieldTargetMessage"
+                onClick.bind="onClickUseAsDescription"
+            />
+        </xpath>
+    </t>
+</templates>
+""",
+        "expected": """
+<templates>
+    <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
+         <xpath expr='//EmbeddedComponentToolbarButton[@name="&apos;copyToClipboard&apos;"]' position="before">
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.canPostMessages"
+                icon="'fa-envelope'"
+                label.translate="Send as Message"
+                onClick.bind="onClickSendAsMessage"
+            />
+            <EmbeddedComponentToolbarButton
+                hidden="!targetRecordInfo?.withHtmlField"
+                icon="'fa-pencil-square'"
+                label="htmlFieldTargetMessage"
+                onClick.bind="onClickUseAsDescription"
+            />
+        </xpath>
+    </t>
+</templates>
 """,
     },
     {
@@ -1581,9 +1747,11 @@ def run_test_specific_modules(test):
     modules = test.get("modules", False)
     path = test.get("path", False)
 
-    aggregator = VariableAggregator()
+    aggregator = VariableAggregator(skip_component_template=True)
     aggregator.all_vars = variables
-    return update_template(path, test["content"], modules, aggregator, {})
+
+    res, warnings = update_template(path, test["content"], modules, aggregator, {})
+    return res
 
 
 test_external_xpath = [
@@ -1741,9 +1909,11 @@ def run_test_exclude_modules(test):
     modules = test.get("modules", False)
     path = test.get("path", False)
 
-    aggregator = VariableAggregator()
+    aggregator = VariableAggregator(skip_component_template=True)
     aggregator.inherit_map = {'web.abc': 'web.xyz'}
-    return update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
+
+    res, warnings = update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
+    return res
 
 
 test_exclude_templates = [
@@ -1799,12 +1969,13 @@ test_exclude_templates = [
 
 
 def run_test_vars(test):
-    aggregator = VariableAggregator()
+    aggregator = VariableAggregator(skip_component_template=True)
     aggregator.all_vars = test["inside_vars"]
     aggregator.t_call_vars = test["outside_vars"]
     aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
 
-    return update_template("", test["content"], False, aggregator, {})
+    res, warnings = update_template("", test["content"], False, aggregator, {})
+    return res
 
 
 test_vars = [
@@ -1918,7 +2089,7 @@ test_vars = [
 
 
 def run_test_aggregator(test):
-    aggregator = VariableAggregator()
+    aggregator = VariableAggregator(skip_component_template=True)
 
     if "inside_vars" in test:
         aggregator.all_vars.update(test["inside_vars"])
@@ -1929,6 +2100,7 @@ def run_test_aggregator(test):
     def callback(tree):
         aggregator.aggregate_inside_vars(tree)
         aggregator.aggregate_call_vars(tree)
+        aggregator.link_templates(tree)
     update_etree(test["content"], callback)
 
     # Convert defaultdicts to standard dicts for clean printing/comparison
@@ -1939,8 +2111,22 @@ def run_test_aggregator(test):
         result["t_call_inner"] = dict(aggregator.t_call_vars)
     if aggregator.t_call_outer_vars:
         result["t_call_outer"] = dict(aggregator.t_call_outer_vars)
-    if aggregator.inherit_map:
-        result["inherit_map"] = dict(aggregator.inherit_map)
+
+    if aggregator.all_templates:
+        inherit_map = dict()
+        full_inherit_and_call_map = dict()
+        for template_name in aggregator.all_templates:
+            template = aggregator.all_templates[template_name]
+
+            full_inherit_and_call_map[template_name] = list(template.get_dependencies())
+
+            # Inherit map
+            if template.parent is not None:
+                inherit_map[template_name] = template.parent.name
+        if inherit_map:
+            result["inherit_map"] = inherit_map
+        if full_inherit_and_call_map:
+            result["full_inherit_and_call_map"] = full_inherit_and_call_map
 
     return result
 
@@ -1948,15 +2134,12 @@ def run_test_aggregator(test):
 test_vars_collection = [
     {
         "name": "simple template",
-        "outside_vars": defaultdict(set),
         "inside_vars": {"abc": {"a"}},
         "content": '<t t-name="web.xyz"> <t t-set="b" t-value="2"/> </t>',
-        "expected": {"all_vars": {'abc': {'a'}, 'web.xyz': {'b'}}},
+        "expected": {"all_vars": {'abc': {'a'}, 'web.xyz': {'b'}}, 'full_inherit_and_call_map': {'web.xyz': []}},
     },
     {
         "name": "t-slot-scope-vars",
-        "outside_vars": defaultdict(set),
-        "inside_vars": defaultdict(set),
         "content": """
 <t t-name="web.Many2XAutocomplete" >
     <div class="o_input_dropdown" t-ref="autocomplete_container">
@@ -1971,26 +2154,25 @@ test_vars_collection = [
     </div>
 </t>
         """,
-        "expected": {"all_vars": {'web.Many2XAutocomplete': {'optionScope'}}},
+        "expected": {"all_vars": {'web.Many2XAutocomplete': {'optionScope'}}, 'full_inherit_and_call_map': {'web.Many2XAutocomplete': []}},
     },
     {
         "name": "t-call",
-        "outside_vars": defaultdict(set),
-        "inside_vars": defaultdict(set),
         "content": """
 <t t-name="web.xyz" >
     <t t-set="outside" t-value="2"/>
-    <t t-call="mail.xyz"> <t t-set="inside" t-value="a"/> </t>
+    <t t-call="mail.zzz"> <t t-set="inside" t-value="a"/> </t>
 </t>
         """,
         "expected": {
             "all_vars": {'web.xyz': {'outside'}},
-            "t_call_inner": {'mail.xyz': {'inside'}},
-            "t_call_outer": {'mail.xyz': {'outside'}}
+            "t_call_inner": {'mail.zzz': {'inside'}},
+            "t_call_outer": {'mail.zzz': {'outside'}},
+            'full_inherit_and_call_map': {'web.xyz': [], 'mail.zzz': ['web.xyz']}
         },
     },
     {
-        "name": "Nested Inherites",
+        "name": "Nested Inherits",
         "excluded_templates": {'web.xyz'},
         "content": """
             <templates id="template" xml:space="preserve">
@@ -2002,16 +2184,83 @@ test_vars_collection = [
                 </t>
             </templates>
         """,
-        "expected": {'all_vars': {'web.xyz': set(), 'web.abc': set()}, 'inherit_map': {'web.abc': 'web.xyz'}},
+        "expected": {'all_vars': {'web.xyz': set(), 'web.abc': set()}, 'inherit_map': {'web.abc': 'web.xyz'},  'full_inherit_and_call_map':  {'web.xyz': [], 'web.abc': ['web.xyz']}},
+    },
+    {
+        "name": "Nested Inherits t-call",
+        "excluded_templates": {'web.xyz'},
+        "content": """
+            <templates id="template" xml:space="preserve">
+                <t t-name="web.a"> t-set var </t>
+                <t t-name="web.b" t-inherit="web.a" t-inherit-mode="primary">
+                     <t t-call="web.c"> </t>
+                </t>
+                <t t-name="web.c">
+                    <t t-call="web.d"> </t>
+                </t>
+                <t t-name="web.e" t-inherit="web.c" t-inherit-mode="primary"></t>
+            </templates>
+        """,
+        "expected": {
+            'all_vars': {'web.a': set(), 'web.b': set(), 'web.c': set(), 'web.e': set()},
+            't_call_outer': {'web.c': set(), 'web.d': set()},
+            'inherit_map': {'web.b': 'web.a', 'web.e': 'web.c'},
+            'full_inherit_and_call_map': {'web.a': [], 'web.b': ['web.a'], 'web.c': ['web.b', 'web.a'], 'web.d': ['web.c', 'web.b', 'web.a'], 'web.e': ['web.c', 'web.b', 'web.a']},
+        }
     },
 ]
 
 
 # ------------------------------------------------------------------------------
 
+def run_test_warnings(test):
+    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator.all_vars = test.get("all_vars", {})
+    aggregator.inherit_map = test.get("inherit_map", {})
+    aggregator.full_inherit_and_call_map = test.get("full_inherit_and_call_map", {})
+    aggregator.t_call_outer_vars = test.get("t_call_outer_vars", {})
+    res, warnings = update_template("", test["content"], False, aggregator, {})
+
+    return warnings
+
+
+test_warning_vars = [
+    {
+        "name": "No warning simple",
+        "all_vars": {'web.a': {"b"}},
+        "full_inherit_and_call_map": {},
+        "content": '<t t-name="web.xyz"> <t t-out="b"/> </t>',
+        "expected": [],
+    },
+    {
+        "name": "No warning on direct parent",
+        "all_vars": {'web.a': {"b"}},
+        "inherit_map": {"web.xyz": "web.a"},
+        "full_inherit_and_call_map": {'web.xyz': {'web.a', 'web.b', 'web.c'}},
+        "content": '<t t-name="web.xyz" t-inherit="web.a" t-inherit-mode="primary"> <t t-out="b"/> </t>',
+        "expected": [],
+    },
+    {
+        "name": "Far away parent warning",
+        "all_vars": {'web.a': {"b"}},
+        "full_inherit_and_call_map": {'web.xyz': {'web.a', 'web.b', 'web.c'}},
+        "content": '<t t-name="web.xyz"> <t t-out="b"/> </t>',
+        "expected": ["WARNING in template 'web.xyz' : variable 'b' also defined in a far parent."]
+    },
+    #  Deprecated because we now automatically discard outer t-call varsY
+    # {
+    #     "name": "Outer t-call warning",
+    #     "t_call_outer_vars": {'web.xyz': {"b"}},
+    #     "full_inherit_and_call_map": {'web.xyz': {'web.a', 'web.b', 'web.c'}},
+    #     "content": '<t t-name="web.xyz"> <t t-out="b"/> </t>',
+    #     "expected": ["WARNING in template 'web.xyz' : t-call-outer variable 'b'."]
+    # },
+]
+
+# ------------------------------------------------------------------------------
+
 
 WHITELIST = []
-# WHITELIST = ["exclude nested templates"]
 
 
 def run_test_group(name, tests, func):
@@ -2050,6 +2299,7 @@ if __name__ == "__main__":
         ("excluded templates", test_exclude_templates, run_test_exclude_modules),
         ("external vars", test_vars, run_test_vars),
         ("vars aggregator", test_vars_collection, run_test_aggregator),
+        ("warning vars", test_warning_vars, run_test_warnings),
     ]:
         s, f = run_test_group(name, test_group, func)
         total_success += s

@@ -10,6 +10,7 @@ EXCLUDED_PATH = (
     'addons/web/static/lib/owl/owl.js',
     'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
     'html_builder/static/tests/custom_tab/builder_components/builder_row.test.js',  # Test has weird string formatting syntax easier to skip
+    '/node_modules/'
 )
 
 CHECKSUM_FILES = (
@@ -41,7 +42,6 @@ EXCLUDED_TEMPLATES = (
     'appointment.resources_list',
     'appointment.slots_list',
     'calendar.AttendeeCalendarCommonRenderer.event',
-    'delivery.locationSelector.map',
     'event.EventSlotCalendarCommonRenderer.event',
     'event_booth_checkbox_list',
     'event_booth_registration_complete',
@@ -78,7 +78,7 @@ EXCLUDED_TEMPLATES = (
     'mass_mailing.IframeBody',
     'mass_mailing.IframeHead',
     'mass_mailing.MailingPreviewIframeBody',
-    'mass_mailing.portal.list_form_con',
+    'mass_mailing.portal.list_form_content',
     'mass_mailing.portal.list_form_content_readonly',
     'mass_mailing.s_masonry_block_alternation_image_text_template',
     'mass_mailing.s_masonry_block_alternation_text_image_template',
@@ -97,7 +97,6 @@ EXCLUDED_TEMPLATES = (
     'mass_mailing_sale.s_product_snapshot_card_fragment',
     'mass_mailing_sale.s_product_snapshot_columns_fragment',
     'mrp.CalendarCommonRenderer.event',
-    'o-spreadsheet-CustomTooltip',
     'planning.allocation_info',
     'planning.daygrid_event',
     'point_of_sale.pos_cash_move_receipt',
@@ -480,7 +479,7 @@ class JSTooling:
 
     @staticmethod
     def get_js_files(file_manager):
-        path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
         return [
             file for file in file_manager
             if '/static/src/' in file.path._str
@@ -488,6 +487,7 @@ class JSTooling:
             and not re.search(path_pattern, file.path._str)
         ]
 
+    @staticmethod
     def get_template_files(file_manager):
         excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
         return [
@@ -495,6 +495,16 @@ class JSTooling:
             if '/static/src/' in file.path._str
             and file.path.suffix in ['.xml', '.js']
             and not re.search(excluded_path_pattern, file.path._str)
+        ]
+    
+    @staticmethod
+    def get_xml_files(file_manager):
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
+        return [
+            file for file in file_manager
+            if '/static/src/' in file.path._str
+            and file.path.suffix == '.xml'
+            and not re.search(path_pattern, file.path._str)
         ]
 
 
@@ -878,6 +888,10 @@ MISC_WHITELIST = {
     "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
     "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
     "hr_calendar.CalendarCommonRenderer.buttonWorklocation": {'multiCalendar'},  # Nested t-inherits with a xpath t-call
+    "crm.ColumnProgress": {'bar'},  # Nested inherit
+    "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
+    "sale_management.ListRenderer.RecordRow": {'record'},  # Nested t-inherits
+    "sale.ListRenderer.RecordRow": {'record', 'column', 'hasDeleteButton'},  # Nested t-inherits
 }
 
 ACCOUNT_WHITELIST = {
@@ -888,38 +902,50 @@ ACCOUNT_WHITELIST = {
     "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
     "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
 }
-THIS_TARGETS = ["hr"]
+THIS_TARGETS = ["mail"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
-    all_files = [
-        f for f in file_manager
-        if 'static/src' in f.path._str
-        and f.path.suffix == '.xml'
-        and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
-    ]
+    js_files = JSTooling.get_js_files(file_manager)
 
-    white_vars = {
-        "crm.ColumnProgress": {'bar'},  # Nested inherit
-        "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
-    }  # vars defined inside template, eg. using t-set
-    white_vars = white_vars | MAIL_WHITELIST | WEB_WHITELIST | MISC_WHITELIST
+    component_templates = list()
 
-    # Iteration 1: Gather all variables
-    aggregator = VariableAggregator()
-    for _, file in enumerate(all_files, start=1):
+    # Iteration 1: search for component template names in js files
+    template_re = re.compile(rf"""static\s+template\s*=\s*["']([^'"]+)["']""")
+    for file in js_files:
+        content = file.content
+        for template_name in template_re.findall(content):
+            component_templates.append(template_name)
+
+    xml_files = JSTooling.get_xml_files(file_manager)
+    aggregator = VariableAggregator(component_templates)
+    for _, file in enumerate(xml_files, start=1):
         def callback(tree):
+            aggregator.link_templates(tree)
             aggregator.aggregate_inside_vars(tree)
             aggregator.aggregate_call_vars(tree)
 
+        if not file.content or not file.content.strip():
+            continue
+
         update_etree(file.content, callback)
 
-    aggregator.all_vars = aggregator.all_vars | white_vars
+    aggregator.map_inherits_and_calls()
 
-    # Iteration 2: Update templates
-    for fileno, file in enumerate(all_files, start=1):
+    # Merge white list of vars with local vars parsed by aggregator
+    white_vars = MAIL_WHITELIST | WEB_WHITELIST | MISC_WHITELIST | ACCOUNT_WHITELIST
+    d1, d2 = aggregator.all_vars, white_vars
+    merged = {k: d1.get(k, set()) | d2.get(k, set()) for k in d1.keys() | d2.keys()}
+
+    aggregator.all_vars = merged
+
+    # Iteration 3: Update templates
+    for fileno, file in enumerate(xml_files, start=1):
         try:
-            file.content = update_template(file.path._str, file.content, THIS_TARGETS, aggregator, EXCLUDED_TEMPLATES)
+            res, warnings = update_template(file.path._str, file.content, THIS_TARGETS, aggregator, EXCLUDED_TEMPLATES)
+            file.content = res
+            for warning in warnings:
+                print(warning)
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
 
@@ -984,6 +1010,7 @@ def upgrade(file_manager) -> str:
     # collector.run_sub("Migrating t-esc", upgrade_t_esc)
     # collector.run_sub("Migrating t-ref", upgrade_t_ref)
     # collector.run_sub("Migrating t-model", upgrade_t_model)
-    collector.run_sub("Migrating this.", upgrade_this)
+    collector.run_sub("Migrating this. in xml templates", upgrade_this)
+    # collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js)
 
     collector.finalize()
