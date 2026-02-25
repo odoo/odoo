@@ -70,3 +70,8 @@ class TestWebsite(ClickAndCollectCommon):
         self._add_product_qty_to_wh(self.storable_product.id, 15, self.warehouse_2.lot_stock_id.id)
         free_qty = self.website._get_max_in_store_product_available_qty(self.storable_product)
         self.assertEqual(free_qty, 15)
+        # Branch companies' warehouses should not be included in the results.
+        self.in_store_dm.warehouse_ids = [Command.link(self.branch_wh.id)]
+        self._add_product_qty_to_wh(self.storable_product.id, 40, self.branch_wh.lot_stock_id.id)
+        free_qty = self.website._get_max_in_store_product_available_qty(self.storable_product)
+        self.assertEqual(free_qty, 15)

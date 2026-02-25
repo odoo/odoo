@@ -89,7 +89,7 @@ class DeliveryCarrier(models.Model):
 
         pickup_locations = []
         order_sudo = request.cart
-        for wh in self.warehouse_ids:
+        for wh in self.warehouse_ids.filtered(lambda wh: wh.company_id == self.env.company):
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
                 continue

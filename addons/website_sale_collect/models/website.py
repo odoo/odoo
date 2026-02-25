@@ -48,4 +48,5 @@ class Website(models.Model):
         return max([
             product.with_context(warehouse_id=wh.id).free_qty
             for wh in self.sudo().in_store_dm_id.warehouse_ids
+                .filtered(lambda wh: wh.company_id == self.company_id)
         ], default=0)

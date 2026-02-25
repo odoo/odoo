@@ -26,6 +26,15 @@ class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
             name="Example in-store delivery",
             is_published=True,
         )
+        cls.admin_user = cls.env.ref('base.user_admin')
+        cls.branch_company = cls.env['res.company'].with_user(cls.admin_user).create({
+            'name': "Branch Company",
+            'parent_id': cls.env.company.id,
+        })
+        cls.branch_wh = cls.env['stock.warehouse'].with_company(cls.branch_company).create({
+            'name': 'Branch Company Warehouse',
+            'code': 'WHB',
+        })
 
     def _create_in_store_delivery_order(self, **values):
         default_values = {

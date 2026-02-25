@@ -72,6 +72,9 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
             ],
         })
 
+        # Branch companies' warehouses should not be included in the results.
+        self.in_store_dm.warehouse_ids = [Command.link(self.branch_wh.id)]
+
         with patch(
             'odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize',
             return_value=True
