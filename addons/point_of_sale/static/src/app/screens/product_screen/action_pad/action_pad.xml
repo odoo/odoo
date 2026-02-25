@@ -8,7 +8,7 @@
                 <t t-if="props.onClickMore">
                     <SelectPartnerButton partner="props.partner"/>
                     <button t-if="pos.config.use_presets and currentOrder"
-                        class="btn btn-secondary btn-lg flex-shrink-0 border-0"
+                        class="btn btn-secondary btn-lg border-0 text-truncate"
                         t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
                         t-on-click="() => this.pos.selectPreset()">
                         <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
