@@ -16,7 +16,7 @@ registerThreadAction("show-threads", {
             channel: channel.parent_channel_id || channel,
         });
     },
-    actionPanelOuterClass: "bg-100 border border-secondary",
+    actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,

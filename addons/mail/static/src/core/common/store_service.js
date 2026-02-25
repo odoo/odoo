@@ -116,7 +116,6 @@ export class Store extends BaseStore {
         return attClassObjectToString({
             "o-discuss-dropdownMenu d-flex flex-column border-secondary": true,
             "o-simulateDarkTheme": simulateDarkTheme,
-            "bg-view": !simulateDarkTheme,
         });
     }
 

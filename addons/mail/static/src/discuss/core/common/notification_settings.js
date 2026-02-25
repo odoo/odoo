@@ -6,6 +6,8 @@ import { useService } from "@web/core/utils/hooks";
 import { DiscussNotificationSettingsClientAction } from "./discuss_notification_settings_client_action";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useHover } from "@mail/utils/common/hooks";
 
 class NotificationDialog extends Component {
     static props = ["close?"];
@@ -27,6 +29,11 @@ export class NotificationSettings extends Component {
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;
+        this.muteConversationDropdownState = useDropdownState();
+        this.muteConversationHover = useHover(["mute-button", "mute-menu"], {
+            onHover: () => (this.muteConversationDropdownState.isOpen = true),
+            onAway: () => (this.muteConversationDropdownState.isOpen = false),
+        });
     }
 
     setMute(minutes) {

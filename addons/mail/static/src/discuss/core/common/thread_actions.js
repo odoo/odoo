@@ -116,7 +116,7 @@ registerThreadAction("notification-settings", {
             });
         }
     },
-    actionPanelOuterClass: "bg-100 border border-secondary",
+    actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
     dropdown: ({ owner }) => !owner.isDiscussContent,
     dropdownComponent: NotificationSettings,
     dropdownComponentProps: ({ channel }) => ({ channel }),
@@ -178,10 +178,10 @@ registerThreadAction("invite-people", {
             });
         }
     },
-    actionPanelOuterClass: ({ owner }) =>
+    actionPanelOuterClass: ({ owner, store }) =>
         `o-discuss-ChannelInvitation ${
             owner.props.chatWindow ? "bg-inherit" : ""
-        } bg-100 border border-secondary`,
+        } border border-secondary ` + store.discussDropdownMenuClass(owner),
     condition: ({ channel, owner }) =>
         channel &&
         !owner.env.pipWindow &&
