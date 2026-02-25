@@ -663,3 +663,45 @@ test("Be able to add and remove shape from custom groups", async () => {
     );
     expect("div[data-label='Shape'] .dropdown").toHaveText("Custom Shuriken");
 });
+
+test("Should reset shape transformation with reset button and when switching shape", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='/web/image/website.s_text_image_default_image'
+                data-original-id="1"
+                data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+                data-mimetype-before-conversion="image/webp"
+                data-shape="html_builder/geometric/geo_tetris"
+                data-shape-colors=";;;;"
+                data-shape-flip="xy"
+                data-shape-rotate="270"
+            >
+        </div>
+    `);
+    const imgSelector = ":iframe .test-options-target img";
+
+    await contains(imgSelector).click();
+    await waitSidebarUpdated();
+
+    await contains("[data-action-id='resetImageShapeTransformation']").click();
+    await waitSidebarUpdated();
+
+    expect(imgSelector).toHaveAttribute("data-shape", "html_builder/geometric/geo_tetris");
+    expect(imgSelector).not.toHaveAttribute("data-shape-flip");
+    expect(imgSelector).not.toHaveAttribute("data-shape-rotate");
+
+    await contains(`[data-action-id="flipImageShape"]:has(.oi-arrows-h)`).click();
+    await contains(`[data-action-id="rotateImageShape"]:has(.fa-rotate-right)`).click();
+    await waitSidebarUpdated();
+
+    expect(imgSelector).toHaveAttribute("data-shape-flip", "x");
+    expect(imgSelector).toHaveAttribute("data-shape-rotate", "90");
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    await waitSidebarUpdated();
+
+    expect(imgSelector).toHaveAttribute("data-shape", "html_builder/geometric/geo_shuriken");
+    expect(imgSelector).not.toHaveAttribute("data-shape-flip");
+    expect(imgSelector).not.toHaveAttribute("data-shape-rotate");
+});
