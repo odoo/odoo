@@ -10,10 +10,7 @@ const messagingMenuPatch = {
      */
     get _tabs() {
         const items = super._tabs;
-        const hasLivechats = Object.values(this.store["discuss.channel"].records).some(
-            (channel) => channel.channel_type === "livechat"
-        );
-        if (hasLivechats) {
+        if (this.store.show_livechat_category) {
             items.push({
                 counter: this.store.discuss.livechats.reduce(
                     (acc, channel) =>

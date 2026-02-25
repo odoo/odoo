@@ -152,6 +152,14 @@ class ResUsers(models.Model):
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)
         res.attr("has_access_livechat", self.has_access_livechat)
+        if self._is_internal():
+            domain = [
+                ("channel_id.channel_type", "=", "livechat"),
+                ("is_self", "=", True),
+                ("is_pinned", "=", True),
+            ]
+            has_pinned_livechats = self.env["discuss.channel.member"].search_count(domain, limit=1) > 0
+            res.attr("show_livechat_category", has_pinned_livechats)
 
     def _store_init_fields(self, res: Store.FieldList):
         super()._store_init_fields(res)

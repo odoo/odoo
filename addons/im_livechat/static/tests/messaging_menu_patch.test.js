@@ -1,4 +1,12 @@
-import { click, contains, patchUiSize, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    contains,
+    listenStoreFetch,
+    patchUiSize,
+    start,
+    startServer,
+    waitStoreFetch,
+} from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -27,6 +35,12 @@ test('livechats should be in "chat" filter', async () => {
 
 test('livechats should be in "livechat" tab in mobile', async () => {
     patchUiSize({ height: 360, width: 640 });
+    const storeFetchResolvers = Promise.withResolvers();
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            await storeFetchResolvers.promise;
+        },
+    });
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -39,6 +53,9 @@ test('livechats should be in "livechat" tab in mobile', async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "Live Chats" });
+    await contains(".o-mail-NotificationItem", { count: 0 });
+    storeFetchResolvers.resolve();
+    await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem", { text: "Visitor 11" });
     await click("button", { text: "Chats" });
     await contains(".o-mail-NotificationItem", { count: 0, text: "Visitor 11" });
