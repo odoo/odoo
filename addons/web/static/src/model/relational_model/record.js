@@ -1388,9 +1388,25 @@ export class Record extends DataPoint {
      */
     async _toggleArchive(state) {
         const method = state ? "action_archive" : "action_unarchive";
-        const action = await this.model.orm.call(this.resModel, method, [[this.resId]], {
-            context: this.context,
-        });
+        let action;
+        try {
+            action = await this.model.orm.call(this.resModel, method, [[this.resId]], {
+                context: this.context,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this.model.offline.scheduleORM(
+                    this.resModel,
+                    method,
+                    [[this.resId]],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, [this]),
+                    }
+                );
+            }
+            throw e;
+        }
         if (action && Object.keys(action).length) {
             this.model.action.doAction(action, { onClose: () => this._load() });
         } else {

@@ -578,6 +578,7 @@ export class FormController extends Component {
             },
             archive: {
                 isAvailable: () => this.archiveEnabled && this.model.root.isActive,
+                availableOffline: true,
                 sequence: 40,
                 description: _t("Archive"),
                 icon: "oi oi-archive",
@@ -587,6 +588,7 @@ export class FormController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
+                availableOffline: true,
                 sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),

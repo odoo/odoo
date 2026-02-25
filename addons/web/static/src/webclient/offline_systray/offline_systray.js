@@ -13,6 +13,8 @@ const { DateTime } = luxon;
 const STATUS = {
     CREATED: { label: _t("Created"), color: 10 },
     EDITED: { label: _t("Edited"), color: 3 },
+    ARCHIVED: { label: _t("Archived"), color: 2 },
+    UNARCHIVED: { label: _t("Unarchived"), color: 4 },
     DELETED: { label: _t("Deleted"), color: 1 },
 };
 
@@ -60,6 +62,12 @@ class OfflineSystray extends Component {
             }
             if (value.method === "unlink") {
                 item.status = STATUS.DELETED;
+            }
+            if (value.method === "action_archive") {
+                item.status = STATUS.ARCHIVED;
+            }
+            if (value.method === "action_unarchive") {
+                item.status = STATUS.UNARCHIVED;
             }
             item.tooltip = JSON.stringify(item.tooltip);
             items.push(item);

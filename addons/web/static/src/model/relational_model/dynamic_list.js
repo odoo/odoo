@@ -487,7 +487,26 @@ export class DynamicList extends DataPoint {
         const method = state ? "action_archive" : "action_unarchive";
         const context = this.context;
         const resIds = await this.getResIds(isSelected);
-        const action = await this.model.orm.call(this.resModel, method, [resIds], { context });
+        let action;
+        try {
+            action = await this.model.orm.call(this.resModel, method, [resIds], { context });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                const records = this.records.filter((r) => resIds.includes(r.resId));
+                this.model.offline.scheduleORM(
+                    this.resModel,
+                    method,
+                    [resIds],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, records),
+                    }
+                );
+                this._unSelectAll();
+                return true;
+            }
+            throw e;
+        }
         if (
             this.isDomainSelected &&
             resIds.length === this.model.activeIdsLimit &&

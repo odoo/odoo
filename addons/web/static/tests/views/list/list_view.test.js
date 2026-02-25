@@ -20024,6 +20024,105 @@ test(`[Offline] delete records`, async () => {
     await expect.waitForSteps(["unlink"]);
 });
 
+test(`[Offline] archiving records`, async () => {
+    onRpc("action_archive", () => expect.step(`action_archive`));
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+    Foo._views = {
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(4, { message: "Checking initial number of records" });
+
+    await setOffline(true);
+
+    await clickRecordSelector(2); //select two records
+
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleMenuItem("Archive"); // toggle archive action
+    await contains(`.modal-footer .btn-primary`).click(); // confirm the archive action
+
+    // The deleted records will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "2 Records",
+        "Archived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_archive"]);
+});
+
+test(`[Offline] unarchiving records`, async () => {
+    onRpc("action_unarchive", () => expect.step(`action_unarchive`));
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+    Foo._views = {
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(4, { message: "Checking initial number of records" });
+
+    await setOffline(true);
+
+    await clickRecordSelector(2); //select two records
+
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleMenuItem("Unarchive"); // toggle archive action
+
+    // The deleted records will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "2 Records",
+        "Unarchived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_unarchive"]);
+});
+
 test(`[Offline] cache web_search_read: enable filter online/offline`, async () => {
     expect.errors(2);
     const setOffline = mockOffline();
