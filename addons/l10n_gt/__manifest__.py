@@ -15,7 +15,7 @@ taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'depends': [
-        'base',
+        'base_address_extended',
         'account',
     ],
     'auto_install': ['account'],
