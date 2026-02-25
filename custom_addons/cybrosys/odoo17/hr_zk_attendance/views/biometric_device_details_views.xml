@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Biometric device configuration tree view-->
+    <record id="biometric_device_details_view_tree" model="ir.ui.view">
+        <field name="name">biometric.device.details.view.tree</field>
+        <field name="model">biometric.device.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="device_ip"/>
+                <field name="port_number"/>
+            </tree>
+        </field>
+    </record>
+   <!-- In biometric_device_details_views.xml -->
+<record id="biometric_device_details_view_form" model="ir.ui.view">
+    <field name="name">biometric.device.details.view.form</field>
+    <field name="model">biometric.device.details</field>
+    <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="action_test_connection" string="Test Connection" type="object" class="oe_highlight"/>
+                <button name="action_map_biometric_ids" string="Map Biometric IDs" type="object" class="oe_highlight"
+                        help="Map biometric IDs from the device to employees in the system"/>
+                <button name="action_download_all_attendance" string="Download All Attendance" type="object" class="oe_highlight"/>
+                <button name="action_download_incremental_attendance" string="Download New Attendance Only" type="object"/>
+                <button name="action_clear_attendance" string="Clear Attendance" type="object"
+                        confirm="Are you sure you want to clear attendance data? This cannot be undone."/>
+                <button name="action_restart_device" string="Restart Device" type="object"
+                        confirm="Are you sure you want to restart the device?"/>
+            </header>
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" placeholder="Device Name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="device_ip" placeholder="e.g. 192.168.1.100"/>
+                        <field name="port_number" placeholder="e.g. 4370"/>
+                        <field name="tz"/>
+                        <field name="year_filter" widget="selection"/>
+                        <field name="last_download_time" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="download_batch_size"/>
+                        <field name="download_timeout"/>
+                        <field name="auto_download"/>
+                        <field name="address_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+                <div class="alert alert-info" role="alert" style="margin-top: 10px;">
+                    <p><strong>Note:</strong> The automated download runs every 2 hours from 8 AM to 6 PM.</p>
+                    <p><strong>Year Filter:</strong> Limits data processing to the selected year to reduce server load and prevent timeouts.</p>
+                    <p><strong>Download All Attendance:</strong> Downloads complete attendance history from the device.</p>
+                    <p><strong>Download New Attendance Only:</strong> Downloads only new attendance records since the last download.</p>
+                    <p><strong>Map Biometric IDs:</strong> Connect to the device and map biometric IDs to employees in the system.</p>
+                </div>
+            </sheet>
+        </form>
+    </field>
+</record>
+    <!--	Action for the biometric device-->
+    <record id="biometric_device_details_action" model="ir.actions.act_window">
+        <field name="name">Biometric Device</field>
+        <field name="res_model">biometric.device.details</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

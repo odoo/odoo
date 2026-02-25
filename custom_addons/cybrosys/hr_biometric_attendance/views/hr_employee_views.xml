@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inherited hr employee for adding biometric user ID field-->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.hr.biometric.attendance</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='identification_group']"
+                   position="inside">
+                <field name="biometric_user_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

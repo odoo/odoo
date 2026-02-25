@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Main cron job: Incremental attendance download every 30 minutes -->
+    <record forcecreate="True" id="cron_incremental_download_data"
+            model="ir.cron">
+        <field name="name">Biometric: Incremental Attendance Download
+        (every 30 minutes)</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="model_id"
+               ref="hr_biometric_attendance.model_biometric_device_details"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_download_incremental()</field>
+    </record>
+</odoo>
