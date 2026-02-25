@@ -1,0 +1,21 @@
+<odoo>
+    <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='payroll_information']" position="inside">
+                <group>
+                    <group string="Allowances">
+                        <field name="hra"/>
+                        <field name="da"/>
+                        <field name="travel_allowance"/>
+                        <field name="meal_allowance"/>
+                        <field name="medical_allowance"/>
+                        <field name="other_allowance"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
