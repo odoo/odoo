@@ -28,7 +28,7 @@
             --card-spacer-x: var(--CardBody-padding);
         }
         &:not(.s_carousel_controllers_hidden) .card-body {
-            padding-bottom: calc(var(--CarouselControllers-size, 3rem) + 2* var(--CardBody-padding) + var(--CardBody-extra-height));
+            padding-bottom: calc(#{$-o-carousel-controllers-size} + 2* var(--CardBody-padding) + var(--CardBody-extra-height));
         }
         .s_carousel_cards_item:only-child .card-body {
             padding-bottom: calc(var(--card-spacer-y) + var(--CardBody-extra-height));
@@ -41,14 +41,27 @@
         .o_horizontal_controllers_row {
             padding: 0 var(--CardBody-padding);
         }
+        .o_carousel_pause {
+            padding-inline-start: var(--CardBody-padding);
+        }
+
+        @include media-breakpoint-down(md) {
+            .o_carousel_pause {
+                margin: 0;
+            }
+        }
 
         @include media-breakpoint-up(lg) {
             &.s_carousel_cards_with_img {
 
-                .o_horizontal_controllers_row {
+                .o_horizontal_controllers_container,
+                // Compatibility before .o_carousel_pause button.
+                :not(.o_horizontal_controllers_container) > .o_horizontal_controllers_row {
                     margin: 0 0 0 var(--card-img-size-h);
                 }
-                &:has(.s_card.flex-lg-row-reverse) .o_horizontal_controllers_row {
+                &:has(.s_card.flex-lg-row-reverse) .o_horizontal_controllers_container,
+                // Compatibility before .o_carousel_pause button.
+                &:has(.s_card.flex-lg-row-reverse) :not(.o_horizontal_controllers_container) > .o_horizontal_controllers_row {
                     margin: 0 var(--card-img-size-h) 0 0;
                 }
             }

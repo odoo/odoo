@@ -10,6 +10,8 @@ export class ImageGalleryOption extends BaseOptionComponent {
         super.setup();
         this.state = useDomState((editingElement) => ({
             isSlideShow: editingElement.classList.contains("o_slideshow"),
+            // Compatibility before .o_carousel_pause button.
+            hasPauseButton: !!editingElement.querySelector(".o_carousel_pause"),
         }));
     }
 }
