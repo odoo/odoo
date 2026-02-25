@@ -2205,6 +2205,9 @@ class HttpCase(TransactionCase):
 
         start_time = time.time()
         request_threads = get_http_request_threads()
+        if not request_threads:
+            return
+
         self._logger.info('waiting for threads: %s', request_threads)
 
         for thread in request_threads:
