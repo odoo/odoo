@@ -540,6 +540,10 @@ class HrEmployee(models.Model):
         """
         dayfield = self._get_current_day_location_field()
         for employee in self:
+            if not employee.active:
+                employee.hr_icon_display = 'presence_archive'
+                employee.show_hr_icon_display = True
+                continue
             today_employee_location_id = employee.sudo().exceptional_location_id or employee[dayfield]
             if not today_employee_location_id:
                 employee.hr_icon_display = 'presence_' + employee.hr_presence_state

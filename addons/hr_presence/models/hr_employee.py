@@ -147,7 +147,8 @@ Thank you for your prompt attention to this matter.""")
         company = self.env.company
         working_now_list = self._get_employee_working_now()
         for employee in self:
-            if not employee.company_id.hr_presence_control_email and not employee.company_id.hr_presence_control_ip:
+            if not employee.active or \
+                (not employee.company_id.hr_presence_control_email and not employee.company_id.hr_presence_control_ip):
                 continue
             if company.hr_presence_last_compute_date and employee.id in working_now_list and \
                     company.hr_presence_last_compute_date.day == fields.Datetime.now().day and \

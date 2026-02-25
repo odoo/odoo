@@ -93,6 +93,16 @@ class HrEmployee(models.Model):
             elif not employee.attendance_manager_id:
                 employee.attendance_manager_id = False
 
+    def action_archive(self):
+        super().action_archive()
+        # check-out all checked-in employees.
+        self.env['hr.attendance'].search([
+            ('employee_id', 'in', self.ids),
+            ('check_out', '=', False),
+        ]).write({
+            'check_out': fields.Datetime.now(),
+        })
+
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(
@@ -250,7 +260,7 @@ class HrEmployee(models.Model):
         Attendance has the second highest priority after login
         """
         super()._compute_presence_state()
-        employees = self.filtered(lambda e: e.hr_presence_state != "present")
+        employees = self.filtered(lambda e: e.active and e.hr_presence_state != "present")
         employee_to_check_working = self.filtered(lambda e: e.sudo().attendance_state == "checked_out"
                                                             and e.hr_presence_state == "out_of_working_hour")
         working_now_list = employee_to_check_working._get_employee_working_now()
@@ -270,6 +280,8 @@ class HrEmployee(models.Model):
         res = super()._compute_presence_icon()
         # All employee must chek in or check out. Everybody must have an icon
         for employee in self:
+            if not employee.active:
+                continue
             employee.show_hr_icon_display = employee.company_id.hr_presence_control_attendance or bool(employee.user_id)
         return res
 

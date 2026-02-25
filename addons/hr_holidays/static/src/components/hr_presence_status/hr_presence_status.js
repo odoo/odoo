@@ -7,6 +7,9 @@ import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components
 const patchHrPresenceStatus = () => ({
 
     get label() {
+        if (!this.isActive) {
+            return super.label;
+        }
         if (this.value.includes("holiday")) {
             return _t("%(label)s, back on %(date)s",
                 {
@@ -29,6 +32,9 @@ const patchHrPresenceStatus = () => ({
     },
 
     get icon() {
+        if (!this.isActive) {
+            return super.icon;
+        }
         if (this.value?.includes("holiday")) {
             return "fa-plane";
         } else if (this.location) {
@@ -45,6 +51,9 @@ const patchHrPresenceStatus = () => ({
     },
 
     get color() {
+        if (!this.isActive) {
+            return super.color;
+        }
         if (this.value?.includes("holiday")) {
             return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
         } else if (this.location) {
@@ -65,6 +74,9 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 // Applies patch on one component and the other should be affected also, since it's extended from it.
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
+        if (!this.isActive) {
+            return super.label;
+        }
         if (this.props.record.data.current_work_entry_type_id){
             let label = this.props.record.data.current_work_entry_type_id.display_name;
             if (this.props.record.data.leave_date_to) {

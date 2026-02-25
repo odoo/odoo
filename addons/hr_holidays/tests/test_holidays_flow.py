@@ -9,12 +9,12 @@ from psycopg2 import IntegrityError
 
 from odoo.tools import date_utils, mute_logger, test_reports
 
-from odoo.tests import tagged
+from odoo.tests import new_test_user
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import TestHolidayContract, TestHrHolidaysCommon
 
 
-class TestHolidaysFlow(TestHrHolidaysCommon):
+class TestHolidaysFlow(TestHrHolidaysCommon, TestHolidayContract):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_leave_request_flow_unlimited(self):
@@ -293,3 +293,19 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'request_date_from': date.today() + relativedelta(day=11),
                 'request_date_to': date.today() + relativedelta(day=10),
             })
+
+    @freeze_time("2024-02-01 10:00:00")
+    def test_employee_presence_after_archived(self):
+        """when an employee is archived his presence_state should be in archive state"""
+        self.jules_emp.write({
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'user_id': new_test_user(self.env, login='jules_emp', groups='base.group_user').id,
+        })
+        self.create_leave(
+            date_from=datetime(2024, 2, 1, 8, 0, 0),
+            date_to=datetime(2024, 2, 1, 17, 0, 0),
+            employee_id=self.jules_emp.id,
+        ).action_approve()
+        self.assertEqual(self.jules_emp.hr_icon_display, 'presence_holiday_absent')
+        self.jules_emp.action_archive()
+        self.assertEqual(self.jules_emp.hr_icon_display, 'presence_archive')

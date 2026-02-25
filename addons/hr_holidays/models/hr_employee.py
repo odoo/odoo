@@ -65,7 +65,7 @@ class HrEmployee(models.Model):
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
+        employees = self.filtered(lambda employee: employee.active and employee.hr_presence_state != 'present' and employee.is_absent)
         employees.update({'hr_presence_state': 'absent'})
 
     def _compute_allocation_count(self):
@@ -112,6 +112,8 @@ class HrEmployee(models.Model):
         super()._compute_presence_icon()
         dayfield = self._get_current_day_location_field()
         for employee in self:
+            if not employee.active:
+                continue
             today_employee_location_id = employee.sudo().exceptional_location_id or employee[dayfield]
             if employee.is_absent:
                 employee.hr_icon_display = f'presence_holiday_{"absent" if employee.hr_presence_state != "present" else "present"}'

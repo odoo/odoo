@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, UTC
+from datetime import date, datetime, UTC
 from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase, freeze_time
 
@@ -27,6 +27,17 @@ class TestHrAttendance(TransactionCase):
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
             'pin': '5678',
+        })
+        cls.calendar_40h = cls.env['resource.calendar'].create({
+            'attendance_ids': [
+                Command.create({
+                        'dayofweek': weekday,
+                        'hour_from': 8.0,
+                        'hour_to': 17.0,
+                })
+                for weekday in ['0', '1', '2', '3', '4']
+            ],
+            'name': 'calendar 40h/week',
         })
 
     def setUp(self):
@@ -108,6 +119,34 @@ class TestHrAttendance(TransactionCase):
         attendance_form.check_in = False
         with self.assertRaises(AssertionError):
             attendance_form.save()
+
+    @freeze_time("2024-02-01 10:00:00")
+    def test_attendance_checkout_while_employee_archived(self):
+        """An employee should be checked out by the system, if employee is getting archive.
+            additionally his presence_state should be in archive state.
+        """
+
+        self.jonathon_user = new_test_user(self.env, login='jonathan_user', groups='base.group_user')
+        jonathon_employee = self.env['hr.employee'].create({
+            'contract_date_start': date(2021, 1, 1),
+            'date_version': date(2021, 1, 1),
+            'email': 'jonathan.joestar@example.com',
+            'name': 'jonathan joestar',
+            'resource_calendar_id': self.calendar_40h.id,
+            'user_id': self.jonathon_user.id,
+        })
+        self.assertEqual(jonathon_employee.hr_icon_display, 'presence_absent')
+
+        jonathon_attendance = self.env['hr.attendance'].create({
+            'check_in': datetime(2024, 1, 2, 8, 0),
+            'employee_id': jonathon_employee.id,
+        })
+        self.assertEqual(jonathon_employee.hr_icon_display, 'presence_present')
+
+        with freeze_time("2024-01-03 20:00:00"):
+            jonathon_employee.action_archive()
+            self.assertEqual(jonathon_employee.hr_icon_display, 'presence_archive')
+            self.assertEqual(jonathon_attendance.check_out, fields.Datetime.now())
 
     # @freeze_time("2024-02-1")
     # def test_change_in_out_mode_when_manual_modification(self):

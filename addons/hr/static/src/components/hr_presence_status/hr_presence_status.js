@@ -28,7 +28,7 @@ export class HrPresenceStatus extends Component {
     }
 
     get color() {
-        if (this.location) {
+        if (this.isActive && this.location) {
             let color = "text-muted";
             if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
                 color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "o_icon_employee_absent";
@@ -49,7 +49,7 @@ export class HrPresenceStatus extends Component {
     }
 
     get icon() {
-        if (this.location) {
+        if (this.isActive && this.location) {
             switch (this.location) {
                 case "home":
                     return "fa-home";
@@ -67,7 +67,7 @@ export class HrPresenceStatus extends Component {
     }
 
     get label() {
-        if (this.location) {
+        if (this.isActive && this.location) {
             return this.props.record.data.work_location_name || _t("Unspecified");
         }
         return this.value !== false
@@ -84,11 +84,16 @@ export class HrPresenceStatus extends Component {
     get value() {
         return this.props.record.data[this.props.name];
     }
+
+    get isActive() {
+        return this.props.record.data.active;
+    }
 }
 
 export const hrPresenceStatus = {
     component: HrPresenceStatus,
     fieldDependencies: [
+        { name: "active", type: "boolean" },
         { name: "hr_presence_state", type: "selection" },
         { name: "work_location_type", type: "char" },
         { name: "work_location_name", type: "char" },
