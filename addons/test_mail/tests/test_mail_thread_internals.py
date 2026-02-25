@@ -1016,8 +1016,8 @@ class TestChatterTweaks(ThreadRecipients):
             (2, False),  # zut alors, 2 recipients is the limit !
             (10, True),
         ):
-            MailTestSimple._CUSTOMER_HEADERS_LIMIT_COUNT = recipients_limit
-            with self.mock_mail_gateway(mail_unlink_sent=False), \
+            with patch.object(MailTestSimple, '_CUSTOMER_HEADERS_LIMIT_COUNT', recipients_limit, create=True), \
+                self.mock_mail_gateway(mail_unlink_sent=False), \
                     self.mock_mail_app():
                 message = test_record.message_post(
                     body='With To Headers',
