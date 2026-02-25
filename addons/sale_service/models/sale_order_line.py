@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
                 if line.is_service:
                     name = f"{line.order_id.name} - {line.product_id.display_name} --({line.order_partner_id.name})--"
                     if with_price_unit:
-                        formatted_price = format_amount(self.env, line.product_id.lst_price, line.currency_id)
+                        formatted_price = format_amount(self.env, line.price_unit, line.currency_id)
                         name += f" --({formatted_price})--"
                     line.display_name = name
                     sol |= line
