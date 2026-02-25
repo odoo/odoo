@@ -206,7 +206,7 @@ class MailTrackMixin(models.AbstractModel):
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
             tracked_fields,
-            attributes=('string', 'type', 'selection', 'currency_field')
+            attributes=('company_dependent', 'string', 'type', 'selection', 'currency_field')
         )
         if set(tracked_fields_get.keys()) < set(tracked_fields):
             current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fields_info.{self._name}', {})
@@ -462,10 +462,14 @@ class MailTrackMixin(models.AbstractModel):
             'old_value': initial_value,
             'new_value': new_value,
         }
+        # when no field linked to tracking, store data in field_info, like when the field is removed
         if not field:
             field_info['desc'] = col_info['string']
             field_info['name'] = col_name
             field_info['type'] = col_info['type']
+        # store company information for company dependent fields
+        if col_info.get('company_dependent') is True:
+            field_info['company_id'] = self.env.company.id
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
@@ -637,6 +641,7 @@ class MailTrackMixin(models.AbstractModel):
                 'id': tracking.id,
                 'fieldInfo': {
                     'changedField': col_info['string'],
+                    'companyId': (tracking.field_info or {}).get('company_id', False),
                     'currencyId': (tracking.field_info or {}).get('currency_id', False),
                     'floatPrecision': col_info.get('digits'),
                     'fieldType': col_info['type'],

@@ -79,18 +79,20 @@ class TestTrackingAPI(TestTrackingCommon):
         with self.mock_mail_gateway(), self.mock_mail_app():
             mixin_records._track_prepare(mixin_records._track_get_fields())
             parent_record_0._track_record(
-                mixin_records, ('many2one_field_id', 'float_field_with_digits', 'selection_field'), body='Manual Tracking Parent 1')
+                mixin_records, ('many2one_field_id', 'many2one_cd_field_id', 'float_field_with_digits', 'selection_field'), body='Manual Tracking Parent 1')
             parent_record_1._track_record(
-                mixin_records, ('many2one_field_id', 'float_field_with_digits', 'selection_field'), body='Manual Tracking Parent 2')
+                mixin_records, ('many2one_field_id', 'many2one_cd_field_id', 'float_field_with_digits', 'selection_field'), body='Manual Tracking Parent 2')
             mixin_records[0].write({
                 'char_field': 'updated 2.0',
                 'many2one_field_id': self.partner_admin.id,
+                'many2one_cd_field_id': self.partner_admin.id,
                 'float_field_with_digits': 15.285,
                 'selection_field': 'first',
             })
             mixin_records[1].write({
                 'char_field': 'updated 2.1',
                 'many2one_field_id': self.partner_employee.id,
+                'many2one_cd_field_id': self.partner_employee.id,
                 'float_field_with_digits': 22.789,
                 'selection_field': 'second',
             })
@@ -100,11 +102,13 @@ class TestTrackingAPI(TestTrackingCommon):
         track_1 = [
             ('float_field_with_digits', 'float', False, 15.285),
             ('many2one_field_id', 'many2one', False, self.partner_admin),
+            ('many2one_cd_field_id', 'many2one', False, self.partner_admin, {'company': self.company_admin}),
             ('selection_field', 'selection', 'SECOND', 'FIRST'),
         ]
         track_2 = [
             ('float_field_with_digits', 'float', False, 22.789),
             ('many2one_field_id', 'many2one', False, self.partner_employee),
+            ('many2one_cd_field_id', 'many2one', False, self.partner_employee, {'company': self.company_admin}),
             # selection field: same value, should not track
         ]
         for msg, expected in zip(self._new_msgs, [
@@ -135,18 +139,21 @@ class TestTrackingAPI(TestTrackingCommon):
                 'false_field_int': 3,
                 'false_field_monetary': 43.3,
                 'false_field_m2o_from_ticket': False,
+                'false_field_m2o_cd': False,
             } for record in test_tracking_records},
             end_values={record.id: {
                 'false_field_char': 'new',
                 'false_field_int': 7,
                 'false_field_monetary': 98.7,
                 'false_field_m2o_from_ticket': self.partner_admin,
+                'false_field_m2o_cd': self.partner_employee,
             } for record in test_tracking_records},
             fields_info={
                 'false_field_char': {'string': 'False Field Char', 'type': 'char'},
                 'false_field_int': {'string': 'False Field Int', 'type': 'integer'},
                 'false_field_monetary': {'string': 'False Field Monetary', 'type': 'monetary', 'currency_id': self.env.ref('base.USD').id},
                 'false_field_m2o_from_ticket': {'field_id': ticket_customer_field.id, 'type': 'many2one'},
+                'false_field_m2o_cd': {'company_dependent': True, 'string': 'False Field M2O Company Dependent', 'type': 'many2one'},
             },
             author=self.partner_admin,
             body='Test Body',
@@ -174,6 +181,12 @@ class TestTrackingAPI(TestTrackingCommon):
                             },
                         }),
                         ('customer_id', 'many2one', self.env['res.partner'], self.partner_admin),
+                        (False, 'many2one', self.env['res.partner'], self.partner_employee, {
+                            'company': self.company_admin,
+                            'field_info': {
+                                'desc': 'False Field M2O Company Dependent', 'name': 'false_field_m2o_cd', 'type': 'many2one'
+                            },
+                        }),
                         (False, 'monetary', 43.3, 98.7, {
                             'currency': self.env.ref('base.USD'),
                             'field_info': {
@@ -210,6 +223,17 @@ class TestTrackingAPI(TestTrackingCommon):
                 }, {
                     **default_vals,
                     'field_info': {
+                        'company_id': self.company_admin.id,
+                        'desc': 'False Field M2O Company Dependent',
+                        'name': 'false_field_m2o_cd',
+                        'type': 'many2one',
+                    },
+                    'new_value_char': self.partner_employee.name,
+                    'new_value_integer': self.partner_employee.id,
+                    'old_value_char': '',
+                }, {
+                    **default_vals,
+                    'field_info': {
                         'desc': 'False Field Int',
                         'name': 'false_field_int',
                         'type': 'integer',
@@ -228,10 +252,11 @@ class TestTrackingAPI(TestTrackingCommon):
                 }
             ])
             self.assertEqual([res['fieldInfo'] for res in msg._message_tracking_value_format(sorted_trackings)], [
-                {'changedField': 'False Field Char', 'currencyId': False, 'floatPrecision': None, 'fieldType': 'char', 'isPropertyField': False},
-                {'changedField': 'False Field Int', 'currencyId': False, 'floatPrecision': None, 'fieldType': 'integer', 'isPropertyField': False},
-                {'changedField': 'False Field Monetary', 'currencyId': 1, 'floatPrecision': None, 'fieldType': 'monetary', 'isPropertyField': False},
-                {'changedField': 'Customer', 'currencyId': False, 'floatPrecision': None, 'fieldType': 'many2one', 'isPropertyField': False},
+                {'changedField': 'False Field Char', 'companyId': False, 'currencyId': False, 'floatPrecision': None, 'fieldType': 'char', 'isPropertyField': False},
+                {'changedField': 'False Field Int', 'companyId': False, 'currencyId': False, 'floatPrecision': None, 'fieldType': 'integer', 'isPropertyField': False},
+                {'changedField': 'False Field M2O Company Dependent', 'companyId': self.company_admin.id, 'currencyId': False, 'floatPrecision': None, 'fieldType': 'many2one', 'isPropertyField': False},
+                {'changedField': 'False Field Monetary', 'companyId': False, 'currencyId': self.env.ref('base.USD').id, 'floatPrecision': None, 'fieldType': 'monetary', 'isPropertyField': False},
+                {'changedField': 'Customer', 'companyId': False, 'currencyId': False, 'floatPrecision': None, 'fieldType': 'many2one', 'isPropertyField': False},
             ])
 
     @users('employee')
@@ -299,7 +324,7 @@ class TestTrackingAPI(TestTrackingCommon):
         records = self.test_tracking_records.with_env(self.env)[0]
         fieldnames = records._track_get_fields()
         self.assertEqual(fieldnames, {
-            'selection_field', 'text_field', 'many2one_field_id', 'char_field', 'float_field', 'properties',
+            'selection_field', 'text_field', 'many2one_field_id', 'many2one_cd_field_id', 'char_field', 'float_field', 'properties',
             'boolean_field', 'date_field', 'integer_field', 'many2many_field', 'datetime_field', 'one2many_field',
             'float_field_with_digits', 'monetary_field', 'properties_parent_id'
         })
@@ -538,6 +563,7 @@ class TestTrackingAPI(TestTrackingCommon):
             {
                 'id': message_1.sudo().tracking_value_ids.id,
                 'fieldInfo': {
+                    'companyId': False,
                     'changedField': 'Responsible',
                     'currencyId': False,
                     'floatPrecision': None,
@@ -993,6 +1019,7 @@ class TestTrackingInternals(TestTrackingCommon):
             'html_field': '<p>Html Value</p>',
             'integer_field': 42,
             'many2one_field_id': self.test_partner.id,
+            'many2one_cd_field_id': self.test_partner.id,
             'monetary_field': 42.42,
             'selection_field': 'first',
             'text_field': 'text_value',
@@ -1010,6 +1037,7 @@ class TestTrackingInternals(TestTrackingCommon):
             ('float_field_with_digits', 'float', 0, 3.00001, {}),
             ('integer_field', 'integer', 0, 42, {}),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner, {}),
+            ('many2one_cd_field_id', 'many2one', self.env['res.partner'], self.test_partner, {'company': self.company_admin}),
             ('monetary_field', 'monetary', False, 42.42, {'currency': self.env.ref('base.USD')}),
             ('selection_field', 'selection', '', 'FIRST', {}),
             ('text_field', 'text', False, 'text_value', {}),
@@ -1021,7 +1049,7 @@ class TestTrackingInternals(TestTrackingCommon):
         )
         # check formatting for all field types
         formatted_values_all = new_message._message_tracking_value_format(new_message.sudo().tracking_value_ids)
-        for (field_name, field_type, _, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
+        for (field_name, field_type, _, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all, strict=True):
             currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
             precision = None if field_name != 'float_field_with_digits' else (10, 8)
             with self.subTest(field_name=field_name):
@@ -1219,7 +1247,7 @@ class TestTrackingInternals(TestTrackingCommon):
                 ],
             }
         )
-        self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 100,
+        self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 13,
             "Properties field should have the same sequence as their parent")
 
     @users('employee')
@@ -1353,6 +1381,7 @@ class TestTrackingInternals(TestTrackingCommon):
             'id': track_msg.tracking_value_ids.id,
             'fieldInfo': {
                 'changedField': 'Email From',
+                'companyId': False,
                 'currencyId': False,
                 'fieldType': 'char',
                 'floatPrecision': None,
@@ -1495,6 +1524,7 @@ class TestTrackingInternals(TestTrackingCommon):
                     'id': trackings[0].id,
                     'fieldInfo': {
                         'changedField': 'Secret',
+                        'companyId': False,
                         'currencyId': False,
                         'fieldType': 'char',
                         'floatPrecision': None,
@@ -1507,6 +1537,7 @@ class TestTrackingInternals(TestTrackingCommon):
                     'id': trackings[2].id,
                     'fieldInfo': {
                         'changedField': 'Old integer',
+                        'companyId': False,
                         'currencyId': False,
                         'fieldType': 'integer',
                         'floatPrecision': None,
@@ -1519,6 +1550,7 @@ class TestTrackingInternals(TestTrackingCommon):
                     'id': trackings[1].id,
                     'fieldInfo': {
                         'changedField': 'Unknown',
+                        'companyId': False,
                         'currencyId': False,
                         'fieldType': 'char',
                         'floatPrecision': None,
@@ -1678,9 +1710,10 @@ class TestTrackingInternals(TestTrackingCommon):
                     'id': tracking.id,
                     'fieldInfo': {
                         'changedField': field_info[2],
+                        'companyId': False,
+                        'currencyId': False,
                         'fieldType': field_info[1],
                         'floatPrecision': None,
-                        'currencyId': False,
                         'isPropertyField': False,
                     },
                     'newValue': values[1],
@@ -1707,9 +1740,10 @@ class TestTrackingInternals(TestTrackingCommon):
                     'id': tracking.id,
                     'fieldInfo': {
                         'changedField': field_info[2],
+                        'companyId': False,
+                        'currencyId': False,
                         'fieldType': field_info[1],
                         'isPropertyField': False,
-                        'currencyId': False,
                         'floatPrecision': None,
                     },
                     'newValue': values[1],

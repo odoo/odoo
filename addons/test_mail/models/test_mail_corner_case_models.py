@@ -172,18 +172,19 @@ class MailTestTrackAll(models.Model):
         'mail.test.track.all.m2m', string='Many2Many',
         tracking=8)
     many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
-    monetary_field = fields.Monetary('Monetary', tracking=10)
+    many2one_cd_field_id = fields.Many2one('res.partner', string='Many2one CD', tracking=10, company_dependent=True)
+    monetary_field = fields.Monetary('Monetary', tracking=11)
     one2many_field = fields.One2many(
         'mail.test.track.all.o2m', 'mail_track_all_id',
         string='One2Many',
-        tracking=11)
-    properties_parent_id = fields.Many2one('mail.test.track.all.properties.parent', tracking=True)
+        tracking=12)
+    properties_parent_id = fields.Many2one('mail.test.track.all.properties.parent', tracking=13)
     properties = fields.Properties('Properties', definition='properties_parent_id.definition_properties')
     selection_field = fields.Selection(
         string='Selection',
         selection=[('first', 'FIRST'), ('second', 'SECOND')],
-        tracking=12)
-    text_field = fields.Text('Text', tracking=13)
+        tracking=14)
+    text_field = fields.Text('Text', tracking=15)
 
     name = fields.Char('Name')
 
@@ -259,7 +260,8 @@ class MailTestTrackMixin(models.Model):
         'mail.test.track.all.m2m', string='Many2Many',
         tracking=8)
     many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
-    monetary_field = fields.Monetary('Monetary', tracking=10)
+    many2one_cd_field_id = fields.Many2one('res.partner', string='Many2one CD', tracking=10, company_dependent=True)
+    monetary_field = fields.Monetary('Monetary', tracking=11)
     selection_field = fields.Selection(
         string='Selection',
         selection=[('first', 'FIRST'), ('second', 'SECOND')],

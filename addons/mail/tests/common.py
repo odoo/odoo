@@ -1060,7 +1060,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 additional_info = {}
             # retrieve optional field info, used notably for dummy tracking or properties
             field_info = additional_info.setdefault('field_info', {})
-            if additional_info.get('currency'):
+            if additional_info.get('company') and not field_info.get('company_id'):
+                field_info['company_id'] = additional_info['company'].id
+            if additional_info.get('currency') and not field_info.get('currency_id'):
                 field_info['currency_id'] = additional_info['currency'].id
 
             # for property fields, value_type is a tuple for the embed property value
