@@ -7,12 +7,12 @@ import { contains } from "@web/../tests/web_test_helpers";
 
 test("should change the containing block with the font", async () => {
     const { el } = await setupEditor("<p>ab[cde]fg</p>");
-    await waitFor(".btn[name='font']");
-    expect(".btn[name='font']").toHaveText("Paragraph");
-    await contains(".btn[name='font']").click();
-    await waitFor(".o_font_selector_menu");
-    await contains(".o_font_selector_menu .o-dropdown-item[name=blockquote]").click();
-    expect(".btn[name='font']").toHaveText("Quote");
+    await waitFor(".btn[name='font_type']");
+    expect(".btn[name='font_type']").toHaveText("Paragraph");
+    await contains(".btn[name='font_type']").click();
+    await waitFor(".o_font_type_selector_menu");
+    await contains(".o_font_type_selector_menu .o-dropdown-item[name=blockquote]").click();
+    expect(".btn[name='font_type']").toHaveText("Quote");
     expect(getContent(el)).toBe("<blockquote>ab[cde]fg</blockquote>");
 });
 
@@ -25,6 +25,6 @@ test("should have font tool only if the block is content editable", async () => 
             `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
         );
         await expandToolbar();
-        expect(".btn[name='font']").toHaveCount(count);
+        expect(".btn[name='font_type']").toHaveCount(count);
     }
 });

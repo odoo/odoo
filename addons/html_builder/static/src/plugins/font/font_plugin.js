@@ -33,7 +33,7 @@ export class BuilderFontPlugin extends Plugin {
             "display-4-font",
             "buttons-font",
         ],
-        font_items: [
+        font_type_items: [
             ...[
                 { name: _t("Header 1 Display 2"), tagName: "h1", extraClass: "display-2" },
                 { name: _t("Header 1 Display 3"), tagName: "h1", extraClass: "display-3" },

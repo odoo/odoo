@@ -145,7 +145,7 @@ test("properly sets the level of depth for a new heading", async () => {
         focusOffset: newSubheadingEl.firstChild.length,
     });
     await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar .btn[name=font]");
+    await click(".o-we-toolbar .btn[name='font_type']");
     await animationFrame();
     await click(".o-dropdown-item[name='h4']");
     expect(":iframe .s_table_of_content_navbar a").toHaveCount(7);

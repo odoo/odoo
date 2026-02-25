@@ -27,7 +27,8 @@ declare module "plugins" {
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_providers, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared } from "@html_editor/main/font/color_ui_plugin";
-    import { before_insert_within_pre_processors, font_items } from "@html_editor/main/font/font_plugin";
+    import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
+    import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
@@ -247,7 +248,7 @@ declare module "plugins" {
         // Data
         advanced_popover_options: advanced_popover_options;
         contenteditable_to_remove_selector: contenteditable_to_remove_selector;
-        font_items: font_items,
+        font_type_items: font_type_items,
         hints: hints;
         immutable_link_selectors: immutable_link_selectors;
         link_popovers: link_popovers;

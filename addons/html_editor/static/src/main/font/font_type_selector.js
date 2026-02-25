@@ -6,8 +6,8 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
 import { useChildRef } from "@web/core/utils/hooks";
 
-export class FontSelector extends Component {
-    static template = "html_editor.FontSelector";
+export class FontTypeSelector extends Component {
+    static template = "html_editor.FontTypeSelector";
     static props = {
         ...toolbarButtonProps,
         getItems: Function,

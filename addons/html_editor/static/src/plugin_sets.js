@@ -24,7 +24,8 @@ import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
 import { ColorUIPlugin } from "./main/font/color_ui_plugin";
 import { FeffPlugin } from "./main/feff_plugin";
-import { FontPlugin } from "./main/font/font_plugin";
+import { FontSizePlugin } from "./main/font/font_size_plugin";
+import { FontTypePlugin } from "./main/font/font_type_plugin";
 import { FontFamilyPlugin } from "./main/font/font_family_plugin";
 import { TranslatePlugin } from "./main/translate/translate_plugin";
 import { HintPlugin } from "./main/hint_plugin";
@@ -124,7 +125,8 @@ export const MAIN_PLUGINS = [
     TableUIPlugin,
     TabulationPlugin,
     ToolbarPlugin,
-    FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
+    FontTypePlugin,
+    FontSizePlugin, // note: if before ListPlugin, there are a few split tests that fails
     FontFamilyPlugin,
     IconPlugin,
     IconColorPlugin,

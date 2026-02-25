@@ -388,9 +388,9 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
     expect(`button[name="italic"]`).not.toHaveAttribute("disabled");
     expect(`button[name="underline"]`).not.toHaveAttribute("disabled");
     expect(`button[name="strikethrough"]`).not.toHaveAttribute("disabled");
-    expect(`button[name="font"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_type"]`).not.toHaveAttribute("disabled");
     expect(`button[name="font_family"]`).not.toHaveAttribute("disabled");
-    expect(`button[name="font_size_selector"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_size"]`).not.toHaveAttribute("disabled");
     expect(`button[title="Apply Font Color"]`).not.toHaveAttribute("disabled");
     expect(`button[title="Apply Background Color"]`).not.toHaveAttribute("disabled");
     expect(`button[name="link"]`).not.toHaveAttribute("disabled");
@@ -400,9 +400,9 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
     await runAllTimers();
     await waitFor("button[name=remove_format]");
 
-    expect(`button[name="font"]`).toHaveAttribute("disabled");
+    expect(`button[name="font_type"]`).toHaveAttribute("disabled");
     expect(`button[name="font_family"]`).toHaveAttribute("disabled");
-    expect(`button[name="font_size_selector"]`).toHaveAttribute("disabled");
+    expect(`button[name="font_size"]`).toHaveAttribute("disabled");
     expect(`button[title="Apply Font Color"]`).toHaveAttribute("disabled");
     expect(`button[title="Apply Background Color"]`).toHaveAttribute("disabled");
     expect(`button[name="link"]`).toHaveAttribute("disabled");
