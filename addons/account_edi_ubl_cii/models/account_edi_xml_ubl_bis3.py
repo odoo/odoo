@@ -777,6 +777,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 },
             })
 
+        if commercial_partner.country_code == 'SE':
+            nodes.append({
+                'cbc:CompanyID': {'_text': "GODKÄND FÖR F-SKATT"},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': "TAX"},
+                },
+            })
+
     def _add_invoice_accounting_supplier_party_nodes(self, document_node, vals):
         # OVERRIDE
         sub_vals = {
