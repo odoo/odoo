@@ -6,6 +6,18 @@ EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
     'iot_drivers/static/src/',
     'web/static/src/owl2',
+    'addons/web/static/lib/owl/owl.js',
+)
+
+CHECKSUM_FILES = (
+    'pos_blackbox_be/static/src/pos/overrides/navbar/navbar.xml',
+    'l10n_eu_iot_scale_cert/controllers/checksum.py',
+    'l10n_eu_iot_scale_cert/static/src/app/utils/scale/certified_iot_scale.js',
+    'l10n_eu_iot_scale_cert/static/src/pos_overrides/components/scale_screen/certified_scale_screen.js',
+    'l10n_eu_iot_scale_cert/static/src/pos_overrides/components/scale_screen/certified_scale_screen.xml',
+    'l10n_eu_iot_scale_cert/receipt/pos_order_receipt.xml',
+    'l10n_eu_iot_scale_cert/static/src/pos_overrides/components/orderline/certified_orderline.xml',
+    'iot_drivers/iot_handlers/drivers/serial_scale_driver.py',
 )
 
 
@@ -25,22 +37,6 @@ class JSTooling:
         line_start = content.rfind('\n', 0, position) + 1
         line_text = content[line_start:position]
         return '//' in line_text
-
-    @staticmethod
-    def has_active_usage(content: str, word: str) -> bool:
-        """Checks if a word is used outside of a comment line.
-
-        Args:
-            content: The file content.
-            word: The word to look for (e.g., 'useEffect').
-
-        Returns:
-            True if at least one usage is not commented out.
-        """
-        for match in re.finditer(rf'\b{word}\(', content):
-            if not JSTooling.is_commented(content, match.start()):
-                return True
-        return False
 
     @staticmethod
     def add_import(content: str, name: str, source: str) -> str:
@@ -129,17 +125,71 @@ class JSTooling:
         Returns:
             The JS content with transformed XML templates.
         """
-        pattern = r'(xml\s*`)(.*?)(`)'
+        pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
 
-        def replacer(match):
+        def replacer(match: re.Match) -> str:
             prefix = match.group(1)
             xml_content = match.group(2)
             suffix = match.group(3)
             return f"{prefix}{transform_func(xml_content)}{suffix}"
 
-        return re.sub(pattern, replacer, content, flags=re.DOTALL)
+        return pattern.sub(replacer, content)
 
     @staticmethod
+    def transform_js_string_literals(content: str, transform_func: callable) -> str:
+        """Finds JS string literals ('...', "...", `...`) and applies a transformation function.
+
+        Args:
+            content: The JS file content.
+            transform_func: Function to apply to the inner string.
+
+        Returns:
+            The JS content with transformed string literals.
+        """
+        pattern = re.compile(
+            r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"|`(?:\\.|[^`\\])*`",
+            re.DOTALL,
+        )
+
+        def replacer(match: re.Match) -> str:
+            literal = match.group(0)
+            delimiter = literal[0]
+            inner = literal[1:-1]
+            return delimiter + transform_func(inner) + delimiter
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
+    def transform_arch_templates(content: str, transform_func: callable) -> str:
+        """Finds arch: `...` or arch = `...` template literals and applies a transform
+        function to the inner XML string.
+        """
+        pattern = re.compile(r"(\barch\b\s*(?:[:=])\s*`)(.*?)(`)", re.DOTALL)
+
+        def replacer(match: re.Match) -> str:
+            prefix = match.group(1)
+            xml_content = match.group(2)
+            suffix = match.group(3)
+            return f"{prefix}{transform_func(xml_content)}{suffix}"
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
+    def has_active_usage(content: str, word: str) -> bool:
+        """Checks if a word is used outside of a comment line.
+
+        Args:
+            content: The file content.
+            word: The word to look for (e.g., 'useEffect').
+
+        Returns:
+            True if at least one usage is not commented out.
+        """
+        for match in re.finditer(rf'\b{word}\(', content):
+            if not JSTooling.is_commented(content, match.start()):
+                return True
+        return False
+
     def replace_usage(content: str, old_name: str, new_name: str) -> str:
         """Replaces variable usage using word boundaries.
 
@@ -147,7 +197,6 @@ class JSTooling:
             content: The file content.
             old_name: Original variable name.
             new_name: New variable name.
-
         Returns:
             The updated content.
         """
@@ -415,6 +464,51 @@ def upgrade_tportal(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(files))
 
 
+def upgrade_t_esc(file_manager, log_info, log_error):
+    """Replaces the t-esc directive in xml templates with the t-out directive"""
+    excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
+    files = [
+        file for file in file_manager
+        if file.path.suffix in ['.xml', '.js'] and not re.search(excluded_path_pattern, file.path._str)
+    ]
+    if not files:
+        return
+
+    reg_t_esc_attr = re.compile(r"\bt-esc(?=\s*=\s*['\"])")
+    # matches: <attribute name="t-esc">  /  <attribute name="t-esc"/> /  <attribute remove="1" name="t-esc" />
+    reg_att_t_esc = re.compile(r'(<attribute\b[^>]*\bname\s*=\s*(["\']))t-esc(\2)')
+
+    def replace_t_esc(s: str) -> str:
+        s = reg_t_esc_attr.sub("t-out", s)
+        s = reg_att_t_esc.sub(r"\1t-out\3", s)
+        return s
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            content = file.path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as e:
+            # For file enterprise/l10n_cl_edi_factoring/template/aec_template.xml
+            log_error(file.path, f"Upgrade_code: skipping non-utf8 file({e})")
+            continue
+
+        if "t-esc" not in content:
+            continue
+
+        try:
+            if file.path.name.endswith(".test.js"):
+                content = JSTooling.transform_js_string_literals(content, replace_t_esc)
+            elif file.path.suffix == ".js":
+                content = JSTooling.transform_xml_literals(content, replace_t_esc)
+                content = JSTooling.transform_arch_templates(content, replace_t_esc)
+            else:  # .xml
+                content = replace_t_esc(content)
+            file.content = content
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -431,5 +525,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating reactive", upgrade_reactive)
     collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
     collector.run_sub("Migrating t-portal", upgrade_tportal)
+    collector.run_sub("Migrating t-esc", upgrade_t_esc)
 
     collector.finalize()
