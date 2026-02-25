@@ -4799,6 +4799,8 @@ class MailThread(models.AbstractModel):
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
         thread = self.browse(thread_id)
-        if thread.exists() and thread.sudo(False).has_access(mode):
+        if thread.exists() and thread.sudo(False).with_context(
+            allowed_company_ids=[]
+        ).has_access(mode):
             return thread
         return self.browse()
