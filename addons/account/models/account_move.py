@@ -7254,8 +7254,6 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if not self.is_invoice(include_receipts=True):
-            if self.origin_payment_id and 'state' in init_values:
-                self.origin_payment_id._message_track(['state'], {self.origin_payment_id.id: init_values})
             return super()._track_subtype(init_values)
 
         if 'payment_state' in init_values and self.payment_state == 'paid':
