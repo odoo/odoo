@@ -945,6 +945,10 @@ class BaseCase(case.TestCase):
 # maps a function name to a file in which it can exist for the setattr it
 # triggers to be allowed
 SETATTR_SOURCES = {
+    # opt
+    '_setup_models__': ('/odoo/orm/registry.py',),
+    # mock `_setup_models__` installed by `start_tour`
+    'setup': ('/odoo/tests/common.py',),
     # model attributes being set from a patcher are fine
     '__enter__': ('/unittest/mock.py',),
     '__exit__': ('/unittest/mock.py',),
@@ -954,7 +958,7 @@ SETATTR_SOURCES = {
     '_instanciate': ('/mail/models/ir_model.py',),
     # account manipulates _template_register
     '_template_register': ('/account/models/chart_template.py',),
-    '_setup_complete': ('/account/models/chart_template.py',),
+    '_post_model_setup__': ('/account/models/chart_template.py',),
     # ...
     'patch': ('/base_automation/models/base_automation.py',),
     # .....
@@ -1164,7 +1168,7 @@ class TransactionCase(BaseCase):
         cls.classPatch(cls.cr, 'rollback', forbidden)
         cls.classPatch(cls.cr, 'close', forbidden)
 
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
