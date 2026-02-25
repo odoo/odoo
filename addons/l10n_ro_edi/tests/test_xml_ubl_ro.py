@@ -215,3 +215,23 @@ class TestUBLRO(TestUBLROCommon):
     def test_export_constraints_new(self):
         self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
         self.test_export_constraints()
+
+    def test_export_individual_customer(self):
+        partner = self.env['res.partner'].create({
+            'country_id': self.env.ref('base.ro').id,
+            'state_id': self.env.ref('base.RO_B').id,
+            'name': 'Bram Stocker',
+            'city': 'SECTOR4',
+            'zip': '020202',
+            'phone': '+40 012 345 678',
+            'street': "Rolling Roast, 88",
+            'ref': 'ref_individual_a',
+            'invoice_edi_format': 'ciusro',
+        })
+        invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id, partner_id=partner.id)
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_individual.xml')
+
+    def test_export_individual_customer_new(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
+        self.test_export_individual_customer()

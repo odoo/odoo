@@ -219,7 +219,8 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             vals['party_node']['cac:PartyTaxScheme'] = [{
                 'cbc:CompanyID': {'_text': DEFAULT_VAT},
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT' if commercial_partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'},
+                    'cbc:ID': {'_text': 'VAT' if (commercial_partner.company_registry
+                        and commercial_partner.company_registry[:2].isalpha()) else 'NOT_EU_VAT'},
                 },
             }]
 
