@@ -120,6 +120,7 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
+        self._cr.cache.clear()  # The cache could be lying now
         self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
 
     def _close(self, rollback: bool):
