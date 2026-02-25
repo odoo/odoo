@@ -358,7 +358,7 @@ registry.category("web_tour.tours").add("PosOrdersListDifferentCurrency", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickControlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation / Order"),
             {
                 content: "Check that no orders are displayed",
                 trigger: '.o_nocontent_help p:contains("No record found")',

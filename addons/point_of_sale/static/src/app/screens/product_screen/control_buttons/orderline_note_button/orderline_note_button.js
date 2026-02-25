@@ -15,6 +15,7 @@ export class NoteButton extends Component {
 
     setup() {
         this.pos = usePos();
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
     }
 

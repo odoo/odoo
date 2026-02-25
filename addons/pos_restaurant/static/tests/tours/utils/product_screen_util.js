@@ -26,7 +26,7 @@ export function guestNumberIs(num) {
         ...ProductScreen.clickControlButtonMore(),
         {
             content: `guest number is ${num}`,
-            trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
+            trigger: ProductScreen.controlButtonTrigger("Guest") + `:contains(${num})`,
         },
     ];
 }

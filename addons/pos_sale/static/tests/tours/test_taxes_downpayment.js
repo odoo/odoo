@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 function addDownPayment(percentage, soNth, downPaymentType) {
     const downPaymentTypeLabel = downPaymentType === "percent" ? "percentage" : "fixed amount";
     return [
-        ProductScreen.clickControlButton("Quotation/Order"),
+        ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: "Select the first SO",
             trigger: `.o_sale_order .o_data_row:nth-child(${soNth}) .o_data_cell:nth-child(1)`,

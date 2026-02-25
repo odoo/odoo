@@ -4,7 +4,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 export function selectNthOrder(n) {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: `select nth order`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
@@ -15,7 +15,7 @@ export function selectNthOrder(n) {
 
 export function settleSaleOrderByPrice(price) {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: `select sale order with price ${price}`,
             trigger: `.modal:not(.o_inactive_modal) table.o_list_table tbody tr.o_data_row td:contains('${price}')`,
@@ -75,7 +75,7 @@ export function downPaymentFirstOrder(amount) {
 
 export function checkOrdersListEmpty() {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: "Check that the orders list is empty",
             trigger: "p:contains(No record found)",
@@ -94,7 +94,7 @@ export function selectedOrderLinesHasLots(productName, lots) {
 
 export function checkOrdersListNotEmpty() {
     return [
-        ...ProductScreen.clickControlButton("Quotation/Order"),
+        ...ProductScreen.clickControlButton("Quotation / Order"),
         {
             content: "Check that the orders list is not empty",
             trigger: ".o_data_row",
