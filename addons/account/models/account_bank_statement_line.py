@@ -409,7 +409,7 @@ class AccountBankStatementLine(models.Model):
                 )
             to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
-                st_line.move_id.write(to_write)
+                st_line.move_id.with_context(clear_sequence_mixin_cache=False).write(to_write)
         self.env['account.move.line'].create(to_create_lines_vals)
         self.env.add_to_compute(self.env['account.move']._fields['name'], st_lines.move_id)
 
