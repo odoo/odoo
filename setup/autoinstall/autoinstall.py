@@ -11,9 +11,32 @@ if os.geteuid() == 0:
 
 user_name = getpass.getuser()
 
-# TODO write config file for srcdir
 
+# define where a potential config file is located 
+if os.getenv('ODOO_DEV_TOOLS_CONFIG_FILE'):
+    config_file = Path(os.getenv('ODOO_DEV_TOOLS_CONFIG_FILE'))
+else:
+    config_file = Path.home() / '.config/odoo/dev.toml'
+
+config_source_dir = False
 base_dir = Path.home() / 'src' / 'master'
+
+if config_file.exists():  # toml is not in python standard lib, we want to avoid adding dependencies just for config parsing, so we will do a very simple parsing, only supporting key = value and ignoring comments and sections
+    with open(config_file) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                if key.strip() == 'multiverse':
+                    multiverse = value.strip().lower() == 'true'
+                if key.strip() == 'source_directory':
+                    config_source_dir = True
+                    base_dir = Path(value.strip().strip('"'))
+        if multiverse and config_source_dir:
+            base_dir = base_dir / 'master'
+if config_source_dir:
+    print(f"Using {base_dir} as source directory from config file {config_file}")
+
 # note, repositories are automaticaly set in a master directory to allow an easy setup of multiverse later
 
 parser = argparse.ArgumentParser()
@@ -42,9 +65,11 @@ features_group.add_argument("--opt", "-o", help="Install additional optional dep
 features_group.add_argument("--docker", help="Install docker and build a ready to used docker image. Implies --odoo-repo if odoo sources are missing", action=strore_true_no_default)
 
 individual_features = parser.add_argument_group('Individual feature selection')
+individual_features.add_argument("--create-config", help="Clone odoo git repository. Will install git if missing. (enabled by default)", action=strore_true_no_default)
 individual_features.add_argument("--odoo-repo", help="Clone odoo git repository. Will install git if missing. (enabled by default)", action=strore_true_no_default)
-individual_features.add_argument("--private-repo", "-e", help="Clone enterprise and upgrade git repository. Will install git if missing. (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--private-repo", "-e", help="Clone enterprise and upgrade git repository. Will install git if missing. Not enabled with -a", action=strore_true_no_default)
 individual_features.add_argument("--postgres", help="Install postgres (enabled by default)", action=strore_true_no_default)
+individual_features.add_argument("--postgres-template", help="Configure postgresql template", action=strore_true_no_default)
 individual_features.add_argument("--minimal-packages", help="Install packages needed to run odoo core (enabled by default)", action=strore_true_no_default)
 individual_features.add_argument("--default-packages", help="Install default packages needed by some community modules (enabled by default) (implies base-packages)", action=strore_true_no_default)
 individual_features.add_argument("--dev-packages", help="Install dev packages (enabled by dev)", action=strore_true_no_default)
@@ -56,14 +81,15 @@ individual_features.add_argument("--opt-packages", help="Install optional packag
 individual_features.add_argument("--rtlcss", help="Install rtlcss (enabled by opt)", action=strore_true_no_default)
 
 configuration = parser.add_argument_group('Configuration')
-configuration.add_argument("--src-dir", help=f"Place where source should be clone, default to {base_dir}", default=base_dir)
+if not config_source_dir:
+    configuration.add_argument("--src-dir", help=f"Place where source should be clone, default to {base_dir}", default=base_dir)
 configuration.add_argument("--git-use-http", help=f"Use HTTP instead of SSH for git operations", action='store_true')
 configuration.add_argument("--branch", help="Branch to checkout after clone")
 
 
 args = parser.parse_args()
-
-base_dir = Path(args.src_dir)
+if not config_source_dir:
+    base_dir = Path(args.src_dir)
 odoo_dir = base_dir / 'odoo'
 
 if not args.disable_default_set:
@@ -85,8 +111,10 @@ if args.opt:
     args.opt_packages = True
     args.pdf = True
     args.rtlcss = True
+    args.postgres_template = True
 
 if args.default:
+    args.create_config = True
     args.odoo_repo = True
     args.postgres = True
     args.minimal_packages = True
@@ -159,11 +187,25 @@ def main():
     has_rtl_css = subprocess.run('rtlcss --version > /dev/null 2>&1', shell=True).returncode != 0
     odoo_dir_exists = odoo_dir.is_dir()
 
-    print('Testing github connection')
-    p = subprocess.run('ssh -T git@github.com', shell=True, encoding='utf-8', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    can_connect_git = "You've successfully authenticated" in p.stdout
-    if not args.git_use_http and not can_connect_git:
-        print("💥 Can't connect to github with SSH, this script won't be able to clone repositories, you may consider adding an ssh key linked to your github account. Alternatively, you can use --git-use-http (not adviced for development or to access private repositories)")
+    if args.odoo_repo or args.dev_remote or args.dev_repos or args.private_repo:
+        print('Testing github connection')
+        p = subprocess.run('ssh -T git@github.com', shell=True, encoding='utf-8', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        can_connect_git = "You've successfully authenticated" in p.stdout
+        if not args.git_use_http and not can_connect_git:
+            print("💥 Can't connect to github with SSH, this script won't be able to clone repositories, you may consider adding an ssh key linked to your github account. Alternatively, you can use --git-use-http (not adviced for development or to access private repositories)")
+
+    if not config_file.exists():
+        if base_dir.name == 'master':
+            source_dir = base_dir.parent
+            multiverse = 'true'
+        else:
+            source_dir = base_dir
+            multiverse = 'false'
+        Operation(
+            args.create_config,
+            f"Create config file at {config_file} with default values",
+            f"""mkdir -p {config_file.parent} && echo 'source_directory = "{source_dir}"\nmultiverse = {multiverse}' > {config_file}""",
+        )
 
     if not base_dir.is_dir():
         Operation(
@@ -248,7 +290,6 @@ def main():
     else:
         print('An install of postgres was detected')
 
-
     check_user_exist = '(psql postgres -c "\\l" > /dev/null 2>&1)'
     if subprocess.run(check_user_exist, shell=True).returncode != 0:
         Operation(
@@ -256,6 +297,15 @@ def main():
             "Create the potgresql user",
             f'(sudo -u postgres createuser -d -R -S {user_name} && createdb {user_name})',
         )
+
+    Operation(
+        args.postgres_template,
+        "Configure postgresql template",
+        "CREATE DATABASE template1 WITH TEMPLATE = template0 LC_COLLATE = 'C' LC_CTYPE = 'C';"
+        "UPDATE pg_database SET datistemplate = true WHERE datname = 'template1';"
+        "GRANT CONNECT ON DATABASE template1 TO PUBLIC;"
+
+    )
 
     # TODO create template with extensions for AI modules and stuff and add it to config
 
@@ -441,9 +491,9 @@ default_packages = ' '.join([  # noqa: FLY002
     'python3-renderpm python3-stdnum python3-tz python3-vobject python3-werkzeug python3-xlsxwriter',
     'python3-xlrd',
 ])
-dev_packages = 'pylint python3-ipython python3-pudb'
+dev_packages = 'pylint python3-ipython python3-pudb python3-toml'
 # flake8 python3-dev python3-mock
-dev_pip_packages = 'ruff==0.4.7'
+dev_pip_packages = 'ruff'
 
 opt_packages = ' '.join([  # noqa: FLY002
     'python3-gevent',  # multiworker
