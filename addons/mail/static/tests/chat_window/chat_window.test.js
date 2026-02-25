@@ -5,6 +5,7 @@ import {
     contains,
     defineMailModels,
     focus,
+    hover,
     inputFiles,
     insertText,
     isInViewportOf,
@@ -881,13 +882,13 @@ test("Notification settings rendering in chatwindow", async () => {
     await contains("button:has(:text('Nothing'))");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:has(:text('Mute Conversation'))");
-    await click("button:has(:text('Mute Conversation'))");
-    await contains("button:text('For 15 minutes')");
-    await contains("button:text('For 1 hour')");
-    await contains("button:text('For 3 hours')");
-    await contains("button:text('For 8 hours')");
-    await contains("button:text('For 24 hours')");
-    await contains("button:text('Until I turn it back on')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await contains(".o-dropdown-item:text('For 15 minutes')");
+    await contains(".o-dropdown-item:text('For 1 hour')");
+    await contains(".o-dropdown-item:text('For 3 hours')");
+    await contains(".o-dropdown-item:text('For 8 hours')");
+    await contains(".o-dropdown-item:text('For 24 hours')");
+    await contains(".o-dropdown-item:text('Until I turn it back on')");
 });
 
 test("open channel in chat window from push notification", async () => {

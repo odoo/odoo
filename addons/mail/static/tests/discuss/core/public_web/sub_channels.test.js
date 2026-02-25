@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcAfter,
     openDiscuss,
@@ -271,8 +272,8 @@ test("sub-thread is visually muted when mute is active", async () => {
     await contains(".opacity-50.o-mail-DiscussSidebar-item:contains('New Thread')", { count: 0 });
     await click(".o-mail-DiscussSidebar-item:contains('New Thread')");
     await click("button[title='Notification Settings']");
-    await click("button:contains('Mute Conversation')");
-    await click("button:contains('Until I turn it back on')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:contains('Until I turn it back on')");
     await contains(".opacity-50.o-mail-DiscussSidebar-item:contains('New Thread')");
 });
 
@@ -295,8 +296,8 @@ test("muted channel hides sub-thread unless channel is selected or thread has un
     await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebar-item:contains('General')");
     await click("button[title='Notification Settings']");
-    await click("button:contains('Mute Conversation')");
-    await click("button:contains('Until I turn it back on')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:contains('Until I turn it back on')");
     await click(".o-mail-DiscussSidebar-item:contains('Other')");
     await contains(".o-mail-DiscussSidebar-item:contains('New Thread')", { count: 0 });
     await click(".o-mail-DiscussSidebar-item:contains('General')");

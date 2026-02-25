@@ -2410,13 +2410,13 @@ test("Notification settings: basic rendering", async () => {
     await contains("button:text('Nothing')");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:text('Mute Conversation')");
-    await click("button:text('Mute Conversation')");
-    await contains("button:text('For 15 minutes')");
-    await contains("button:text('For 1 hour')");
-    await contains("button:text('For 3 hours')");
-    await contains("button:text('For 8 hours')");
-    await contains("button:text('For 24 hours')");
-    await contains("button:text('Until I turn it back on')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await contains(".o-dropdown-item:text('For 15 minutes')");
+    await contains(".o-dropdown-item:text('For 1 hour')");
+    await contains(".o-dropdown-item:text('For 3 hours')");
+    await contains(".o-dropdown-item:text('For 8 hours')");
+    await contains(".o-dropdown-item:text('For 24 hours')");
+    await contains(".o-dropdown-item:text('Until I turn it back on')");
 });
 
 test("Notification settings: mute conversation will change the style of sidebar", async () => {
@@ -2434,8 +2434,8 @@ test("Notification settings: mute conversation will change the style of sidebar"
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:text('Mute Conversation')");
-    await click("button:text('Mute Conversation')");
-    await click("button:text('For 15 minutes')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 15 minutes')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario Party')");
     await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']:text('Mario Party')");
 });
@@ -2455,15 +2455,15 @@ test("Notification settings: change the mute duration of the conversation", asyn
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:text('Mute Conversation')");
-    await click("button:text('Mute Conversation')");
-    await click("button:text('For 15 minutes')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 15 minutes')");
     await click("[title='Notification Settings']");
     await click(".o-discuss-NotificationSettings span:text('Unmute Conversation')");
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:text('Mute Conversation')");
-    await click("button:text('Mute Conversation')");
-    await click("button:text('For 1 hour')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 1 hour')");
 });
 
 test("Notification settings: mute/unmute conversation works correctly", async () => {
@@ -2478,8 +2478,8 @@ test("Notification settings: mute/unmute conversation works correctly", async ()
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button:text('Mute Conversation')");
-    await click("button:text('Mute Conversation')");
-    await click("button:text('For 15 minutes')");
+    await hover("button:has(:text('Mute Conversation'))");
+    await click(".o-dropdown-item:text('For 15 minutes')");
     await click("[title='Notification Settings']");
     await contains("button:has(:text('Unmute Conversation'))");
     await click("button:has(:text('Unmute Conversation'))");
