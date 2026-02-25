@@ -637,6 +637,9 @@ class PosConfig(models.Model):
                 if key in vals.keys():
                     if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
                         continue
+                    # Allow activating a pos config even if it has an open session, but don't allow deactivating it.
+                    if key == 'active' and vals['active']:
+                        continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
 
