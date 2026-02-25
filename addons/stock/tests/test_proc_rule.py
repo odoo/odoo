@@ -604,6 +604,11 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.qty_forecast, 10.0)
         orderpoint.action_replenish(force_to_max=True)
         self.assertEqual(orderpoint.qty_forecast, 200.0)
+        # Test that changing the replenishment UoM does not cause issues when replenishing to max
+        orderpoint.replenishment_uom_id = self.env.ref('uom.product_uom_dozen')
+        orderpoint.product_max_qty = 240
+        orderpoint.action_replenish(force_to_max=True)
+        self.assertEqual(orderpoint.qty_forecast, 248.0, "qty to order should be 4 dozens converted to the product UoM (48) and added to the current forecasted quantity")
 
     def test_orderpoint_location_archive(self):
         warehouse = self.env['stock.warehouse'].create({
