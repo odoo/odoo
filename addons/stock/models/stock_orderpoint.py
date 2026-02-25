@@ -266,7 +266,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_to_order = orderpoint.product_max_qty - orderpoint.qty_forecast
                 remainder = orderpoint.replenishment_uom_id and orderpoint.qty_to_order % orderpoint.replenishment_uom_id.factor or 0.0
                 if not orderpoint.product_uom.is_zero(remainder):
-                    orderpoint.qty_to_order += orderpoint.replenishment_uom_id - remainder
+                    orderpoint.qty_to_order -= remainder
         try:
             self._procure_orderpoint_confirm(company_id=self.env.company)
         except UserError as e:
