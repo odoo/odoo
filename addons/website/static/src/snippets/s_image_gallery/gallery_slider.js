@@ -23,6 +23,7 @@ export class GallerySlider extends Interaction {
     };
 
     setup() {
+        this.liEls = [];
         this.hideOnClickIndicator = true;
         this.carouselEl = this.el.classList.contains("carousel")
             ? this.el
