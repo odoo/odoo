@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
         groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
-    show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
+    show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False, compute_sudo=True)
 
 
     def _compute_timesheet_count(self):
