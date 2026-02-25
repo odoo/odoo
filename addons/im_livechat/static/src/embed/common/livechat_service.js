@@ -116,9 +116,17 @@ export class LivechatService {
             {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
+<<<<<<< 26d4bfbf9451581502189f440dcf1d09d7e7e7c2
                 chatbot_script_id:
                     originThread?.chatbot?.script.id ??
                     this.store.livechat_rule?.chatbot_script_id?.id,
+||||||| 78834c197f7735762c627ddfb4b87a415daa47d0
+                chatbot_script_id: this.savedState
+                    ? this.thread.chatbot?.script.id
+                    : this.rule.chatbotScript?.id,
+=======
+                chatbot_script_id: this.thread?.chatbot?.script.id ?? this.rule.chatbotScript?.id,
+>>>>>>> 37e9c85d8bf3c6eb34de888fa4b90a2c34198744
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 persisted: persist,
             },
