@@ -34,6 +34,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         return cls.env['res.partner'].create({
             **cls._create_partner_default_values(),
             'name': 'partner_be',
+            'ref': False,
             'street': "Rue des Bourlottes 9",
             'zip': "1367",
             'city': "Ramillies",
