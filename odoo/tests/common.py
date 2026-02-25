@@ -837,7 +837,7 @@ SETATTR_SOURCES = {
     '_instanciate': ('/mail/models/ir_model.py',),
     # account manipulates _template_register
     '_template_register': ('/account/models/chart_template.py',),
-    '_setup_complete': ('/account/models/chart_template.py',),
+    '_post_model_setup__': ('/account/models/chart_template.py',),
     # ...
     'patch': ('/base_automation/models/base_automation.py',),
     # .....
