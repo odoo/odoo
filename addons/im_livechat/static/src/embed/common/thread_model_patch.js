@@ -57,7 +57,9 @@ patch(Thread.prototype, {
         this.livechat_active = false;
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && this.isLoaded && this.livechat_active;
+                return (
+                    this.chatbot && !this.chatbot.completed && this.isLoaded && this.livechat_active
+                );
             },
             onUpdate() {
                 if (this._toggleChatbot) {
