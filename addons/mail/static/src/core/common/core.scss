@@ -90,6 +90,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
         }
     }
 
+    &:not(.o-simulateDarkTheme) {
+        background-color: var(--discuss-dropdownMenuBg, $o-view-background-color);
+    }
+
     .o_bottom_sheet_sheet:has(&) {
         background-color: $gray-100;
         box-shadow: unset !important;
