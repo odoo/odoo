@@ -279,7 +279,7 @@ test("sendDraftOrderToServer", async () => {
 });
 
 test("sendDraftOrderToServer updateLastOrderChange", async () => {
-    const store = await setupSelfPosEnv();
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
     const order = await getFilledSelfOrder(store);
 
     const product1 = store.models["product.template"].get(8);

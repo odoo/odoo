@@ -606,7 +606,7 @@ export class SelfOrder extends Reactive {
     }
 
     shouldUpdateLastOrderChange() {
-        return true;
+        return this.config.self_ordering_mode !== "kiosk";
     }
 
     async sendDraftOrderToServer() {

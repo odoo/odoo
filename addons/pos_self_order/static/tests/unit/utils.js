@@ -115,3 +115,37 @@ export const addComboProduct = async (store) => {
     await store.addToCart(productCombo, 2, "", {}, {}, comboValues);
     return store.currentOrder.lines.find((ol) => ol.combo_line_ids.length); // Parent Combo line
 };
+
+export async function checkKioskPreparationTicketData(store, expectedData) {
+    const categoryIds = store.config.preparationCategories;
+    const generator = store.ticketPrinter.getGenerator({
+        models: store.models,
+        order: store.currentOrder,
+    });
+    const changes = generator.generatePreparationData(categoryIds, {});
+    if (!changes.length) {
+        return "No preparation data generated";
+    }
+    const printedLines = changes[0].changes?.data || [];
+    if (printedLines.length !== expectedData.length) {
+        return `Mismatch in number of lines. Expected ${expectedData.length}, got ${printedLines.length}`;
+    }
+    for (const expected of expectedData) {
+        const found = printedLines.find((line) => line.name === expected.name);
+        if (!found) {
+            return `Product ${expected.name} not found in preparation data`;
+        }
+        if (String(found.qty) !== String(expected.qty)) {
+            return `Qty mismatch for ${expected.name}: expected ${expected.qty}, got ${found.qty}`;
+        }
+        if (expected.attributes) {
+            for (const attr of expected.attributes) {
+                const foundAttr = found.attributes?.find((a) => a.includes(attr));
+                if (!foundAttr) {
+                    return `Attribute ${attr} not found for ${expected.name}`;
+                }
+            }
+        }
+    }
+    return true;
+}
