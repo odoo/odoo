@@ -1,16 +1,14 @@
-import { Component } from "@odoo/owl";
-
-import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationAlertDialog } from "@web/core/notification_alert_dialog/notification_alert_dialog";
 import { useService } from "@web/core/utils/hooks";
 
-export class CallPermissionDeniedDialog extends Component {
-    static template = "discuss.CallPermissionDeniedDialog";
-    static components = { Dialog };
-    static props = {
-        close: Function,
-        permissionType: { type: String, optional: true },
+export class CallPermissionDeniedDialog extends NotificationAlertDialog {
+    static defaultProps = {
+        ...NotificationAlertDialog.defaultProps,
+        animateMouse: false,
     };
+    static props = [...NotificationAlertDialog.props, "permissionType?"];
+    static template = "discuss.CallPermissionDeniedDialog";
 
     setup() {
         this.ui = useService("ui");

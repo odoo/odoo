@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PermissionPromptDialog">
+        <Dialog title="this.props.title or ''" size="this.props.size or 'md'" contentClass="this.props.contentClass">
+            <t t-if="this.props.illustrationPosition === 'left'">
+                <div class="d-flex align-items-center justify-content-between gap-4" t-att-class="this.ui.isSmall ? 'flex-column': 'flex-row pb-2'">
+                    <div t-att-class="this.ui.isSmall ? 'w-100': 'w-50'">
+                        <t t-slot="illustration"/>
+                    </div>
+                    <div t-if="this.props.slots.instructions" class="d-flex flex-column gap-3">
+                        <t t-slot="instructions"/>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="this.props.illustrationPosition === 'right'">
+                <div class="d-flex flex-fill align-items-center gap-3" t-att-class="this.ui.isSmall ? 'flex-column-reverse' : ''">
+                    <div t-if="this.props.slots.instructions">
+                        <t t-slot="instructions"/>
+                    </div>
+                    <t t-slot="illustration"/>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="d-flex flex-column align-items-center gap-4">
+                    <div class="w-75">
+                        <t t-slot="illustration"/>
+                    </div>
+                    <t t-if="this.props.slots.instructions">
+                        <t t-slot="instructions"/>
+                    </t>
+                </div>
+            </t>
+            <t t-if="this.props.slots.footer" t-set-slot="footer">
+                <t t-slot="footer"/>
+            </t>
+        </Dialog>
+    </t>
+</templates>

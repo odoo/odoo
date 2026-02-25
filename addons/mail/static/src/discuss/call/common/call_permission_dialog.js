@@ -1,11 +1,10 @@
 import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-
 import { _t } from "@web/core/l10n/translation";
+import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {
-    static components = { Dialog };
+    static components = { PermissionPromptDialog };
     static props = {
         close: Function,
         media: {

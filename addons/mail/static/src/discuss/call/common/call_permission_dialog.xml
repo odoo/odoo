@@ -2,19 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallPermissionDialog">
-        <Dialog title="''" size="'md'">
-            <div class="d-flex flex-fill align-items-center gap-3" t-att-class="{ 'flex-column-reverse': this.ui.isSmall }">
-                <div>
-                    <h2 t-out="this.permissionPrompt"/>
-                    <p class="text-muted" t-out="this.permissionNote"/>
-                </div>
+        <PermissionPromptDialog title="''" close="this.props.close" illustrationPosition="'right'">
+            <t t-set-slot="illustration">
                 <t t-call="discuss.CallPermissionDialogImg"/>
-            </div>
+            </t>
+            <t t-set-slot="instructions">
+                <h2 t-out="this.permissionPrompt"/>
+                <p class="text-muted" t-out="this.permissionNote"/>
+            </t>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.primaryActionText"/>
                 <button class="btn btn-secondary" t-if="this.props.suggestAllMedias and this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
             </t>
-        </Dialog>
+        </PermissionPromptDialog>
     </t>
 
     <t t-name="discuss.CallPermissionDialogImg">
