@@ -23,13 +23,13 @@ def patch_api(func):
 
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncGoogle(HttpCase):
-
-    def setUp(self):
-        super().setUp()
-        self.google_service = GoogleCalendarService(self.env['google.service'])
-        self.env.user.sudo().unpause_google_synchronization()
-        self.organizer_user = mail_new_test_user(self.env, login="organizer_user")
-        self.attendee_user = mail_new_test_user(self.env, login='attendee_user')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.google_service = GoogleCalendarService(cls.env['google.service'])
+        cls.env.user.sudo().unpause_google_synchronization()
+        cls.organizer_user = mail_new_test_user(cls.env, login="organizer_user")
+        cls.attendee_user = mail_new_test_user(cls.env, login='attendee_user')
 
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):
