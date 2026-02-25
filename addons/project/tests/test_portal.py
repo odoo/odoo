@@ -91,6 +91,7 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.authenticate(project_manager.login, project_manager.login)
         self.project_1 = self.env['project.project'].create({'name': 'Portal Search Project 1'})
         self.project_2 = self.env['project.project'].create({'name': 'Portal Search Project 2'})
+        self.project_3 = self.env['project.project'].create({'name': 'Portal Search Project 3'})
         self.task_1 = self.env['project.task'].create({
             'name': 'Test Task Name Match',
             'project_id': self.project_1.id,
@@ -103,10 +104,17 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
             'user_ids': project_manager,
         })
 
+        self.task_3 = self.env['project.task'].create({
+            'name': 'Project Not For Manager',
+            'project_id': self.project_3.id,
+            'user_ids': self.user_projectuser
+        })
+
         url = '/my/tasks'
         response = self.url_open(url)
         self.assertIn(self.task_1.name, response.text)
         self.assertIn(self.task_2.name, response.text)
+        self.assertIn(self.task_3.name, response.text)
 
         url = '/my/tasks?search_in=name&search=Test+Task+Name+Match'
         response = self.url_open(url)
@@ -116,4 +124,10 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         url = '/my/tasks?search_in=project_id&search=%s' % (self.project_1.name)
         response = self.url_open(url)
         self.assertIn(self.task_1.name, response.text)
+        self.assertNotIn(self.task_2.name, response.text)
+
+        url = '/my/tasks?search_in=user_ids&search=%s' % (self.user_projectuser.name)
+        response = self.url_open(url)
+        self.assertIn(self.task_3.name, response.text)
+        self.assertNotIn(self.task_1.name, response.text)
         self.assertNotIn(self.task_2.name, response.text)
