@@ -118,8 +118,9 @@ export class AddPageTemplatePreview extends Component {
             const iframeEl = this.iframeRef.el;
             // Firefox replaces the built content with about:blank.
             const isFirefox = isBrowserFirefox();
-            if (isFirefox) {
-                // Make sure empty preview iframe is loaded.
+            if (isFirefox && !(iframeEl?.contentDocument.readyState === "complete")) {
+                // Make sure empty preview iframe is loaded. This was necessary
+                // in Firefox < 148 as it created and parsed a new document.
                 // This event is never triggered on Chrome.
                 await new Promise(resolve => {
                     iframeEl.contentDocument.body.onload = resolve;
