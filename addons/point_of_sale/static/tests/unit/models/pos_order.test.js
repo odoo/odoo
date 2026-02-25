@@ -81,8 +81,15 @@ test("addPaymentline", async () => {
     const cashPaymentMethod = store.models["pos.payment.method"].get(1);
     // Test that the payment line is correctly created
     const result = order.addPaymentline(cashPaymentMethod);
-    expect(result.data.payment_method_id.id).toBe(cashPaymentMethod.id);
-    expect(result.data.amount).toBe(17.85);
+    const cashPaymentLine = result.data;
+    expect(cashPaymentLine.payment_method_id.id).toBe(cashPaymentMethod.id);
+    expect(cashPaymentLine.amount).toBe(17.85);
+    // Update the cash payment line amount to 10 to confirm that the second created cash payment
+    // line will take the remaining amount to pay (7.85)
+    cashPaymentLine.setAmount(10);
+    const result2 = order.addPaymentline(cashPaymentMethod);
+    expect(result2.data.payment_method_id.id).toBe(cashPaymentMethod.id);
+    expect(result2.data.amount).toBe(7.85);
 });
 
 test("getTotalDiscount", async () => {
