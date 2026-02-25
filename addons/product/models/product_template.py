@@ -743,6 +743,17 @@ class ProductTemplate(models.Model):
                 product_template.combo_ids = False
         return res
 
+    def action_archive(self):
+        combo_items = self.env['product.combo.item'].search([('product_id', 'in', self.product_variant_ids.ids)])
+        if combo_items:
+            combo_names = ', '.join(combo_items.combo_id.mapped('name'))
+            raise UserError(_(
+                "You cannot archive a product that is part of a combo. "
+                "Please remove it from the following combos first: %s",
+                combo_names,
+            ))
+        return super().action_archive()
+
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)

@@ -2818,8 +2818,8 @@ export class PosStore extends WithLazyGetterTrap {
         const combos = this.models["product.combo"].getAll();
         const comboItems = combos.flatMap((combo) => combo.combo_item_ids);
         const totalQtyAvailable = comboItems.reduce((acc, item) => {
-            const productId = item.product_id.id;
-            if (productInOrder[productId]) {
+            const productId = item.product_id?.id;
+            if (productId && productInOrder[productId]) {
                 acc[item.combo_id.id] =
                     (acc[item.combo_id.id] || 0) + productInOrder[productId].totalQty;
             }

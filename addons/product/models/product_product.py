@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_compare, groupby, OrderedSet
 from odoo.tools.image import is_image_size_above
@@ -784,6 +784,14 @@ class ProductProduct(models.Model):
 
     def action_archive(self):
         records = self.filtered('active')
+        combo_items = self.env['product.combo.item'].search([('product_id', 'in', records.ids)])
+        if combo_items:
+            combo_names = ', '.join(combo_items.combo_id.mapped('name'))
+            raise UserError(_(
+                "You cannot archive a product that is part of a combo. "
+                "Please remove it from the following combos first: %s",
+                combo_names,
+            ))
         super().action_archive()
         # We deactivate product templates which are active with no active variants.
         records.product_tmpl_id.filtered(
