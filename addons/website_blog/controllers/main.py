@@ -81,7 +81,7 @@ class WebsiteBlog(http.Controller):
 
         if date_begin and date_end:
             domain &= Domain("published_date", ">=", date_begin) & Domain("published_date", "<=", date_end)
-        active_tag_ids = tags and [request.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
+        active_tag_ids = tags and [tag_id for tag_id in [request.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] if tag_id] or []
         active_tags = BlogTag
         if active_tag_ids:
             active_tags = BlogTag.browse(active_tag_ids).exists()

@@ -226,3 +226,17 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         self.url_open('/website/field/translation/update', data=json.dumps(payload), headers=self.headers)
         self.assertEqual('Todos os blogs', blog_post.with_context(lang=br_lang.code).content)
         self.assertEqual('Updated blogs', blog_post.with_context(lang=en_lang.code).content)
+
+    def test_url_with_falsy_value(self):
+        """Test that accessing a tag without id in the url does not crash."""
+        blog = self.env['blog.blog'].create({'name': 'Test Blog'})
+        blog_tag = self.env['blog.tag'].create({'name': 'demo'})
+        self.env['blog.post'].create({
+            'name': 'Test Blog Post',
+            'blog_id': blog.id,
+            'tag_ids': [(6, 0, [blog_tag.id])],
+            'author_id': self.env.user.id,
+            'is_published': True,
+        })
+        response = self.url_open('/blog/tag/demo')
+        self.assertEqual(response.status_code, 200)
