@@ -14,6 +14,8 @@ from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import HttpCase
 
+from odoo.tools import mute_logger
+
 
 def patch_api(func):
     def patched(self, *args, **kwargs):
@@ -30,6 +32,10 @@ class TestSyncGoogle(HttpCase):
         cls.env.user.sudo().unpause_google_synchronization()
         cls.organizer_user = mail_new_test_user(cls.env, login="organizer_user")
         cls.attendee_user = mail_new_test_user(cls.env, login='attendee_user')
+
+        m = mute_logger('odoo.addons.auth_signup.models.res_users')
+        mute_logger.__enter__(m)  # noqa: PLC2801
+        cls.addClassCleanup(mute_logger.__exit__, m, None, None, None)
 
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):
