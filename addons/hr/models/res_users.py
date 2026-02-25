@@ -299,7 +299,7 @@ class ResUsers(models.Model):
         self.ensure_one()
         if self.env.company not in self.company_ids:
             raise AccessError(_("You are not allowed to create an employee because the user does not have access rights for %s", self.env.company.name))
-        self.env['hr.employee'].create(dict(
+        return self.env['hr.employee'].create(dict(
             name=self.name,
             company_id=self.env.company.id,
             **self.env['hr.employee']._sync_user(self)
