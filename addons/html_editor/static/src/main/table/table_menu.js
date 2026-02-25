@@ -140,8 +140,10 @@ export class TableMenu extends Component {
         const containerRect = container.getBoundingClientRect();
         const top = frameRect.top + targetRect.top - containerRect.top;
         const left = frameRect.left + targetRect.left - containerRect.left;
+        this.overlayEl.classList.remove("h-100", "w-100");
         if (type === "column") {
             Object.assign(this.overlayEl.style, {
+                position: "absolute",
                 top: `${top - this.overlayEl.offsetHeight}px`,
                 left: `${left}px`,
                 width: `${targetRect.width}px`,
@@ -152,6 +154,7 @@ export class TableMenu extends Component {
                 ? left
                 : containerRect.right - (frameRect.left + targetRect.right);
             Object.assign(this.overlayEl.style, {
+                position: "absolute",
                 top: `${top}px`,
                 insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
                 height: `${targetRect.height}px`,
