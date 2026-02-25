@@ -196,12 +196,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 if not update_module:
                     cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading'))")
                     if db.is_initialized(cr):
-                        # check whether module updates are pending
-                        cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
+                        # check whether we have a partially upgraded database that needs updating;
+                        # PostgreSQL will detect deadlocks if several processes have the shared
+                        # lock and try to acquire the exclusive lock
+                        cr.execute("""
+                            SELECT FROM ir_module_module
+                            WHERE state IN ('to upgrade', 'to install', 'to remove')
+                            LIMIT 1
+                        """)
                         if cr.rowcount:
-                            _logger.debug("Database %s initialized, removing upgrade marker", cr.dbname)
-                            # We are updating modules, so we must acquire the exclusive lock. The
-                            # upgrade marker (config parameter above) is deleted while loading modules.
+                            _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
                     cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))")
@@ -214,7 +218,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 retries = 5 if update_module else 1
                 for _ in range(retries):
                     # load_modules multiple times in case there are modules to be uninstalled
-                    cr.commit()  # start a new transaction
                     try:
                         load_modules(
                             registry,
@@ -225,19 +228,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             reinit_modules=reinit_modules,
                             new_db_demo=new_db_demo,
                         )
+                        cr.commit()
                     except Exception:
                         cr.rollback()
                         reset_modules_state(cr)
                         raise
-                    if update_module:
-                        cr.execute(
-                            """
-                            INSERT INTO ir_config_parameter(key, value)
-                            SELECT 'base.partially_updated_database', '1'
-                            WHERE EXISTS(SELECT FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove'))
-                            ON CONFLICT DO NOTHING
-                            """
-                        )
                     if registry.loaded:
                         break
                     models_to_check = registry._models_to_check
