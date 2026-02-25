@@ -176,7 +176,10 @@ export class KanbanController extends Component {
                         const { scrollPositions } = this.props.state || {};
                         if (scrollPositions) {
                             const { scrollLeft, columnScrollTops } = scrollPositions;
-                            this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
+                            const renderer = this.rootRef.el?.querySelector(".o_renderer");
+                            if (renderer) {
+                                renderer.scrollLeft = scrollLeft;
+                            }
                             const groups = this.model.root.groups;
                             for (const [serverValue, scrollTop] of columnScrollTops) {
                                 const group = groups.find((g) => g.serverValue === serverValue);
