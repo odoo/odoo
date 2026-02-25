@@ -35,7 +35,7 @@ test("ODOO.ACCOUNT.GROUP type", async function () {
         '"expense_direct_cost"',
         '"off_balance"',
     ]);
-    composer.insertAutoCompleteValue(proposals[0].text);
+    composer.insertAutoCompleteValue(proposals[0]);
     await animationFrame();
     expect(composer.currentContent).toBe('=ODOO.ACCOUNT.GROUP("asset_receivable"');
     expect(composer.isAutoCompleteDisplayed).toBe(false);
