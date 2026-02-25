@@ -37,6 +37,7 @@ class StructuredReferenceTest(TransactionCase):
         self.assertTrue(is_valid_structured_reference_be('***020/3430/57642*** '))
         # Accept references in unstructured format
         self.assertTrue(is_valid_structured_reference_be(' 020343057642'))
+        self.assertTrue(is_valid_structured_reference_be('020/3430/57642'))
         # Validates edge case where result of % 97 = 0
         self.assertTrue(is_valid_structured_reference_be('020343053497'))
 

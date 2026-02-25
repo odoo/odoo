@@ -13,7 +13,7 @@ def sanitize_structured_reference(reference):
              `***020/3430/57642***` -> `020343057642`
     """
     ref = re.sub(r'\s', '', reference)
-    if re.match(r'(\+{3}|\*{3})\d{3}/\d{4}/\d{5}(\+{3}|\*{3})', ref):
+    if re.fullmatch(r'(\+{3}|\*{3}|)\d{3}/\d{4}/\d{5}\1', ref):
         return re.sub(r'[+*/]', '', ref)
     return ref
 
