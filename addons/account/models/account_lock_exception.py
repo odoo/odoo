@@ -189,12 +189,7 @@ class AccountLock_Exception(models.Model):
             company = exception.company_id
 
             # Create tracking values to display the lock date change in the chatter
-            field = exception.lock_date_field
-            value = exception.lock_date
-            field_info = exception.fields_get([field])[field]
-            tracking_value = exception._create_mail_tracking_values(
-                company[field], value, field, field_info,
-            )
+            field_name = exception.lock_date_field
 
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime
             end_datetime_string = _(" valid until %s", format_datetime(self.env, exception.end_datetime)) if exception.end_datetime else ""
@@ -206,9 +201,10 @@ class AccountLock_Exception(models.Model):
                 end_datetime_string=end_datetime_string,
                 reason=reason_string,
             )
-            company.sudo().message_post(
+            company._track_add(
+                {company.id: {field_name: company[field_name]}},
+                end_values={company.id: {field_name: exception.lock_date}},
                 body=company_chatter_message,
-                tracking_value_ids=[(0, 0, tracking_value)],
             )
 
         exceptions._invalidate_affected_user_lock_dates()

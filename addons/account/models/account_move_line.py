@@ -1943,21 +1943,17 @@ class AccountMoveLine(models.Model):
 
         lines._check_tax_lock_date()
 
-        if not self.env['mail.thread']._track_disabled():
-            # Log changes to move lines on each move
-            # TDE CLEANME: to be cleaned using standard track API
-            tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
-            tracked_fields_get = self.env['account.move.line'].fields_get(tracked_fields)
-            empty_values = dict.fromkeys(tracked_fields)
-            for move_id, modified_lines in lines.grouped('move_id').items():
-                if not move_id.posted_before:
-                    continue
-                for line in modified_lines:
-                    if tracking_values := line._mail_track(tracked_fields_get, empty_values)[1]:
-                        line.move_id._message_log(
-                            body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
-                        )
+        # Log changes to move lines on each move
+        if not self._track_disabled():
+            tracked_fnames = [f for f in self._track_get_fields() if not self._fields[f].related]
+            empty_line = self.browse()  # all falsy fields
+            for line in lines.filtered(lambda line: line.move_id.posted_before):
+                line.move_id._track_record(
+                    line,
+                    tracked_fnames,
+                    initial_values={line.id: {fname: empty_line[fname] for fname in tracked_fnames}},
+                    body=_("Journal Item %s created", line._get_html_link(title=f"#{line.id}")),
+                )
 
         lines.move_id._synchronize_business_models(['line_ids'])
         # Remove analytic lines created for draft AMLs, after analytic_distribution has been updated
@@ -2044,27 +2040,15 @@ class AccountMoveLine(models.Model):
             self = line_to_write
             if not self:
                 return True
-            # Tracking stuff can be skipped for perfs using tracking_disable context key
-            if not self.env['mail.thread']._track_disabled():
-                # Get all tracked fields (without related fields because these fields must be manage on their own model)
-                tracking_fields = []
-                for value in vals:
-                    field = self._fields[value]
-                    if hasattr(field, 'related') and field.related:
-                        continue # We don't want to track related field.
-                    if hasattr(field, 'tracking') and field.tracking:
-                        tracking_fields.append(value)
 
-                # Get initial values for each line
-                move_initial_values = {}
-                for line in self.filtered(lambda l: l.move_id.posted_before): # Only lines with posted once move.
-                    for field in tracking_fields:
-                        # Group initial values by move_id
-                        if line.move_id.id not in move_initial_values:
-                            move_initial_values[line.move_id.id] = {}
-                        move_initial_values[line.move_id.id].update({field: line[field]})
+            # Log changes to move lines on each move
+            if not self._track_disabled():
+                tracked_fnames = [f for f in self._track_get_fields() if not self._fields[f].related]
+                for line in self.filtered(lambda l: l.move_id.posted_before):  # Only lines with posted once move.
+                    line.move_id._track_record(line, tracked_fnames, body=_("Journal Item %s updated", line._get_html_link(title=f"#{line.id}")))
 
             result = super().write(vals)
+
             self.move_id._synchronize_business_models(['line_ids'])
             if any(field in vals for field in ['account_id', 'currency_id']):
                 self._check_constrains_account_id_journal_id()
@@ -2072,19 +2056,6 @@ class AccountMoveLine(models.Model):
             # double check modified lines in case a tax field was changed on a line that didn't previously affect tax
             self.browse(tax_lock_check_ids)._check_tax_lock_date()
 
-            if not self.env['mail.thread']._track_disabled():
-                tracked_fields_get = self.env['account.move.line'].fields_get(tracking_fields)
-                # Log changes to move lines on each move
-                # TDE CLEANME: to be cleaned using standard track API
-                for move_id, modified_lines in move_initial_values.items():
-                    for line in self.filtered(lambda l: l.move_id.id == move_id):
-                        tracking_values = line._mail_track(tracked_fields_get, modified_lines)[1]
-                        if tracking_values:
-                            msg = _("Journal Item %s updated", line._get_html_link(title=f"#{line.id}"))
-                            line.move_id._message_log(
-                                body=msg,
-                                tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
-                            )
             if 'analytic_line_ids' in vals:
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
 
@@ -2147,21 +2118,19 @@ class AccountMoveLine(models.Model):
         # Check the tax lock date.
         self._check_tax_lock_date()
 
-        if not self.env['mail.thread']._track_disabled():
+        if not self._track_disabled():
             # Log changes to move lines on each move
-            # TDE CLEANME: to be cleaned using standard track API
-            tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
-            tracked_fields_get = self.env['account.move.line'].fields_get(tracked_fields)
+            tracked_fnames = [f for f in self._track_get_fields() if not self._fields[f].related]
             empty_line = self.browse()  # all falsy fields
-            for move_id, modified_lines in self.grouped('move_id').items():
-                if not move_id.posted_before:
-                    continue
-                for line in modified_lines:
-                    if tracking_values := empty_line._mail_track(tracked_fields_get, line)[1]:
-                        line.move_id._message_log(
-                            body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
-                            tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
-                        )
+            for line in self.filtered(lambda l: l.move_id.posted_before):  # Only lines with posted once move.
+                line.move_id._track_record(
+                    line,
+                    track_fnames=tracked_fnames,
+                    end_values={line.id: {fname: empty_line[fname] for fname in tracked_fnames}},
+                    body=_("Journal Item %s deleted", line._get_html_link(title=f"#{line.id}")),
+                )
+                # fire now: one track / line, and avoid spurious issues with unlink
+                line._track_finalize()
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\

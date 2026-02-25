@@ -249,7 +249,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', 300, 0, {'currency': self.env['res.currency']}),
+                    ('balance', 'monetary', 300, 0, {'currency': self.env.ref('base.USD')}),
                     ('tax_ids', 'many2many', '15%', ''),
                 ],
             }, {
@@ -257,21 +257,21 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -200, 0, {'currency': self.env['res.currency']}),
+                    ('balance', 'monetary', -200, 0, {'currency': self.env.ref('base.USD')}),
                 ],
             }, {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} deleted\n400000 Product Sales ⇨  (Account)\n-100.0 ⇨ 0.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -100, 0, {'currency': self.env['res.currency']}),
+                    ('balance', 'monetary', -100, 0, {'currency': self.env.ref('base.USD')}),
                 ],
             }, {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[3].id} deleted\n131000 Tax Paid ⇨  (Account)\n45.0 ⇨ 0.0 (Balance)\n15% ⇨ False (Label)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False),
-                    ('balance', 'monetary', 45, 0, {'currency': self.env['res.currency']}),
+                    ('balance', 'monetary', 45, 0, {'currency': self.env.ref('base.USD')}),
                     ('name', 'char', '15%', False),
                 ],
             }, {
@@ -279,7 +279,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', suspense_account, False),
-                    ('balance', 'monetary', -45, -0, {'currency': self.env['res.currency']}),
+                    ('balance', 'monetary', -45, -0, {'currency': self.env.ref('base.USD')}),
                     ('name', 'char', "Automatic Balancing Line", False),
                 ],
             },

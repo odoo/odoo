@@ -27,10 +27,12 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         account_move.action_post()
         account_move.button_draft()
         old_value = account_move.invoice_line_ids.account_id
+        self.flush_tracking()
 
         with self.mock_mail_app(), self.mock_mail_gateway(), Form(account_move) as account_move_form:
             with account_move_form.invoice_line_ids.edit(0) as line_form:
                 line_form.account_id = self.company_data['default_account_assets']
+            account_move_form.save()
             self.flush_tracking()
         new_value = account_move.invoice_line_ids.account_id
 
