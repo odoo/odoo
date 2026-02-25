@@ -168,7 +168,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
     ):
         rendering_values = super()._prepare_address_form_values(*args, callback=callback, order_sudo=order_sudo, **kwargs)
         partner_sudo = kwargs.get('partner_sudo') or (args[0] if args else None)
-        if partner_sudo and request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
+        if partner_sudo and request.website.sudo().company_id.account_fiscal_country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
             rendering_values["l10n_tw_edi_require_paper_format"] = partner_sudo.l10n_tw_edi_require_paper_format
         return rendering_values
 
@@ -177,7 +177,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
             address_values, partner_sudo, address_type, *args, **kwargs
         )
 
-        if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
+        if address_type == 'billing' and request.website.sudo().company_id.account_fiscal_country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
             phone = address_values.get('phone')
             if phone:
                 formatted_phone = request.env['account.move']._reformat_phone_number(phone)
@@ -215,7 +215,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
         address_values, extra_form_data = self._parse_form_data(form_data)
 
-        if request.website.sudo().company_id.country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
+        if request.website.sudo().company_id.account_fiscal_country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
             order_sudo = request.cart
             if address_values.get('company_name'):
                 l10n_tw_edi_is_print = True
