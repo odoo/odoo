@@ -2849,6 +2849,42 @@ test("properties: signature", async () => {
     });
 });
 
+test("properties definition: default value should not add value key", async () => {
+    onRpc("has_access", () => true);
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect("value" in args[1].definitions.at(-1)).toBe(false);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "res.company",
+        resId: 37,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="id" invisible="1"/>
+                        <field name="definitions" widget="properties_definition"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Edit Properties");
+
+    await click(".o_field_property_add button");
+    await waitFor(".o_property_field_popover");
+    await changeType("boolean");
+    await click(".o_field_property_definition_value .o-checkbox input");
+    await closePopover();
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
 /**
  * tests todo: edit, delete, display
  */
