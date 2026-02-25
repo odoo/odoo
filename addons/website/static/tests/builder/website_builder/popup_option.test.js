@@ -110,6 +110,7 @@ describe("Popup options: popup in page before edit", () => {
         await advanceTime(5000);
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(":iframe .s_popup").toHaveAttribute("data-invisible", "1");
+        expect(":iframe .s_popup").toHaveClass("d-none");
     });
 
     test("closing s_popup with the X button updates the invisible elements panel", async () => {
@@ -119,10 +120,12 @@ describe("Popup options: popup in page before edit", () => {
         await waitFor(":iframe .s_popup .modal", { visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
+        expect(":iframe .s_popup").not.toHaveClass("d-none");
         await expectToTriggerEvent(":iframe .s_popup .modal", "hidden.bs.modal", () =>
             contains(":iframe .s_popup div.js_close_popup").click()
         );
         expect(":iframe .s_popup .modal").not.toBeVisible();
+        expect(":iframe .s_popup").toHaveClass("d-none");
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         // Ensure that no mutations were registered in the history.
         // `addStep` return the created step, or false if there was no mutations
