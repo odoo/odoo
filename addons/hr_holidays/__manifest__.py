@@ -42,7 +42,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'wizard/hr_leave_allocation_generate_multi_wizard_views.xml',
 
         'views/resource_views.xml',
-        'views/hr_employee_departure_views.xml',
         'views/hr_leave_views.xml',
         'views/hr_work_entry_type_views.xml',
         'views/hr_leave_allocation_views.xml',

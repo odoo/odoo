@@ -288,18 +288,8 @@ class HrEmployee(models.Model):
         readonly=False, groups="hr.group_hr_user")
     departure_date = fields.Date(related='version_id.departure_date', inherited=True,
         readonly=False, groups="hr.group_hr_user")
-    departure_action_at_departure = fields.Boolean(related='version_id.departure_action_at_departure', inherited=True,
+    departure_action_date = fields.Date(related='version_id.departure_action_date', inherited=True,
         readonly=False, groups="hr.group_hr_user")
-    departure_action_other_date = fields.Date(related='version_id.departure_action_other_date', inherited=True,
-        readonly=False, groups="hr.group_hr_user")
-    departure_do_archive_employee = fields.Boolean(related='version_id.departure_do_archive_employee', inherited=True,
-        readonly=False, groups="hr.group_hr_user")
-    departure_do_archive_user = fields.Boolean(related='version_id.departure_do_archive_user', inherited=True,
-        readonly=False, groups="hr.group_hr_user")
-    departure_do_set_date_end = fields.Boolean(related='version_id.departure_do_set_date_end', inherited=True,
-        readonly=False, groups="hr.group_hr_user")
-    departure_has_selected_actions = fields.Boolean(related='version_id.departure_has_selected_actions', inherited=True,
-        groups="hr.group_hr_user")
     departure_apply_immediately = fields.Boolean(related='version_id.departure_apply_immediately', inherited=True,
         groups="hr.group_hr_user")
     departure_apply_date = fields.Date(related='version_id.departure_apply_date', inherited=True,
@@ -2181,15 +2171,22 @@ class HrEmployee(models.Model):
 
     def action_new_departure(self):
         self.ensure_one()
+        if not self.is_in_contract:
+            raise UserError(self.env._("You can't end the collaboration of an employee without contract, archive it instead."))
         if self.departure_id:
             if self.departure_id.apply_date:
                 raise UserError(self.env._("You can't modify the departure of an employee that has already departed."))
             return {
-                'name': self.env._('End of collaboration'),
-                'res_model': 'hr.employee.departure',
-                'res_id': self.departure_id.id,
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
+                "type": "ir.actions.client",
+                "tag": "departure_conflict_dialog",
+                "params": {
+                    "title": self.env._("Departure already configured"),
+                    "message": self.env._(
+                        "Employee is already configured in a Departure process. \n"
+                        "Cancel it before configurating a new End of Collaboration."
+                    ),
+                    "employee_id": self.id,
+                },
             }
         return {
             'name': self.env._('End of collaboration'),

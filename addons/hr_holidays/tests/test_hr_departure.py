@@ -121,6 +121,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.assertTrue(allocation_msg in allocation.message_ids.mapped('body'))
 
     def _check_action_departure(self):
+        self.departure.action_date = date.today()
         self.departure.action_register()
         self._check_employee_allocation()
         self._check_employee_leave()

@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
@@ -43,7 +44,7 @@ class TestDeparture(TestHrCommon):
     def test_immediate_departure(self):
         departure = self.env['hr.employee.departure'].create([{
             'employee_id': self.emp_A.id,
-            'dismissal_date': date.today(),
+            'dismissal_date': date.today() + relativedelta(days=-1),
             'departure_reason_id': self.env.ref('hr.departure_fired').id,
             'departure_description': "Didn't bring coffee",
         }])
@@ -51,34 +52,17 @@ class TestDeparture(TestHrCommon):
         departure.action_register()
         self.assertEqual(departure.apply_date, date.today(), "The departure should have been applied.")
 
-    @freeze_time('2025-06-01')
+    @freeze_time('2025-06-02')
     def test_departure_actions_to_true(self):
         dep_date = date(2025, 6, 1)
         departure = self.env['hr.employee.departure'].create([{
             'employee_id': self.emp_A.id,
             'dismissal_date': dep_date,
-            'do_set_date_end': True,
-            'do_archive_employee': True,
-            'do_archive_user': True,
         }])
         departure.action_register()
         self.assertFalse(self.emp_A.active, "Employee A should be archived.")
         self.assertFalse(self.user_A.active, "Employee A's user should be archived.")
         self.assertEqual(self.emp_A.contract_date_end, dep_date, "Employee A's contract dates should end at the departure date.")
-
-    @freeze_time('2025-06-01')
-    def test_departure_actions_to_false(self):
-        departure = self.env['hr.employee.departure'].create([{
-            'employee_id': self.emp_A.id,
-            'dismissal_date': date(2025, 6, 1),
-            'do_set_date_end': False,
-            'do_archive_employee': False,
-            'do_archive_user': False,
-        }])
-        departure.action_register()
-        self.assertTrue(self.emp_A.active, "Employee A shouldn't be archived.")
-        self.assertTrue(self.user_A.active, "Employee A's user shouldn't be archived.")
-        self.assertFalse(self.emp_A.contract_date_end, "Employee A's contract should not end.")
 
     def test_wrong_departure_date(self):
         # the departure should be blocked if not after the first version date
@@ -102,16 +86,14 @@ class TestDeparture(TestHrCommon):
                 'dismissal_date': date(2025, 6, 1),
                 'departure_reason_id': self.env.ref('hr.departure_fired').id,
                 'departure_description': "Didn't bring coffee",
-                'do_archive_employee': True,
-                'do_set_date_end': True,
             }])
-            self.assertTrue(departure.has_selected_actions)
+
             self.assertFalse(departure.apply_immediately)
             with self.assertRaises(ValidationError):
                 departure.action_register()
             self.assertFalse(departure.apply_date, "The departure shouldn't be applied yet.")
 
-        with freeze_time('2025-06-01'):
+        with freeze_time('2025-06-02'):
             departure.action_register()
             self.assertEqual(departure.apply_date, date.today(), "The departure should have been applied.")
             self.assertFalse(self.emp_A.active, "The employee should have been archived.")

@@ -2,33 +2,27 @@
 
 from datetime import timedelta
 
-from odoo import fields, models
+from odoo import models
 
 
 class HrEmployeeDeparture(models.Model):
     _inherit = 'hr.employee.departure'
 
-    do_cancel_time_off_requests = fields.Boolean(
-        string="Cancel Time Off Requests",
-        default=True,
-        help="Set the running allocations validity's end and delete future time off.")
-
     def action_register(self):
         super().action_register()
-        cancel_leave_departures = self.filtered(lambda d: d.do_cancel_time_off_requests)
-        if not cancel_leave_departures:
+        if not self:
             return
         all_leaves_sudo = self.sudo().env['hr.leave'].search([
-            ('employee_id', 'in', cancel_leave_departures.employee_id.ids),
-            ('date_to', '>', min(cancel_leave_departures.mapped('departure_date'))),
+            ('employee_id', 'in', self.employee_id.ids),
+            ('date_to', '>', min(self.mapped('departure_date'))),
         ])
         all_allocations_sudo = self.sudo().env['hr.leave.allocation'].search([
-            ('employee_id', 'in', cancel_leave_departures.employee_id.ids),
+            ('employee_id', 'in', self.employee_id.ids),
             '|',
                 ('date_to', '=', False),
-                ('date_to', '>', min(cancel_leave_departures.mapped('departure_date'))),
+                ('date_to', '>', min(self.mapped('departure_date'))),
         ])
-        for departure in cancel_leave_departures:
+        for departure in self:
             employee_leaves_sudo = all_leaves_sudo.filtered_domain([
                 ('employee_id', '=', departure.employee_id.id),
                 ('date_to', '>', departure.departure_date),

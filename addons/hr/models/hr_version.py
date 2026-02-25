@@ -129,12 +129,7 @@ class HrVersion(models.Model):
     departure_description = fields.Html(related='departure_id.departure_description', readonly=False, groups="hr.group_hr_user")
     dismissal_date = fields.Date(related='departure_id.dismissal_date', readonly=False, groups="hr.group_hr_user", tracking=1)
     departure_date = fields.Date(related='departure_id.departure_date', readonly=False, groups="hr.group_hr_user", tracking=1)
-    departure_action_at_departure = fields.Boolean(related='departure_id.action_at_departure', readonly=False, groups="hr.group_hr_user")
-    departure_action_other_date = fields.Date(related='departure_id.action_other_date', readonly=False, groups="hr.group_hr_user")
-    departure_do_archive_employee = fields.Boolean(related='departure_id.do_archive_employee', readonly=False, groups="hr.group_hr_user")
-    departure_do_archive_user = fields.Boolean(related='departure_id.do_archive_user', readonly=False, groups="hr.group_hr_user")
-    departure_do_set_date_end = fields.Boolean(related='departure_id.do_set_date_end', readonly=False, groups="hr.group_hr_user")
-    departure_has_selected_actions = fields.Boolean(related='departure_id.has_selected_actions', groups="hr.group_hr_user")
+    departure_action_date = fields.Date(related='departure_id.action_date', readonly=False, groups="hr.group_hr_user")
     departure_apply_immediately = fields.Boolean(related='departure_id.apply_immediately', groups="hr.group_hr_user")
     departure_apply_date = fields.Date(related='departure_id.apply_date', groups="hr.group_hr_user")
 

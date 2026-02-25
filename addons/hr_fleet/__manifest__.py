@@ -8,7 +8,6 @@
         'security/ir.model.access.csv',
         'security/hr_fleet_security.xml',
         'views/hr_employee_views.xml',
-        'views/hr_employee_departure_views.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
     ],

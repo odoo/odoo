@@ -38,6 +38,14 @@
                                     ('contract_date_end', '>=', 'today')
                             ]"
                             groups="hr.group_hr_manager"/>
+                    <filter string="Notice Period" name="notice_period"
+                            domain="[
+                                ('contract_date_start', '!=', False),
+                                ('contract_date_start', '&lt;=', 'today'),
+                                ('departure_date', '!=', False),
+                                ('departure_date', '&gt;=', 'today')
+                            ]"
+                            groups="hr.group_hr_manager"/>
                     <filter string="Out of Contract" name="out_of_contract"
                             domain="[
                                 '|',
@@ -64,6 +72,7 @@
                         <filter name="_search_today_location" string="Work location" domain="[]" context="{'group_by':'today_location_name'}"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
                         <filter name="group_start" string="Contract Start" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
+                        <filter name="group_departure_date" string="Departure Date" domain="[]" context="{'group_by': 'departure_date'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
                         <filter string="Properties" name="group_by_employee_properties" context="{'group_by': 'employee_properties'}"/>
@@ -102,7 +111,7 @@
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
-                        <button name="action_cancel_departure" string="Cancel Departure" type="object"
+                        <button name="action_cancel_departure" string="Cancel End of Collaboration" type="object"
                             groups="hr.group_hr_user" invisible="not id or not departure_id or departure_apply_date"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
@@ -399,71 +408,31 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="departure" string="Departure" groups="hr.group_hr_user" invisible="not departure_id">
-                                <group>
-                                    <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
-                                        readonly="1"/>
-                                    <field name="dismissal_date" readonly="1"/>
-                                    <field name="departure_date" invisible="departure_date == dismissal_date" readonly="1"/>
+                            <page name="departure" string="End of Collaboration" groups="hr.group_hr_user" invisible="not departure_id">
+                                <group class="mt-2 mb-4" invisible="not departure_apply_date">
+                                    <span class="alert alert-warning" role="alert">
+                                        The departure process has been completed on
+                                        <field name="departure_apply_date" readonly="1" class="oe_inline"/>
+                                        <a name="action_cancel_departure" type="object" class="oe_inline"
+                                           confirm="This action will delete the departure entirely. Are you sure you want to proceed?">
+                                            <i class="oi oi-arrow-right ms-1"/>
+                                            Cancel Departure
+                                        </a>
+                                    </span>
                                 </group>
-                                <notebook name="departure_notebook">
-                                    <page string="Planned Actions" name="planned_actions">
-                                        <group>
-                                            <group name="departure_planned_actions_left">
-                                                <label for="departure_do_archive_employee" string="Employee"/>
-                                                <div class="o_row">
-                                                    <field name="departure_do_archive_employee" nolabel="1"
-                                                        readonly="departure_apply_date"/>
-                                                    <span>Archive</span>
-                                                </div>
-                                                <label for="departure_do_set_date_end" string="Contract"/>
-                                                <div class="o_row">
-                                                    <field name="departure_do_set_date_end" nolabel="1"
-                                                        readonly="departure_apply_date"/>
-                                                    <span>Set Contract End Date</span>
-                                                </div>
-                                                <label for="departure_do_archive_user" string="Related User"
-                                                    invisible="not user_id"/>
-                                                <div invisible="not user_id">
-                                                    <field name="departure_do_archive_user"
-                                                        readonly="departure_apply_date"/>
-                                                    <span>Archive</span>
-                                                </div>
-                                            </group>
-                                            <group name="departure_planned_actions_right"/>
-                                        </group>
-                                        <group class="mt-4" invisible="not departure_has_selected_actions">
-                                            <group invisible="departure_apply_date">
-                                                <label for="departure_action_at_departure" string="Action at"/>
-                                                <field class="w-auto" name="departure_action_at_departure" nolabel="1"
-                                                    readonly="departure_apply_date" widget="boolean_radio" options="{
-                                                        'yes_label_element_id': 'action_at_departure_yes',
-                                                        'no_label_element_id': 'action_at_departure_no'
-                                                    }"
-                                                />
-                                                <template id="action_at_departure_yes">Departure date</template>
-                                                <template id="action_at_departure_no">Other date</template>
-                                                <field name="departure_action_other_date" invisible="departure_action_at_departure"
-                                                    placeholder="Immediately" readonly="departure_apply_date"/>
-                                            </group>
-                                            <div invisible="not departure_apply_date">
-                                                <span class="alert alert-warning" role="alert">
-                                                    All selected actions have been executed on
-                                                    <field name="departure_apply_date" readonly="1" class="oe_inline"/>
-                                                    <a name="action_cancel_departure" type="object" class="oe_inline"
-                                                        confirm="This action will delete the departure entirely. Are you sure you want to proceed?">
-                                                        <i class="oi oi-arrow-right ms-1"/>
-                                                        Cancel Departure
-                                                    </a>
-                                                </span>
-                                            </div>
-                                        </group>
-                                    </page>
-                                    <page string="Detailed Reason">
-                                        <field name="departure_description" nolabel="1" readonly="0"
-                                            placeholder="Add more details about the reason to end the collaboration with this employee."/>
-                                    </page>
-                                </notebook>
+                                <group name="header_group">
+                                    <group readonly="1">
+                                        <field name="departure_reason_id" readonly="1"
+                                               options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                        <field name="dismissal_date" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="departure_description" string="Reason"
+                                               placeholder="Additional information" readonly="1"/>
+                                        <field name="departure_action_date" placeholder="The day after departure"
+                                               string="Archive Employee On" readonly="1"/>
+                                    </group>
+                                </group>
                             </page>
                             <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
                                 <group name="settings_group">

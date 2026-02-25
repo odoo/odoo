@@ -59,13 +59,12 @@ class TestDeparture(TestHolidayContract):
         ])
         (cls.leave_before | cls.leave_during | cls.leave_after_1)._action_validate()
 
-    @freeze_time("2026-02-01")
+    @freeze_time("2026-02-02")
     def test_departure_with_leave_cancel(self):
         self.env['hr.employee.departure'].create([{
             'employee_id': self.jules_emp.id,
             'dismissal_date': date(2026, 2, 1),
             'departure_reason_id': self.env.ref('hr.departure_fired').id,
-            'do_cancel_time_off_requests': True,
         }]).action_register()
 
         self.assertEqual(self.jules_allocation.date_to, date(2026, 2, 1))
@@ -74,18 +73,3 @@ class TestDeparture(TestHolidayContract):
         self.assertEqual(self.leave_during.request_date_to, date(2026, 2, 1))
         self.assertEqual(self.leave_after_1.state, 'cancel')
         self.assertFalse(self.leave_after_2.exists(), "The draft leave should have been deleted.")
-
-    @freeze_time("2026-02-01")
-    def test_departure_without_leave_cancel(self):
-        self.env['hr.employee.departure'].create([{
-            'employee_id': self.jules_emp.id,
-            'dismissal_date': date(2026, 2, 1),
-            'departure_reason_id': self.env.ref('hr.departure_fired').id,
-            'do_cancel_time_off_requests': False,
-        }]).action_register()
-
-        self.assertFalse(self.jules_allocation.date_to)
-        self.assertEqual(self.leave_before.state, 'validate')
-        self.assertEqual(self.leave_during.state, 'validate')
-        self.assertEqual(self.leave_after_1.state, 'validate')
-        self.assertEqual(self.leave_after_2.state, 'confirm')

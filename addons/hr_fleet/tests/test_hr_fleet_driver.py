@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import timedelta, date
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, common
@@ -205,3 +205,19 @@ class TestHrFleetDriver(common.TransactionCase):
                 'date_start': today + timedelta(days=6),
                 'date_end': today + timedelta(days=10),
             })
+
+    def test_employee_departure_fleet(self):
+        self.new_employee = self.env['hr.employee'].create({
+            'name': 'New Employee',
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+        })
+        self.car.driver_id = self.new_employee.work_contact_id.id
+        self.assertEqual(self.car.driver_employee_id, self.new_employee, "Car is not assign to the employee")
+
+        self.env['hr.employee.departure'].create([{
+            'employee_id': self.new_employee.id,
+            'dismissal_date': date.today() + timedelta(days=-1),
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+        }]).action_register()
+        self.assertFalse(self.car.driver_id, "Car was not unassigned after employee's departure")

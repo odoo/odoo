@@ -1,19 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import models
 
 
 class HrEmployeeDeparture(models.Model):
     _inherit = 'hr.employee.departure'
 
-    do_unassign_company_car = fields.Boolean(
-        string="Release Company Car",
-        default=lambda self: self.env.user.has_group('fleet.fleet_group_user'),
-    )
-
     def action_register(self):
         super().action_register()
-        self.filtered('do_unassign_company_car')._unassign_company_car()
+        self._unassign_company_car()
 
     def _unassign_company_car(self):
         """Find all fleet.vehicle.assignation.log records that link to the employee, if there is no
