@@ -1,6 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
@@ -52,6 +53,19 @@ export class CarouselSlider extends Interaction {
             },
             "t-att-tabindex": (el) => (el.classList.contains("active") ? undefined : "-1"),
         },
+        ".o_carousel_pause": {
+            "t-on-click": this.onPauseBtnClick,
+            "t-att-title": () => (this.isPausedByUser ? _t("Play slides") : _t("Pause slides")),
+        },
+        ".o_carousel_pause .fa": {
+            "t-att-class": () => ({
+                "fa-pause": !this.isPausedByUser,
+                "fa-play": this.isPausedByUser,
+            }),
+        },
+        ".o_carousel_pause .visually-hidden": {
+            "t-out": () => (this.isPausedByUser ? _t("Play slides") : _t("Pause slides")),
+        },
     };
     carouselOptions = undefined;
     showClickableSlideLinks = true;
@@ -79,13 +93,15 @@ export class CarouselSlider extends Interaction {
         } else if (!this.hasInterval) {
             this.el.dataset.bsInterval = "5000";
         }
+
+        this.isPausedByUser = this.el.dataset.bsRide === "false";
     }
 
     start() {
         this.computeMaxHeight();
         this.updateContent();
-        const carouselBS = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
-        this.registerCleanup(() => carouselBS.dispose());
+        this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
+        this.registerCleanup(() => this.bsCarousel.dispose());
 
         const itemWidth = getComputedStyle(this.el).getPropertyValue(
             "--o-carousel-item-width-percentage"
@@ -142,7 +158,7 @@ export class CarouselSlider extends Interaction {
             // slide once the next images are loaded.
             ev.preventDefault();
             onceAllImagesLoaded(this.carouselInnerEl).then(() => {
-                window.Carousel.getOrCreateInstance(this.el).to(ev.to);
+                this.bsCarousel.to(ev.to);
             });
             return;
         }
@@ -228,13 +244,28 @@ export class CarouselSlider extends Interaction {
         }
     }
 
+    onPauseBtnClick() {
+        if (!this.isPausedByUser) {
+            this.bsCarousel.pause();
+            this.bsCarousel.dispose();
+            this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, {
+                pause: true,
+                ride: false,
+            });
+        } else {
+            this.bsCarousel.dispose();
+            this.bsCarousel = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
+            this.bsCarousel.cycle();
+        }
+        this.isPausedByUser = !this.isPausedByUser;
+    }
+
     /**
      * If the carousel should auto-slide and it has been paused, resume it.
      */
     resumeCarouselCycling() {
-        if (["true", "carousel"].includes(this.el.dataset.bsRide)) {
-            const carouselBS = window.Carousel.getInstance(this.el);
-            carouselBS.cycle();
+        if (!this.isPausedByUser && ["true", "carousel"].includes(this.el.dataset.bsRide)) {
+            this.bsCarousel.cycle();
         }
     }
 

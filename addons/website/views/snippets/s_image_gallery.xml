@@ -4,10 +4,14 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default o_image_popup" data-vcss="002" data-vjs="001" data-columns="3">
         <div class="o_container_small overflow-hidden">
-            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="1600" style="margin: 0 12px;" role="region" aria-roledescription="carousel">
+            <div id="slideshow_sample" class="o_carousel_pause_btn_hidden carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="1600" style="margin: 0 12px;" role="region" aria-roledescription="carousel">
                 <!-- Controls and indicators are set before the content so that they
                      are focused in priority when navigating the page with tab. -->
                 <div class="o_carousel_controllers">
+                    <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn py-3 z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
+                        <span class="fa fa-pause align-content-center" aria-hidden="true"/>
+                        <span class="visually-hidden">Pause slides</span>
+                    </button>
                     <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" aria-controls="slideshow_sample_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                         <span class="carousel-control-prev-icon" aria-hidden="true"/>
                         <span class="visually-hidden">Previous slide</span>

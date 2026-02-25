@@ -301,3 +301,14 @@ test("Change gallery layout still works when img.decode() fails", async () => {
     await unfoldAllOptionsGroups();
     expect("[data-label='Mode'] .dropdown-toggle").toHaveText("Grid");
 });
+
+test("Cannot edit s_image_gallery pause button", async () => {
+    await setupWebsiteBuilderWithSnippet("s_image_gallery", { loadIframeBundles: true });
+    await contains(":iframe .s_image_gallery").click();
+    await contains(
+        "[data-label='Pause Button'] [data-class-action='o_carousel_pause_btn_hidden'] input"
+    ).click();
+    await contains(":iframe .s_image_gallery .o_carousel_pause .fa").dblclick();
+    // The media dialog doesn't open.
+    expect("modal").not.toHaveCount();
+});

@@ -7,9 +7,8 @@ export class CarouselEdit extends Interaction {
     // controls (indeed we want it to change the carousel slide then enable
     // the slide overlay) + See "CarouselItem" option.
     dynamicContent = {
-        ".carousel-control-prev, .carousel-control-next, .carousel-indicators": {
+        ".carousel-control-prev, .carousel-control-next, .carousel-indicators, .o_carousel_pause": {
             "t-on-click": this.throttled(this.onControlClick),
-            "t-att-class": () => ({ o_we_no_overlay: true }),
         },
         ".carousel-control-prev, .carousel-control-next": {
             "t-att-data-bs-slide": () => undefined,

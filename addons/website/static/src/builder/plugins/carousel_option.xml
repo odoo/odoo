@@ -41,6 +41,10 @@
                 min="1"
                 applyWithUnit="false"/>
         </BuilderRow>
+
+        <BuilderRow t-if="this.state.hasPauseButton" label.translate="Pause Button" tooltip.translate="Allow your visitors to pause the carousel" level="1">
+            <BuilderCheckbox classAction="'o_carousel_pause_btn_hidden'" inverseAction="true"/>
+        </BuilderRow>
     </t>
 </t>
 
@@ -122,7 +126,6 @@
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <carousel_option
-            template="website.CarouselOption"
             selector="section"
             exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
             applyTo=":scope > .carousel"/>

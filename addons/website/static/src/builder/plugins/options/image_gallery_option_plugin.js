@@ -470,7 +470,9 @@ export class ImageGalleryOptionPlugin extends Plugin {
 
     getContentEditableEls(rootEl) {
         return [...selectElements(rootEl, ".s_image_gallery *")].filter(
-            (el) => isMediaElement(el) || el.tagName === "IMG"
+            (el) =>
+                !el.closest(".o_carousel_controllers") &&
+                (isMediaElement(el) || el.tagName === "IMG")
         );
     }
 

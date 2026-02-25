@@ -172,16 +172,49 @@
             background-size: 50%;
         }
 
+        // Pause button
+        .o_carousel_pause {
+            padding: 0;
+
+            &:focus-visible {
+                box-shadow: none;
+
+                > .fa {
+                    box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
+                }
+            }
+
+            &:active {
+                border-color: transparent;
+            }
+        }
+
+        .o_carousel_pause .fa {
+            width: $-o-carousel-controllers-size;
+            height: $-o-carousel-controllers-size;
+        }
+
+        & .carousel:not(.carousel-dark) {
+            .o_carousel_pause .fa {
+                filter: $carousel-dark-control-icon-filter;
+            }
+        }
+
+        // Pause button - Hidden
+        .o_carousel_pause_btn_hidden .o_carousel_pause {
+            display: none;
+        }
+
         // Arrows - Default
         &.s_image_gallery_arrows_default {
-            .carousel-control-prev, .carousel-control-next {
+            .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                 &:hover {
                     background: rgba($carousel-dark-indicator-active-bg, .2);
                 }
             }
 
             .carousel-dark {
-                .carousel-control-prev, .carousel-control-next {
+                .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                     &:hover {
                         background: rgba($carousel-indicator-active-bg, .2);
                     }
@@ -219,6 +252,16 @@
             }
         }
 
+        // Indicators
+        .carousel-indicators {
+            padding: 4px;
+
+            > button:focus-visible {
+                box-shadow: 0 0 0 2px white, 0 0 0 4px black !important;
+                outline: none;
+            }
+        }
+
         // Indicators - Bars
         &.s_image_gallery_indicators_bars .carousel-indicators > button img {
             display: none;
@@ -227,8 +270,9 @@
         // Indicators - Squared Miniatures / Rounded Miniatures
         &.s_image_gallery_indicators_squared, &.s_image_gallery_indicators_rounded {
             .carousel-indicators > button {
-                width: $-o-carousel-controllers-size;
-                height: $-o-carousel-controllers-size;
+                // Apply *.85 to keep the box-shadow within overflow boundaries.
+                width: calc(#{$-o-carousel-controllers-size} * 0.85);
+                height: calc(#{$-o-carousel-controllers-size} * 0.85);
                 border: 0;
                 background-size: cover;
                 background-position: center;
@@ -355,6 +399,17 @@
         // Indicators - Hidden
         &.s_image_gallery_indicators_hidden .carousel-indicators {
             display: none;
+        }
+
+        // Style - Default / Indicators outside
+        &:not(.s_image_gallery_controllers_outside) .o_carousel_pause {
+            position: absolute;
+            bottom: 0;
+            width: $carousel-control-width;
+
+            & .fa {
+                width: auto;
+            }
         }
 
         // Style - Indicators outside / Outside

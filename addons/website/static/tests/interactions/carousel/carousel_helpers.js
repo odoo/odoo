@@ -2,20 +2,24 @@ export const defaultCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ `
     <section class="s_carousel_wrapper p-0" data-snippet="s_carousel" data-vcss="001">
         <div id="slideshow_sample" class="s_carousel s_carousel_default carousel slide o_colored_level" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
             <div class="o_carousel_controllers">
+                <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
+                    <span class="fa fa-pause align-content-center" aria-hidden="true"/>
+                    <span class="visually-hidden">Pause slides</span>
+                </button>
                 <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
                     <span class="carousel-control-prev-icon" aria-hidden="true"/>
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active">
+                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active" aria-selected="true">
                         <span class="visually-hidden">Slide 1 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_5"/>
                     </button>
-                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable">
+                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable" aria-selected="false">
                         <span class="visually-hidden">Slide 2 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.set_2_square_md_1"/>
                     </button>
-                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable">
+                    <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable" aria-selected="false">
                         <span class="visually-hidden">Slide 3 of 3</span>
                         <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_1"/>
                     </button>
@@ -44,20 +48,24 @@ export const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => /*xml*/ 
         <div class="o_container_small overflow-hidden">
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
                 <div class="o_carousel_controllers">
+                    <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
+                        <span class="fa fa-pause align-content-center" aria-hidden="true"/>
+                        <span class="visually-hidden">Pause slides</span>
+                    </button>
                     <button class="carousel-control-prev o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
                         <span class="carousel-control-prev-icon" aria-hidden="true"/>
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active">
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="o_not_editable active" aria-selected="true">
                             <span class="visually-hidden">Slide 1 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_5"/>
                         </button>
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable">
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1" class="o_not_editable" aria-selected="false">
                             <span class="visually-hidden">Slide 2 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.set_2_square_md_1"/>
                         </button>
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable">
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2" class="o_not_editable" aria-selected="false">
                             <span class="visually-hidden">Slide 3 of 3</span>
                             <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_1"/>
                         </button>
