@@ -182,4 +182,8 @@ class Module(Command):
 
     def _force_demo(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
+            env.registry.ready = False
             force_demo(env)
+            env.cr.commit()
+            Registry.new(env.cr.dbname, update_module=True)
+            env.registry.ready = True
