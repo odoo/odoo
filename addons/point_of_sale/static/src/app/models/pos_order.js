@@ -475,16 +475,11 @@ export class PosOrder extends PosOrderAccounting {
     /* ---- Payment Lines --- */
     addPaymentline(payment_method) {
         this.assertEditable();
-        const existingCash = this.payment_ids.find((pl) => pl.payment_method_id.is_cash_count);
 
         const { status: canSend, message } = payment_method.getPaymentInterfaceStates();
         if (!canSend) {
             return { status: false, data: message };
         }
-        if (existingCash && payment_method.is_cash_count) {
-            return { status: false, data: _t("There is already a cash payment line.") };
-        }
-
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
         const newPaymentLine = this.models["pos.payment"].create({
             pos_order_id: this,
