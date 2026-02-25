@@ -69,6 +69,15 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'tax_scheme_vals': {'id': 'TAX'},
             })
 
+        # source:
+        # https://docs.peppol.eu/poacc/billing/3.0/2025-Q4/rules/ubl-peppol/SE-R-005/
+        # https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (SE-R-005 (fatal))
+        if partner.country_id.code == "SE" and role == 'supplier':
+            vals_list.append({
+                'company_id': "GODKÄND FÖR F-SKATT",
+                'tax_scheme_vals': {'id': 'TAX'},
+            })
+
         return vals_list
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
