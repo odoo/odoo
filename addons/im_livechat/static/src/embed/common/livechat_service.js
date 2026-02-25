@@ -218,9 +218,7 @@ export class LivechatService {
             {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username ?? _t("Visitor"),
-                chatbot_script_id: this.savedState
-                    ? this.thread.chatbot?.script.id
-                    : this.rule.chatbotScript?.id,
+                chatbot_script_id: this.thread?.chatbot?.script.id ?? this.rule.chatbotScript?.id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 temporary_id: this.thread?.id,
                 persisted: persist,
