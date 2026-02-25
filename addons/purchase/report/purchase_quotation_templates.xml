@@ -46,11 +46,11 @@
                                     <span t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="order_line.product_qty"/>
+                                    <span t-field="order_line.product_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                                     <span t-field="order_line.uom_id" groups="uom.group_uom"/>
                                     <span t-if="order_line.uom_id != order_line.product_id.uom_id" class="text-muted small">
                                     <br/>
-                                        <span t-field="order_line.product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="order_line.product_id.uom_id"/>
+                                        <span t-field="order_line.product_uom_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> <span t-field="order_line.product_id.uom_id"/>
                                     </span>
                                 </td>
                             </t>

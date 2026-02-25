@@ -69,7 +69,6 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
                     <table class="table table-sm table-borderless" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
@@ -88,20 +87,20 @@
                                     </p>
                                 </td>
                                 <td class="o_td_quantity text-end">
-                                    <span t-out="format_number(move.product_uom_qty)" class="text-nowrap">3.00</span>
+                                    <span t-out="move.product_uom_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}" class="text-nowrap">3.00</span>
                                     <span t-field="move.uom_id" groups="uom.group_uom">units</span>
                                     <t t-if="move.packaging_uom_id != move.uom_id" groups="uom.group_uom">
                                         <br/>
-                                        <span class="text-muted" t-field="move.packaging_uom_qty">1.00</span>
+                                        <span class="text-muted" t-field="move.packaging_uom_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}">1.00</span>
                                         <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
                                     </t>
                                 </td>
                                 <td class="o_td_quantity text-end">
-                                    <span t-out="format_number(move.quantity)" class="text-nowrap">3.00</span>
+                                    <span t-out="move.quantity" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}" class="text-nowrap">3.00</span>
                                     <span t-field="move.uom_id" groups="uom.group_uom">units</span>
                                     <t t-if="move.packaging_uom_id != move.uom_id" groups="uom.group_uom">
                                         <br/>
-                                        <span class="text-muted" t-out="move.uom_id._compute_quantity(move.quantity, move.packaging_uom_id)">1.00</span>
+                                        <span class="text-muted" t-out="move.uom_id._compute_quantity(move.quantity, move.packaging_uom_id)" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}">1.00</span>
                                         <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
                                     </t>
                                 </td>
@@ -204,7 +203,7 @@
                                     </td>
                                     <td/>
                                     <td class="text-end w-auto">
-                                        <span t-out="format_number(bo_line.product_uom_qty)">3.00</span>
+                                        <span t-out="bo_line.product_uom_qty" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}">3.00</span>
                                         <span t-field="bo_line.uom_id" groups="uom.group_uom">units</span>
                                     </td>
                                 </tr>
@@ -257,7 +256,7 @@
             <td class="text-end"><span t-field="move_line.lot_id.name"/></td>
         </t>
         <td class="text-end" name="move_line_lot_quantity">
-            <span t-out="format_number(move_line.quantity)"/>
+            <span t-out="move_line.quantity" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
             <span t-field="move_line.uom_id"/>
         </td>
     </template>
@@ -276,7 +275,7 @@
                 </t>
             </td>
             <td class="text-end" name="move_line_aggregated_qty_ordered">
-                <span t-out="format_number(aggregated_lines[line]['qty_ordered'])"/>
+                <span t-out="aggregated_lines[line]['qty_ordered']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                 <span t-out="aggregated_lines[line]['uom_id'].name"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
@@ -285,11 +284,11 @@
                 </t>
             </td>
             <td class="text-end" name="move_line_aggregated_quantity">
-                <span t-out="format_number(aggregated_lines[line]['quantity'])"/>
+                <span t-out="aggregated_lines[line]['quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/>
                 <span t-out="aggregated_lines[line]['uom_id'].name"/>
                 <t t-if="aggregated_lines[line]['packaging_uom_id'] != aggregated_lines[line]['uom_id']" groups="uom.group_uom">
                     <br/>
-                    <span class="text-muted" t-out="aggregated_lines[line]['packaging_quantity']">1.00</span>
+                    <span class="text-muted" t-out="aggregated_lines[line]['packaging_quantity']" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}">1.00</span>
                     <span class="text-muted" t-out="aggregated_lines[line]['packaging_uom_id'].name">Pack of 6</span>
                 </t>
             </td>
