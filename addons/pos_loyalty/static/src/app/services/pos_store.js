@@ -82,14 +82,25 @@ patch(PosStore.prototype, {
                 const claimableRewards = order.getClaimableRewards(false, false, true);
                 let changed = false;
                 for (const { coupon_id, reward } of claimableRewards) {
-                    if (
-                        reward.program_id.reward_ids.length === 1 &&
-                        !reward.program_id.is_nominative &&
-                        (reward.reward_type !== "product" ||
-                            (reward.reward_type == "product" && !reward.multi_product))
-                    ) {
-                        order._applyReward(reward, coupon_id);
-                        changed = true;
+                    let apply_max = true;
+                    while (apply_max) {
+                        apply_max = false;
+                        const nbr_lines = order.lines.length;
+                        if (
+                            reward.program_id.reward_ids.length === 1 &&
+                            !reward.program_id.is_nominative &&
+                            (reward.reward_type !== "product" ||
+                                (reward.reward_type == "product" && !reward.multi_product))
+                        ) {
+                            order._applyReward(reward, coupon_id);
+                            changed = true;
+                        }
+                        if (reward.reward_type === "discount" && order.lines.length > nbr_lines) {
+                            apply_max = Boolean(
+                                order.getClaimableRewards(coupon_id, reward.program_id.id, true)
+                                    .length
+                            );
+                        }
                     }
                 }
 

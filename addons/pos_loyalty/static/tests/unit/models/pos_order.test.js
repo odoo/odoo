@@ -2,7 +2,12 @@ import { test, describe, expect } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import {
+    addProductLineToOrder,
+    deactivateAllProgramsExcept,
+} from "@pos_loyalty/../tests/unit/utils";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
 
@@ -310,6 +315,7 @@ describe("pos.order - loyalty", () => {
     test("getLoyaltyPoints adapts to qty decreasing", async () => {
         const store = await setupPosEnv();
         const models = store.models;
+        deactivateAllProgramsExcept(store, [7]);
         const order = store.addNewOrder();
 
         const partner1 = models["res.partner"].get(1);
@@ -355,5 +361,29 @@ describe("pos.order - loyalty", () => {
         expect(order.getOrderlines().length).toBe(2);
         const rewardLine = order._get_reward_lines()[0];
         expect(rewardLine.prices.total_included).toBe(-10);
+    });
+
+    test("apply max amount of promo when setting line qty", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        await store.orderUpdateLoyaltyPrograms();
+        const line = await addProductLineToOrder(store, order, {
+            productId: 10,
+            templateId: 10,
+            qty: 1,
+        });
+        const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
+
+        await store.orderUpdateLoyaltyPrograms();
+        await store.updateRewards();
+        await tick();
+        expect(order.lines.length).toBe(2);
+
+        expect(order.getSelectedOrderline().id == line.id).toBe(true);
+        orderSummary._setValue(9);
+        await tick();
+        expect(order.lines.length).toBe(10);
+        expect(order.lines.filter((l) => l.is_reward_line).length).toBe(9);
     });
 });
