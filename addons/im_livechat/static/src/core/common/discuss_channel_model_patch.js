@@ -25,6 +25,13 @@ const discussChannelPatch = {
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
         this.livechat_lang_id = fields.One("res.lang");
         this.livechat_looking_for_help_since_dt = fields.Datetime();
+        this.storeAsPinnedLivechats = fields.One("Store", {
+            compute() {
+                if (this.channel_type === "livechat" && this.self_member_id?.is_pinned) {
+                    return this.store;
+                }
+            },
+        });
         /** @type {"in_progress"|"need_help"|undefined} */
         this.livechat_status = fields.Attr(undefined, {
             onUpdate() {
