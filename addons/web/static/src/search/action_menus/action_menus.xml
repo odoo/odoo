@@ -23,7 +23,7 @@
 
             <div t-if="this.actionItems.length" class="d-inline-block">
                 <Dropdown>
-                    <button class="btn btn-secondary" data-hotkey="u">
+                    <button class="btn btn-secondary" data-hotkey="u" data-available-offline="">
                         <i class="fa fa-cog me-1"/>
                         <span class="o_dropdown_title">Actions</span>
                     </button>
@@ -33,7 +33,10 @@
                                 <div role="separator" class="dropdown-divider"/>
                             </t>
                             <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
-                            <DropdownItem t-else="" class="item.class ? item.class + ' o_menu_item' : 'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                            <DropdownItem
+                             t-else=""
+                             class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': offline.offline and !item.availableOffline }"
+                             onSelected="() => this.onItemSelected(item)">
                                 <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>

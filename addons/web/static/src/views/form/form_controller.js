@@ -594,6 +594,7 @@ export class FormController extends Component {
             },
             delete: {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
+                availableOffline: true,
                 sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),

@@ -5,7 +5,8 @@ import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
-import { getFieldsSpec, resequence } from "./utils";
+import { getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -276,9 +277,27 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
         }
-        const unlinked = await this.model.orm.unlink(this.resModel, resIds, {
-            context: this.context,
-        });
+        let unlinked = false;
+        try {
+            unlinked = await this.model.orm.unlink(this.resModel, resIds, {
+                context: this.context,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                this.model.offline.scheduleORM(
+                    this.resModel,
+                    "unlink",
+                    [resIds],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, records),
+                    }
+                );
+                this._unSelectAll();
+                return true;
+            }
+            throw e;
+        }
         if (!unlinked) {
             return false;
         }
@@ -504,5 +523,12 @@ export class DynamicList extends DataPoint {
                 record._toggleSelection(true);
             });
         }
+    }
+
+    _unSelectAll() {
+        this.selection.forEach((record) => {
+            record.toggleSelection(false);
+        });
+        this._selectDomain(false);
     }
 }

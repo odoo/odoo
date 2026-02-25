@@ -225,11 +225,16 @@ async function clickControlPanelAction(buttonName) {
     }
 }
 
-async function clickRecordSelector() {
+async function clickRecordSelector(count = 1) {
     if (getMockEnv().isSmall) {
-        await contains(".o_data_row").drag();
+        const cells = queryAll(".o_data_row").slice(0, count);
+        for (const cell of cells) {
+            await contains(cell).drag();
+        }
     } else {
-        await contains(`.o_data_row .o_list_record_selector input`).click();
+        for (let i = 0; i < count; i++) {
+            await contains(`.o_data_row:eq(${i}) .o_list_record_selector input`).click();
+        }
     }
 }
 
@@ -635,7 +640,7 @@ test(`[Offline] disable new button if not previously visited`, async () => {
 });
 
 test(`[Offline] create record when offline`, async () => {
-    expect.errors(2); // 2x ConnectionLostError
+    expect.errors(4); // 4x ConnectionLostError
     onRpc("web_save", () => expect.step(`web_save`));
     Foo._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -687,6 +692,19 @@ test(`[Offline] create record when offline`, async () => {
         `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
     ]);
 
+    // Open the created record !
+    await contains(`.o_offline_systray_content .o-dropdown-item`).click();
+    await animationFrame();
+    expect(`.o_field_widget[name='foo'] input`).toHaveValue("test");
+
+    //Came back to the list
+    await getService("action").doAction(1);
+    await animationFrame();
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/onchange" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
+
     // go online and save the record.
     await setOffline(false);
 
@@ -700,6 +718,95 @@ test(`[Offline] create record when offline`, async () => {
     //The offline create record is there
     await getService("action").doAction(1);
     expect(`tbody tr`).toHaveCount(5);
+});
+
+test(`[Offline] edit record when offline`, async () => {
+    expect.errors(6); // 6x ConnectionLostError
+    onRpc("web_save", () => expect.step(`web_save`));
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    // Put in cache the on_change
+    await contains(".o_data_cell").click();
+    expect(`.o_field_widget[name='foo'] input`).toHaveValue("yop");
+    await contains(`.o_back_button`).click();
+
+    await setOffline(true);
+
+    //Open the record offline
+    await contains(".o_data_cell").click();
+    await contains(`.o_field_widget[name='foo'] input`).edit("test");
+    //Go Back to the list, this will save the record
+    await contains(`.o_back_button`).click();
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
+
+    // The edited record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "foo,1",
+        "Edited",
+        "",
+    ]);
+
+    // Open the created record from the Offline Dropdown!
+    await contains(`.o_offline_systray_content .o-dropdown-item`).click();
+    await animationFrame();
+    expect(`.o_field_widget[name='foo'] input`).toHaveValue("test");
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_read" couldn't be established`,
+    ]);
+
+    //Came back to the list
+    await getService("action").doAction(1);
+
+    // Open the create record from the List
+    await contains(".o_data_cell").click();
+    expect(`.o_field_widget[name='foo'] input`).toHaveValue("test");
+    await contains(`.o_back_button`).click();
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    //The current view is not updated when the offline is sync.
+    //In this case we don't see the newly created record, until the view is reloaded.
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap", "blip"]);
+
+    //Reload the view
+    //The offline create record is there
+    await getService("action").doAction(1);
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["test", "blip", "gnap", "blip"]);
 });
 
 test.tags("desktop");
@@ -19867,6 +19974,54 @@ test(`[Offline] cache web_search_read: browsing with pager online/offline`, asyn
         `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
         `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
     ]);
+});
+
+test(`[Offline] delete records`, async () => {
+    onRpc("unlink", () => expect.step(`unlink`));
+    Foo._views = {
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(4, { message: "Checking initial number of records" });
+
+    await setOffline(true);
+
+    await clickRecordSelector(2); //select two records
+
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleMenuItem("Delete"); // toggle delete action
+    await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
+
+    // The deleted records will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "2 Records",
+        "Deleted",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["unlink"]);
 });
 
 test(`[Offline] cache web_search_read: enable filter online/offline`, async () => {

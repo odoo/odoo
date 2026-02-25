@@ -461,6 +461,7 @@ export class ListController extends Component {
             },
             delete: {
                 isAvailable: () => this.activeActions.delete,
+                availableOffline: true,
                 sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),

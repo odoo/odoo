@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;
@@ -56,6 +57,7 @@ export class ActionMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.offline = useService("offline");
         this.state = useState({ printItems: [] });
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);
@@ -149,11 +151,18 @@ export class ActionMenus extends Component {
                 : validActionIds.push(action.id);
         }
         if (actionWithDomainIds.length) {
-            const validActionsWithDomainIds = await this.orm.call(
-                "ir.actions.report",
-                "get_valid_action_reports",
-                [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
-            );
+            let validActionsWithDomainIds = [];
+            try {
+                validActionsWithDomainIds = await this.orm.call(
+                    "ir.actions.report",
+                    "get_valid_action_reports",
+                    [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
+                );
+            } catch (e) {
+                if (!(e instanceof ConnectionLostError)) {
+                    throw e;
+                }
+            }
             validActionIds.push(...validActionsWithDomainIds);
         }
         return printActions

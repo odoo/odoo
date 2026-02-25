@@ -906,3 +906,30 @@ export async function resequence({
         throw error;
     }
 }
+
+export function getScheduleORMExtras(model, records) {
+    const extras = {
+        actionId: model.env.config.actionId,
+        actionName: model.env.config.actionName,
+        viewType: model.env.config.viewType,
+        timeStamp: Date.now(),
+    };
+    if (records.length > 1) {
+        extras.displayNames = records.map((r) => getOfflineDisplayName(r));
+        extras.displayName = _t("%s Records", records.length);
+    } else {
+        extras.displayName = getOfflineDisplayName(records[0]);
+    }
+    return extras;
+}
+
+function getOfflineDisplayName(record) {
+    return (
+        record.data.complete_name ||
+        record.data.name ||
+        record.data.display_name ||
+        record.data.x_name ||
+        record.data.x_studio_name ||
+        _t("Record")
+    );
+}

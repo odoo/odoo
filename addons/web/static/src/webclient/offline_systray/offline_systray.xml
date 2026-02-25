@@ -26,7 +26,7 @@
                 <div class="o_offline_systray_content px-2">
                     <t t-foreach="this.groupEntries" t-as="entry" t-key="entry[0]">
                         <div class="o_horizontal_separator text-uppercase fw-bolder small mb-1">
-                            <span t-esc="entry[0]"/> 
+                            <span t-esc="entry[0]"/>
                         </div>
                         <t t-foreach="entry[1]" t-as="element" t-key="element.id">
                             <DropdownItem
@@ -50,8 +50,8 @@
                                     class="ms-auto"
                                     t-att-data-tooltip-template="'web.OfflineSystrayTooltip'"
                                     t-att-data-tooltip-info="element.tooltip">
-                                    <span t-attf-class="o_tag mw-100 o_badge badge rounded-pill {{ 'o_tag_color_' + element.statusColor }}">
-                                        <t class="o_tag_badge_text o_badge_text" t-esc="element.status"/>
+                                    <span t-attf-class="o_tag mw-100 o_badge badge rounded-pill {{ 'o_tag_color_' + element.status.color }}">
+                                        <t class="o_tag_badge_text o_badge_text" t-esc="element.status.label"/>
                                     </span>
                                 </div>
                                 <div>
@@ -73,9 +73,24 @@
         <div>
             On <t t-esc="this.timeStamp"/>
         </div>
-        <t t-foreach="this.details" t-as="entry" t-key="entry[0]">
+        <t t-if="this.records.length">
             <div>
-                - <t t-esc="entry[0]"/>: <t t-esc="entry[1]"/><t t-if="entry[2]"> → <t t-esc="entry[2]"/></t>
+                Records:
+                <t t-foreach="this.records" t-as="record" t-key="record_index">
+                    <div>
+                        - <t t-esc="record"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+        <t t-if="this.changes">
+            <div>
+                <t t-if="this.records.length">Changes:</t>
+                <t t-foreach="this.changes" t-as="entry" t-key="entry_index">
+                    <div>
+                        - <t t-esc="entry[0]"/>: <t t-esc="entry[1]"/><t t-if="entry[2] !== undefined"> → <t t-esc="entry[2]"/></t>
+                    </div>
+                </t>
             </div>
         </t>
     </t>

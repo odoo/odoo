@@ -10,6 +10,12 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 
 const { DateTime } = luxon;
 
+const STATUS = {
+    CREATED: { label: _t("Created"), color: 10 },
+    EDITED: { label: _t("Edited"), color: 3 },
+    DELETED: { label: _t("Deleted"), color: 1 },
+};
+
 class OfflineSystray extends Component {
     static template = "web.OfflineSystray";
     static props = {};
@@ -28,33 +34,35 @@ class OfflineSystray extends Component {
     get groupEntries() {
         const items = [];
         for (const { key, value } of Object.values(this.offlineService.scheduledORM)) {
-            // OfflineSystray for the moment only support web_save!
+            const timeStamp = formatDateTime(DateTime.fromMillis(value.extras.timeStamp));
+            const item = {
+                id: key,
+                timeStamp: value.extras.timeStamp,
+                actionName: value.extras.actionName,
+                displayName: value.extras.displayName,
+                clickable: this.isClickable(value),
+                error: value.extras.error,
+                tooltip: {
+                    timeStamp,
+                    records: value.extras.displayNames || [],
+                },
+            };
             if (value.method === "web_save") {
-                let tooltipDetails = Object.entries(value.extras.changes);
+                item.status = value.args[0].length ? STATUS.EDITED : STATUS.CREATED;
+                item.tooltip.changes = Object.entries(value.extras.changes);
                 if (value.args[0].length) {
-                    tooltipDetails = tooltipDetails.map((c) => [
+                    item.tooltip.changes = item.tooltip.changes.map((c) => [
                         c[0],
                         value.extras.originalValues[c[0]],
                         c[1],
                     ]);
                 }
-                const status = value.args[0].length ? _t("Edited") : _t("Created");
-                const statusColor = value.args[0].length ? "2" : "10";
-                items.push({
-                    id: key,
-                    timeStamp: value.extras.timeStamp,
-                    actionName: value.extras.actionName,
-                    displayName: value.extras.displayName,
-                    status,
-                    statusColor,
-                    clickable: this.isClickable(value),
-                    error: value.extras.error,
-                    tooltip: JSON.stringify({
-                        timeStamp: formatDateTime(DateTime.fromMillis(value.extras.timeStamp)),
-                        details: tooltipDetails,
-                    }),
-                });
             }
+            if (value.method === "unlink") {
+                item.status = STATUS.DELETED;
+            }
+            item.tooltip = JSON.stringify(item.tooltip);
+            items.push(item);
         }
         const sections = Object.entries(Object.groupBy(items, (item) => item.actionName || ""));
         sections.forEach(([_name, items]) => {
@@ -66,6 +74,7 @@ class OfflineSystray extends Component {
     isClickable(value) {
         const resId = value.args[0].length ? value.args[0][0] : false;
         return (
+            value.method === "web_save" &&
             value.extras.viewType === "form" &&
             (!this.offlineService.offline ||
                 this.offlineService.isAvailableOffline(value.extras.actionId, "form", resId))

@@ -5,7 +5,7 @@
         <div t-if="this.hasItems" class="o_cp_action_menus d-flex align-items-center gap-1" t-att-class="{'pe-2': !this.env.isSmall}">
             <div class="lh-1">
                 <Dropdown menuClass="'lh-base'" beforeOpen.bind="this.loadPrintItems">
-                    <button class="d-print-none btn" t-att-class="this.env.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu">
+                    <button class="d-print-none btn" t-att-class="this.env.isSmall ? 'btn-secondary' : 'lh-sm p-0 border-0'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu" data-available-offline="">
                         <i class="fa fa-fw fa-cog"/>
                     </button>
 
@@ -42,7 +42,11 @@
 
                             <t t-if="item.Component" t-component="item.Component"/>
 
-                            <DropdownItem t-else="" class="item.class ? item.class + ' o_menu_item' : 'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                            <DropdownItem
+                                t-else=""
+                                class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': offline.offline and !(item.availableOffline and !env.model.root.isNew) }"
+                                onSelected="() => this.onItemSelected(item)"
+                            >
                                 <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>

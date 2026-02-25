@@ -10,6 +10,7 @@ import {
     getBasicEvalContext,
     getFieldContext,
     getFieldsSpec,
+    getScheduleORMExtras,
     parseServerValue,
 } from "./utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -188,9 +189,25 @@ export class Record extends DataPoint {
 
     delete() {
         return this.model.mutex.exec(async () => {
-            const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
-                context: this.context,
-            });
+            let unlinked = false;
+            try {
+                unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+                    context: this.context,
+                });
+            } catch (e) {
+                if (e instanceof ConnectionLostError) {
+                    return this.model.offline.scheduleORM(
+                        this.resModel,
+                        "unlink",
+                        [[this.resId]],
+                        { context: this.context },
+                        {
+                            extras: getScheduleORMExtras(this.model, [this]),
+                        }
+                    );
+                }
+                throw e;
+            }
             if (!unlinked) {
                 return false;
             }
@@ -335,12 +352,16 @@ export class Record extends DataPoint {
             scheduledORM = Object.values(this.model.offline.scheduledORM).find(
                 (s) =>
                     s.value.extras?.actionId === this.model.env.config.actionId &&
+                    s.value.method === "web_save" && // Only web_save changes are applied
+                    s.value.extras.viewType === "form" && // Only changes made on a view form are applied
                     s.value.args[0]?.[0] === this.resId
             );
         }
         if (scheduledORM) {
             this._offlineId = scheduledORM.key;
-            this._offlineChanges = this._parseServerValues(scheduledORM.value.extras.changes);
+            this._offlineChanges = markRaw(
+                this._parseServerValues(scheduledORM.value.extras.changes)
+            );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
             return this.update(this._offlineChanges);
         }
@@ -1279,7 +1300,7 @@ export class Record extends DataPoint {
         this.dirty = false;
     }
 
-    async _offlineSave() {
+    _offlineSave() {
         this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
         const offlineChanges = this._getChanges(this._offlineChanges);
         delete offlineChanges.id; // id never changes, and should not be written
@@ -1293,20 +1314,11 @@ export class Record extends DataPoint {
             {
                 id: this._offlineId,
                 extras: {
-                    actionId: this.model.env.config.actionId,
-                    actionName: this.model.env.config.actionName,
-                    viewType: this.model.env.config.viewType,
+                    ...getScheduleORMExtras(this.model, [this]),
                     changes: this._formatServerValues(this._offlineChanges),
                     originalValues: this._formatServerValues(
                         pick(this._values, ...Object.keys(this._offlineChanges))
                     ),
-                    displayName:
-                        this.data.complete_name ||
-                        this.data.name ||
-                        this.data.display_name ||
-                        this.data.x_name ||
-                        this.data.x_studio_name ||
-                        _t("Record"),
                     timeStamp: this._offlineTimeStamp,
                 },
             }
