@@ -317,7 +317,10 @@ class MrpWorkorder(models.Model):
         for wo in self:
             wo.display_name = f"{wo.production_id.name} - {wo.name}"
             if self.env.context.get('prefix_product'):
-                wo.display_name = f"{wo.product_id.name} - {wo.production_id.name} - {wo.name}"
+                product_name = wo.product_id.name
+                if variant := wo.product_id.product_template_attribute_value_ids._get_combination_name():
+                    product_name = f"{product_name}({variant})"
+                wo.display_name = f"{product_name} - {wo.production_id.name} - {wo.name}"
 
     @api.depends('duration_expected', 'duration', 'state')
     def _compute_remaining_time(self):
@@ -586,7 +589,7 @@ class MrpWorkorder(models.Model):
         for production in self.mapped("production_id"):
             production._link_workorders_and_moves()
 
-    def _plan_workorders(self, from_date=False, alternative=True):
+    def _plan_workorders(self, from_date=False, alternative=True, consider_blocked_by=True):
         """Plan or replan a set of manufacturing workorders
 
         :param from_date: An optional `datetime` object. If provided, The planning will start from
@@ -612,7 +615,8 @@ class MrpWorkorder(models.Model):
             if wo.id in done_wo:
                 continue
             date_start = max(from_date or datetime.now(), datetime.now())
-            wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo)._plan_workorders(from_date=from_date)
+            if consider_blocked_by:
+                wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo)._plan_workorders(from_date=from_date, alternative=alternative)
             done_wo.update(wo.blocked_by_workorder_ids.ids)
             if wo.blocked_by_workorder_ids and wo.blocked_by_workorder_ids[-1].date_finished:
                 date_start = wo.blocked_by_workorder_ids[-1].date_finished
@@ -978,7 +982,7 @@ class MrpWorkorder(models.Model):
         date_to_plan_on = max((wo.leave_id.date_to for wo in self.blocked_by_workorder_ids if wo.leave_id), default=datetime.now())
         if self.env.context.get('date_to_plan_on'):
             date_to_plan_on = fields.Datetime.from_string(self.env.context.get('date_to_plan_on'))
-        self._plan_workorders(from_date=date_to_plan_on, alternative=False)
+        self._plan_workorders(from_date=date_to_plan_on, alternative=False, consider_blocked_by=False)
 
     def action_unplan(self):
         self.leave_id.unlink()
