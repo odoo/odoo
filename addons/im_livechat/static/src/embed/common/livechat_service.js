@@ -124,6 +124,10 @@ export class LivechatService {
         if (this.thread && !this.thread.isTransient) {
             return this.thread;
         }
+        if (this._persistResolvers) {
+            return this._persistResolvers.promise;
+        }
+        this._persistResolvers = Promise.withResolvers();
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
         const deleteTemporary = async () => {
@@ -148,6 +152,8 @@ export class LivechatService {
             deleteTemporary();
             this.thread.openChatWindow({ focus: true });
         });
+        this._persistResolvers.resolve(this.thread);
+        this._persistResolvers = null;
         return this.thread;
     }
 
