@@ -19,6 +19,7 @@ import {
     waitFor,
     hover,
     manuallyDispatchProgrammaticEvent,
+    advanceTime,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -2728,4 +2729,32 @@ test("should always have a block before a Table of Contents", async () => {
     expect(firstChild).toHaveOuterHTML(
         '<div class="o-paragraph" data-selection-placeholder="" style="margin: 8px 0px -9px;"><br></div>'
     );
+});
+
+test.tags("desktop");
+test("should not open icon toolbar when creating table of contents inside a list", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<ol><li><br></li></ol>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField("li");
+    await insertText(htmlEditor, "/tableofcontents");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Table of Contents");
+    await press("Enter");
+    await animationFrame();
+    setSelectionInHtmlField("li");
+    await advanceTime(200);
+    await expectElementCount(".o-we-toolbar", 0);
 });
