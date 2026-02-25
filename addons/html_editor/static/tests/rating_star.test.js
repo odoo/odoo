@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press } from "@odoo/hoot-dom";
+import { advanceTime, click, press } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import {
     deleteBackward,
@@ -140,4 +140,14 @@ test("stars line should be reachable with up/down", async () => {
     await simulateArrowKeyPress(editor, "ArrowUp");
     await simulateArrowKeyPress(editor, "ArrowDown");
     expect(getContent(el)).toBe(`<p>abc</p><p>[]\uFEFF${stars}\uFEFF</p><p>def</p>`);
+});
+
+test.tags("desktop");
+test("should not open icon toolbar when inserting a paragraph break before the star element", async () => {
+    const { editor } = await setupEditor(
+        `<p>\u200B[]<span contenteditable="false" class="o_stars o_three_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B</p>`
+    );
+    splitBlock(editor);
+    await advanceTime(100);
+    await expectElementCount(".o-we-toolbar", 0);
 });
