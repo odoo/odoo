@@ -117,7 +117,9 @@ export class Thread extends Component {
                     this.smoothScrollingDeferred,
                 ]);
                 if (this.loadOlderState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages();
+                    const thread = toRaw(this.props.thread);
+                    thread.checkMessagesToUnload();
+                    thread.fetchMoreMessages();
                 }
             },
             { ready: false }
@@ -130,7 +132,9 @@ export class Thread extends Component {
                     this.smoothScrollingDeferred,
                 ]);
                 if (this.loadNewerState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages("newer");
+                    const thread = toRaw(this.props.thread);
+                    thread.checkMessagesToUnload("newer");
+                    thread.fetchMoreMessages("newer");
                 }
             },
             { ready: false }
@@ -514,6 +518,10 @@ export class Thread extends Component {
             (this.props.thread.loadNewer || this.presentThresholdState.isVisible === false);
     }
 
+    onClickLoadNewer() {
+        this.props.thread.fetchMoreMessages("newer");
+    }
+
     onClickLoadOlder() {
         this.props.thread.fetchMoreMessages();
     }
@@ -662,15 +670,23 @@ export class Thread extends Component {
         return this.props.order === "asc" ? [...messages] : [...messages].reverse();
     }
 
-    get showLoadOlder() {
+    get showLoadNewerOlderCommon() {
         return (
-            this.props.thread.loadOlder &&
             this.props.thread.isLoaded &&
+            !this.props.thread.unloadingHiddenMessages &&
             !this.props.thread.isTransient &&
             !this.props.thread.hasLoadingFailed &&
             !this.messageHighlight?.initiated &&
             !this.messageHighlight?.highlightedMessageId
         );
+    }
+
+    get showLoadNewer() {
+        return this.props.thread.loadNewer && this.showLoadNewerOlderCommon;
+    }
+
+    get showLoadOlder() {
+        return this.props.thread.loadOlder && this.showLoadNewerOlderCommon;
     }
 
     setScroll(value, { smooth = false } = {}) {
