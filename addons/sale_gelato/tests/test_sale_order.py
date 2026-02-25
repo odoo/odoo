@@ -24,6 +24,19 @@ class TestGelatoSaleOrder(SaleCommon):
             ],
         })
 
+        cls.partner_missing_street = cls.env['res.partner'].create({
+            'name': 'Test',
+            'city': 'Leuven',
+            'zip': '3001',
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'test@test.com',
+            'phone': '123123123',
+        })
+
+        cls.partner_street_too_long = cls.partner_missing_street.copy({
+            'street': 'Rue de la Madeleine/Magdalenasteenweg'
+        })
+
     def test_add_non_gelato_service_product_to_gelato_order(self):
         """Test that adding a non-gelato service product to Gelato order is possible."""
         self.env['sale.order.line'].create({
@@ -42,3 +55,21 @@ class TestGelatoSaleOrder(SaleCommon):
                 'product_id': self.product.id,
                 'order_id': self.gelato_order.id,
             })
+
+    def test_prevent_confirming_gelato_so_with_an_incomplete_partner_address(self):
+        """Test that confirming Gelato SO with incomplete partner address is impossible."""
+        self.gelato_order.write({'partner_id': self.partner_missing_street.id})
+        with self.assertRaises(
+            ValidationError,
+            msg="It should not be possible to confirm Gelato SO with incomplete address.",
+        ):
+            self.gelato_order.action_confirm()
+
+    def test_prevent_confirming_gelato_so_with_too_long_partner_address(self):
+        """Test that confirming Gelato SO is impossible if partner shipping address is too long."""
+        self.gelato_order.write({'partner_id': self.partner_street_too_long.id})
+        with self.assertRaises(
+            ValidationError,
+            msg="It should not be possible to confirm Gelato SO with too long partner address.",
+        ):
+            self.gelato_order.action_confirm()
