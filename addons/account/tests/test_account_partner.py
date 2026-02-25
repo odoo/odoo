@@ -35,7 +35,11 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             'acc_number': '123456789',
             'partner_id': partner.id,
         })
-        account.env.user.groups_id |= self.env.ref('account.group_validate_bank_account')
+        self.env.user.groups_id = (
+            self.env.ref('base.group_partner_manager')
+            + self.env.ref('account.group_account_user')
+            + self.env.ref('account.group_validate_bank_account')
+        )
         account.allow_out_payment = True
 
         with self.assertRaisesRegex(UserError, "has been trusted"), self.cr.savepoint():

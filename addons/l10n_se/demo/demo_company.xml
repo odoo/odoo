@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Ängelholms kommun</field>
         <field name="country_id" ref="base.se"/>
-        
+
         <field name="zip">262 64</field>
         <field name="phone">+46 70 123 45 67</field>
         <field name="email">info@company.seexample.com</field>
@@ -23,6 +23,7 @@
         <field name="acc_number">SE0826566594158439377422</field>
         <field name="partner_id" ref="partner_demo_company_se"/>
         <field name="company_id" ref="demo_company_se"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

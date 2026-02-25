@@ -380,6 +380,11 @@ class TestCIIFR(TestUBLCommon):
     def test_import_and_create_partner_facturx(self):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
         """
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR15001559627230',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
+        })
         partner_vals = {
             'name': "Buyer",
             'mail': "buyer@yahoo.com",
@@ -444,6 +449,11 @@ class TestCIIFR(TestUBLCommon):
         )
 
     def test_import_fnfe_examples(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR76 1254 2547 2569 8542 5874 698',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
+        })
         # Source: official documentation of the FNFE (subdirectory: "5. FACTUR-X 1.0.06 - Examples")
         subfolder = 'tests/test_files/from_factur-x_doc'
         # the 2 following files have the same pdf but one is labelled as an invoice and the other as a refund
@@ -465,6 +475,11 @@ class TestCIIFR(TestUBLCommon):
         See the tests above to create these xml attachments ('test_export_with_fixed_taxes_case_[X]').
         NB: use move_type = 'out_invoice' s.t. we can retrieve the taxes used to create the invoices.
         """
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'FR15001559627230',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
+        })
         subfolder = "tests/test_files/from_odoo"
         self._assert_imported_invoice_from_file(
             subfolder=subfolder, filename='facturx_ecotaxes_case1.xml', amount_total=121, amount_tax=22,
@@ -497,4 +512,3 @@ class TestCIIFR(TestUBLCommon):
         )
 
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/facturx_positive_discount_price_unit.xml')
-

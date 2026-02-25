@@ -6,7 +6,7 @@
         <field name="street">Meierskappelerstrasse 14</field>
         <field name="city">Risch-Rotkreuz</field>
         <field name="country_id" ref="base.ch"/>
-        
+
         <field name="zip">6343</field>
         <field name="phone">+41 78 123 45 67</field>
         <field name="email">info@company.chexample.com</field>
@@ -18,6 +18,7 @@
         <field name="acc_number">CH1500240123456789012</field>
         <field name="l10n_ch_qr_iban">CH4431999123000889012</field>
         <field name="partner_id" ref="l10n_ch.partner_demo_company_ch"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <record id="demo_company_ch" model="res.company">

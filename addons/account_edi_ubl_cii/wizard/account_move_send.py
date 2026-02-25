@@ -72,7 +72,7 @@ class AccountMoveSend(models.TransientModel):
     def _need_invoice_document(self, invoice):
         result = super()._need_invoice_document(invoice)
         invoice_data = self.env.context.get('invoice_data')
-        if invoice_data and invoice_data['ubl_cii_xml'] and invoice._need_ubl_cii_xml():
+        if invoice_data and invoice_data.get('ubl_cii_xml') and invoice._need_ubl_cii_xml():
             return True
         return result
 
