@@ -167,21 +167,61 @@
         }
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
-            width: $-o-carousel-controllers-size;
-            height: $-o-carousel-controllers-size;
             background-size: 50%;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
+            height: $-o-carousel-controllers-size;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon,
+        &.s_image_gallery_controllers_outside .o_carousel_pause_icon {
+            width: $-o-carousel-controllers-size;
+        }
+        &:not(.s_image_gallery_controllers_outside) .o_carousel_pause_icon {
+            width: MIN(#{$-o-carousel-controllers-size}, 100%);
+        }
+
+        // Pause button
+        .o_carousel_pause {
+            padding: 0;
+
+            &:focus-visible {
+                outline: none;
+                box-shadow: none;
+
+                .o_carousel_pause_icon {
+                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                }
+            }
+
+            &:active {
+                border-color: transparent;
+            }
+
+            .o_carousel_pause_icon {
+                align-content: center;
+                color: $carousel-control-color;
+            }
+        }
+
+        .carousel-dark .o_carousel_pause_icon {
+            filter: $carousel-dark-control-icon-filter;
+        }
+
+        // Pause button - Hidden
+        .o_carousel_pause_btn_hidden .o_carousel_pause {
+            display: none;
         }
 
         // Arrows - Default
         &.s_image_gallery_arrows_default {
-            .carousel-control-prev, .carousel-control-next {
+            .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                 &:hover {
                     background: rgba($carousel-dark-indicator-active-bg, .2);
                 }
             }
 
             .carousel-dark {
-                .carousel-control-prev, .carousel-control-next {
+                .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                     &:hover {
                         background: rgba($carousel-indicator-active-bg, .2);
                     }
@@ -219,13 +259,35 @@
             }
         }
 
+        // Indicators
+        .carousel-indicators {
+            > button:focus-visible {
+                position: relative;
+                outline: none;
+
+                &::before {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    content: "";
+                    box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
+                    border-radius: inherit;
+                }
+            }
+        }
+
         // Indicators - Bars
-        &.s_image_gallery_indicators_bars .carousel-indicators > button img {
-            display: none;
+        &.s_image_gallery_indicators_bars {
+            // Border-top + border-bottom + indicator height.
+            --image-gallery-indicators-height: #{2* $carousel-indicator-hit-area-height + $carousel-indicator-height};
+
+            .carousel-indicators > button img {
+                display: none;
+            }
         }
 
         // Indicators - Squared Miniatures / Rounded Miniatures
         &.s_image_gallery_indicators_squared, &.s_image_gallery_indicators_rounded {
+            --image-gallery-indicators-height: #{$-o-carousel-controllers-size};
+
             .carousel-indicators > button {
                 width: $-o-carousel-controllers-size;
                 height: $-o-carousel-controllers-size;
@@ -267,6 +329,8 @@
 
         // Indicators - Dots
         &.s_image_gallery_indicators_dots {
+            --image-gallery-indicators-height: #{$-o-carousel-indicators-dots-size};
+
             .carousel-indicators > button {
                 width: $-o-carousel-indicators-dots-size;
                 height: $-o-carousel-indicators-dots-size;
@@ -296,6 +360,8 @@
 
         // Indicators - Numbers
         &.s_image_gallery_indicators_numbers {
+            --image-gallery-indicators-height: 1.5rem; // line height
+
             .carousel-indicators {
                 flex-wrap: wrap;
                 height: auto;
@@ -357,6 +423,21 @@
             display: none;
         }
 
+        // Style - Classic
+        &:not(.s_image_gallery_controllers_outside, .s_image_gallery_controllers_indicators_outside) {
+            .o_carousel_pause {
+                // 1rem = indicators margin-bottom
+                height: calc(var(--image-gallery-indicators-height) + 2* 1rem);
+            }
+        }
+
+        // Style - Classic / Indicators outside
+        &:not(.s_image_gallery_controllers_outside) .o_carousel_pause {
+            position: absolute;
+            bottom: 0;
+            width: $carousel-control-width;
+        }
+
         // Style - Indicators outside / Outside
         &.s_image_gallery_controllers_indicators_outside:where(:not(.s_image_gallery_indicators_hidden)),
         &.s_image_gallery_controllers_outside {
@@ -392,8 +473,18 @@
                 margin-bottom: 0;
             }
 
-            &.s_image_gallery_indicators_numbers .carousel-indicators {
-                height: auto;
+            &.s_image_gallery_indicators_numbers {
+                .carousel-indicators {
+                    height: auto;
+                }
+
+                .o_carousel_pause {
+                    height: var(--image-gallery-indicators-height);
+
+                    .o_carousel_pause_icon {
+                        height: auto;
+                    }
+                }
             }
         }
 

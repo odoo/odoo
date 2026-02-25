@@ -1094,15 +1094,23 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             min-width: 0;
             margin: 0;
         }
-        .carousel-control-prev, .carousel-control-next {
+        .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
             position: relative;
             width: auto;
+        }
+
+        .o_carousel_pause {
+            padding-block: 0;
+
+            .o_carousel_pause_icon {
+                height: auto;
+            }
         }
     }
 
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control buttons/indicators clickable.
-    .carousel-indicators > *, .carousel-control-prev, .carousel-control-next {
+    .carousel-indicators > *, .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
         pointer-events: auto;
     }
 
@@ -1274,10 +1282,17 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 // This style is shared by the new versions of carousels
 // 001 for s_carousel & 002 for s_quotes_carousel
 %s_carousel_variants {
+    // Before media-breakpoint-down so that it's overridden.
+    .o_carousel_pause {
+        width: $carousel-control-width;
+        padding-block: map-get($spacers, 3);
+    }
+
     // Controllers in Mobile
     @include media-breakpoint-down(md) {
         .carousel-control-prev,
-        .carousel-control-next {
+        .carousel-control-next,
+        .o_carousel_pause {
             top: auto;
             bottom: map-get($spacers, 3);
             height: $-o-carousel-controllers-size;
@@ -1285,17 +1300,43 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             margin: 0 map-get($spacers, 3);
         }
 
-        &:not(.s_carousel_arrows_hidden) .carousel-indicators {
-            $-margin-x: calc(#{map-get($spacers, 3)} * 2 + #{$-o-carousel-controllers-size});
+        .o_carousel_pause {
+            left: 0;
+            padding: 0;
 
-            min-height: $-o-carousel-controllers-size;
+            .o_carousel_pause_icon {
+                height: auto;
+            }
+        }
+        &:not(.o_carousel_pause_btn_hidden, .s_carousel_controllers_indicators_outside),
+        &.s_carousel_controllers_indicators_outside:has(.s_carousel_indicators_hidden) {
+            .carousel-control-prev {
+                left: calc(#{$-o-carousel-controllers-size} + 1rem);
+            }
+        }
+
+        $-margin-x: calc(#{map-get($spacers, 3)} * 2 + #{$-o-carousel-controllers-size});
+
+        &:not(.s_carousel_arrows_hidden), &:not(.o_carousel_pause_btn_hidden) {
+            .carousel-indicators {
+                min-height: $-o-carousel-controllers-size;
+            }
+        }
+        &.o_carousel_pause_btn_hidden:not(.s_carousel_arrows_hidden) .carousel-indicators {
             margin: 0 $-margin-x map-get($spacers, 3);
+        }
+        &.s_carousel_arrows_hidden:not(.o_carousel_pause_btn_hidden) .carousel-indicators {
+            margin: 0 0 map-get($spacers, 3) $-margin-x;
+        }
+        &:not(.s_carousel_arrows_hidden, .o_carousel_pause_btn_hidden) .carousel-indicators {
+            margin: 0 $-margin-x map-get($spacers, 3) calc(#{$-margin-x} + #{map-get($spacers, 5)});
         }
     }
 
     .carousel-control-prev,
     .carousel-control-next,
-    .carousel-indicators {
+    .carousel-indicators,
+    .o_carousel_pause {
         position: absolute;
     }
 
@@ -1304,6 +1345,28 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             .carousel-control-prev-icon, .carousel-control-next-icon {
                 box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
             }
+        }
+    }
+
+    .o_carousel_pause {
+        display: grid;
+        justify-content: center;
+        color: $carousel-control-color;
+        opacity: $carousel-control-opacity;
+        transition: $carousel-control-transition;
+
+        &:hover, &:focus-visible {
+            opacity: $carousel-control-hover-opacity;
+        }
+        &:focus-visible {
+            box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
+        }
+        &:active {
+            border-color: transparent;
+        }
+
+        .o_carousel_pause_icon {
+            align-content: center;
         }
     }
 
@@ -1316,21 +1379,35 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
     }
 
-    .carousel-control-prev-icon, .carousel-control-next-icon {
+    .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
         width: $-o-carousel-controllers-size;
         height: $-o-carousel-controllers-size;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
         background-size: 50%;
     }
 
+    &.carousel-dark:not(.s_carousel_controllers_indicators_outside),
+    &.carousel-dark.s_carousel_controllers_indicators_outside:has(.s_carousel_indicators_hidden) {
+        .o_carousel_pause_icon {
+            filter: $carousel-dark-control-icon-filter;
+        }
+    }
+
     &.s_carousel_default {
-        .carousel-control-prev, .carousel-control-next {
+        .o_carousel_pause {
+            border-radius: 0;
+        }
+
+        .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
             &:hover {
                 background: rgba($carousel-dark-indicator-active-bg, .2);
             }
         }
 
         &.carousel-dark {
-            .carousel-control-prev, .carousel-control-next {
+            .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                 &:hover {
                     background: rgba($carousel-indicator-active-bg, .2);
                 }
@@ -1354,13 +1431,19 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 
     &.s_carousel_rounded {
-        .carousel-control-prev-icon, .carousel-control-next-icon {
+        .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
             border-radius: $border-radius-pill;
         }
     }
 
     &.s_carousel_arrows_hidden {
         .carousel-control-prev, .carousel-control-next {
+            display: none;
+        }
+    }
+
+    &.o_carousel_pause_btn_hidden {
+        .o_carousel_pause {
             display: none;
         }
     }
@@ -1520,9 +1603,24 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             }
         }
 
+        .o_carousel_pause {
+            margin-bottom: 0;
+            border: 0;
+
+            &:not(:has(~ .s_carousel_indicators_hidden)) {
+                bottom: 0;
+                padding: 0;
+                color: inherit;
+            }
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+
         .carousel-indicators {
             position: relative;
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
 
             &:not(.s_carousel_indicators_numbers) button {
                 background-color: currentColor;

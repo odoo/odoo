@@ -4,7 +4,7 @@ import {
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
@@ -23,64 +23,102 @@ async function setupWbsiteBuilderWithImageWall() {
     return builder;
 }
 
-test("Add image in gallery", async () => {
-    onRpc("ir.attachment", "search_read", () => [
-        {
-            id: 1,
-            name: "logo",
-            mimetype: "image/png",
-            image_src: "/web/image/hoot.png",
-            access_token: false,
-            public: true,
-        },
-    ]);
-
-    onRpc("/web/image/hoot.png", () => {
-        const base64Image =
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-        return dataURItoBlob(base64Image);
-    });
-
-    const { waitSidebarUpdated } = await setupWbsiteBuilderWithImageWall();
-    onRpc("/html_editor/get_image_info", () => {
-        expect.step("get_image_info");
-        return {
-            attachment: {
-                id: 1,
-            },
-            original: {
-                id: 1,
-                image_src: "/web/image/hoot.png",
-                mimetype: "image/png",
-            },
-        };
-    });
-    await contains(":iframe .o_masonry_col img[data-index='1']").click();
-    await waitSidebarUpdated();
-    await unfoldAllOptionsGroups();
-    expect("[data-action-id='addImage']").toHaveCount(1);
+async function addImage() {
     await contains("[data-action-id='addImage']").click();
-    // We use "click" instead of contains.click because contains wait for the image to be visible.
-    // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
+    // We use "click" instead of contains.click because contains wait for
+    // the image to be visible. In this test we don't want to wait ~800ms
+    // for the image to be visible but we can still click on it
     await click(".o_existing_attachment_cell .o_button_area");
     await contains(".modal-footer button:not([disabled]):contains(Add)").click();
-    await waitFor(":iframe .o_masonry_col img[data-index='6']");
+}
 
-    const columns = queryAll(":iframe .o_masonry_col");
-    const columnImgs = columns.map((column) =>
-        [...column.children].map((img) => img.dataset.index)
-    );
+describe("Add image", () => {
+    beforeEach(() => {
+        onRpc("ir.attachment", "search_read", () => [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/image/hoot.png",
+                access_token: false,
+                public: true,
+            },
+        ]);
+        onRpc("/web/image/hoot.png", () => {
+            const base64Image =
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+            return dataURItoBlob(base64Image);
+        });
+    });
 
-    expect(columnImgs).toEqual([["0", "3", "4", "5", "6"], ["1"], ["2"]]);
-    expect.verifySteps(["get_image_info", "get_image_info"]);
-    expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
-        "data-mimetype",
-        "image/webp"
-    );
-    expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
-        "data-mimetype-before-conversion",
-        "image/png"
-    );
+    test("Add image in gallery", async () => {
+        const { waitSidebarUpdated } = await setupWbsiteBuilderWithImageWall();
+        onRpc("/html_editor/get_image_info", () => {
+            expect.step("get_image_info");
+            return {
+                attachment: {
+                    id: 1,
+                },
+                original: {
+                    id: 1,
+                    image_src: "/web/image/hoot.png",
+                    mimetype: "image/png",
+                },
+            };
+        });
+        await contains(":iframe .o_masonry_col img[data-index='1']").click();
+        await waitSidebarUpdated();
+        await unfoldAllOptionsGroups();
+        expect("[data-action-id='addImage']").toHaveCount(1);
+        await addImage();
+        await waitFor(":iframe .o_masonry_col img[data-index='6']");
+
+        const columns = queryAll(":iframe .o_masonry_col");
+        const columnImgs = columns.map((column) =>
+            [...column.children].map((img) => img.dataset.index)
+        );
+
+        expect(columnImgs).toEqual([["0", "3", "4", "5", "6"], ["1"], ["2"]]);
+        expect.verifySteps(["get_image_info", "get_image_info"]);
+        expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
+            "data-mimetype",
+            "image/webp"
+        );
+        expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
+            "data-mimetype-before-conversion",
+            "image/png"
+        );
+    });
+
+    test("Adding an image in gallery doesn't show a hidden pause button", async () => {
+        const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
+            loadIframeBundles: true,
+        });
+        await contains(":iframe .s_image_gallery").click();
+        await waitSidebarUpdated();
+        await unfoldAllOptionsGroups();
+        expect(":iframe .o_carousel_pause").not.toBeVisible();
+        await addImage();
+        await waitFor(":iframe .carousel-item img[src^='data:image/webp;base64']");
+        expect(":iframe .carousel-inner > .carousel-item").toHaveCount(4);
+        expect(":iframe .o_carousel_pause").not.toBeVisible();
+    });
+
+    test("Adding an image in gallery doesn't hide a visible pause button", async () => {
+        const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_image_gallery", {
+            loadIframeBundles: true,
+        });
+        await contains(":iframe .s_image_gallery").click();
+        await waitSidebarUpdated();
+        await unfoldAllOptionsGroups();
+        expect(":iframe .o_carousel_pause").not.toBeVisible();
+        await contains("[data-class-action='o_carousel_pause_btn_hidden'] input").click();
+        expect(":iframe .o_carousel_pause").toBeVisible();
+        await addImage();
+        await waitFor(":iframe .carousel-item img[src^='data:image/webp;base64']");
+        expect(":iframe .carousel-inner > .carousel-item").toHaveCount(4);
+        expect(":iframe .o_carousel_pause").toBeVisible();
+    });
 });
 
 // TODO Re-enable once interactions run within iframe in hoot tests.
@@ -300,4 +338,15 @@ test("Change gallery layout still works when img.decode() fails", async () => {
     expect(":iframe .o_masonry_col").toHaveCount(0);
     await unfoldAllOptionsGroups();
     expect("[data-label='Mode'] .dropdown-toggle").toHaveText("Grid");
+});
+
+test("Cannot edit s_image_gallery pause button", async () => {
+    await setupWebsiteBuilderWithSnippet("s_image_gallery", { loadIframeBundles: true });
+    await contains(":iframe .s_image_gallery").click();
+    await contains(
+        "[data-label='Pause Button'] [data-class-action='o_carousel_pause_btn_hidden'] input"
+    ).click();
+    await contains(":iframe .s_image_gallery .o_carousel_pause_icon").dblclick();
+    // The media dialog doesn't open.
+    expect("modal").not.toHaveCount();
 });

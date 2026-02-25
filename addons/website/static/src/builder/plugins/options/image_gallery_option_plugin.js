@@ -292,6 +292,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
             copyAttributes: true,
             getIndicatorLabel: (itemPosition, total) =>
                 _t("Slide %(itemPosition)s of %(total)s", { itemPosition, total }),
+            hasPauseBtn: carouselEl.classList.contains("o_carousel_pause_btn_hidden"),
         });
         if (carouselEl) {
             carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
@@ -471,7 +472,9 @@ export class ImageGalleryOptionPlugin extends Plugin {
 
     getContentEditableEls(rootEl) {
         return [...selectElements(rootEl, ".s_image_gallery *")].filter(
-            (el) => isMediaElement(el) || el.tagName === "IMG"
+            (el) =>
+                !el.closest(".o_carousel_controllers") &&
+                (isMediaElement(el) || el.tagName === "IMG")
         );
     }
 

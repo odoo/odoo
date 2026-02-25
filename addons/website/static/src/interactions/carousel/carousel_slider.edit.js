@@ -12,6 +12,9 @@ const CarouselSliderEdit = (I) =>
                 "t-on-focusin": () => {},
                 "t-on-focusout": () => {},
             },
+            ".o_carousel_pause": {
+                "t-on-click": () => {},
+            },
         };
         // Pause carousel in edit mode.
         carouselOptions = { ride: false, pause: true, keyboard: false };
