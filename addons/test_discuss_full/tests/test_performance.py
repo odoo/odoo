@@ -36,7 +36,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
-    _query_count_init_store = 19
+    #   2: show_livechat_category
+    #       - search discuss_channel_member (is_self for ACL check)
+    #       - search_count discuss_channel_member
+    _query_count_init_store = 21
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -415,8 +418,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": True,
                     "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
                     "id": self.users[0].partner_id.id,
-                    "im_status": 'online',
-                    "im_status_access_token": self.users[0].partner_id._get_im_status_access_token(),
+                    "im_status": "online",
+                    "im_status_access_token": partner_0._get_im_status_access_token(),
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
                     "tz": "Europe/Brussels",
@@ -454,6 +457,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": self.user_root.partner_id.id,
                 "self_user": self.users[0].id,
+                "show_livechat_category": True,
                 "settings": {
                     "channel_notifications": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
