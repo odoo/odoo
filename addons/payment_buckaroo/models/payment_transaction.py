@@ -46,7 +46,6 @@ class PaymentTransaction(models.Model):
         return {
             'api_url': self.provider_id._buckaroo_get_api_url(),
             'url_params': url_params,
-            'api_method': 'post',
         }
 
     @api.model

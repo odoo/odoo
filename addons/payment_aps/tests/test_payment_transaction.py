@@ -40,7 +40,6 @@ class TestPaymentTransaction(APSCommon):
                 'return_url': self._build_url(APSController._return_url),
                 'signature': 'c9b9f35a607606c045f8882e762a4a4a35572cf230fe1cd45fa18d7c8681aeb9'
             },
-            'api_method': 'post'
         }
         self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
 

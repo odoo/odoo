@@ -19,7 +19,6 @@ class TestPaymentTransaction(DPOCommon):
             'url_params': {
                 'ID': transaction_token,
             },
-            'api_method': 'post',
         }
         with patch(
             'odoo.addons.payment_dpo.models.payment_transaction.PaymentTransaction'

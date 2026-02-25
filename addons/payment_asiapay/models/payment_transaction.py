@@ -95,15 +95,12 @@ class PaymentTransaction(models.Model):
             'lang': get_language_code(lang),
             'payMethod': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
         }
-        url_params.update({
-            'secureHash': self.provider_id._asiapay_calculate_signature(
-                url_params, incoming=False
-            )
-        })
+        url_params['secureHash'] = self.provider_id._asiapay_calculate_signature(
+            url_params, incoming=False
+        )
         return {
             'api_url': self.provider_id._asiapay_get_api_url(),
             'url_params': url_params,
-            'api_method': 'post',
         }
 
     @api.model

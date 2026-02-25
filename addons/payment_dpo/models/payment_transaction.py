@@ -29,13 +29,11 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_rendering_values(processing_values)
 
         transaction_token = self._dpo_create_token()
-
         return {
             'api_url': 'https://secure.3gdirectpay.com/payv2.php',
             'url_params': {
                 'ID': transaction_token,
             },
-            'api_method': 'post',
         }
 
     def _dpo_create_token(self):

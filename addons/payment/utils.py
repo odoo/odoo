@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha1
-from werkzeug import urls
+from urllib.parse import parse_qsl, urlparse
 
 from odoo import api, fields
 from odoo.http import request
@@ -246,28 +246,17 @@ def generate_idempotency_key(tx, scope=None):
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
 
 
-def extract_values_for_default_redirect_form(url, method):
+def extract_url_params(url):
+    """Extract the query parameters from the provided URL.
+
+    This is useful for redirect payment flows where the parameters are already embedded in the API
+    URL as a query string: query parameters must be passed separately as inputs of the redirect
+    form, or they will be stripped off from the URL when submitting the form.
+
+    :param str url: The URL to extract the params from.
+    :return: The decoded query parameters
+    :rtype: dict
     """
-    Extract the checkout URL and its query parameters, returning them along with
-    the HTTP method to be used for the request.
-
-    The returned values are intended to be used for rendering the template
-    `payment.payment_default_redirect_form`, so that the checkout form or
-    redirection preserves all necessary parameters.
-
-    Passing the query parameters separately ensures they are preserved during
-    redirection, avoiding issues where query parameters could be stripped.
-
-    :param str url: The full checkout URL.
-    :param str method: The HTTP method to use for the checkout (e.g., 'GET' or 'POST').
-    :return: A dictionary containing the URL, decoded query parameters, and method.
-    :rtype: dict with keys 'api_url', 'url_params', 'api_method'
-    """
-    parsed = urls.url_parse(url)
-    params = urls.url_decode(parsed.query)
-
-    return {
-        'api_url': url,
-        'url_params': params or {},
-        'api_method': method,
-    }
+    query_string = urlparse(url).query  # param1=value1&param2=value2
+    url_params = parse_qsl(query_string)  # [(param1, value1), (param2, value2)]
+    return dict(url_params)

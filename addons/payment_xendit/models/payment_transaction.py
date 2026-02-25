@@ -56,11 +56,10 @@ class PaymentTransaction(models.Model):
             self._set_error(str(error))
             return {}
 
-        api_url = invoice_data.get('invoice_url')
-        return payment_utils.extract_values_for_default_redirect_form(
-            api_url,
-            'get'
-        )
+        return {
+            'api_url': invoice_data.get('invoice_url'),
+            'http_method': 'get',
+        }
 
     def _xendit_prepare_invoice_request_payload(self):
         """ Create the payload for the invoice request based on the transaction values.

@@ -56,14 +56,11 @@ class PaymentTransaction(models.Model):
         if not self._flutterwave_is_authorization_pending():
             return super()._get_specific_processing_values(processing_values)
 
-        form_values = payment_utils.extract_values_for_default_redirect_form(
-            self.provider_reference,
-            method='post'
-        )
-        return {'redirect_form_html': self.env['ir.qweb']._render(
-            self.provider_id.redirect_form_view_id.id,
-            form_values,
-        )}
+        return {
+            'redirect_form_html': self.env['ir.qweb']._render(
+                self.provider_id.redirect_form_view_id.id, {'api_url': self.provider_reference}
+            )
+        }
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Flutterwave-specific rendering values.
@@ -105,10 +102,7 @@ class PaymentTransaction(models.Model):
             return {}
 
         api_url = payment_link_data['link']
-        return payment_utils.extract_values_for_default_redirect_form(
-            api_url,
-            method='get'
-        )
+        return {'api_url': api_url, 'http_method': 'get'}
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Flutterwave."""

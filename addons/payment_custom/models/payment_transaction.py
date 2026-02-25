@@ -29,7 +29,6 @@ class PaymentTransaction(models.Model):
             'url_params': {
                 'reference': self.reference,
             },
-            'api_method': 'post',
         }
 
     def _get_communication(self):

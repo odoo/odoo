@@ -65,15 +65,12 @@ class PaymentTransaction(models.Model):
         }
         if payment_option:  # Not included if the payment method is 'card'.
             url_params['payment_option'] = payment_option
-        url_params.update({
-            'signature': self.provider_id._aps_calculate_signature(
-                url_params, incoming=False
-            ),
-        })
+        url_params['signature'] = self.provider_id._aps_calculate_signature(
+            url_params, incoming=False
+        )
         return {
             'api_url': self.provider_id._aps_get_api_url(),
             'url_params': url_params,
-            'api_method': 'post',
         }
 
     @api.model

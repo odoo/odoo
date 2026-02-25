@@ -42,12 +42,11 @@ class PaymentTransaction(models.Model):
         api_url = response_content[
             'init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point'
         ]
-
-        # Extract the payment link URL and params and embed them in the redirect form.
-        return payment_utils.extract_values_for_default_redirect_form(
-            api_url,
-            'get'
-        )
+        return {
+            'api_url': api_url,
+            'http_method': 'get',
+            'url_params': payment_utils.extract_url_params(api_url),
+        }
 
     def _mercado_pago_prepare_preference_request_payload(self):
         """Create the payload for the preference request based on the transaction values.

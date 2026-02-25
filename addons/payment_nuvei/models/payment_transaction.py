@@ -95,15 +95,12 @@ class PaymentTransaction(models.Model):
             'pending_url': return_url,
             'success_url': return_url,
         }
-
         checksum = self.provider_id._nuvei_calculate_signature(url_params, incoming=False)
-        rendering_values = {
+        url_params['checksum'] = checksum
+        return {
             'api_url': self.provider_id._nuvei_get_api_url(),
             'url_params': url_params,
-            'checksum': checksum,
-            'api_method': 'post',
         }
-        return rendering_values
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):

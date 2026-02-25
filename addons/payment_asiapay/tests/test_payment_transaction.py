@@ -86,7 +86,6 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
                         'cancelUrl': return_url,
                         'secureHash': 'dummy_signature',
                     },
-                    'api_method': 'post',
                 }
             )
 

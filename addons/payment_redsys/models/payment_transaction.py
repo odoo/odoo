@@ -77,7 +77,6 @@ class PaymentTransaction(models.Model):
                 'Ds_Signature': signature,
                 'Ds_SignatureVersion': 'HMAC_SHA256_V1',
             },
-            'api_method': 'post',
         }
 
     def _redsys_prepare_merchant_parameters(self):
