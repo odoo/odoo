@@ -4,9 +4,10 @@
         <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
             <t t-set="availableValues" t-value="availableAttributeValue(attribute)"/>
             <t t-if="availableValues.length">
-                <h2 class="text-start py-3 m-0 d-flex align-items-center" t-att-id="attribute.attribute_id.id">
+                <t t-set="attributeRequired" t-value="attribute.attribute_id.display_type !== 'multi'"/>
+                <h2 class="text-start py-3 m-0 d-flex align-items-center" t-att-id="attribute.attribute_id.id" t-att-attr-required="attributeRequired? 'required' : undefined">
                     <t t-out="attribute.attribute_id.name"/>
-                    <span t-if="attribute.attribute_id.display_type !== 'multi'" class="badge smaller rounded-pill bg-danger text-white ms-2">Required</span>
+                    <span t-if="attributeRequired" class="badge smaller rounded-pill bg-danger text-white ms-2">Required</span>
                 </h2>
                 <div class="self_order_attribute_selection row pb-3">
                     <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
