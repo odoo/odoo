@@ -411,7 +411,7 @@ class TestCommonCustomFields(TransactionCase):
             assert set(self.registry[self.MODEL]._fields) == fnames
 
         self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_all_caches)
+        self.addCleanup(self.drop_ormcaches)
 
         super().setUp()
 

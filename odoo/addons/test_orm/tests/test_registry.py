@@ -34,7 +34,7 @@ class TestRegistry(TransactionCase):
             registry._setup_models__(self.cr, model_names)
             registry.field_setup_dependents.clear()  # filled during incremental setup
 
-        registry.clear_all_caches()  # stuff may remain in the cache
+        self.drop_ormcaches()  # stuff may remain in the cache
 
         # Now collect objects
         # This test may fail if your debugger stores references to previous fields.

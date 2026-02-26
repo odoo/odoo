@@ -29,7 +29,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def setUp(self):
         # for tests methods that create custom models/fields
         self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_all_caches)
+        self.addCleanup(self.drop_ormcaches)
         super().setUp()
         self.env.ref('test_orm.discussion_0').write({'participants': [Command.link(self.user_demo.id)]})
         # YTI FIX ME: The cache shouldn't be inconsistent (rco is gonna fix it)
