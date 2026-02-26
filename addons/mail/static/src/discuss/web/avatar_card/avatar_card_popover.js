@@ -9,6 +9,7 @@ import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
 import { ActionList } from "@mail/core/common/action_list";
+import { user } from "@web/core/user";
 
 export class AvatarCardPopover extends Component {
     static template = "mail.AvatarCardPopover";
@@ -92,7 +93,7 @@ export class AvatarCardPopover extends Component {
     }
 
     get showViewProfileBtn() {
-        return this.partner;
+        return this.partner && user.isInternalUser;
     }
 
     get hasFooter() {
