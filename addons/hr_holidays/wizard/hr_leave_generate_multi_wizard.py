@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -25,7 +25,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     name = fields.Char("Description")
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", string="Time Off Type", required=True)
+        "hr.work.entry.type", string="Time Off Type", required=True, domain="[('id', 'in', valid_work_entry_type_ids)]")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
@@ -39,6 +39,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     date_to_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period End", default='pm')
+    valid_work_entry_type_ids = fields.Many2many("hr.work.entry.type", compute="_compute_valid_work_entry_type_ids")
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
@@ -120,3 +121,29 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
                 'active_id': False,
             },
         }
+
+    @api.depends("employee_ids", "date_from")
+    def _compute_valid_work_entry_type_ids(self):
+        res = self.env["hr.work.entry.type"]
+        work_entry_types = (
+            self.env["hr.work.entry.type"].search([]).grouped("requires_allocation")
+        )
+        work_entry_types_alloc = work_entry_types.get(True)
+        work_entry_types_no_alloc = work_entry_types.get(False)
+        res |= work_entry_types_no_alloc
+        allocations = self.env['hr.leave.allocation'].search([
+            ('work_entry_type_id', 'in', work_entry_types_alloc.ids),
+            ('employee_id', 'in', self.employee_ids.ids),
+            ('date_from', '<=', self.date_from),
+            '|',
+            ('date_to', '=', False),
+            ('date_to', '>=', self.date_to),
+        ])
+        valid_allocations = allocations.filtered(
+            lambda a: a.work_entry_type_id.allows_negative or a.virtual_remaining_leaves > 0,
+        )
+        allocation_data = valid_allocations.grouped('work_entry_type_id')
+        for entry_type, entry_allocations in allocation_data.items():
+            if entry_allocations.employee_id == self.employee_ids._origin:
+                res |= entry_type
+        self.valid_work_entry_type_ids = res

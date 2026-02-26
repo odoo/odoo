@@ -311,6 +311,77 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         leave_wizard.action_generate_time_off()
 
+    def test_group_time_off_wizard(self):
+        self.employee_1, self.employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Rambo1',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Rambo2',
+                'leave_manager_id': self.user_responsible_id,
+            },
+        ])
+
+        leave_types = self.holidays_type_1 | self.holidays_type_2
+        # Archive all existing types so they don't interfere
+        self.env['hr.work.entry.type'].search([
+            ('id', 'not in', leave_types.ids),
+        ]).write({'active': False})
+        # Case 1: No allocations — only no-alloc type should appear
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].new({
+            'employee_ids': (self.employee_1 + self.employee_2).ids,
+            'date_from': date(2020, 1, 1),
+            'date_to': date(2020, 1, 1),
+        })
+        leave_wizard._compute_valid_work_entry_type_ids()
+        valid_ids = leave_wizard.valid_work_entry_type_ids.ids
+        self.assertIn(self.holidays_type_1.id, valid_ids,
+        "No-allocation type should always be in valid types")
+        self.assertNotIn(self.holidays_type_2.id, valid_ids,
+        "Allocation-required type should NOT appear when no allocations exist")
+
+        # Case 2: Only employee_1 has allocation — type should still be excluded
+        allocation_e1 = self.env['hr.leave.allocation'].create({
+        'name': 'Alloc E1',
+        'employee_id': self.employee_1.id,
+        'work_entry_type_id': self.holidays_type_2.id,
+        'number_of_days': 5,
+        'date_from': date(2020, 1, 1),
+        'state': 'confirm',
+        })
+        allocation_e1.action_approve()
+        wizard2 = self.env['hr.leave.generate.multi.wizard'].new({
+            'employee_ids': (self.employee_1 + self.employee_2).ids,
+            'date_from': date(2020, 1, 2),
+            'date_to': date(2020, 1, 2),
+        })
+        wizard2._compute_valid_work_entry_type_ids()
+
+        valid_ids2 = wizard2.valid_work_entry_type_ids.ids
+        self.assertNotIn(self.holidays_type_2.id, valid_ids2,
+            "Allocation-required type should NOT appear when only one employee has allocation")
+
+        # Case 3: Both employees have allocations — Both types should appear ---
+        allocation_e2 = self.env['hr.leave.allocation'].create({
+            'name': 'Alloc E2',
+            'employee_id': self.employee_2.id,
+            'work_entry_type_id': self.holidays_type_2.id,
+            'number_of_days': 3,
+            'date_from': date(2020, 1, 1),
+            'state': 'confirm',
+        })
+        allocation_e2.action_approve()
+        wizard3 = self.env['hr.leave.generate.multi.wizard'].new({
+            'employee_ids': (self.employee_1 + self.employee_2).ids,
+            'date_from': date(2020, 1, 2),
+            'date_to': date(2020, 1, 2),
+        })
+        wizard3._compute_valid_work_entry_type_ids()
+
+        valid_ids3 = wizard3.valid_work_entry_type_ids.ids
+        self.assertIn(self.holidays_type_2.id, valid_ids3,
+            "Allocation-required type should appear when all employees have valid allocations")
+
     @users('Titus')
     def test_create_group_leave_form_allocation_mode_without_hr_right(self):
         employee_1, employee_2, employee_3 = self.env['hr.employee'].sudo().create([

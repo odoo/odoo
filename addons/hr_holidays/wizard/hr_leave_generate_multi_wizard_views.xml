@@ -6,6 +6,7 @@
             <form string="Generate time off for multiple employees">
                 <group>
                     <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
+                    <field name="valid_work_entry_type_ids" invisible="1"/>
                     <label for="date_from" string="Dates"/>
                     <field
                         name="date_from"
