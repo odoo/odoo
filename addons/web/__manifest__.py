@@ -451,6 +451,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/polyfills/set.js',
             'web/static/src/public/**/*.js',
+            ("remove", 'web/static/src/public/public_root_instance.js'),
             'web/static/src/public/**/*.xml',
             'web/static/tests/public/**/*.xml',
             ('remove', 'web/static/src/public/database_manager.js'),
