@@ -1743,7 +1743,7 @@ class SaleOrder(models.Model):
             return groups
 
         self.ensure_one()
-        if self._context.get('proforma'):
+        if self._context.get('proforma') or self.state == 'draft':
             for group in [g for g in groups if g[0] in ('portal_customer', 'portal', 'follower', 'customer')]:
                 group[2]['has_button_access'] = False
             return groups
