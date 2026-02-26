@@ -397,15 +397,17 @@
                 </div>
                 <form t-if="searchbar_inputs" class="o_portal_search_panel col-md-5 col-xl-4 ms-lg-2">
                     <div class="input-group w-100">
-                        <button type="button" class="btn btn-light border-end dropdown-toggle" data-bs-toggle="dropdown"/>
-                        <div class="dropdown-menu dropdown-menu-end" role="menu">
-                            <t t-foreach='searchbar_inputs' t-as='input'>
-                                <a t-att-href="'#' + input_value['input']"
-                                    t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
-                                    <span t-out="input_value['label']"/>
-                                </a>
-                            </t>
-                        </div>
+                        <t t-if="len(searchbar_inputs) > 1">
+                            <button type="button" class="btn btn-light border-end dropdown-toggle" data-bs-toggle="dropdown"/>
+                            <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                <t t-foreach='searchbar_inputs' t-as='input'>
+                                    <a t-att-href="'#' + input_value['input']"
+                                        t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
+                                        <span t-out="input_value['label']"/>
+                                    </a>
+                                </t>
+                            </div>
+                        </t>
                         <input type="search" class="form-control border-0 bg-light" placeholder="Search" t-att-value='search' name="search"/>
                         <button class="btn btn-light" type="submit">
                             <span class="oi" data-icon="search"/>
