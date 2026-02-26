@@ -1397,13 +1397,29 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     domain = condition.value
     if not isinstance(domain, Domain):
         return condition
+
     field = condition._field(model)
     if not field.relational:
         condition._raise("Cannot use 'any' with non-relational fields")
+
     try:
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
+
+    if isinstance(search_domain := model.env.context.get('search_domain'), Domain):
+        # model with search_domain like (field, 'any', comodel_domain)
+        # => comodel with comodel_domain
+        comodel_domain = Domain.OR(
+            c.value
+            for c in search_domain.iter_conditions()
+            if c.is_condition(condition.field_expr, value=Domain)
+        )
+        if comodel_domain.is_false():
+            # we don't know the condition, accept all
+            comodel_domain = Domain.TRUE
+        comodel = comodel.with_context(search_domain=comodel_domain)
+
     domain = domain._optimize(comodel, level)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is

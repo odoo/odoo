@@ -4710,7 +4710,7 @@ class BaseModel(metaclass=MetaModel):
 
         # security access domain
         if check_access:
-            self_sudo = self.sudo().with_context(active_test=False)
+            self_sudo = self.sudo().with_context(active_test=False, search_domain=domain)
             sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
             sec_domain = sec_domain.optimize_full(self_sudo)
             if sec_domain.is_false():
