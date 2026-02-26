@@ -702,3 +702,25 @@ Content-Type: text/html;
         task = self.env['project.task'].browse(task_id)
         self.assertEqual(task.name, "In a cage")
         self.assertEqual(task.project_id, self.project_pigs)
+
+    def test_task_access_action(self):
+        """ Test that the access action link is correctly generated for portal users """
+        project_portal = self.env['project.project'].create({
+            'name': 'Portal Project',
+            'privacy_visibility': 'portal',
+        })
+        task_portal = self.env['project.task'].create({
+            'name': 'Test Task Portal',
+            'project_id': project_portal.id,
+        })
+
+        # Portal User + Project Sharing -> Project Sharing Link
+        project_portal.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project_portal._add_collaborators(self.user_portal.partner_id)
+        action = task_portal.with_user(self.user_portal)._get_access_action()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertIn(
+            f'/my/projects/{project_portal.id}/project_sharing/{task_portal.id}',
+            action['url'],
+            "Portal user with edit access should get a link to project sharing",
+        )
