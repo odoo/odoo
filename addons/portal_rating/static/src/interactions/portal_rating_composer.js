@@ -77,9 +77,10 @@ export class RatingPopupComposer extends Interaction {
         const locationEl = this.el.querySelector(".o_rating_popup_composer_modal .o_portal_chatter_composer");
         // TODO maybe always put in this.options - and prepare in setup ???
         if (!locationEl) {
+            delete this.env.portalComposerOptions;
             return;
         }
-        this.composerEl = this.renderAt("portal.Composer", { widget: {options: this.env.portalComposerOptions }}, locationEl, "afterend")[0];
+        this.composerEl = this.renderAt("portal.Composer", { widget: { options } }, locationEl, "afterend")[0];
         delete this.env.portalComposerOptions;
         locationEl.remove();
         // Change the text of the button

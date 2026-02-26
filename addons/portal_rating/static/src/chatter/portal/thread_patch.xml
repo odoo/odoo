@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread.loadOlder" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='this.showLoadMore']" position="before">
+            <hr t-if="this.reviewChatter and this.showLoadMore" class="o-discuss-separator flex-grow-1"/>
+        </xpath>
+        <xpath expr="//t[@t-if='this.showLoadMore']" position="after">
+            <hr t-if="this.reviewChatter and this.showLoadMore" class="o-discuss-separator flex-grow-1"/>
+        </xpath>
+    </t>
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//t[@t-else='']/t[@t-if='this.showLoadOlder']" position="replace">
+            <div t-if="this.showLoadOlder" t-att-class="{ 'd-flex align-items-center gap-2 px-2': this.reviewChatter }">
+                <t t-call="mail.Thread.loadOlder"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

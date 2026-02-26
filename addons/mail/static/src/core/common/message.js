@@ -128,6 +128,7 @@ export class Message extends Component {
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = useRef("body");
+        this.richBodyRef = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -316,6 +317,10 @@ export class Message extends Component {
 
     get expandText() {
         return _t("Expand");
+    }
+
+    get richBodyAttClass() {
+        return {};
     }
 
     get isEditing() {

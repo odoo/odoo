@@ -74,7 +74,11 @@
 </t>
 
 <t t-name="mail.Thread.loadOlder">
-    <button class="btn btn-link" t-att-class="{ 'opacity-0': !this.mountedAndLoaded }" t-on-click="this.onClickLoadOlder" t-custom-ref="load-older">Load More</button>
+    <t t-if="this.showLoadMore" t-call="mail.Thread.loadOlder.button"/>
+</t>
+
+<t t-name="mail.Thread.loadOlder.button">
+    <button class="btn" t-att-class="this.loadMoreClass" t-on-click="this.onClickLoadOlder" t-custom-ref="load-older">Load More</button>
 </t>
 
 <t t-name="mail.Thread.loadingError">

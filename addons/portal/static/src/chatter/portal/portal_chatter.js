@@ -1,23 +1,24 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, xml } from "@odoo/owl";
+import { Component, plugin, providePlugins, useSubEnv, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class PortalChatter extends Component {
     static template = xml`
         <Chatter threadId="this.props.resId" threadModel="this.props.resModel" composer="this.props.composer" twoColumns="this.props.twoColumns"/>
-        <div class="position-fixed" style="z-index:1030"><OverlayContainer overlays="this.overlayService.overlays"/></div>
+        <div class="position-fixed o-portal-overlay"><OverlayContainer overlays="this.overlayService.overlays"/></div>
     `;
     static components = { Chatter, OverlayContainer };
-    static props = ["resId", "resModel", "composer", "twoColumns", "displayRating"];
+    static props = ["resId", "resModel", "composer", "twoColumns", "displayRating", "reviewChatter?"];
 
     setup() {
-        useSubEnv({
-            displayRating: this.props.displayRating,
-            inFrontendPortalChatter: true,
-        });
+        providePlugins([PortalChatterPlugin]);
+        const portalChatterPlugin = plugin(PortalChatterPlugin);
+        portalChatterPlugin.displayRating.set(this.props.displayRating);
+        portalChatterPlugin.inFrontendPortalChatter.set(true);
+        useSubEnv({ inFrontendPortalChatter: true });
         this.overlayService = useService("overlay");
         this.store = useService("mail.store");
         this.env.bus.addEventListener("reload_chatter_content", (ev) =>
@@ -25,11 +26,11 @@ export class PortalChatter extends Component {
         );
     }
 
-    async _reloadChatterContent(data) {
+    async _reloadChatterContent() {
         const thread = this.store["mail.thread"].get({
             id: this.props.resId,
             model: this.props.resModel,
         });
-        thread.messages = await thread.fetchMessages({ routeParams: this.messageFetchRouteParams });
+        await (thread._reloadReviews?.() ?? thread.fetchNewMessages());
     }
 }

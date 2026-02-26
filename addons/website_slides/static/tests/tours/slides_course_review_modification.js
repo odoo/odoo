@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='4']:contains(100%)",
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='4'][title='100%']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(First review)",
@@ -53,10 +53,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .text-muted:text(0 reviews)",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(No messages yet.)",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter:contains(No reviews yet.)",
         },
         {
             trigger: ".o_wslides_course_header .o_website_rating_static[title='0 stars on 5']",
@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='3']:contains(100%)",
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='3'][title='100%']",
         },
         {
             trigger:
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='2']:contains(100%)",
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='2'][title='100%']",
         },
         {
             trigger:
@@ -204,7 +204,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
+                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .text-muted:text(0 reviews)",
         },
         {
             trigger: "span:contains(Add Review)",

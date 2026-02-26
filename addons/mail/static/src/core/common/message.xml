@@ -118,7 +118,7 @@
                                                         <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
                                                         <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-ref="this.shadowBody"/>
                                                         <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
-                                                        <div class="o-mail-Message-richBody overflow-x-auto" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
+                                                        <div class="o-mail-Message-richBody overflow-x-auto" t-att-class="this.richBodyAttClass" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-ref="this.richBodyRef" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="this.message.showTranslation">
                                                             <t t-if="this.message.translationSource" t-out="this.translatedFromText"/>
                                                         </p>

@@ -465,8 +465,8 @@ export class Thread extends Record {
                 fetch_params: {
                     limit:
                         !around && around !== 0
-                            ? this.store.FETCH_LIMIT
-                            : this.store.FETCH_LIMIT * 2,
+                            ? this.getFetchLimit()
+                            : this.getFetchLimit() * 2,
                     after,
                     around,
                     before,
@@ -512,7 +512,7 @@ export class Thread extends Record {
         } else {
             this.messages.push(...messagesToAdd);
         }
-        if (fetched.length < this.store.FETCH_LIMIT) {
+        if (fetched.length < this.getFetchLimit()) {
             if (epoch === "older") {
                 this.loadOlder = false;
             } else if (epoch === "newer") {
@@ -585,12 +585,16 @@ export class Thread extends Record {
         this.messages.splice(startIndex, 0, ...filtered);
         Object.assign(this, {
             loadOlder:
-                after === undefined && fetched.length === this.store.FETCH_LIMIT
+                after === undefined && fetched.length === this.getFetchLimit()
                     ? true
-                    : after === undefined && fetched.length !== this.store.FETCH_LIMIT
+                    : after === undefined && fetched.length !== this.getFetchLimit()
                     ? false
                     : this.loadOlder,
         });
+    }
+
+    getFetchLimit() {
+        return this.store.FETCH_LIMIT;
     }
 
     getFetchParams() {
@@ -660,7 +664,7 @@ export class Thread extends Record {
         this.loadNewer = messageId !== undefined ? true : false;
         this.loadOlder = true;
         const limit =
-            !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
+            !messageId && messageId !== 0 ? this.getFetchLimit() : this.getFetchLimit() * 2;
         if (this.messages.length < limit) {
             const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
             const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
