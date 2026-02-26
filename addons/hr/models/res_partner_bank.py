@@ -27,7 +27,7 @@ class ResPartnerBank(models.Model):
                 bank.employee_salary_amount, bank.employee_salary_amount_is_percentage = bank.employee_id.get_bank_account_salary_allocation(bank.id)
                 continue
             bank.employee_salary_amount_is_percentage = True
-            if bank.employee_id.salary_distribution:
+            if bank.employee_id and bank.employee_id.salary_distribution:
                 bank.employee_salary_amount = bank.employee_id.get_remaining_percentage()
             else:
                 bank.employee_salary_amount = 0
