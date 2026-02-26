@@ -10,6 +10,18 @@ li.oe-nested {
 }
 
 .table-bordered {
+    &.o-table-cellbordered {
+        tr {
+            border-style: none;
+            border-width: 0;
+
+            td {
+                border-style: inset;
+                border-width: 1px;
+            }
+        }
+    }
+
     > :not(caption) > * {
         border-width: 1px 0;
         > * {
