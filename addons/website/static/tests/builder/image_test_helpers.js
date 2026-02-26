@@ -29,9 +29,8 @@ export const testGifImg = `
 export function mockImageRequests() {
     before(() => {
         onRpc("/html_editor/get_image_info", async (data) => {
-            const body = await data.body.getReader().read();
-            const { src } = JSON.parse(new TextDecoder().decode(body.value)).params;
-            if (src === testGifImgSrc) {
+            const { params } = await data.json();
+            if (params.src === testGifImgSrc) {
                 return {
                     attachment: {
                         id: 456,
