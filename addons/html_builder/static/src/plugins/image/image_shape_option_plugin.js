@@ -290,7 +290,9 @@ export class ImageShapeOptionPlugin extends Plugin {
         const postProcessCroppedCanvas = async (canvas) => {
             const img = await loadImage(canvas.toDataURL());
             document.createElement("div").appendChild(img);
-            const cropper = await activateCropper(img, 1, { y: 0 });
+            const [ratioWidth, ratioHeight] = imgAspectRatio.split(":");
+            const shapeAspectRatio = parseFloat(ratioWidth) / parseFloat(ratioHeight);
+            const cropper = await activateCropper(img, shapeAspectRatio, { y: 0 });
             const croppedCanvas = cropper.getCroppedCanvas();
             cropper.destroy();
             return croppedCanvas;
