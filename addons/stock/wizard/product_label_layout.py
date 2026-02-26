@@ -27,8 +27,7 @@ class ProductLabelLayout(models.TransientModel):
         ('custom', 'Custom')], string="Quantity to print", required=True, default='custom')
     print_format = fields.Selection(selection_add=[
         ('zpl', 'ZPL Labels'),
-        ('zplxprice', 'ZPL Labels with price')
-    ], ondelete={'zpl': 'set default', 'zplxprice': 'set default'})
+    ], ondelete={'zpl': 'set default'})
     zpl_template = fields.Selection([
         ('normal', 'Normal (2.25" x 1.25")'),
         ('small', 'Small (1.25" x 1.00")'),

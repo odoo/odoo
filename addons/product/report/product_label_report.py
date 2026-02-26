@@ -52,7 +52,6 @@ def _prepare_data(env, docids, data):
     return {
         'quantity': quantity_by_product,
         'page_numbers': (total - 1) // (layout_wizard.rows * layout_wizard.columns) + 1,
-        'price_included': data.get('price_included'),
         'extra_html': layout_wizard.extra_html,
         'pricelist': layout_wizard.pricelist_id,
     }
@@ -77,14 +76,6 @@ class ReportProductReport_Producttemplatelabel4x7(models.AbstractModel):
 class ReportProductReport_Producttemplatelabel4x12(models.AbstractModel):
     _name = 'report.product.report_producttemplatelabel4x12'
     _description = 'Product Label Report 4x12'
-
-    def _get_report_values(self, docids, data):
-        return _prepare_data(self.env, docids, data)
-
-
-class ReportProductReport_Producttemplatelabel4x12noprice(models.AbstractModel):
-    _name = 'report.product.report_producttemplatelabel4x12noprice'
-    _description = 'Product Label Report 4x12 No Price'
 
     def _get_report_values(self, docids, data):
         return _prepare_data(self.env, docids, data)
