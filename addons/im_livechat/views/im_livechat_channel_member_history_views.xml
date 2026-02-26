@@ -120,7 +120,7 @@
             </field>
         </record>
         <record id="im_livechat_agent_history_action" model="ir.actions.act_window">
-            <field name="name">Agents</field>
+            <field name="name">Agents Performance</field>
             <field name="res_model">im_livechat.channel.member.history</field>
             <field name="view_mode">pivot,graph</field>
             <field name="domain">[('livechat_member_type', '=', 'agent')]</field>
@@ -141,7 +141,7 @@
         </record>
         <menuitem
             id="menu_reporting_livechat_agent"
-            name="Agents"
+            name="Agents Performance"
             parent="menu_reporting_livechat"
             sequence="10"
             action="im_livechat_agent_history_action"
