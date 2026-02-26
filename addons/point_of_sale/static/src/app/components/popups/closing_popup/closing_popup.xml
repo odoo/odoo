@@ -43,17 +43,18 @@
                         <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
                         <t t-set="diff" t-value="_showDiff ? this.getDifference(pm.id) : 0" />
                         <t t-set="counted" t-value="_showDiff ? this.env.utils.parseValidFloat(this.state.payments[pm.id].counted) : 0" />
+                        <t t-set="currency" t-value="this.getCurrency(pm.id)" />
                         <div class="d-flex align-items-center justify-content-between fs-3">
                             <span t-out="pm.name" />
-                            <span t-out="this.env.utils.formatCurrency(pm.amount)" />
+                            <span t-out="this.env.utils.formatCurrency(pm.amount, true, currency)" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Counted</span>
-                            <span t-out="this.env.utils.formatCurrency(counted)" />
+                            <span t-out="this.env.utils.formatCurrency(counted, true, currency)" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                             <span>Difference</span>
-                            <span t-out="this.env.utils.formatCurrency(diff)" />
+                            <span t-out="this.env.utils.formatCurrency(diff, true, currency)" />
                         </div>
                     </div>
                 </div>

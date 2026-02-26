@@ -5,6 +5,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
@@ -66,6 +67,46 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
             OfflineUtil.setOnlineMode(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PaymentScreenMixedCurrencies", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Currency Switch Test Product", true, null, 100),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("100"),
+            PaymentScreen.clickPaymentMethod("Company Currency PM", true, {
+                amount: "100",
+                remaining: "0.0",
+            }),
+            PaymentScreen.totalIs("$"),
+            PaymentScreen.totalIs("100"),
+            PaymentScreen.countPaymentlinesIs(1),
+            PaymentScreen.clickPaymentMethod("Different Currency PM"),
+            Dialog.is({
+                title: "Oh snap !",
+                body: "You can't pay the same order in multiple currencies",
+            }),
+            Dialog.confirm(),
+            PaymentScreen.clickPaymentlineDelButton("Company Currency PM", 100),
+            PaymentScreen.clickPaymentMethod("Different Currency PM", true, {
+                amount: "50",
+                remaning: "0.0",
+            }),
+            PaymentScreen.totalIs("€"),
+            PaymentScreen.totalIs("50"),
+            PaymentScreen.countPaymentlinesIs(1),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                total_amount: "100",
+                payment_lines: [
+                    { name: "Different Currency PM", amount: "50.00\xa0€ (rate:0.5000)" },
+                ],
+            }),
         ].flat(),
 });
 

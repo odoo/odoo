@@ -7,7 +7,8 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _name = 'account.journal'
+    _inherit = ['account.journal', 'pos.load.mixin']
 
     pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 
@@ -16,6 +17,10 @@ class AccountJournal(models.Model):
         methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
         if methods:
             raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
+
+    @api.model
+    def _load_pos_data_fields(self, config):
+        return ['id', 'name', 'currency_id']
 
     def _check_no_active_payments(self):
         linked_payment_methods = self.env['pos.payment.method'].sudo().search([('journal_id', 'in', self.ids)], limit=1)

@@ -151,6 +151,10 @@ export class ClosePosPopup extends Component {
             this.state.payments[paymentId].counted
         );
     }
+    getCurrency(paymentId) {
+        const paymentMethod = this.pos.models["pos.payment.method"].get(paymentId);
+        return paymentMethod?.journal_id?.currency_id || this.pos.currency;
+    }
     getDifference(paymentId) {
         const counted = this.state.payments[paymentId].counted;
         if (!this.env.utils.isValidFloat(counted)) {

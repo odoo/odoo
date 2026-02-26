@@ -194,7 +194,7 @@ class PosSession(models.Model):
             'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
             'account.cash.rounding', 'account.fiscal.position', 'res.currency', 'pos.note',
             'product.tag', 'ir.module.module', 'account.move', 'account.account',
-            'pos.snooze', 'pos.prep.order', 'pos.prep.line',
+            'pos.snooze', 'pos.prep.order', 'pos.prep.line', 'account.journal',
         ]
 
     @api.model
@@ -1009,7 +1009,7 @@ class PosSession(models.Model):
         payment_lines = self.env['account.move.line']
         for payment in payments:
             pm = payment['metadata']['payment_method_id']
-            amount = payment['account.move.line']['amount_currency']
+            amount = payment['metadata']['amount']
             payment_lines |= pm._create_payment_line(
                 self,
                 amount,

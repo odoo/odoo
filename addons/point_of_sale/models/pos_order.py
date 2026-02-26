@@ -204,7 +204,7 @@ class PosOrder(models.Model):
 
     def _compute_amount_paid(self):
         paid_payment_ids = self.payment_ids.filtered(lambda p: not p.payment_status or p.payment_status == "done")
-        return sum(paid_payment_ids.mapped('amount'))
+        return sum(x._get_amount_in_config_currency() for x in paid_payment_ids)
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
@@ -225,10 +225,13 @@ class PosOrder(models.Model):
             cash_payment_method = pos_session.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[:1]
             if not cash_payment_method:
                 raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
+            # The client sends the change in the currency of the order, but the amount of a
+            # payment is expressed in the currency of its payment method's journal.
+            change_currency = cash_payment_method.journal_id.currency_id or order.currency_id
             return_payment_vals = {
                 'name': _('return'),
                 'pos_order_id': order.id,
-                'amount': pos_order['amount_return'],
+                'amount': order.currency_id._convert(pos_order['amount_return'], change_currency, order.company_id, order.date_order.date()),
                 'payment_date': fields.Datetime.now(),
                 'payment_method_id': cash_payment_method.id,
                 'is_change': True,
@@ -413,8 +416,9 @@ class PosOrder(models.Model):
 
     def _get_order_tax_totals(self):
         self.ensure_one()
-        self.amount_paid = sum(payment.amount for payment in self.payment_ids)
-        self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
+        amounts = [payment._get_amount_in_config_currency() for payment in self.payment_ids]
+        self.amount_paid = sum(amounts)
+        self.amount_return = -sum(amount for amount in amounts if amount < 0)
         base_lines = self.lines._prepare_base_lines_for_taxes_computation()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
@@ -1411,12 +1415,13 @@ class PosOrder(models.Model):
 
         for payment in self.payment_ids:
             pm = payment.payment_method_id
-            combined.setdefault(pm, 0.0)
-            combined[pm] += payment.amount
+            amounts = combined.setdefault(pm, {'payment_in_config_currency': 0.0, 'payment': 0.0})
+            amounts['payment_in_config_currency'] += payment._get_amount_in_config_currency()
+            amounts['payment'] += payment.amount
 
         # Combined payments: aggregate all orders for a given PM into one slot
         result = []
-        for pm, amount in combined.items():
+        for pm, amounts in combined.items():
             partner_account = partner.property_account_receivable_id if partner else None
             destination_account = partner_account or session._get_receivable_account()
 
@@ -1427,10 +1432,11 @@ class PosOrder(models.Model):
                     'account_id': destination_account.id,
                     'partner_id': partner.id if partner else None,
                     'date_maturity': today,
-                    'amount_currency': amount,
+                    'amount_currency': amounts['payment_in_config_currency'],
                 },
                 'metadata': {
                     'payment_method_id': pm,
+                    'amount': amounts['payment'],
                 },
             })
 
@@ -1609,7 +1615,7 @@ class PosOrder(models.Model):
             for session, payments in total_payments_by_session.items():
                 for payment in payments:
                     pm = payment['metadata']['payment_method_id']
-                    amount = payment['account.move.line']['amount_currency']
+                    amount = payment['metadata']['amount']
                     all_payment_lines |= pm._create_payment_line(
                         session,
                         amount,

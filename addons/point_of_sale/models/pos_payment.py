@@ -21,10 +21,10 @@ class PosPayment(models.Model):
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True, ondelete='cascade')
     amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
-    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
+    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, index=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
-    currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
-    currency_rate = fields.Float(string='Conversion Rate', related='pos_order_id.currency_rate', help='Conversion rate from company currency to order currency.')
+    currency_id = fields.Many2one('res.currency', string='Currency', compute='_compute_currency', store=True)
+    currency_rate = fields.Float(string='Conversion Rate', compute='_compute_conversion_rate', help='Conversion rate from the payment currency to the currency of the point of sale.')
     partner_id = fields.Many2one('res.partner', string='Customer', related='pos_order_id.partner_id')
     session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True, index=True)
     user_id = fields.Many2one('res.users', string='Employee', related='session_id.user_id')
@@ -67,6 +67,28 @@ class PosPayment(models.Model):
                 payment.display_name = f'{payment.name} {formatLang(self.env, payment.amount, currency_obj=payment.currency_id)}'
             else:
                 payment.display_name = formatLang(self.env, payment.amount, currency_obj=payment.currency_id)
+
+    @api.depends('currency_id', 'pos_order_id.config_id.currency_id', 'pos_order_id.date_order')
+    def _compute_conversion_rate(self):
+        for payment in self:
+            order = payment.pos_order_id
+            payment.currency_rate = self.env['res.currency']._get_conversion_rate(
+                payment.currency_id, order.config_id.currency_id, order.company_id, order.date_order.date())
+
+    @api.depends('payment_method_id.journal_id', 'payment_method_id.journal_id.currency_id')
+    def _compute_currency(self):
+        for payment in self:
+            if payment.payment_method_id.journal_id.currency_id:
+                payment.currency_id = payment.payment_method_id.journal_id.currency_id
+            else:
+                payment.currency_id = payment.pos_order_id.currency_id
+
+    def _get_amount_in_config_currency(self):
+        """
+        Returns the amount of the payment converted to the currency of the pos config
+        """
+        self.ensure_one()
+        return self.pos_order_id.config_id.currency_id.round(self.amount * self.currency_rate)
 
     @api.constrains('amount')
     def _check_amount(self):
