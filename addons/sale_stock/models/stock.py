@@ -261,7 +261,14 @@ class StockPicking(models.Model):
                 # Check if there is already a SO line for this product to get
                 # back its unit price (in case it was manually updated).
                 if so_line:
+                    # first proposition is to copy the uom from the other line
                     so_line_vals['price_unit'] = so_line[0].price_unit
+                    so_line_vals['product_uom_id'] = so_line[0].product_uom_id 
+                    # might need then need to adjust the qty_delivered or trigger computation ? 
+
+                    # second proposition is to compute the new price (different from the already existing price)
+                    so_line_vals['price_unit'] = old_uom._compute_price(so_line[0].price_unit, new_uom)
+                    
             elif product.invoice_policy == 'order':
                 # No unit price if the product is invoiced on the ordered qty.
                 so_line_vals['price_unit'] = 0
