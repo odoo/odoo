@@ -149,6 +149,9 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
 
+            # Assert that the `l10n_hu_chain_index` is not silently set by the tax audit export
+            self.assertFalse(invoice.l10n_hu_invoice_chain_index, "The chain index shouldn't be set by the tax audit report")
+
     def test_invoice_simple_deduction(self):
         with freeze_time('2024-02-01'):
             invoice = self.create_invoice_simple_discount()
