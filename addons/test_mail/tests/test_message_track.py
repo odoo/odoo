@@ -580,6 +580,7 @@ class TestTrackingInternals(MailCommon):
                 {'name': 'property_int', 'string': 'Property Int', 'type': 'integer', 'default': 1337},
                 {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
                  'default': (cls.properties_linked_records[0].id, cls.properties_linked_records[0].display_name), 'comodel': 'mail.test.ticket'},
+                {'name': 'property_signature', 'string': 'Property Signature', 'type': 'signature'},
             ],
             'name': 'Properties Parent 1',
         }, {
@@ -596,6 +597,9 @@ class TestTrackingInternals(MailCommon):
         }])
         cls.properties_record_1, cls.properties_record_2 = cls.env['mail.test.track.all'].create([{
             'properties_parent_id': cls.properties_parent_1.id,
+            'properties': {
+                'property_signature': 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+            },
         }, {
             'properties_parent_id': cls.properties_parent_2.id,
 
@@ -881,7 +885,11 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(formatted_values[2]['oldValue'], 1337)
         self.assertEqual(formatted_values[3]['fieldInfo']['changedField'], 'Properties: Property Char')
         self.assertEqual(formatted_values[3]['oldValue'], 'char value')
-
+        # Ensure that no tracking value was created for the 'signature' type
+        self.assertFalse(
+            any((t.get('fieldInfo') or {}).get('fieldType') == 'signature' for t in formatted_values),
+            "Signature property must be ignored in tracking even when other properties change"
+        )
         # changing the parent and then changing again
         # to the original one to not create tracking values
         with self.mock_mail_gateway(), self.mock_mail_app():

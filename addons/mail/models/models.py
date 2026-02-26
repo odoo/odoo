@@ -301,7 +301,7 @@ class Base(models.AbstractModel):
                     )]
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html') and property_.get('value')
+                    if property_['type'] not in ('separator', 'html', 'signature') and property_.get('value')
                 )
                 continue
 
