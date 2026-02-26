@@ -192,6 +192,7 @@ class MailComposeMessage(models.TransientModel):
     use_exclusion_list = fields.Boolean(
         'Use Exclusion List', default=True, copy=False,
         help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
+    max_email_size = fields.Float("Max Email Size in MB", compute="_compute_max_email_size")
     # template generation
     template_name = fields.Char('Template Name')
 
@@ -684,6 +685,10 @@ class MailComposeMessage(models.TransientModel):
         if field.compute_sudo:
             return super(MailComposeMessage, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
+
+    @api.depends('mail_server_id')
+    def _compute_max_email_size(self):
+        self.max_email_size = self.env['ir.mail_server'].sudo()._get_max_email_size()
 
     # ------------------------------------------------------------
     # CRUD / ORM

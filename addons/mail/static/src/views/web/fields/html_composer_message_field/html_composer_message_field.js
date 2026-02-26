@@ -1,7 +1,8 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
+import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
 import { MailFullComposerSuggestionPlugin } from "./mail_full_composer_suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
@@ -12,6 +13,7 @@ import { markup } from "@odoo/owl";
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
         super.setup();
+        const notification = useService("notification");
         if (this.env.fullComposerBus) {
             useBus(this.env.fullComposerBus, "ACCIDENTAL_DISCARD", (ev) => {
                 const elContent = this.getNoSignatureElContent();
@@ -23,6 +25,50 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 );
                 const composerHtml = markup(this.getNoSignatureElContent().innerHTML);
                 ev.detail.onSaveContent({ composerHtml, emailAddSignature });
+            });
+            useBus(this.env.fullComposerBus, "ADD_INLINE_ATTACHMENTS", async (ev) => {
+                const filePlugin = this.editor.plugins.find(
+                    (p) => p.constructor.id === FilePlugin.id
+                );
+                if (!filePlugin) {
+                    return;
+                }
+                const attachments = ev.detail.attachments.map((a) => a.data);
+                // Filter out already added attachments
+                const filteredAttachments = attachments.filter(
+                    (a) =>
+                        !this.editor.editable.querySelectorAll(`[data-attachment-id="${a.id}"]`)
+                            .length
+                );
+                if (!filteredAttachments.length) {
+                    return;
+                }
+                const attachmentContainer = this.editor.editable.querySelector(
+                    ".o-attachments-container"
+                );
+                if (!attachmentContainer) {
+                    const newAttachmentContainer = document.createElement("div");
+                    newAttachmentContainer.classList.add(
+                        "o-attachments-container",
+                        "o-contenteditable-false"
+                    );
+                    newAttachmentContainer.contentEditable = false;
+                    attachments.forEach((a) =>
+                        newAttachmentContainer.appendChild(filePlugin.renderDownloadBox(a))
+                    );
+                    const signature = this.editor.editable.querySelector(".o-signature-container");
+                    if (signature) {
+                        signature.before(newAttachmentContainer);
+                    } else {
+                        this.editor.editable.firstChild.before(newAttachmentContainer);
+                    }
+                } else {
+                    filteredAttachments.forEach((a) =>
+                        attachmentContainer.appendChild(filePlugin.renderDownloadBox(a))
+                    );
+                }
+                this.editor.shared.history.addStep();
+                notification.add(ev.detail.message, { type: "info" });
             });
             useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
                 const attachmentElements = this.editor.editable.querySelectorAll(

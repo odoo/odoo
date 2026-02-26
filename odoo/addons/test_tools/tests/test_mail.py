@@ -484,17 +484,29 @@ class TestHtmlTools(BaseCase):
 
     def test_append_to_html(self):
         test_samples = [
-            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, True, False,
+            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, True, False, False,
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
-            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False,
+            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False, False,
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<p>--<br/>Yours truly</p>\n</html>'),
-            ('<html><body>some <b>content</b></body></html>', '--\nYours & <truly>', True, True, False,
+            ('<html><body>some <b>content</b></body></html>', '--\nYours & <truly>', True, True, False, False,
              '<html><body>some <b>content</b>\n<pre>--\nYours &amp; &lt;truly&gt;</pre>\n</body></html>'),
-            ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False,
+            ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False, False,
              '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
+            ('<html><body>Hello <div class="o-signature-container"><div class="o_signature">Marc Demo</div></div></body></html>',
+             Markup('<div>attachments</div>'), False, False, False, ['o-signature-container', 'o_signature'],
+             '<html><body>Hello \n<div>attachments</div>\n<div class="o-signature-container"><div class="o_signature">Marc Demo</div></div></body></html>'),
+            ('<html><body>Hello <DIV class="o_signature">Marc Demo</DIV></body></html>',
+             Markup('<div>attachments</div>'), False, False, False, ['o-signature-container', 'o_signature'],
+             '<html><body>Hello \n<div>attachments</div>\n<div class="o_signature">Marc Demo</div></body></html>'),
+            ('<html><body>Hello\n \n--- Marc Demo</body></html>',
+             Markup('<div>attachments</div>'), False, False, False, ['o-signature-container', 'o_signature'],
+             '<html><body>Hello\n \n--- Marc Demo\n<div>attachments</div>\n</body></html>'),
+            ('<html><body>Hello\n \n--- Marc Demo</body></html>',
+             'Text before < signature', True, True, False, ['o-signature-container', 'o_signature'],
+             '<html><body>Hello\n \n--- Marc Demo\n<pre>Text before &lt; signature</pre>\n</body></html>'),
         ]
-        for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
-            self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
+        for html, content, plaintext_flag, preserve_flag, container_tag, before_classes, expected in test_samples:
+            self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag, before_classes), expected, 'append_content_to_html is broken')
 
     def test_is_html_empty(self):
         void_strings_samples = ['', False, ' ']
