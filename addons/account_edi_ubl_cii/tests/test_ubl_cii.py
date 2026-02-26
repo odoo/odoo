@@ -240,3 +240,74 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'quantity': 1.0,
             'tax_ids': self.env['account.tax'],
         }])
+
+    def test_ubl_line_extension_global_rounding_distribution(self):
+        """ Test that rounding errors in line extensions are distributed
+            to ensure the sum of lines equals the total.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
+        decimal_precision.digits = 4
+        tax_21 = self.env['account.tax'].create({
+            'name': 'tax 21',
+            'amount': 21.0,
+        })
+        fixed_tax_1 = self.env['account.tax'].create({
+            'name': "fixed tax 1",
+            'amount_type': 'fixed',
+            'amount': 0.1488,
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+        fixed_tax_2 = self.env['account.tax'].create({
+            'name': "fixed tax 2",
+            'amount_type': 'fixed',
+            'amount': 0.0800,
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+
+        invoice_line_vals = [
+            (2.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (2.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (3.00, 7.3770, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (2.00, 3.6270, fixed_tax_1 | fixed_tax_2 | tax_21),
+            (6.00, 7.2500, tax_21),
+            (6.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+            (12.00, 7.2500, tax_21),
+        ]
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': f'line {idx}',
+                    'quantity': quantity,
+                    'price_unit': price_unit,
+                    'tax_ids': [Command.set(taxes.ids)],
+                })
+                for idx, (quantity, price_unit, taxes) in enumerate(invoice_line_vals)
+            ]
+        })
+        invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+
+        root = etree.fromstring(xml)
+        line_extension_amounts = [elem.text for elem in root.findall('./{*}InvoiceLine/{*}LineExtensionAmount')]
+        # Ensure the delta amount of 0.02 was distributed
+        # Expected total is 651.39
+        self.assertEqual(
+            line_extension_amounts,
+            ['15.20', '15.20', '22.82', '22.82', '22.82', '22.82', '7.71',
+             '43.50', '43.50', '87.00', '87.00', '87.00', '87.00', '87.00']
+        )
+        self.assertEqual(root.findtext('./{*}LegalMonetaryTotal/{*}LineExtensionAmount'), '651.39')
