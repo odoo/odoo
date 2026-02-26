@@ -555,3 +555,21 @@ class TestReplenishWizard(PurchaseTestCommon):
         self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
         self.assertEqual(po.order_line.price_unit, 5, 'Generated PO line must respect the supplier price of UoM "Pack of 6" because the quantity matches the "Pack of 6" pricelist')
         po.button_cancel()
+
+    def test_product_replenish_wizard_multiple_buy_routes(self):
+        self.route_buy.copy()
+        self.product.write({
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+            })]
+        })
+
+        replenish_wizard = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product.product_tmpl_id.id
+        ))
+        buy_route = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('company_id', '=', self.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ], limit=1).route_id
+        self.assertEqual(replenish_wizard.route_id, buy_route)
