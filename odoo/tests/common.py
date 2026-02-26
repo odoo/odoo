@@ -552,7 +552,11 @@ class BaseCase(case.TestCase):
         with ExitStack() as init:
             if self.env:
                 init.enter_context(self.env.cr.savepoint())
-                if issubclass(expected_exception, AccessError):
+                if isinstance(expected_exception, tuple):
+                    clear_cache = any(issubclass(e, AccessError) for e in expected_exception)
+                else:
+                    clear_cache = issubclass(expected_exception, AccessError)
+                if clear_cache:
                     # When checking for an `AccessError`, the cache is cleared
                     # before executing the code. This avoids cache pollution issues and
                     # ensures that access are re-evaluated correctly.
