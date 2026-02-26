@@ -11,4 +11,7 @@ class AccountMove(models.Model):
         refunded_order = None if self.reversed_entry_id else self.pos_order_ids.refunded_order_id
         if refunded_order:
             vals['refunded_document'] = refunded_order.l10n_es_edi_verifactu_document_ids._get_last('submission')
+        doc = self.pos_order_ids.l10n_es_edi_verifactu_document_ids._get_last('submission')
+        if doc:
+            vals['was_simplified_invoice'] = doc._get_document_dict()['RegistroAlta']['TipoFactura'] == 'F2'
         return vals

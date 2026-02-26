@@ -819,7 +819,7 @@ class Task(models.Model):
                     'dependent_ids': False,
                     'parent_id': False,
                 }
-                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
+                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids.filtered(lambda c: c.active)]
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):

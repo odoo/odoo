@@ -750,7 +750,7 @@ class Website(Home):
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        views = request.env["ir.ui.view"].with_context(is_customization_code=False).get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 

@@ -265,9 +265,7 @@ patch(PosStore.prototype, {
         this.set_order(null);
     },
     getActiveOrdersOnTable(table) {
-        return this.models["pos.order"].filter(
-            (o) => o.table_id?.id === table.id && !o.finalized && o.lines.length
-        );
+        return this.models["pos.order"].filter((o) => o.table_id?.id === table.id && !o.finalized);
     },
     tableHasOrders(table) {
         return Boolean(table.getOrder());
@@ -302,7 +300,7 @@ patch(PosStore.prototype, {
             await this.setTable(destinationTable);
             return;
         }
-        if (!this.tableHasOrders(destinationTable)) {
+        if (!destinationOrder) {
             order.update({ table_id: destinationTable });
             this.set_order(order);
             this.addPendingOrder([order.id]);

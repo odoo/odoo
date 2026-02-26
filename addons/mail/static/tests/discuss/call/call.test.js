@@ -15,9 +15,16 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
-import { mockSendBeacon } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    describe,
+    expect,
+    hover,
+    manuallyDispatchProgrammaticEvent,
+    mockSendBeacon,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import {
     Command,
     mockService,
