@@ -92,7 +92,7 @@ class TestPartnerAssign(TransactionCase):
         lead_forwarded = self.env['crm.lead.forward.to.partner'].with_context(context).create({})
         try:
             lead_forwarded.action_forward()
-        except:
+        except Exception:
             pass
 
 

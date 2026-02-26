@@ -652,7 +652,7 @@ class AccountReportExpression(models.Model):
             try:
                 domain = ast.literal_eval(expression.formula)
                 self.env['account.move.line']._search(domain)
-            except:
+            except Exception:
                 raise_formula_error(expression)
 
         for expression in expressions_by_engine.get('account_codes', []):
