@@ -72,8 +72,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Open update select",
-            trigger:
-                '.modal .modal-content .o_form_renderer div[name="value"] textarea',
+            trigger: '.modal .modal-content .o_form_renderer div[name="value"] textarea',
             run: "edit Test",
         },
         {
@@ -117,8 +116,8 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             trigger: ".o_select_menu_menu",
             run() {
                 const options = [...this.anchor.querySelectorAll(".o_select_menu_item")].map(
-                        (el) => el.textContent
-                    );
+                    (el) => el.textContent
+                );
 
                 assertEqual(
                     JSON.stringify(options),
@@ -134,7 +133,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
                         "On create and edit",
                         "On deletion",
                         "On UI change",
-                        "On webhook"
+                        "On webhook",
                     ])
                 );
             },
@@ -179,8 +178,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger:
-                '.modal .modal-content .o_form_renderer div[name="value"] textarea',
+            trigger: '.modal .modal-content .o_form_renderer div[name="value"] textarea',
             run: "edit Test",
         },
         {
@@ -218,8 +216,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "click",
         },
         {
-            trigger:
-                '.modal .modal-content .o_form_renderer div[name="selection_value"] input',
+            trigger: '.modal .modal-content .o_form_renderer div[name="selection_value"] input',
             run: "edit High",
         },
         {
@@ -346,9 +343,9 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_create_acti
         },
         {
             trigger: "div[name='action_server_ids']:contains(Create Contact with name NameX)",
-            async run() {
-                assertEqual(document.querySelectorAll(".fa.fa-plus-square").length, 1);
-            },
+        },
+        {
+            trigger: "body:has(.fa.fa-plus-square:count(1))",
         },
     ],
 });
@@ -516,7 +513,6 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
 });
 
 registry.category("web_tour.tours").add("test_form_view_custom_reference_field", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -544,10 +540,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
-            run() {
-                assertEqual(this.anchor.innerText, "test stage\nSearch more...");
-            },
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin):contains(test stage\nSearch more...)",
         },
         {
             content: "Open select",
@@ -568,10 +561,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
-            run() {
-                assertEqual(this.anchor.innerText, "test tag\nSearch more...");
-            },
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin):contains(test stage\nSearch more...)",
         },
         {
             trigger: ".o_form_button_cancel",
@@ -584,7 +574,6 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
 });
 
 registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -598,17 +587,9 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             trigger: ".o_field_widget[name='trigger'] input",
             run: "click",
         },
-        {
-            trigger: ".o_select_menu_menu",
-            run() {
-                assertEqual(
-                    Array.from(this.anchor.querySelectorAll(".o_select_menu_group"))
-                        .map((el) => el.textContent)
-                        .join(", "),
-                    "Values Updated, Timing Conditions, Custom, External"
-                );
-            },
-        },
+        ...["Values Updated", "Timing Conditions", "Custom", "External"].map((menu) => ({
+            trigger: `.o_select_menu_menu:has(.o_select_menu_group:contains(${menu}))`,
+        })),
         {
             trigger: ".o_field_widget[name='model_id'] input",
             run: "edit base.automation.lead.thread.test",
@@ -621,17 +602,11 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             trigger: ".o_field_widget[name='trigger'] input",
             run: "click",
         },
-        {
-            trigger: ".o_select_menu_menu",
-            run() {
-                assertEqual(
-                    Array.from(this.anchor.querySelectorAll(".o_select_menu_group "))
-                        .map((el) => el.textContent)
-                        .join(", "),
-                    "Values Updated, Email Events, Timing Conditions, Custom, External"
-                );
-            }
-        },
+        ...["Values Updated", "Email Events", "Timing Conditions", "Custom", "External"].map(
+            (menu) => ({
+                trigger: `.o_select_menu_menu:has(.o_select_menu_group:contains(${menu}))`,
+            })
+        ),
         {
             trigger: "button.o_form_button_cancel",
             run: "click",
