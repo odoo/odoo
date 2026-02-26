@@ -4483,3 +4483,58 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation.action_refuse()
             self.env['hr.leave']._cancel_invalid_leaves()
             self.assertEqual(leave.state, 'cancel')
+
+    def test_backdated_leave_absorbed_by_surplus_buffer(self):
+        """
+        Scenario A: Backdated leave absorbed by lost surplus buffer.
+        Testing Goal: Verify that a leave taken in a previous period does NOT reduce
+        the current balance if the employee had 'lost surplus' days to cover it.
+
+        1. Setup: End of 2025, employee has 21 days. Carry-over cap is 5 days.
+        2. Refresh: Jan 1st, 2026, 16 days are 'lost' (21 - 5).
+           The new balance is 26 (5 carry-over + 21 new grant).
+        3. Action: User records a leave for Dec 31, 2025, AFTER the refresh.
+        4. Logic: Balance on Dec 31 was 21. 21 - 1 = 20. 20 is still > 5 (Cap).
+           The carry-over amount should remain 5.
+        5. Result: The 2026 balance remains 26.0. The leave was absorbed by the surplus.
+        """
+        accrual_plan = self.accrual_plan_yearly_max_postponed_days_start
+
+        with freeze_time('2025-01-01'):
+            allocation = self._create_form_test_accrual_allocation(self.leave_type, '2025-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 21, self.employee_emp)
+
+        with freeze_time('2026-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+            self._take_leave(self.employee_emp, self.leave_type, '2025-12-31', '2025-12-31').action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+
+    def test_backdated_leave_deducted_when_under_cap(self):
+        """
+        Scenario B: Backdated leave deducted when under the carry-over cap.
+        Testing Goal: Verify that a leave taken in a previous period DOES reduce
+        the current balance if the employee was already at or below their carry-over limit.
+
+        1. Setup: End of 2025, employee has 3 days. Carry-over cap is 5 days.
+        2. Refresh: Jan 1st, 2026, 0 days are lost because 3 < 5.
+           The new balance is 24 (3 carry-over + 21 new grant).
+        3. Action: User records a leave for Dec 31, 2025, AFTER the refresh.
+        4. Logic: Balance on Dec 31 was 3. 3 - 1 = 2. 2 is the new carry-over amount.
+        5. Result: The 2026 balance drops to 23.0 (2 carry-over + 21 new).
+           The leave is correctly deducted from the real savings.
+        """
+        accrual_plan = self.accrual_plan_yearly_max_postponed_days_start
+
+        with freeze_time('2025-01-01'):
+            allocation = self._create_form_test_accrual_allocation(self.leave_type, '2025-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 21, self.employee_emp)
+
+        with freeze_time('2026-01-01'):
+            allocation._update_accrual()
+            self._take_leave(self.employee_emp, self.leave_type, '2025-06-02', '2025-06-26').action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 23, self.employee_emp)
+            self._take_leave(self.employee_emp, self.leave_type, '2025-12-31', '2025-12-31').action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 22, self.employee_emp)

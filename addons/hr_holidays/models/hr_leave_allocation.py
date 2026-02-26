@@ -413,7 +413,10 @@ class HolidaysAllocation(models.Model):
             if context_precomputed := self.env.context.get('precomputed_allocations'):
                 precomputed_allocations |= context_precomputed
             # By setting `precomputed_allocations`, avoid infinite loop (otherwise _get_consumed_leaves -> _get_future_leaves_on -> _process_accrual_plans -> ...)
-            employee_days_per_allocation = allocation.employee_id.with_context(precomputed_allocations=precomputed_allocations)._get_consumed_leaves(
+            employee_days_per_allocation = allocation.employee_id.with_context(
+                precomputed_allocations=precomputed_allocations,
+                ignore_lost_surplus=True,
+            )._get_consumed_leaves(
                 allocation.holiday_status_id, allocation.nextcall, ignore_future=True)[0]
             origin = allocation._origin
             leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
@@ -523,7 +526,7 @@ class HolidaysAllocation(models.Model):
                 # if it's the carry-over date, adjust days using current level's carry-over policy
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
-                    if current_level.action_with_unused_accruals in ['lost', 'maximum']:
+                    if not self.env.context.get('ignore_carryover_policy') and current_level.action_with_unused_accruals in ['lost', 'maximum']:
                         allocated_days_left = allocation.number_of_days - leaves_taken
                         allocation_max_days = 0 # default if unused_accrual are lost
                         if current_level.action_with_unused_accruals == 'maximum':
@@ -550,7 +553,7 @@ class HolidaysAllocation(models.Model):
                 #   occurred on 01/09/2023 for example, then the carryover should be applied to any day accrued between 01/01/2023 and 01/09/2023.
                 # 3. The following if block will handle the carryover for days accrued after carryover_date until carryover_period_end. Carryover period end is
                 #    adjusted if a level transition occurred. The carryover for days accrued before carryover_date is handled above.
-                if allocation.accrual_plan_id.accrued_gain_time == 'start' and allocation.last_executed_carryover_date:
+                if not self.env.context.get('ignore_carryover_policy') and allocation.accrual_plan_id.accrued_gain_time == 'start' and allocation.last_executed_carryover_date:
                     last_carryover_date = allocation.last_executed_carryover_date
                     carryover_level, carryover_level_idx = allocation._get_current_accrual_plan_level_id(last_carryover_date)
                     carryover_period_end = carryover_level._get_next_date(last_carryover_date)
@@ -646,6 +649,82 @@ class HolidaysAllocation(models.Model):
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation.invalidate_recordset()
         return res
+
+    def _get_accrual_simulation_allocation(self):
+        self.ensure_one()
+        fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
+        fake_allocation.lastcall = self.date_from
+        fake_allocation.actual_lastcall = self.date_from
+        fake_allocation.nextcall = False
+        fake_allocation.number_of_days = 0.0
+        fake_allocation.already_accrued = False
+        fake_allocation.carried_over_days_expiration_date = False
+        fake_allocation.expiring_carryover_days = 0
+        fake_allocation.last_executed_carryover_date = False
+        fake_allocation.yearly_accrued_amount = 0.0
+        return fake_allocation
+
+    def _get_simulated_number_of_days(self, date_to, ignore_carryover_policy=False):
+        self.ensure_one()
+        if not date_to:
+            return self.number_of_days
+        fake_allocation = self._get_accrual_simulation_allocation()
+        ctx = dict(self.env.context, ignore_lost_surplus=True)
+        if ignore_carryover_policy:
+            ctx['ignore_carryover_policy'] = True
+        fake_allocation = fake_allocation.with_context(ctx).sudo()
+        fake_allocation._process_accrual_plans(date_to, log=False)
+        number_of_days = fake_allocation.number_of_days
+        fake_allocation.invalidate_recordset()
+        return number_of_days
+
+    def _get_lost_surplus_buckets(self, target_date):
+        self.ensure_one()
+        if not target_date or self.allocation_type != 'accrual' or not self.accrual_plan_id:
+            return []
+        if isinstance(target_date, datetime):
+            target_date = target_date.date()
+        elif isinstance(target_date, str):
+            target_date = fields.Date.to_date(target_date)
+        end_date = target_date
+        if self.date_to and self.date_to < end_date:
+            end_date = self.date_to
+        if end_date < self.date_from:
+            return []
+
+        buckets = []
+        previous_carryover_date = self.date_from
+        cursor = self.date_from
+        while True:
+            carryover_date = self._get_carryover_date(cursor)
+            if carryover_date > end_date:
+                break
+            level, _level_idx = self._get_current_accrual_plan_level_id(carryover_date)
+            if level and level.action_with_unused_accruals in ['lost', 'maximum']:
+                reference_date = carryover_date
+                if self.accrual_plan_id.accrued_gain_time == 'start':
+                    reference_date = carryover_date + relativedelta(days=-1)
+                if reference_date < self.date_from:
+                    previous_carryover_date = carryover_date
+                    cursor = carryover_date + relativedelta(days=1)
+                    continue
+                remaining_before_carryover = self._get_simulated_number_of_days(reference_date, ignore_carryover_policy=True)
+                cap_days = 0
+                if level.action_with_unused_accruals == 'maximum':
+                    if level.added_value_type == 'day':
+                        cap_days = level.postpone_max_days
+                    else:
+                        cap_days = level.postpone_max_days / self.employee_id._get_hours_per_day(self.date_from)
+                lost_days = max(0, remaining_before_carryover - cap_days)
+                if lost_days:
+                    buckets.append({
+                        'start': previous_carryover_date,
+                        'end': carryover_date,
+                        'amount': lost_days,
+                    })
+            previous_carryover_date = carryover_date
+            cursor = carryover_date + relativedelta(days=1)
+        return buckets
 
     ####################################################
     # ORM Overrides methods

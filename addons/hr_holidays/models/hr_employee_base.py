@@ -103,6 +103,11 @@ class HrEmployeeBase(models.AbstractModel):
 
         if not target_date:
             target_date = fields.Date.today()
+        elif isinstance(target_date, datetime):
+            target_date = target_date.date()
+        elif isinstance(target_date, str):
+            target_date = fields.Date.to_date(target_date)
+        today = fields.Date.today()
         if ignore_future:
             leaves_domain.append(('date_from', '<=', target_date))
         leaves = self.env['hr.leave'].search(leaves_domain)
@@ -118,6 +123,95 @@ class HrEmployeeBase(models.AbstractModel):
         allocations_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave.allocation']))
         for allocation in allocations:
             allocations_per_employee_type[allocation.employee_id][allocation.holiday_status_id] |= allocation
+
+        lost_surplus_buckets = {}
+        if not self.env.context.get('ignore_lost_surplus'):
+            for allocation in allocations:
+                if allocation.allocation_type != 'accrual' or not allocation.accrual_plan_id:
+                    continue
+                buckets = allocation._get_lost_surplus_buckets(target_date)
+                if not buckets:
+                    continue
+                request_unit = allocation.holiday_status_id.request_unit
+                unit_multiplier = 1
+                if request_unit == 'hour':
+                    unit_multiplier = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                converted = []
+                for bucket in buckets:
+                    remaining = bucket['amount'] * unit_multiplier
+                    if remaining:
+                        converted.append({
+                            'start': bucket['start'],
+                            'end': bucket['end'],
+                            'remaining': remaining,
+                        })
+                if converted:
+                    lost_surplus_buckets[allocation] = converted
+
+        def _get_interval_duration(employee, start, end, unit):
+            if end <= start:
+                return 0
+            duration_info = employee._get_calendar_attendances(start.replace(tzinfo=pytz.UTC), end.replace(tzinfo=pytz.UTC))
+            return duration_info['hours'] if unit == 'hours' else duration_info['days']
+
+        def _get_lost_surplus_capacity(employee, interval_start, interval_end, unit, buckets):
+            capacity = 0
+            for bucket in buckets:
+                if bucket['remaining'] <= 0:
+                    continue
+                bucket_start = datetime.combine(bucket['start'], time.min)
+                bucket_end = datetime.combine(bucket['end'], time.min)
+                overlap_start = max(interval_start, bucket_start)
+                overlap_end = min(interval_end, bucket_end)
+                if overlap_end <= overlap_start:
+                    continue
+                overlap_duration = _get_interval_duration(employee, overlap_start, overlap_end, unit)
+                if overlap_duration <= 0:
+                    continue
+                capacity += min(overlap_duration, bucket['remaining'])
+            return capacity
+
+        def _consume_lost_surplus(employee, interval_start, interval_end, allocated_time, unit, buckets):
+            if allocated_time <= 0:
+                return 0
+            remaining_to_absorb = allocated_time
+            absorbed = 0
+            for bucket in buckets:
+                if remaining_to_absorb <= 0:
+                    break
+                if bucket['remaining'] <= 0:
+                    continue
+                bucket_start = datetime.combine(bucket['start'], time.min)
+                bucket_end = datetime.combine(bucket['end'], time.min)
+                overlap_start = max(interval_start, bucket_start)
+                overlap_end = min(interval_end, bucket_end)
+                if overlap_end <= overlap_start:
+                    continue
+                overlap_duration = _get_interval_duration(employee, overlap_start, overlap_end, unit)
+                if overlap_duration <= 0:
+                    continue
+                absorb_here = min(overlap_duration, bucket['remaining'], remaining_to_absorb)
+                bucket['remaining'] -= absorb_here
+                absorbed += absorb_here
+                remaining_to_absorb -= absorb_here
+            return absorbed
+
+        def _get_applicable_lost_surplus_buckets(leave, buckets, target_date):
+            if not buckets or not leave.create_date or not target_date:
+                return []
+            create_date = leave.create_date.date()
+            leave_start = leave.date_from.date()
+            applicable = []
+            for bucket in buckets:
+                carryover_date = bucket['end']
+                if target_date < carryover_date:
+                    continue
+                if leave_start >= carryover_date:
+                    continue
+                if create_date < carryover_date:
+                    continue
+                applicable.append(bucket)
+            return applicable
 
         # _get_consumed_leaves returns a tuple of two dictionnaries.
         # 1) The first is a dictionary to map the number of days/hours of leaves taken per allocation
@@ -178,10 +272,25 @@ class HrEmployeeBase(models.AbstractModel):
             future_leaves = 0
             if allocation.allocation_type == 'accrual' and not precomputed:
                 future_leaves = allocation._get_future_leaves_on(target_date)
-            max_leaves = allocation.number_of_hours_display\
-                if allocation.holiday_status_id.request_unit in ['hour']\
-                else allocation.number_of_days_display
-            max_leaves += future_leaves
+            use_simulation = False
+            if allocation.allocation_type == 'accrual' and allocation.accrual_plan_id and target_date and target_date < today:
+                carryover_date = allocation._get_carryover_date(target_date + relativedelta(days=1))
+                if carryover_date and carryover_date <= today:
+                    level, _level_idx = allocation._get_current_accrual_plan_level_id(carryover_date)
+                    if level and level.action_with_unused_accruals in ['lost', 'maximum']:
+                        use_simulation = True
+            if use_simulation:
+                simulated_days = allocation._get_simulated_number_of_days(target_date)
+                if allocation.holiday_status_id.request_unit in ['hour']:
+                    max_leaves = simulated_days * allocation.employee_id._get_hours_per_day(allocation.date_from)
+                else:
+                    max_leaves = simulated_days
+                future_leaves = 0
+            else:
+                max_leaves = allocation.number_of_hours_display\
+                    if allocation.holiday_status_id.request_unit in ['hour']\
+                    else allocation.number_of_days_display
+                max_leaves += future_leaves
             allocation_data.update({
                 'max_leaves': max_leaves,
                 'accrual_bonus': future_leaves,
@@ -243,6 +352,12 @@ class HrEmployeeBase(models.AbstractModel):
                             if leave.date_from != interval_start or leave.date_to != interval_end:
                                 duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=pytz.UTC), interval_end.replace(tzinfo=pytz.UTC))
                                 duration = duration_info['hours' if leave_unit == 'hours' else 'days']
+                            buffer_capacity = 0
+                            buckets = lost_surplus_buckets.get(allocation)
+                            if buckets:
+                                buckets = _get_applicable_lost_surplus_buckets(leave, buckets, target_date)
+                            if buckets:
+                                buffer_capacity = _get_lost_surplus_capacity(employee, interval_start, interval_end, leave_unit, buckets)
                             max_allowed_duration = min(
                                 duration,
                                 leave_type_data[allocation]['virtual_remaining_leaves']
@@ -257,6 +372,13 @@ class HrEmployeeBase(models.AbstractModel):
                             if leave.state == 'validate':
                                 leave_type_data[allocation]['leaves_taken'] += allocated_time
                                 leave_type_data[allocation]['remaining_leaves'] -= allocated_time
+
+                            if buckets:
+                                absorbed = _consume_lost_surplus(employee, interval_start, interval_end, allocated_time, leave_unit, buckets)
+                                if absorbed:
+                                    leave_type_data[allocation]['virtual_remaining_leaves'] += absorbed
+                                    if leave.state == 'validate':
+                                        leave_type_data[allocation]['remaining_leaves'] += absorbed
 
                             leave_duration -= allocated_time
                             if not leave_duration:
