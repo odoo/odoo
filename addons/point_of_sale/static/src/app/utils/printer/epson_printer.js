@@ -2,6 +2,7 @@ import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
+import { getLNATargetAddressSpace } from "../init_lna";
 
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
@@ -121,6 +122,9 @@ export class EpsonPrinter extends BasePrinter {
     setup({ printer }) {
         super.setup(...arguments);
         this.printer_ip = printer.printer_ip;
+        if (this.use_lna) {
+            this.lnaTargetAddressSpace = getLNATargetAddressSpace(this.address);
+        }
     }
 
     get address() {
@@ -152,7 +156,7 @@ export class EpsonPrinter extends BasePrinter {
         };
 
         if (this.use_lna) {
-            params.targetAddressSpace = "local";
+            params.targetAddressSpace = this.lnaTargetAddressSpace;
         }
 
         try {
