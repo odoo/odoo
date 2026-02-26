@@ -311,17 +311,149 @@
 %o-nocontent-init-image {
     content: "";
     display: block;
-    margin: auto;
+    margin: var(--o-nocontent-img-margin,  0 auto 1rem);
     background-size: cover;
 }
 
-%o-nocontent-empty-document {
+%o-nocontent-default-image-init {
     @extend %o-nocontent-init-image;
-    width: 120px;
-    height: 80px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+
+    width: var(--o-nocontent-img-width, 50px);
+    aspect-ratio: 1 / 1;
+    background-image: var(--o-nocontent-background-image, url('/web/static/img/nocontent_sprite_light.svg'));
+    background-size: 600% 500%; // 4 columns, 3 rows: if we add images to `nocontent_sprite.svg`, we need to update this value
+    background-position: var(--o-nocontent-x, 0%) var(--o-nocontent-y, 0%);  
+}
+
+%o-nc-empty-folder {
+    --o-nocontent-x: 0;
+    --o-nocontent-y: 0;
+}
+
+%o-nc-thumb-up{
+    --o-nocontent-x: -100%;
+}
+
+%o-nc-empty-small-box {
+    --o-nocontent-x: -200%;
+}
+
+%o-nc-empty-letter {
+    --o-nocontent-x: -300%;
+}
+
+%o-nc-empty-box {
+    --o-nocontent-x: -400%;
+}
+
+%o-nc-checklist{
+    --o-nocontent-x: -500%;
+}
+
+%o-nc-bubble{
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-empty-search{
+    --o-nocontent-x: -100%;
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-add-card{
+    --o-nocontent-x: -200%;
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-add-document {
+    --o-nocontent-x: -300%;
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-cellphone {
+    --o-nocontent-x: -400%;
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-phone {
+    --o-nocontent-x: -500%; 
+    --o-nocontent-y: -100%;
+}
+
+%o-nc-voyage {
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-coffee{
+    --o-nocontent-x: -100%;
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-tea {
+    --o-nocontent-x: -200%;
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-paperplane {
+    --o-nocontent-x: -300%;
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-magic-hat {
+    --o-nocontent-x: -400%;
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-pouf {
+    --o-nocontent-x: -500%;
+    --o-nocontent-y: -200%;
+}
+
+%o-nc-ghost {
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-signpost {
+    --o-nocontent-x: -100%;
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-letterbox {
+    --o-nocontent-x: -200%;
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-cactus {
+    --o-nocontent-x: -300%;
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-leaves {
+    --o-nocontent-x: -400%;
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-hole {
+    --o-nocontent-x: -500%;
+    --o-nocontent-y: -300%;
+}
+
+%o-nc-calendar {
+    --o-nocontent-y: -400%;
+}
+
+%o-nc-island {
+    --o-nocontent-x: -100%;
+    --o-nocontent-y: -400%;
+}
+
+%o-nc-network-tower {
+    --o-nocontent-x: -200%;
+    --o-nocontent-y: -400%;
+}
+
+%o-nc-signature {
+    --o-nocontent-x: -300%;
+    --o-nocontent-y: -400%;
 }
 
 // Sample data

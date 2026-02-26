@@ -50,7 +50,7 @@ class MailingMailing(models.Model):
                 'crm_lead_view_hide_month': True,
             },
             'domain': [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
-            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+            'help': Markup('<p class="o_view_nocontent_img o_nc_empty_folder">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
             'name': _("Leads Analysis"),

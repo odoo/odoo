@@ -4,8 +4,8 @@
         <xpath expr="//*[@name='empty-message']" position="replace">
             <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
                 <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
-                    <div class="align-items-center text-center">
-                        <h4 class="mb-3 o-fw-600">Congratulations, your inbox is empty</h4>
+                    <div class="o_nocontent_help align-items-center text-center">
+                        <h4 class="o_view_nocontent_img o_nc_thumb_up mb-3 o-fw-600">Congratulations, your inbox is empty</h4>
                         New messages appear here.
                     </div>
                 </t>
@@ -17,7 +17,7 @@
                 </t>
                 <t t-if="props.thread.id === 'history'">
                     <img src="/web/static/img/neutral_face.svg" alt="History"/>
-                    <h4 class="mb-3 o-fw-600">No history messages</h4>
+                    <h4 class="o_view_nocontent_img o_nc_empty_small_box mb-3 o-fw-600">No history messages</h4>
                     Messages marked as read will appear in the history.
                 </t>
             </t>

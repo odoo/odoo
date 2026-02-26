@@ -243,7 +243,7 @@
             'default_user_id': uid,
         }</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -265,7 +265,7 @@
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -286,7 +286,7 @@
         }</field>
         <field name="domain">[('equipment_id', '=', active_id)]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -304,7 +304,7 @@
         }</field>
         <field name="domain">[('maintenance_team_id', '=', active_id), ('maintenance_type', 'in', context.get('maintenance_type', ['preventive', 'corrective']))]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -320,7 +320,7 @@
         <field name="view_id" ref="hr_equipment_view_calendar"/>
         <field name="context">{'search_default_todo': True}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -335,7 +335,7 @@
         <field name="view_mode">graph,pivot,kanban,list,form,calendar,activity</field>
         <field name="context">{'search_default_todo': True}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
@@ -535,7 +535,7 @@
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new equipment
             </p><p>
                 Track equipment and link it to an employee or department.
@@ -556,7 +556,7 @@
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new equipment
             </p><p>
                 Track equipment and link it to an employee or department.
@@ -659,7 +659,7 @@
         <field name="view_mode">list,kanban,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img o_nc_empty_folder">
                 Add a new equipment category
             </p>
         </field>
@@ -708,7 +708,7 @@
         <field name="path">maintenance-stages</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
+          <p class="o_view_nocontent_img o_nc_empty_folder">
             Add a new stage in the maintenance request
           </p>
         </field>
@@ -897,7 +897,7 @@
                 (0, 0, {'view_mode': 'list', 'view_id': ref('maintenance_team_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('maintenance_team_view_kanban')})]"/>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
+          <p class="o_view_nocontent_img o_nc_empty_folder">
             Add a team in the maintenance request
           </p>
         </field>
@@ -910,7 +910,7 @@
         <field name="view_mode">kanban,form</field>
         <field name="view_id" ref="maintenance_team_kanban"/>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
+          <p class="o_view_nocontent_img o_nc_empty_folder">
             Add a new stage in the maintenance request
           </p>
         </field>

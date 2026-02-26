@@ -52,7 +52,7 @@ class MailingMailing(models.Model):
                 'sale_report_view_hide_date': True,
             },
             'domain': [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
-            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+            'help': Markup('<p class="o_view_nocontent_img o_nc_empty_folder">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
             'name': _("Sales Analysis"),
@@ -78,7 +78,7 @@ class MailingMailing(models.Model):
                 'invoice_report_view_hide_invoice_date': True,
             },
             'domain': [('move_id', 'in', moves.ids)],
-            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+            'help': Markup('<p class="o_view_nocontent_img o_nc_empty_folder">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
             'name': _("Invoices Analysis"),

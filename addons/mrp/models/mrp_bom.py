@@ -787,7 +787,7 @@ class MrpBomLine(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,list,form',
             'target': 'current',
-            'help': _('''<p class="o_view_nocontent_smiling_face">
+            'help': _('''<p class="o_view_nocontent_img o_nc_empty_folder">
                         Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.

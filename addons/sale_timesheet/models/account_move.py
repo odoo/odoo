@@ -66,7 +66,7 @@ class AccountMove(models.Model):
             'view_id': False,
             'view_mode': 'list,form',
             'help': _("""
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_view_nocontent_img o_nc_empty_folder">
                     Record timesheets
                 </p><p>
                     You can register and track your workings hours by project every
