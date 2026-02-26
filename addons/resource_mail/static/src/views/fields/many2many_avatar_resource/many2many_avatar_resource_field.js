@@ -133,3 +133,4 @@ export const kanbanMany2ManyAvatarResourceField = {
     component: KanbanMany2ManyAvatarResourceField,
 };
 registry.category("fields").add("kanban.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
+registry.category("fields").add("activity.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
