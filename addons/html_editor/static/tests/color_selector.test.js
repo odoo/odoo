@@ -1435,3 +1435,25 @@ describe("color preview", () => {
         });
     });
 });
+
+test("Should not close the color picker on icon color change", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="fa fa-glass" contenteditable="false"></span></p>`
+    );
+    await animationFrame();
+    const icon = el.querySelector(".fa");
+    setSelection({
+        anchorNode: icon.previousSibling,
+        anchorOffset: 1,
+        focusNode: icon.nextSibling,
+        focusOffset: 0,
+    });
+    await waitFor(".o-select-color-foreground");
+    await click(".o-select-color-foreground");
+    await waitFor('[data-color="o-color-1"]');
+    await hover('[data-color="o-color-1"]');
+    expectElementCount('[data-color="o-color-1"]', 1);
+    await hover('[data-color="o-color-2"]');
+    // Color picker should stay open
+    expectElementCount('[data-color="o-color-2"]', 1);
+});
