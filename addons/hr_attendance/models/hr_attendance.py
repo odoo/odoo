@@ -270,8 +270,8 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = [Domain.AND([
             Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(SU)),
-            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(MO(-1))),
+            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(weekday=SU)),
+            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(weekday=MO(-1))),
         ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
         if not domain_list:
             return Domain.FALSE
