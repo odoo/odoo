@@ -166,7 +166,9 @@ export class RecipientsInput extends Component {
                             });
                         };
                     }
-                    options.push(createOption);
+                    if (name.trim() || email) {
+                        options.push(createOption);
+                    }
                     return options;
                 },
             },
