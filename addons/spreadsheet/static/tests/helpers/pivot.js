@@ -4,6 +4,9 @@ import { addEmptyGranularity } from "@spreadsheet/pivot/pivot_helpers";
 import { getBasicPivotArch, getPyEnv } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
+import { constants } from "@odoo/o-spreadsheet";
+
+const { PIVOT_INSERT_TABLE_STYLE_ID } = constants;
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -75,6 +78,7 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
         columns: addEmptyGranularity(archInfo.colGroupBys, pyEnv[resModel]._fields),
         rows: addEmptyGranularity(archInfo.rowGroupBys, pyEnv[resModel]._fields),
         name: "Partner Pivot",
+        style: { tableStyleId: PIVOT_INSERT_TABLE_STYLE_ID },
         actionXmlId: params.actionXmlId,
     };
     model.dispatch("ADD_PIVOT", {
