@@ -1,6 +1,10 @@
+.modal-dialog:has(.self_order_pills_selection_popup_dialog) {
+    margin: 0;
+    --bs-modal-margin: 0px;
+}
+
 .self_order_pills_selection_popup_dialog {
     border-radius: 35px 35px 0 0 !important;
-    bottom: 0;
 }
 
 .no-scrollbar {
@@ -12,10 +16,24 @@
     display: none;  /* Chrome, Safari and Opera */
 }
 
+/* On mobile screens (<576px) */
+@media (max-width: 575px) {
+    /* If modal-dialog-centered is present, it will center; override it */
+    .modal-dialog-centered:has(.self_order_pills_selection_popup_dialog) {
+      align-items: flex-end;
+      min-height: 100%;
+    }
+
+    .modal-dialog:has(.self_order_pills_selection_popup_dialog) {
+      margin: 0;
+    }
+  }
+
 /* On small screens (576px - 767px) */
 @media (min-width: 576px) and (max-width: 767px) {
     .self_order_pills_selection_popup_dialog {
         max-height: 75vh;
+        bottom: 0;
     }
 
     .self_order_pills_selection_popup {
