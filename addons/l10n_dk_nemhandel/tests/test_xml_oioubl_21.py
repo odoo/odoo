@@ -40,6 +40,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',
+            'nemhandel_identifier_value': '12345674',
             'phone': '+45 32 12 35 56',
             'street': 'Paradisæblevej, 11',
             'country_id': cls.env.ref('base.dk').id,
