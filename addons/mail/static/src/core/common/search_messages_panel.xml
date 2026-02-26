@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="mail.SearchMessagesPanel">
         <ActionPanel
-            title="title"
+            title="this.title"
             minWidth="200"
             initialWidth="400"
             icon="'oi oi-search'"
         >
-            <SearchMessageInput closeSearch="props.closeSearch" messageSearch="messageSearch" thread="props.thread"/>
-            <SearchMessageResult thread="props.thread" messageSearch="messageSearch"/>
+            <SearchMessageInput closeSearch="this.props.closeSearch" messageSearch="this.messageSearch" thread="this.props.thread"/>
+            <SearchMessageResult thread="this.props.thread" messageSearch="this.messageSearch"/>
         </ActionPanel>
     </t>
 </templates>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ImStatusDropdown">
         <Dropdown menuClass="'o-mail-ImStatusDropdown'">
-            <a href="#" t-att-class="{ 'd-block text-body py-3 fs-4 d-flex flex-row gap-2': env.isSmall }"><ImStatus persona='store.self'/> <span t-esc="readableImStatus"/> <i t-if="env.isSmall" class="oi oi-chevron-right ms-auto mt-1"/></a>
+            <a href="#" t-att-class="{ 'd-block text-body py-3 fs-4 d-flex flex-row gap-2': this.env.isSmall }"><ImStatus persona='this.store.self'/> <span t-esc="this.readableImStatus"/> <i t-if="this.env.isSmall" class="oi oi-chevron-right ms-auto mt-1"/></a>
             <t t-set-slot="content">
                 <DropdownItem class="{ 'active': this.store.self.im_status === 'online' }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
                 <hr class="my-1"/>

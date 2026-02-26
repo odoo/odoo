@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ScheduledDateField">
-    <button t-attf-class="btn btn-light #{scheduledDate ? 'text-info' : ''}" data-hotkey="s" t-on-click="onClick" title="Send Later">
+    <button t-attf-class="btn btn-light #{this.scheduledDate ? 'text-info' : ''}" data-hotkey="s" t-on-click="this.onClick" title="Send Later">
         <i class="fa fa-clock-o"/>
-        <span t-if="scheduledDate">
-            Sending <t t-out="scheduledDate.toLocaleString(this.dateTimeFormat)"/>
+        <span t-if="this.scheduledDate">
+            Sending <t t-out="this.scheduledDate.toLocaleString(this.dateTimeFormat)"/>
         </span>
     </button>
 </t>

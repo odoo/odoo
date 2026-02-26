@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AvatarStack">
-        <div t-if="props.personas.length > 0" class="bg-inherit" t-att-class="props.containerClass" t-on-click="props.onClick">
-            <div class="d-flex bg-inherit position-relative z-1" t-att-class="{'flex-column': props.direction === 'v'}">
-                <span t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId" class="bg-inherit rounded-circle position-relative" t-attf-style="{{getStyle(persona_index)}}">
-                    <img t-att-src="persona.avatarUrl" t-att-title="persona.displayName or persona.name" class="w-100 h-100 rounded-circle object-fit-cover" t-attf-class="{{props.avatarClass(persona)}}"/>
+        <div t-if="this.props.personas.length > 0" class="bg-inherit" t-att-class="this.props.containerClass" t-on-click="this.props.onClick">
+            <div class="d-flex bg-inherit position-relative z-1" t-att-class="{'flex-column': this.props.direction === 'v'}">
+                <span t-foreach="this.props.personas.slice(0, this.props.max)" t-as="persona" t-key="persona.localId" class="bg-inherit rounded-circle position-relative" t-attf-style="{{this.getStyle(persona_index)}}">
+                    <img t-att-src="persona.avatarUrl" t-att-title="persona.displayName or persona.name" class="w-100 h-100 rounded-circle object-fit-cover" t-attf-class="{{this.props.avatarClass(persona)}}"/>
                     <t t-slot="avatarExtraInfo" persona="persona"/>
                 </span>
-                <span t-if="remainingCount > 0" class="bg-inherit rounded-circle" t-attf-style="{{getStyle(props.personas.length)}};">
-                    <span class="o-mail-AvatarStack-remainingCount rounded-circle h-100 w-100 bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" style="font-weight: 450;">+<t t-esc="remainingCount"/></span>
+                <span t-if="this.remainingCount > 0" class="bg-inherit rounded-circle" t-attf-style="{{this.getStyle(this.props.personas.length)}};">
+                    <span class="o-mail-AvatarStack-remainingCount rounded-circle h-100 w-100 bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" style="font-weight: 450;">+<t t-esc="this.remainingCount"/></span>
                 </span>
             </div>
         </div>

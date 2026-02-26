@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Composer" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Composer-coreMain')]" position="before">
-            <div t-if="env.displayRating and !message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
-                <div class="o-mail-Composer-stars enabled cursor-pointer" t-on-mouseleave="onMouseLeaveStar">
+            <div t-if="this.env.displayRating and !this.message" class="o-mail-Composer-starCard d-flex mb-3 px-2">
+                <div class="o-mail-Composer-stars enabled cursor-pointer" t-on-mouseleave="this.onMouseLeaveStar">
                     <t t-set="index" t-value="0" />
-                    <t t-foreach="Array(visibleRatingValue)" t-as="num" t-key="num_index">
-                        <i class="fa fa-star" role="img" aria-label="Full star" t-att-index="index" t-on-mousemove="onMoveStar" t-on-click="onClickStar"/>
+                    <t t-foreach="Array(this.visibleRatingValue)" t-as="num" t-key="num_index">
+                        <i class="fa fa-star" role="img" aria-label="Full star" t-att-index="index" t-on-mousemove="this.onMoveStar" t-on-click="this.onClickStar"/>
                         <t t-set="index" t-value="index + 1" />
                     </t>
-                    <t t-foreach="Array(MAX_STAR_RATING - visibleRatingValue)" t-as="num" t-key="Array(visibleRatingValue) + num_index">
-                        <i class="fa fa-star-o text-black-25" role="img" aria-label="Empty star" t-att-index="index" t-on-mousemove="onMoveStar" t-on-click="onClickStar"/>
+                    <t t-foreach="Array(this.MAX_STAR_RATING - this.visibleRatingValue)" t-as="num" t-key="Array(this.visibleRatingValue) + num_index">
+                        <i class="fa fa-star-o text-black-25" role="img" aria-label="Empty star" t-att-index="index" t-on-mousemove="this.onMoveStar" t-on-click="this.onClickStar"/>
                         <t t-set="index" t-value="index + 1" />
                     </t>
                 </div>

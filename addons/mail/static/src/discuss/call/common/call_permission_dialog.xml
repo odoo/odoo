@@ -3,22 +3,22 @@
 
     <t t-name="discuss.CallPermissionDialog">
         <Dialog title="''" size="'md'">
-            <div class="d-flex flex-fill align-items-center gap-3" t-att-class="{ 'flex-column-reverse': ui.isSmall }">
+            <div class="d-flex flex-fill align-items-center gap-3" t-att-class="{ 'flex-column-reverse': this.ui.isSmall }">
                 <div>
-                    <h2 t-out="permissionPrompt"/>
-                    <p class="text-muted" t-out="permissionNote"/>
+                    <h2 t-out="this.permissionPrompt"/>
+                    <p class="text-muted" t-out="this.permissionNote"/>
                 </div>
                 <t t-call="discuss.CallPermissionDialogImg"/>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="props.media === 'microphone' ? onClickUseMicrophone : onClickUseCamera" t-out="primaryActionText"/>
-                <button class="btn btn-secondary" t-if="rtc.cameraPermission !== 'granted' and rtc.microphonePermission !== 'granted'" t-on-click="onClickUseMicAndCamera">Use microphone and camera</button>
+                <button class="btn btn-primary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.primaryActionText"/>
+                <button class="btn btn-secondary" t-if="this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
             </t>
         </Dialog>
     </t>
 
     <t t-name="discuss.CallPermissionDialogImg">
-        <svg role="img" aria-label="Permissions Lady - Lady pushing a giant toggle button" width="auto" height="auto" viewBox="0 0 431 294" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Permissions Lady - Lady pushing a giant toggle button" width="auto" height="auto" viewBox="0 0 431 294" fill="none">
             <title>Permissions Lady</title>
             <description>Illustration showing a lady pushing a giant toggle button representing microphone and camera permissions</description>
             <g>

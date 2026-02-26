@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
-            <PipBanner t-if="rtc.isPipMode and thread.channel?.eq(rtc.channel)"/>
-            <Call t-elif="thread.channel?.showCallView" channel="thread.channel"/>
+            <PipBanner t-if="this.rtc.isPipMode and this.thread.channel?.eq(this.rtc.channel)"/>
+            <Call t-elif="this.thread.channel?.showCallView" channel="this.thread.channel"/>
         </xpath>
     </t>
 </templates>

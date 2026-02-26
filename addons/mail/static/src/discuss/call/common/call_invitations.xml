@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallInvitations">
-        <div t-if="store.ringingChannels.length > 0" class="o-discuss-CallInvitations position-fixed top-0 end-0 d-flex flex-column p-2">
-            <t t-foreach="store.ringingChannels" t-as="channel" t-key="channel.localId">
+        <div t-if="this.store.ringingChannels.length > 0" class="o-discuss-CallInvitations position-fixed top-0 end-0 d-flex flex-column p-2">
+            <t t-foreach="this.store.ringingChannels" t-as="channel" t-key="channel.localId">
                 <CallInvitation channel="channel"/>
             </t>
         </div>

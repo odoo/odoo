@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessageContextMenu">
-    <Dropdown state="props.dropdownState" manual="true" menuClass="store.discussDropdownMenuClass(this)" position="'right-start'">
+    <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" position="'right-start'">
         <span class="d-flex position-fixed z-1" t-ref="anchorRef"/>
         <t t-set-slot="content">
-            <ActionList actions="messageActions.actions" dropdown="true"/>
+            <ActionList actions="this.messageActions.actions" dropdown="true"/>
         </t>
     </Dropdown>
 </t>

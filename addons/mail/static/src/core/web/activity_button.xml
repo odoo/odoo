@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityButton">
-        <button class="o-mail-ActivityButton btn btn-link btn-link-inline" t-on-click.stop="onClick" t-ref="button" t-att-aria-label="title" t-att-title="title">
-            <i class="fa fa-fw fa-lg" t-att-class="buttonClass" role="img"/>
+        <button class="o-mail-ActivityButton btn btn-link btn-link-inline" t-on-click.stop="this.onClick" t-ref="button" t-att-aria-label="this.title" t-att-title="this.title">
+            <i class="fa fa-fw fa-lg" t-att-class="this.buttonClass" role="img"/>
         </button>
     </t>
 </templates>
