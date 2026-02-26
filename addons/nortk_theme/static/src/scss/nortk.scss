@@ -77,7 +77,12 @@ body, .o_web_client {
 .btn {
     --btn-color: var(--o-active-option-text-color) !important;
     background-color: var(--nortk-button-background) !important;
-    border-color: var(--nortk-button-background) !important;
+    border-color: var(--o-input-border-color) !important;
+}
+
+.btn-check:checked + .btn, :not(.btn-check) + .btn:active,
+.btn:first-child:active, .btn.active, .btn.show {
+    color: var(--o-main-text-color) !important;
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
@@ -105,7 +110,8 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 }
 
 .popover {
-  --popover-bg: var(--o-main-navbar-background-color) !important;
+    --popover-bg: var(--o-main-navbar-background-color) !important;
+    --popover-border-color: var(--o-input-border-color) !important;
 }
 
 /* Style the "Card" (The white box containing the login form or DB list) */
@@ -161,6 +167,13 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 .o_kanban_renderer {
     background: var(--nortk-kanban-background) !important;
     border: none !important;
+}
+
+.o-dropdown--kanban-record-menu .container
+.row.o_kanban_card_manage_settings:not(:first-child),
+.o-dropdown--kanban-record-menu .o_container_small
+.row.o_kanban_card_manage_settings:not(:first-child) {
+    border-top-color: var(--o-input-border-color) !important;
 }
 
 /* Control Panel */
