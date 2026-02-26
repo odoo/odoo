@@ -638,6 +638,41 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         comp_receipt.button_validate()
         self.assertEqual(ressuply_pick.state, 'assigned')
 
+    def test_subcontract_with_multi_receipts(self):
+        """
+        Compute the value of a subcontract move with multiple receipts
+        Up to 18.4: a stock move could have multiple move_dest_ids
+        """
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'subcontract',
+            'subcontractor_ids': [(4, self.subcontractor_partner1.id)],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': 5,
+                'product_uom_id': self.product.uom_id.id,
+            })],
+        })
+        po.button_confirm()
+
+        self.assertEqual(len(po.picking_ids), 1)
+        self.assertEqual(len(po.picking_ids.move_line_ids), 1)
+
+        po.picking_ids.move_line_ids.quantity = 2
+        Form.from_action(self.env, po.picking_ids.button_validate()).save().process()
+
+        po.picking_ids.filtered(lambda x: x.state == 'assigned').button_validate()
+
+        subcontract_mo_move = po.picking_ids.move_ids.move_orig_ids[0]
+        subcontract_mo_move.move_dest_ids = po.picking_ids.move_ids
+        self.assertEqual(len(subcontract_mo_move.move_dest_ids), 2)
+
+        self.assertEqual(subcontract_mo_move._get_value_from_account_move(1).get('value'), 20.0)
+
     def test_update_qty_purchased_with_subcontracted_product(self):
         """
         Test That we can update the quantity of a purchase order line with a subcontracted product
