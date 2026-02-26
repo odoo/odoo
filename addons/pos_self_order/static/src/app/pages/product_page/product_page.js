@@ -23,6 +23,15 @@ export class ProductPage extends Component {
             return;
         }
 
+        if (
+            this.selfOrder.hasPresets() &&
+            !this.selfOrder.currentOrder.preset_id &&
+            this.selfOrder.config.self_ordering_mode !== "kiosk"
+        ) {
+            this.router.navigate("location");
+            return;
+        }
+
         const editedLine = this.selfOrder.editedLine;
         useSubEnv({ selectedValues: {} });
 

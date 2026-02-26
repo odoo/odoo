@@ -382,6 +382,18 @@ export class SelfOrder extends Reactive {
             const isPaid = o.state === "paid";
             const isZeroAmount = o.amount_total === 0;
             const isKiosk = this.config.self_ordering_mode === "kiosk";
+            const isEach = this.config.self_ordering_pay_after === "each";
+
+            if (
+                isEach &&
+                !isKiosk &&
+                o.isSynced &&
+                o.lines.length > 0 &&
+                o.state === "draft" &&
+                !["confirmation", "cart", "payment"].includes(this.router.activeSlot)
+            ) {
+                return false;
+            }
 
             return (
                 isDraft ||
@@ -400,7 +412,10 @@ export class SelfOrder extends Reactive {
             this.selectedOrderUuid = existingOrder.uuid;
             return existingOrder;
         }
-        return this.createNewOrder();
+        const newOrder = this.createNewOrder();
+        const orderObj = Array.isArray(newOrder) ? newOrder[0] : newOrder;
+        this.selectedOrderUuid = orderObj?.uuid;
+        return orderObj;
     }
 
     createNewOrder() {
@@ -734,7 +749,12 @@ export class SelfOrder extends Reactive {
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
 
-            if (this.config.self_ordering_pay_after === "each") {
+            // Do not reset selectedOrderUuid if we are immediately transitioning to payment.
+            // The payment page needs to access the current order to process it.
+            if (
+                this.config.self_ordering_pay_after === "each" &&
+                !["cart", "payment"].includes(this.router.activeSlot)
+            ) {
                 this.selectedOrderUuid = null;
             }
 
@@ -777,7 +797,16 @@ export class SelfOrder extends Reactive {
             });
             const result = this.models.connectNewData(data);
             const openOrder = result["pos.order"]?.find((o) => o.state === "draft");
-            if (openOrder && this.router.activeSlot !== "confirmation") {
+            const isEach = this.config.self_ordering_pay_after === "each";
+            const isViewingPage = ["confirmation", "cart", "payment"].includes(
+                this.router.activeSlot
+            );
+
+            if (
+                openOrder &&
+                this.router.activeSlot !== "confirmation" &&
+                (!isEach || isViewingPage)
+            ) {
                 this.selectedOrderUuid = openOrder.uuid;
 
                 // Remove all other open orders in draft and add orderline in the current order

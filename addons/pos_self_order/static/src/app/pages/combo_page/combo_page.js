@@ -23,8 +23,19 @@ export class ComboPage extends Component {
             this.goBack();
             return;
         }
-        useSubEnv({ selectedValues: {} });
+
         this.selfOrder = useSelfOrder();
+
+        if (
+            this.selfOrder.hasPresets() &&
+            !this.selfOrder.currentOrder.preset_id &&
+            this.selfOrder.config.self_ordering_mode !== "kiosk"
+        ) {
+            this.router.navigate("location");
+            return;
+        }
+
+        useSubEnv({ selectedValues: {} });
         this.state = useState({
             selectedChoiceIndex: 0,
             choices: [],
