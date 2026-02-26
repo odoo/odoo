@@ -66,10 +66,13 @@ class ProjectCustomerPortal(CustomerPortal):
         }
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, search=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
         domain = self._prepare_project_domain()
+        searchbar_inputs = {
+            'name': {'input': 'name', 'label': _('Search Project')},
+        }
 
         searchbar_sortings = self._prepare_searchbar_sortings()
         if not sortby:
@@ -79,12 +82,16 @@ class ProjectCustomerPortal(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        if search:
+            search = search.strip()
+            domain += [('name', 'ilike', search)]
+
         # projects count
         project_count = Project.search_count(domain)
         # pager
         pager = portal_pager(
             url="/my/projects",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'search': search},
             total=project_count,
             page=page,
             step=self._items_per_page
@@ -102,7 +109,10 @@ class ProjectCustomerPortal(CustomerPortal):
             'default_url': '/my/projects',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby
+            'search': search,
+            'searchbar_inputs': searchbar_inputs,
+            'search_in': 'name',
+            'sortby': sortby,
         })
         return request.render("project.portal_my_projects", values)
 
