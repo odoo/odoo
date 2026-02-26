@@ -201,6 +201,14 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
+        for condition in domain:
+            field_name, operator, _value = condition  # Force '&' implicit syntax
+            if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
+                raise UserError(_(
+                    "Invalid domain, use 'name' and/or 'department_id' fields "
+                    "with '=' and/or 'ilike' operators.",
+                ))
+
         company = self._get_company(token)
         if company:
             domain = Domain(domain) & Domain('company_id', '=', company.id)
