@@ -563,7 +563,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             !isColorGradient(getComputedStyle(neighborEl).backgroundImage) &&
             !hasNeighborTransparency
                 ? rgbToHex(neighborBgColor)
-                : Object.values(defaultColors)[0];
+                : Object.values(defaultColors)[0]?.toLowerCase();
         const curBgHexColor = rgbToHex(getComputedStyle(editingElement).backgroundColor);
 
         return {
