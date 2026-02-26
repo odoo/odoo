@@ -3,25 +3,25 @@
     <t t-name="im_livechat.ExpertiseTagsAutocomplete">
         <div
             class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input flex-wrap gap-1 mb-3"
-            t-att-class="{'o_input': !props.disabled, 'o-disabled': props.disabled}"
+            t-att-class="{'o_input': !this.props.disabled, 'o-disabled': this.props.disabled}"
             t-ref="root"
         >
             <div class="d-flex flex-wrap gap-1">
-                <BadgeTag t-foreach="props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" color="expertise.color" onDelete="props.disabled ? null : () => this.unlinkExpertise(expertise)"/>
+                <BadgeTag t-foreach="this.props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" color="expertise.color" onDelete="this.props.disabled ? null : () => this.unlinkExpertise(expertise)"/>
             </div>
-            <div t-if="!props.disabled" class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
+            <div t-if="!this.props.disabled" class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
                 <Many2XAutocomplete
-                    placeholder="placeholder"
+                    placeholder="this.placeholder"
                     resModel="'im_livechat.expertise'"
                     activeActions="{'link': true}"
                     isToMany="true"
                     fieldString.translate="Expertise"
-                    update.bind="addExpertises"
-                    quickCreate="store.self_user?.is_livechat_manager ? (name) => this.createAndLinkExpertise(name) : null"
+                    update.bind="this.addExpertises"
+                    quickCreate="this.store.self_user?.is_livechat_manager ? (name) => this.createAndLinkExpertise(name) : null"
                     getDomain="() => []"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                        <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record.id) }">
+                        <span t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record.id) }">
                             <span t-out="autoCompleteItemScope.label"/>
                         </span>
                     </t>
