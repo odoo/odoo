@@ -1674,19 +1674,9 @@ $-product-radius-map: (
     }
 }
 
-// ==== IMAGE ZOOM (discontinued) ==============================================
-.ecom-zoomable {
-    &[data-ecom-zoom-click] img.product_detail_img {
-        cursor: zoom-in;
-    }
-
-    img[data-zoom] {
-        cursor: zoom-in;
-    }
-
-    .o_savable img[data-zoom] {
-        cursor: pointer;
-    }
+// ==== IMAGE ZOOM ==============================================
+.ecom-zoomable[data-ecom-zoom-click] img.product_detail_img {
+    cursor: zoom-in;
 }
 
 #coupon_box form {
