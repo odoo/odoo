@@ -43,11 +43,22 @@ class ScaleDriver(SerialDriver):
 
     def __init__(self, identifier: str, device: dict):
         super().__init__(identifier, device)
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
         self.device_type = "scale"
         self.device_manufacturer = "Toledo"
         self._actions["read_once"] = self._read_once
         self.net_weight_char = b'N'
         self.tare_mode = False
+||||||| 70311e4bf0c9081c165abfa360641f4930812358
+        self.device_type = 'scale'
+        self._set_actions()
+        self._is_reading = True
+=======
+        self.device_type = 'scale'
+        self._set_actions()
+        self._is_reading = True
+        self.tare_mode = False
+>>>>>>> af2d8f33313dee1e6728f7e3018c01ff5111d3af
 
     def _read_once(self, data: dict):
         """Reads the scale current weight value and pushes it to the frontend."""
@@ -66,12 +77,46 @@ class ScaleDriver(SerialDriver):
         answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
             if self.net_weight_char and self.net_weight_char in answer:
                 self.tare_mode = True
             else:
                 self.tare_mode = False
             return float(match.group(1))
         return self._read_status(answer)
+||||||| 70311e4bf0c9081c165abfa360641f4930812358
+            self.data.update({
+                'result': float(match.group(1)),
+                'status': self._status,
+            })
+        else:
+            self._read_status(answer)
+
+    # Ensures compatibility with Community edition
+    def _scale_read_hw_proxy(self):
+        """Used when the iot app is not installed"""
+        with self._device_lock:
+            self._read_weight()
+        return self.data['result']
+=======
+            if self.net_weight_char and self.net_weight_char in answer:
+                self.tare_mode = True
+            else:
+                self.tare_mode = False
+            self.data.update({
+                'result': float(match.group(1)),
+                'status': self._status,
+            })
+        else:
+            self._read_status(answer)
+
+    # Ensures compatibility with Community edition
+    def _scale_read_hw_proxy(self):
+        """Used when the iot app is not installed"""
+        with self._device_lock:
+            self._read_weight()
+        return self.data['result']
+>>>>>>> af2d8f33313dee1e6728f7e3018c01ff5111d3af
 
     def _take_measure(self):
         """Reads the device's weight value, and pushes that value to the frontend."""
@@ -82,6 +127,29 @@ class ScaleDriver(SerialDriver):
                 self.data.update({"status": "success", "result": weight})
                 event_manager.device_changed(self)
 
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
+||||||| 70311e4bf0c9081c165abfa360641f4930812358
+
+class Toledo8217Driver(ScaleDriver):
+    """Driver for the Toldedo 8217 serial scale."""
+    _protocol = Toledo8217Protocol
+
+    def __init__(self, identifier, device):
+        super().__init__(identifier, device)
+        self.device_manufacturer = 'Toledo'
+
+=======
+
+class Toledo8217Driver(ScaleDriver):
+    """Driver for the Toldedo 8217 serial scale."""
+    _protocol = Toledo8217Protocol
+
+    def __init__(self, identifier, device):
+        super().__init__(identifier, device)
+        self.device_manufacturer = 'Toledo'
+        self.net_weight_char = b'N'
+
+>>>>>>> af2d8f33313dee1e6728f7e3018c01ff5111d3af
     @classmethod
     def supported(cls, device: dict) -> bool:
         protocol = cls._protocol
@@ -135,6 +203,7 @@ class ScaleDriver(SerialDriver):
             status_char = status_match.group(1).decode()  # Example: b'D' extracted from b'\x02?D\r'
             binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
                 if index == 5:
                     # Index 5 is Net Weight status
                     self.tare_mode = bool(bit)
@@ -146,3 +215,23 @@ class ScaleDriver(SerialDriver):
                     self.data.update({"status": "error", "result": 0})
                     return 0.0
         return self.data.get("result", 0.0)
+||||||| 70311e4bf0c9081c165abfa360641f4930812358
+                if int(bit):
+                    _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
+                    self.data.update({
+                        'result': 0,
+                        'status': self._status,
+                    })
+                    break
+=======
+                if int(bit):
+                    # Ignore the 'Net weight' error as it's normal in tare mode
+                    if index == 5 and self.tare_mode:
+                        continue
+                    _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
+                    self.data.update({
+                        'result': 0,
+                        'status': self._status,
+                    })
+                    break
+>>>>>>> af2d8f33313dee1e6728f7e3018c01ff5111d3af
