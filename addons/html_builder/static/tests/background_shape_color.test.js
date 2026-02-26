@@ -61,6 +61,11 @@ function getShapeTestCSS() {
             background-image: url("/html_editor/shape/html_builder/Connections/01.svg?c5=%23383e45");
             background-position: center bottom;
         }
+        /* Connections shapes with upper case hexadecimal color */
+        .o_we_shape.o_html_builder_Connections_02 {
+            background-image: url("/html_editor/shape/html_builder/Connections/02.svg?c5=%230000FF");
+            background-position: center bottom;
+        }
 
         /* Non-connection shapes used in tests */
         .o_we_shape.o_html_builder_Blobs_02 {
@@ -427,4 +432,28 @@ test("Connection shape color updates if background shape color and neighbor back
     await updateBgColor(":iframe #section2", "o_cc5", waitSidebarUpdated);
     const shape1Data = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shape1Data.colors.c5).toBe(HEX_O_CC_5);
+});
+
+test("Connections shape color updates even default color shape is in hexadecimal upper case", async () => {
+    // The background color of the snippet is the same than the color of the
+    // background shape.
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `
+        <section id="section1" style="background-color: ${RGB_BLUE}" data-snippet="s_snippet"
+                 data-oe-shape-data='{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+            <div class="o_we_shape o_html_builder_Connections_02"></div>
+            Section 1
+        </section>
+    `,
+        {
+            styleContent: getShapeTestCSS(),
+        }
+    );
+    await contains(":iframe #section1").click();
+    // Force a recompute of the background shape color
+    await contains("button[data-action-id='flipShape'][data-action-param='y']").click();
+    await waitSidebarUpdated();
+    const shape1Data = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shape1Data.colors).toInclude("c5");
+    expect(shape1Data.colors.c5).not.toBe(HEX_BLUE);
 });
