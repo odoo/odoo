@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, manuallyDispatchProgrammaticEvent, pointerDown, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -1354,4 +1354,48 @@ test("Space bar key opens the dropdown", async () => {
     await animationFrame();
     expect(".o_select_menu_menu").toHaveCount(1);
     expect(".o_select_menu_input").toHaveValue("World");
+});
+
+test.tags("desktop");
+test("prevent glitch on open or focusout", async () => {
+    const slots = `
+        <t t-set-slot="default">
+            <button class="custom_button">Open</button>
+        </t>
+    `;
+    class Wrapper extends Component {
+        static components = { SelectMenu };
+        static props = ["*"];
+        static template = xml`
+            <SelectMenu t-props="props">${slots}</SelectMenu>`;
+    }
+    await mountSingleApp(Wrapper, {
+        choices: [
+            {
+                label: "C1",
+                value: "C1",
+            },
+        ],
+        placeholder: "placeholder",
+        searchPlaceholder: "searchPlaceholder",
+    });
+
+    await contains(".custom_button").click();
+    const searchInput = queryOne(".o_select_menu_searchbox input");
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+    expect(document.activeElement).toBe(searchInput);
+    await contains(".o_select_menu_searchbox input").click();
+
+    await pointerDown(searchInput);
+    await animationFrame();
+    manuallyDispatchProgrammaticEvent(searchInput, "focus");
+    await animationFrame();
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+
+    pointerDown(".custom_button");
+    await animationFrame();
+
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
 });
