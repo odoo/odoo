@@ -430,6 +430,14 @@ export class SelfOrder extends Reactive {
         return this.config.self_ordering_mode === "kiosk";
     }
 
+    get isSyncedOrderRestricted() {
+        return (
+            !this.kioskMode &&
+            this.config.self_ordering_pay_after === "each" &&
+            this.currentOrder.isSynced
+        );
+    }
+
     markupDescriptions() {
         for (const product of this.models["product.template"].getAll()) {
             product.public_description = product.public_description

@@ -19,12 +19,21 @@ export class ComboPage extends Component {
 
     setup() {
         this.router = useService("router");
+        this.selfOrder = useSelfOrder();
+
+        if (
+            this.selfOrder.isSyncedOrderRestricted ||
+            (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id)
+        ) {
+            this.router.navigate("default");
+            return;
+        }
+
         if (!this.props.productTemplate) {
             this.goBack();
             return;
         }
         useSubEnv({ selectedValues: {} });
-        this.selfOrder = useSelfOrder();
         this.state = useState({
             selectedChoiceIndex: 0,
             choices: [],
