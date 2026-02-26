@@ -2031,6 +2031,19 @@ class ProjectTask(models.Model):
                 "url": f'/odoo/all-tasks/{self.id}',
                 "target": "self",
             }
+        if (
+            user
+            and user._is_portal()
+            and self.with_user(user).has_access('read')
+            and self.project_id
+            and self.project_id.with_user(user).has_access('read')
+            and self.project_id._check_project_sharing_access()
+        ):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/my/projects/{self.project_id.id}/project_sharing/{self.id}',
+                'target': 'self',
+            }
         return super()._get_access_action(access_uid, force_website)
 
     # ---------------------------------------------------

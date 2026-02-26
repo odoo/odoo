@@ -745,3 +745,14 @@ Content-Type: text/html;
             action['url'],
             "URL should point to the all-tasks route",
         )
+
+        # 4. Portal User + Project Sharing -> Project Sharing Link
+        project_portal.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project_portal._add_collaborators(self.user_portal.partner_id)
+        action = task_portal.with_user(self.user_portal)._get_access_action()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertIn(
+            f'/my/projects/{project_portal.id}/project_sharing/{task_portal.id}',
+            action['url'],
+            "Portal user with edit access should get a link to project sharing",
+        )
