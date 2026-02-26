@@ -70,6 +70,11 @@ class TestUBLROCommon(TestUBLCommon):
             ],
         )
 
+    def get_attachment(self, move):
+        self.assertTrue(move.ubl_cii_xml_id)
+        self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
+        return move.ubl_cii_xml_id
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLRO(TestUBLROCommon):
@@ -77,11 +82,6 @@ class TestUBLRO(TestUBLROCommon):
     ####################################################
     # Test export - import
     ####################################################
-
-    def get_attachment(self, move):
-        self.assertTrue(move.ubl_cii_xml_id)
-        self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
-        return move.ubl_cii_xml_id
 
     def test_export_invoice(self):
         invoice = self.create_move("out_invoice")

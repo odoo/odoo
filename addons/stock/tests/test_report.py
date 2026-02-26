@@ -1342,6 +1342,12 @@ class TestReports(TestReportsCommon):
             }
         ])
 
+        # Ensure that a move from a sublocation doesn't create a negative 'in_transit' line.
+        delivery.action_assign()
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertFalse(any(line['in_transit'] for line in lines))
+        self.assertEqual(len(lines), 2)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
