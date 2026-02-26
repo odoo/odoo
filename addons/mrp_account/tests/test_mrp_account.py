@@ -176,6 +176,29 @@ class TestMrpAccount(TestBomPriceCommon):
         mo_1 = self._create_mo(self.bom_1, 1)
         mo_1.with_user(mrp_user).button_mark_done()
 
+    def test_unbuild_component_cost_no_MO_multi_company(self):
+        """ Check that when unbuild is created, unrelated to a MO,
+        the price used for the incoming moves of the component, is the
+        price from the company from which de unbuild was made.
+        """
+        company_2 = self.env['res.company'].create({'name': 'other company new name'})
+        finished = self.dining_table
+        finished.qty_available = 1
+        comp = self.screw
+        comp.categ_id = self.category_standard_auto
+        comp.standard_price = 10
+        comp.with_company(company_2).standard_price = 9
+        self.bom_1.bom_line_ids.filtered(lambda bl: bl.product_id == comp).product_qty = 1
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.product_id = self.dining_table
+        unbuild_form.bom_id = self.bom_1
+        unbuild_form.product_qty = 1
+        unbuild_order = unbuild_form.save()
+        unbuild_order.with_company(company_2).action_unbuild()
+        comp_move_value = unbuild_order.produce_line_ids.filtered(lambda m: m.product_id == comp).value
+        self.assertEqual(comp_move_value, 9)
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
