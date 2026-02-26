@@ -549,7 +549,13 @@ class AccountAccount(models.Model):
             """
             return (
                 new_code not in cache
+<<<<<<< 7ef7f362e218cbb816453a081ea829716841f87b
                 and not self.sudo().with_context(active_test=False).search_count([
+||||||| 43abaa0518315a7ed8a528c289da60d89eb86ab4
+                and not self.sudo().search_count([
+=======
+                and not self.with_context(active_test=False).sudo().search_count([
+>>>>>>> 80bbc98725c531a7c0d2bfee3eb4e357bb9a30e0
                     ('code', '=', new_code),
                     '|',
                     ('company_ids', 'parent_of', self.env.company.id),
