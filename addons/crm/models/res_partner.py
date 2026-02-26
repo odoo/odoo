@@ -779,14 +779,14 @@ class Partner(models.Model):
                 'default_is_company': False,
             },
         }
-
-    @api.constrains('lopd_signed', 'lopd_document_id')
-    def _check_lopd_document(self):
-        for partner in self:
-            if partner.lopd_signed and not partner.lopd_document_id:
-                raise ValidationError(
-                    _("Si marca la LOPD como firmada, debe importar el documento mediante el botón 'Importar documento LOPD'.")
-                )
+#
+#    @api.constrains('lopd_signed', 'lopd_document_id')
+#    def _check_lopd_document(self):
+#        for partner in self:
+#            if partner.lopd_signed and not partner.lopd_document_id:
+#                raise ValidationError(
+#                    _("Si marca la LOPD como firmada, debe importar el documento mediante el botón 'Importar documento LOPD'.")
+#                )
 
     @api.constrains('billing_sepa_signed', 'billing_sepa_document_id')
     def _check_billing_sepa_document(self):
