@@ -161,16 +161,18 @@ patch(PosStore.prototype, {
             }
         }
     },
+    getLinesToMerge(sourceOrder, destinationOrder) {
+        return sourceOrder.lines;
+    },
     async mergeOrders(sourceOrder, destOrder) {
-        let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
 
         // Sum the guest counts from both orders
         const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
         destOrder.setCustomerCount(totalGuests);
 
-        while (sourceOrder.lines.length) {
-            const orphanLine = sourceOrder.lines[0];
+        const sourceLines = this.getLinesToMerge(sourceOrder, destOrder);
+        for (const orphanLine of sourceLines) {
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
             if (destinationLine) {
@@ -218,10 +220,6 @@ patch(PosStore.prototype, {
             }
 
             orphanLine.delete();
-            whileGuard++;
-            if (whileGuard > 1000) {
-                break;
-            }
         }
         if (mergedCourses) {
             destOrder.uiState.unmergeCourses = {
