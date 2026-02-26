@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
 from datetime import timedelta
 
 from odoo import Command
 from odoo.fields import Date
+from odoo.tools.safe_eval import expr_eval
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
@@ -1464,3 +1466,28 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             analytic_account1 | analytic_account2,
             "As the timesheet SOL's distribution only contains the main account of the project, we fallback on the project's accounts and add them to the distribution.",
         )
+
+    def test_so_line_domain(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_timesheet2.id,
+                }),
+                Command.create({
+                    'product_id': self.product_order_timesheet4.id,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': self.project_global.id,
+            'employee_id': self.employee_user.id,
+        })
+        self.project_global.partner_id = self.partner_a.id
+        domain = timesheet._domain_so_line()
+        evaluated_domain = expr_eval(re.sub(r"\bcommercial_partner_id\b(?!')", str(self.project_global.partner_id.id), repr(domain)))
+        so_line = self.env['sale.order.line'].search(evaluated_domain)
+        self.assertEqual(sale_order.order_line, so_line, "Expected sale order lines of the associated partner.")

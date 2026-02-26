@@ -24,10 +24,8 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     def _domain_so_line(self):
-        domain = super()._domain_so_line()
-
         return Domain.AND([
-            domain,
+            Domain.OR([super()._domain_so_line(), Domain('qty_delivered_method', '=', 'timesheet')]),
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
@@ -38,6 +36,7 @@ class AccountAnalyticLine(models.Model):
     billable_type = fields.Selection(selection_add=TIMESHEET_BILLABLE_TYPES)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     so_line = fields.Many2one(
+        domain=lambda self: str(self._domain_so_line()),
         falsy_value_label="Non-billable",
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable."
     )
