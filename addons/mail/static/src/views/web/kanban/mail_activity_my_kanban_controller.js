@@ -18,4 +18,8 @@ export class MailActivityMyKanbanController extends KanbanController {
                 await this.model.root.load();
             });
     }
+
+    get canQuickCreate() {
+        return false;
+    }
 }
