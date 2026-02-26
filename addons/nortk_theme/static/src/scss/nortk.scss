@@ -16,6 +16,7 @@
     --Kanban-background: #000000;
     --nortk-kanban-background: #000000;
     --nortk-button-background: #151515;
+    --nortk-table-header-background: #2b2b2b;
 
     /* --- Text Colors --- */
     --o-main-text-color: #e0e0e0;
@@ -186,5 +187,13 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 /* Dropdown Menu */
 
 .dropdown-item {
-    color: var(--o-header-view-text-color) !important;
+    color: var(--o-active-option-text-color) !important;
+}
+
+/* Lists and tables */
+
+.o_list_renderer .o_list_table thead th {
+    background-color: var(--nortk-table-header-background) !important;
+    color: var(--o-main-text-color) !important;
+
 }
