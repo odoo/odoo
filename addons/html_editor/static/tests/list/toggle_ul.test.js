@@ -55,6 +55,14 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should create a list inside a blockquote", async () => {
+            await testEditor({
+                contentBefore: "<blockquote>ab[]cd</blockquote>",
+                stepFunction: toggleUnorderedList,
+                contentAfter: "<blockquote><ul><li>ab[]cd</li></ul></blockquote>",
+            });
+        });
+
         test("should turn a paragraph in a div into a list", async () => {
             await testEditor({
                 contentBefore: "<div><p>ab[]cd</p></div>",
