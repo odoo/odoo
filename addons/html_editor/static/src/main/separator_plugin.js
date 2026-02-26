@@ -34,6 +34,7 @@ export class SeparatorPlugin extends Plugin {
         powerbox_items: withSequence(1, {
             categoryId: "structure",
             commandId: "insertSeparator",
+            keywords: [_t("divider"), _t("line")],
         }),
         content_not_editable_providers: (rootEl) => selectElements(rootEl, "hr"),
         contenteditable_to_remove_selector: "hr[contenteditable]",
