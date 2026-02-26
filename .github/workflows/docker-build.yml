@@ -13,18 +13,16 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
-      - develop
       - feature/odoo-uber
-      - 'testing/**'
-      - 'release/**'
+      - feature/ram-website
     paths-ignore:
       - '**.md'
       - 'doc/**'
       - '.github/ISSUE_TEMPLATE/**'
   pull_request:
     branches:
-      - main
+      - feature/odoo-uber
+      - feature/ram-website
   release:
     types: [published]
   workflow_dispatch:

@@ -4,16 +4,19 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
 patch(PosStore.prototype, {
-    async setup() {
-        await super.setup(...arguments);
+    async setup(env, deps) {
+        await super.setup(env, deps);
         
         // Listen for remote orders on the session channel
         // Note: PosStore already has this.bus (bus_service)
-        this.bus.addChannel(`pos_session_${this.session.id}`);
-        this.bus.subscribe("NEW_REMOTE_ORDER", (data) => {
-            this._onNewRemoteOrder(data);
-        });
+        if (this.session) {
+            this.bus.addChannel(`pos_session_${this.session.id}`);
+            this.bus.subscribe("NEW_REMOTE_ORDER", (data) => {
+                this._onNewRemoteOrder(data);
+            });
+        }
     },
+
 
     async _onNewRemoteOrder(data) {
         console.log("New Remote Order Received:", data);

@@ -100,7 +100,6 @@ COPY --chown=odoo:odoo setup.py setup.cfg ./
 # Create required directories with proper permissions
 RUN mkdir -p /var/lib/odoo \
     /opt/odoo/custom_addons \
-    /opt/odoo/extra-addons \   
     /opt/odoo/logs \
     /tmp/odoo-sessions \
     /tmp/odoo-session-config \

@@ -598,7 +598,7 @@
 
     <template id="ram_cart_ui" inherit_id="website.layout" name="RAM Cart UI">
         <xpath expr="//div[@id='wrapwrap']" position="inside">
-            <tset t-set="pos_session" t-value="request.env['pos.session'].sudo().search([('state', '=', 'opened'), ('delivery_active', '=', True), ('config_id.accept_remote_orders', '=', True)], limit=1)"/>
+            <t t-set="pos_session" t-value="request.env['pos.session'].sudo().search([('state', '=', 'opened'), ('delivery_active', '=', True), ('config_id.accept_remote_orders', '=', True)], limit=1)"/>
             <t t-if="pos_session">
                 <!-- Load ordering JavaScript directly -->
                 <script type="text/javascript">

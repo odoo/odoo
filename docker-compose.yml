@@ -62,11 +62,11 @@ services:
       - --accesslog=true
 
     ports:
-      - "80:80"
-      - "443:443"
-      - "8072:8072"
+      - '80:80'
+      - '443:443'
+      - '8072:8072'
       # Dashboard exposed only locally
-      - "127.0.0.1:8081:8080"
+      - '127.0.0.1:8081:8080'
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -78,11 +78,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.10"
+          cpus: '0.10'
           memory: 100M
 
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost/ping"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost/ping']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -100,7 +100,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
 
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
@@ -120,7 +120,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.4"
+          cpus: '0.4'
           memory: 256M
 
   # ===========================================================================
@@ -161,59 +161,57 @@ services:
       # -------------------------------------------------------
       # Enable Traefik for this container
       # -------------------------------------------------------
-      - "traefik.enable=true"
+      - 'traefik.enable=true'
 
       # -------------------------------------------------------
       # HTTPS Router (443) — DOMAIN ONLY
       # https://demo.primetek.in
       # -------------------------------------------------------
-      - "traefik.http.routers.odoo-https.rule=Host(`demo.primetek.in`)"
-      - "traefik.http.routers.odoo-https.entrypoints=websecure"
-      - "traefik.http.routers.odoo-https.tls=true"
-      - "traefik.http.routers.odoo-https.tls.certresolver=le"
-      - "traefik.http.routers.odoo-https.service=odoo"
-      - "traefik.http.routers.odoo-https.middlewares=odoo-headers,odoo-proxy-headers"
+      - 'traefik.http.routers.odoo-https.rule=Host(`demo.primetek.in`)'
+      - 'traefik.http.routers.odoo-https.entrypoints=websecure'
+      - 'traefik.http.routers.odoo-https.tls=true'
+      - 'traefik.http.routers.odoo-https.tls.certresolver=le'
+      - 'traefik.http.routers.odoo-https.service=odoo'
+      - 'traefik.http.routers.odoo-https.middlewares=odoo-headers,odoo-proxy-headers'
 
       # -------------------------------------------------------
       # HTTP Router (80) — IP & fallback
       # http://SERVER_IP
       # http://demo.primetek.in (also used for ACME)
       # -------------------------------------------------------
-      - "traefik.http.routers.odoo-http.rule=PathPrefix(`/`)"
-      - "traefik.http.routers.odoo-http.entrypoints=web"
-      - "traefik.http.routers.odoo-http.service=odoo"
-      - "traefik.http.routers.odoo-http.middlewares=odoo-headers,odoo-proxy-headers"
+      - 'traefik.http.routers.odoo-http.rule=PathPrefix(`/`)'
+      - 'traefik.http.routers.odoo-http.entrypoints=web'
+      - 'traefik.http.routers.odoo-http.service=odoo'
+      - 'traefik.http.routers.odoo-http.middlewares=odoo-headers,odoo-proxy-headers'
 
       # -------------------------------------------------------
       # Odoo service definition (HTTP only on 8069)
       # Port 8072 is for websocket/longpolling, separate entrypoint
       # -------------------------------------------------------
-      - "traefik.http.services.odoo.loadbalancer.server.port=8069"
+      - 'traefik.http.services.odoo.loadbalancer.server.port=8069'
 
       # -------------------------------------------------------
       # Proxy Headers Middleware (Critical for reverse proxy)
       # Tells Odoo it's behind a proxy and forwards required headers
       # -------------------------------------------------------
-      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-For={{ClientIP}}"
-      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Host=demo.primetek.in"
-      - "traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Script-Name=/"
+      - 'traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-For={{ClientIP}}'
+      - 'traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Proto=https'
+      - 'traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Forwarded-Host=demo.primetek.in'
+      - 'traefik.http.middlewares.odoo-proxy-headers.headers.customrequestheaders.X-Script-Name=/'
 
       # -------------------------------------------------------
       # Basic security headers
       # -------------------------------------------------------
-      - "traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN"
-      - "traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Content-Type-Options=nosniff"
+      - 'traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Frame-Options=SAMEORIGIN'
+      - 'traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Content-Type-Options=nosniff'
 
     expose:
-      - "8069"
-      - "8072"
+      - '8069'
+      - '8072'
 
     volumes:
       - odoo-data:/var/lib/odoo
       - odoo-sessions:/tmp/odoo-sessions
-      - ./odoo-extra-addons:/mnt/extra-addons
-
 
     command:
       - server
@@ -222,14 +220,18 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.55"
+          cpus: '0.55'
           memory: 640M
 
     networks:
       - odoo-network
 
     healthcheck:
-      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:8069/web/database/selector')\" || exit 1"]
+      test:
+        [
+          'CMD-SHELL',
+          'python3 -c "import urllib.request; urllib.request.urlopen(''http://localhost:8069/web/database/selector'')" || exit 1',
+        ]
       interval: 20s
       timeout: 15s
       retries: 5

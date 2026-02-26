@@ -5,7 +5,9 @@ _build/
 # CRITICAL: Environment & Secrets
 # ============================================
 .env
-.env.local
+.env.loca
+local.conf
+*.yml
 .env.*.local
 .env.production
 *.pem
@@ -135,6 +137,7 @@ odoo/addons/base/maintenance/
 /config/docker.conf
 /config/odoo.conf
 docker-compose.override.yml
+docker-compose.local.yml
 
 # ============================================
 # Platform-Specific
