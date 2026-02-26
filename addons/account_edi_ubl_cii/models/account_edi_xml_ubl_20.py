@@ -700,7 +700,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         _fixed_taxes, emptying_taxes = self._split_fixed_taxes(taxes_vals)
 
         # Compute values for invoice lines.
-        line_extension_amount = 0.0
+        expected_line_extension_amount = line_extension_amount = 0.0
 
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
@@ -711,6 +711,23 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
+            expected_line_extension_amount += invoice.currency_id.round(line_vals['line_extension_amount'])
+
+        delta_amount = line_extension_amount - expected_line_extension_amount
+        if not invoice.currency_id.is_zero(delta_amount) and invoice.currency_id.decimal_places <= 2:
+            # distribute rounding error from low precision computation on lines
+            delta_sign = 1 if delta_amount > 0 else -1
+            lines_len = len(invoice_line_vals_list)
+            remaining = delta_amount
+            for line in invoice_line_vals_list:
+                if invoice.currency_id.compare_amounts(remaining, 0) != delta_sign:
+                    break
+                amt = delta_sign * max(
+                    invoice.currency_id.rounding,
+                    abs(invoice.currency_id.round(remaining / lines_len)),
+                )
+                remaining -= amt
+                line['line_extension_amount'] += amt
 
         # add emptying taxes as extra invoice lines
         for tax_key, tax_vals in emptying_taxes:
