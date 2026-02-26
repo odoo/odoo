@@ -72,11 +72,6 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }
-
-        selectElements(root, "[data-editor-message]").forEach((el) => {
-            el.removeAttribute("data-editor-message");
-            el.removeAttribute("data-editor-message-default");
-        });
     }
 
     /**
