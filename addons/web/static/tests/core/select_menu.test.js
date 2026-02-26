@@ -1,4 +1,11 @@
-import { animationFrame, expect, runAllTimers, test } from "@odoo/hoot";
+import {
+    animationFrame,
+    expect,
+    manuallyDispatchProgrammaticEvent,
+    pointerDown,
+    runAllTimers,
+    test,
+} from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -1363,4 +1370,48 @@ test("Disabled choice", async () => {
     await animationFrame();
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["Hello", "World"]);
     expect(".o_select_menu_item:eq(0)").toHaveClass("text-muted");
+});
+
+test.tags("desktop");
+test("prevent glitch on open or focusout", async () => {
+    const slots = `
+        <t t-set-slot="default">
+            <button class="custom_button">Open</button>
+        </t>
+    `;
+    class Wrapper extends Component {
+        static components = { SelectMenu };
+        static props = ["*"];
+        static template = xml`
+            <SelectMenu t-props="props">${slots}</SelectMenu>`;
+    }
+    await mountSingleApp(Wrapper, {
+        choices: [
+            {
+                label: "C1",
+                value: "C1",
+            },
+        ],
+        placeholder: "placeholder",
+        searchPlaceholder: "searchPlaceholder",
+    });
+
+    await contains(".custom_button").click();
+    const searchInput = queryOne(".o_select_menu_searchbox input");
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+    expect(document.activeElement).toBe(searchInput);
+    await contains(".o_select_menu_searchbox input").click();
+
+    await pointerDown(searchInput);
+    await animationFrame();
+    manuallyDispatchProgrammaticEvent(searchInput, "focus");
+    await animationFrame();
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
+
+    pointerDown(".custom_button");
+    await animationFrame();
+
+    expect(queryOne(".o_select_menu_searchbox input")).toBe(searchInput);
+    expect(searchInput.placeholder).toBe("searchPlaceholder");
 });

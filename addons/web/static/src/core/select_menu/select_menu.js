@@ -247,13 +247,17 @@ export class SelectMenu extends Component {
     }
 
     get placeholderValue() {
-        if (this.state.isFocused && this.props.searchPlaceholder) {
+        if (
+            (this.state.isFocused || this.dropdownNextOpenState === "open") &&
+            this.props.searchPlaceholder
+        ) {
             return this.props.searchPlaceholder;
         }
         return this.props.placeholder;
     }
 
     async onBeforeOpen() {
+        this.dropdownNextOpenState = "open";
         this.onInput("");
     }
 
@@ -275,7 +279,12 @@ export class SelectMenu extends Component {
     }
 
     onInputBlur(ev) {
-        this.state.isFocused = false;
+        // if the input is not in the toggler, it is in the dropdown.
+        // if the input blurs, it means that something else has gained
+        // focus, so that the dropdown will be closing.
+        if (this.displayInputInToggler) {
+            this.state.isFocused = false;
+        }
         if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
             this.onInputClear();
         }
@@ -293,6 +302,7 @@ export class SelectMenu extends Component {
     }
 
     onStateChanged(open) {
+        this.dropdownNextOpenState = undefined;
         if (open) {
             if (this.isBottomSheet) {
                 // the toggler input must not be focused
