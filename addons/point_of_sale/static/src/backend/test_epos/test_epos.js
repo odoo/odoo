@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { initLNA } from "@point_of_sale/app/utils/init_lna";
+import { initLNA, getLNATargetAddressSpace } from "@point_of_sale/app/utils/init_lna";
 
 const EPSON_ERRORS = {
     DeviceNotFound: _t(
@@ -119,7 +119,7 @@ export class TestEPos extends Component {
                     signal: AbortSignal.timeout(15000),
                 };
                 if (printer.use_lna) {
-                    params.targetAddressSpace = "local";
+                    params.targetAddressSpace = getLNATargetAddressSpace(url);
                     await initLNA(this.notification);
                 }
                 const result = await fetch(address, params);
