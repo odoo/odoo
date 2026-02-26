@@ -5,6 +5,7 @@ try:
 except ImportError:
     contents = None
 
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -691,6 +692,21 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             partner=partner_be_invoice_address,
             test_file='test_invoice_customer_party_identifiers_partner_be_invoice_address',
         )
+
+        # VAT in company_registry should render the CBE Numer only
+        self.partner_be.company_registry = 'BE0477472701'
+        self._assert_invoice_partner_party_identifiers(
+            partner=self.partner_be,
+            test_file='test_invoice_customer_party_identifiers_partner_be_vat_and_company_registry',
+        )
+
+        # Malformed company_registry should raise
+        self.partner_be.company_registry = 'BEWrongOne'
+        with self.assertRaises(UserError):
+            self._assert_invoice_partner_party_identifiers(
+                partner=self.partner_be,
+                test_file='test_invoice_customer_party_identifiers_partner_be_vat_and_company_registry',
+            )
 
     def test_invoice_customer_party_identifiers_partner_lu(self):
         # Both VAT and company registry are not set.
