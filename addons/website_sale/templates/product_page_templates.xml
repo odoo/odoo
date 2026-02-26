@@ -72,7 +72,7 @@
                             </ol>
                             <div class="d-flex d-md-none gap-2 ms-auto">
                                 <t t-call="website_sale.pricelist_list"/>
-                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                                <t t-if="original_category" t-set="placeholder" t-valuef.translate="Search in {{original_category.name}}"/>
                                 <t t-call="website.website_search_box_input"
                                     search_type.f="products"
                                     placeholder="placeholder"
