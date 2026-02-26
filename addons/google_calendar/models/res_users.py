@@ -52,9 +52,12 @@ class ResUsers(models.Model):
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
         results = self._sync_request(calendar_service)
-        if not results or (not results.get('events') and not self._check_pending_odoo_records()):
+        if not results:
             return False
         events, default_reminders, full_sync = results.values()
+        events = self._sync_google_calendar_filter_remote_events(events)
+        if not events and not self._check_pending_odoo_records():
+            return False
         # Google -> Odoo
         send_updates = not full_sync
         events.clear_type_ambiguity(self.env)
@@ -81,6 +84,12 @@ class ResUsers(models.Model):
         (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
         return bool(results) and (bool(events | synced_events) or bool(recurrences | synced_recurrences))
+
+    def _sync_google_calendar_filter_remote_events(self, google_events):
+        """Filter out events coming from google which should not be synced into odoo."""
+        # Birthday events appear in a separate virtual calendar in the UI of google calendar which can be confusing.
+        # They require special handling and are not very useful in business flows so they are ignored for now.
+        return google_events.filter(lambda google_event: google_event.eventType != 'birthday')
 
     def _sync_single_event(self, calendar_service: GoogleCalendarService, odoo_event, event_id):
         self.ensure_one()
