@@ -657,3 +657,21 @@ class TestReplenishWizard(PurchaseTestCommon):
             f.partner_id = self.env['res.partner']
             f.route_id = self.route_buy  # Changing the route will trigger onchange
             self.assertEqual(f.partner_id, self.vendor2)
+
+    def test_product_replenish_wizard_multiple_buy_routes(self):
+        self.route_buy.copy()
+        self.product.write({
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+            })]
+        })
+
+        replenish_wizard = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product.product_tmpl_id.id
+        ))
+        buy_routes = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('company_id', '=', self.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ]).route_id
+        self.assertIn(replenish_wizard.route_id.id, buy_routes.ids)

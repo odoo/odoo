@@ -558,3 +558,20 @@ class TestDropshipPostInstall(common.TransactionCase):
         purchase_order.button_confirm()
         sale_order._action_cancel()
         self.assertEqual(len(purchase_order.activity_ids), 1)
+
+    def test_product_replenish_wizard_excludes_dropship_routes(self):
+        '''
+        Ensure the dropship route is not included in the replenish wizard.
+        '''
+        buy_route = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('company_id', '=', self.env.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ], limit=1).route_id
+        # Ensure no buy route so the widget tries to default to dropship
+        buy_route.action_archive()
+        self.dropship_product.route_ids = False
+        replenish_wizard = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.dropship_product.product_tmpl_id.id
+        ))
+        self.assertNotEqual(replenish_wizard.route_id, self.env.ref('stock_dropshipping.route_drop_shipping'))
