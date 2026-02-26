@@ -108,6 +108,23 @@ describe("search", () => {
         );
     });
 
+    test("should filter Separator commands with term 'divider' and 'line'", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(commandNames(el).length).toBe(27);
+        await insertText(editor, "line");
+        await animationFrame();
+        expect(commandNames(el).includes("Separator")).toBe(true);
+        // Replace "line" by "divider"
+        for (let i = 0; i < 4; i++) {
+            press("backspace");
+        }
+        await insertText(editor, "/divider");
+        await animationFrame();
+        expect(commandNames(el).includes("Separator")).toBe(true);
+    });
+
     test("should hide categories when you have a search term", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
