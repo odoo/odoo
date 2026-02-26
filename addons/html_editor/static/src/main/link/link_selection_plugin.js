@@ -75,6 +75,7 @@ export class LinkSelectionPlugin extends Plugin {
         const linkHasContentOrSelected =
             isLinkSelected || link.textContent.replaceAll("\ufeff", "");
         return (
+            link.isConnected &&
             linkHasContentOrSelected &&
             link.isContentEditable &&
             link.parentElement.isContentEditable &&
