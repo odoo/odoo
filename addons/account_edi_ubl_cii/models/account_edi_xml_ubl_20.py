@@ -496,7 +496,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
 
         # Compute values for invoice lines.
-        line_extension_amount = 0.0
+        expected_line_extension_amount = line_extension_amount = 0.0
 
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
@@ -509,6 +509,23 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
+            expected_line_extension_amount += invoice.currency_id.round(line_vals['line_extension_amount'])
+
+        delta_amount = line_extension_amount - expected_line_extension_amount
+        if not invoice.currency_id.is_zero(delta_amount):
+            # distribute rounding error on lines
+            delta_sign = 1 if delta_amount > 0 else -1
+            lines_len = len(invoice_line_vals_list)
+            remaining = delta_amount
+            for line in invoice_line_vals_list:
+                if invoice.currency_id.compare_amounts(remaining, 0) != delta_sign:
+                    break
+                amt = delta_sign * max(
+                    invoice.currency_id.rounding,
+                    abs(invoice.currency_id.round(remaining / lines_len)),
+                )
+                remaining -= amt
+                line['line_extension_amount'] += amt
 
         # Compute the total allowance/charge amounts.
         allowance_total_amount = 0.0
