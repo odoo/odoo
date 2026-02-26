@@ -16,6 +16,10 @@
         'web.assets_frontend': [
             'nortk_theme/static/src/scss/nortk.scss',
         ],
+        # For POS
+        'point_of_sale._assets_pos': [
+            'nortk_theme/static/src/scss/nortk.scss',
+        ],
     },
     'installable': True,
     'application': False,
