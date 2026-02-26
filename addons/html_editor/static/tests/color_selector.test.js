@@ -21,6 +21,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
+import { delay } from "@web/core/utils/concurrency";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -1349,4 +1350,27 @@ describe("color preview", () => {
         await animationFrame();
         expect("p font").toHaveStyle({ backgroundImage: initialGradient });
     });
+});
+
+test("Should not close the color picker on icon color change", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="fa fa-glass" contenteditable="false"></span></p>`
+    );
+    await animationFrame();
+    const icon = el.querySelector(".fa");
+    setSelection({
+        anchorNode: icon.previousSibling,
+        anchorOffset: 1,
+        focusNode: icon.nextSibling,
+        focusOffset: 0,
+    });
+    await delay(50);
+    await click(".o-select-color-foreground");
+    await animationFrame();
+    await hover('[data-color="o-color-1"]');
+    await animationFrame();
+    expect('[data-color="o-color-1"]').toHaveCount(1);
+    await hover('[data-color="o-color-2"]');
+    await delay(50);
+    expect('[data-color="o-color-2"]').toHaveCount(1);
 });
