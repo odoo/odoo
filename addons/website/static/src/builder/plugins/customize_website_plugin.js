@@ -81,7 +81,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return `o_cc${getCSSVariableValue(combination, style)}`;
             }
         }),
-        on_will_reset_history_after_saving_handlers: this.onSave.bind(this),
+        on_ready_to_save_document_handlers: this.onSave.bind(this),
     };
 
     async onSave() {

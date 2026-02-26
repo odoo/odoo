@@ -481,7 +481,7 @@ describe("Add Language", () => {
             class extends Plugin {
                 static id = "test";
                 resources = {
-                    on_will_reset_history_after_saving_handlers: async () => {
+                    on_ready_to_save_document_handlers: async () => {
                         await deferSave.promise;
                         throw "save fails for the test";
                     },
@@ -540,7 +540,7 @@ test("attempt to prevent closing window with unsaved changes", async () => {
     addPlugin(
         class extends Plugin {
             static id = "test";
-            resources = { on_will_reset_history_after_saving_handlers: () => deferSave.promise };
+            resources = { on_ready_to_save_document_handlers: () => deferSave.promise };
         }
     );
     setupSaveAndReloadIframe();

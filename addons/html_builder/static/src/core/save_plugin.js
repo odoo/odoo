@@ -19,8 +19,8 @@ import { uniqueId } from "@web/core/utils/functions";
  * @typedef {((el: HTMLElement) => Promise<void>)[]} on_will_save_element_handlers
  * Called when saving an element (in parallel to saving the view).
  *
- * @typedef {(() => Promise<boolean>)[]} on_will_reset_history_after_saving_handlers
- * Called at the very end of the save process.
+ * @typedef {(() => Promise<boolean>)[]} on_ready_to_save_document_handlers
+ * Called concurrently as part of the save process.
  *
  * @typedef {((cleanedEls: HTMLElement[]) => Promise<boolean>)[]} save_elements_overrides
  *
@@ -104,7 +104,7 @@ export class SavePlugin extends Plugin {
             }
         });
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
-        const willSaves = this.trigger("on_will_reset_history_after_saving_handlers");
+        const willSaves = this.trigger("on_ready_to_save_document_handlers");
         await Promise.all(saveProms.concat(willSaves));
         this.dependencies.history.reset();
     }

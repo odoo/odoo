@@ -163,7 +163,7 @@ class SocialMediaOptionPlugin extends Plugin {
             AddSocialMediaLinkAction,
         },
         normalize_processors: this.normalize.bind(this),
-        on_will_reset_history_after_saving_handlers: this.saveRecordedSocialMedia.bind(this),
+        on_ready_to_save_document_handlers: this.saveRecordedSocialMedia.bind(this),
         content_not_editable_selectors: [".s_share"],
         content_editable_selectors: [
             ".s_share a > i",

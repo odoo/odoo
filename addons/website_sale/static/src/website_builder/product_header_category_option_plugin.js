@@ -27,7 +27,7 @@ class ProductHeaderCategoryOptionPlugin extends Plugin {
             ToggleCategoryAlignContentAction,
         },
 
-        on_will_reset_history_after_saving_handlers: this.onSave.bind(this),
+        on_ready_to_save_document_handlers: this.onSave.bind(this),
     };
 
     async onSave() {
