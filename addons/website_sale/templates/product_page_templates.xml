@@ -234,7 +234,7 @@
                 <div class="modal-dialog modal-lg pt-5">
                     <div class="modal-content mt-5 bg-transparent border-0">
                         <div class="o_container_small">
-                            <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                            <t t-if="original_category" t-set="placeholder" t-valuef.translate="Search in {{original_category.name}}"/>
                             <t t-call="website.website_search_box_input"
                                 default_style.f="true"
                                 search_type.f="products"
@@ -680,7 +680,8 @@
         name="Searchbar On Product Page"
     >
         <xpath expr="//div[hasclass('o_wsale_product_top_bar_desktop')]" position="inside">
-            <t t-call="website_sale.search" search="False" _classes.f="me-sm-2"/>
+            <t t-if="original_category" t-set="placeholder" t-valuef.translate="Search in {{original_category.name}}"/>
+            <t t-call="website_sale.search" search="False" _classes.f="me-sm-2" placeholder="placeholder"/>
         </xpath>
         <xpath expr="//a[contains(@t-attf-class, 'o_wsale_product_search_mobile_btn')]" position="attributes">
             <attribute name="t-attf-class" add="d-md-none" remove="d-none" separator=" "/>
