@@ -25,6 +25,12 @@
             .note-editable {
                 padding-left: 0;
                 padding-right: 0;
+                
+                &:not(.o_field_highlight) {
+                    &:hover, &:focus {
+                        --o-input-border-color: transparent;
+                    }
+                }
             }
         }
     }
