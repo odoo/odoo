@@ -133,6 +133,12 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.getSelectedPaymentline();
     }
+    get currentCurrency() {
+        return (
+            this.currentOrder.payment_ids[0]?.payment_method_id.journal_id?.currency_id ||
+            this.pos.config.currency_id
+        );
+    }
     makeAnimation() {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
@@ -311,6 +317,16 @@ export class PaymentScreen extends Component {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
         this.currentOrder.selectPaymentline(line);
         this.numberBuffer.reset();
+    }
+
+    paymentMethodsHaveDifferentCurrencies() {
+        const methods = this.pos.config.payment_method_ids;
+        if (!methods) {
+            return false;
+        }
+        return methods.some(
+            (pm) => pm.journal_id && pm.journal_id.currency_id != this.currentOrder.currency
+        );
     }
 
     paymentMethodImage(paymentMethod) {

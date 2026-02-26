@@ -42,8 +42,12 @@ export class GeneratePrinterData {
         };
     }
 
-    formatCurrency(amount) {
-        return formatCurrency(amount, this.currency.id);
+    formatCurrency(amount, currency = this.currency) {
+        let rate = "";
+        if (currency.id != this.currency.id) {
+            rate = " (rate:" + (currency.rate / this.currency.rate).toFixed(4) + ")";
+        }
+        return formatCurrency(amount, currency.id) + rate;
     }
 
     /**
@@ -200,7 +204,10 @@ export class GeneratePrinterData {
         return this.order.payment_ids.map((line) => ({
             ...line.raw,
             payment_method_data: { name: line.payment_method_id?.name || "" },
-            amount: this.formatCurrency(line.amount),
+            amount: this.formatCurrency(
+                line.amount,
+                line.payment_method_id?.journal_id?.currency_id || this.currency
+            ),
         }));
     }
 

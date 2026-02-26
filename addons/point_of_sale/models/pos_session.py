@@ -136,7 +136,8 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
-            'account.cash.rounding', 'account.fiscal.position', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account', 'pos.product.template.snooze']
+            'account.cash.rounding', 'account.fiscal.position', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account',
+            'pos.product.template.snooze', 'account.journal']
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -808,13 +809,13 @@ class PosSession(models.Model):
         combine_inv_payment_receivable_lines = defaultdict(lambda: self.env['account.move.line'])
         split_inv_payment_receivable_lines = defaultdict(lambda: self.env['account.move.line'])
         pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
-        currency_rounding = self.currency_id.rounding
         closed_orders = self._get_closed_orders()
         for order in closed_orders:
             order_is_invoiced = order.is_invoiced
             for payment in order.payment_ids:
+                currency = payment.currency_id
                 amount = payment.amount
-                if float_is_zero(amount, precision_rounding=currency_rounding):
+                if float_is_zero(amount, precision_rounding=currency.rounding):
                     continue
                 date = payment.payment_date
                 payment_method = payment.payment_method_id
@@ -827,22 +828,22 @@ class PosSession(models.Model):
                 # pos receivable lines from the invoice payments.
                 if payment_type != 'pay_later':
                     if is_split_payment and payment_type == 'cash':
-                        split_receivables_cash[payment] = self._update_amounts(split_receivables_cash[payment], {'amount': amount}, date)
+                        split_receivables_cash[payment] = self._update_amounts(split_receivables_cash[payment], {'amount': amount, 'currency': currency}, date)
                     elif not is_split_payment and payment_type == 'cash':
-                        combine_receivables_cash[payment_method] = self._update_amounts(combine_receivables_cash[payment_method], {'amount': amount}, date)
+                        combine_receivables_cash[payment_method] = self._update_amounts(combine_receivables_cash[payment_method], {'amount': amount, 'currency': currency}, date)
                     elif is_split_payment and payment_type == 'bank':
-                        split_receivables_bank[payment] = self._update_amounts(split_receivables_bank[payment], {'amount': amount}, date)
+                        split_receivables_bank[payment] = self._update_amounts(split_receivables_bank[payment], {'amount': amount, 'currency': currency}, date)
                     elif not is_split_payment and payment_type == 'bank':
-                        combine_receivables_bank[payment_method] = self._update_amounts(combine_receivables_bank[payment_method], {'amount': amount}, date)
+                        combine_receivables_bank[payment_method] = self._update_amounts(combine_receivables_bank[payment_method], {'amount': amount, 'currency': currency}, date)
 
                     # Create the vals to create the pos receivables that will balance the pos receivables from invoice payment moves.
                     if order_is_invoiced:
                         if is_split_payment:
                             split_inv_payment_receivable_lines[payment] |= payment.account_move_id.line_ids.filtered(lambda line: line.account_id == pos_receivable_account)
-                            split_invoice_receivables[payment] = self._update_amounts(split_invoice_receivables[payment], {'amount': payment.amount}, order.date_order)
+                            split_invoice_receivables[payment] = self._update_amounts(split_invoice_receivables[payment], {'amount': payment.amount, 'currency': currency}, order.date_order)
                         else:
                             combine_inv_payment_receivable_lines[payment_method] |= payment.account_move_id.line_ids.filtered(lambda line: line.account_id == pos_receivable_account)
-                            combine_invoice_receivables[payment_method] = self._update_amounts(combine_invoice_receivables[payment_method], {'amount': payment.amount}, order.date_order)
+                            combine_invoice_receivables[payment_method] = self._update_amounts(combine_invoice_receivables[payment_method], {'amount': payment.amount, 'currency': currency}, order.date_order)
 
                 # If pay_later, we create the receivable lines.
                 #   if split, with partner
@@ -850,9 +851,9 @@ class PosSession(models.Model):
                 # But only do if order is *not* invoiced because no account move is created for pay later invoice payments.
                 if payment_type == 'pay_later' and not order_is_invoiced:
                     if is_split_payment:
-                        split_receivables_pay_later[payment] = self._update_amounts(split_receivables_pay_later[payment], {'amount': amount}, date)
+                        split_receivables_pay_later[payment] = self._update_amounts(split_receivables_pay_later[payment], {'amount': amount, 'currency': currency}, date)
                     elif not is_split_payment:
-                        combine_receivables_pay_later[payment_method] = self._update_amounts(combine_receivables_pay_later[payment_method], {'amount': amount}, date)
+                        combine_receivables_pay_later[payment_method] = self._update_amounts(combine_receivables_pay_later[payment_method], {'amount': amount, 'currency': currency}, date)
 
             if not order_is_invoiced:
                 base_lines = order.with_context(linked_to_pos=True)._prepare_tax_base_line_values()
@@ -1105,12 +1106,15 @@ class PosSession(models.Model):
         combine_cash_statement_line_vals = []
         combine_cash_receivable_vals = []
         for payment_method, amounts in combine_receivables_cash.items():
-            if not float_is_zero(amounts['amount'] , precision_rounding=self.currency_id.rounding):
+            currency = payment_method.journal_id.currency_id
+            if not currency:
+                currency = self.currency_id
+            if not float_is_zero(amounts['amount'], precision_rounding=currency.rounding):
                 combine_cash_statement_line_vals.append(
                     self._get_combine_statement_line_vals(
                         payment_method.journal_id,
                         amounts['amount'],
-                        payment_method
+                        payment_method,
                     )
                 )
                 combine_cash_receivable_vals.append(
@@ -1378,10 +1382,12 @@ class PosSession(models.Model):
         new_amounts = { **old_amounts }
 
         amount = amounts_to_add.get('amount')
-        if self.is_in_company_currency or force_company_currency:
+        currency = amounts_to_add.get('currency') or self.currency_id
+        if not currency and (self.is_in_company_currency or force_company_currency):
             amount_converted = amount
         else:
-            amount_converted = self._amount_converter(amount, date, round)
+            currency = currency or self.currency_id
+            amount_converted = currency._convert(amount, self.company_id.currency_id, self.company_id, date, round=round)
 
         # update amount and amount converted
         new_amounts['amount'] += amount

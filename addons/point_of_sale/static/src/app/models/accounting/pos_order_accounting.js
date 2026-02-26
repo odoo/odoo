@@ -157,7 +157,15 @@ export class PosOrderAccounting extends Base {
                 // Return lines are created after the sync, should not be taken into account in
                 // the paid amount otherwise, the change would be wrong.
                 if (paymentLine.isDone() && !paymentLine.is_change) {
-                    sum += paymentLine.getAmount();
+                    var currency = paymentLine.payment_method_id.journal_id?.currency_id;
+                    if (currency) {
+                        sum +=
+                            paymentLine.getAmount() *
+                            (paymentLine.pos_order_id.currency.rate /
+                                paymentLine.payment_method_id.journal_id.currency_id.rate);
+                    } else {
+                        sum += paymentLine.getAmount();
+                    }
                 }
                 return sum;
             }, 0)

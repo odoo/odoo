@@ -470,6 +470,15 @@ export class PosOrder extends PosOrderAccounting {
     addPaymentline(payment_method) {
         this.assertEditable();
 
+        // Check payment method currencies are the same
+        // or use the company currency when using a journal without a currency
+        if (!this.isCurrencyConsistent(payment_method)) {
+            return {
+                status: false,
+                data: _t("You can't pay the same order in multiple currencies"),
+            };
+        }
+
         const { status: canSend, message } = payment_method.getPaymentInterfaceStates();
         if (!canSend) {
             return { status: false, data: message };
@@ -480,12 +489,23 @@ export class PosOrder extends PosOrderAccounting {
             payment_method_id: payment_method,
         });
         this.selectPaymentline(newPaymentLine);
-        newPaymentLine.setAmount(totalAmountDue);
+        const currency = payment_method.journal_id?.currency_id || this.currency;
+        newPaymentLine.setAmount(totalAmountDue * (currency.rate / this.currency.rate));
 
         if ((payment_method.payment_interface && !this.isRefund) || payment_method.useBankQrCode) {
             newPaymentLine.setPaymentStatus("pending");
         }
         return { status: true, data: newPaymentLine };
+    }
+
+    isCurrencyConsistent(payment_method) {
+        const existingPayment = this.payment_ids[0];
+        if (!existingPayment) {
+            return true;
+        }
+        const existingCurrency =
+            existingPayment.payment_method_id.journal_id?.currency_id || this.currency;
+        return existingCurrency == (payment_method.journal_id?.currency_id || this.currency);
     }
 
     getPaymentlineByUuid(uuid) {

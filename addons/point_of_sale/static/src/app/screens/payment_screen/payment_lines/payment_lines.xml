@@ -16,7 +16,11 @@
                     <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                         <span class="payment-name" t-out="line.payment_method_id.name"/>
                         <div class="payment-amount px-3">
-                            <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
+                            <t t-set="lineCurrency" t-value="line.payment_method_id.journal_id?.currency_id" />
+                            <PriceFormatter t-if="lineCurrency and lineCurrency != line.pos_order_id.currency" price="env.utils.formatCurrency(line.getAmount(), true, lineCurrency)" />
+                            <t t-else="">
+                                <PriceFormatter price="env.utils.formatCurrency(line.getAmount(), true)" />
+                            </t>
                         </div>
                     </div>
 

@@ -2458,6 +2458,78 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.payment_ids[0].payment_method_id.name, "Bank")
 
+    def test_payment_screen_mixed_currencies(self):
+        company_currency = self.env.company.currency_id
+        different_currency = self.env.ref('base.EUR')
+        if different_currency == company_currency:
+            different_currency = self.env.ref('base.USD')
+
+        different_currency.active = True
+        self.env['res.currency.rate'].create({
+            'currency_id': different_currency.id,
+            'rate': 0.5,
+            'name': date.today(),
+        })
+
+        different_currency_journal = self.env['account.journal'].create({
+            'name': 'Different Currency Journal',
+            'type': 'bank',
+            'company_id': self.env.company.id,
+            'code': 'ORDCJ',
+            'currency_id': different_currency.id,
+        })
+        company_currency_journal = self.env['account.journal'].create({
+            'name': 'Company Currency Journal',
+            'type': 'bank',
+            'company_id': self.env.company.id,
+            'code': 'COMCJ',
+            'currency_id': company_currency.id,
+        })
+        different_currency_pm = self.env['pos.payment.method'].create({
+            'name': 'Different Currency PM',
+            'journal_id': different_currency_journal.id,
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'outstanding_account_id': self.inbound_payment_method_line.payment_account_id.id,
+        })
+        company_currency_pm = self.env['pos.payment.method'].create({
+            'name': 'Company Currency PM',
+            'journal_id': company_currency_journal.id,
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'outstanding_account_id': self.inbound_payment_method_line.payment_account_id.id,
+        })
+
+        self.main_pos_config.write({
+            'payment_method_ids': [Command.set([different_currency_pm.id, company_currency_pm.id])],
+        })
+        self.env['product.product'].create({
+            'name': 'Currency Switch Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f"/pos/ui?config_id={self.main_pos_config.id}",
+            'PaymentScreenMixedCurrencies',
+            login="pos_user",
+        )
+
+        order = self.main_pos_config.current_session_id.order_ids[-1]
+
+        self.main_pos_config.current_session_id.action_pos_session_closing_control()
+
+        self.assertEqual(order.payment_ids.payment_method_id, different_currency_pm)
+
+        payment_move_line = self.env['account.move.line'].search([
+            ('journal_id', '=', different_currency_journal.id),
+            ('account_id', '=', different_currency_pm.outstanding_account_id.id),
+        ])
+
+        self.assertEqual(len(payment_move_line), 1)
+        self.assertEqual(payment_move_line.currency_id, different_currency)
+        self.assertEqual(payment_move_line.amount_currency, 50)
+
     def test_barcode_search_attributes_preset(self):
         product = self.env['product.template'].create({
             'name': 'Product with Attributes',
