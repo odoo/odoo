@@ -6,48 +6,36 @@ import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedbac
 import { escapeRegExp } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
 
-export function clickDownPaymentNumpad(num) {
-    return {
-        content: `click discount numpad button: ${num}`,
-        trigger: `.o_dialog div.numpad button:contains(/^${escapeRegExp(num)}$/)`,
-        run: "click",
-    };
-}
-
-export function addDownPayment(percentage, soNth, downPaymentType) {
-    const steps = [
+function addDownPayment(percentage, soNth, downPaymentType) {
+    const downPaymentTypeLabel = downPaymentType === "percent" ? "percentage" : "fixed amount";
+    return [
         ProductScreen.clickControlButton("Quotation/Order"),
         {
             content: "Select the first SO",
             trigger: `.o_sale_order .o_data_row:nth-child(${soNth}) .o_data_cell:nth-child(1)`,
             run: "click",
         },
+        Dialog.is({ title: "What do you want to do?" }),
+        {
+            content: `Select 'Apply a down payment (${downPaymentTypeLabel})`,
+            trigger: `.modal-body button:contains(${downPaymentTypeLabel})`,
+            run: "click",
+        },
+        ...percentage.split("").map((num) => ({
+            content: `click discount numpad button: ${num}`,
+            trigger: `.o_dialog div.numpad button:contains(/^${escapeRegExp(num)}$/)`,
+            run: "click",
+        })),
+        {
+            content:
+                "Wait the input value is well filled before apply (just make keydown not wait for interactions)",
+            trigger: `.modal .input-symbol .input-value:contains(${percentage})`,
+        },
+        Dialog.proceed({ title: "Down payment", confirm: "Apply" }),
     ];
-    if (downPaymentType === "percent") {
-        steps.push({
-            content: "Select 'Apply a down payment (percentage)'",
-            trigger: ".modal-body button:contains('percentage')",
-            run: "click",
-        });
-    } else {
-        steps.push({
-            content: "Select 'Apply a down payment (fixed amount)'",
-            trigger: ".modal-body button:contains('fixed amount')",
-            run: "click",
-        });
-    }
-    for (const num of percentage.split("")) {
-        steps.push(clickDownPaymentNumpad(num));
-    }
-    steps.push({
-        content: "Select 'Apply'",
-        trigger: ".modal-dialog button.btn-primary:contains('Apply')",
-        run: "click",
-    });
-    return steps;
 }
 
-export function payAndInvoice(totalAmount) {
+function payAndInvoice(totalAmount) {
     return [
         ProductScreen.clickPayButton(),
 
@@ -69,7 +57,6 @@ export function payAndInvoice(totalAmount) {
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_downpayment_round_per_line_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -105,7 +92,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_downpayment_round_globally_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -141,7 +127,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_downpayment_round_per_line_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -177,7 +162,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_in_pos_downpayment_round_globally_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -213,7 +197,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_br_pos_downpayment_round_per_line_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -229,7 +212,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_br_pos_downpayment_round_globally_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -245,7 +227,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_br_pos_downpayment_round_per_line_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -261,7 +242,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_br_pos_downpayment_round_globally_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -277,7 +257,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_be_pos_downpayment_round_per_line_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -293,7 +272,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_be_pos_downpayment_round_globally_price_excluded", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -309,7 +287,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_be_pos_downpayment_round_per_line_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
@@ -325,7 +302,6 @@ registry
 registry
     .category("web_tour.tours")
     .add("test_taxes_l10n_be_pos_downpayment_round_globally_price_included", {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () =>
             [
                 Chrome.startPoS(),
