@@ -14,7 +14,7 @@
 
                     <!-- Payment Info -->
                     <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
-                        <span class="payment-name" t-esc="line.payment_method_id.name"/>
+                        <span class="payment-name" t-out="line.payment_method_id.name"/>
                         <div class="payment-amount px-3">
                             <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
                         </div>
@@ -39,7 +39,7 @@
                     <t t-set="state" t-value="this.getPaymentActionState(line)" />
                     <t t-if="state.id !== 'unknown'">
                         <div class="paymentline_status_title d-flex justify-content-between align-items-center gap-2 py-3 px-4 fs-4" t-attf-class="paymentline_status_title_{{state.id}}">
-                            <span class="text-truncate" t-esc="state.title" />
+                            <span class="text-truncate" t-out="state.title" />
                             <t t-if="state.icon">
                                 <i t-att-class="state.icon" role="img" />
                             </t>
@@ -50,7 +50,7 @@
                                     t-attf-class="paymentline_status_actions_button paymentline_status_actions_button_{{button.id}} ms-0 p-3 fs-4 btn btn-{{button.severity}}"
                                     t-att-title="button.title || button.label"
                                     t-on-click="button.action"
-                                    t-esc="button.label" />
+                                    t-out="button.label" />
                         </div>
                     </t>
                 </div>

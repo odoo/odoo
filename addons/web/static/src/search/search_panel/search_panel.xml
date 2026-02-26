@@ -30,7 +30,7 @@
                                 t-attf-class="o_search_panel_section_icon fa {{ category.icon }} fa-rotate-90 mb-2"
                                 t-att-style="category.color and ('color: ' + category.color)"
                             />
-                            <t t-esc="category.values.join(' / ')" />
+                            <t t-out="category.values.join(' / ')" />
                         </span>
                     </t>
                     <t t-foreach="filters" t-as="filter" t-key="filter_index">
@@ -39,7 +39,7 @@
                                 t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} fa-rotate-90 mb-2"
                                 t-att-style="filter.color and ('color: ' + filter.color)"
                             />
-                            <t t-esc="filter.values.join(', ')" />
+                            <t t-out="filter.values.join(', ')" />
                         </span>
                     </t>
                 </t>
@@ -68,7 +68,7 @@
                 <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />
-                <b t-esc="section.description"/>
+                <b t-out="section.description"/>
             </header>
             <t t-call="web.SearchPanel.Section"/>
         </section>
@@ -80,7 +80,7 @@
 
 <t t-name="web.SearchPanel.Section">
     <div t-if="section.errorMsg" class="alert alert-warning">
-        <span><t t-esc="section.errorMsg"/></span>
+        <span><t t-out="section.errorMsg"/></span>
     </div>
     <ul t-else="" class="list-group d-block o_search_panel_field px-2 px-md-0">
         <t t-if="section.type === 'category'" t-call="{{ constructor.subTemplates.category }}">
@@ -113,7 +113,7 @@
                             >
                             <span class="o_search_panel_label_title text-truncate"
                                   t-attf-class="{{ group.color_index ? 'o_tag o_badge badge rounded-pill o_tag_color_' + group.color_index : ''}}">
-                                <t t-esc="group.name"/>
+                                <t t-out="group.name"/>
                             </span>
                         </label>
                     </div>
@@ -160,8 +160,8 @@
                     <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
                     />
-                    <b class="pe-2" t-if="section.type !== 'category' || !state.active[section.id]" t-esc="section.description"/>
-                    <b class="pe-2" t-else="" t-esc="section.values.get(section.activeValueId)['display_name']"/>
+                    <b class="pe-2" t-if="section.type !== 'category' || !state.active[section.id]" t-out="section.description"/>
+                    <b class="pe-2" t-else="" t-out="section.values.get(section.activeValueId)['display_name']"/>
                 </span>
                 <t t-set-slot="content">
                     <div t-attf-class="o_search_panel_{{ section.type }}" class="o_search_panel_section">
@@ -206,12 +206,12 @@
                     <span
                         class="o_search_panel_label_title text-truncate"
                         t-att-class="{'fw-bold' : value.bold}"
-                        t-esc="value.display_name"
+                        t-out="value.display_name"
                         />
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter text-muted mx-2 fw-bold"
-                    t-esc="value.__count"
+                    t-out="value.__count"
                 />
             </header>
             <ul t-if="value.childrenIds.length and state.expanded[section.id][valueId]"
@@ -242,10 +242,10 @@
             <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"
                 t-att-title="(group and group.tooltip) or false">
-                <span class="o_search_panel_label_title text-truncate" t-esc="value.display_name"/>
+                <span class="o_search_panel_label_title text-truncate" t-out="value.display_name"/>
                 <span t-if="section.enableCounters and value.__count gt 0"
                     class="o_search_panel_counter text-muted mx-2 small"
-                    t-esc="value.__count"
+                    t-out="value.__count"
                 />
             </label>
         </div>

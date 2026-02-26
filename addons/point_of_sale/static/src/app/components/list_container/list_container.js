@@ -52,7 +52,7 @@ export class ListContainer extends Component {
                         class="btn btn-lg btn-secondary order-1 flex-shrink-0 fw-bolder lh-lg"
                         t-att-class="props.forceSmall ? '' : 'px-3 fw-bold'">
                         <i t-if="props.forceSmall" class="fa fa-fw fa-caret-down"/>
-                        <t t-else="">+<t t-esc="hiddenCount"/></t>
+                        <t t-else="">+<t t-out="hiddenCount"/></t>
                     </button>
                 </div>
             </div>

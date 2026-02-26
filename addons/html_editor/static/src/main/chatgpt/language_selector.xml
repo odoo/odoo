@@ -13,7 +13,7 @@
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="state.languages" t-as="language" t-key="language[0]">
                         <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
-                            <div class="lang" t-esc="language[1]"/>
+                            <div class="lang" t-out="language[1]"/>
                         </DropdownItem>
                     </t>
                 </div>

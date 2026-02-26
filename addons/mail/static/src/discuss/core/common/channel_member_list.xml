@@ -21,7 +21,7 @@
                 </div>
             </t>
             <span t-if="props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.channel.unknownMembersCount"/> other members.</span>
+            <span t-if="props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="props.channel.unknownMembersCount"/> other members.</span>
             <div t-if="!props.channel.areAllMembersLoaded" class="mx-2 my-1">
                 <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.channel.fetchChannelMembers()">Load more</button>
             </div>
@@ -29,7 +29,7 @@
     </t>
 
     <t t-name="discuss.ChannelMemberList.section">
-        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-esc="sectionName"/>
+        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-out="sectionName"/>
     </t>
 
 </templates>

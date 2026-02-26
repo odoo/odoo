@@ -14,7 +14,7 @@
                         <t t-foreach="this.aspectRatios" t-as="ratio" t-key="ratio">
                             <t t-set="is_active" t-value="ratio === this.aspectRatio"/>
                             <label t-attf-class="btn #{is_active and 'active' or ''}" t-on-click="() => this.setAspectRatio(ratio)">
-                                <input type="radio" /><t t-esc="ratio_value.label"/>
+                                <input type="radio" /><t t-out="ratio_value.label"/>
                             </label>
                         </t>
                     </div>

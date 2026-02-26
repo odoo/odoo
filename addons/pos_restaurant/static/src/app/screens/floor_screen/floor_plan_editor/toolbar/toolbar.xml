@@ -14,7 +14,7 @@
                                               onSelected="()=>this.selectFloor(floor.uuid)">
                                     <i class="fa fa-fw fa-check me-1 fs-5" style="color:var(--success)"
                                        t-attf-class="{{floor === floorStore.selectedFloor ? 'visible' : 'invisible' }}"/>
-                                    <span t-esc="floor.name"/>
+                                    <span t-out="floor.name"/>
                                 </DropdownItem>
                             </t>
                             <div class="dropdown-divider mx-1 my-1"/>

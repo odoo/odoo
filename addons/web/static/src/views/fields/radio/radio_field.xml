@@ -20,7 +20,7 @@
                         t-att-id="`${id}_${item[0]}`"
                         t-on-change="() => this.onChange(item)"
                     />
-                    <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
+                    <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`" t-out="item[1]" />
                 </div>
             </t>
         </div>

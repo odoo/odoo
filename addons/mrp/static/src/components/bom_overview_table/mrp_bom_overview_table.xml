@@ -38,7 +38,7 @@
                     <tfoot t-if="showUnitCosts">
                         <tr>
                             <td name="td_mrp_bom_f" class="text-end" colspan="2">
-                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-esc="data.name"/>
+                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-out="data.name"/>
                             </td>
                             <td t-if="showUom &amp;&amp; (data.byproducts.length || data.product_uom_name != data.uom_name)">
                                 <t t-out="data.product_uom_name"/>
@@ -52,13 +52,13 @@
                         </tr>
                         <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
                             <tr>
-                                <td name="td_mrp_bom_b" class="text-end" colspan="2" t-esc="byproduct.name"/>
+                                <td name="td_mrp_bom_b" class="text-end" colspan="2" t-out="byproduct.name"/>
                                 <td t-if="showUom"><t t-out="byproduct['product_uom_name']"/></td>
                                 <td name="free_to_use" t-if="forecastMode"/>
                                 <td name="status" t-if="forecastMode"/>
                                 <td name="lead_time" t-if="forecastMode"/>
                                 <td name="route_column" class="text-end"><strong>Unit Cost</strong></td>
-                                <td name="cost" class="text-end" width="5rem"><t t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
+                                <td name="cost" class="text-end" width="5rem"><t t-out="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
                                 <td t-if="showAttachments"/>
                             </tr>
                         </t>

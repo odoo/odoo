@@ -254,11 +254,11 @@ export class HootTestResult extends Component {
                     <t t-if="results.length > 1">
                         <div class="flex justify-between mx-2 my-1">
                             <span t-attf-class="text-{{ result.pass ? 'emerald' : 'rose' }}">
-                                <t t-esc="ordinal(index)" /> run:
+                                <t t-out="ordinal(index)" /> run:
                             </span>
                             <t t-set="timestamp" t-value="formatTime(result.duration, 'ms')" />
                             <small class="text-gray flex items-center" t-att-title="timestamp">
-                                <t t-esc="timestamp" />
+                                <t t-out="timestamp" />
                             </small>
                         </div>
                     </t>

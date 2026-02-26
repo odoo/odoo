@@ -12,8 +12,8 @@ import { Component, onWillUpdateProps } from "@odoo/owl";
  *
  *      e.g.:
  *          PageTemplate.template = xml`
-                    <h1 t-esc="props.heading" />
-                    <p t-esc="props.text" />`;
+                    <h1 t-out="props.heading" />
+                    <p t-out="props.text" />`;
 
  *      `pages` could be:
  *      [

@@ -17,7 +17,7 @@
                     <i class="oi oi-arrow-left fa-fw"/>
                 </button>
                 <i t-if="props.icon" class="text-muted fa-fw" t-att-class="props.icon"/>
-                <p t-if="props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-esc="props.title"/>
+                <p t-if="props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-out="props.title"/>
                 <button t-if="env.closeActionPanel and !env.inChatWindow" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="env.closeActionPanel">
                     <i class="oi oi-close fa-fw"/>
                 </button>

@@ -46,7 +46,7 @@ export class HootTestPath extends Component {
                     <t t-if="props.inert">
                         <span
                             class="text-gray whitespace-nowrap font-bold p-1 hidden md:inline transition-colors"
-                            t-esc="suite.name"
+                            t-out="suite.name"
                         />
                     </t>
                     <t t-else="">
@@ -54,11 +54,11 @@ export class HootTestPath extends Component {
                             ids="{ id: suite.id }"
                             class="'text-gray hover:text-primary hover:underline whitespace-nowrap font-bold p-1 hidden md:inline transition-colors'"
                             title="'Run ' + suite.fullName"
-                            t-esc="suite.name"
+                            t-out="suite.name"
                         />
                         <t t-if="suite.config.multi">
                             <strong class="text-amber whitespace-nowrap me-1">
-                                x<t t-esc="suite.config.multi" />
+                                x<t t-out="suite.config.multi" />
                             </strong>
                         </t>
                     </t>
@@ -68,14 +68,14 @@ export class HootTestPath extends Component {
                     class="text-primary truncate font-bold p-1"
                     t-att-class="{ 'text-cyan': props.test.config.skip }"
                     t-att-title="props.test.name"
-                    t-esc="props.test.name"
+                    t-out="props.test.name"
                 />
                 <t t-if="props.canCopy">
                     <HootCopyButton text="props.test.name" altText="props.test.id" />
                 </t>
                 <t t-if="results.length > 1">
                     <strong class="text-amber whitespace-nowrap mx-1">
-                        x<t t-esc="results.length" />
+                        x<t t-out="results.length" />
                     </strong>
                 </t>
             </span>

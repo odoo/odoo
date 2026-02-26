@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="account.FetchEInvoices">
         <DropdownItem onSelected.bind="fetchEInvoices">
-            <i class="fa fa-fw fa-refresh me-1" aria-hidden="true"></i><t t-esc="this.buttonLabel" />
+            <i class="fa fa-fw fa-refresh me-1" aria-hidden="true"></i><t t-out="this.buttonLabel" />
         </DropdownItem>
     </t>
 </templates>

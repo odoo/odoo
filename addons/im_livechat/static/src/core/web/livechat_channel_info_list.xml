@@ -33,7 +33,7 @@
                 <t t-foreach="expectAnswerSteps" t-as="step" t-key="step.id">
                     <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="fa fa-comment-o me-1"/>
-                        <span class="text-truncate" t-esc="step.answer"/>
+                        <span class="text-truncate" t-out="step.answer"/>
                     </div>
                 </t>
             </div>
@@ -45,7 +45,7 @@
                 <h6 class="pt-3">Country &amp; Language</h6>
                 <div class="d-flex bg-inherit align-items-center gap-1">
                     <img t-if="props.thread.channel.correspondentCountry" class="o_country_flag" t-att-src="props.thread.channel.correspondentCountry.flagUrl" t-att-title="props.thread.channel.correspondentCountry.code or props.thread.channel.correspondentCountry.name" aria-label="Country"/>
-                    <span t-if="props.thread.channel.livechat_lang_id" title="Language" t-esc="props.thread.channel.livechat_lang_id.name"/>
+                    <span t-if="props.thread.channel.livechat_lang_id" title="Language" t-out="props.thread.channel.livechat_lang_id.name"/>
                 </div>
             </div>
             <t t-name="extra_infos"/>
@@ -70,7 +70,7 @@
                     target="_blank"
                 >
                     <i class="fa fa-external-link opacity-75"/>
-                    <span class="ms-1 fw-bold" t-esc="record.name"/>
+                    <span class="ms-1 fw-bold" t-out="record.name"/>
                 </a>
             </t>
         </div>

@@ -15,7 +15,7 @@
 
     <t t-name="web.TagsList.Tooltip">
         <t t-foreach="tags" t-as="tag" t-key="tag_index">
-            <div t-esc="tag"/>
+            <div t-out="tag"/>
         </t>
     </t>
 

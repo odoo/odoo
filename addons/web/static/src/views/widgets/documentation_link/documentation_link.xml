@@ -8,7 +8,7 @@
             </t>
             <t t-else="">
                 <i t-if="props.icon" class="fa pe-1" t-att-class="props.icon"></i>
-                <span t-esc="props.label"/>
+                <span t-out="props.label"/>
             </t>
         </a>
     </t>

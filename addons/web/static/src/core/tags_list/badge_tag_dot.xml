@@ -5,7 +5,7 @@
             <t t-set-slot="default">
                 <div class="o_tag_badge_text o_badge_text o_tag_color_basic fw-bold">
                     <i t-if="dotColor" class="fa fa-circle me-1" t-attf-style="color:{{dotColor}};"/>
-                    <t t-esc="this.props.text"/>
+                    <t t-out="this.props.text"/>
                 </div>
             </t>
         </xpath>

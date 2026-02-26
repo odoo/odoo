@@ -10,11 +10,11 @@
                                 <i class="fa fa-print" aria-hidden="true"/>
                             </div>
                             <div>
-                                <h1 class="pt-2 text-center"><t t-esc="this.props.title"/></h1>
+                                <h1 class="pt-2 text-center"><t t-out="this.props.title"/></h1>
                             </div>
-                            <div class="mt-4 pb-2 fs-3"><t t-esc="this.props.message"/></div>
+                            <div class="mt-4 pb-2 fs-3"><t t-out="this.props.message"/></div>
                             <div class="pb-4 fs-3">We invite you to get the receipt at the counter. Please remember your order number:</div>
-                            <h1 class="text-center mb-4" t-esc="props.trackingNumber"/>
+                            <h1 class="text-center mb-4" t-out="props.trackingNumber"/>
                         </div>
                     </div>
                 </div>

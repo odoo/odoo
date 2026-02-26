@@ -13,20 +13,20 @@
                             <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
                         </div>
                         <div class="text-large text-center">
-                            <span t-esc="extra_data['date']" />
+                            <span t-out="extra_data['date']" />
                         </div>
                         <div class="text-center text-large">
-                            CASH <span t-if="extra_data.get('translated_type')" t-esc="extra_data['translated_type']" />
+                            CASH <span t-if="extra_data.get('translated_type')" t-out="extra_data['translated_type']" />
                         </div>
                         <table class="w-100 text-large mt-3">
                             <tbody>
                                 <tr>
                                     <td class="text-start">AMOUNT</td>
-                                    <td class="text-end" t-esc="extra_data['formatted_amount']"/>
+                                    <td class="text-end" t-out="extra_data['formatted_amount']"/>
                                 </tr>
                                 <tr>
                                     <td class="text-start">REASON</td>
-                                    <td class="text-end" t-esc="extra_data['reason']" />
+                                    <td class="text-end" t-out="extra_data['reason']" />
                                 </tr>
                             </tbody>
                         </table>

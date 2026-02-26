@@ -5,7 +5,7 @@
         <RemoveButton remove="() => this.remove()"/>
         <div t-att-data-url="props.url" role="img" t-att-aria-label="props.name" t-att-title="props.name" t-att-data-mimetype="props.mimetype" class="o_image d-flex align-items-center justify-content-center"/>
         <button class="o_btn_reset o_button_area cursor-pointer" t-on-click="props.selectAttachment" t-att-aria-label="props.name"/>
-        <small class="o_file_name d-block text-truncate" t-esc="props.name"/>
+        <small class="o_file_name d-block text-truncate" t-out="props.name"/>
     </div>
 </t>
 

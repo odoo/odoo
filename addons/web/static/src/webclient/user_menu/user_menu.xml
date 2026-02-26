@@ -7,9 +7,9 @@
                 <button class="o_user_menu d-none d-md-flex py-1 py-lg-0">
                     <img class="o_avatar o_user_avatar rounded" t-att-src="source" alt="User"/>
                     <small class="oe_topbar_name d-none ms-2 text-start smaller lh-1 text-truncate"  t-att-class="{'d-lg-inline-block' : env.debug}" style="max-width: 200px">
-                        <t t-esc="userName"/>
+                        <t t-out="userName"/>
                         <mark class="d-block font-monospace text-truncate">
-                            <i class="fa fa-database oi-small me-1"/><t t-esc="dbName"/>
+                            <i class="fa fa-database oi-small me-1"/><t t-out="dbName"/>
                         </mark>
                     </small>
                 </button>

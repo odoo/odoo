@@ -18,7 +18,7 @@
                             onSelected="() => this.filterClicked({ optionKey: filter[0], reload: true})"
                             closingMode="'none'"
                         >
-                            <t t-esc="filter[1].name"/>
+                            <t t-out="filter[1].name"/>
                         </DropdownItem>
                     </t>
                 </t>
@@ -35,7 +35,7 @@
                             class="{ 'selected': this.controller.options[filter[0]] }"
                             onSelected="filter[1].onSelect"
                         >
-                            <t t-esc="filter[1].name"/>
+                            <t t-out="filter[1].name"/>
                         </DropdownItem>
                     </t>
                 </t>

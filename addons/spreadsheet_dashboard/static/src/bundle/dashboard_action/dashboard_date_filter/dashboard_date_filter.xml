@@ -4,7 +4,7 @@
         <Dropdown navigationOptions="{ 'shouldFocusChildInput': false }">
             <button class="btn btn-secondary o-btn-date-filter">
                 <i class="fa fa-calendar me-2"/>
-                <span class="o-date-filter-value" t-esc="inputValue"/>
+                <span class="o-date-filter-value" t-out="inputValue"/>
             </button>
             <t t-set-slot="content">
                 <DateFilterDropdown

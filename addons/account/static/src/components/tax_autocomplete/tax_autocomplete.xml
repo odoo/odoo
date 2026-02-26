@@ -5,7 +5,7 @@
             <t t-if="option.data.record.tax_scope">
                 <div class="tax_autocomplete_grid">
                     <div t-out="option.label"/>
-                    <div t-esc="option.data.record.tax_scope" class="text-muted"/>
+                    <div t-out="option.data.record.tax_scope" class="text-muted"/>
                 </div>
             </t>
             <t t-else="">

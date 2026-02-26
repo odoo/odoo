@@ -22,7 +22,7 @@
                 <div class="flex-grow-1 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': showsChatLocalDateTime }">
                     <div class="d-flex">
                         <div t-if="thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                            <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
+                            <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                         </div>
                         <AutoresizeInput
@@ -50,7 +50,7 @@
                 </div>
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                     <img class="o-mail-DiscussContent-selfAvatar me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="store.self.avatarUrl"/>
-                    <div t-if="store.self_user" class="text-nowrap px-1 me-2" t-esc="store.self_user.name"/>
+                    <div t-if="store.self_user" class="text-nowrap px-1 me-2" t-out="store.self_user.name"/>
                     <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="renameGuest" value="store.self_guest.name"/>
                 </div>
             </t>
@@ -63,7 +63,7 @@
                         <div t-if="!ui.isSmall or !threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit o-min-width-0">
                             <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent"/></t>
                             <Composer t-if="(thread.model !== 'mail.box' and !thread.channel?.composerHidden) or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
-                            <span t-if="thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-esc="thread.channel?.composerHiddenText"/>
+                            <span t-if="thread.channel?.composerHidden" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-out="thread.channel?.composerHiddenText"/>
                         </div>
                         <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
                             <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>

@@ -14,7 +14,7 @@
                         />
                     </t>
                     <div class="o_model_field_selector_popover_title px-2 text-truncate">
-                        <t t-esc="state.page.title"/>
+                        <t t-out="state.page.title"/>
                     </div>
                     <i class="o_model_field_selector_popover_close btn btn-link me-n2 fa fa-times text-dark"
                        data-tooltip="Close"
@@ -39,9 +39,9 @@
                         <t t-set="fieldDef" t-value="state.page.fieldDefs[fieldName]" />
                         <li class="o_model_field_selector_popover_item d-flex border-bottom" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
                             <button t-attf-class="o_model_field_selector_popover_item_name btn btn-light flex-fill border-0 rounded-0 text-break text-start fw-normal" t-on-click="() => this.selectField(fieldDef)">
-                                <t t-esc="fieldDef.string" />
-                                <t t-if="fieldDef.record_name"> (<t t-esc="fieldDef.record_name" />)</t>
-                                <div t-if="props.isDebugMode" class="o_model_field_selector_popover_item_title text-break text-muted small"><t t-esc="fieldName"/> (<t t-esc="fieldDef.type"/>)</div>
+                                <t t-out="fieldDef.string" />
+                                <t t-if="fieldDef.record_name"> (<t t-out="fieldDef.record_name" />)</t>
+                                <div t-if="props.isDebugMode" class="o_model_field_selector_popover_item_title text-break text-muted small"><t t-out="fieldName"/> (<t t-out="fieldDef.type"/>)</div>
                             </button>
                             <t t-if="this.canFollowRelationFor(fieldDef)">
                                 <t t-set="label">

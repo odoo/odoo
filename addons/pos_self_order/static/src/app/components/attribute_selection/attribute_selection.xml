@@ -18,9 +18,9 @@
                                 t-attf-class="{{ valueSelected ? 'border-primary': 'border-transparent' }}">
                                 <div class="d-flex d-inline-flex justify-content-between w-100 align-items-center gap-1">
                                     <div class="text-center d-flex flex-column gap-2 align-items-center w-100">
-                                        <span t-esc="value.name" class="fs-4"/>
+                                        <span t-out="value.name" class="fs-4"/>
                                     </div>
-                                    <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)"
+                                    <span t-if="shouldShowPriceExtra(value)" t-out="formatExtraPrice(value)"
                                         class="d-block position-absolute badge top-0 end-0 me-3 mt-3 rounded-3 text-bg-primary fw-medium" />
                                     <img  t-if="value.image" t-attf-src="data:image/png;base64,{{value.image}}" class="img-fluid rounded-4" style="max-height:70px; max-width:70px"/>
                                     <div t-if="value.html_color and !value.image" t-attf-style="min-height: 25px; min-width: 25px; background-color: {{value.html_color}}" class="rounded-5"/> 

@@ -15,10 +15,10 @@
                             class="form-check-input radio-check"
                         />
                         <label t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
-                            <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-esc="value.name"/>
+                            <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-out="value.name"/>
                             <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
                                 <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
-                                    <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                                    <t t-out="getFormatPriceExtra(value.price_extra)"/>
                                 </span>
                             </div>
                         </label>
@@ -49,10 +49,10 @@
                             t-attf-class="btn btn-secondary btn-lg lh-lg d-flex {{ value.id == props.selected.id ? 'active' : '' }}"
                             t-att-name="value.name"
                             t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
-                            <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-esc="value.name"/>
+                            <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-out="value.name"/>
                             <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
                                 <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
-                                    <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                                    <t t-out="getFormatPriceExtra(value.price_extra)"/>
                                 </span>
                             </div>
                         </label>
@@ -73,9 +73,9 @@
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
                     <option t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}" t-att-selected="props.selected?.id === value.id ? 'selected' : ''">
                         <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == props.selected.id)"/>
-                        <t t-esc="value.name"/>
+                        <t t-out="value.name"/>
                         <t t-if="value.price_extra">
-                            <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                            <t t-out="getFormatPriceExtra(value.price_extra)"/>
                         </t>
                     </option>
                 </t>
@@ -110,7 +110,7 @@
                         </label>
                         <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2" t-att-class="{'ptav-not-available' : value.excluded}">
                             <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
-                                <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                                <t t-out="getFormatPriceExtra(value.price_extra)"/>
                             </span>
                         </div>
                     </span>
@@ -135,10 +135,10 @@
                     t-attf-class="form-check-label btn btn-secondary btn-lg lh-lg d-flex {{ this.state.is_value_selected[value.id] === true ? 'active' : '' }}"
                     t-attf-name="multi-{{value.id}}"
                     t-attf-for="multi-{{value.id}}">
-                    <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-esc="value.name"/>
+                    <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }" t-out="value.name"/>
                     <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
                         <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
-                            <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                            <t t-out="getFormatPriceExtra(value.price_extra)"/>
                         </span>
                     </div>
                 </label>
@@ -172,14 +172,14 @@
                         </label>
                         <div class="text-center mt-2 small">
                             <span t-att-class="{ 'text-muted': pos.doHaveConflictWith(value, props.allSelectedValues) }"
-                                t-esc="value.name"/>
+                                t-out="value.name"/>
                         </div>
 
                         <div t-if="value.price_extra"
                             class="price-extra-cell d-inline-block mt-1"
                             t-att-class="{'ptav-not-available' : value.excluded}">
                             <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
-                                <t t-esc="getFormatPriceExtra(value.price_extra)"/>
+                                <t t-out="getFormatPriceExtra(value.price_extra)"/>
                             </span>
                         </div>
                     </span>
@@ -198,7 +198,7 @@
                     <span>This option or combination of options is not available</span>
                 </div>
                 <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
-                    <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.attribute_id.name"/>
+                    <div class="attribute_name mb-2 fw-bolder" t-out="attribute.attribute_id.name"/>
                     <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="setCustomValue(attribute)"

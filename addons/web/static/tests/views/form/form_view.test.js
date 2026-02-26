@@ -13514,7 +13514,7 @@ test("twice same many2one, one invisible, one with widget with related field", a
         static template = xml`
             <div>
                 <Many2OneField t-props="this.props"/>
-                <span class="date" t-esc="this.writeDate"/>
+                <span class="date" t-out="this.writeDate"/>
             </div>`;
         get writeDate() {
             return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");

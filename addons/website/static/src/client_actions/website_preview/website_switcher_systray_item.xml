@@ -5,7 +5,7 @@
         <Dropdown menuClass="{'mw-100': false}">
             <button data-hotkey="w" class="mx-1 border-0">
                 <div class="d-none d-md-flex align-items-md-center">
-                    <span t-esc="websiteService.currentWebsite?.name" class="me-2 text-truncate" style="max-width: 200px"/>
+                    <span t-out="websiteService.currentWebsite?.name" class="me-2 text-truncate" style="max-width: 200px"/>
                     <i class="fa fa-caret-down"/>
                 </div>
                 <div class="d-md-none">

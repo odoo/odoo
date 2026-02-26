@@ -10,8 +10,8 @@
         />
 
         <div class="o_pie_info">
-            <span class="o_pie_value" t-esc="formattedValue + '%'"/>
-            <span class="o_pie_text" t-esc="props.string"/>
+            <span class="o_pie_value" t-out="formattedValue + '%'"/>
+            <span class="o_pie_text" t-out="props.string"/>
         </div>
     </t>
 

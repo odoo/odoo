@@ -13,7 +13,7 @@
 
                 <t t-if="props.description">
                     <span class="text-capitalize d-block mb-3 fs-6">
-                        <t t-esc="props.description"/>
+                        <t t-out="props.description"/>
                     </span>
                 </t>
 
@@ -26,15 +26,15 @@
                                 <t t-if="group.lines.map(line => line.tag_names).flat().length">
                                     <div class="d-flex align-items-center me-2 mb-2">
                                         <span class="text-capitalize me-2">
-                                            <t t-esc="group.type"/>
+                                            <t t-out="group.type"/>
                                         </span>
 
                                         <t t-foreach="group.lines" t-as="line" t-key="line_index">
                                             <t t-foreach="line.tag_names" t-as="tname" t-key="tname_index">
                                                 <span class="o_tag o_tag_color_0 badge rounded-pill me-1 text-dark border">
-                                                    <t t-esc="tname"/>
+                                                    <t t-out="tname"/>
                                                     <t t-if="group.type!='base' and line.factor_percent">
-                                                        (<t t-esc="line.factor_percent"/>%)
+                                                        (<t t-out="line.factor_percent"/>%)
                                                     </t>
                                                 </span>
                                             </t>
@@ -55,15 +55,15 @@
                                 <t t-if="group.lines.map(line => line.tag_names).flat().length">
                                     <div class="d-flex align-items-center me-2 mb-2">
                                         <span class="text-capitalize me-2">
-                                            <t t-esc="group.type"/>
+                                            <t t-out="group.type"/>
                                         </span>
 
                                         <t t-foreach="group.lines" t-as="line" t-key="line_index">
                                             <t t-foreach="line.tag_names" t-as="tname" t-key="tname_index">
                                                 <span class="o_tag o_tag_color_0 badge rounded-pill me-1 text-dark border">
-                                                    <t t-esc="tname"/>
+                                                    <t t-out="tname"/>
                                                     <t t-if="group.type!='base' and line.factor_percent">
-                                                        (<t t-esc="line.factor_percent"/>%)
+                                                        (<t t-out="line.factor_percent"/>%)
                                                     </t>
                                                 </span>
                                             </t>

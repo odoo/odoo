@@ -7,7 +7,7 @@
             <t t-if="this.props.icon">
                 <i t-attf-class="{{this.props.icon}} me-1"/>
             </t>
-            <span t-esc="this.props.label"/>
+            <span t-out="this.props.label"/>
         </button>
     </t>
 </templates>

@@ -189,7 +189,7 @@ test("tooltip with a template, no info", async () => {
     await makeMockEnv({ tooltip_text: "tooltip" });
     await mountWithCleanup(MyComponent, {
         templates: {
-            my_tooltip_template: /* xml */ `<i t-esc='env.tooltip_text'/>`,
+            my_tooltip_template: /* xml */ `<i t-out='env.tooltip_text'/>`,
         },
     });
 
@@ -222,8 +222,8 @@ test("tooltip with a template and info", async () => {
         templates: {
             my_tooltip_template: /* xml */ `
                 <ul>
-                    <li>X: <t t-esc="x"/></li>
-                    <li>Y: <t t-esc="y"/></li>
+                    <li>X: <t t-out="x"/></li>
+                    <li>Y: <t t-out="y"/></li>
                 </ul>
             `,
         },

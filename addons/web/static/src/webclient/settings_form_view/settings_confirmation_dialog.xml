@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.SettingsConfirmationDialog">
         <Dialog size="'sm'" title="props.title" modalRef="modalRef">
-            <t t-esc="props.body" />
+            <t t-out="props.body" />
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="_confirm">
                     Save

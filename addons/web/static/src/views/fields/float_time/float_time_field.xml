@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatTimeField">
-        <time t-if="props.readonly" t-esc="formattedValue" />
+        <time t-if="props.readonly" t-out="formattedValue" />
         <input t-else="" 
             t-att-id="props.id" 
             t-att-type="props.inputType" 
@@ -16,7 +16,7 @@
     
     <t t-name="web.DurationPopover">
         <div class="o_duration_popover p-1">
-            <time t-esc="props.state.formattedResult" />
+            <time t-out="props.state.formattedResult" />
         </div>
     </t>
 

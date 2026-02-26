@@ -26,7 +26,7 @@
                 <strong class="o_timeoff_name">Pending Requests</strong>
                 <span t-on-click="openPendingRequests"
                     t-att-class="'o_timeoff_duration' + (state.allocationRequests ? ' cursor-pointer' : '')">
-                    <t t-esc="state.allocationRequests"/>
+                    <t t-out="state.allocationRequests"/>
                 </span>
                 <a class="text-uppercase o_timeoff_details p-1" t-on-click="newAllocationRequest">
                     <t t-if="employeeId">Grant Time</t>

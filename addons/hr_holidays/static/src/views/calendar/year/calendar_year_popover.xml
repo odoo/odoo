@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="hr_holidays.MandatoryDayCalendarYearPopover.body">
         <t t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
-            <div class="fw-bold mt-2" t-esc="recordGroup.title" />
+            <div class="fw-bold mt-2" t-out="recordGroup.title" />
             <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
                 <t t-if="record.id &lt; 0">
                     <p class="">
-                        <t t-if="record.startHour"><t t-esc="record.startHour" /> </t>
-                        <t t-esc="record.title"/>
+                        <t t-if="record.startHour"><t t-out="record.startHour" /> </t>
+                        <t t-out="record.title"/>
                     </p>
                 </t>
                 <t t-else="">

@@ -56,7 +56,7 @@
                         </t>
                     </small>
                     <div class="d-flex align-items-center">
-                        <h4 class="o_resume_line_title mt-2 me-2" t-esc="data.name"/>
+                        <h4 class="o_resume_line_title mt-2 me-2" t-out="data.name"/>
                         <t t-if="data.is_course">
                             <a id="external_link" t-if="data.external_url" t-attf-href="#{data.external_url}" target="_blank" class="ms-2 fa fa-external-link btn-secondary" style="font-size: 1rem;"/>
                         </t>

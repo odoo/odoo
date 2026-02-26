@@ -3,13 +3,13 @@
     <t t-name="pos_event.QuestionInputs">
         <div t-foreach="questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
             <span class="input-group-text">
-                <t t-esc="question.title"/>
+                <t t-out="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
             </span>
             <select t-if="question.question_type === 'simple_choice'" t-model="stateObject[question.id]" class="form-select">
                 <option value="">--- Select ---</option>
                 <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
-                    <t t-esc="choice.name"/>
+                    <t t-out="choice.name"/>
                 </option>
             </select>
             <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
@@ -31,7 +31,7 @@
                     <div t-foreach="this.dataInQty" t-as="data" t-key="data_index" class="ticket_question mb-4">
                         <div>
                             <span class="fs-3">
-                                Ticket #<t t-esc="data_index + 1" /> for <t t-esc="this.state.byRegistration[data_index].ticket_id.name" />
+                                Ticket #<t t-out="data_index + 1" /> for <t t-out="this.state.byRegistration[data_index].ticket_id.name" />
                             </span>
                             <hr class="hr mt-1" />
                         </div>

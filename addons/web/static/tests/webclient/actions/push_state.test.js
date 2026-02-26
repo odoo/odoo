@@ -156,7 +156,7 @@ defineModels([Partner, Pony, User]);
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-esc="props.action.params?.description"/>
+            ClientAction_<t t-out="props.action.params?.description"/>
         </div>
     `;
     static props = ["*"];
@@ -216,7 +216,7 @@ test(`actions can push state`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
             <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-esc="props.params and props.params.description"/>
+                ClientAction_<t t-out="props.params and props.params.description"/>
             </div>
         `;
         static props = ["*"];
@@ -251,7 +251,7 @@ test(`actions override previous state`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
             <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-esc="props.params and props.params.description"/>
+                ClientAction_<t t-out="props.params and props.params.description"/>
             </div>
         `;
         static props = ["*"];
@@ -289,7 +289,7 @@ test(`actions override previous state from menu click`, async () => {
     class ClientActionPushes extends Component {
         static template = xml`
             <div class="test_client_action" t-on-click="_actionPushState">
-                ClientAction_<t t-esc="props.params and props.params.description"/>
+                ClientAction_<t t-out="props.params and props.params.description"/>
             </div>
         `;
         static props = ["*"];

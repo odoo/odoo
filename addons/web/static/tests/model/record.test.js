@@ -610,7 +610,7 @@ test(`can switch records`, async () => {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <a id="increment" t-on-click="() => state.num++" t-esc="state.num"/>
+            <a id="increment" t-on-click="() => state.num++" t-out="state.num"/>
             <a id="next" t-on-click="next">NEXT</a>
             <Record resId="state.currentId" resModel="'foo'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
@@ -730,7 +730,7 @@ test(`faulty useRecordObserver in widget`, async () => {
                 </Record>
             </t>
             <t t-else="">
-                <div class="error" t-esc="state.error.message"/>
+                <div class="error" t-out="state.error.message"/>
             </t>
         `;
 

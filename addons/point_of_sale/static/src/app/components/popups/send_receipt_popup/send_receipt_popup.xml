@@ -15,11 +15,11 @@
             </t>
             <div class="notice text-center">
                 <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
-                <div t-if="this.sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
+                <div t-if="this.sendReceipt.status === 'loading'" class="text-info">Sending <t t-out="usedMethod"/> in progress</div>
                 <div t-if="this.sendReceipt.status === 'success'" class="text-success">
                     <t t-if="this.order.is_invoiced">Receipt and invoice sent successfully</t>
                     <t t-else="">Receipt sent successfully</t></div>
-                <div t-if="this.sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
+                <div t-if="this.sendReceipt.status === 'error'" class="text-danger">Sending <t t-out="usedMethod"/> failed. Please try again</div>
             </div>
         </Dialog>
     </t>

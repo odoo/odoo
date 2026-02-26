@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.NumpadDropdown">
         <div t-if="this.pos.tableSelectorState and !this.isSmall" class="table-selector bg-light rounded d-flex flex-column z-3 shadow overflow-hidden">
             <div class="d-flex justify-content-center p-3">
-                <span t-if="this.state.buffer" t-esc="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                <span t-if="this.state.buffer" t-out="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
                 <span t-else="" class="text-muted fs-3">Enter a table number</span>
             </div>
             <Numpad buttons="this.numpadButtons" class="'flex-grow-1 bg-200'"/>
@@ -16,7 +16,7 @@
                 <main class="d-flex flex-column justify-content-between bg-light h-100">
                     <div class="input-symbol">
                         <div class="popup-input value active form-control form-control-lg py-3 text-center rounded-0 border-bottom-0">
-                            <span t-if="this.state.buffer" t-esc="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                            <span t-if="this.state.buffer" t-out="this.state.buffer" class="input-value fw-bolder fs-3" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
                             <span t-else="" class="text-muted fs-3">Enter a table number</span>
                         </div>
                     </div>

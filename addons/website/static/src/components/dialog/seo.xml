@@ -59,7 +59,7 @@
                 <span t-if="!state.suggestions.length" class="small text-muted fst-italic">No related keywords found. Try a broader term.</span>
                 <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
                     <li class="list-inline-item me-1 mb-1" t-on-click="() => props.addKeyword(suggestion)">
-                        <span class="o_seo_suggestion badge rounded-pill py-1 text-bg-secondary" t-att-title="translatedStrings.suggestionTag(suggestion)" t-esc="suggestion"/>
+                        <span class="o_seo_suggestion badge rounded-pill py-1 text-bg-secondary" t-att-title="translatedStrings.suggestionTag(suggestion)" t-out="suggestion"/>
                     </li>
                 </t>
             </ul>
@@ -134,7 +134,7 @@
     <div class="col-2">
         <label class="align-middle text-truncate w-100" t-att-title="link.label">
             <i t-if="link.isImageLink" class="fa fa-picture-o text-400 me-2"/>
-            <t t-esc="link.label"/>
+            <t t-out="link.label"/>
         </label>
     </div>
     <div class="col-10" role="form">
@@ -180,7 +180,7 @@
             <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
                     t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                 <t t-foreach="languages" t-as="lang" t-key="lang[0]">
-                    <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                    <option t-att-value="lang[0]"><t t-out="lang[2]"/></option>
                 </t>
             </select>
             <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary" type="button">Add</button>
@@ -207,10 +207,10 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <div class="o_seo_preview_r mt-1"><t t-esc="props.title"/></div>
+                                <div class="o_seo_preview_r mt-1"><t t-out="props.title"/></div>
                                 <div class="o_seo_preview_s">
                                     <div class="o_seo_preview_st" t-att-class="this.props.description ? 'text-black' : 'text-muted fst-italic'">
-                                        <t t-esc="description"/>
+                                        <t t-out="description"/>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +257,7 @@
                             Description <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="props.previewDescription"/>
                         </label>
                         <t t-if="descriptionWarning.length">
-                            <small class="text-warning" t-esc="descriptionWarning"/>
+                            <small class="text-warning" t-out="descriptionWarning"/>
                         </t>
                     </div>
                     <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
@@ -268,12 +268,12 @@
                     </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
+                            <span class="input-group-text seo_name_pre" t-out="seoNamePre"/>
                         </div>
                         <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
                                t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
                         <div class="input-group-append" title="Unalterable unique identifier">
-                            <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
+                            <span class="input-group-text seo_name_post" t-out="seoNamePost"/>
                         </div>
                     </div>
                 </div>

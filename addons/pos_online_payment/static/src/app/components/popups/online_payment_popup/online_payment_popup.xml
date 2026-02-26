@@ -4,8 +4,8 @@
         <Dialog title.translate="Scan to pay" footer="false" bodyClass="'w-100 h-100 d-flex flex-column justify-content-center align-items-center'">
             <p>Scan the QR code to pay</p>
             <img class="w-50 pb-3" t-att-src="props.qrCode" alt="QR Code to pay"/>
-            <div class="amount">Amount: <t t-esc="props.formattedAmount"/></div>
-            <div>Order reference: <t t-esc="props.orderName"/></div>
+            <div class="amount">Amount: <t t-out="props.formattedAmount"/></div>
+            <div>Order reference: <t t-out="props.orderName"/></div>
         </Dialog>
     </t>
 </templates>

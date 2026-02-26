@@ -14,7 +14,7 @@
         >
             <button data-hotkey="shift+u" t-att-disabled="isSingleCompany" t-att-title="user.activeCompany.name" class="o_switch_company_menu d-none d-md-flex">
                 <i class="fa fa-building d-lg-none"/>
-                <span class="oe_topbar_name d-none d-lg-block text-truncate" t-esc="user.activeCompany.name"/>
+                <span class="oe_topbar_name d-none d-lg-block text-truncate" t-out="user.activeCompany.name"/>
             </button>
 
             <t t-set-slot="content">

@@ -10,7 +10,7 @@
             <div class="mb-3" t-if="orderCount > 0">
                 <label class="form-label">Orders status</label>
                 <div class="alert alert-info" role="alert">
-                    You still have <span t-esc="orderCount" /> open orders for the next few days.
+                    You still have <span t-out="orderCount" /> open orders for the next few days.
                 </div>
             </div>
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">

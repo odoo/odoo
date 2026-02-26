@@ -45,7 +45,7 @@ test("unmounts erroring main component", async () => {
     });
     let compA;
     class MainComponentA extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentA</span>`;
+        static template = xml`<span><t t-if="state.shouldThrow" t-out="error"/>MainComponentA</span>`;
         static props = ["*"];
         setup() {
             compA = this;
@@ -97,7 +97,7 @@ test("unmounts erroring main component: variation", async () => {
 
     let compB;
     class MainComponentB extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentB</span>`;
+        static template = xml`<span><t t-if="state.shouldThrow" t-out="error"/>MainComponentB</span>`;
         static props = ["*"];
         setup() {
             compB = this;

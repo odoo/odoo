@@ -7,13 +7,13 @@
     </span>
     <div class="w-100 overflow-hidden">
         <span class="d-flex align-items-baseline gap-1">
-            <small class="flex-grow-1 text-truncate" t-esc="props.name"/>
-            <span class="o_notification_size text-nowrap text-600" t-esc="props.size"/>
+            <small class="flex-grow-1 text-truncate" t-out="props.name"/>
+            <span class="o_notification_size text-nowrap text-600" t-out="props.size"/>
         </span>
         <div class="progress mt-1 w-100">
             <div t-attf-class="progress-bar progress-bar-animated {{props.uploaded ? 'bg-success' : 'bg-info'}}" role="progressbar" t-attf-style="width: {{this.progress}}%;" aria-label="Progress bar"></div>
         </div>
-        <small t-if="props.hasError" class="text-danger fw-bold" t-esc="errorMessage"/>
+        <small t-if="props.hasError" class="text-danger fw-bold" t-out="errorMessage"/>
     </div>
     <div class="o_notification_indicator d-flex align-items-center justify-content-center pt-2">
         <t t-if="!props.hasError and !props.uploaded">

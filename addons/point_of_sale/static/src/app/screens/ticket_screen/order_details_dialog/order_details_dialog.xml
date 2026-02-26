@@ -9,7 +9,7 @@
                             <div class="d-flex align-items-center">
                                 <i t-att-class="`fa ${card.icon} fs-6`" aria-hidden="true"/>
                                 <h5 class="ms-2 mb-0 fw-semibold text-dark">
-                                    <t t-esc="card.title"/>
+                                    <t t-out="card.title"/>
                                     <small class="text-muted ms-2"><b><t t-out="card.subtitle"/></b></small>
                                 </h5>
                             </div>
@@ -17,7 +17,7 @@
                             <t t-if="card.buttons">
                                 <div class="d-flex gap-2">
                                     <t t-foreach="card.buttons" t-as="btn" t-key="btn_index">
-                                        <button t-if="btn.visible and btn.action" t-on-click="btn.action" t-attf-class="btn rounded-2 btn-sm btn-{{btn.color}} rounded-2" t-esc="btn.label" />
+                                        <button t-if="btn.visible and btn.action" t-on-click="btn.action" t-attf-class="btn rounded-2 btn-sm btn-{{btn.color}} rounded-2" t-out="btn.label" />
                                         <BadgeTag t-if="!btn.action" color="btn.colorIndex" text="btn.label"/>
                                     </t>
                                 </div>
@@ -30,9 +30,9 @@
                                 <t t-foreach="card.fields" t-as="field" t-key="field_index">
                                     <div t-if="field.value" class="col-md-6">
                                         <div class="d-flex field-details flex-column">
-                                            <div class="text-muted small"><t t-esc="field.label"/></div>
+                                            <div class="text-muted small"><t t-out="field.label"/></div>
                                             <div class="fw-medium">
-                                                <t t-esc="field.value"/>
+                                                <t t-out="field.value"/>
                                             </div>
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                     <tr>
                                         <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
                                             <th class="fw-semibold text-dark text-capitalize px-3 py-2">
-                                                <t t-esc="head"/>
+                                                <t t-out="head"/>
                                             </th>
                                         </t>
                                     </tr>
@@ -57,7 +57,7 @@
                                         <tr>
                                             <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
                                                 <td class="px-3 py-2">
-                                                    <t t-esc="row[head] or ''"/>
+                                                    <t t-out="row[head] or ''"/>
                                                 </td>
                                             </t>
                                         </tr>

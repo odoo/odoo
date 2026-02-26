@@ -25,7 +25,7 @@
                         type="button"
                         t-on-click.stop.prevent="() => this.toggleSection(ev)"
                     >
-                        <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-esc="section.label"/>
+                        <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-out="section.label"/>
                         <i
                             class="o_cw_filter_collapse_icon fa ms-1"
                             t-attf-class="fa-caret-{{ state.collapsed ? 'left' : 'down' }}"
@@ -45,7 +45,7 @@
                         <t t-if="optionScope.data.id and section.avatar.field">
                             <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.data.id }}/{{ section.avatar.field }}"/>
                         </t>
-                        <t t-esc="optionScope.label" />
+                        <t t-out="optionScope.label" />
                     </t>
                 </AutoComplete>
             </t>
@@ -80,9 +80,9 @@
                 </t>
                 <span
                     class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
-                    t-esc="filter.label"
+                    t-out="filter.label"
                 />
-                <span t-if="filter.aggregatedValue" t-esc="filter.aggregatedValue"/>
+                <span t-if="filter.aggregatedValue" t-out="filter.aggregatedValue"/>
             </label>
             <t t-if="filter.canRemove">
                 <button

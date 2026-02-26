@@ -30,7 +30,7 @@ class Counter extends Component {
                 <input type="number" t-model.number="state.interval" />
             </div>
             <div class="counter">
-                <span class="value" t-esc="state.value" />
+                <span class="value" t-out="state.value" />
                 <button class="inc" t-on-click="onIncrement">+</button>
             </div>
         </div>

@@ -169,7 +169,7 @@ export class HootConfigMenu extends Component {
                         <t t-foreach="LOG_LEVELS" t-as="level" t-key="level.value">
                             <option
                                 t-att-value="level.value"
-                                t-esc="level.label"
+                                t-out="level.label"
                             />
                         </t>
                     </select>

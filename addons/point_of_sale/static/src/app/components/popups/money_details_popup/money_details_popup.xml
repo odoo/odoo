@@ -7,14 +7,14 @@
                 <div t-foreach="bills" t-as="moneyValue" t-key="moneyValue" class="d-flex align-items-center justify-content-center my-1 ">
                     <NumericInput class="'w-50'" tModel="[state.moneyDetails, moneyValue]" min="0"/>
                     <label class="oe_link_icon w-25 text-center" t-att-for="moneyValue">
-                        <span class="ms-1" t-esc="env.utils.formatCurrency(_parseFloat(moneyValue))"/>
+                        <span class="ms-1" t-out="env.utils.formatCurrency(_parseFloat(moneyValue))"/>
                     </label>
                 </div>
             </div>
             <t t-set-slot="footer" >
                 <div class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Confirm</div>
                 <h4 class="total-section ms-auto py-2">
-                    Total <t t-esc="env.utils.formatCurrency(computeTotal())"/>
+                    Total <t t-out="env.utils.formatCurrency(computeTotal())"/>
                 </h4>
             </t>
         </Dialog>

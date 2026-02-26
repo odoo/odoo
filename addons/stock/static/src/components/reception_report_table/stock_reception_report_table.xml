@@ -14,7 +14,7 @@
                         <a href="#" t-on-click.prevent="() => this.onClickLink('res.partner', props.source[0].partner_id, 'form')" t-out="props.source[0].partner_name"/>
                     </span>
                 </th>
-                <th>Expected Delivery: <t t-esc="props.scheduledDate"/></th>
+                <th>Expected Delivery: <t t-out="props.scheduledDate"/></th>
                 <th t-if="hasMovesIn">
                     <button t-if="hasAssignAllButton" t-on-click="onClickAssignAll" class="btn btn-sm btn-primary" t-att-disabled="isAssignAllDisabled" name="assign_source_link">
                         Assign All

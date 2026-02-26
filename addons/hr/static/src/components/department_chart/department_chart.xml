@@ -33,12 +33,12 @@
             <div t-attf-class="#{hideTree?'':'o_treeEntry'}">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="department_name ms-1 mb-1">
-                        <t t-esc="dept.name"/>
+                        <t t-out="dept.name"/>
                     </span>
                     <button class="btn btn-secondary btn-sm rounded-pill ms-2 my-1"
                         t-on-click.prevent="() => this.openDepartmentEmployees(dept.id)">
                         <span class="badge top-0 px-0">
-                            <t t-esc="dept.employees"/>
+                            <t t-out="dept.employees"/>
                         </span>
                     </button>
                 </div>

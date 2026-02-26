@@ -38,7 +38,7 @@
                 </button>
                 <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
                     <button class="btn w-100 d-flex o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-att-class="{ 'mb-1': notif_last and !env[DROPDOWN_NESTING] }" t-on-click="() => store.settings.setCustomNotifications(notif.label, props.channel)">
-                        <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="notif.name"/>
+                        <span class="fs-6 fw-normal text-wrap text-start text-break" t-out="notif.name"/>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                         <input class="form-check-input ms-2 shadow-sm me-1" type="radio" t-att-checked="props.channel.self_member_id?.custom_notifications === notif.label"/>
                     </button>

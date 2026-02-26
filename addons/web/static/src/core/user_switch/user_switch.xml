@@ -10,7 +10,7 @@
                             <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" t-on-click="() => this.fillForm(user.login)">
                                 <span class="d-flex justify-content-begin align-items-center">
                                     <img class="o_avatar o_user_avatar rounded me-2" t-attf-src="{{getAvatarUrl(user)}}" t-att-alt="user.login"/>
-                                    <t t-esc="user.name" />
+                                    <t t-out="user.name" />
                                 </span>
                                 <i class="fa fa-times" title="Remove user from switcher" t-on-click.stop="() => this.remove(user)"/>
                             </button>

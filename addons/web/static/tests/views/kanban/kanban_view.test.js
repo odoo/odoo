@@ -725,7 +725,7 @@ test("kanban with t-set outside card", async () => {
                     <t t-name="card">
                         <t t-set="x" t-value="record.int_field.value"/>
                         <div>
-                            <t t-esc="x"/>
+                            <t t-out="x"/>
                         </div>
                     </t>
                 </templates>
@@ -4863,8 +4863,8 @@ test("rendering date and datetime (raw value)", async () => {
                 <field name="datetime"/>
                 <templates>
                     <t t-name="card">
-                        <span class="date" t-esc="record.date.raw_value"/>
-                        <span class="datetime" t-esc="record.datetime.raw_value"/>
+                        <span class="date" t-out="record.date.raw_value"/>
+                        <span class="datetime" t-out="record.datetime.raw_value"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -4908,7 +4908,7 @@ test("rendering many2one (raw value)", async () => {
                 <field name="product_id"/>
                 <templates>
                     <t t-name="card">
-                        <span class="product_id" t-esc="record.product_id.raw_value"/>
+                        <span class="product_id" t-out="record.product_id.raw_value"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -7495,10 +7495,10 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
                 <templates>
                     <t t-name="card">
                         <div>
-                            <t t-esc="__owl__"/>
-                            <t t-esc="props"/>
-                            <t t-esc="env"/>
-                            <t t-esc="render"/>
+                            <t t-out="__owl__"/>
+                            <t t-out="props"/>
+                            <t t-out="env"/>
+                            <t t-out="render"/>
                         </div>
                     </t>
                 </templates>

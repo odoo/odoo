@@ -17,7 +17,7 @@
                             <div class="o_list_item cursor-pointer position-relative ps-4"
                                 t-on-click="() => this.include(record)">
                                 <div class="d-flex align-items-center">
-                                    <span class="overflow-hidden w-100" t-esc="record.display_name" />
+                                    <span class="overflow-hidden w-100" t-out="record.display_name" />
                                     <span title="Include record" class="fa fa-plus float-end m-1 pe-2" />
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                             <div class="o_list_item cursor-pointer position-relative ps-4"
                                 t-on-click="() => this.exclude(record)">
                                 <div class="d-flex align-items-center">
-                                    <span class="overflow-hidden w-100" t-esc="record.display_name" />
+                                    <span class="overflow-hidden w-100" t-out="record.display_name" />
                                     <span class="fa fa-minus m-1 pe-2 float-end" title="Exclude record" />
                                 </div>
                             </div>

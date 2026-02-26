@@ -522,7 +522,7 @@ describe(parseUrl(import.meta.url), () => {
             class TextComponent extends Component {
                 static props = {};
                 static template = xml`
-                    <div class="with">With<t t-esc="nbsp" />nbsp</div>
+                    <div class="with">With<t t-out="nbsp" />nbsp</div>
                     <div class="without">Without nbsp</div>
                 `;
 

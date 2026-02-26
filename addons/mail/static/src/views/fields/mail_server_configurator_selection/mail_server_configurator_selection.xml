@@ -2,7 +2,7 @@
 <templates>
     <div t-name="mail.MailServerConfiguratorSelection" class="d-flex flex-row">
         <t t-if="readonly">
-            <span t-esc="string" t-att-raw-value="value" />
+            <span t-out="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
             <select

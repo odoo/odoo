@@ -25,7 +25,7 @@
                     </span>
                     <span class="flex-grow-1"/>
                     <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': props.muted, 'o-fw-600': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
-                        <t t-esc="dateText"/>
+                        <t t-out="dateText"/>
                     </small>
                     <t t-if="props.slots and props.slots.sideContent">
                         <t t-slot="sideContent"/>
@@ -48,7 +48,7 @@
                             'o-important': props.important,
                             'o-empty me-1': props.counter === 0,
                         }">
-                            <t t-if="props.counter" t-esc="props.counter"/>
+                            <t t-if="props.counter" t-out="props.counter"/>
                         </span>
                     </div>
                 </div>

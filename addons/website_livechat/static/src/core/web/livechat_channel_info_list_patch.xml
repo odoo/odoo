@@ -7,9 +7,9 @@
                 <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
                     <i class="me-1 fa fa-globe" aria-label="Website"/>
-                    <span t-esc="visitor.website_id.name"/>
+                    <span t-out="visitor.website_id.name"/>
                 </div>
-                <span t-esc="visitor.pageVisitHistoryText"/>
+                <span t-out="visitor.pageVisitHistoryText"/>
             </div>
             <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>

@@ -5,7 +5,7 @@
         <div t-if="Object.keys(props.scales).length > 1" t-att-class="`btn-group o_view_scale_selector ${props.dropdownClass || ''}`">
             <Dropdown>
                 <button class="btn btn-secondary scale_button_selection o-dropdown-caret" data-hotkey="v">
-                    <t t-esc="props.scales[props.currentScale].description" />
+                    <t t-out="props.scales[props.currentScale].description" />
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="scales" t-as="scale" t-key="scale.key">
@@ -14,7 +14,7 @@
                             onSelected="() => this.props.setScale(scale.key)"
                             attrs="{ 'data-hotkey': scale.hotkey or scale.key[0] }"
                         >
-                            <t t-esc="scale.description" />
+                            <t t-out="scale.description" />
                         </DropdownItem>
                     </t>
                     <div t-if="this.props.isWeekendVisible !== undefined" class="dropdown-divider" role="separator"/>

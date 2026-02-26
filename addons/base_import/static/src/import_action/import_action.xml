@@ -66,7 +66,7 @@
                         <div class="mb-2" t-foreach="importTemplates" t-as="template" t-key="template.template">
                             <a t-att-href="template.template" aria-label="Download" data-tooltip="Download">
                                 <i class="fa fa-download pe-1"/>
-                                <span><t t-esc="template.label"/></span>
+                                <span><t t-out="template.label"/></span>
                             </a>
                         </div>
                         <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'fa-question-circle'"/>

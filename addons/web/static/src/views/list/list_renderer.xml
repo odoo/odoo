@@ -32,7 +32,7 @@
                                         t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
                                         t-att-data-tooltip-info="makeTooltip(column)">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
-                                              t-esc="column.label"/>
+                                              t-out="column.label"/>
                                         <div class="o_list_header_label_spacer"/>
                                         <i class="o_list_sortable_icon" t-att-class="getSortableIconClass(column)"/>
                                     </div>
@@ -56,7 +56,7 @@
                                         <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
                                             <div t-if="!group_first" role="separator" class="dropdown-divider"/>
                                             <DropdownItem t-if="group.displayName" closingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
-                                                <div class="fw-bold" t-esc="group.displayName"/>
+                                                <div class="fw-bold" t-out="group.displayName"/>
                                             </DropdownItem>
                                             <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
                                                 <DropdownItem closingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
@@ -65,7 +65,7 @@
                                                         value="field.value"
                                                         name="field.name"
                                                     >
-                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
+                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-out="field.label"/><span class="ps-1" t-if="env.debug" t-out="' (' + field.name + ')'" /></span>
                                                     </CheckBox>
                                                 </DropdownItem>
                                             </t>
@@ -119,7 +119,7 @@
                         </td>
                         <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                             <span t-if="column.type === 'field' and aggregates[column.name]" t-att-data-tooltip="aggregates[column.name].help">
-                                <t t-esc="aggregates[column.name].value"/>
+                                <t t-out="aggregates[column.name].value"/>
                                 <sup
                                     t-if="aggregates[column.name].multiCurrency"
                                     class="p-1 fw-bolder text-info"
@@ -154,7 +154,7 @@
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
-                            <t t-esc="control.string"/>
+                            <t t-out="control.string"/>
                         </button>
                         <ViewButton
                             t-if="control.type === 'button' and !evalColumnInvisible(control.invisible)"
@@ -246,7 +246,7 @@
                     </div>
                     <div class="d-flex align-items-center ms-auto gap-2">
                         <t t-if="!showGroupPager(group)" class="m-1">
-                            <span><t t-esc="group.count"/></span>
+                            <span><t t-out="group.count"/></span>
                         </t>
                         <div t-att-class="showGroupPager(group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
                             <Pager t-props="getGroupPagerProps(group)"/>
@@ -258,7 +258,7 @@
                 <t t-if="column.type === 'field'">
                     <t t-set="groupAggregate" t-value="formatGroupAggregate(group, column)"/>
                     <span class="fw-bold" t-att-data-tooltip="groupAggregate.help">
-                        <t t-esc="groupAggregate.value"/>
+                        <t t-out="groupAggregate.value"/>
                         <sup
                             t-if="groupAggregate.multiCurrency"
                             class="p-1 fw-bolder text-info"
@@ -379,8 +379,8 @@
     </t>
 
     <t t-name="web.ListHeaderTooltip">
-        <t t-esc="field.label"/>
-        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
+        <t t-out="field.label"/>
+        <div t-if="field.help" class="mt-2" t-out="field.help"/>
     </t>
 
 </templates>

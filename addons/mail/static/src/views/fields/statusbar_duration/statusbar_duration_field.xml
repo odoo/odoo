@@ -3,14 +3,14 @@
     <!-- Add time to the stage buttons -->
 
     <t t-name="mail.StatusBarDurationField.Dropdown" t-inherit="web.StatusBarField.Dropdown" t-inherit-mode="primary">
-        <xpath expr="//*[@t-esc='item.label']" position="inside">
-            <span t-esc="item.label" />
+        <xpath expr="//*[@t-out='item.label']" position="inside">
+            <span t-out="item.label" />
             <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
-                <t t-esc="item.shortTimeInStage" />
+                <t t-out="item.shortTimeInStage" />
             </span>
         </xpath>
-        <xpath expr="//*[@t-esc='item.label']" position="attributes">
-            <attribute name="t-esc" />
+        <xpath expr="//*[@t-out='item.label']" position="attributes">
+            <attribute name="t-out" />
         </xpath>
     </t>
 
@@ -19,14 +19,14 @@
             <attribute name="t-call">mail.StatusBarDurationField.Dropdown</attribute>
         </xpath>
 
-        <xpath expr="//*[@t-esc='item.label']" position="inside">
-            <span t-esc="item.label" />
+        <xpath expr="//*[@t-out='item.label']" position="inside">
+            <span t-out="item.label" />
             <span t-if="item.shortTimeInStage" t-att-title="item.fullTimeInStage" class="ms-2 text-muted small">
-                <t t-esc="item.shortTimeInStage" />
+                <t t-out="item.shortTimeInStage" />
             </span>
         </xpath>
-        <xpath expr="//*[@t-esc='item.label']" position="attributes">
-            <attribute name="t-esc" />
+        <xpath expr="//*[@t-out='item.label']" position="attributes">
+            <attribute name="t-out" />
         </xpath>
     </t>
 </templates>

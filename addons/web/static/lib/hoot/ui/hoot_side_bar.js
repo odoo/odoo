@@ -64,10 +64,10 @@ export class HootSideBarSuite extends Component {
                 }"
             />
         </t>
-        <span t-ref="root" t-att-class="getClassName()" t-esc="props.name" />
+        <span t-ref="root" t-att-class="getClassName()" t-out="props.name" />
         <t t-if="props.multi">
             <strong class="text-amber whitespace-nowrap me-1">
-                x<t t-esc="props.multi" />
+                x<t t-out="props.multi" />
             </strong>
         </t>
     `;
@@ -115,7 +115,7 @@ export class HootSideBarCounter extends Component {
         <t t-set="info" t-value="getCounterInfo()" />
         <span
             t-attf-class="${HootSideBarCounter.name} {{ info[1] ? info[0] : 'text-gray' }} {{ info[1] ? 'font-bold' : '' }}"
-            t-esc="info[1]"
+            t-out="info[1]"
         />
     `;
 
@@ -201,7 +201,7 @@ export class HootSideBar extends Component {
                                     unfolded="unfoldedIds.has(suite.id)"
                                 />
                                 <span class="text-gray">
-                                    (<t t-esc="suite.totalTestCount" />)
+                                    (<t t-out="suite.totalTestCount" />)
                                 </span>
                             </div>
                             <HootJobButtons hidden="true" job="suite" />

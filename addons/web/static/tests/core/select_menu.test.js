@@ -524,7 +524,7 @@ test("Custom choice template using a slot", async () => {
             <SelectMenu choices="choices">
                 <span class="select_menu_test">Select something</span>
                 <t t-set-slot="choice" t-slot-scope="choice">
-                    <span class="coolClass" t-esc="choice.data.label" />
+                    <span class="coolClass" t-out="choice.data.label" />
                 </t>
             </SelectMenu>
         `;
@@ -551,7 +551,7 @@ test("Custom slot for the bottom area sends the current search value", async () 
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <div t-if="select.data.searchValue" class="px-2">
                         <button class="coolClass btn text-primary" t-on-click="() => this.onClick(select.data.searchValue)">
-                            Do something with "<i t-esc="select.data.searchValue" />"
+                            Do something with "<i t-out="select.data.searchValue" />"
                         </button>
                     </div>
                 </t>
@@ -1168,7 +1168,7 @@ test("Can add custom data to choices", async () => {
         static template = xml`
             <SelectMenu choices="choices">
                 <t t-set-slot="choice" t-slot-scope="choice">
-                    <span class="coolClass" t-esc="choice.data.custom" />
+                    <span class="coolClass" t-out="choice.data.custom" />
                 </t>
             </SelectMenu>
         `;

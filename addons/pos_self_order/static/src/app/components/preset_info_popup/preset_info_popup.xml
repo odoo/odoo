@@ -19,7 +19,7 @@
                             Select your address
                         </option>
                         <t t-foreach="existingPartners" t-as="partner" t-key="partner.id">
-                            <option t-att-value="partner.id" t-esc="partner.name + ' ' + partner.address" />
+                            <option t-att-value="partner.id" t-out="partner.name + ' ' + partner.address" />
                         </t>
                     </select>
                     <input t-if="preset.needsName || preset.needsPartner"
@@ -48,7 +48,7 @@
                                 Select a country
                             </option>
                             <t t-foreach="this.countries" t-as="country" t-key="country.id">
-                                <option t-att-value="country.id" t-esc="country.name" />
+                                <option t-att-value="country.id" t-out="country.name" />
                             </t>
                         </select>
                         <div class="d-flex gap-3">
@@ -71,7 +71,7 @@
                                     Select a state
                                 </option>
                                 <t t-foreach="availableState" t-as="state" t-key="state.id">
-                                    <option t-att-value="state.id" t-esc="state.name" />
+                                    <option t-att-value="state.id" t-out="state.name" />
                                 </t>
                             </select>
                             <input type="text"

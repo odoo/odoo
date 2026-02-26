@@ -16,7 +16,7 @@
                     <t t-slot="autoCompleteItem" label="optionScope.label" data="optionScope.data"/>
                 </t>
                 <t t-else="">
-                    <t t-esc="optionScope.label"/>
+                    <t t-out="optionScope.label"/>
                 </t>
             </t>
         </AutoComplete>

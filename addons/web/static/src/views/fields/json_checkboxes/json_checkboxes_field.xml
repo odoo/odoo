@@ -11,7 +11,7 @@
                         disabled="props.readonly || checkbox_value.readonly"
                         onChange="(ev) => this.onChange(checkbox, ev)"
                     >
-                        <t t-esc="checkbox_value.label" />
+                        <t t-out="checkbox_value.label" />
                     </CheckBox>
                     <i t-if="checkbox_value.question_circle"
                        class="fa fa-question-circle"

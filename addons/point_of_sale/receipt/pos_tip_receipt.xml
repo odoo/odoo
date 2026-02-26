@@ -13,13 +13,13 @@
                             <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
                         </div>
                         <div class="text-large text-center">
-                            <span t-esc="extra_data['date']" />
+                            <span t-out="extra_data['date']" />
                         </div>
                         <div class="text-large text-center text-bold">
                             Tip Receipt
                         </div>
                         <div t-if="extra_data.get('name')" class="pos-payment-terminal-receipt mb-2 text-center">
-                            <pre t-esc="extra_data['name']" style="font-family: inherit;" />
+                            <pre t-out="extra_data['name']" style="font-family: inherit;" />
                         </div>
 
                         <table class="w-100 mb-3 text-large">

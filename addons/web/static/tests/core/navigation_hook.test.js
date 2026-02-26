@@ -222,7 +222,7 @@ test("insert item before current", async () => {
         static template = xml`
             <div class="container" t-ref="containerRef">
                 <t t-foreach="state.items" t-as="item" t-key="item">
-                    <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-esc="item"/>
+                    <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-out="item"/>
                 </t>
             </div>
         `;

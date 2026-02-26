@@ -19,10 +19,10 @@
                     <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
                         <h3 class="mb-0">
                             <t t-if="this.hasCheckedInToday">
-                                <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
+                                <small>Welcome back</small> <span class="d-block"><t t-out="this.employeeName"/>!</span>
                             </t>
                             <t t-else="">
-                                <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
+                                <small>Welcome,</small> <span class="d-block"><t t-out="this.employeeName"/>.</span>
                             </t>
                         </h3>
                     </div>
@@ -33,13 +33,13 @@
                                 <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
                                     <td>
                                         <t t-set="start" t-value="this.splitTime(attendance.start)"/>
-                                        <t t-esc="start.h"/>:<span class="text-muted"><t t-esc="start.m"/></span>
+                                        <t t-out="start.h"/>:<span class="text-muted"><t t-out="start.m"/></span>
                                     </td>
                                     <td class="px-0">–</td>
                                     <td>
                                         <t t-if="attendance.end">
                                             <t t-set="end" t-value="this.splitTime(attendance.end)"/>
-                                            <t t-esc="end.h"/>:<span class="text-muted"><t t-esc="end.m"/></span>
+                                            <t t-out="end.h"/>:<span class="text-muted"><t t-out="end.m"/></span>
                                         </t>
                                         <t t-else="">
                                             Now
@@ -47,7 +47,7 @@
                                     </td>
                                     <td class="ps-4 text-end">
                                         <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
-                                        <t t-esc="duration.h"/>h<span class="text-muted"><t t-esc="duration.m"/></span>
+                                        <t t-out="duration.h"/>h<span class="text-muted"><t t-out="duration.m"/></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -56,7 +56,7 @@
                                     </td>
                                     <td class="border-bottom-0 ps-4 text-end">
                                         <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
-                                        <t t-esc="total.h"/>h<span class="text-muted"><t t-esc="total.m"/></span>
+                                        <t t-out="total.h"/>h<span class="text-muted"><t t-out="total.m"/></span>
                                     </td>
                                 </tr>
                             </tbody>

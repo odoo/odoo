@@ -34,7 +34,7 @@ class TestComponent extends Component {
             <p><button class="btn inc" t-on-click="() => this.state.value++">increment</button></p>
             <p><button class="btn dec" t-on-click="() => this.state.value--">decrement</button></p>
             <p><button class="btn double" t-on-click="() => this.state.value = 2*this.state.value">double</button></p>
-            <span class="value"><t t-esc="state.value"/></span>
+            <span class="value"><t t-out="state.value"/></span>
             <input />
         </div>`;
     static props = ["*"];

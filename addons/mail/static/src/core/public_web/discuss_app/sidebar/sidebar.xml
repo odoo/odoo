@@ -16,7 +16,7 @@
                     <t t-set="VIEW_HIDDEN_CONVERSATIONS">View hidden conversations</t>
                     <button t-if="store.has_unpinned_channels" class="btn btn-secondary btn-sm border-0 mb-1 opacity-100-hover rounded-3 d-flex align-items-center justify-content-center" t-att-class="{ 'p-2 mx-2 mt-1 opacity-75': store.discuss.isSidebarCompact, 'mx-4 mt-2 opacity-50': !store.discuss.isSidebarCompact }" t-on-click="onClickViewHiddenConversations" t-att-title="store.discuss.isSidebarCompact ? VIEW_HIDDEN_CONVERSATIONS : undefined">
                         <i class="fa fa-eye-slash" t-att-class="{ 'fa-lg': store.discuss.isSidebarCompact, 'me-2': !store.discuss.isSidebarCompact }"/>
-                        <span t-if="!store.discuss.isSidebarCompact" class="text-truncate" t-esc="VIEW_HIDDEN_CONVERSATIONS"/>
+                        <span t-if="!store.discuss.isSidebarCompact" class="text-truncate" t-out="VIEW_HIDDEN_CONVERSATIONS"/>
                     </button>
                 </div>
             </ResizablePanel>

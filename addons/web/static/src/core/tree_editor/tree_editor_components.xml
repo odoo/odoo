@@ -7,9 +7,9 @@
 
     <t t-name="web.TreeEditor.Select">
         <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
-            <option class="o_select_placeholder" t-if="props.addBlankOption" hidden="true" t-esc="props.placeholder ? props.placeholder : ''"/>
+            <option class="o_select_placeholder" t-if="props.addBlankOption" hidden="true" t-out="props.placeholder ? props.placeholder : ''"/>
             <t t-foreach="props.options" t-as="option" t-key="serialize(option[0])">
-                <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
+                <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-out="option[1]" />
             </t>
         </select>
     </t>

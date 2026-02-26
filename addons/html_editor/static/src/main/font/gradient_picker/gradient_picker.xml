@@ -7,7 +7,7 @@
                 <t t-if="isMobileOS">
                     <Dropdown>
                         <button class="btn btn-light d-flex justify-content-between w-100 ms-2 border border-dark rounded-0">
-                            <span class="px-1" t-esc="this.state.type"/>
+                            <span class="px-1" t-out="this.state.type"/>
                             <i class="fa fa-caret-down ms-2"/>
                         </button>
                         <t t-set-slot="content">

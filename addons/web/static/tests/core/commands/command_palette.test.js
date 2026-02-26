@@ -257,7 +257,7 @@ test("command with a Custom Component", async () => {
     class CustomComponent extends Component {
         static template = xml`
             <div class="o_command_custom">
-                <span t-esc="props.name"/>
+                <span t-out="props.name"/>
             </div>
         `;
         static props = ["*"];

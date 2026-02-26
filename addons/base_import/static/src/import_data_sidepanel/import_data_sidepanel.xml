@@ -12,20 +12,20 @@
                         t-att-value="props.options.sheet"
                     >
                         <option t-foreach="props.options.sheets" t-as="sheet" t-key="sheet" t-att-value="sheet" t-att-selected="sheet === props.options.sheet">
-                            <t t-esc="sheet" />
+                            <t t-out="sheet" />
                         </option>
                     </select>
                 </div>
                 <CheckBox value="props.options.has_headers" onChange.bind="isChecked => this.props.onOptionChanged('has_headers', isChecked)">
-                    Use first row as header<sup class="text-info p-1 cursor-default" t-att-data-tooltip="headersTooltip" t-esc="'?'" />
+                    Use first row as header<sup class="text-info p-1 cursor-default" t-att-data-tooltip="headersTooltip" t-out="'?'" />
                 </CheckBox>
                 <CheckBox value="!props.options.tracking_disable" onChange.bind="(isChecked) => this.props.onOptionChanged('tracking_disable', !isChecked)">
-                    Track changes in chatter<sup class="text-info p-1 cursor-default" t-att-data-tooltip="trackingTooltip" t-esc="'?'" />
+                    Track changes in chatter<sup class="text-info p-1 cursor-default" t-att-data-tooltip="trackingTooltip" t-out="'?'" />
                 </CheckBox>
                 <div t-if="props.isBatched and env.debug" class="o_import_grid gap-1">
                     <div class="o_import_grid_col">
                         <label for="o_import_batch_limit">Batch size</label>
-                        <sup class="text-info p-1 cursor-default" t-att-data-tooltip="batchLimitTooltip" t-esc="'?'"/>
+                        <sup class="text-info p-1 cursor-default" t-att-data-tooltip="batchLimitTooltip" t-out="'?'"/>
                     </div>
                     <div class="o_import_grid_col">
                         <input class="w-100 border rounded-2" type="number" id="o_import_batch_limit" t-att-value="getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value || 1)" />
@@ -36,8 +36,8 @@
                 <h4>Formatting</h4>
                 <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
                     <label t-att-for="`${option[0]}-${option_index}`">
-                        <t t-esc="option[1].label" />
-                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-esc="'?'" />
+                        <t t-out="option[1].label" />
+                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-out="'?'" />
                     </label>
                     <input
                         t-if="option[1].type === 'input'"
@@ -50,7 +50,7 @@
                     />
                     <datalist t-if="option[1].type === 'input' and option[1].options" t-att-id="`list-${ option_index }`">
                         <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
-                            <t t-esc="opt.label ? opt.label : opt" />
+                            <t t-out="opt.label ? opt.label : opt" />
                         </option>
                     </datalist>
                     <select
@@ -60,7 +60,7 @@
                         t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
                     >
                         <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt.value === '' ? opt.value : opt" t-att-selected="opt.value or opt.value === '' ? opt.value === option[1].value : opt === option[1].value">
-                            <t t-esc="opt.label ? opt.label : opt" />
+                            <t t-out="opt.label ? opt.label : opt" />
                         </option>
                     </select>
                     <input
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div t-if="props.hasBinaryFields" class="py-3 border-top o_import_file">
-                <h4>Attachments<sup class="text-info p-1" t-att-data-tooltip="attachmentsTooltip" t-esc="'?'" /></h4>
+                <h4>Attachments<sup class="text-info p-1" t-att-data-tooltip="attachmentsTooltip" t-out="'?'" /></h4>
                 <div class="o_import_grid gap-1">
                     <!-- First row-->
                     <div class="o_import_grid_col">
@@ -84,17 +84,17 @@
                         </label>
                     </div>
                     <div class="o_import_grid_col o_grid_span_2 align-content-center">
-                        <t t-esc="binaryFilesLabel"/>
+                        <t t-out="binaryFilesLabel"/>
                     </div>
 
                     <!-- Second row-->
                     <t t-if="env.debug">
                         <div class="o_import_grid_col">
                             <label for="o_input_maxSizePerBatch">Batch max size</label>
-                            <sup t-if="props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.maxSizePerBatch.help" t-esc="'?'"/>
+                            <sup t-if="props.binaryFilesParams.maxSizePerBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.maxSizePerBatch.help" t-out="'?'"/>
                         </div>
                         <div class="o_import_grid_col">
-                                <input 
+                                <input
                                     type="number"
                                     id="o_input_maxSizePerBatch"
                                     class="border rounded-2"
@@ -111,10 +111,10 @@
                         <!-- Third row-->
                         <div class="o_import_grid_col">
                             <label for="o_input_delayAfterEachBatch">Batch interval</label>
-                            <sup t-if="props.binaryFilesParams.delayAfterEachBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.delayAfterEachBatch.help" t-esc="'?'"/>
+                            <sup t-if="props.binaryFilesParams.delayAfterEachBatch.help" class="text-info p-1 cursor-default" t-att-data-tooltip="props.binaryFilesParams.delayAfterEachBatch.help" t-out="'?'"/>
                         </div>
                         <div class="o_import_grid_col">
-                                <input 
+                                <input
                                     type="number"
                                     id="o_input_delayAfterEachBatch"
                                     class="border rounded-2"
@@ -134,7 +134,7 @@
                 <h4>Help</h4>
                 <t t-foreach="props.importTemplates" t-as="template" t-key="template">
                     <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
-                        <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        <i class="fa fa-download"/> <span><t t-out="template.label"/></span>
                     </a>
                 </t>
                 <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'fa-question-circle'"/>

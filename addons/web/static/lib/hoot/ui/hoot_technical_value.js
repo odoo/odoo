@@ -77,8 +77,8 @@ export class HootTechnicalValue extends Component {
                 </pre>
             </t>
             <t t-else="">
-                <t t-if="value.tagName === 't'" t-esc="value.content" />
-                <t t-else="" t-tag="value.tagName" t-att-class="value.className" t-esc="value.content" />
+                <t t-if="value.tagName === 't'" t-out="value.content" />
+                <t t-else="" t-tag="value.tagName" t-att-class="value.className" t-out="value.content" />
             </t>
         </t>
         <t t-elif="isNode(value)">
@@ -87,24 +87,24 @@ export class HootTechnicalValue extends Component {
                 class="hoot-html"
                 t-on-click.stop="log"
             >
-                <t>&lt;<t t-esc="elParts.tag" /></t>
+                <t>&lt;<t t-out="elParts.tag" /></t>
                 <t t-if="elParts.id">
-                    <span class="hoot-html-id" t-esc="elParts.id" />
+                    <span class="hoot-html-id" t-out="elParts.id" />
                 </t>
                 <t t-if="elParts.class">
-                    <span class="hoot-html-class" t-esc="elParts.class" />
+                    <span class="hoot-html-class" t-out="elParts.class" />
                 </t>
                 <t>/&gt;</t>
             </button>
         </t>
         <t t-elif="SPECIAL_SYMBOLS.includes(value)">
             <span class="italic">
-                &lt;<t t-esc="symbolValue(value)" />&gt;
+                &lt;<t t-out="symbolValue(value)" />&gt;
             </span>
         </t>
         <t t-elif="typeof value === 'symbol'">
             <span>
-                Symbol(<span class="hoot-string" t-esc="stringify(symbolValue(value))" />)
+                Symbol(<span class="hoot-string" t-out="stringify(symbolValue(value))" />)
             </span>
         </t>
         <t t-elif="value and typeof value === 'object'">
@@ -120,17 +120,17 @@ export class HootTechnicalValue extends Component {
                             t-att-class="{ 'rotate-90': state.open }"
                         />
                     </t>
-                    <t t-esc="labelSize[0]" />
+                    <t t-out="labelSize[0]" />
                     <t t-if="state.promiseState">
                         &lt;
-                        <span class="text-gray" t-esc="state.promiseState[0]" />
+                        <span class="text-gray" t-out="state.promiseState[0]" />
                         <t t-if="state.promiseState[0] !== 'pending'">
                             : <HootTechnicalValue value="state.promiseState[1]" />
                         </t>
                         &gt;
                     </t>
                     <t t-elif="labelSize[1] !== null">
-                        (<t t-esc="labelSize[1]" />)
+                        (<t t-out="labelSize[1]" />)
                     </t>
                 </button>
                 <t t-if="state.open and labelSize[1] > 0">
@@ -140,7 +140,7 @@ export class HootTechnicalValue extends Component {
                             <t t-foreach="value" t-as="subValue" t-key="subValue_index">
                                 <li class="flex">
                                     <HootTechnicalValue value="subValue" />
-                                    <t t-esc="displayComma(subValue)" />
+                                    <t t-out="displayComma(subValue)" />
                                 </li>
                             </t>
                         </ul>
@@ -151,10 +151,10 @@ export class HootTechnicalValue extends Component {
                         <ul class="ps-4">
                             <t t-foreach="value" t-as="key" t-key="key">
                                 <li class="flex">
-                                    <span class="hoot-key" t-esc="key" />
+                                    <span class="hoot-key" t-out="key" />
                                     <span class="me-1">:</span>
                                     <HootTechnicalValue value="value[key]" />
-                                    <t t-esc="displayComma(value[key])" />
+                                    <t t-out="displayComma(value[key])" />
                                 </li>
                             </t>
                         </ul>
@@ -165,7 +165,7 @@ export class HootTechnicalValue extends Component {
         </t>
         <t t-else="">
             <span t-attf-class="hoot-{{ getTypeOf(value) }}">
-                <t t-esc="typeof value === 'string' ? stringify(explicitValue) : explicitValue" />
+                <t t-out="typeof value === 'string' ? stringify(explicitValue) : explicitValue" />
             </span>
         </t>
     `;
