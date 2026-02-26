@@ -29,7 +29,8 @@ class MailingMailing(models.Model):
     def _compute_sale_invoiced_amount(self):
         domain = Domain.AND([
             [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
-            [('state', 'not in', ['draft', 'cancel'])]
+            [('state', 'not in', ['draft', 'cancel'])],
+            [('move_type', 'in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'])]
         ])
         moves_data = self.env['account.move'].sudo()._read_group(
             domain, ['utm_reference'], ['amount_untaxed_signed:sum'],
