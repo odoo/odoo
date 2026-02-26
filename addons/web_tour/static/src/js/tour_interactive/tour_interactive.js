@@ -2,7 +2,7 @@ import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
 import { TourStep } from "@web_tour/js/tour_step";
-import { MacroMutationObserver } from "@web/core/macro";
+import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
 import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
 
 /**
@@ -39,7 +39,7 @@ export class TourInteractive {
         if (TourInteractive.observer) {
             TourInteractive.observer.disconnect();
         }
-        TourInteractive.observer = new MacroMutationObserver(() => this._onMutation());
+        TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
         TourInteractive.observer.observe(document.body);
         this.currentActionIndex = tourState.getCurrentIndex();
         this.play();
