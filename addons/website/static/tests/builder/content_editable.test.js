@@ -109,7 +109,7 @@ test("feff on links are cleaned up", async () => {
     onRpc("ir.ui.view", "save", ({ args }) => {
         // Check that the saved content has no feff
         expect(args[1]).toBe(
-            `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><section class="o_colored_level"><a href="http://test.test">texst</a></section></div>`
+            `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="DRAG BUILDING BLOCKS HERE"><section class="o_colored_level"><a href="http://test.test">texst</a></section></div>`
         );
         expect.step("save");
         return true;
