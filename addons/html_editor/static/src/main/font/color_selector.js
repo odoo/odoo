@@ -19,6 +19,7 @@ export class ColorSelector extends Component {
         isDisabled: t.boolean(),
         mode: t.string(),
         type: t.string(),
+        customIconClass: t.string().optional(),
         getSelectedColors: t.function(),
         applyColor: t.function(),
         applyColorPreview: t.function(),
@@ -99,6 +100,8 @@ export class ColorSelector extends Component {
         if (isColorGradient(this.state.selectedColor)) {
             return `border-bottom: 2px solid transparent; border-image: ${this.state.selectedColor}; border-image-slice: 1`;
         }
-        return `border-bottom: 2px solid ${this.state.selectedColor}`;
+        return `border-bottom: 2px solid ${
+            this.state.selectedColor || this.props.getDefaultColor?.()
+        }`;
     }
 }

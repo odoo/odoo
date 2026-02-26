@@ -3,7 +3,7 @@ import { ForumFontTypePlugin } from "./font_type_plugin";
 import { ForumHistoryPlugin } from "./history_plugin";
 import { ForumFontSizePlugin } from "./font_size_plugin";
 
-const removedPlugins = new Set(["colorUi", "file", "iconColor"]);
+const removedPlugins = new Set(["colorUi", "file", "iconColor", "tableBorder"]);
 
 const customPlugins = {
     fontType: ForumFontTypePlugin,
