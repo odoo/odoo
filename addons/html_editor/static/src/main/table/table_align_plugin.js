@@ -1,6 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { TableAlignSelector } from "./table_align_selector";
 
@@ -40,9 +41,9 @@ export class TableAlignPlugin extends Plugin {
             },
         ],
         toolbar_items: [
-            {
+            withSequence(20, {
                 id: "table_alignment",
-                groupId: "layout",
+                groupId: "table",
                 description: _t("Vertical align table cells content"),
                 isAvailable: () =>
                     this.dependencies.selection
@@ -57,7 +58,7 @@ export class TableAlignPlugin extends Plugin {
                         this.setVerticalAlignment(item.mode);
                     },
                 },
-            },
+            }),
         ],
 
         /** Handlers */
