@@ -27,6 +27,21 @@ class AccountMove(models.Model):
             )
         super(AccountMove, self - own_expense_moves)._compute_commercial_partner_id()
 
+    @api.depends('expense_ids')
+    def _compute_duplicated_ref_ids(self):
+        """ EXTENDS 'account'
+        If the bill is linked to expenses, apply the expense-based duplication logic.
+        For all other moves, keep the default logic.
+        """
+        expense_bills = self.filtered(lambda move: move.move_type == 'in_invoice' and move.expense_ids)
+        for move in expense_bills:
+            duplicate_expenses = move.expense_ids.duplicate_expense_ids
+            move.duplicated_ref_ids = (
+                duplicate_expenses.account_move_id - move
+                if duplicate_expenses else self.env['account.move']
+            )
+        return super(AccountMove, self - expense_bills)._compute_duplicated_ref_ids()
+
     @api.constrains('expense_ids')
     def _check_expense_ids(self):
         for move in self:

@@ -1127,3 +1127,32 @@ class TestExpenses(TestExpenseCommon):
                 {'name': 'file_4.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
             ]
         )
+
+    def test_expense_based_bill_duplicate_detection(self):
+        """ Test that bills linked to expenses use expense-based duplication logic. """
+        all_expenses = expense_1, expense_2 = self.create_expenses([
+            {
+                'name': 'Expense 1',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount_currency': 100.0,
+                'payment_mode': 'own_account',
+                'company_id': self.company_data['company'].id,
+            },
+            {
+                'name': 'Expense 2',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount_currency': 100.0,
+                'payment_mode': 'own_account',
+                'company_id': self.company_data['company'].id,
+            },
+        ])
+
+        all_expenses.action_submit()
+        all_expenses._do_approve()  # Skip duplicate wizard
+        self.post_expenses_with_wizard(expense_1)
+        self.post_expenses_with_wizard(expense_2)
+
+        self.assertTrue(expense_1.account_move_id.duplicated_ref_ids)
+        self.assertTrue(expense_2.account_move_id.duplicated_ref_ids)
