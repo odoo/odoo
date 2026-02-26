@@ -317,7 +317,6 @@ registry.category("web_tour.tours").add("PosLoyaltyTour9", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyTour10", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -330,9 +329,10 @@ registry.category("web_tour.tours").add("PosLoyaltyTour10", {
             ProductScreen.selectedOrderlineHas("Product Test", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product B"),
+            Dialog.is({ title: "Please select a product for this reward" }),
             {
                 content: `click on reward item`,
-                trigger: `.selection-item:contains("Free Product B")`,
+                trigger: `.modal .selection-item:contains("Free Product B")`,
                 run: "click",
             },
             PosLoyalty.hasRewardLine("Free Product B", "-1.00"),
