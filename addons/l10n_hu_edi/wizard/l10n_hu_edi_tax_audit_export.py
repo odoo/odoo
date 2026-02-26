@@ -94,7 +94,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
             with zipfile.ZipFile(buf, mode='w', compression=zipfile.ZIP_DEFLATED, allowZip64=False) as zf:
                 # To correctly generate the XML for invoices created before l10n_hu_edi was installed,
                 # we need to temporarily set the chain index and line numbers, so we do this in a savepoint.
-                with contextlib.closing(self.env.cr.savepoint(flush=False)):
+                with contextlib.closing(self.env.cr.savepoint()):
                     for invoice in invoices.sorted(lambda i: i.create_date):
                         if invoice.l10n_hu_edi_state:
                             # Case 1: An XML was already generated for this invoice.
