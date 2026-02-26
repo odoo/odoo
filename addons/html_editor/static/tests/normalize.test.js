@@ -51,3 +51,10 @@ test("should remove `style.color` from table and apply it to td without `style.c
         `),
     });
 });
+
+test("Should properly add feffs around icons", async () => {
+    await testEditor({
+        contentBefore: `<div><span class="fa fa-glass" contenteditable="false"></span></div>`,
+        contentBeforeEdit: `<div class="o-paragraph">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</div>`,
+    });
+});
