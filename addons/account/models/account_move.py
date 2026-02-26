@@ -5714,6 +5714,38 @@ class AccountMove(models.Model):
                     "So you cannot confirm the invoice."
                 ))
             if invoice.partner_bank_id and invoice.is_inbound() and not invoice.partner_bank_id.allow_out_payment:
+<<<<<<< afc6f4b41c63800efaa8e3ca15afe5cff5cfa0f9
+||||||| b58f92baf6f721f98f9c0ee39cef3030377dd589
+                if invoice.partner_bank_id._user_can_trust():
+                    raise RedirectWarning(
+                        _(
+                            "The company bank account (%(account_number)s) linked to this invoice is not trusted. "
+                            "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Send Money to trust it.",
+                            account_number=invoice.partner_bank_id.display_name,
+                        ),
+                        invoice.partner_bank_id._get_records_action(),
+                        _("Bank settings")
+                    )
+                raise UserError(_("The bank account of your company is not trusted. Please ask an admin or someone with approval rights to check it."))
+            if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
+=======
+                if self.env.user.id == SUPERUSER_ID or self.user_has_groups('base.group_public') or self.user_has_groups('base.group_portal'):
+                    # Do not block in case of automated flows, simply remove the information
+                    invoice.partner_bank_id = False
+                elif invoice.partner_bank_id._user_can_trust():
+                    raise RedirectWarning(
+                        _(
+                            "The company bank account (%(account_number)s) linked to this invoice is not trusted. "
+                            "Go to the Bank Settings, double-check that it is yours or correct the number, and click on Send Money to trust it.",
+                            account_number=invoice.partner_bank_id.display_name,
+                        ),
+                        invoice.partner_bank_id._get_records_action(),
+                        _("Bank settings")
+                    )
+                else:
+                    raise UserError(_("The bank account of your company is not trusted. Please ask an admin or someone with approval rights to check it."))
+            if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
+>>>>>>> 2e2dd364f665c65cbe2eb57221aaa4067f7dc1db
                 raise UserError(_(
                     "The company bank account linked to this invoice is not trusted, please double-check and trust it before confirming, or remove it"
                 ))
