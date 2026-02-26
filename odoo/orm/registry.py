@@ -1012,19 +1012,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             caller_info = format_frame(inspect.currentframe().f_back)  # type: ignore
             _logger.debug('Invalidating %s model cache from %s', cache_name, caller_info)
 
-    def clear_all_caches(self) -> None:
-        """ Clear the caches associated to methods decorated with
-        ``tools.ormcache``.
-        """
-        for cache_name, caches in _CACHES_BY_KEY.items():
-            for cache in caches:
-                self.__caches[cache].clear()
-            self.cache_invalidated.add(cache_name)
-
-        caller_info = format_frame(inspect.currentframe().f_back)  # type: ignore
-        log = _logger.info if self.loaded else _logger.debug
-        log('Invalidating all model caches from %s', caller_info)
-
     def is_an_ordinary_table(self, model: BaseModel) -> bool:
         """ Return whether the given model has an ordinary table. """
         if self._ordinary_tables is None:

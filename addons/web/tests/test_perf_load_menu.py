@@ -26,11 +26,16 @@ class TestPerfSessionInfo(common.HttpCase):
     def setUp(self):
         super().setUp()
         self.uid = self.user
+        self._prepare()
+
+    def _prepare(self):
+        self.env.invalidate_all()
+        self.drop_ormcaches()
 
     def test_performance_session_info(self):
         self.authenticate(self.user.login, "info")
+        self._prepare()
 
-        self.env.registry.clear_all_caches()
         # cold ormcache:
         # - Only web: 35
         # - All modules: 122
@@ -52,8 +57,6 @@ class TestPerfSessionInfo(common.HttpCase):
             )
 
     def test_load_web_menus_perf(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold orm/fields cache:
         # - Web only: 17
         # - All modules 60
@@ -70,8 +73,6 @@ class TestPerfSessionInfo(common.HttpCase):
             self.env['ir.ui.menu'].load_web_menus(False)
 
     def test_load_menus_perf(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold orm/fields cache:
         # - Web only: 17
         # - All modules 60
@@ -88,8 +89,6 @@ class TestPerfSessionInfo(common.HttpCase):
             self.env['ir.ui.menu'].load_menus(False)
 
     def test_visible_menu_ids(self):
-        self.env.registry.clear_all_caches()
-        self.env.invalidate_all()
         # cold ormcache:
         # - Only web 16
         # - All modules: 27

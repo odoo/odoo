@@ -67,7 +67,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
     def setUp(self):
         self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_all_caches)
+        self.addCleanup(self.drop_ormcaches)
         super().setUp()
 
     def test_export_import_product(self):

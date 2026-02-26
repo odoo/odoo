@@ -1472,9 +1472,12 @@ class Base_ImportImport(models.TransientModel):
         with contextlib.suppress(psycopg2.InternalError):
             import_savepoint.close(rollback=dryrun)
         if dryrun:
+            # TODO why isn't this a flushing savepoint?
             # cancel all changes done to the registry/ormcache
-            # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
-            self.pool.clear_all_caches()
+            # clear main caches only, these should already be invalidated while
+            # importing data and will be cleared when resetting changes
+            for cache_name in ('default', 'groups', 'stable'):
+                self.pool.clear_cache(cache_name)
             # don't propagate to other workers since it was rollbacked
             self.pool.reset_changes()
             _logger.info('Previous import was a dry/test run, changes were reset')
