@@ -1,8 +1,10 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { useForwardRefsToParent } from "@mail/utils/common/hooks";
 import { Component, htmlEscape } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";
@@ -14,13 +16,33 @@ export class NotificationMessage extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
         this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");
+        this.avatarCard = usePopover(AvatarCardPopover, {
+            arrow: false,
+            onClose: () => (this.state.isAvatarCardOpen = false),
+            popoverClass: "mx-2",
+        });
+        this.state = useState({
+            isAvatarCardOpen: false,
+        });
     }
 
     /**
      * @param {MouseEvent} ev
      */
     async onClickNotificationMessage(ev) {
-        this.store.handleClickOnLink(ev, this.props.thread);
+        const model = ev.target.dataset.oeModel;
+        const id = Number(ev.target.dataset.oeId);
+        if (ev.target.tagName === "A" && model === "res.partner" && id) {
+            if (!this.avatarCard.isOpen) {
+                this.avatarCard.open(ev.currentTarget, {
+                    id,
+                    model,
+                });
+                this.state.isAvatarCardOpen = true;
+            }
+        } else {
+            this.store.handleClickOnLink(ev, this.props.thread);
+        }
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(
