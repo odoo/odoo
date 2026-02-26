@@ -88,7 +88,7 @@ class ResPartnerBank(models.Model):
         res = super()._get_qr_code_vals_list(*args, **kwargs)
         if self.country_code == "BR":
             res[5] = (res[5][0], float_repr(res[5][1], 2) if res[5][1] else None)  # amount
-            res[7] = (res[7][0], res[7][1].upper())  # merchant_name
+            res[7] = (res[7][0], re.sub(r"[^a-zA-Z0-9 ]", "", res[7][1]).upper())  # merchant_name
             res[8] = (res[8][0], res[8][1].upper())  # merchant_city
             if not res[9][1]:
                 res[9] = (res[9][0], self._get_additional_data_field("***"))  # default comment if none is set
