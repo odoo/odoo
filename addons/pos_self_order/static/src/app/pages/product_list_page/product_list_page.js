@@ -21,6 +21,14 @@ export class ProductListPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
+
+        if (
+            this.selfOrder.isSyncedOrderRestricted ||
+            (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id)
+        ) {
+            this.router.navigate("default");
+            return;
+        }
         this.categoryListRef = useRef("category_list");
         this.subCategoryListRef = useRef("sub_category_list");
         this.productListRef = useRef("product_list");

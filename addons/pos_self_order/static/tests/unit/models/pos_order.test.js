@@ -6,6 +6,7 @@ definePosSelfModels();
 
 test("isTakeaway", async () => {
     const store = await setupSelfPosEnv();
+    store.config.use_presets = true;
     const order = await getFilledSelfOrder(store);
 
     expect(order.lines).toHaveLength(2);

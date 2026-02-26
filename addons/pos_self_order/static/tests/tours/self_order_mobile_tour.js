@@ -478,3 +478,26 @@ registry.category("web_tour.tours").add("test_delete_mobile_order_from_backend",
             ProductPage.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("self_mobile_each_synced_order_redirect", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Order"),
+        ConfirmationPage.isShown(),
+        Utils.clickBtn("Ok"),
+        // Order is now synced — try to navigate to product list
+        {
+            content: "Try to navigate to product list via router",
+            trigger: "body",
+            run: () => {
+                posmodel.router.navigate("product_list");
+            },
+        },
+        // Should be redirected back to landing page (no product list visible)
+        Utils.checkIsNoBtn("Order Now"),
+        Utils.checkBtn("My Order"),
+    ],
+});

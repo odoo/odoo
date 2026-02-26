@@ -99,6 +99,7 @@ test("showComboSelectionPage", async () => {
 
 test("createNewOrder", async () => {
     const store = await setupSelfPosEnv();
+    store.config.use_presets = true;
     const models = store.models;
     {
         expect(store.config.available_preset_ids.length > 1).toBe(true);
@@ -491,4 +492,26 @@ describe("getKioskPrintingCategoriesChanges", () => {
         expect(orderLines.length).toBe(1);
         expect(orderLines[0].product_id.id).toBe(this.testProduct2.id);
     });
+});
+
+test("isSyncedOrderRestricted", async () => {
+    const store = await setupSelfPosEnv("mobile", "counter", "each");
+
+    // Not synced yet → should not be restricted
+    expect(store.isSyncedOrderRestricted).toBe(false);
+
+    // Sync the order
+    await getFilledSelfOrder(store);
+    await store.sendDraftOrderToServer();
+    expect(store.currentOrder.isSynced).toBe(true);
+    expect(store.isSyncedOrderRestricted).toBe(true);
+
+    // Kiosk mode → should not be restricted
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.isSyncedOrderRestricted).toBe(false);
+
+    // Back to mobile, meal mode → should not be restricted
+    store.config.self_ordering_mode = "mobile";
+    store.config.self_ordering_pay_after = "meal";
+    expect(store.isSyncedOrderRestricted).toBe(false);
 });

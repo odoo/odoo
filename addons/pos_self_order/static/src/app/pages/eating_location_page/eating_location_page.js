@@ -10,6 +10,11 @@ export class EatingLocationPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+
+        if (this.selfOrder.isSyncedOrderRestricted) {
+            this.router.navigate("default");
+            return;
+        }
         this.scrollContainerRef = useRef("scrollContainer");
         this.scrollShadow = useScrollShadow(this.scrollContainerRef);
     }
