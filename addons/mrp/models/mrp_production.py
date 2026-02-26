@@ -1993,7 +1993,7 @@ class MrpProduction(models.Model):
         initial_qty_by_production = {}
 
         # Create the backorders.
-        for production in self:
+        for production in self.sudo():
             initial_qty_by_production[production] = production.product_qty
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
@@ -2014,7 +2014,7 @@ class MrpProduction(models.Model):
                     backorder_sequence=next_seq
                 ))
 
-        backorders = self.env['mrp.production'].with_context(skip_confirm=True).create(backorder_vals_list)
+        backorders = self.env['mrp.production'].with_context(skip_confirm=True).sudo().create(backorder_vals_list)
 
         index = 0
         production_to_backorders = {}

@@ -40,7 +40,7 @@ class MrpWorkorder(models.Model):
         }
 
     def _create_or_update_analytic_entry(self):
-        for wo in self:
+        for wo in self.sudo():
             if not wo.id:
                 continue
             hours = wo.duration / 60.0
