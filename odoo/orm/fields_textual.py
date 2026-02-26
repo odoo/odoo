@@ -184,7 +184,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if (
             callable(self.translate)
             and record.env.context.get('edit_translations')
-            and self.get_trans_terms(value)
+            and (translated_terms := self.get_trans_terms(value))
         ):
             base_lang = record._get_base_lang()
             lang = record.env.lang or 'en_US'
@@ -193,7 +193,6 @@ class BaseString(Field[str | typing.Literal[False]]):
             if lang != base_lang:
                 base_value = record.with_context(edit_translations=None, check_translations=True, lang=base_lang)[self.name]
                 base_terms = self.get_trans_terms(base_value)
-                translated_terms = self.get_trans_terms(value) if value != base_value else base_terms
                 if len(base_terms) != len(translated_terms):
                     # term number mismatch, ignore all translations
                     value = base_value
