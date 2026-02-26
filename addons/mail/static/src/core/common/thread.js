@@ -128,7 +128,7 @@ export class Thread extends Component {
                     this.messageHighlight?.scrollPromise,
                     this.smoothScrollingPromise,
                 ]);
-                if (this.loadOlderState.isVisible) {
+                if (this.loadOlderState.isVisible && this.shouldTriggerLoadOnVisible) {
                     this.props.thread.fetchMoreMessages({
                         routeParams: this.messageFetchRouteParams,
                     });
@@ -143,7 +143,7 @@ export class Thread extends Component {
                     this.messageHighlight?.scrollPromise,
                     this.smoothScrollingPromise,
                 ]);
-                if (this.loadNewerState.isVisible) {
+                if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
                     this.props.thread.fetchMoreMessages({
                         epoch: "newer",
                         routeParams: this.messageFetchRouteParams,
@@ -540,6 +540,10 @@ export class Thread extends Component {
         this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
     }
 
+    get shouldTriggerLoadOnVisible() {
+        return true;
+    }
+
     onClickRetry() {
         if (!this.props.thread.oldestPersistentMessage) {
             this.fetchInitialMessages();
@@ -720,6 +724,18 @@ export class Thread extends Component {
             !this.props.thread.isTransient &&
             !this.props.thread.hasLoadingFailed
         );
+    }
+
+    get loadMoreClass() {
+        return { [this.loadMoreBtnClass]: true, "opacity-0": !this.state.mountedAndLoaded };
+    }
+
+    get loadOlderWrapperAttClass() {
+        return {};
+    }
+
+    get loadMoreBtnClass() {
+        return "btn btn-link";
     }
 
     get isInErrorState() {

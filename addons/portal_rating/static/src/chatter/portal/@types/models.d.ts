@@ -1,5 +1,7 @@
 declare module "models" {
     export interface Thread {
-        selectedRating: undefined;
+        ratingChatter: boolean;
+        reviewChatter: boolean;
+        selectedRating: false | number;
     }
 }

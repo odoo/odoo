@@ -3,12 +3,7 @@
 $o-w-rating-star-color: #FACC2E;
 
 .o_website_rating_static {
-    color: var(--WebsiteRating__star-color,  #{$o-w-rating-star-color});
-}
-
-// website_sale
-#product_details {
-    --WebsiteRating__star-color: currentColor;
+    color: currentColor;
 }
 
 .o_website_rating_card_container {
@@ -18,51 +13,73 @@ $o-w-rating-star-color: #FACC2E;
     }
 
     /* progress bars */
-    table.o_website_rating_table {
-        width: 100%;
-        overflow: visible;
-
-        .o_website_rating_table_star_num {
-            min-width: 50px;
-            white-space: nowrap;
-        }
-        .o_website_rating_table_progress{
-            min-width: 120px;
-            > .progress {
-                margin-bottom: 2px;
-                margin-left: 5px;
-                margin-right: 5px;
-            }
-            .o_rating_progressbar{
-                background-color: $o-w-rating-star-color;
-            }
-        }
+    .o_website_rating_table {
         .o_website_rating_table_percent {
-            text-align: right;
-            padding-left: 5px;
-            @include font-size($font-size-sm);
+            font-variant-numeric: tabular-nums;
         }
-        .o_website_rating_table_reset {
-            .o_website_rating_selection_reset {
-                color: $red;
+
+        .o_website_rating_table_progress {
+            .o_rating_progressbar {
+                background-color: $body-color;
             }
         }
-        .o_website_rating_table_row:not(.o_website_rating_table_row_selected) {
-            cursor: pointer;
+
+        .progress {
+            --progress-height: .4rem;
+
+            @include media-breakpoint-down(lg) {
+                --progress-height: .8rem;
+            }
         }
-        .o_website_rating_table_row td {
-            padding-bottom: 0.4rem;
+    }
+}
+
+.o-portal-Chatter.o-review-Chatter {
+    .o-mail-Thread {
+        padding-top: 0;
+    }
+
+    .o-mail-Thread-content {
+        gap: map-get($spacers, 4);
+    }
+}
+
+.o-review-Message-core {
+    display: grid !important;
+    grid-template-columns: max-content 1fr;
+
+    > .o-review-Message-content {
+        display: contents;
+
+        > *:not(.o-mail-Message-header) {
+            grid-column: span 2;
+        }
+
+        .o-mail-Message-body:not(.o-mail-Message-body-wrating) {
+            padding: 0 0 map-get($spacers, 1) !important;
+            max-width: 74ch;
+        }
+
+        @include media-breakpoint-down(md) {
+            .o-mail-Message-header {
+                position: relative;
+            }
+
+            .o-mail-Message-actions {
+                position: absolute;
+                right: 0;
+            }
         }
     }
 }
 
 /* Star Widget */
-.o-mail-Composer-starCard{
+.o-mail-Composer-starCard {
     width: max-content;
     .o-mail-Composer-stars {
         display: inline-flex;
-        color: #FACC2E;
-        margin-right: 15px;
+        color: $o-w-rating-star-color;
+        margin-right: map-get($spacers, 3);
     }
 }
 
@@ -74,6 +91,6 @@ $o-w-rating-star-color: #FACC2E;
     }
 
     .o_portal_chatter_avatar {
-        margin-right: 10px;
+        margin-right: map-get($spacers, 2);
     }
 }

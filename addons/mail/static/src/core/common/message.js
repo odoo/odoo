@@ -525,6 +525,21 @@ export class Message extends Component {
         };
     }
 
+    getCoreAttClass() {
+        return {};
+    }
+
+    getSidebarAttClass() {
+        return {
+            "align-items-start": !this.isAlignedRight,
+            "o-inChatWindow": this.env.inChatWindow,
+        };
+    }
+
+    getContentAttClass() {
+        return { "flex-grow-1": this.isEditing };
+    }
+
     exitEditMode() {
         this.message.exitEditMode();
     }

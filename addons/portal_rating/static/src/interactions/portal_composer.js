@@ -145,8 +145,7 @@ patch(PortalComposer.prototype, {
      */
     onSubmitCheckContent(ev) {
         if (this.options.rate_with_void_content) {
-            // TODO verify comparison
-            if (this.ratingInputEl.value === "0") {
+            if (!parseFloat(this.ratingInputEl.value)) {
                 return _t("The rating is required. Please make sure to select one before sending your review.")
             }
             return false;

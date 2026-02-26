@@ -74,6 +74,7 @@ a dependency towards website editing and customization capabilities.""",
             "mail/static/src/**/common/**/*",
             "mail/static/src/chatter/web_portal_project/**/*",
             ("remove", "mail/static/src/**/*.dark.scss"),
+            "portal/static/src/chatter/portal/portal_chatter_plugin.js",
         ],
         "portal.assets_chatter": [
             ("include", "web._assets_helpers"),
@@ -110,6 +111,7 @@ a dependency towards website editing and customization capabilities.""",
             "mail/static/src/chatter/web_portal_project/**/*.scss",
             ("remove", "mail/static/src/**/*.dark.scss"),
             "portal/static/src/chatter/portal/scss/shadow.scss",
+            "portal/static/src/chatter/portal/scss/portal_chatter.scss",
         ],
         'website.assets_inside_builder_iframe': [
             'portal/static/src/scss/portal.edit.*'

@@ -133,14 +133,8 @@ export class ProductPage extends Interaction {
         }
     }
 
-    /**
-     * Uncollapse the reviews.
-     */
     onClickReviewsLink() {
-        const reviewsContent = document.querySelector('#o_product_page_reviews_content');
-        if (reviewsContent) {
-            window.Collapse.getOrCreateInstance(reviewsContent).show();
-        }
+        document.querySelector('#o_product_page_reviews')?.scrollIntoView({ behavior: 'smooth' });
     }
 
     /**

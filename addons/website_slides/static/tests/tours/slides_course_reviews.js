@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means that the portal chatter has fetched the notes.
-            trigger: "#chatterRoot:shadow .o-mail-Chatter:has(:text(No messages yet.))",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter:contains(No reviews yet.)",
         },
         {
             // If it fails here, it means the log note is considered as a review

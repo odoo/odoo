@@ -41,7 +41,7 @@
                 </t>
                 <span t-if="this.props.order === 'asc'" class="pt-1" t-custom-ref="load-newer"/>
                 <t t-else="">
-                    <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder"/>
+                    <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder" name="loadOlder"/>
                     <t t-if="this.props.thread.isInErrorState" t-call="mail.Thread.loadingError"/>
                 </t>
             </div>
@@ -73,7 +73,7 @@
 </t>
 
 <t t-name="mail.Thread.loadOlder">
-    <button class="btn btn-link" t-att-class="{ 'opacity-0': !this.mountedAndLoaded }" t-on-click="this.onClickLoadOlder" t-custom-ref="load-older">Load More</button>
+    <button t-att-class="this.loadMoreClass" t-on-click="this.onClickLoadOlder" t-custom-ref="load-older">Load More</button>
 </t>
 
 <t t-name="mail.Thread.loadingError">

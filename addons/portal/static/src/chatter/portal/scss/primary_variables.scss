@@ -18,3 +18,9 @@ $o-btns-bs-override: map-merge((
         active-color:$o-brand-primary,
     ),
 ), $o-btns-bs-override);
+
+$o-light-color: map-get($o-color-palette, 'o-color-3') or $gray-100;
+
+// Bootstrap overrides
+$theme-colors: map-merge($theme-colors, ("light": $o-light-color));
+$alert-border-width: $border-width;

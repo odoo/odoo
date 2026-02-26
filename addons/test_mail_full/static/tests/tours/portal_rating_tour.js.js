@@ -9,18 +9,22 @@ registry.category("web_tour.tours").add("portal_rating_tour", {
             trigger: "#chatterRoot:shadow .o-mail-Message-body:text(Message without rating)",
         },
         {
-            trigger: `#chatterRoot:shadow .o-mail-Chatter-top:not(:has(${ratingCardSelector}))`,
+            trigger: `#chatterRoot:shadow .o-mail-Chatter-top ${ratingCardSelector} .text-muted:text(0 reviews)`,
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run: "edit Excellent service!",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter-top .btn:contains(Write a review)",
             run: "click",
         },
         {
-            trigger: `#chatterRoot:shadow .o-mail-Chatter-top ${ratingCardSelector} .o_website_rating_table_row[data-star='4']:has(:text(100%))`,
+            trigger: "#chatterRoot:shadow .o_review_composer_modal .o-mail-Composer-input",
+            run: "edit Excellent service!",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o_review_composer_modal .o-mail-Composer-send:enabled",
+            run: "click",
+        },
+        {
+            trigger: `#chatterRoot:shadow .o-mail-Chatter-top ${ratingCardSelector} .o_website_rating_table_row[data-star='4'] .o_rating_progressbar`,
         },
     ],
 });

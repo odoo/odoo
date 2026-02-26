@@ -5,8 +5,18 @@ registry
     .add('website_sale.product_reviews_reactions_public', {
         steps: () => [
             {
-                trigger: '.o_product_page_reviews_title',
-                run: "click",
+                trigger: "#chatterRoot:shadow .o-mail-Chatter-top .alert:contains(To post a review)",
+            },
+            {
+                trigger: "#chatterRoot:shadow .o-mail-Chatter-content",
+                run: () => {
+                    const composer = document
+                        .querySelector("#chatterRoot")
+                        .shadowRoot.querySelector(".o-mail-Composer");
+                    if (composer) {
+                        throw new Error("Public user should not see the review composer");
+                    }
+                },
             },
             {
                 trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Bad box!)",

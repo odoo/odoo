@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { maybePlugin } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
@@ -37,7 +37,11 @@ patch(Chatter.prototype, {
         );
     },
 
-    get extraMessageFetchRouteParams() {
-        return super.extraMessageFetchRouteParams;
+    get displayRating() {
+        return this.portalChatterPlugin?.displayRating() ?? false;
+    },
+
+    get threadShowDates() {
+        return true;
     },
 });

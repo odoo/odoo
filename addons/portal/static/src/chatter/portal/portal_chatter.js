@@ -9,10 +9,17 @@ import { useService } from "@web/core/utils/hooks";
 export class PortalChatter extends Component {
     static template = xml`
         <Chatter threadId="this.props.resId" threadModel="this.props.resModel" composer="this.props.composer" twoColumns="this.props.twoColumns"/>
-        <div class="position-fixed" style="z-index:1030"><OverlayContainer overlays="this.overlayService.overlays"/></div>
+        <div class="position-fixed o-portal-overlay"><OverlayContainer overlays="this.overlayService.overlays"/></div>
     `;
     static components = { Chatter, OverlayContainer };
-    static props = ["resId", "resModel", "composer", "twoColumns", "displayRating"];
+    static props = [
+        "resId",
+        "resModel",
+        "composer",
+        "twoColumns",
+        "displayRating",
+        "reviewChatter?",
+    ];
 
     setup() {
         providePlugins([PortalChatterPlugin]);
@@ -20,17 +27,11 @@ export class PortalChatter extends Component {
         portalChatterPlugin.displayRating.set(this.props.displayRating);
         useSubEnv({ inFrontendPortalChatter: true });
         this.overlayService = useService("overlay");
-        this.store = useService("mail.store");
-        this.env.bus.addEventListener("reload_chatter_content", (ev) =>
-            this._reloadChatterContent(ev.detail)
+        this.env.bus.addEventListener("reload_chatter_content", () =>
+            this.env.bus.trigger("MAIL:RELOAD-THREAD", {
+                id: this.props.resId,
+                model: this.props.resModel,
+            })
         );
-    }
-
-    async _reloadChatterContent(data) {
-        const thread = this.store["mail.thread"].get({
-            id: this.props.resId,
-            model: this.props.resModel,
-        });
-        thread.messages = await thread.fetchMessages({ routeParams: this.messageFetchRouteParams });
     }
 }

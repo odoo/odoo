@@ -18,8 +18,8 @@
         >
             <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
-            <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
-                <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !this.isAlignedRight, 'o-inChatWindow': this.env.inChatWindow }">
+            <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit" t-att-class="this.getCoreAttClass()">
+                <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="this.getSidebarAttClass()">
                     <t t-if="!this.props.squashed">
                         <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="this.getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="this.message.authorAvatarUrl" t-att-class="this.authorAvatarAttClass"/>
@@ -34,7 +34,7 @@
                         <t t-elif="this.message.is_bookmarked" t-call="mail.Message.sidebarBookmark"/>
                     </t>
                 </div>
-                <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
+                <div class="w-100 min-w-0" t-att-class="this.getContentAttClass()" t-custom-ref="messageContent">
                     <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote }" name="header">
                         <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
                             <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>

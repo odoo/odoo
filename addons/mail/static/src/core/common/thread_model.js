@@ -19,6 +19,7 @@ import { user } from "@web/core/user";
  * @property {number} [after]
  * @property {number} [around]
  * @property {number} [before]
+ * @property {number} [limit]
  */
 
 /**
@@ -453,7 +454,7 @@ export class Thread extends Record {
      * @returns {Promise<{messages: number[]}>}
      */
     async fetchMessagesData({
-        fetchParams: { after, around, before } = {},
+        fetchParams: { after, around, before, limit } = {},
         routeParams = {},
     } = {}) {
         // ordered messages received: newest to oldest
@@ -463,10 +464,7 @@ export class Thread extends Record {
                 ...this.getFetchParams(),
                 ...routeParams,
                 fetch_params: {
-                    limit:
-                        !around && around !== 0
-                            ? this.store.FETCH_LIMIT
-                            : this.store.FETCH_LIMIT * 2,
+                    limit: limit ?? this.initialFetchLimit,
                     after,
                     around,
                     before,
@@ -493,7 +491,10 @@ export class Thread extends Record {
         const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
         let fetched = [];
         try {
-            fetched = await this.fetchMessages({ fetchParams: { after, before }, routeParams });
+            fetched = await this.fetchMessages({
+                fetchParams: { after, before, limit: this.moreFetchLimit },
+                routeParams,
+            });
         } catch {
             return;
         }
@@ -512,7 +513,7 @@ export class Thread extends Record {
         } else {
             this.messages.push(...messagesToAdd);
         }
-        if (fetched.length < this.store.FETCH_LIMIT) {
+        if (fetched.length < this.moreFetchLimit) {
             if (epoch === "older") {
                 this.loadOlder = false;
             } else if (epoch === "newer") {
@@ -551,7 +552,10 @@ export class Thread extends Record {
         ) {
             return;
         }
-        const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
+        const after = this.getFetchNewMessagesAfter();
+        if (after === undefined && this.isLoaded) {
+            this.messages.splice(0, this.messages.length);
+        }
         let fetched = [];
         try {
             fetched = await this.fetchMessages({ fetchParams: { after }, routeParams });
@@ -585,12 +589,24 @@ export class Thread extends Record {
         this.messages.splice(startIndex, 0, ...filtered);
         Object.assign(this, {
             loadOlder:
-                after === undefined && fetched.length === this.store.FETCH_LIMIT
+                after === undefined && fetched.length === this.initialFetchLimit
                     ? true
-                    : after === undefined && fetched.length !== this.store.FETCH_LIMIT
+                    : after === undefined && fetched.length !== this.initialFetchLimit
                     ? false
                     : this.loadOlder,
         });
+    }
+
+    getFetchNewMessagesAfter() {
+        return this.isLoaded ? this.newestPersistentMessage?.id : undefined;
+    }
+
+    get initialFetchLimit() {
+        return this.store.FETCH_LIMIT;
+    }
+
+    get moreFetchLimit() {
+        return this.store.FETCH_LIMIT;
     }
 
     getFetchParams() {
@@ -633,10 +649,11 @@ export class Thread extends Record {
         }
         this.isLoaded = false;
         this.scrollTop = undefined;
+        const limit = !messageId && messageId !== 0 ? this.moreFetchLimit : this.moreFetchLimit * 2;
         try {
             this.phantomMessages = this.messages;
             this.messages = await this.fetchMessages({
-                fetchParams: { around: messageId },
+                fetchParams: { around: messageId, limit },
                 routeParams,
             });
             this.phantomMessages = [];
@@ -647,8 +664,6 @@ export class Thread extends Record {
         this.isLoaded = true;
         this.loadNewer = messageId !== undefined ? true : false;
         this.loadOlder = true;
-        const limit =
-            !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
         if (this.messages.length < limit) {
             const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
             const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
