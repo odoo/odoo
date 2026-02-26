@@ -2,7 +2,6 @@
 
 import base64
 import json
-import psycopg2
 
 from markupsafe import Markup
 from psycopg2 import IntegrityError
@@ -39,22 +38,15 @@ class WebsiteForm(http.Controller):
             raise BadRequest('Session expired (invalid CSRF token)')
 
         try:
-            # The except clause below should not let what has been done inside
-            # here be committed. It should not either roll back everything in
-            # this controller method. Instead, we use a savepoint to roll back
-            # what has been done inside the try clause.
-            with request.env.cr.savepoint() as sp:
-                # request.params was modified, update kwargs to reflect the changes
-                kwargs = dict(request.params)
-                kwargs.pop('model_name')
-                res = self._handle_website_form(model_name, **kwargs)
-                # ignore savepoint closing error if the transaction was committed
-                try:
-                    sp.close(rollback=False)
-                except psycopg2.errors.InvalidSavepointSpecification:
-                    sp.closed = True
-                return res
+            # request.params was modified, update kwargs to reflect the changes
+            kwargs = dict(request.params)
+            kwargs.pop('model_name')
+            res = self._handle_website_form(model_name, **kwargs)
+            # try to save here
+            self.env.cr.commit()
+            return res
         except (ValidationError, UserError) as e:
+            self.env.cr.rollback()
             return json.dumps({
                 'error': e.args[0],
             })

@@ -564,7 +564,8 @@ class Transaction:
     """ A object holding ORM data structures for a transaction. """
     __slots__ = (
         '_Transaction__file_open_tmp_paths',
-        '_cache', '_recent_envs', '_weak_envs',
+        '_cache', '_recent_envs', '_registry_sequence',
+        '_state_stack', '_weak_envs',
         'access_read', 'default_env',
         'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
@@ -576,8 +577,12 @@ class Transaction:
         self._recent_envs: deque[Environment] = deque()
         # all environments in order of creation (weak)
         self._weak_envs: list[ReferenceType[Environment]] = []
+
         # default environment (for flushing)
         self.default_env: Environment | None = None
+        self._registry_sequence = registry.registry_sequence
+        # transaction state manipulated by savepoints
+        self._state_stack: list[TransactionState] = []
 
         # cache data {field: cache_data_managed_by_field} often uses a dict
         # to store a mapping from id to a value, but fields may use this field
@@ -726,13 +731,63 @@ class Transaction:
             the registry on all its environments.  This operation is strongly
             recommended after reloading the registry.
         """
+        # get the registry and rebuild the stack of states
         self.registry = Registry(self.registry.db_name)
+        self._registry_sequence = self.registry.registry_sequence
+        self._state_stack = [
+            TransactionState(
+                default_env=state.default_env,
+                registry_sequence=self._registry_sequence,
+            ) for state in self._state_stack]
+
         for env in self.envs:
             reset_cached_properties(env)
         self.access_read.clear()
         # make all environments weak
         self._recent_envs.clear()
         self.clear()
+
+    @contextmanager
+    def committing(self):
+        """ Context for committing the connection. """
+        assert not self._state_stack, "Pending savepoints not released, cannot commit!"
+        yield
+        self.clear()
+
+    @contextmanager
+    def rollbacking(self):
+        """ Context for rollbacking the connection. """
+        assert not self._state_stack, "Pending savepoints not released, cannot rollback!"
+        yield
+        self.restore_state()
+
+    def save_state(self):
+        """ Save the current state of the transaction for future restore. """
+        self.flush()
+        self._state_stack.append(TransactionState(
+            default_env=self.default_env,
+            registry_sequence=self._registry_sequence,
+        ))
+
+    def merge_state(self):
+        """ Merge current state into the last saved state. """
+        assert self._state_stack, "no state to pop"
+        self._state_stack.pop()
+
+    def restore_state(self):
+        """ Restore the previously saved state of the transaction after
+        rollback execution (on savepoint or connection). """
+        if self._state_stack:
+            state = self._state_stack[-1]
+            self.default_env = state.default_env
+        if self.registry.registry_sequence != self._registry_sequence:
+            # registry changed, reset the transaction
+            self.reset()
+            return
+
+        self.clear()
+        for env in self.envs:
+            reset_cached_properties(env)
 
     def invalidate_field_data(self) -> None:
         """ Invalidate the cache of all the fields.
@@ -745,6 +800,12 @@ class Transaction:
         # reset Field._get_cache()
         for env in self.envs:
             env.__dict__.pop('_field_cache_memo', None)
+
+
+class TransactionState(typing.NamedTuple):
+    """ The state of the transaction that can be stacked for savepoint operations. """
+    default_env: Environment | None
+    registry_sequence: int
 
 
 # sentinel value for optional parameters

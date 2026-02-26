@@ -16,7 +16,7 @@ import time
 import typing
 import uuid
 import warnings
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timedelta
 from inspect import currentframe
 
@@ -35,7 +35,7 @@ import odoo
 from . import tools
 from .release import MIN_PG_VERSION
 from .tools import SQL, config
-from .tools.func import frame_codeinfo, locked, reset_cached_properties
+from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
@@ -137,29 +137,30 @@ class Savepoint:
 class _FlushingSavepoint(Savepoint):
     def __init__(self, cr: Cursor):
         cr.flush()
+        if cr.transaction is not None:
+            cr.transaction.save_state()
         super().__init__(cr)
-        self._default_env = cr.transaction.default_env if cr.transaction is not None else None
 
     def rollback(self):
         cr = self._cr
         assert isinstance(cr, Cursor)
-        if cr.transaction is not None:
-            cr.transaction.default_env = self._default_env
-            cr.transaction.clear()
-            for env in cr.transaction.envs:
-                reset_cached_properties(env)
         super().rollback()
+        if cr.transaction is not None:
+            cr.transaction.restore_state()
 
     def _close(self, rollback: bool):
-        assert isinstance(self._cr, Cursor)
+        cr = self._cr
+        assert isinstance(cr, Cursor)
         try:
             if not rollback:
-                self._cr.flush()
+                cr.flush()
         except Exception:
             rollback = True
             raise
         finally:
             super()._close(rollback)
+            if cr.transaction is not None:
+                cr.transaction.merge_state()
 
 
 # _CursorProtocol declares the available methods and type information,
@@ -514,10 +515,10 @@ class Cursor(_CursorProtocol):
     def commit(self) -> None:
         """ Commit the current transaction. """
         self.flush()
-        self._cnx.commit()
-        if self.transaction is not None:
-            self.transaction.clear()
-        self._now = None
+        committing = self.transaction.committing() if self.transaction is not None else nullcontext()
+        with committing:
+            self._cnx.commit()
+            self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.run()
@@ -527,10 +528,10 @@ class Cursor(_CursorProtocol):
         self.precommit.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cnx.rollback()
-        if self.transaction is not None:
-            self.transaction.clear()
-        self._now = None
+        rollbacking = self.transaction.rollbacking() if self.transaction is not None else nullcontext()
+        with rollbacking:
+            self._cnx.rollback()
+            self._now = None
         self.postrollback.run()
 
     def __getattr__(self, name):
