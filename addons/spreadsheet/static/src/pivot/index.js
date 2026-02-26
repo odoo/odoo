@@ -20,6 +20,7 @@ function identity(cmd) {
 coreTypes.add("UPDATE_ODOO_PIVOT_DOMAIN");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_PIVOT_DOMAIN");
+invalidateEvaluationCommands.add("REFRESH_PIVOT");
 
 cellMenuRegistry.add("pivot_see_records", {
     name: _t("See records"),
