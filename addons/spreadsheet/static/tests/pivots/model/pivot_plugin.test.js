@@ -695,15 +695,27 @@ test("pivot grouped by char field which represents numbers", async function () {
                 </pivot>`,
         pivotType: "static",
     });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","000111")');
-    expect(getCell(model, "A4").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","111")');
-    expect(getCell(model, "A5").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"name","14.0")');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"name","000111")'
+    );
+    expect(getCell(model, "A4").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"name","111")'
+    );
+    expect(getCell(model, "A5").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"name","14.0")'
+    );
     expect(getEvaluatedCell(model, "A3").value).toBe("000111");
     expect(getEvaluatedCell(model, "A4").value).toBe("111");
     expect(getEvaluatedCell(model, "A5").value).toBe("14.0");
-    expect(getCell(model, "B3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","000111")');
-    expect(getCell(model, "B4").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","111")');
-    expect(getCell(model, "B5").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.VALUE(1,"probability:avg","name","14.0")');
+    expect(getCell(model, "B3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","name","000111")'
+    );
+    expect(getCell(model, "B4").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","name","111")'
+    );
+    expect(getCell(model, "B5").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","name","14.0")'
+    );
     expect(getEvaluatedCell(model, "B3").value).toBe(15);
     expect(getEvaluatedCell(model, "B4").value).toBe(11);
     expect(getEvaluatedCell(model, "B5").value).toBe(16);
@@ -1067,10 +1079,10 @@ test("pivot grouped by ID in a chain displays values correctly", async () => {
 });
 
 test("Can group by many2one_reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
         // The mock server doesn't support well many2one_reference.
         // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        return [
+        [
             [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
             [
                 {
@@ -1091,9 +1103,9 @@ test("Can group by many2one_reference field ", async () => {
                     __count: 1,
                     "probability:avg": 13,
                 },
-            ]
-        ];
-    });
+            ],
+        ]
+    );
     Partner._fields = {
         ...Partner._fields,
         res_id: fields.Many2oneReference({
@@ -1144,10 +1156,10 @@ test("Can group by many2one_reference field ", async () => {
 });
 
 test("Can group by reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
         // The mock server doesn't support well reference.
         // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        return [
+        [
             [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
             [
                 {
@@ -1168,9 +1180,9 @@ test("Can group by reference field ", async () => {
                     __count: 1,
                     "probability:avg": 13,
                 },
-            ]
-        ];
-    });
+            ],
+        ]
+    );
     Partner._fields = {
         ...Partner._fields,
         ref: fields.Reference({
@@ -2601,4 +2613,14 @@ test("`getPivotCellFromPosition` should not throw on missing company default cur
     expect(() => {
         model.getters.getPivotCellFromPosition({ sheetId, col: 0, row: 0 });
     }).not.toThrow();
+});
+
+test("REFRESH_PIVOT properly invalidates a pivot table", async function () {
+    const { model } = await createSpreadsheetWithPivot({ pivotType: "dynamic" });
+    const position = { sheetId: model.getters.getActiveSheetId(), col: 0, row: 0 };
+    expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
+    model.dispatch("REFRESH_PIVOT", { id: model.getters.getPivotIds()[0] });
+    expect(model.getters.getCellTableBorder(position)).toBe(undefined);
+    await waitForDataLoaded(model);
+    expect(model.getters.getCellTableBorder(position)).not.toBe(undefined);
 });
