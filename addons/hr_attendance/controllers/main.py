@@ -2,6 +2,7 @@
 
 from odoo.service.common import exp_version
 from odoo import http, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_round, py_to_js_locale, SQL
@@ -154,6 +155,14 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/employees_infos', type="json", auth="public")
     def employees_infos(self, token, limit, offset, domain):
+        for condition in domain:
+            field_name, operator, _value = condition  # Force '&' implicit syntax
+            if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
+                raise UserError(_(
+                    "Invalid domain, use 'name' and/or 'department_id' fields "
+                    "with '=' and/or 'ilike' operators.",
+                ))
+
         company = self._get_company(token)
         if company:
             domain = expression.AND([domain, [('company_id', '=', company.id)]])
