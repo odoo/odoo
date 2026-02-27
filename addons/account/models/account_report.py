@@ -182,6 +182,11 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_growth_comparison', True),
         precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
+    filter_line_comparison = fields.Boolean(
+        string="Report Line Comparison",
+        compute=lambda x: x._compute_report_option_filter('filter_line_comparison', False),
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
     filter_journals = fields.Boolean(
         string="Journals",
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False,
