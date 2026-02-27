@@ -1,10 +1,8 @@
 /** @odoo-module */
 
 import { animationFrame } from "@odoo/hoot-dom";
-import { App } from "@odoo/owl";
 import { getActiveElement, getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { isInstanceOf } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
@@ -25,7 +23,7 @@ import { getViewPortHeight, getViewPortWidth } from "../mock/window";
 // Global
 //-----------------------------------------------------------------------------
 
-const { customElements, document, getSelection, HTMLElement, MutationObserver, Promise, WeakSet } =
+const { customElements, document, getSelection, HTMLElement, MutationObserver, Promise } =
     globalThis;
 
 //-----------------------------------------------------------------------------
@@ -39,71 +37,67 @@ function waitForIframe(iframe) {
     return new Promise((resolve) => iframe.addEventListener("load", resolve));
 }
 
-const destroyed = new WeakSet();
-let allowFixture = false;
-/** @type {HootFixtureElement | null} */
-let currentFixture = null;
-let shouldPrepareNextFixture = true; // Prepare setup for first test
-
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-/**
- * @param {App | import("@odoo/owl").Component} target
- */
-export function destroy(target) {
-    const app = isInstanceOf(target, App) ? target : target.__owl__.app;
-    if (destroyed.has(app)) {
-        return;
+export class FixtureManager {
+    allowFixture = false;
+    /** @type {HootFixtureElement | null} */
+    currentFixture = null;
+    shouldPrepareNextFixture = true; // Prepare setup for first test
+
+    /**
+     * @param {Runner} runner
+     */
+    constructor(runner) {
+        this.runner = runner;
+
+        // Pre-bind all methods
+        this.cleanup = this.cleanup.bind(this);
+        this.getFixture = this.getFixture.bind(this);
+        this.setup = this.setup.bind(this);
     }
-    destroyed.add(app);
-    app.destroy();
-}
 
-/**
- * @param {import("./runner").Runner} runner
- */
-export function makeFixtureManager(runner) {
-    function cleanup() {
-        allowFixture = false;
+    cleanup() {
+        this.allowFixture = false;
 
-        if (currentFixture) {
-            shouldPrepareNextFixture = true;
-            currentFixture.remove();
-            currentFixture = null;
+        if (this.currentFixture) {
+            this.shouldPrepareNextFixture = true;
+            this.currentFixture.remove();
+            this.currentFixture = null;
         }
     }
 
-    function getFixture() {
-        if (!allowFixture) {
+    getFixture() {
+        if (!this.allowFixture) {
             throw new HootError(`cannot access fixture outside of a test.`);
         }
-        if (!currentFixture) {
+        if (!this.currentFixture) {
             // Prepare fixture once to not force layouts/reflows
-            currentFixture = document.createElement(HootFixtureElement.TAG_NAME);
-            if (runner.debug || runner.headless) {
-                currentFixture.show();
+            this.currentFixture = document.createElement(HootFixtureElement.TAG_NAME);
+            if (this.runner.debug || this.runner.headless) {
+                this.currentFixture.show();
             }
 
             const { width, height } = getCurrentDimensions();
             if (width !== getViewPortWidth()) {
-                currentFixture.style.width = `${width}px`;
+                this.currentFixture.style.width = `${width}px`;
             }
             if (height !== getViewPortHeight()) {
-                currentFixture.style.height = `${height}px`;
+                this.currentFixture.style.height = `${height}px`;
             }
 
-            document.body.appendChild(currentFixture);
+            document.body.appendChild(this.currentFixture);
         }
-        return currentFixture;
+        return this.currentFixture;
     }
 
-    async function setup() {
-        allowFixture = true;
+    async setup() {
+        this.allowFixture = true;
 
-        if (shouldPrepareNextFixture) {
-            shouldPrepareNextFixture = false;
+        if (this.shouldPrepareNextFixture) {
+            this.shouldPrepareNextFixture = false;
 
             // Reset focus & selection
             getActiveElement().blur();
@@ -112,12 +106,6 @@ export function makeFixtureManager(runner) {
             await animationFrame();
         }
     }
-
-    return {
-        cleanup,
-        setup,
-        get: getFixture,
-    };
 }
 
 export class HootFixtureElement extends HTMLElement {

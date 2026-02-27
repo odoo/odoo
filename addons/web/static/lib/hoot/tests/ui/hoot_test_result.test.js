@@ -1,64 +1,55 @@
 /** @odoo-module */
 
 import { describe, expect, makeExpect, test } from "@odoo/hoot";
-import { mountForTest, parseUrl } from "../local_helpers";
+import { makeTestRunner, mountForTest, parseUrl } from "../local_helpers";
 
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { Runner } from "../../core/runner";
 import { Test } from "../../core/test";
 import { HootTestResult } from "../../ui/hoot_test_result";
-import { makeUiState } from "../../ui/setup_hoot_ui";
 
 /**
  * @param {(mockExpect: typeof expect) => any} callback
+ * @param {boolean | "always"} [open="always"]
  */
-const mountTestResults = async (testFn, props) => {
-    const runner = new Runner();
-    const ui = makeUiState();
+async function mountTestResults(testFn, open = "always") {
     const mockTest = new Test(null, "test", {});
     const [mockExpect, { after, before }] = makeExpect({});
 
-    class Parent extends Component {
+    class HootTestResultParent extends Component {
         static components = { HootTestResult };
-        static props = { test: Test, open: [Boolean, { value: "always" }] };
         static template = xml`
-            <HootTestResult test="this.props.test" open="this.props.open">
+            <HootTestResult test="this.test" open="this.open">
                 Toggle
             </HootTestResult>
         `;
 
-        mockTest = mockTest;
+        open = open;
+        test = mockTest;
     }
 
     before(mockTest);
     testFn(mockExpect);
-    after(runner);
+    after();
 
-    await mountForTest(Parent, {
-        env: { runner, ui },
-        props: {
-            test: mockTest,
-            open: "always",
-            ...props,
+    await mountForTest(HootTestResultParent, {
+        config: {
+            runner: makeTestRunner(),
         },
     });
 
     return mockTest;
-};
+}
 
 const CLS_PASS = "text-emerald";
 const CLS_FAIL = "text-rose";
 
 describe(parseUrl(import.meta.url), () => {
     test("test results: toBe and basic interactions", async () => {
-        const mockTest = await mountTestResults(
-            (mockExpect) => {
-                mockExpect(true).toBe(true);
-                mockExpect(true).toBe(false);
-            },
-            { open: false }
-        );
+        const mockTest = await mountTestResults((mockExpect) => {
+            mockExpect(true).toBe(true);
+            mockExpect(true).toBe(false);
+        }, false);
 
         expect(".HootTestResult button:only").toHaveText("Toggle");
         expect(".hoot-result-detail").not.toHaveCount();
