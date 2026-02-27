@@ -1,19 +1,18 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
-import { CONFIG_KEYS } from "../core/config";
+import { Component, plugin, xml } from "@odoo/owl";
+import { hasConfigChanged } from "../core/config";
 import { LOG_LEVELS } from "../core/logger";
 import { refresh } from "../core/url";
-import { CASE_EVENT_TYPES, strictEqual } from "../hoot_utils";
-import { generateSeed, internalRandom } from "../mock/math";
-import { toggleColorScheme, useColorScheme } from "./hoot_colors";
+import { CASE_EVENT_TYPES, generateSeed } from "../hoot_utils";
+import { internalRandom } from "../mock/math";
+import { colorScheme, toggleColorScheme } from "./hoot_colors";
 import { HootCopyButton } from "./hoot_copy_button";
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
+import { UiPlugin } from "./ui_plugin";
 
 /**
  * @typedef {"dark" | "light"} ColorScheme
- *
- * @typedef {{
- * }} HootConfigMenuProps
  */
 
 //-----------------------------------------------------------------------------
@@ -21,31 +20,30 @@ import { HootCopyButton } from "./hoot_copy_button";
 //-----------------------------------------------------------------------------
 
 const {
-    Object: { entries: $entries, keys: $keys, values: $values },
+    Object: { entries: $entries, values: $values },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-/** @extends {Component<HootConfigMenuProps, import("../hoot").Environment>} */
 export class HootConfigMenu extends Component {
     static components = { HootCopyButton };
-    static props = {};
     static template = xml`
-        <form class="contents" t-on-submit.prevent="refresh">
+        <form class="contents" t-on-submit.prevent="this.refresh">
             <h3 class="pb-1 border-b text-gray border-gray">Behavior</h3>
-            <t t-if="hasPresets()">
+            <t t-if="this.runner.presets().size > 1">
                 <div class="flex items-center gap-1">
-                    <t t-set="hasCorrectViewPort" t-value="env.runner.checkPresetForViewPort()" />
+                    <t t-set="hasCorrectViewPort" t-value="this.runner.checkPresetForViewPort()" />
                     <t t-set="highlightClass" t-value="hasCorrectViewPort ? 'text-primary' : 'text-amber'" />
                     <span class="me-auto">Preset</span>
-                    <t t-foreach="env.runner.presets" t-as="presetKey" t-key="presetKey">
-                        <t t-set="preset" t-value="env.runner.presets[presetKey]" />
+                    <t t-foreach="this.runner.presets().entries()" t-as="presetEntry" t-key="presetEntry[0]">
+                        <t t-set="presetKey" t-value="presetEntry[0]" />
+                        <t t-set="preset" t-value="presetEntry[1]" />
                         <button
                             type="button"
                             class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
-                            t-att-class="{ ['border-primary ' + highlightClass]: config.preset === presetKey }"
+                            t-att-class="{ ['border-primary ' + highlightClass]: this.config.preset() === presetKey }"
                             t-att-title="presetKey ? preset.label : 'No preset'"
                             t-on-click.stop="() => this.onPresetChange(presetKey)"
                         >
@@ -59,11 +57,11 @@ export class HootConfigMenu extends Component {
                 title="Determines the order of the tests execution"
             >
                 <span class="me-auto">Execution order</span>
-                <t t-foreach="executionOrders" t-as="order" t-key="order.value">
+                <t t-foreach="this.executionOrders" t-as="order" t-key="order.value">
                     <button
                         type="button"
                         class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
-                        t-att-class="{ 'text-primary border-primary': config.order === order.value }"
+                        t-att-class="{ 'text-primary border-primary': this.config.order() === order.value }"
                         t-att-title="order.title"
                         t-on-click.stop="() => this.setExecutionOrder(order.value)"
                     >
@@ -71,23 +69,23 @@ export class HootConfigMenu extends Component {
                     </button>
                 </t>
             </div>
-            <t t-if="config.order === 'random'">
+            <t t-if="this.config.order() === 'random'">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Seed:</span>
                     <input
                         type="text"
                         autofocus=""
                         class="w-full outline-none border-b border-primary px-1"
-                        t-model.number="config.random"
+                        t-model.number="this.config.random"
                     />
                     <button
                         type="button"
                         title="Generate new random seed"
-                        t-on-click.stop="resetSeed"
+                        t-on-click.stop="this.resetSeed"
                     >
                         <i class="fa fa-repeat" />
                     </button>
-                    <HootCopyButton text="config.random.toString()" />
+                    <HootCopyButton text="this.config.random().toString()" />
                 </small>
             </t>
             <label
@@ -98,7 +96,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-model.number="config.timeout"
+                    t-model.number="this.config.timeout"
                 />
             </label>
             <label
@@ -109,7 +107,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-model="config.networkDelay"
+                    t-model="this.config.networkDelay"
                 />
             </label>
             <label
@@ -119,7 +117,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.manual"
+                    t-model="this.config.manual"
                 />
                 <span>Run tests manually</span>
             </label>
@@ -130,19 +128,19 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-att-checked="config.bail"
-                    t-on-change="onBailChange"
+                    t-att-checked="this.config.bail()"
+                    t-on-change="this.onBailChange"
                 />
                 <span>Bail</span>
             </label>
-            <t t-if="config.bail">
+            <t t-if="this.config.bail()">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Failed tests:</span>
                     <input
                         type="text"
                         autofocus=""
                         class="outline-none w-full border-b border-primary px-1"
-                        t-model.number="config.bail"
+                        t-model.number="this.config.bail"
                     />
                 </small>
             </t>
@@ -153,20 +151,20 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-att-checked="config.loglevel"
-                    t-on-change="onLogLevelChange"
+                    t-att-checked="this.config.loglevel()"
+                    t-on-change="this.onLogLevelChange"
                 />
                 <span>Log level</span>
             </label>
-            <t t-if="config.loglevel">
+            <t t-if="this.config.loglevel()">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Level:</span>
                     <select
                         autofocus=""
                         class="outline-none w-full bg-base text-base border-b border-primary px-1"
-                        t-model.number="config.loglevel"
+                        t-model.number="this.config.loglevel"
                     >
-                        <t t-foreach="LOG_LEVELS" t-as="level" t-key="level.value">
+                        <t t-foreach="this.LOG_LEVELS" t-as="level" t-key="level.value">
                             <option
                                 t-att-value="level.value"
                                 t-out="level.label"
@@ -182,7 +180,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.notrycatch"
+                    t-model="this.config.notrycatch"
                 />
                 <span>No try/catch</span>
             </label>
@@ -191,39 +189,39 @@ export class HootConfigMenu extends Component {
             <h3 class="mt-2 pb-1 border-b text-gray border-gray">Display</h3>
             <div class="flex items-center gap-1">
                 <span class="me-auto">Events</span>
-                <t t-foreach="CASE_EVENT_TYPES" t-as="sType" t-key="sType">
-                    <t t-set="isDisplayed" t-value="isEventDisplayed(sType)" />
-                    <t t-set="eventColor" t-value="isDisplayed ? CASE_EVENT_TYPES[sType].color : 'gray'" />
+                <t t-foreach="this.CASE_EVENT_TYPES" t-as="sType" t-key="sType">
+                    <t t-set="isDisplayed" t-value="this.isEventDisplayed(sType)" />
+                    <t t-set="eventColor" t-value="isDisplayed ? this.CASE_EVENT_TYPES[sType].color : 'gray'" />
                     <button
                         type="button"
                         t-attf-class="p-1 border-b-2 transition-color text-{{ eventColor }} border-{{ eventColor }}"
                         t-attf-title="{{ isDisplayed ? 'Hide' : 'Show' }} {{ sType }} events"
                         t-on-click.stop="(ev) => this.toggleEventType(ev, sType)"
                     >
-                        <i class="fa" t-att-class="CASE_EVENT_TYPES[sType].icon" />
+                        <i class="fa" t-att-class="this.CASE_EVENT_TYPES[sType].icon" />
                     </button>
                 </t>
             </div>
             <button
                 type="button"
                 class="flex items-center gap-1"
-                t-on-click.stop="toggleSortResults"
+                t-on-click.stop="this.toggleSortResults"
             >
                 <span class="me-auto">Sort by duration</span>
                 <span
                     class="flex items-center gap-1 transition-colors"
-                    t-att-class="{ 'text-primary': uiState.sortResults }"
+                    t-att-class="{ 'text-primary': this.ui.sortResults() }"
                 >
-                    <t t-if="uiState.sortResults === 'asc'">
+                    <t t-if="this.ui.sortResults() === 'asc'">
                         ascending
                     </t>
-                    <t t-elif="uiState.sortResults === 'desc'">
+                    <t t-elif="this.ui.sortResults() === 'desc'">
                         descending
                     </t>
                     <t t-else="">
                         none
                     </t>
-                    <i t-attf-class="fa fa-sort-numeric-{{ uiState.sortResults or 'desc' }}" />
+                    <i t-attf-class="fa fa-sort-numeric-{{ this.ui.sortResults() or 'desc' }}" />
                 </span>
             </button>
             <label
@@ -233,7 +231,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.headless"
+                    t-model="this.config.headless"
                 />
                 <span>Headless</span>
             </label>
@@ -244,7 +242,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="checkbox"
                     class="appearance-none border border-primary rounded-xs w-4 h-4"
-                    t-model="config.fun"
+                    t-model="this.config.fun"
                 />
                 <span>Enable incentives</span>
             </label>
@@ -252,84 +250,78 @@ export class HootConfigMenu extends Component {
                 type="button"
                 class="flex items-center gap-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                 title="Toggle the color scheme of the UI"
-                t-on-click.stop="toggleColorScheme"
+                t-on-click.stop="this.toggleColorScheme"
             >
-                <i t-attf-class="fa fa-{{ color.scheme === 'light' ? 'moon' : 'sun' }}-o w-4 h-4" />
+                <i t-attf-class="fa fa-{{ this.colorScheme() === 'light' ? 'moon' : 'sun' }}-o w-4 h-4" />
                 Color scheme
             </button>
 
             <!-- Refresh button -->
             <button
                 class="flex bg-btn justify-center rounded mt-1 p-1 transition-colors"
-                t-att-disabled="doesNotNeedRefresh()"
+                t-att-disabled="this.doesNotNeedRefresh()"
             >
                 Apply and refresh
             </button>
         </form>
     `;
 
-    CASE_EVENT_TYPES = CASE_EVENT_TYPES;
+    // Props & plugins
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
+    ui = plugin(UiPlugin);
 
+    // Reactive values
+    colorScheme = colorScheme;
+
+    // Other members
+    CASE_EVENT_TYPES = CASE_EVENT_TYPES;
+    LOG_LEVELS = $entries(LOG_LEVELS)
+        .filter(([, value]) => value)
+        .map(([label, value]) => ({ label, value }));
     executionOrders = [
         { value: "fifo", title: "First in, first out", icon: "fa-sort-numeric-asc" },
         { value: "lifo", title: "Last in, first out", icon: "fa-sort-numeric-desc" },
         { value: "random", title: "Random", icon: "fa-random" },
     ];
-    LOG_LEVELS = $entries(LOG_LEVELS)
-        .filter(([, value]) => value)
-        .map(([label, value]) => ({ label, value }));
-
     refresh = refresh;
     toggleColorScheme = toggleColorScheme;
 
-    setup() {
-        const { runner, ui } = this.env;
-        this.color = useColorScheme();
-        this.config = useState(runner.config);
-        this.uiState = useState(ui);
-    }
-
     doesNotNeedRefresh() {
-        return CONFIG_KEYS.every((key) =>
-            strictEqual(this.config[key], this.env.runner.initialConfig[key])
-        );
-    }
-
-    hasPresets() {
-        return $keys(this.env.runner.presets).filter(Boolean).length > 0;
+        return !hasConfigChanged(this.config);
     }
 
     /**
      * @param {keyof CASE_EVENT_TYPES} sType
      */
     isEventDisplayed(sType) {
-        return this.config.events & CASE_EVENT_TYPES[sType].value;
+        return this.config.events() & CASE_EVENT_TYPES[sType].value;
     }
 
     /**
      * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onBailChange(ev) {
-        this.config.bail = ev.currentTarget.checked ? 1 : 0;
+        this.config.bail.set(ev.currentTarget.checked ? 1 : 0);
     }
 
     /**
      * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onLogLevelChange(ev) {
-        this.config.loglevel = ev.currentTarget.checked ? LOG_LEVELS.suites : LOG_LEVELS.runner;
+        this.config.loglevel.set(ev.currentTarget.checked ? LOG_LEVELS.suites : LOG_LEVELS.runner);
     }
 
     /**
      * @param {string} presetId
      */
     onPresetChange(presetId) {
-        this.config.preset = this.config.preset === presetId ? "" : presetId;
+        this.config.preset.set(this.config.preset() === presetId ? "" : presetId);
     }
 
     resetSeed() {
         const newSeed = generateSeed();
-        this.config.random = newSeed;
+        this.config.random.set(newSeed);
         internalRandom.seed = newSeed;
     }
 
@@ -337,12 +329,12 @@ export class HootConfigMenu extends Component {
      * @param {"fifo" | "lifo" | "random"} order
      */
     setExecutionOrder(order) {
-        this.config.order = order;
+        this.config.order.set(order);
 
-        if (order === "random" && !this.config.random) {
+        if (order === "random" && !this.config.random()) {
             this.resetSeed();
-        } else if (this.config.random) {
-            this.config.random = 0;
+        } else if (this.config.random()) {
+            this.config.random.set(0);
         }
     }
 
@@ -352,30 +344,33 @@ export class HootConfigMenu extends Component {
      */
     toggleEventType(ev, sType) {
         const nType = CASE_EVENT_TYPES[sType].value;
-        if (this.config.events & nType) {
+        const events = this.config.events();
+        if (events & nType) {
             if (ev.altKey) {
-                this.config.events = 0;
+                this.config.events.set(0);
             } else {
-                this.config.events &= ~nType;
+                this.config.events.set(events & ~nType);
             }
         } else {
             if (ev.altKey) {
                 // Aggregate all event types
-                this.config.events = $values(CASE_EVENT_TYPES).reduce((acc, t) => acc + t.value, 0);
+                this.config.events.set(
+                    $values(CASE_EVENT_TYPES).reduce((acc, t) => acc + t.value, 0)
+                );
             } else {
-                this.config.events |= nType;
+                this.config.events.set(events | nType);
             }
         }
     }
 
     toggleSortResults() {
-        this.uiState.resultsPage = 0;
-        if (!this.uiState.sortResults) {
-            this.uiState.sortResults = "desc";
-        } else if (this.uiState.sortResults === "desc") {
-            this.uiState.sortResults = "asc";
+        this.ui.resultsPage.set(0);
+        if (!this.ui.sortResults()) {
+            this.ui.sortResults.set("desc");
+        } else if (this.ui.sortResults() === "desc") {
+            this.ui.sortResults.set("asc");
         } else {
-            this.uiState.sortResults = false;
+            this.ui.sortResults.set(false);
         }
     }
 }

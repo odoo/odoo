@@ -1,12 +1,13 @@
 /** @odoo-module */
 
-import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, computed, props, signal, types as t, useEffect, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { refresh } from "../core/url";
-import { formatTime, throttle } from "../hoot_utils";
+import { elSignal, formatTime, throttle } from "../hoot_utils";
 import { HootConfigMenu } from "./hoot_config_menu";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
+import { getConfigPlugin, getRunnerPlugin } from "./runner_plugin";
 
 const {
     HTMLElement,
@@ -20,19 +21,16 @@ const removeWindowListener = window.removeEventListener.bind(window);
 const { addEventListener, removeEventListener } = HTMLElement.prototype;
 
 /**
- * @param {string} containerRefName
- * @param {string} handleRefName
+ * @param {import("@odoo/owl").Signal<HTMLElement | null>} containerRef
+ * @param {import("@odoo/owl").Signal<HTMLElement | null>} handleRef
  * @param {() => any} allowDrag
  */
-function useMovable(containerRefName, handleRefName, allowDrag) {
-    function computeEffectDependencies() {
-        return [(currentContainer = containerRef.el), (currentHandle = handleRef.el)];
-    }
-
+function useMovable(containerRef, handleRef, allowDrag) {
     /**
      * @param {PointerEvent} ev
      */
     function drag(ev) {
+        const currentContainer = containerRef();
         if (!currentContainer || !isDragging) {
             return;
         }
@@ -51,6 +49,7 @@ function useMovable(containerRefName, handleRefName, allowDrag) {
      * @param {PointerEvent} [ev]
      */
     function dragEnd(ev) {
+        const currentContainer = containerRef();
         if (!currentContainer || !isDragging) {
             return;
         }
@@ -66,6 +65,7 @@ function useMovable(containerRefName, handleRefName, allowDrag) {
      * @param {PointerEvent} ev
      */
     function dragStart(ev) {
+        const currentContainer = containerRef();
         if (!currentContainer || !allowDrag()) {
             return;
         }
@@ -98,12 +98,14 @@ function useMovable(containerRefName, handleRefName, allowDrag) {
     }
 
     function effectCleanup() {
+        const currentHandle = handleRef();
         if (currentHandle) {
             removeEventListener.call(currentHandle, "pointerdown", dragStart);
         }
     }
 
     function onEffect() {
+        const currentHandle = handleRef();
         if (currentHandle) {
             addEventListener.call(currentHandle, "pointerdown", dragStart);
         }
@@ -111,25 +113,19 @@ function useMovable(containerRefName, handleRefName, allowDrag) {
     }
 
     function resetPosition() {
-        currentContainer?.removeAttribute("style");
+        containerRef()?.removeAttribute("style");
         dragEnd();
     }
 
     const throttledDrag = throttle(drag);
 
-    const containerRef = useRef(containerRefName);
-    const handleRef = useRef(handleRefName);
-    /** @type {HTMLElement | null} */
-    let currentContainer = null;
-    /** @type {HTMLElement | null} */
-    let currentHandle = null;
     let isDragging = false;
     let maxX = 0;
     let maxY = 0;
     let offsetX = 0;
     let offsetY = 0;
 
-    useEffect(onEffect, computeEffectDependencies);
+    useEffect(onEffect);
 
     return {
         resetPosition,
@@ -139,47 +135,37 @@ function useMovable(containerRefName, handleRefName, allowDrag) {
 /**
  * @typedef {import("../core/expect").Assertion} Assertion
  *
- * @typedef {{
- *  test: Test;
- * }} HootDebugToolBarProps
- *
  * @typedef {import("../core/expect").CaseResult} CaseResult
  */
 
-/** @extends {Component<HootDebugToolBarProps, import("../hoot").Environment>} */
 export class HootDebugToolBar extends Component {
     static components = { HootConfigMenu, HootTestPath, HootTestResult };
-
-    static props = {
-        test: Test,
-    };
-
     static template = xml`
         <div
             class="${HootDebugToolBar.name} absolute start-0 bottom-0 max-w-full max-h-full flex p-4 z-4"
-            t-att-class="{ 'w-full': state.open }"
-            t-ref="root"
+            t-att-class="{ 'w-full': this.isOpen() }"
+            t-ref="this.rootRef"
         >
             <div class="flex flex-col w-full overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800">
                 <div class="flex items-center gap-2 px-2">
                     <i
                         class="fa fa-bug text-cyan p-2"
-                        t-att-class="{ 'cursor-move': !state.open }"
-                        t-ref="handle"
+                        t-att-class="{ 'cursor-move': !this.isOpen() }"
+                        t-ref="this.handleRef"
                     />
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                         <button
                             class="bg-btn px-2 py-1"
                             title="Exit debug mode (Ctrl + Esc)"
-                            t-on-click.stop="exitDebugMode"
+                            t-on-click.stop="this.exitDebugMode"
                         >
                             <i class="fa fa-sign-out" />
                         </button>
-                        <t t-if="done">
+                        <t t-if="this.done">
                             <button
                                 class="bg-btn px-2 py-1 animate-slide-left"
                                 title="Restart test (F5)"
-                                t-on-click.stop="refresh"
+                                t-on-click.stop="this.refresh"
                             >
                                 <i class="fa fa-refresh" />
                             </button>
@@ -187,25 +173,25 @@ export class HootDebugToolBar extends Component {
                     </div>
                     <button
                         class="flex flex-1 items-center gap-1 truncate"
-                        t-on-click.stop="toggleOpen"
+                        t-on-click.stop="this.toggleOpen"
                         title="Click to toggle details"
                     >
                         status:
                         <strong
-                            t-attf-class="text-{{ info.className }}"
-                            t-out="info.status"
+                            t-attf-class="text-{{ this.info().className }}"
+                            t-out="this.info().status"
                         />
                         <span class="hidden sm:flex items-center gap-1">
                             <span class="text-gray">-</span>
                             assertions:
                             <span class="contents text-emerald">
-                                <strong t-out="info.passed" />
+                                <strong t-out="this.info().passed" />
                                 passed
                             </span>
-                            <t t-if="info.failed">
+                            <t t-if="this.info().failed">
                                 <span class="text-gray">/</span>
                                 <span class="contents text-rose">
-                                    <strong t-out="info.failed" />
+                                    <strong t-out="this.info().failed" />
                                     failed
                                 </span>
                             </t>
@@ -214,19 +200,19 @@ export class HootDebugToolBar extends Component {
                         time:
                         <span
                             class="text-primary"
-                            t-out="formatTime(props.test.lastResults?.duration, 'ms')"
+                            t-out="this.formatTime(this.props.test.lastResults?.duration, 'ms')"
                         />
                     </button>
-                    <button class="p-2" t-on-click="toggleConfig">
+                    <button class="p-2" t-on-click="this.toggleConfig">
                         <i class="fa fa-cog" />
                     </button>
                 </div>
-                <t t-if="state.open">
+                <t t-if="this.isOpen()">
                     <div class="flex flex-col w-full sm:flex-row overflow-auto">
-                        <HootTestResult open="'always'" test="props.test" t-key="done">
-                            <HootTestPath canCopy="true" full="true" test="props.test" />
+                        <HootTestResult open="'always'" test="this.props.test" t-key="this.done">
+                            <HootTestPath canCopy="true" full="true" test="this.props.test" />
                         </HootTestResult>
-                        <t t-if="state.configOpen">
+                        <t t-if="this.isConfigOpen()">
                             <div class="flex flex-col gap-1 p-3 overflow-y-auto">
                                 <HootConfigMenu />
                             </div>
@@ -237,36 +223,18 @@ export class HootDebugToolBar extends Component {
         </div>
     `;
 
-    formatTime = formatTime;
-    refresh = refresh;
+    // Props & plugins
+    props = props({
+        test: t.instanceOf(Test),
+    });
 
-    get done() {
-        return Boolean(this.runnerState.done.size); // subscribe to test being added as done
-    }
+    config = getConfigPlugin();
+    runner = getRunnerPlugin();
 
-    setup() {
-        this.runnerState = useState(this.env.runner.state);
-        this.state = useState({
-            configOpen: false,
-            open: false,
-        });
-
-        onWillRender(this.onWillRender.bind(this));
-
-        this.movable = useMovable("root", "handle", this.allowDrag.bind(this));
-    }
-
-    allowDrag() {
-        return !this.state.open;
-    }
-
-    exitDebugMode() {
-        const { runner } = this.env;
-        runner.config.debugTest = false;
-        runner.stop();
-    }
-
-    getInfo() {
+    // Reactive values
+    isConfigOpen = signal(false);
+    isOpen = signal(false);
+    info = computed(() => {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
             this.props.test.lastResults?.getEvents("assertion")
@@ -277,6 +245,26 @@ export class HootDebugToolBar extends Component {
             passed: assertPassed,
             failed: assertFailed,
         };
+    });
+    rootRef = elSignal(null);
+    handleRef = elSignal(null);
+
+    // Other members
+    formatTime = formatTime;
+    movable = useMovable(this.rootRef, this.handleRef, this.allowDrag.bind(this));
+    refresh = refresh;
+
+    get done() {
+        return Boolean(this.runner.finishedTests().size); // subscribe to test being added as done
+    }
+
+    allowDrag() {
+        return !this.isOpen();
+    }
+
+    exitDebugMode() {
+        this.config.debugTest.set(false);
+        this.runner.stop();
     }
 
     getStatus() {
@@ -309,21 +297,17 @@ export class HootDebugToolBar extends Component {
         return [passed, failed];
     }
 
-    onWillRender() {
-        this.info = this.getInfo();
-    }
-
     toggleConfig() {
-        this.state.configOpen = !this.state.open || !this.state.configOpen;
-        if (this.state.configOpen && !this.state.open) {
-            this.state.open = true;
+        this.isConfigOpen.set(!this.isOpen() || !this.isConfigOpen());
+        if (this.isConfigOpen() && !this.isOpen()) {
+            this.isOpen.set(true);
             this.movable.resetPosition();
         }
     }
 
     toggleOpen() {
-        this.state.open = !this.state.open;
-        if (this.state.open) {
+        this.isOpen.set(!this.isOpen());
+        if (this.isOpen()) {
             this.movable.resetPosition();
         }
     }

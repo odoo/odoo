@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, setFrameRate } from "@odoo/hoot-dom";
-import { markRaw, reactive, toRaw } from "@odoo/owl";
+import { markRaw, proxy, signal, types as t } from "@odoo/owl";
 import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
 import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
@@ -15,7 +15,7 @@ import {
     STORAGE,
     batch,
     createReporting,
-    deepEqual,
+    destroy,
     ensureArray,
     ensureError,
     formatHumanReadable,
@@ -40,14 +40,14 @@ import {
     mockTouch,
     setupWindow,
 } from "../mock/window";
-import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
+import { FILTER_KEYS, getConfigValues, makeConfigManager } from "./config";
 import { makeExpect } from "./expect";
-import { destroy, makeFixtureManager } from "./fixture";
+import { FixtureManager } from "./fixture";
 import { logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities, getTags } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId } from "./url";
 
 // Import all helpers for debug mode
 import * as _hootDom from "@odoo/hoot-dom";
@@ -78,6 +78,8 @@ const { isPrevented, mockPreventDefault } = _window;
  *  message: string;
  *  name: string;
  * }} GlobalIssueReport
+ *
+ * @typedef {import("./config").HootConfig} HootConfig
  *
  * @typedef {Suite | Test} Job
  *
@@ -126,7 +128,6 @@ const {
         defineProperty: $defineProperty,
         entries: $entries,
         freeze: $freeze,
-        fromEntries: $fromEntries,
         keys: $keys,
         values: $values,
     },
@@ -277,6 +278,8 @@ export class Runner {
 
     // Properties
     aborted = false;
+    /** @type {import("@odoo/owl").Signal<Test | null>} */
+    currentTest = signal(null);
     /** @type {boolean | Test | Suite} */
     debug = false;
     dry = false;
@@ -284,64 +287,61 @@ export class Runner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
+    /**
+     * List of IDs of tests that have failed (previously AND during this run).
+     * @type {import("@odoo/owl").Signal<Set<string>>}
+     */
+    failedIds = signal.Set(new Set(storageGet(STORAGE.failed)));
+    /**
+     * List of suites that will be run (only available after {@link Runner.start})
+     * @type {Suite[]}
+     */
+    filteredSuites = signal.Array([]);
+    /**
+     * List of tests that will be run (only available after {@link Runner.start})
+     * @type {Test[]}
+     */
+    filteredTests = signal.Array([]);
+    /**
+     * List of tests that have been run
+     * @type {import("@odoo/owl").Signal<Set<Test>>}
+     */
+    finishedTests = signal.Set(new Set());
+    fixture = new FixtureManager(this);
+    /**
+     * @type {Record<string, GlobalIssueReport>}
+     */
+    globalErrors = {};
+    /**
+     * @type {Record<string, GlobalIssueReport>}
+     */
+    globalWarnings = {};
     headless = false;
-    /** @type {Record<string, Preset>} */
-    presets = {
-        [""]: { label: "No preset" },
+    /**
+     * Dictionnary containing whether a job is included or excluded from the
+     * current run. Values are numbers defining priority:
+     *  - 0: inherits inclusion status from parent object
+     *  - +1/-1: included/excluded by URL
+     *  - +2/-2: included/excluded by explicit test tag (readonly)
+     *  - +3/-3: included/excluded by preset (readonly)
+     * @type {Record<"id" | "tag", Record<string, number>>}
+     */
+    includeSpecs = {
+        id: {},
+        tag: {},
     };
+    /** @type {import("@odoo/owl").Signal<Map<string, Preset>>} */
+    presets = signal.Map(new Map([["", { label: "No preset" }]]));
     reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
-    state = {
-        /** @type {Test | null} */
-        currentTest: null,
-        /**
-         * List of tests that have been run
-         * @type {Set<Test>}
-         */
-        done: new Set(),
-        /**
-         * List of IDs of tests that have failed (previously AND during this run).
-         */
-        failedIds: new Set(storageGet(STORAGE.failed)),
-        /**
-         * @type {Record<string, GlobalIssueReport>}
-         */
-        globalErrors: {},
-        /**
-         * @type {Record<string, GlobalIssueReport>}
-         */
-        globalWarnings: {},
-        /**
-         * Dictionnary containing whether a job is included or excluded from the
-         * current run. Values are numbers defining priority:
-         *  - 0: inherits inclusion status from parent object
-         *  - +1/-1: included/excluded by URL
-         *  - +2/-2: included/excluded by explicit test tag (readonly)
-         *  - +3/-3: included/excluded by preset (readonly)
-         * @type {Record<"id" | "tag", Record<string, number>>}
-         */
-        includeSpecs: {
-            id: {},
-            tag: {},
-        },
-        /** @type {"ready" | "running" | "done"} */
-        status: "ready",
-        /**
-         * List of suites that will be run (only available after {@link Runner.start})
-         * @type {Suite[]}
-         */
-        suites: [],
-        /**
-         * List of tests that will be run (only available after {@link Runner.start})
-         * @type {Test[]}
-         */
-        tests: [],
-    };
     /** @type {Map<string, Suite>} */
     suites = new Map();
     /** @type {Suite[]} */
     suiteStack = [];
+    status = signal("ready", {
+        type: t.or([t.literal("ready"), t.literal("running"), t.literal("done")]),
+    });
     /** @type {Map<string, Tag>} */
     tags = new Map();
     /** @type {Map<string, Test>} */
@@ -356,7 +356,7 @@ export class Runner {
      * @type {boolean}
      */
     get hasFilter() {
-        for (const includeValues of $values(this.state.includeSpecs)) {
+        for (const includeValues of $values(this.includeSpecs)) {
             if ($keys(includeValues).length > 0) {
                 return true;
             }
@@ -372,70 +372,97 @@ export class Runner {
     }
 
     // Private properties
-    _callbacks = new Callbacks();
-    /** @type {Job[]} */
-    _currentJobs = [];
-    _failed = 0;
-    _includeFilterCount = 0;
-    /** @type {(() => MaybePromise<void>)[]} */
-    _missedCallbacks = [];
-    _populateState = false;
-    _prepared = false;
-    /** @type {() => void} */
-    _pushPendingTest = () => {};
-    /** @type {(test: Test) => void} */
-    _pushTest = () => {};
-    _removableFilterCount = 0;
-    _started = false;
-    _startTime = 0;
 
-    /** @type {null | (value?: any) => any} */
+    /**
+     * @private
+     */
+    _callbacks = new Callbacks();
+    /**
+     * @private
+     * @type {Job[]}
+     */
+    _currentJobs = [];
+    /**
+     * @private
+     */
+    _failed = 0;
+    /**
+     * @private
+     */
+    _includeFilterCount = 0;
+    /**
+     * @private
+     * @type {(() => MaybePromise<void>)[]}
+     */
+    _missedCallbacks = [];
+    /**
+     * @private
+     */
+    _populateState = false;
+    /**
+     * @private
+     */
+    _prepared = false;
+    /**
+     * @private
+     * @type {() => void}
+     */
+    _pushPendingTest = () => {};
+    /**
+     * @private
+     * @type {(test: Test) => void}
+     */
+    _pushTest = () => {};
+    /**
+     * @private
+     */
+    _removableFilterCount = 0;
+    /**
+     * @private
+     */
+    _started = false;
+    /**
+     * @private
+     */
+    _startTime = 0;
+    /**
+     * @private
+     * @type {null | (value?: any) => any}
+     */
     _resolveCurrent = null;
 
     /**
-     * @param {typeof DEFAULT_CONFIG} [config]
+     * @param {Partial<HootConfig>} urlParams
      */
-    constructor(config) {
+    constructor(urlParams) {
+        /** @type {ReturnType<makeConfigManager>} */
+        this.config = makeConfigManager(urlParams);
+
         // Main test methods
         this.describe = this._addConfigurators(this.addSuite, () => this.suiteStack.at(-1));
-        this.fixture = makeFixtureManager(this);
         this.test = this._addConfigurators(this.addTest, false);
 
-        this.initialConfig = { ...DEFAULT_CONFIG, ...config };
         // Headless cannot be configured while running since it retains much less
         // information/state that cannot be retrieved after construction.
-        this.headless = this.initialConfig.headless;
-        if (this.headless) {
-            this.config = { ...this.initialConfig };
-        } else {
-            this.presets = reactive(this.presets);
-            this.state = reactive(this.state);
-            this.config = reactive({ ...this.initialConfig }, () => {
-                setParams(
-                    $fromEntries(
-                        $entries(this.config).map(([key, value]) => [
-                            key,
-                            deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
-                        ])
-                    )
-                );
-            });
+        this.headless = this.config.headless();
+        if (!this.headless) {
+            this.globalErrors = proxy(this.globalErrors);
+            this.globalWarnings = proxy(this.globalWarnings);
+            this.includeSpecs = proxy(this.includeSpecs);
 
-            [this._pushTest, this._pushPendingTest] = batch((test) => this.state.done.add(test));
+            [this._pushTest, this._pushPendingTest] = batch((test) =>
+                this.finishedTests().add(test)
+            );
         }
 
         [this.expect, this.expectHooks] = makeExpect({ headless: this.headless });
 
-        for (const key in this.config) {
-            this.config[key];
-        }
-
         // Debug
-        this.debug = Boolean(this.config.debugTest);
+        this.debug = Boolean(this.config.debugTest());
 
         // Text filter
-        if (this.config.filter) {
-            for (const queryPart of parseQuery(this.config.filter)) {
+        if (this.config.filter()) {
+            for (const queryPart of parseQuery(this.config.filter())) {
                 if (queryPart.exclude) {
                     this.queryExclude.push(queryPart);
                 } else {
@@ -447,23 +474,26 @@ export class Runner {
         }
 
         // Jobs (suites or tests)
-        if (this.config.id?.length) {
-            this._include(this.state.includeSpecs.id, this.config.id, INCLUDE_LEVEL.url);
+        if (this.config.id()?.length) {
+            this._include(this.includeSpecs.id, this.config.id(), INCLUDE_LEVEL.url);
         }
 
         // Tags
-        if (this.config.tag?.length) {
-            this._include(this.state.includeSpecs.tag, this.config.tag, INCLUDE_LEVEL.url);
+        if (this.config.tag()?.length) {
+            this._include(this.includeSpecs.tag, this.config.tag(), INCLUDE_LEVEL.url);
         }
 
-        if (this.config.networkDelay) {
-            const values = this.config.networkDelay.split("-").map((val) => $parseFloat(val) || 0);
+        if (this.config.networkDelay()) {
+            const values = this.config
+                .networkDelay()
+                .split("-")
+                .map((val) => $parseFloat(val) || 0);
             throttleNetwork(...values);
         }
 
         // Random seed
-        if (this.config.random) {
-            internalRandom.seed = this.config.random;
+        if (this.config.random()) {
+            internalRandom.seed = this.config.random();
         }
 
         on(window, "error", this._handleError.bind(this));
@@ -497,7 +527,7 @@ export class Runner {
                 `expected second argument to be a function and got ${String(fn)}`
             );
         }
-        if (this.state.status === "running") {
+        if (this.status() === "running") {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
                 `cannot add a suite after the test runner started`
@@ -568,7 +598,7 @@ export class Runner {
                 `expected second argument to be a function and got ${String(fn)}`
             );
         }
-        if (this.state.status === "running") {
+        if (this.status === "running") {
             throw testError(
                 { name, parent: parentSuite },
                 `cannot add a test after the test runner started.`
@@ -734,8 +764,8 @@ export class Runner {
     }
 
     checkPresetForViewPort() {
-        const presetId = this.config.preset;
-        const preset = this.presets[presetId];
+        const presetId = this.config.preset();
+        const preset = this.presets().get(presetId);
         if (!preset.size) {
             return true;
         }
@@ -744,7 +774,7 @@ export class Runner {
         const [width, height] = preset.size;
         if (width === innerWidth && height === innerHeight) {
             lastPresetWarn = null;
-            delete this.state.globalWarnings[WARNINGS.viewport];
+            delete this.globalWarnings[WARNINGS.viewport];
         } else {
             if (lastPresetWarn !== presetId) {
                 this._handleGlobalWarning(WARNINGS.viewport);
@@ -768,18 +798,72 @@ export class Runner {
     }
 
     /**
+     * @template {(previous: any, ...args: any[]) => any} T
+     * @param {T} instanceGetter
+     * @param {() => any} [afterCallback]
+     * @returns {(...args: DropFirst<Parameters<T>>) => ReturnType<T>}
+     */
+    createJobScopedGetter(instanceGetter, afterCallback) {
+        /**
+         * @this {Runner}
+         * @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>}
+         */
+        function getInstance(...args) {
+            if (this.dry) {
+                return memoized(...args);
+            }
+
+            const currentJob = this.currentTest() || this.suiteStack.at(-1) || this;
+            if (!instances.has(currentJob)) {
+                const parentInstance = [...instances.values()].at(-1);
+                instances.set(currentJob, instanceGetter(parentInstance, ...args));
+
+                if (canCallAfter) {
+                    this.after(function instanceGetterCleanup() {
+                        instances.delete(currentJob);
+                        canCallAfter = false;
+                        afterCallback?.();
+                        canCallAfter = true;
+                    });
+                }
+            }
+
+            return instances.get(currentJob);
+        }
+
+        /** @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>} */
+        function memoized(...args) {
+            if (!memoizedCalled) {
+                memoizedCalled = true;
+                memoizedValue = instanceGetter(null, ...args);
+            }
+            return memoizedValue;
+        }
+
+        /** @type {Map<Job, Parameters<T>[0]>} */
+        const instances = new Map();
+        let canCallAfter = true;
+        let memoizedCalled = false;
+        let memoizedValue;
+
+        this.after(() => instances.clear());
+
+        return getInstance.bind(this);
+    }
+
+    /**
      * @param {string} key
      * @param {Preset} preset
      */
     definePreset(key, preset) {
-        this.presets[key] = preset;
+        this.presets().set(key, preset);
     }
 
     /**
      * @param {() => Promise<void>} callback
      */
     async dryRun(callback) {
-        if (this.state.status !== "ready") {
+        if (this.status() !== "ready") {
             throw new HootError("cannot run a dry run after the test runner started", {
                 level: "global",
             });
@@ -802,12 +886,26 @@ export class Runner {
     }
 
     /**
-     * @template {(...args: any[]) => any} T
-     * @param {T} fn
-     * @returns {T}
+     * @template {keyof Runner} T
+     * @param {T} name
+     * @returns {Runner[T]}
      */
-    exportFn(fn) {
-        return fn.bind(this);
+    exposeRuntimeHook(name) {
+        return {
+            [name](...callbacks) {
+                if (this.dry) {
+                    return;
+                }
+                const last = callbacks.at(-1);
+                const options = last && typeof last === "object" ? callbacks.pop() : {};
+                if (!this.suiteStack.length && !options.global) {
+                    throw new HootError(`cannot call "${name}" callback outside of a suite`, {
+                        level: "critical",
+                    });
+                }
+                return this[name](...callbacks);
+            },
+        }[name].bind(this);
     }
 
     /**
@@ -819,7 +917,7 @@ export class Runner {
     getCurrent() {
         return {
             suite: this.suiteStack.at(-1) || null,
-            test: this.state.currentTest,
+            test: this.currentTest(),
         };
     }
 
@@ -829,7 +927,7 @@ export class Runner {
      * @param {number} value
      */
     include(type, id, value) {
-        this._include(this.state.includeSpecs[type], [id], value);
+        this._include(this.includeSpecs[type], [id], value);
         this._updateConfigFromSpecs();
     }
 
@@ -904,7 +1002,7 @@ export class Runner {
             });
         }
 
-        if (this.state.status === "done") {
+        if (this.status() === "done") {
             return false;
         }
 
@@ -916,13 +1014,13 @@ export class Runner {
             await this._canStartDef.promise;
         }
 
-        this.state.status = "running";
+        this.status.set("running");
 
         /** @type {Runner["_handleError"]} */
         const handleError = this._handleError.bind(this);
 
         let job = this._nextJob(jobs);
-        while (job && this.state.status === "running") {
+        while (job && this.status() === "running") {
             const callbackChain = this._getCallbackChain(job);
             if (job instanceof Suite) {
                 // Case: suite
@@ -991,7 +1089,7 @@ export class Runner {
             const restoreConsole = handleConsoleIssues(test, !this.debug);
 
             // Before test
-            this.state.currentTest = test;
+            this.currentTest.set(test);
             this.expectHooks.before(test);
             test.before();
             for (const callbackRegistry of [...callbackChain].reverse()) {
@@ -1004,7 +1102,7 @@ export class Runner {
             // ! keep the smallest stack trace possible:
             // !    Runner.start() > Test.run() > Error
             const testPromise = Promise.resolve(test.run());
-            const timeout = $floor(test.config.timeout || this.config.timeout);
+            const timeout = $floor(test.config.timeout || this.config.timeout());
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
                 this._resolveCurrent = resolve;
@@ -1081,14 +1179,14 @@ export class Runner {
                 if (!this.aborted) {
                     if (this._failed === 1) {
                         // On first failed test: reset the "failed IDs" list
-                        this.state.failedIds.clear();
+                        this.failedIds().clear();
                     }
-                    this.state.failedIds.add(test.id);
-                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                    this.failedIds().add(test.id);
+                    storageSet(STORAGE.failed, [...this.failedIds()]);
                 }
-            } else if (this.state.failedIds.has(test.id)) {
-                this.state.failedIds.delete(test.id);
-                storageSet(STORAGE.failed, [...this.state.failedIds]);
+            } else if (this.failedIds().has(test.id)) {
+                this.failedIds().delete(test.id);
+                storageSet(STORAGE.failed, [...this.failedIds()]);
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1100,7 +1198,7 @@ export class Runner {
             if (this.debug) {
                 return new Promise(() => {});
             }
-            if (this.config.bail && this._failed >= this.config.bail) {
+            if (this.config.bail() && this._failed >= this.config.bail()) {
                 return this.stop();
             }
 
@@ -1118,7 +1216,7 @@ export class Runner {
             job = this._nextJob(jobs, job);
         }
 
-        if (this.state.status === "done") {
+        if (this.status() === "done") {
             return false;
         }
 
@@ -1126,7 +1224,7 @@ export class Runner {
 
         if (!this.debug) {
             if (jobs.length) {
-                this.state.status = "ready";
+                this.status.set("ready");
             } else {
                 await this.stop();
             }
@@ -1137,7 +1235,7 @@ export class Runner {
 
     async stop() {
         this._currentJobs = [];
-        this.state.status = "done";
+        this.status.set("done");
 
         if (this._resolveCurrent) {
             this._resolveCurrent();
@@ -1167,7 +1265,7 @@ export class Runner {
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.headless) {
-                const ids = this.simplifyUrlIds({ id: this.state.failedIds });
+                const ids = this.simplifyUrlIds({ id: this.failedIds() });
                 const link = createUrlFromId(ids, { debug: true });
                 // Tweak parameters to make debugging easier
                 link.searchParams.set("debug", "assets");
@@ -1367,7 +1465,7 @@ export class Runner {
                             )}. This is not suitable for CI`
                         );
                     }
-                    this._include(this.state.includeSpecs.id, [job.id], INCLUDE_LEVEL.tag);
+                    this._include(this.includeSpecs.id, [job.id], INCLUDE_LEVEL.tag);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1441,7 +1539,7 @@ export class Runner {
                 this.suites.delete(job.id);
             }
         } else {
-            if (job.results.every((result) => result.pass)) {
+            if (job.results().every((result) => result.pass)) {
                 this.tests.delete(job.id);
             }
         }
@@ -1490,7 +1588,7 @@ export class Runner {
      * @param {Job} job
      */
     _getExplicitIncludeStatus(job) {
-        const explicitInclude = this.state.includeSpecs.id[job.id] || 0;
+        const explicitInclude = this.includeSpecs.id[job.id] || 0;
         return [explicitInclude > 0, explicitInclude < 0];
     }
 
@@ -1558,7 +1656,7 @@ export class Runner {
      */
     _isImplicitlyExcluded(job) {
         // By tag name
-        for (const [tagName, status] of $entries(this.state.includeSpecs.tag)) {
+        for (const [tagName, status] of $entries(this.includeSpecs.tag)) {
             if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
@@ -1578,7 +1676,7 @@ export class Runner {
      */
     _isImplicitlyIncluded(job) {
         // By tag name
-        for (const [tagName, status] of $entries(this.state.includeSpecs.tag)) {
+        for (const [tagName, status] of $entries(this.includeSpecs.tag)) {
             if (status > 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
@@ -1597,7 +1695,7 @@ export class Runner {
      * @param {Job} [job]
      */
     _nextJob(jobs, job) {
-        this.state.currentTest = null;
+        this.currentTest.set(null);
         if (job) {
             const sibling = job.currentJobs?.[job.currentJobIndex++];
             if (sibling) {
@@ -1634,7 +1732,7 @@ export class Runner {
             }
 
             if (this._populateState) {
-                this.state.tests.push(debugTest);
+                this.filteredTests().push(debugTest);
             }
 
             const jobs = debugTest.path;
@@ -1642,7 +1740,7 @@ export class Runner {
                 const suite = jobs[i];
                 suite.setCurrentJobs([jobs[i + 1]]);
                 if (this._populateState) {
-                    this.state.suites.push(suite);
+                    this.filteredSuites().push(suite);
                 }
             }
             return [jobs[0]];
@@ -1668,15 +1766,15 @@ export class Runner {
                 included = Boolean(job.currentJobs.length);
 
                 if (included && this._populateState) {
-                    this.state.suites.push(job);
+                    this.filteredSuites().push(job);
                 }
             } else if (included && this._populateState) {
-                this.state.tests.push(job);
+                this.filteredTests().push(job);
             }
             return included;
         });
 
-        switch (this.config.order) {
+        switch (this.config.order()) {
             case "fifo": {
                 return filteredJobs;
             }
@@ -1695,15 +1793,16 @@ export class Runner {
         }
         this._prepared = true;
 
-        if (this.config.preset) {
-            const preset = this.presets[this.config.preset];
+        const presetId = this.config.preset();
+        if (presetId) {
+            const preset = this.presets().get(presetId);
             if (!preset) {
-                throw new HootError(`unknown preset: "${this.config.preset}"`, {
+                throw new HootError(`unknown preset: "${presetId}"`, {
                     level: "critical",
                 });
             }
             if (preset.tags?.length) {
-                this._include(this.state.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
+                this._include(this.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
             }
             if (typeof preset.touch === "boolean") {
                 this.beforeEach(() => mockTouch(preset.touch));
@@ -1712,16 +1811,16 @@ export class Runner {
         }
 
         // Cleanup invalid IDs and tags from URL
-        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs.id);
+        const hasChanged = this._simplifyIncludeSpecs(this.includeSpecs.id);
         if (hasChanged) {
             this._updateConfigFromSpecs();
         }
 
         // Cleanup invalid tests from storage
-        const failedIds = [...this.state.failedIds];
+        const failedIds = [...this.failedIds()];
         const existingFailed = failedIds.filter((id) => this.tests.has(id));
         if (existingFailed.length !== failedIds.length) {
-            this.state.failedIds = new Set(existingFailed);
+            this.failedIds.set(new Set(existingFailed));
             storageSet(STORAGE.failed, existingFailed);
         }
 
@@ -1738,12 +1837,12 @@ export class Runner {
         this._currentJobs = this._prepareJobs(this.rootSuites);
         this._populateState = false;
 
-        if (!this.state.tests.length) {
+        if (!this.filteredTests().length) {
             logger.logGlobal(`no tests to run`);
         }
 
         // Reduce non-included suites & tests info to a miminum
-        const includedSuites = new Set(this.state.suites);
+        const includedSuites = new Set(this.filteredSuites());
         for (const suite of this.suites.values()) {
             if (!includedSuites.has(suite)) {
                 if (this.headless) {
@@ -1753,7 +1852,7 @@ export class Runner {
                 }
             }
         }
-        const includedTests = new Set(this.state.tests);
+        const includedTests = new Set(this.filteredTests());
         for (const test of this.tests.values()) {
             if (!includedTests.has(test)) {
                 if (this.headless) {
@@ -1766,8 +1865,8 @@ export class Runner {
 
         if (this.headless) {
             this.rootSuites.length = 0;
-            this.state.suites.length = 0;
-            this.state.tests.length = 0;
+            this.filteredSuites().length = 0;
+            this.filteredTests().length = 0;
         }
 
         return {
@@ -1780,7 +1879,7 @@ export class Runner {
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
     _handleError(ev) {
-        if (this.config.notrycatch) {
+        if (this.config.notrycatch()) {
             return;
         }
         const error = ensureError(ev);
@@ -1805,7 +1904,7 @@ export class Runner {
             return ev.preventDefault();
         }
 
-        if (this.state.currentTest) {
+        if (this.currentTest()) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
@@ -1837,7 +1936,7 @@ export class Runner {
      * @param {Error} error
      */
     _handleErrorInTest(ev, error) {
-        for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
+        for (const callbackRegistry of this._getCallbackChain(this.currentTest())) {
             callbackRegistry.callSync("error", ev, logger.error);
             if (isPrevented(ev)) {
                 // Prevented in tests
@@ -1853,12 +1952,11 @@ export class Runner {
      * @param {Error} error
      */
     _handleGlobalError(ev, error) {
-        const { globalErrors } = this.state;
         const key = String(error);
-        if (globalErrors[key]) {
-            globalErrors[key].count++;
+        if (this.globalErrors[key]) {
+            this.globalErrors[key].count++;
         } else {
-            globalErrors[key] = {
+            this.globalErrors[key] = {
                 count: 1,
                 message: error.message,
                 name: error.constructor.name || error.name,
@@ -1871,15 +1969,14 @@ export class Runner {
      * @param {string} message
      */
     _handleGlobalWarning(message) {
-        const { globalWarnings } = this.state;
         const key = message;
-        if (globalWarnings[key]) {
-            globalWarnings[key].count++;
+        if (this.globalWarnings[key]) {
+            this.globalWarnings[key].count++;
         } else {
-            globalWarnings[key] = {
+            this.globalWarnings[key] = {
                 count: 1,
                 message,
-                name: this.config.fun ? "warming" : "warning",
+                name: this.config.fun() ? "warming" : "warning",
             };
         }
         return false;
@@ -1887,12 +1984,12 @@ export class Runner {
 
     async _setupStart() {
         this._startTime = $now();
-        if (this.config.manual) {
+        if (this.config.manual()) {
             this._canStartDef ||= Promise.withResolvers();
         }
 
         // Config log
-        const table = { ...toRaw(this.config) };
+        const table = getConfigValues(this.config);
         for (const key of FILTER_KEYS) {
             if (isIterable(table[key])) {
                 table[key] = `[${[...table[key]].join(", ")}]`;
@@ -1906,14 +2003,14 @@ export class Runner {
 
         // Adjust debug mode if more or less than 1 test will be run
         if (this.debug) {
-            const activeSingleTests = this.state.tests.filter(
+            const activeSingleTests = this.filteredTests().filter(
                 (test) => !test.config.skip && !test.config.multi
             );
             if (activeSingleTests.length !== 1) {
                 logger.global.warn(
                     `Disabling debug mode: ${activeSingleTests.length} tests will be run`
                 );
-                this.config.debugTest = false;
+                this.config.debugTest.set(false);
                 this.debug = false;
             } else {
                 const nameSpace = exposeHelpers(
@@ -1928,7 +2025,7 @@ export class Runner {
                     {
                         __debug__: this,
                         destroy,
-                        getFixture: this.fixture.get,
+                        getFixture: this.fixture.getFixture,
                     }
                 );
                 logger.setLogLevel("debug");
@@ -1939,7 +2036,7 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(defineRootNode.bind(null, this.fixture.get));
+        this.beforeAll(defineRootNode.bind(null, this.fixture.getFixture));
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
@@ -1960,13 +2057,13 @@ export class Runner {
         );
 
         enableEventLogs(logger.canLog("debug"));
-        setFrameRate(this.config.fps);
+        setFrameRate(this.config.fps());
 
         await this._callbacks.call("before-all", this, logger.error);
     }
 
     /**
-     * @param {Runner["state"]["includeSpecs"]["id"]} idSpecs
+     * @param {Runner["includeSpecs"]["id"]} idSpecs
      */
     _simplifyIncludeSpecs(idSpecs) {
         let hasChanged = false;
@@ -2014,7 +2111,7 @@ export class Runner {
             if (type === "filter") {
                 continue;
             }
-            this.config[type] = formatIncludes(this.state.includeSpecs[type]);
+            this.config[type].set(formatIncludes(this.includeSpecs[type]));
         }
     }
 }
