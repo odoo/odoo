@@ -21,7 +21,8 @@ class MrpWorkorder(models.Model):
         return res
 
     def action_cancel(self):
-        (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()
+        sudo_self = self.sudo()
+        (sudo_self.mo_analytic_account_line_ids | sudo_self.wc_analytic_account_line_ids).unlink()
         return super().action_cancel()
 
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
@@ -54,5 +55,6 @@ class MrpWorkorder(models.Model):
                 self.wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
 
     def unlink(self):
-        (self.mo_analytic_account_line_ids | self.wc_analytic_account_line_ids).unlink()
+        sudo_self = self.sudo()
+        (sudo_self.mo_analytic_account_line_ids | sudo_self.wc_analytic_account_line_ids).unlink()
         return super().unlink()
