@@ -1222,9 +1222,11 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            PartnerList.searchCustomerValue("Test Partner", true),
-            PartnerList.clickPartner("Test Partner"),
-            ProductScreen.customerIsSelected("Test Partner"),
+            PartnerList.searchCustomerValue("Partner Full", true),
+            PartnerList.clickPartner("Partner Full"),
+            ProductScreen.customerIsSelected("Partner Full"),
+            Chrome.clickOrders(),
+            TicketScreen.checkCustomerAddress("77 Santa Barbara Rd Pleasant Hill"),
             Chrome.endTour(),
         ].flat(),
 });
