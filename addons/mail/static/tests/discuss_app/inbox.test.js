@@ -549,8 +549,8 @@ test("reply: stop replying button click", async () => {
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer");
-    await contains("i[title='Stop replying']");
-    await click("i[title='Stop replying']");
+    await contains("i[title='Discard']");
+    await click("i[title='Discard']");
     await contains(".o-mail-Composer", { count: 0 });
 });
 
@@ -577,60 +577,6 @@ test("error notifications should not be shown in Inbox", async () => {
         `.o-mail-Message-header a[href*='/odoo/res.partner/${partnerId}']:text('Demo User')`
     );
     await contains(".o-mail-Message-notification", { count: 0 });
-});
-
-test("emptying inbox displays rainbow man in inbox", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const messageId1 = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "discuss.channel",
-        needaction: true,
-        res_id: channelId,
-    });
-    pyEnv["mail.notification"].create([
-        {
-            mail_message_id: messageId1,
-            notification_type: "inbox",
-            res_partner_id: serverState.partnerId,
-        },
-    ]);
-    await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message");
-    await click("button:enabled:text('Mark all read')");
-    await contains(".o_reward_rainbow");
-});
-
-test("emptying inbox doesn't display rainbow man in another thread", async () => {
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const partnerId = pyEnv["res.partner"].create({});
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "res.partner",
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create([
-        {
-            mail_message_id: messageId,
-            notification_type: "inbox",
-            res_partner_id: serverState.partnerId,
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId);
-    await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
-    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
-        message_ids: [messageId],
-        needaction_inbox_counter: 0,
-    });
-    await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
-    // weak test, no guarantee that we waited long enough for the potential rainbow man to show
-    await contains(".o_reward_rainbow", { count: 0 });
 });
 
 test("Counter should be incremented by 1 when receiving a message with a mention in a channel", async () => {

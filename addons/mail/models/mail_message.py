@@ -873,6 +873,7 @@ class MailMessage(models.Model):
                 "needaction_inbox_counter": self.env.user.partner_id._get_needaction_count(),
             },
         )
+        return notifications.mail_message_id.ids
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
@@ -1143,7 +1144,7 @@ class MailMessage(models.Model):
             res.many(
                 "notification_ids",
                 "_store_notification_fields",
-                value=lambda m: m.sudo().notification_ids._filtered_for_web_client(),
+                sudo=True,
             )
 
         # fetch scheduled notifications once, only if msg_vals is not given to

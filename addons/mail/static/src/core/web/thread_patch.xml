@@ -5,8 +5,8 @@
             <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
                 <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
                     <div class="align-items-center text-center">
-                        <h4 class="mb-3 o-fw-600">Congratulations, your inbox is empty</h4>
-                        New messages appear here.
+                        <h4 class="mb-3 o-fw-600">You're all caught up!</h4>
+                        New messages will appear here.
                     </div>
                 </t>
                 <t t-if="props.thread.id === 'bookmark'">
