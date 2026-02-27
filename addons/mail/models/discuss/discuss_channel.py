@@ -661,6 +661,7 @@ class DiscussChannel(models.Model):
         guests = guests or self.env["mail.guest"]
         current_user, current_guest = self.env["res.users"]._get_current_persona()
         all_new_members = self.env["discuss.channel.member"]
+        last_message_by_channel = self._get_last_messages().grouped("channel_id")
         for channel in self:
             members_to_create = []
             existing_members = self.env['discuss.channel.member'].search(
@@ -677,6 +678,9 @@ class DiscussChannel(models.Model):
                 'guest_id': guest.id,
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
+            if last_message := last_message_by_channel.get(channel):
+                for member_vals in members_to_create:
+                    member_vals.setdefault("new_message_separator", last_message.id + 1)
             if channel.parent_channel_id and channel.parent_channel_id.has_access("write"):
                 new_members = self.env["discuss.channel.member"].sudo().create(members_to_create)
             else:

@@ -13,10 +13,16 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    makeKwArgs,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -377,4 +383,32 @@ test("only show new message separator in its thread", async () => {
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))", {
         count: 0,
     });
+});
+
+test("new member's separator should be at the bottom of existing messages after being invited", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const demoPartnerId = pyEnv["res.partner"].create({ name: "Newbie" });
+    await start();
+    const newMemberIds = await getService("orm").call(
+        "discuss.channel",
+        "add_members",
+        [[channelId]],
+        { partner_ids: [demoPartnerId] }
+    );
+    const [lastMessageId = 0] = pyEnv["mail.message"].search(
+        [
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ],
+        makeKwArgs({ limit: 1, order: "id DESC" })
+    );
+    expect(newMemberIds[0].new_message_separator).toBe(lastMessageId + 1);
 });

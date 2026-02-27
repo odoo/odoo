@@ -131,6 +131,8 @@ export class DiscussChannel extends models.ServerModel {
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
@@ -145,12 +147,20 @@ export class DiscussChannel extends models.ServerModel {
             const subtype_xmlid = "mail.mt_comment";
             this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
         }
+        const [lastMessageId = 0] = MailMessage.search(
+            [
+                ["model", "=", "discuss.channel"],
+                ["res_id", "=", channel.id],
+            ],
+            makeKwArgs({ limit: 1, order: "id DESC" })
+        );
         const insertedChannelMembers = [];
         for (const partner of partners) {
             const channelMember = DiscussChannelMember.create({
                 channel_id: channel.id,
                 partner_id: partner.id,
                 create_uid: this.env.uid,
+                new_message_separator: lastMessageId + 1,
             });
             insertedChannelMembers.push(channelMember);
             BusBus._sendone(partner, "discuss.channel/joined", {
