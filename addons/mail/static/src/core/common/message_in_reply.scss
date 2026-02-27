@@ -13,9 +13,17 @@
     border-left-color: var(--o-message-bubble-color-base) !important;;
     background-color: rgba($o-view-background-color, .5) !important;
 
+    .o-mail-MessageInReply-message {
+        opacity: var(--mail-MessageInReply-messageOpacityNonHover, 65%);
+    }
+
     &:hover, &:focus-visible {
         transform: translateY(#{$border-width * -2});
         transition: $transition-base;
+
+        .o-mail-MessageInReply-message {
+            opacity: 100%;
+        }
     }
 }
 
