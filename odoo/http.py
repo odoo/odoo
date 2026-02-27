@@ -311,6 +311,12 @@ SESSION_LIFETIME = 60 * 60 * 24 * 7
 # session id (also on the cookie) but keeping the same content.
 SESSION_ROTATION_INTERVAL = 60 * 60 * 3
 
+# URL paths for which automatic session rotation is disabled.
+SESSION_ROTATION_EXCLUDED_PATHS = (
+    '/websocket/peek_notifications',
+    '/websocket/update_bus_presence',
+)
+
 # After a session is rotated, the session should be kept for a couple of
 # seconds to account for network delay between multiple requests which are
 # made at the same time and all use the same old cookie.
@@ -2123,7 +2129,11 @@ class Request:
 
         if sess.should_rotate:
             root.session_store.rotate(sess, env)  # it saves
-        elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
+        elif (
+            sess.uid
+            and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
+            and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+        ):
             root.session_store.rotate(sess, env, True)
         elif sess.is_dirty:
             root.session_store.save(sess)
