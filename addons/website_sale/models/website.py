@@ -348,27 +348,24 @@ class Website(models.Model):
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
-    @api.depends_context('uid')
+    @api.depends_context('sale_order_id')
     def _compute_current_session_sale_order_id(self):
         if not self:
             return
         self.current_session_sale_order_id = self._get_and_cache_current_session_sale_order_id()
 
-    @api.depends_context('uid')
+    @api.depends_context('fiscal_position_id')
     def _compute_current_session_fiscal_position_id(self):
         if not self:
             return
         self.current_session_fiscal_position_id = self._get_and_cache_current_session_fiscal_position_id()
 
-    @api.depends_context('uid', 'pricelist_id')
+    @api.depends_context('pricelist_id')
     @api.depends('current_session_sale_order_id')
     def _compute_current_session_pricelist_id(self):
         if not self:
             return
-        if pricelist_id := self.env.context.get('pricelist_id'):
-            self.current_session_pricelist_id = self.env['product.pricelist'].browse(pricelist_id)
-        else:
-            self.current_session_pricelist_id = self._get_and_cache_current_session_pricelist_id()
+        self.current_session_pricelist_id = self._get_and_cache_current_session_pricelist_id()
 
     @api.depends('company_id')
     def _compute_currency_id(self):
@@ -796,10 +793,11 @@ class Website(models.Model):
         if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
-        if request and PRICELIST_SESSION_CACHE_KEY in request.session:
-            pricelist_sudo = ProductPricelistSudo.browse(
-                request.session[PRICELIST_SESSION_CACHE_KEY]
-            )
+        if pricelist_id := (
+                self.env.context.get('pricelist_id')
+                or (request and request.session.get(PRICELIST_SESSION_CACHE_KEY))
+            ):
+            pricelist_sudo = ProductPricelistSudo.browse(pricelist_id)
             if pricelist_sudo and (
                 pricelist_sudo.exists()
                 and pricelist_sudo._is_available_on_website(self)
@@ -808,7 +806,7 @@ class Website(models.Model):
                 return pricelist_sudo.sudo()
 
         if cart_sudo := self.current_session_sale_order_id:
-            if not request.env.cr.readonly:
+            if not self.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()
             pricelist_sudo = cart_sudo.pricelist_id
@@ -818,7 +816,9 @@ class Website(models.Model):
             if available_pricelists and pricelist_sudo not in available_pricelists:
                 pricelist_sudo = available_pricelists[0].sudo()
 
-        request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist_sudo.id
+        if request:
+            request.session[PRICELIST_SESSION_CACHE_KEY] = pricelist_sudo.id
+            self.invalidate_model(['current_session_pricelist_id'])
 
         return pricelist_sudo
 
@@ -829,20 +829,25 @@ class Website(models.Model):
         :rtype: account.fiscal.position
         """
         AccountFiscalPositionSudo = self.env['account.fiscal.position'].sudo()
-        fpos_sudo = AccountFiscalPositionSudo
 
-        if request and FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
-            fpos_sudo = AccountFiscalPositionSudo.browse(
-                request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
-            )
+        if fiscal_position_id := (
+                self.env.context.get('fiscal_position_id')
+                or (request and request.session.get(FISCAL_POSITION_SESSION_CACHE_KEY))
+            ):
+            fpos_sudo = AccountFiscalPositionSudo.browse(fiscal_position_id)
             if fpos_sudo and fpos_sudo.exists():
                 return fpos_sudo
 
         partner_sudo = self.env.user.partner_id
+        fpos_sudo = AccountFiscalPositionSudo
 
-        # If the current user is the website public user, the fiscal position
-        # is computed according to geolocation.
-        if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
+        if not (request and request.geoip.country_code):
+            # If the current user is the connected use the user country.
+            # If they are no request, the website user can be used.
+            fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_sudo)
+        elif self.partner_id.id == partner_sudo.id:
+            # If the current user is the website public user, the fiscal position
+            # is computed according to geolocation.
             country = self.env['res.country'].search(
                 [('code', '=', request.geoip.country_code)],
                 limit=1,
@@ -850,10 +855,9 @@ class Website(models.Model):
             partner_geoip = self.env['res.partner'].sudo().new({'country_id': country.id})
             fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_geoip)
 
-        if not fpos_sudo:
-            fpos_sudo = AccountFiscalPositionSudo._get_fiscal_position(partner_sudo)
-
-        request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fpos_sudo.id
+        if request:
+            request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = fpos_sudo.id
+            self.invalidate_model(['current_session_fiscal_position_id'])
 
         return fpos_sudo
 
@@ -864,10 +868,19 @@ class Website(models.Model):
         :rtype: sale.order
         """
         SaleOrderSudo = self.env['sale.order'].sudo()
-
         sale_order_sudo = SaleOrderSudo
-        if request and CART_SESSION_CACHE_KEY in request.session:
-            sale_order_sudo = SaleOrderSudo.browse(request.session[CART_SESSION_CACHE_KEY])
+
+        sale_order_id = (
+            self.env.context.get('sale_order_id')
+            or (request and request.session.get(CART_SESSION_CACHE_KEY))
+        )
+
+        if sale_order_id is False:
+            # get comment below for request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
+            return sale_order_sudo
+
+        if sale_order_id:
+            sale_order_sudo = SaleOrderSudo.browse(sale_order_id)
 
             try:
                 # fetch the record field or raise a missingError
@@ -893,7 +906,7 @@ class Website(models.Model):
                 sale_order_sudo
                 and not self.env.user._is_public()
                 and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
-                and not request.env.cr.readonly
+                and not self.env.cr.readonly
             ):
                 sale_order_sudo._update_address(self.env.user.partner_id.id, ['partner_id'])
         elif (
@@ -930,14 +943,18 @@ class Website(models.Model):
             request.session[CART_SESSION_CACHE_KEY] = sale_order_sudo.id
             if 'website_sale_cart_quantity' not in request.session:
                 request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
+            self.invalidate_model(['current_session_sale_order_id', 'current_session_pricelist_id', 'current_session_fiscal_position_id'])
+
         return sale_order_sudo
 
     def sale_reset(self):
-        request.session.pop(CART_SESSION_CACHE_KEY, None)
-        request.session.pop('website_sale_cart_quantity', None)
-        request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
-        request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
-        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
+        if request:
+            request.session.pop(CART_SESSION_CACHE_KEY, None)
+            request.session.pop('website_sale_cart_quantity', None)
+            request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+            request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+            request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
+            self.invalidate_model(['current_session_sale_order_id', 'current_session_pricelist_id', 'current_session_fiscal_position_id'])
 
     @api.model
     def action_dashboard_redirect(self):
