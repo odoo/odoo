@@ -150,6 +150,18 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
 
+    // Always disable the sample model when `load` is called (can be called by the view itself).
+    // Note: the only case where the sample mode should be kept after a load is handled below (see
+    // @_load), and in that case, the flag is directly set to true afterwards.
+    if (useSampleModel) {
+        const originalLoad = model.load;
+        model.load = async function () {
+            const result = await originalLoad.call(this, ...arguments);
+            this.useSampleModel = false;
+            return result;
+        };
+    }
+
     /**
      * @param {Record<string, unknown>} props
      */

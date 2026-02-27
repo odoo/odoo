@@ -20089,3 +20089,31 @@ For example, if the date is Mar 11 and you enter "+=2d", it will be updated to M
         "Dec 28, 2024, 1:00 AM",
     ]);
 });
+
+test(`custom button that creates record in list with sample data`, async () => {
+    Foo._records = [];
+    onRpc("custom_create", () => {
+        MockServer.env.foo.create({ foo: "new record" });
+        return false;
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list sample="1">
+                <header>
+                    <button class="custom_create" type="object" name="custom_create" string="Custom create" display="always"/>
+                </header>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+    expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
+
+    if (getMockEnv().isSmall) {
+        await contains(".o_control_panel_main_buttons .btn.dropdown-toggle").click();
+    }
+    await contains(".custom_create").click();
+    expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
+    expect(`.o_data_row`).toHaveCount(1);
+});
