@@ -1141,7 +1141,7 @@
                 <input
                     type="text"
                     class="o_wsale_attribute_search_bar form-control"
-                    t-att-placeholder="'Search %s (%s)' % (a.name, len(a.value_ids))"
+                    t-attf-placeholder="Search {{a.name}} ({{len(a.value_ids)}})"
                     t-att-data-container-id="'searchable-values-%s' % a.id"
                 />
             </div>
