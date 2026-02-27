@@ -5,7 +5,14 @@ import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelector } from "@mass_mailing/themes/theme_selector/theme_selector";
-import { onWillUpdateProps, status, toRaw, useEffect, useRef } from "@odoo/owl";
+import {
+    onWillUpdateProps,
+    status,
+    toRaw,
+    useEffect,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
@@ -61,6 +68,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         this.resetIframe();
         this.iframeRef = useChildRef();
+        this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
 
         onWillUpdateProps((nextProps) => {
@@ -115,6 +123,8 @@ export class MassMailingHtmlField extends HtmlField {
             },
             () => [this.codeViewRef.el]
         );
+
+        useExternalListener(window, "pointerdown", this.onPointerDown.bind(this));
     }
 
     get withBuilder() {
@@ -183,7 +193,9 @@ export class MassMailingHtmlField extends HtmlField {
         const props = {
             config: this.getConfig(),
             iframeRef: this.iframeRef,
-            onBlur: this.onBlur.bind(this),
+            iframeWrapperRef: this.iframeWrapperRef,
+            onFocus: this.onFocus.bind(this),
+            onBlur: this.onBlur.bind(this), // deprecated
             onEditorLoad: this.onEditorLoad.bind(this),
             onIframeLoad: this.onIframeLoad.bind(this),
             readonly: this.props.readonly,
@@ -298,6 +310,33 @@ export class MassMailingHtmlField extends HtmlField {
         // editable directly by the user).
         this.props.record.resetFieldValidity(this.props.inlineField);
         super.onChange();
+    }
+
+    onFocus() {
+        this.activeElement = this.iframeWrapperRef.el;
+    }
+
+    /**
+     * Simulate a tuned down "blur", based around the edition area, comprised
+     * of the edition iframe and the builder, to avoid committing changes when
+     * the user is actively interacting inside that zone. Also avoid cases
+     * where the user clicks inside an overlay or other element inside the
+     * main component container, because the builder uses a lot of these.
+     */
+    onPointerDown(ev) {
+        const isTargetOutsideActiveElement =
+            this.activeElement && !this.activeElement.contains(ev.target);
+        const ignoredTargetContainer =
+            isTargetOutsideActiveElement &&
+            ev.target?.closest(".o-main-components-container, .o_form_status_indicator_buttons");
+        const shouldIgnoreTarget =
+            ignoredTargetContainer && !ignoredTargetContainer.contains(this.activeElement);
+        if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
+            this.activeElement = undefined;
+            this.onBlur();
+        } else if (this.iframeWrapperRef.el.contains(ev.target)) {
+            this.activeElement = this.iframeWrapperRef.el;
+        }
     }
 
     onTextareaInput(ev) {
