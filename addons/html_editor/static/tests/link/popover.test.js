@@ -9,7 +9,6 @@ import { getContent, setContent, setSelection } from "../_helpers/selection";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { insertText } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
-import { MAIN_PLUGINS, NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS } from "@html_editor/plugin_sets";
 
 describe("should open a popover", () => {
     test("should open a popover when the selection is inside a link and close outside of a link", async () => {
@@ -366,6 +365,9 @@ describe("popover should edit,copy,remove the link", () => {
         await animationFrame();
         expect(".o_we_href_input_link").toBeFocused();
         // Tab through all focusable elements
+        await press("Tab");
+        await animationFrame();
+        expect("button:has(i.fa-upload)").toBeFocused();
         await press("Tab");
         await animationFrame();
         expect("button[name='link_type']").toBeFocused();
@@ -737,9 +739,7 @@ describe("popover in contenteditable=false or readonly mode", () => {
 
 describe("popover for file uploads", () => {
     test("should display upload button when url input is empty", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         // Upload button should be visible
@@ -766,9 +766,7 @@ describe("popover for file uploads", () => {
         return mockedUploadPromise;
     };
     test("can create a link to an uploaded file", async () => {
-        const { editor, el } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+        const { editor, el } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
@@ -812,9 +810,7 @@ describe("popover for file uploads", () => {
     });
 
     test("label input does not get filled on file upload if it is already filled", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] },
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
