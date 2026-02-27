@@ -287,6 +287,13 @@ test("Can pass domain to search more", async () => {
         { id: 9, name: "Ivy" }
     );
     Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+
+    onRpc("ir.model", "display_name_for", ({ args }) => {
+        expect.step("display_name_for");
+        expect(args[0]).toEqual(["partner"]);
+        return [{ display_name: Partner.name, model: Partner._name }];
+    });
+
     await mountMultiRecordSelector({
         resModel: "partner",
         resIds: [],
@@ -299,4 +306,42 @@ test("Can pass domain to search more", async () => {
     await animationFrame();
 
     expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });
+    expect.verifySteps(["display_name_for"]);
+});
+
+test.tags("desktop");
+test("search more dialog opens with a meaningful title", async () => {
+    Partner._records.push(
+        { id: 4, name: "David" },
+        { id: 5, name: "Eve" },
+        { id: 6, name: "Frank" },
+        { id: 7, name: "Grace" },
+        { id: 8, name: "Helen" },
+        { id: 9, name: "Ivy" }
+    );
+    Partner._views["list"] = /* xml */ `<list><field name="name"/></list>`;
+
+    onRpc("ir.model", "display_name_for", ({ args }) => {
+        expect.step("display_name_for");
+        expect(args[0]).toEqual(["partner"]);
+        return [{ display_name: Partner.name, model: Partner._name }];
+    });
+
+    // The fieldString parameter is intentionally omitted during MultiRecordSelector mounting.
+    await mountMultiRecordSelector({
+        resModel: "partner",
+        resIds: [],
+    });
+    await click(".o-autocomplete input");
+    await animationFrame();
+
+    await click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await animationFrame();
+
+    expect(".modal-title").toHaveText("Search: Partner", {
+        message:
+            "dialog title should display the model name to guide users on what they're searching for",
+    });
+    expect(".o_data_row").toHaveCount(9, { message: "should contain 9 records" });
+    expect.verifySteps(["display_name_for"]);
 });

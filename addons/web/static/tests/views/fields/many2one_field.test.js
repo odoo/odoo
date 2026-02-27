@@ -3478,6 +3478,38 @@ test("search more in many2one: dropdown click", async () => {
     expect(getDropdownMenu(searchDropdown)).toBeVisible();
 });
 
+test.tags("desktop");
+test("search more dialog title falls back to model name when no fieldString is given", async () => {
+    Partner._views = {
+        list: `<list><field name="name"/></list>`,
+    };
+
+    onRpc("ir.model", "display_name_for", ({ args }) => {
+        expect.step("display_name_for");
+        expect(args[0]).toEqual(["partner"]);
+        return [{ display_name: Partner.name, model: Partner._name }];
+    });
+
+    await mountWithCleanup(Many2XAutocomplete, {
+        props: {
+            resModel: Partner._name,
+            fieldString: "",
+            getDomain: () => [],
+            update: () => {},
+            activeActions: {},
+        },
+    });
+
+    await click(".o-autocomplete input");
+    await animationFrame();
+
+    await click(".o_m2o_dropdown_option_search_more");
+    await animationFrame();
+
+    expect(".modal-title").toHaveText("Search: Partner");
+    expect.verifySteps(["display_name_for"]);
+});
+
 test("updating a many2one from a many2many", async () => {
     expect.assertions(5);
 

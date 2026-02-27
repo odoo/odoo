@@ -558,7 +558,13 @@ export class Many2XAutocomplete extends Component {
 
     async onSearchMore(request) {
         const { resModel, getDomain, context, fieldString } = this.props;
-
+        let dialogTitle = fieldString;
+        if (!dialogTitle) {
+            const [modelInfo] = await this.orm
+                .cache()
+                .call("ir.model", "display_name_for", [[resModel]]);
+            dialogTitle = modelInfo?.display_name || resModel;
+        }
         const domain = getDomain();
         let dynamicFilters = [];
         if (request.length) {
@@ -578,7 +584,7 @@ export class Many2XAutocomplete extends Component {
             ];
         }
 
-        const title = _t("Search: %s", fieldString);
+        const title = _t("Search: %s", dialogTitle);
         this.selectCreate({
             domain,
             context,

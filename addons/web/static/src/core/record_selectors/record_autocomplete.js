@@ -79,8 +79,16 @@ export class RecordAutocomplete extends Component {
 
     async onSearchMore(name) {
         const { fieldString, multiSelect, resModel } = this.props;
+        let dialogTitle = fieldString;
         let operator;
         const ids = [];
+        if (!dialogTitle) {
+            const [modelInfo] = await this.orm
+                .cache()
+                .call("ir.model", "display_name_for", [[resModel]]);
+            dialogTitle = modelInfo?.display_name || resModel;
+        }
+
         if (name) {
             const nameGets = await this.search(name, SEARCH_MORE_LIMIT);
             this.addNames(nameGets);
@@ -101,7 +109,7 @@ export class RecordAutocomplete extends Component {
         // fine for now but we don't like this kind of dependence of core to views
         const SelectCreateDialog = registry.category("dialogs").get("select_create");
         this.addDialog(SelectCreateDialog, {
-            title: _t("Search: %s", fieldString),
+            title: _t("Search: %s", dialogTitle),
             dynamicFilters,
             domain: this.getDomain(),
             resModel,
