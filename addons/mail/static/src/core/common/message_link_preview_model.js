@@ -17,7 +17,10 @@ export class MessageLinkPreview extends Record {
     }
 
     hide() {
-        rpc("/mail/link_preview/hide", { message_link_preview_ids: [this.id] });
+        rpc("/mail/link_preview/hide", {
+            message_link_preview_ids: [this.id],
+            ...this.message_id.thread.rpcParams,
+        });
     }
 }
 

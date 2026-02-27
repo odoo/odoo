@@ -687,7 +687,11 @@ export class Message extends Record {
         });
         this.store.insert(data);
         if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
-            rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
+            rpc(
+                "/mail/link_preview",
+                { message_id: this.id, ...this.thread.rpcParams },
+                { silent: true }
+            );
         }
         return data;
     }
@@ -888,6 +892,7 @@ export class Message extends Record {
     hideAllLinkPreviews() {
         rpc("/mail/link_preview/hide", {
             message_link_preview_ids: this.message_link_preview_ids.map((lpm) => lpm.id),
+            ...this.thread.rpcParams,
         });
     }
 }
