@@ -1,9 +1,5 @@
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
-import {
-    EMBEDDED_COMPONENT_PLUGINS,
-    MAIN_PLUGINS,
-    NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
-} from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
@@ -14,14 +10,15 @@ import { insertText } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
+import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 
 const configWithEmbeddedFile = {
-    Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+    Plugins: [
+        ...MAIN_PLUGINS.filter((P) => P.id !== "file"),
+        EmbeddedFilePlugin,
+        ...EMBEDDED_COMPONENT_PLUGINS,
+    ],
     resources: { embedded_components: MAIN_EMBEDDINGS },
-};
-
-const configWithoutEmbeddedFile = {
-    Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS],
 };
 
 const patchUpload = (editor) => {
@@ -38,9 +35,7 @@ const patchUpload = (editor) => {
 
 describe("file command", () => {
     test("/file uploads a file via the system's selector, skipping the media dialog", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: configWithoutEmbeddedFile,
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         // Open powerbox.
         await insertText(editor, "/file");
@@ -56,9 +51,7 @@ describe("file command", () => {
     });
 
     test("file card should have inline display, BS alert-info style and no download button", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: configWithoutEmbeddedFile,
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         patchUpload(editor);
         execCommand(editor, "uploadFile");
         // wait for the embedded component to be mounted
@@ -74,9 +67,7 @@ describe("file command", () => {
     describe("static file box interactions", () => {
         test.tags("desktop");
         test("should toggle file name editability independently on click", async () => {
-            const { el, editor } = await setupEditor("<p>[]<br></p>", {
-                config: configWithoutEmbeddedFile,
-            });
+            const { el, editor } = await setupEditor("<p>[]<br></p>");
             patchUpload(editor);
 
             // Upload two files.
@@ -143,9 +134,7 @@ describe("file command", () => {
 
         test.tags("desktop");
         test("ArrowUp and ArrowDown move the caret to the start and end of a file name", async () => {
-            const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: configWithoutEmbeddedFile,
-            });
+            const { editor } = await setupEditor("<p>[]<br></p>");
             patchUpload(editor);
 
             // Upload a file and wait until the file name is rendered.
@@ -179,9 +168,7 @@ describe("file command", () => {
 
         test.tags("desktop");
         test("ArrowLeft at start and ArrowRight at end do nothing in a file name", async () => {
-            const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: configWithoutEmbeddedFile,
-            });
+            const { editor } = await setupEditor("<p>[]<br></p>");
             patchUpload(editor);
 
             // Upload a file and wait until the file name is rendered.
@@ -215,9 +202,7 @@ describe("file command", () => {
 
         test.tags("desktop");
         test("Enter and Shift+Enter do nothing in a file name", async () => {
-            const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: configWithoutEmbeddedFile,
-            });
+            const { editor } = await setupEditor("<p>[]<br></p>");
             patchUpload(editor);
 
             // Upload a file and wait until the file name is rendered.
@@ -287,7 +272,7 @@ describe("document tab in media dialog", () => {
     describe("without File nor EmbeddedFile plugin", () => {
         test("Document tab is not available by default", async () => {
             const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: { Plugins: MAIN_PLUGINS },
+                config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "file") },
             });
             execCommand(editor, "insertMedia");
             await animationFrame();
@@ -313,9 +298,7 @@ describe("document tab in media dialog", () => {
 
     describe("with File plugin (no embedded component)", () => {
         test("file upload via media dialog inserts a link in the editable", async () => {
-            const { editor } = await setupEditor("<p>[]<br></p>", {
-                config: configWithoutEmbeddedFile,
-            });
+            const { editor } = await setupEditor("<p>[]<br></p>");
             execCommand(editor, "insertMedia");
             await animationFrame();
             await click(".nav-link:contains('Documents')");
@@ -328,9 +311,7 @@ describe("document tab in media dialog", () => {
 
 describe("powerbutton", () => {
     test("file powerbutton uploads a file directly via the system's selector", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: configWithoutEmbeddedFile,
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
         // Click on the upload powerbutton.
         await click(".power_button.fa-upload");
@@ -358,9 +339,7 @@ describe("powerbutton", () => {
 
 describe("zero width no-break space", () => {
     test("file card should be padded with zero-width no-break spaces", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", {
-            config: configWithoutEmbeddedFile,
-        });
+        const { editor } = await setupEditor("<p>[]<br></p>");
         patchUpload(editor);
         execCommand(editor, "uploadFile");
         // wait for the the file to be uploaded and the card rendered
