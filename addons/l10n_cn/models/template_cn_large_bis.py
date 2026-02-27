@@ -10,6 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_cn_large_bis_template_data(self):
         return {
             'name': _('Accounting Standards for Business Enterprises'),
+            'code_digits': 4,
             'parent': 'cn_common',
             'property_account_expense_categ_id': 'l10n_cn_large_bis_account_6401',
             'property_account_income_categ_id': 'l10n_cn_large_bis_account_6001',
@@ -21,8 +22,8 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.cn',
                 'transfer_account_code_prefix': '1004',
-                'income_currency_exchange_account_id': 'l10n_cn_large_bis_account_6061',
-                'expense_currency_exchange_account_id': 'l10n_cn_large_bis_account_6061',
+                'income_currency_exchange_account_id': 'l10n_cn_large_bis_account_660304',
+                'expense_currency_exchange_account_id': 'l10n_cn_large_bis_account_660304',
                 'account_journal_suspense_account_id': 'l10n_cn_large_bis_account_100201',
                 'transfer_account_id': 'l10n_cn_large_bis_account_1004',
                 'account_production_wip_account_id': 'l10n_cn_large_bis_account_140501',
