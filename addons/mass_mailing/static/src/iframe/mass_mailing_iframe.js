@@ -57,24 +57,28 @@ export class MassMailingIframe extends Component {
     static props = {
         config: { type: Object },
         iframeRef: { type: Function },
+        iframeWrapperRef: { type: Function },
         showThemeSelector: { type: Boolean, optional: true },
         onIframeLoad: { type: Function, optional: true },
         showCodeView: { type: Boolean, optional: true },
         toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
         onEditorLoad: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true }, // deprecated
+        onFocus: { type: Function, optional: true },
         extraClass: { type: String, optional: true },
         withBuilder: { type: Boolean, optional: true },
     };
     static defaultProps = {
         onEditorLoad: () => {},
+        onFocus: () => {},
     };
 
     setup() {
         useOverlayServiceOffset();
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
+        this.iframeWrapperRef = useForwardRefToParent("iframeWrapperRef");
         this.sidebarRef = useRef("sidebarRef");
         this.isRTL = localization.direction === "rtl";
         useSubEnv({
@@ -261,7 +265,7 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentWindow.addEventListener("beforeUnload", () => {
             this.iframeRef.el.removeAttribute("is-ready");
         });
-        this.iframeRef.el.contentWindow.addEventListener("blur", this.onBlur.bind(this));
+        this.iframeRef.el.contentWindow.addEventListener("focus", this.props.onFocus.bind(this));
         this.iframeLoaded.resolve({
             iframe: this.iframeRef.el,
             // TODO EGGMAIL: deprecated bundleControls
@@ -347,6 +351,9 @@ export class MassMailingIframe extends Component {
         return Object.fromEntries(await Promise.all(bundleEntryPromises));
     }
 
+    /**
+     * @deprecated
+     */
     onBlur(ev) {
         if (!this.props.readonly) {
             this.props.onBlur(ev);

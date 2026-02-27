@@ -1,6 +1,7 @@
 <templates>
     <t t-name="mass_mailing.MassMailingIframe">
         <div class="o_mass_mailing_iframe_wrapper"
+            t-ref="iframeWrapperRef"
             t-att-class="{
                 'o_mass_mailing_fullscreen': state.showFullscreen,
                 [props.extraClass]: props.extraClass,
