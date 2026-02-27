@@ -82,11 +82,10 @@ export class Chatbot extends Record {
         });
         this.store.insert(store_data);
         this.thread.messages.add(message_id);
+        this.thread.livechat_end_dt = false;
         if (this.currentStep) {
             this.currentStep.isLast = false;
-            this.thread.livechat_end_dt = false;
         }
-        this.start();
     }
 
     /**
