@@ -220,6 +220,9 @@ export class HtmlField extends Component {
 
     onChange() {
         this.isDirty = true;
+        // Ensure that FormController.beforeLeave is able to save record
+        // changes.
+        this.props.record.setDirty();
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
     }
 
