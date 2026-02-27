@@ -35,7 +35,7 @@
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
-                                    <div class="col mw-25">
+                                    <div class="col-2">
                                         <label for="code" string="Code"/>
                                         <div>
                                             <field name="placeholder_code" invisible="1"/>
@@ -70,12 +70,17 @@
                                         <field name="parent_id" placeholder="Root account"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
+                                    <group>
+                                        <div colspan="2">
+                                            <div class="o_horizontal_separator mb-3">
+                                                <label for="description" string="Description" class="fs-4 fw-bolder"/>
+                                            </div>
+                                            <field name="description" no_label="1" placeholder="Enter description here..."/>
+                                        </div>
+                                    </group>
                                 </group>
                             </page>
-                            <page name="Description">
-                                <field name="description"/>
-                            </page>
-                            <page name="mapping" string="Mapping" groups="base.group_multi_company" invisible="not display_mapping_tab">
+                            <page name="mapping" string="Consolidation" groups="base.group_multi_company" invisible="not display_mapping_tab">
                                 <field name="code_mapping_ids" nolabel="1">
                                     <list editable="bottom">
                                         <field name="company_id" force_save="1"/>
