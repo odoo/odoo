@@ -4,6 +4,21 @@ from odoo import Command, _, models
 from odoo.addons.account.models.chart_template import template
 
 
+BE_ASSO_TEMPLATE_CODES = (
+    'be_asso_full',
+    'be_asso_abbr'
+)
+
+BE_COMP_TEMPLATE_CODES = (
+    'be_comp_con_abbr',
+    'be_comp_con_full',
+    'be_comp_cap_abbr',
+    'be_comp_cap_full',
+)
+
+BE_TEMPLATE_CODES = BE_ASSO_TEMPLATE_CODES + BE_COMP_TEMPLATE_CODES
+
+
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
@@ -77,6 +92,7 @@ class AccountChartTemplate(models.AbstractModel):
         return be_account or super()._get_bank_fees_reco_account(company)
 
     def _load(self, template_code, company, install_demo, force_create=True):
+        # OVERRIDE
         to_reset = False
         if company.chart_template == 'be_comp':
             to_reset = self.ref('cash_rounding_be_comp_05', raise_if_not_found=False)
@@ -85,11 +101,16 @@ class AccountChartTemplate(models.AbstractModel):
 
         if to_reset and (to_reset.profit_account_id or to_reset.loss_account_id):
             to_reset.write({'profit_account_id': False, 'loss_account_id': False})
-        return super()._load(template_code, company, install_demo, force_create=force_create)
+        if template_code and company.chart_template and template_code != company.chart_template:
+            for template_group in (BE_ASSO_TEMPLATE_CODES, BE_COMP_TEMPLATE_CODES):
+                if company.chart_template in template_group and template_code in template_group:
+                    company.chart_template = template_code
+                    return
+        return super()._load(template_code, company, install_demo, force_create)
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
-        if template_code in ('be_comp', 'be_asso') and \
+        if template_code in BE_TEMPLATE_CODES and \
                 (purchase_journal := self.ref('purchase', raise_if_not_found=False)) and \
                 (non_deductible_account := self.ref('a416', raise_if_not_found=False)):
             purchase_journal.non_deductible_account_id = non_deductible_account

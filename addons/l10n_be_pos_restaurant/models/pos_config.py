@@ -1,4 +1,6 @@
 from odoo import api, models, Command
+from odoo.addons.l10n_be.models.template_be import BE_TEMPLATE_CODES
+
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
@@ -24,7 +26,7 @@ class PosConfig(models.Model):
 
     def _load_bar_demo_data(self, with_demo_data=True):
         super()._load_bar_demo_data(with_demo_data)
-        if (self.env.company.chart_template or '').startswith('be'):
+        if self.env.company.chart_template in BE_TEMPLATE_CODES:
             ChartTemplate = self.env['account.chart.template'].with_company(self.env.company)
             tax_alcohol = ChartTemplate.ref('tax_alcohol_luxury')
             cocktails_category = self.env.ref('pos_restaurant.pos_category_cocktails', raise_if_not_found=False)
@@ -36,7 +38,7 @@ class PosConfig(models.Model):
     @api.model
     def load_onboarding_restaurant_scenario(self, with_demo_data=True):
         res = super().load_onboarding_restaurant_scenario(with_demo_data)
-        if (self.env.company.chart_template or '').startswith('be'):
+        if self.env.company.chart_template in BE_TEMPLATE_CODES:
             config = self.env.ref(self._get_suffixed_ref_name('pos_restaurant.pos_config_main_restaurant'), raise_if_not_found=False)
             if config:
                 self._create_takeaway_fiscal_position(config)
