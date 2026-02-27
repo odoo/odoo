@@ -119,7 +119,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _check_pos_order_lines(self, pos_config, order, line, fiscal_position_id):
-        existing_order = pos_config.env['pos.order'].browse(order.get('id'))
+        existing_order = pos_config.env['pos.order']._get_open_order(order)
         existing_lines = existing_order.lines if existing_order.exists() else pos_config.env['pos.order.line']
 
         if line[0] == Command.DELETE and line[1] in existing_lines.ids:
@@ -131,8 +131,10 @@ class PosOrder(models.Model):
 
             product = pos_config.env['product.product'].browse(line_data.get('product_id'))
             tax_ids = fiscal_position_id.map_tax(product.taxes_id)
+            command = Command.CREATE if line[0] == Command.CREATE else Command.UPDATE
+            id_to_use = line[1] if line[0] == Command.UPDATE else 0
 
-            return [Command.CREATE, 0, {
+            return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
@@ -164,21 +166,31 @@ class PosOrder(models.Model):
         if not preset_id and pos_config.use_presets:
             raise UserError(_("Invalid preset"))
 
-        pos_reference, tracking_number = pos_config._get_next_order_refs()
-        prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
+        existing_order = pos_config.env['pos.order']._get_open_order(order)
+        if not existing_order.exists():
+            pos_reference, tracking_number = pos_config._get_next_order_refs()
+            prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
+
+            if device_type == 'kiosk':
+                floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+
+            if not order.get('floating_order_name') and table:
+                floating_order_name = f"Self-Order T {table.table_number}"
+            elif not order.get('floating_order_name'):
+                floating_order_name = f"Self-Order {tracking_number}"
+
+            tracking_number = f"{prefix}{tracking_number}"
+        else:
+            pos_reference = existing_order.pos_reference
+            floating_order_name = existing_order.floating_order_name
+            tracking_number = existing_order.tracking_number
+
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
+        lines = [line for line in lines if len(line)]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
-
-        if device_type == 'kiosk':
-            floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
-
-        if not order.get('floating_order_name') and table:
-            floating_order_name = f"Self-Order T {table.table_number}"
-        elif not order.get('floating_order_name'):
-            floating_order_name = f"Self-Order {tracking_number}"
 
         return {
             'id': order.get('id'),
@@ -201,7 +213,7 @@ class PosOrder(models.Model):
             'fiscal_position_id': fiscal_position_id.id if fiscal_position_id else False,
             'preset_id': preset_id.id if preset_id else False,
             'preset_time': order.get('preset_time'),
-            'tracking_number': f"{prefix}{tracking_number}",
+            'tracking_number': tracking_number,
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
             'email': partner.email if partner else order.get('email'),
             'mobile': order.get('mobile'),

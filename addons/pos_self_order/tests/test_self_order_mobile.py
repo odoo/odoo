@@ -380,3 +380,15 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.self_ordering_table_id, order.table_id)
+
+    def test_self_order_meal_do_not_change_tracking_number_on_sync(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'meal',
+            'self_ordering_service_mode': 'table',
+            'use_presets': False,
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_meal_do_not_change_tracking_number_on_sync')

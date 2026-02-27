@@ -12,7 +12,11 @@ const comparePricesWithBackend = {
         const order = posmodel.currentOrder;
         const orderTotal = order.displayPrice;
         const allUnitPrices = order.lines.map((l) => l.price_unit);
-        await posmodel.sendDraftOrderToServer();
+        const result = await posmodel.sendDraftOrderToServer();
+        if (!result) {
+            throw new Error("Failed to sync order with server");
+        }
+
         const orderTotalAfterSync = order.displayPrice;
         const allUnitPricesAfterSync = order.lines.map((l) => l.price_unit);
 
@@ -223,7 +227,11 @@ registry.category("web_tour.tours").add("test_prices_are_immutable_from_frontend
 
                 // 257.58 Order total
                 // 106.44 Line price unit
-                await posmodel.sendDraftOrderToServer();
+                const result = await posmodel.sendDraftOrderToServer();
+                if (!result) {
+                    throw new Error("Failed to sync order with server");
+                }
+
                 const orderTotalAfterSync = order.displayPrice;
                 const allUnitPricesAfterSync = order.lines.map((l) => l.price_unit);
 
@@ -288,7 +296,11 @@ registry.category("web_tour.tours").add("test_pricelist_should_not_be_changed_fr
                     );
                 }
 
-                await posmodel.sendDraftOrderToServer();
+                const result = await posmodel.sendDraftOrderToServer();
+                if (!result) {
+                    throw new Error("Failed to sync order with server");
+                }
+
                 const amountTotalAfterSync = order.displayPrice;
                 if (amountTotalAfterSync === 0) {
                     throw new Error(
