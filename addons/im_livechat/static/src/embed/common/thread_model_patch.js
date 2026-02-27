@@ -60,11 +60,12 @@ patch(Thread.prototype, {
         this.chatbot = fields.One("Chatbot");
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && !this.livechat_end_dt;
+                return Boolean(this.chatbot && !this.chatbot.completed && !this.livechat_end_dt);
             },
             onUpdate() {
+                const shouldToggle = this._toggleChatbot;
                 this.isLoadedDeferred.then(() => {
-                    if (this._toggleChatbot) {
+                    if (shouldToggle) {
                         this.chatbot.start();
                     } else {
                         this.chatbot?.stop();
