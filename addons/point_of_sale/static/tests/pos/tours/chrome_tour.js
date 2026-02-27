@@ -303,6 +303,11 @@ registry.category("web_tour.tours").add("test_set_opening_note_without_cash_meth
                 run: "edit Opening Notes",
             },
             Dialog.confirm("Open Register"),
+<<<<<<< 67d1e0f94d3157672b12a92bbd4e865841b69b33:addons/point_of_sale/static/tests/pos/tours/chrome_tour.js
             ProductScreen.addOrderline("Whiteboard Pen", "1", "6", "6.0"),
+||||||| 0df631380155423e51395612f27943b76b2d1b1c:addons/point_of_sale/static/tests/tours/chrome_tour.js
+=======
+            Chrome.waitRequest(),
+>>>>>>> 4ce4a0a9732bfbfc7b3717182fc6bee0c0366eea:addons/point_of_sale/static/tests/tours/chrome_tour.js
         ].flat(),
 });
