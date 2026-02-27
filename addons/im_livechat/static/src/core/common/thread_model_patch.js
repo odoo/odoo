@@ -67,7 +67,7 @@ patch(Thread.prototype, {
 
     get composerDisabledText() {
         return this.channel_type === "livechat" && this.livechat_active === false
-            ? _t("This livechat conversation has ended")
+            ? _t("This livechat conversation has ended.")
             : "";
     },
     /**
