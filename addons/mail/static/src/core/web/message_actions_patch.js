@@ -39,7 +39,7 @@ registerMessageAction("reply-all", {
         });
         const recipientIds = recipients.map((r) => r.id);
         const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -50,11 +50,13 @@ registerMessageAction("reply-all", {
             email,
             message,
             name: name || email,
+            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
         });
         const context = {
             default_body: body,
             default_composition_mode: "comment",
             default_composition_comment_option: "reply_all",
+            default_email_add_signature: false,
             default_partner_ids: recipientIds,
         };
         messageActionOpenFullComposer(_t("Reply All"), context, owner);
@@ -65,9 +67,9 @@ registerMessageAction("forward", {
     condition: ({ message, thread }) => message.canForward(thread),
     icon: "fa fa-share",
     name: _t("Forward"),
-    onSelected: async ({ message, owner, store }) => {
+    onSelected: async ({ message, owner, store, thread }) => {
         const emailFrom = message.author_id?.email || message.email_from;
-        const [name, email] = parseEmail(emailFrom);
+        const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
             time: message.datetime.toFormat("hh:mm a"),
@@ -78,6 +80,7 @@ registerMessageAction("forward", {
             email,
             message,
             name: name || email,
+            signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
         const newAttachmentIds = await store.env.services.orm.call(
@@ -93,6 +96,7 @@ registerMessageAction("forward", {
             default_body: body,
             default_composition_mode: "comment",
             default_composition_comment_option: "forward",
+            default_email_add_signature: false,
         };
         messageActionOpenFullComposer(_t("Forward Message"), context, owner);
     },
