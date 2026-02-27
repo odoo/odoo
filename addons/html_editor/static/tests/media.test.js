@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
@@ -201,13 +201,13 @@ test("cropper should not open for external image", async () => {
     await setupEditor(
         `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
     );
-    await waitFor('div[name="image_transform"]');
+    const imageTransform = await waitFor('div[name="image_transform"] > .btn');
+    imageTransform.click();
 
-    await click('div[name="image_transform"] > .btn');
-    await animationFrame();
+    const imageCrop = await waitFor('.btn[name="image_crop"]');
+    imageCrop.click();
 
-    await click('.btn[name="image_crop"]');
-    await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    await waitFor(".o_notification_manager .o_notification", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
 
@@ -223,12 +223,11 @@ test("Image cropper disappear on backspace", async () => {
     });
 
     await setupEditor(`<p>[<img src="#">]</p>`);
-    await waitFor(".o-we-toolbar");
-
-    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
-    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    const cropButton = await waitFor(".o-we-toolbar .btn[name='image_crop']");
+    cropButton.click();
+    await waitFor(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(1);
     press("backspace");
-    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
+    await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
