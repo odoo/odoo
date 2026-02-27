@@ -30,13 +30,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         self._check_move_for_group_ungroup_lines_by_tax()
 
-        # Check if lines look like they're grouped
-        lines_grouped = any(
-            re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name)
-            for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
-        )
-
-        if lines_grouped:
+        if self._has_lines_grouped():
             self._ungroup_lines()
         else:
             self._group_lines_by_tax()
@@ -61,7 +55,7 @@ class AccountMove(models.Model):
             if ubl_cii_xml_builder is None:
                 continue
             self.invoice_line_ids = [Command.clear()]
-            res = ubl_cii_xml_builder._import_invoice_ubl_cii(self, file_data)
+            res = ubl_cii_xml_builder.with_context(ungroup_lines=True)._import_invoice_ubl_cii(self, file_data)
             if res:
                 success = True
                 self._message_log(body=_("Ungrouped lines from %s", file_data['attachment'].name))
@@ -134,6 +128,17 @@ class AccountMove(models.Model):
         if 'purchase_order_id' in self.env['account.move.line']._fields:  # purchase field
             if any(line.purchase_order_id for line in self.line_ids):
                 raise UserError(_("You can only (un)group lines of an invoice not linked to a purchase order"))
+
+    def _has_lines_grouped(self):
+        """
+        Check if the move has its lines grouped
+        :return: True if lines look like they're grouped, False otherwise
+        """
+        self.ensure_one()
+        return any(
+            re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name)
+            for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
+        )
 
     # -------------------------------------------------------------------------
     # EDI
