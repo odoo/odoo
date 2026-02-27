@@ -500,10 +500,9 @@ class TestDiscussChannelAccess(MailCommon):
         elif channel_key == "group_failing":
             channel.group_public_id = self.env.ref("base.group_system")
         if sub_channel:
-            channel.sudo()._create_sub_channel()
-            channel = channel.sub_channel_ids[0]
+            channel = channel.sudo()._create_sub_channel()
             if membership == "member":
-                channel.sudo()._add_members(users=user, guests=guest)
+                channel._add_members(users=user, guests=guest)
         return channel.id
 
     def _execute_action_channel(self, user_key, channel_key, membership, operation, result, for_sub_channel):
