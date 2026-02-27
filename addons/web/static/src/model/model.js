@@ -158,6 +158,16 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const model = new ModelClass(component.env, params, services);
 
+    // disable the sample model if `load` is called directly by the view itself
+    const originalLoad = model.load;
+    model.load = async function (searchParams, disableSampleModel = true) {
+        const result = originalLoad.apply(this, searchParams ? [searchParams] : []);
+        if (disableSampleModel) {
+            this.useSampleModel = false;
+        }
+        return result;
+    };
+
     useBus(
         model.bus,
         "update",
@@ -179,13 +189,13 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     async function load(props) {
         const searchParams = getSearchParams(props);
-        await model.load(searchParams);
+        await model.load(searchParams, false);
         if (useSampleModel && !model.hasData()) {
             sampleORM =
                 sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
             // Load data with sampleORM then restore real ORM.
             model.orm = sampleORM;
-            await model.load(searchParams);
+            await model.load(searchParams, false);
             model.orm = orm;
         } else {
             useSampleModel = false;

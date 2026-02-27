@@ -16704,3 +16704,28 @@ test(`basic open record with allowOpenAction`, async () => {
     await contains(".o_field_cell").click();
     expect.verifySteps([]);
 });
+
+test(`custom button that creates record in list with sample data`, async () => {
+    Foo._records = [];
+    onRpc("custom_create", () => {
+        MockServer.env.foo.create({ foo: "new record" });
+        return false;
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list sample="1">
+                <header>
+                    <button class="custom_create" type="object" name="custom_create" string="Custom create" display="always"/>
+                </header>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+    expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
+
+    await contains(".custom_create").click();
+    expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
+    expect(`.o_data_row`).toHaveCount(1);
+});
