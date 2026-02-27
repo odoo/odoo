@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("website_livechat.question_selection_ove
             run: "click",
         },
         { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(You selected maybe X)" },
-        { trigger: ".o-livechat-root:shadow span:contains(This livechat conversation has ended)" },
+        { trigger: ".o-livechat-root:shadow span:contains(This livechat conversation has ended.)" },
         {
             trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-header [title*=Close]",
             run: "click",
