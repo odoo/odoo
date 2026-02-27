@@ -26,7 +26,7 @@ class Cart(PaymentPortal):
         :param str id: The abandoned cart's id.
         :param str access_token: The abandoned cart's access token.
         :param str revive_method: The revival method for abandoned carts. Can be 'merge' or 'squash'.
-        :return: The rendered cart page.
+        :return: The rendered cart page..
         :rtype: str
         """
         if not request.website.has_ecommerce_access():
