@@ -40,6 +40,8 @@ export class WebsiteBuilder extends Component {
     setup() {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
+        this.websiteEditService =
+            this.websiteService.websiteRootInstance?.env.services["website_edit"];
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
@@ -53,6 +55,7 @@ export class WebsiteBuilder extends Component {
             if (this.props.translation && !browser.localStorage.getItem(localStorageNoDialogKey)) {
                 this.dialog.add(TranslatorInfoDialog);
             }
+            this.websiteEditService?.clearRpcCache();
         });
     }
 

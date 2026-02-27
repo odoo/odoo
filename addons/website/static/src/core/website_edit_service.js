@@ -4,6 +4,8 @@ import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 import { setupIgnoreDOMMutations } from "@website/js/content/auto_hide_menu";
 import { omit } from "@web/core/utils/objects";
+import { Cache } from "@web/core/utils/cache";
+import { rpc } from "@web/core/network/rpc";
 
 export function buildEditableInteractions(builders) {
     const result = [];
@@ -53,6 +55,13 @@ export const websiteEditService = {
         const patches = [];
         const historyCallbacks = {};
         const shared = {};
+        // A cached rpc to be used for edit/preview mode interactions
+        // (e.g., when dynamic snippets are loading content with the
+        // same config: filter, template, number of records,...).
+        const _rpcCall = async (params) => rpc(params.url, params);
+        const cache = new Cache(_rpcCall, JSON.stringify);
+        const clearRpcCache = () => cache.invalidate();
+        const rpcCache = async (params) => cache.read(params);
 
         const update = (target, mode) => {
             // editMode = true;
@@ -290,6 +299,8 @@ export const websiteEditService = {
             uninstallPatches,
             applyAction,
             callShared,
+            rpcCache,
+            clearRpcCache,
         };
 
         const handleEditPage = (ev) => {
