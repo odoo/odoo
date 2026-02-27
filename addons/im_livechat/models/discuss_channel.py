@@ -772,12 +772,11 @@ class DiscussChannel(models.Model):
             to fill, like : {'question_email': 'email_from', 'question_phone': 'mobile'}
         """
         values = {}
-        filtered_message_ids = self.chatbot_message_ids.filtered(
-            # sudo: chatbot.script.step - getting the type of the current step
-            lambda m: m.script_step_id.sudo().step_type in step_type_to_field
-        )
-        for message_id in filtered_message_ids:
-            field_name = step_type_to_field[message_id.script_step_id.step_type]
+        for message_id in self.sudo().chatbot_message_ids:
+            step_type = message_id.script_step_id.step_type
+            if step_type not in step_type_to_field:
+                continue
+            field_name = step_type_to_field[step_type]
             if not values.get(field_name):
                 values[field_name] = html2plaintext(message_id.user_raw_answer or '')
 
