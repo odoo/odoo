@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { htmlField, HtmlField } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
@@ -62,6 +62,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         this.resetIframe();
         this.iframeRef = useChildRef();
+        this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
 
         onWillUpdateProps((nextProps) => {
@@ -116,6 +117,8 @@ export class MassMailingHtmlField extends HtmlField {
             },
             () => [this.codeViewRef.el]
         );
+
+        useExternalListener(window, "pointerdown", this.onPointerDown.bind(this));
     }
 
     get withBuilder() {
@@ -183,7 +186,8 @@ export class MassMailingHtmlField extends HtmlField {
         const props = {
             config: this.getConfig(),
             iframeRef: this.iframeRef,
-            onBlur: this.onBlur.bind(this),
+            iframeWrapperRef: this.iframeWrapperRef,
+            onFocus: this.onFocus.bind(this),
             onEditorLoad: this.onEditorLoad.bind(this),
             onIframeLoad: this.onIframeLoad.bind(this),
             readonly: this.props.readonly,
@@ -298,6 +302,33 @@ export class MassMailingHtmlField extends HtmlField {
         // editable directly by the user).
         this.props.record.resetFieldValidity(this.props.inlineField);
         super.onChange();
+    }
+
+    onFocus() {
+        this.activeElement = this.iframeWrapperRef.el;
+    }
+
+    /**
+     * Simulate a tuned down "blur", based around the edition area, comprised
+     * of the edition iframe and the builder, to avoid committing changes when
+     * the user is actively interacting inside that zone. Also avoid cases
+     * where the user clicks inside an overlay or other element inside the
+     * main component container, because the builder uses a lot of these.
+     */
+    onPointerDown(ev) {
+        const isTargetOutsideActiveElement =
+            this.activeElement && !this.activeElement.contains(ev.target);
+        const ignoredTargetContainer =
+            isTargetOutsideActiveElement &&
+            ev.target?.closest(".o-main-components-container, .o_form_status_indicator_buttons");
+        const shouldIgnoreTarget =
+            ignoredTargetContainer && !ignoredTargetContainer.contains(this.activeElement);
+        if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
+            this.activeElement = undefined;
+            this.onBlur();
+        } else if (this.iframeWrapperRef.el.contains(ev.target)) {
+            this.activeElement = this.iframeWrapperRef.el;
+        }
     }
 
     onTextareaInput(ev) {

@@ -41,6 +41,9 @@ registry.category('web_tour.tours').add('mailing_campaign', {
             run: "click",
         },
         {
+            trigger: ":iframe .o_mass_mailing_value .o_layout",
+        },
+        {
             content: 'Fill in Mailing list',
             trigger: '#contact_list_ids_0',
             run: "edit Newsletter",
