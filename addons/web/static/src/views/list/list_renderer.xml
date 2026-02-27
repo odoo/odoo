@@ -332,7 +332,9 @@
                 </t>
                 <t t-if="column.type === 'widget'">
                     <td class="o_data_cell" t-att-class="this.getCellClass(column, record)">
-                        <Widget t-props="column.props" record="record"/>
+                        <t t-if="!evalInvisible(column.invisible, record)">
+                            <Widget t-props="column.props" record="record"/>
+                        </t>
                     </td>
                 </t>
             </t>

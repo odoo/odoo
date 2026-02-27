@@ -80,6 +80,9 @@ export class Widget extends Component {
             if (name === "options") {
                 widgetInfo.options = evaluateExpr(value);
             } else if (!name.startsWith("t-att")) {
+                if (["column_invisible", "invisible"].includes(name)) {
+                    widgetInfo[name] = value;
+                }
                 // all other (non dynamic) attributes
                 widgetInfo.attrs[name] = value;
             }

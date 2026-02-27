@@ -3569,7 +3569,8 @@ test(`edit field in editable field without editing the row`, async () => {
     const cellRect = queryFirst(`.o_boolean_toggle_cell`);
     const inputRect = queryFirst(`.o_data_row .o_field_boolean_toggle .form-check`);
     const { paddingRight, paddingLeft } = getComputedStyle(cellRect);
-    const expectedSelectedWidth = cellRect.clientWidth - parseFloat(paddingRight) - parseFloat(paddingLeft);
+    const expectedSelectedWidth =
+        cellRect.clientWidth - parseFloat(paddingRight) - parseFloat(paddingLeft);
     expect(inputRect.clientWidth).not.toEqual(expectedSelectedWidth);
     // toggle the boolean value after switching the row in edition
     expect(`.o_selected_row`).toHaveCount(0);
@@ -20120,4 +20121,48 @@ test(`custom button that creates record in list with sample data`, async () => {
     await contains(".custom_create").click();
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
     expect(`.o_data_row`).toHaveCount(1);
+});
+
+test(`widget visibility with invisible attribute`, async () => {
+    class TestWidget extends Component {
+        static template = xml`<div class="test_widget">Widget Content</div>`;
+        static props = ["*"];
+    }
+    registry.category("view_widgets").add("test_widget", { component: TestWidget });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <widget name="test_widget" invisible="foo == 'yop'"/>
+            </list>
+        `,
+    });
+
+    expect(`.o_data_row`).toHaveCount(4);
+    expect(`.o_data_row .test_widget`).toHaveCount(3);
+});
+
+test(`widget column visibility with column_invisible attribute`, async () => {
+    class TestWidget extends Component {
+        static template = xml`<div class="test_widget">Widget Content</div>`;
+        static props = ["*"];
+    }
+    registry.category("view_widgets").add("test_widget", { component: TestWidget });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="bar"/>
+                <widget name="test_widget" column_invisible="1"/>
+            </list>
+        `,
+    });
+    expect(`thead th:not(.o_list_record_selector)`).toHaveCount(2);
+    expect(`.o_data_row .test_widget`).toHaveCount(0);
 });
