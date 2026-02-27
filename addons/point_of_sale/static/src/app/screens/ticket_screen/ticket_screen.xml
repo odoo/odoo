@@ -54,6 +54,11 @@
                                                     <t t-out="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
+                                            <td class="align-middle address-cell">
+                                                <span t-if="order.preset_id?.identification === 'address'"
+                                                    class="address-text"
+                                                    t-out="order.partner_id?.address"/>
+                                            </td>
                                             <td class="align-middle">
                                                 <t t-if="order.presetTime">
                                                     <div t-if="order.isFutureDate" class="fw-bolder" t-out="order.presetDate" />
