@@ -300,5 +300,6 @@ registry.category("web_tour.tours").add("test_set_opening_note_without_cash_meth
                 run: "edit Opening Notes",
             },
             Dialog.confirm("Open Register"),
+            Chrome.waitRequest(),
         ].flat(),
 });
