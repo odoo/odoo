@@ -14,9 +14,11 @@ export class AttendanceActionHelper extends Component {
             hasDemoData: false,
         });
         onWillStart(async () => {
-            this.isHrUser = await user.hasGroup("hr.group_hr_user");
-            this.hasAttendanceRight = await user.hasGroup("hr_attendance.group_hr_attendance_user");
-            if (this.hasAttendanceRight && this.isHrUser){
+            [this.isHrUser, this.hasAttendanceRight] = await Promise.all([
+                user.hasGroup("hr.group_hr_user"),
+                user.hasGroup("hr_attendance.group_hr_attendance_user"),
+            ]);
+            if (this.hasAttendanceRight && this.isHrUser) {
                 this.state.hasDemoData = await this.orm.call("hr.attendance", "has_demo_data", []);
             }
         });
