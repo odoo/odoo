@@ -168,7 +168,7 @@ patch(Thread.prototype, {
             return text;
         }
         if (this.chatbot.completed) {
-            return _t("This livechat conversation has ended");
+            return _t("This livechat conversation has ended.");
         }
         if (
             this.chatbot.currentStep?.step_type === "question_selection" &&
