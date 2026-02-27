@@ -10,6 +10,7 @@ import {
     getAttributeValues,
     getAttributeValuesExtraPrice,
 } from "@pos_self_order/app/services/card_utils";
+import { shouldShowMissingDetails } from "../../utils";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -50,12 +51,10 @@ export class ProductPage extends Component {
     }
 
     shouldShowMissingDetails() {
-        const el = this.scrollContainerRef?.el;
-        if (!el) {
-            return false;
-        }
-        return (
-            el.scrollHeight > el.clientHeight && this.productTemplate.attribute_line_ids.length > 1
+        return shouldShowMissingDetails(
+            this.productTemplate,
+            this.state.selectedValues,
+            this.scrollContainerRef
         );
     }
 
