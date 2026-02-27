@@ -63,5 +63,6 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         purchase_orders.read()
 
         # try to access the PO lines from the SO, as sale person
+        self.assertFalse(sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids)
         with self.assertRaises(AccessError):
-            sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids.read()
+            sol_service_purchase.sudo().purchase_line_ids.with_user(self.user_salesperson).read()
