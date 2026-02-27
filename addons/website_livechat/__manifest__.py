@@ -41,7 +41,6 @@
         ],
         'web.assets_frontend': [
             "website_livechat/static/src/core/common/**/*",
-            'website_livechat/static/src/**/frontend/**/*',
         ],
         'web.assets_backend': [
             "website_livechat/static/src/core/common/**/*",
