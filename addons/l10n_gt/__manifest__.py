@@ -17,6 +17,7 @@ taxes and the Quetzal currency.""",
     'depends': [
         'base',
         'account',
+        'base_address_extended',
     ],
     'auto_install': ['account'],
     'data': [
