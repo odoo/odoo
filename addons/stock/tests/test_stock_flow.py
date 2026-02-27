@@ -2864,3 +2864,29 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
         self.assertEqual(new_location_complete_name, 'NoPrefixLocation')
+
+    def test_past_qty_available(self):
+        """
+        Test that available quantity at a date (not datetime) is computed at the end of
+        that date.
+        """
+        TEST_DATE = fields.Datetime.to_datetime('2026-01-01 11:11:11')
+
+        # .date() simulates behavior of "As of" in the Stock Valuation report
+        # (Specifies date but no time)
+        self.assertEqual(0, self.productA.with_context(to_date=TEST_DATE.date()).qty_available)
+
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+            })]
+        })
+
+        receipt.action_confirm()
+        receipt.button_validate()
+
+        receipt.write({'date_done': TEST_DATE})
+
+        self.assertEqual(10, self.productA.with_context(to_date=TEST_DATE.date()).qty_available)

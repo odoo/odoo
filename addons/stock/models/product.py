@@ -5,6 +5,7 @@ from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Iterable
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -166,6 +167,8 @@ class ProductProduct(models.Model):
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
         to_date = fields.Datetime.to_datetime(to_date)
+        if to_date and to_date.time() == datetime.min.time():
+            to_date = datetime.combine(to_date, datetime.max.time())
         if to_date and to_date < fields.Datetime.now():
             dates_in_the_past = True
 
