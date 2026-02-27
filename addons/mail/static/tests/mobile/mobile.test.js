@@ -19,8 +19,9 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
@@ -152,4 +153,35 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     await openListView("discuss.channel", { res_id: channelId });
     await contains(".o-mail-ChatBubble");
     assertChatHub({ folded: [channelId] });
+});
+
+test("Jump to present should go to last message on mobile", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Last Message Body".repeat(100),
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 21 });
+    await contains(".o-mail-Thread");
+    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
+        { message: "should have enough scroll height to trigger jump to present" }
+    );
+    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']", { count: 0 });
+    await contains(`.o-mail-Message:contains('${"Last Message Body".repeat(100)}')`);
+    await contains(".o-mail-Thread", { scroll: "bottom" });
 });

@@ -339,6 +339,13 @@ export class Thread extends Component {
          */
         this.loadNewer = undefined;
         /**
+         * The scrollTop value when a smooth scrolling is triggered,
+         * useful to re-apply it when the smooth scrolling is interrupted
+         * by a re-render before it can end.
+         * This value is reset to undefined whenever another scroll is detected.
+         */
+        this.smoothScrollTargetTop = undefined;
+        /**
          * These states need to be immediately reset when the value changes on
          * the record, because the transition is important, not only the final
          * value. If resetting is depending on the update cycle, it can happen
@@ -377,6 +384,9 @@ export class Thread extends Component {
         });
         const observer = new ResizeObserver(() => {
             this.computeJumpPresentPosition();
+            if (this.smoothScrollTargetTop > this.scrollableRef.el.scrollHeight) {
+                this.smoothScrollTargetTop = this.scrollableRef.el.scrollHeight;
+            }
             this.applyScroll();
         });
         useEffect(
@@ -391,6 +401,58 @@ export class Thread extends Component {
                 }
             },
             () => [this.scrollableRef.el, this.state.mountedAndLoaded]
+        );
+        this.smoothScrollObservationTarget = undefined;
+        const smoothScrollObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        if (this.smoothScrollObservationTarget?.el === entry.target) {
+                            this.unobserveSmoothScroll();
+                        } else {
+                            smoothScrollObserver.unobserve(entry.target);
+                        }
+                    }
+                });
+            },
+            { root: this.scrollableRef.el }
+        );
+        this.observeSmoothScroll = (el, { messageId, callback }) => {
+            if (el) {
+                if (this.smoothScrollObservationTarget) {
+                    smoothScrollObserver.unobserve(this.smoothScrollObservationTarget.el);
+                    this.smoothScrollObservationTarget?.callback();
+                }
+                this.smoothScrollObservationTarget = { el, messageId, callback };
+                smoothScrollObserver.observe(el);
+            }
+        };
+        this.unobserveSmoothScroll = () => {
+            if (this.smoothScrollObservationTarget) {
+                smoothScrollObserver.unobserve(this.smoothScrollObservationTarget.el);
+                this.smoothScrollObservationTarget?.callback();
+                this.smoothScrollObservationTarget = undefined;
+            }
+        };
+        useEffect(
+            () => {
+                if (!this.state.mountedAndLoaded) {
+                    return;
+                }
+                const scrollEl = this.scrollableRef?.el;
+                if (scrollEl && this.smoothScrollObservationTarget && this.isSmoothScrolling) {
+                    const messageEl = this.refByMessageId.get(
+                        this.smoothScrollObservationTarget.messageId
+                    )?.el;
+                    if (!messageEl) {
+                        this.unobserveSmoothScroll();
+                        return;
+                    }
+                    const jumpTarget = messageEl.querySelector(".o-mail-Message-jumpTarget");
+                    this.observeSmoothScroll(jumpTarget, this.smoothScrollObservationTarget);
+                }
+            },
+            () => [this.scrollableRef.el, this.state.mountedAndLoaded, this.props.thread.messages]
         );
     }
 
@@ -415,6 +477,14 @@ export class Thread extends Component {
 
     /** @param {import("models").Thread} thread */
     applyScrollContextually(thread) {
+        // A smooth scrolling was interrupted by a re-rendering before it could end, we should try to apply it again
+        if (!this.isSmoothScrolling && this.smoothScrollObservationTarget) {
+            this.setScrollToMessage(this.smoothScrollObservationTarget.messageId, { smooth: true });
+            return;
+        }
+        if (this.isSmoothScrolling) {
+            return;
+        }
         const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
         const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
         const messagesAtTop =
@@ -544,7 +614,11 @@ export class Thread extends Component {
             this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }
-        this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
+        const lastMessage = this.props.thread.messages.at(-1);
+        if (!lastMessage) {
+            return;
+        }
+        this.setScrollToMessage(lastMessage.id, { smooth: !immediate });
         if (!this.ui.isSmall) {
             this.props.thread.composer.autofocus++;
         }
@@ -612,6 +686,9 @@ export class Thread extends Component {
         ) {
             thread.markAsRead();
         }
+        if (!this.isSmoothScrolling) {
+            this.smoothScrollTargetTop = undefined;
+        }
         this.saveScroll();
     }
 
@@ -663,30 +740,61 @@ export class Thread extends Component {
         );
     }
 
+    _setupSmoothScroll({ withObserver, el }) {
+        clearTimeout(this.smoothScrollingTimeout);
+        this.isSmoothScrolling = true;
+        this.smoothScrollingDeferred = new Deferred();
+        const onSmoothScrollingEnd = withObserver
+            ? this.smoothScrollObservationTarget?.callback
+            : () => {
+                  this.smoothScrollingDeferred.resolve();
+                  this.smoothScrollingDeferred = undefined;
+                  this.isSmoothScrolling = false;
+              };
+        if ("onscrollend" in window) {
+            document.addEventListener("scrollend", onSmoothScrollingEnd, {
+                capture: true,
+                once: true,
+            });
+        } else {
+            // To remove when safari will support the "scrollend" event.
+            this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
+        }
+        if (withObserver) {
+            this.observeSmoothScroll(el, {
+                messageId: withObserver,
+                callback: () => {
+                    this.smoothScrollingDeferred?.resolve();
+                    this.smoothScrollingDeferred = undefined;
+                    this.isSmoothScrolling = false;
+                },
+            });
+        }
+    }
+
     setScroll(value, { smooth = false } = {}) {
+        this.unobserveSmoothScroll();
         if (smooth) {
-            clearTimeout(this.smoothScrollingTimeout);
-            this.isSmoothScrolling = true;
-            this.smoothScrollingDeferred = new Deferred();
-            const onSmoothScrollingEnd = () => {
-                this.smoothScrollingDeferred.resolve();
-                this.smoothScrollingDeferred = undefined;
-                this.isSmoothScrolling = false;
-            };
-            if ("onscrollend" in window) {
-                document.addEventListener("scrollend", onSmoothScrollingEnd, {
-                    capture: true,
-                    once: true,
-                });
-            } else {
-                // To remove when safari will support the "scrollend" event.
-                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
-            }
+            this._setupSmoothScroll({ withObserver: false });
         }
         this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
         this.lastSetValue = value;
         this.messageHighlight?.startupDeferred?.resolve();
         this.saveScroll();
+    }
+
+    setScrollToMessage(messageId, { smooth = false } = {}) {
+        const ref = this.refByMessageId.get(messageId);
+        if (ref) {
+            const el = ref.el.querySelector(".o-mail-Message-jumpTarget-bottom");
+            if (el) {
+                this.unobserveSmoothScroll();
+                if (smooth) {
+                    this._setupSmoothScroll({ withObserver: messageId, el });
+                }
+                el.scrollIntoView({ behavior: smooth ? "smooth" : undefined, block: "end" });
+            }
+        }
     }
 
     get showStartMessage() {
