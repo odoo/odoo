@@ -3174,3 +3174,54 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(refund.amount_total, -24.0)
         self.assertEqual(refund.lines.qty, -2)
         self.assertEqual(refund.lines[0].price_subtotal, -24.0)
+
+    def test_bank_payment_state_paid(self):
+        """
+        Tests that a bank payment and a refund will have their state set to paid
+        once we close the session if they are reconciled.
+        """
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 450.0,
+            'amount_total': 450.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+        payment_context = {'active_ids': order.ids, 'active_id': order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.bank_payment_ids.state, 'paid')
+
+        self.pos_config.open_ui()
+        refund_session = self.pos_config.current_session_id
+        refund = self.PosOrder.browse(order.refund()['res_id'])
+        payment_context = {'active_ids': refund.ids, 'active_id': refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+        refund_session.action_pos_session_closing_control()
+        self.assertEqual(refund_session.bank_payment_ids.state, 'paid')

@@ -1395,6 +1395,11 @@ class PosSession(models.Model):
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
             ).filtered(lambda aml: not aml.reconciled).with_context(no_cash_basis=True).reconcile()
+        self.bank_payment_ids.filtered(
+            lambda p: p.state == 'in_process'
+            and p.is_reconciled
+        ).write({'state': 'paid'})
+
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
