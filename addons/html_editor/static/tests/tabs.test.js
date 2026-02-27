@@ -1009,6 +1009,15 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}gh]</blockquote>`,
         });
     });
+
+    test("inserting a tab should not impact <br>", async () => {
+        await testTabulation({
+            contentBefore: `<p>a<br>[]b</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p>a<br>${oeTab(TAB_WIDTH, false)}[]b</p>`,
+            contentAfter: `<p>a<br>${oeTab(TAB_WIDTH)}[]b</p>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
