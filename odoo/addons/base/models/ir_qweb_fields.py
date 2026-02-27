@@ -342,6 +342,12 @@ class IrQwebFieldText(models.AbstractModel):
         """
         return nl2br(value) if value else ''
 
+    @api.model
+    def attributes(self, record, field_name, options, values=None):
+        attrs = super().attributes(record, field_name, options, values)
+        attrs['dir'] = 'auto'
+        return attrs
+
 
 class IrQwebFieldSelection(models.AbstractModel):
     _name = 'ir.qweb.field.selection'
