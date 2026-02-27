@@ -540,6 +540,12 @@ class MailThread(models.AbstractModel):
     # track data storage / manipulation
     # ------------------------------------------------------
 
+    def _track_clear(self):
+        super()._track_clear()
+        # clear post info
+        self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', None)
+        self.env.cr.precommit.data.pop(f'mail.tracking.author.{self._name}', None)
+
     def _track_execute(
         self, track_init_values: dict[int, ValuesType],
         trackings: dict[int, tuple[set[str], list[ValuesType]]]
@@ -554,13 +560,6 @@ class MailThread(models.AbstractModel):
         for record_su in self:
             tracked_fields, _tracking_value_ids = trackings.get(record_su.id, (None, None))
             record_su._track_post_template(tracked_fields)
-
-    def _track_finalize(self) -> dict[int, ValuesType] | None:
-        # override to cleanup precommit data specific to mailing capabilities
-        res = super()._track_finalize()
-        self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
-        self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
-        return res
 
     def _track_set_log_author(self, author: BaseModel):
         """ Set the author (res.partner) of the tracking message for `self`. """
@@ -652,6 +651,10 @@ class MailThread(models.AbstractModel):
     # track template posting
     # ------------------------------------------------------
 
+    def _track_clear_for_template(self):
+        """ Clear template-based only tracking """
+        self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}', None)
+
     def _track_prepare_for_template(self, field_names: Iterable[str]):
         """ Prepare template-based message generation based on changes """
         self.env.cr.precommit.add(self._track_finalize_for_template)  # call to _track_finalize_for_template bound to this record
@@ -661,7 +664,7 @@ class MailThread(models.AbstractModel):
     def _track_finalize_for_template(self):
         """ Generate template-based message generation for records that have been
         prepared. """
-        precommit_data = self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}', {})
+        precommit_data = self.env.cr.precommit.data.get(f'mail.tracking.create.{self._name}', {})
         ids = [id_ for id_, vals in precommit_data.items() if vals]
         if not ids:
             return
@@ -672,6 +675,9 @@ class MailThread(models.AbstractModel):
         records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
         for record_su in records_su:
             record_su._track_post_template(precommit_data[record_su.id])
+
+        self._track_clear_for_template()
+        return precommit_data
 
     def _track_post_template(self, tracked_fields: Iterable[str]) -> True:
         """ Based on a tracking, post a message based on a template, as defined

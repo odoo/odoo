@@ -1035,6 +1035,17 @@ class TestTrackingInternals(TestTrackingCommon):
                 ],
             })
 
+        # cleanup precommit data before flush
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            track_records.write({
+                'char_field': 'should not track',
+                'integer_field': 3,
+                'selection_field': 'second',
+            })
+            track_records._track_clear()  # discards stored value
+            self.flush_tracking()
+        self.assertFalse(self._new_msgs)
+
         # manual precommit manipulation
         track_records._track_prepare(('char_field', 'integer_field'))
         track_records._track_set_log_message('Forced <b>again</b> until finalize')
@@ -1043,8 +1054,8 @@ class TestTrackingInternals(TestTrackingCommon):
         with self.mock_mail_gateway(), self.mock_mail_app():
             track_records.with_context(mail_notrack=True).write({
                 'char_field': 'should track also',
-                'integer_field': 2,  # writing same value -> should not be tracked even if prepared
-                'selection_field': 'second',
+                'integer_field': 3,  # writing same value -> should not be tracked even if prepared
+                'selection_field': 'first',
             })
             self.flush_tracking()
         for record, msg in zip(track_records, self._new_msgs, strict=True):
@@ -1052,7 +1063,7 @@ class TestTrackingInternals(TestTrackingCommon):
                 'author_id': self.partner_admin,  # forced author
                 'body': '<p>Forced &lt;b&gt;again&lt;/b&gt; until finalize</p>',  # forced body
                 'tracking_values': [
-                    ('char_field', 'char', 'should track', 'should track also'),
+                    ('char_field', 'char', 'should not track', 'should track also'),
                 ],
             })
 

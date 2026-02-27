@@ -61,6 +61,10 @@ class MailTrackMixin(models.AbstractModel):
         # ease overrides by returning initial values
         return initial_values
 
+    def _track_clear(self):
+        """ Clear tracking data, without preventing further other tracking. """
+        self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', None)
+
     def _track_discard(self):
         """ Prevent any tracking of fields on `self`. """
         if not self or not self._track_get_fields():
@@ -91,6 +95,8 @@ class MailTrackMixin(models.AbstractModel):
 
         Also cleans precommit data, resetting state and avoiding multiple
         tracking generation. """
+        # pop now, so that potentially nested calls do not loop (e.g. override a track
+        # to generate sub-trackings)
         initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
@@ -120,6 +126,7 @@ class MailTrackMixin(models.AbstractModel):
         # launch business flow to manage tracking values
         records_su._track_execute(initial_values, trackings)
 
+        self._track_clear()
         return records_su, initial_values, trackings
 
     @ormcache('self.env.uid', 'self.env.su')

@@ -2079,9 +2079,7 @@ class SaleOrder(models.Model):
             and self.id in self._fields["state"]._get_cache(self.env)
             and self._discard_tracking()
         ):
-            self.env.cr.precommit.data.pop(f"mail.tracking.{self._name}", {})
-            self.env.flush_all()
-            return None
+            self._track_clear()
         return super()._track_finalize()
 
     def message_post(self, **kwargs):
