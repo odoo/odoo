@@ -942,6 +942,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
+    const { promise: isActivePromise, resolve: resolveIsActive } = Promise.withResolvers();
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
@@ -954,7 +955,10 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
                     commandId: "test_cmd",
                     description: "Test Button",
                     icon: "fa-square",
-                    isActive: () => expect.step("image format evaluated"),
+                    isActive: () => {
+                        expect.step("image format evaluated");
+                        resolveIsActive();
+                    },
                 },
             ],
         };
@@ -973,7 +977,7 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
     await waitFor(".o-we-toolbar");
     expect.verifySteps([]);
     await click("img");
-    await animationFrame();
+    await isActivePromise;
     expect.verifySteps(["image format evaluated"]);
 });
 
