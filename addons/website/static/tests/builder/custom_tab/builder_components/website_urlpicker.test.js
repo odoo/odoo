@@ -6,7 +6,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { delay } from "@web/core/utils/concurrency";
+import { advanceTime } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -96,7 +96,7 @@ test("opens dropdown when typing /", async () => {
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container input").edit("/", { confirm: false });
-    await delay(250);
+    await advanceTime(250);
     expect.verifySteps(["button_immediate_install"]);
     expect(document.querySelector(".o_website_ui_autocomplete")).toBeVisible();
 });
@@ -111,7 +111,7 @@ test("selects and commits value from dropdown", async () => {
     await contains(":iframe .test-options-target").click();
 
     await contains(".we-bg-options-container input").edit("/", { confirm: false });
-    await delay(250);
+    await advanceTime(250);
     await contains(document.querySelector(".o_website_ui_autocomplete > li:first-child a")).click();
     expect(document.querySelector(".o_website_ui_autocomplete")).toBe(null);
     expect(".we-bg-options-container input").toHaveValue("/page1");
@@ -131,7 +131,7 @@ test("collects anchors in current page and suggests them", async () => {
     `);
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container input").edit("#", { confirm: false });
-    await delay(250);
+    await advanceTime(250);
 
     // Check autocomplete suggests both anchors
     const els = document.querySelectorAll(".o_website_ui_autocomplete > li a");
