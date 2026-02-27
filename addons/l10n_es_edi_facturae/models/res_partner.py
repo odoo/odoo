@@ -13,7 +13,7 @@ class AcRoleType(models.Model):
 
 class Partner(models.Model):
     _inherit = 'res.partner'
-
+    _inherit = 'res.partner'
     invoice_edi_format = fields.Selection(selection_add=[('es_facturae', 'Spain (FacturaE)')])
     type = fields.Selection(selection_add=[('facturae_ac', 'FACe Center'), ('other',)])
     l10n_es_edi_facturae_ac_center_code = fields.Char(string='Code', size=10, help="Code of the issuing department.")

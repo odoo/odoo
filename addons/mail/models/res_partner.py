@@ -5,13 +5,11 @@ import re
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 from odoo.tools.misc import limited_field_access_token
-from odoo.addons.mail.tools.discuss import Store
 
 
 class Partner(models.Model):
-    """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
-       to restrict usage of automatic email templates. """
-    _name = "res.partner"
+    _inherit = 'res.partner'
+    _name = 'res.partner'
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
@@ -19,6 +17,7 @@ class Partner(models.Model):
     name = fields.Char(tracking=1)
     email = fields.Char(tracking=1)
     phone = fields.Char(tracking=2)
+    
     parent_id = fields.Many2one(tracking=3)
     user_id = fields.Many2one(tracking=4)
     vat = fields.Char(tracking=5)
@@ -212,7 +211,7 @@ class Partner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _to_store(self, store: Store, /, *, fields=None, main_user_by_partner=None):
+    def _to_store(self, store, /, *, fields=None, main_user_by_partner=None):
         if fields is None:
             fields = ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
         if not self.env.user._is_internal() and "email" in fields:
