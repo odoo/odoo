@@ -17,6 +17,8 @@
                         <field name="path" />
                         <field name="line" />
                         <field name="func" />
+                        <field name="res_model"/>
+                        <field name="res_id"/>
                         <field name="message" />
                     </group>
                 </sheet>
@@ -48,6 +50,8 @@
                     <field name="name" />
                     <field name="level" />
                     <field name="message" />
+                    <field name="res_model"/>
+                    <field name="res_id"/>
                     <group>
                         <filter string="Database" name="database" domain="[]" context="{'group_by': 'dbname'}" />
                         <filter string="Level" name="group_by_level" domain="[]" context="{'group_by': 'level'}" />
