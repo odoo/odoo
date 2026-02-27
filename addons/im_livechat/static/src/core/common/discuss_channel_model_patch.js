@@ -162,7 +162,7 @@ const discussChannelPatch = {
 
     get composerHiddenText() {
         if (this.channel?.channel_type === "livechat" && this.livechat_end_dt) {
-            return _t("This live chat conversation has ended");
+            return _t("This live chat conversation has ended.");
         }
         return super.composerHiddenText;
     },
