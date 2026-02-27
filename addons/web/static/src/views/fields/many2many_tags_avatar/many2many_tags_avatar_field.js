@@ -60,7 +60,10 @@ export const many2ManyTagsAvatarField = {
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
 export class ListMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    visibleItemsLimit = 5;
+    static defaultProps = {
+        ...Many2ManyTagsAvatarField.defaultProps,
+        tagLimit: 5,
+    };
 }
 
 export const listMany2ManyTagsAvatarField = {
@@ -111,7 +114,11 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         isEditable: { type: Boolean, optional: true },
     };
     static PopoverClass = Many2ManyTagsAvatarFieldPopover;
-    visibleItemsLimit = 3;
+
+    static defaultProps = {
+        ...Many2ManyTagsAvatarField.defaultProps,
+        tagLimit: 3,
+    };
 
     setup() {
         super.setup();
@@ -129,6 +136,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         const props = { ...this.props, specification: this.specification };
         delete props.isEditable;
         delete props.relation;
+        props.tagLimit = 0; // See all tags when editing in popover
         return props;
     }
 

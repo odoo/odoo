@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -154,19 +154,6 @@ test("widget many2many_tags_avatar in list view", async () => {
         ".o_data_row:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     ).toHaveText("+9");
 
-    // check data-tooltip attribute (used by the tooltip service)
-    const tag = queryOne(
-        ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
-    );
-    expect(tag).toHaveAttribute("data-tooltip-template", "web.TagsList.Tooltip");
-    expect(tag).toHaveAttribute(
-        "data-tooltip-info",
-        JSON.stringify({ tags: ["record 6", "record 7"] }),
-        {
-            message: "shows a tooltip on hover",
-        }
-    );
-
     await contains(".o_data_row .o_many2many_tags_avatar_cell:eq(0)").click();
     await contains(
         ".o_data_row .o_many2many_tags_avatar_cell:eq(0) .o-autocomplete--input"
@@ -296,7 +283,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
-    ).toHaveText("9+");
+    ).toHaveText("+11");
     expect(".o_field_many2many_tags_avatar .o_field_many2many_selection").toHaveCount(0);
     await contains(".o_kanban_record:nth-child(3) .o_quick_assign", { visible: false }).click();
     await animationFrame();
@@ -311,14 +298,14 @@ test("widget many2many_tags_avatar in kanban view", async () => {
     expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3);
     // select first non selected input
     await contains(".o-overlay-container .o-autocomplete--dropdown-item:eq(4)").click();
-    expect(".o-overlay-container .o_tag").toHaveCount(4);
-    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(2);
+    expect(".o-overlay-container .o_tag").toHaveCount(4); // Should show full list above m2m autocomplete input
+    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3); // But keep truncate in the card
     // load more
     await contains(".o-overlay-container .o_m2o_dropdown_option_search_more").click();
     // first non already selected item
     await contains(".o_dialog .o_list_table .o_data_row .o_data_cell:eq(3)").click();
     expect(".o-overlay-container .o_tag").toHaveCount(5);
-    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(2);
+    expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(3);
     expect(
         `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);

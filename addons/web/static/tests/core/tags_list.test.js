@@ -1,22 +1,22 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAttribute } from "@odoo/hoot-dom";
+import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { TagsList } from "@web/core/tags_list/tags_list";
 
-test("Limiting the visible tags displays a counter", async () => {
+test("Limiting the visible tags displays a clickable counter badge", async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { TagsList };
         static template = xml`
-            <TagsList tags="this.tags" visibleItemsLimit="this.state.visibleItemsLimit" t-slot-scope="tag">
-                <span class="o_tag" t-out="tag.text"/>
+            <TagsList tags="this.tags" tagLimit="this.state.tagLimit" t-slot-scope="tag">
+                <span class="custom_tag" t-out="tag.text"/>
             </TagsList>
         `;
         setup() {
             this.state = useState({
-                visibleItemsLimit: 3,
+                tagLimit: 3,
             });
             this.tags = [
                 { id: "tag1", text: "Water" },
@@ -30,25 +30,36 @@ test("Limiting the visible tags displays a counter", async () => {
     }
 
     const parent = await mountWithCleanup(Parent);
-    // visibleItemsLimit = 3 -> displays 2 tags + 1 counter (4 tags left)
-    expect(".o_tag").toHaveCount(2);
-    expect(".o_tags_list_counter").toHaveText("+4", {
+    // tagLimit = 3 -> displays 2 tags + 1 counter (4 tags left)
+    expect(".custom_tag").toHaveCount(2);
+    expect(".o_badge.bg-secondary").toHaveText("+4", {
         message: "the counter displays 4 more items",
     });
-    expect(JSON.parse(queryAttribute(".o_tags_list_counter", "data-tooltip-info"))).toEqual(
-        { tags: ["Fire", "Earth", "Wind", "Dust"] },
-        { message: "the counter has a tooltip displaying other items" }
-    );
+    expect(".o_badge.bg-secondary").toHaveAttribute("data-tooltip", "Click to show more", {
+        message: "the counter has the correct static tooltip",
+    });
 
-    parent.state.visibleItemsLimit = 5;
+    parent.state.tagLimit = 5;
     await animationFrame();
-    // visibleItemsLimit = 5 -> displays 4 tags + 1 counter (2 tags left)
-    expect(".o_tag").toHaveCount(4);
-    expect(".o_tags_list_counter").toHaveText("+2");
 
-    parent.state.visibleItemsLimit = 6;
+    // limit = 5 -> displays 4 tags + 1 counter (2 tags left)
+    expect(".custom_tag").toHaveCount(4);
+    expect(".o_badge.bg-secondary").toHaveText("+2");
+
+    parent.state.tagLimit = 6;
     await animationFrame();
-    // visibleItemsLimit = 6 -> displays 6 tags + 0 counter (0 tag left)
-    expect(".o_tag").toHaveCount(6);
-    expect(".o_tags_list_counter").toHaveCount(0);
+    expect(".custom_tag").toHaveCount(6);
+    expect(".o_badge.bg-secondary").toHaveCount(0);
+
+    // Test the click-to-expand behavior
+    parent.state.tagLimit = 4;
+    await animationFrame();
+    expect(".custom_tag").toHaveCount(3);
+    // Clicking should override the limit and display ALL tags
+    await click(".o_badge.bg-secondary");
+    await animationFrame();
+    expect(".custom_tag").toHaveCount(6);
+    expect(".o_badge.bg-secondary").toHaveCount(0, {
+        message: "The counter badge should disappear after expansion",
+    });
 });

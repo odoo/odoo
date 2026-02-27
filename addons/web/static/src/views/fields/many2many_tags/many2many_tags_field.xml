@@ -6,6 +6,7 @@
             class="o_field_tags d-inline-flex flex-wrap gap-1 mw-100"
             t-att-class="{'o_tags_input o_input': !this.props.readonly}"
             t-custom-ref="many2ManyTagsField"
+            t-on-focusin="this.onFocusIn"
         >
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
                 <Tag t-props="tag.props"/>

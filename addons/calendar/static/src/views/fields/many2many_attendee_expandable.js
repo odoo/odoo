@@ -14,7 +14,7 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
         this.uncertainCount = this.attendeesCount - this.acceptedCount - this.declinedCount;
     }
 
-    get visibleItemsLimit() {
+    get tagLimit() {
         return this.state.expanded ? Number.POSITIVE_INFINITY : 5;
     }
 

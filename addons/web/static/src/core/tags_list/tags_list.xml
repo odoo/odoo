@@ -5,17 +5,8 @@
         <t t-foreach="this.visibleTags" t-as="tag" t-key="tag.id or tag_index">
             <t t-slot="default" t-props="tag"/>
         </t>
-        <t t-set="invisibleTagCount" t-value="this.invisibleTags.length"/>
-        <t t-if="invisibleTagCount">
-            <span class="o_tags_list_counter o_m2m_avatar_empty rounded text-center fw-bold cursor-default" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="this.tooltipInfo" t-on-click.stop="">
-                <span t-out="invisibleTagCount gt 9 ? '9+' : '+' + invisibleTagCount"/>
-            </span>
-        </t>
-    </t>
-
-    <t t-name="web.TagsList.Tooltip">
-        <t t-foreach="this.tags" t-as="tag" t-key="tag_index">
-            <div t-out="tag"/>
+        <t t-if="this.invisibleTags.length">
+            <BadgeTag color="0" cssClass="'bg-secondary o_m2m_avatar_empty fw-bold cursor-pointer'" text="'+' + this.invisibleTags.length" tooltip.translate="Click to show more" t-on-click.stop="this.showAllTags"/>
         </t>
     </t>
 

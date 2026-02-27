@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { click, hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 
 import {
@@ -759,7 +759,7 @@ test("Many2ManyTagsField can load more than 40 records", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
-        arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+        arch: `<form><field name="partner_ids" widget="many2many_tags" options="{'tag_limit': 0}"/></form>`,
         resId: 1,
     });
     expect('.o_field_widget[name="partner_ids"] .badge').toHaveCount(100);
@@ -1062,7 +1062,7 @@ test("Many2ManyTagsField: select multiple records on desktop", async () => {
         resId: 1,
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags"/>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 0}"/>
             </form>`,
     });
 
@@ -1101,9 +1101,9 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
         resModel: "partner",
         resId: 1,
         arch: `
-                <form>
-                    <field name="timmy" widget="many2many_tags"/>
-                </form>`,
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 0}"/>
+            </form>`,
     });
 
     await selectFieldDropdownItem("timmy", "Search more...");
@@ -2090,22 +2090,26 @@ test("Many2ManyTagsField: keyboard navigation", async () => {
         { id: 15, name: "platinium", color: 10 },
     ];
 
-    Partner._records[0].timmy = [12, 14];
+    Partner._records[0].timmy = [12, 14, 15];
 
     await mountView({
         type: "form",
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags"/>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 2}"/>
             </form>`,
         resId: 1,
     });
 
     const input = ".o_field_many2many_tags input";
 
-    // 2. Test RIGHT arrow: Should close dropdown and focus the FIRST tag
+    // 1. Should expand on focus
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(2); // 1 normal tag + 1 counter tag
     await contains(input).click();
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // 3 normal tags
+
+    // 2. Test RIGHT arrow: Should close dropdown and focus the FIRST tag
     expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
     await press("ArrowRight");
     expect(".o_tag:eq(0)").toBeFocused();
@@ -2117,7 +2121,7 @@ test("Many2ManyTagsField: keyboard navigation", async () => {
     // 3. Test LEFT arrow: Should close dropdown and focus the LAST tag
     await contains(input).click();
     await press("ArrowLeft");
-    expect(".o_tag:eq(1)").toBeFocused();
+    expect(".o_tag:last").toBeFocused();
 
     // Ensure dropdown closed
     await animationFrame();
@@ -2141,4 +2145,82 @@ test("Many2ManyTagsField: keyboard navigation", async () => {
 
     // Dropdown should still be visible (filtering)
     expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("many2many_tags widget with more records than limit can be edited", async () => {
+    PartnerType._records.push({ id: 15, name: "bronze" }, { id: 16, name: "copper" });
+    Partner._records[0].timmy = [12, 14, 15, 16];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 3}"/>
+            </form>`,
+    });
+
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // The counter badge also has the .o_tag class
+    expect(".o_field_many2many_tags .o_m2m_avatar_empty").toHaveCount(1); // .o_m2m_avatar_empty is the counter badge
+    expect(".o_field_many2many_tags .o_m2m_avatar_empty").toHaveText("+2"); // 4 records in total, 2 displayed / 2 hidden
+
+    // When editing we should see all elements and many2many drop down should appear
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
+    await contains(".o_field_widget[name='timmy'] .o_field_many2many_selection input").click();
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(4);
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
+});
+
+test.tags("mobile");
+test("many2many_tags widget enforces limit in desktop form view", async () => {
+    PartnerType._records.push({ id: 15, name: "bronze" }, { id: 16, name: "copper" });
+    Partner._records[0].timmy = [12, 14, 15, 16];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 3}"/>
+            </form>`,
+    });
+
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // The counter badge also has the .o_tag class
+    expect(".o_field_many2many_tags .o_m2m_avatar_empty").toHaveCount(1); // .o_m2m_avatar_empty is the counter badge
+    expect(".o_field_many2many_tags .o_m2m_avatar_empty").toHaveText("+2");
+
+    // When editing we should see all elements and should open a new screen with list of tags
+    await contains(".o_field_widget[name='timmy'] .o_field_many2many_selection input").click();
+    expect("article.o_kanban_record:contains('gold')").toHaveCount(1); // New screen with list of tags
+
+    // When coming back we should see all tags
+    await click(".modal-header button.oi-arrow-left");
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(4);
+});
+
+test.tags("desktop");
+test("many2many_tags limit and edit color on click", async () => {
+    PartnerType._records.push(
+        { id: 15, name: "a", color: 3 },
+        { id: 16, name: "b", color: 4 },
+        { id: 17, name: "c", color: 5 }
+    );
+    Partner._records[0].timmy = [15, 16, 17];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'tag_limit': 2, 'on_tag_click': 'edit_color', 'color_field': 'color'}"/>
+            </form>`,
+    });
+
+    // Show the color list on first click even if tags list is truncated.
+    expect(".o_colorlist").toHaveCount(0);
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(2);
+    await contains("[name=timmy] .o_tag").click();
+    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_field_many2many_tags .o_tag").toHaveCount(3); // Clicking on a tag should also expand all tags
 });

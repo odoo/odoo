@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
@@ -58,14 +58,17 @@ export class Many2ManyTagsField extends Component {
         createExpression: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
         context: { type: Object, optional: true },
+        tagLimit: { type: Number, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
         searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
     };
+
     static defaultProps = {
         canCreate: true,
         canQuickCreate: true,
+        tagLimit: 8,
         canCreateEdit: true,
         nameCreateField: "name",
         context: {},
@@ -73,9 +76,8 @@ export class Many2ManyTagsField extends Component {
 
     static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-    visibleItemsLimit = Number.POSITIVE_INFINITY;
-
     setup() {
+        this.state = useState({ expanded: false });
         this.orm = useService("orm");
         this.previousColorsMap = {};
         this.popover = usePopover(this.constructor.components.Popover);
@@ -153,10 +155,10 @@ export class Many2ManyTagsField extends Component {
     }
 
     get tagsListProps() {
+        const limit = this.state.expanded ? 0 : this.props.tagLimit;
         return {
-            mapTooltip: (tag) => tag.props.tooltip,
             tags: this.tags,
-            visibleItemsLimit: this.visibleItemsLimit,
+            tagLimit: limit === 0 ? Number.POSITIVE_INFINITY : limit,
         };
     }
 
@@ -212,6 +214,10 @@ export class Many2ManyTagsField extends Component {
         await tagRecord.update(changes);
         await tagRecord.save();
         this.popover.close();
+    }
+
+    onFocusIn() {
+        this.state.expanded = true;
     }
 
     get tags() {
@@ -319,6 +325,15 @@ export const many2ManyTagsField = {
             availableTypes: ["char"],
         },
         {
+            label: _t("Maximum Visible Tags"),
+            name: "tag_limit",
+            type: "number",
+            default: Many2ManyTagsField.defaultProps.tagLimit,
+            help: _t(
+                "Maximum number of tags to display before showing a counter. Set to 0 to always show all tags."
+            ),
+        },
+        {
             label: _t("On tag click"),
             name: "on_tag_click",
             type: "selection",
@@ -355,6 +370,7 @@ export const many2ManyTagsField = {
             createExpression: attrs.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
+            tagLimit: options.tag_limit,
             placeholder,
             searchThreshold: options.search_threshold,
             string,
