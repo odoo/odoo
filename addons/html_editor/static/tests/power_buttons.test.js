@@ -190,7 +190,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(26);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -205,7 +205,7 @@ describe("buttons", () => {
         }
         await animationFrame();
         // All commands should be available again
-        expect(queryAllTexts(".o-we-command-name").length).toBe(26);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
     });
 
     test("should close the powerbox on pointerdown outside and not reopen it on subsequent keydown", async () => {
@@ -258,7 +258,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(26);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -276,7 +276,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(26);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
@@ -294,7 +294,7 @@ describe("buttons", () => {
         // Open powerbox via the More options button
         click(".o_we_power_buttons .power_button.oi-ellipsis-v");
         await expectElementCount(".o-we-powerbox", 1);
-        expect(queryAllTexts(".o-we-command-name").length).toBe(26);
+        expect(queryAllTexts(".o-we-command-name").length).toBe(27);
         // Type a search term
         await insertText(editor, "head");
         await animationFrame();
