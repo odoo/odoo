@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { press, tick, waitFor } from "@odoo/hoot-dom";
+import { press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -11,6 +11,7 @@ import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_transl
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
@@ -67,46 +68,35 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (1)", async () => {
     await setupEditor("<div>[ab]</div>");
-    await animationFrame();
-    await tick();
     await expandToolbar();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (2)", async () => {
     await setupEditor("<div>a[b</div><div>c]d</div>");
-    await animationFrame();
-    await tick();
     await expandToolbar();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test.todo("should not open toolbar when selection contains contenteditable false", async () => {
     await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (4)", async () => {
     await setupEditor('<div class="oe_unbreakable">a[b</div><div>c]d</div>');
-    await animationFrame();
-    await tick();
     await expandToolbar();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (5)", async () => {
     await setupEditor('<div>a[b</div><div>c]d</div><div class="oe_unbreakable">e</div>');
-    await animationFrame();
-    await tick();
     await expandToolbar();
     expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (6)", async () => {
     await setupEditor('<div>a[b</div><div>cd</div><div class="oe_unbreakable">e]</div>');
-    await animationFrame();
-    await tick();
     await expandToolbar();
     expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
