@@ -65,6 +65,7 @@ test("shouldGoBack", async () => {
     expect(comp.shouldGoBack()).toBe(true);
 
     const product5 = store.models["product.template"].get(5);
+    store.config.self_ordering_pay_after = "meal";
     store.addToCart(product5, 2, "");
     expect(comp.shouldGoBack()).toBe(false);
 

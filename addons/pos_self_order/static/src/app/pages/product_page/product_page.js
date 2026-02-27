@@ -19,6 +19,14 @@ export class ProductPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
 
+        if (
+            this.selfOrder.isSyncedOrderRestricted ||
+            (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id)
+        ) {
+            this.router.navigate("default");
+            return;
+        }
+
         if (!this.props.productTemplate) {
             this.goBack();
             return;

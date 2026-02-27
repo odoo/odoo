@@ -69,6 +69,7 @@ export const setupSelfPosEnv = async (
     store.config.self_ordering_mode = mode;
     store.config.self_ordering_service_mode = service_mode;
     store.config.self_ordering_pay_after = pay_after;
+    store.config.use_presets = false;
 
     await mountWithCleanup(selfOrderIndex);
     return store;
