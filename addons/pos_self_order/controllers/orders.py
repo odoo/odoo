@@ -18,13 +18,15 @@ class PosSelfOrderController(http.Controller):
         pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
         pos_session = pos_config.current_session_id
 
-        ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        sequence_number = order.get('sequence_number')
-        if not sequence_number:
-            sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
-        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
-        order['pos_reference'] = order_reference
-        order['name'] = order_reference
+        existing_order = pos_config.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+        if not existing_order.exists():
+            ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
+            sequence_number = order.get('sequence_number')
+            if not sequence_number:
+                sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
+            order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
+            order['pos_reference'] = order_reference
+            order['name'] = order_reference
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
