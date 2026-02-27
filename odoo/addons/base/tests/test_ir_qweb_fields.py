@@ -178,3 +178,13 @@ class TestQwebFieldMany2One(common.TransactionCase):
         parent = self.env['res.partner'].create({'name': 'BigBoss'})
         child = self.env['res.partner'].create({'name': 'Minion', 'parent_id': parent.id})
         self.assertEqual(self.value_to_html(child.parent_id), 'BigBoss')
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestQwebFieldText(common.TransactionCase):
+
+    def test_attributes_include_dir_auto(self):
+        """Verify that the text widget injects dir="auto" on rendered elements."""
+        partner = self.env['res.partner'].create({'name': 'Test', 'comment': 'Test comment'})
+        attrs = self.env['ir.qweb.field.text'].attributes(partner, 'comment', {'inherit_branding': False, 'translate': False})
+        self.assertEqual(attrs['dir'], 'auto')
