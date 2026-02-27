@@ -1,5 +1,11 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
+<<<<<<< a2b3ca73fd63108fc70a5cec8ef328c150f85554
 import { Component } from "@odoo/owl";
+||||||| a4f2604994431787cfc63e92a28e925a3df41649
+import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
+=======
+import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
+>>>>>>> 9d00d12e7c0cb5f64e0c7f42e503e20431028eae
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -22,6 +28,7 @@ export class TableMenu extends Component {
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
+        document: { validate: (el) => el.nodeType === Node.DOCUMENT_NODE },
         direction: { type: String, optional: true },
     };
     static defaultProps = { direction: "ltr" };
@@ -37,6 +44,34 @@ export class TableMenu extends Component {
             this.isLast = !tr.nextElementSibling;
         }
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
+<<<<<<< a2b3ca73fd63108fc70a5cec8ef328c150f85554
+||||||| a4f2604994431787cfc63e92a28e925a3df41649
+        onWillUpdateProps((newProps) => {
+            this.updatePosition(newProps);
+        });
+        onMounted(() => {
+            this.overlayEl = this.dropdownRef.el;
+            this.updatePosition(this.props);
+        });
+=======
+        onWillUpdateProps((newProps) => {
+            this.updatePosition(newProps);
+        });
+        onMounted(() => {
+            this.overlayEl = this.dropdownRef.el;
+            this.updatePosition(this.props);
+        });
+        if (this.props.document.defaultView.frameElement) {
+            useExternalListener(this.props.document, "scroll", () => {
+                this.updatePosition(this.props);
+            });
+            useExternalListener(this.props.document, "pointerdown", (ev) => {
+                if (!this.overlayEl.contains(ev.target)) {
+                    this.props.close();
+                }
+            });
+        }
+>>>>>>> 9d00d12e7c0cb5f64e0c7f42e503e20431028eae
     }
 
     get hasCustomTableSize() {
@@ -62,6 +97,76 @@ export class TableMenu extends Component {
         );
     }
 
+<<<<<<< a2b3ca73fd63108fc70a5cec8ef328c150f85554
+||||||| a4f2604994431787cfc63e92a28e925a3df41649
+    updatePosition({ target, type, direction }) {
+        if (!this.overlayEl || !target) {
+            return;
+        }
+        const targetRect = target.getBoundingClientRect();
+        const container = this.overlayEl.parentElement;
+        const containerRect = container.getBoundingClientRect();
+        if (type === "column") {
+            Object.assign(this.overlayEl.style, {
+                top: `${targetRect.top - containerRect.top - this.overlayEl.offsetHeight}px`,
+                left: `${targetRect.left - containerRect.left}px`,
+                width: `${targetRect.width}px`,
+            });
+        } else {
+            const isLTR = direction === "ltr";
+            const inlineStartOffset = isLTR
+                ? targetRect.left - containerRect.left
+                : containerRect.right - targetRect.right;
+            Object.assign(this.overlayEl.style, {
+                top: `${targetRect.top - containerRect.top}px`,
+                insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
+                height: `${targetRect.height}px`,
+            });
+        }
+    }
+=======
+    updatePosition({ target, type, direction }) {
+        if (!this.overlayEl || !target) {
+            return;
+        }
+        let frameRect = { top: 0, left: 0 };
+        let frameElement;
+        try {
+            frameElement = this.props.document.defaultView.frameElement;
+        } catch {
+            // We don't access the frameElement if we don't have access to it.
+            // (i.e. iframe origin or sandbox restriction)
+        }
+        if (frameElement) {
+            frameRect = frameElement.getBoundingClientRect();
+        }
+        const targetRect = target.getBoundingClientRect();
+        const container = this.overlayEl.parentElement;
+        const containerRect = container.getBoundingClientRect();
+        const top = frameRect.top + targetRect.top - containerRect.top;
+        const left = frameRect.left + targetRect.left - containerRect.left;
+        this.overlayEl.classList.remove("h-100", "w-100");
+        if (type === "column") {
+            Object.assign(this.overlayEl.style, {
+                position: "absolute",
+                top: `${top - this.overlayEl.offsetHeight}px`,
+                left: `${left}px`,
+                width: `${targetRect.width}px`,
+            });
+        } else {
+            const isLTR = direction === "ltr";
+            const inlineStartOffset = isLTR
+                ? left
+                : containerRect.right - (frameRect.left + targetRect.right);
+            Object.assign(this.overlayEl.style, {
+                position: "absolute",
+                top: `${top}px`,
+                insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
+                height: `${targetRect.height}px`,
+            });
+        }
+    }
+>>>>>>> 9d00d12e7c0cb5f64e0c7f42e503e20431028eae
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();

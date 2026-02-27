@@ -167,6 +167,7 @@ export class TableUIPlugin extends Plugin {
             this.rowMenu.open({
                 target: td,
                 props: {
+                    document: this.document,
                     type: "row",
                     overlay: this.rowMenu,
                     target: td,
@@ -176,6 +177,7 @@ export class TableUIPlugin extends Plugin {
             });
         }
         if (td.parentElement.rowIndex === 0) {
+<<<<<<< a2b3ca73fd63108fc70a5cec8ef328c150f85554
             this.colMenu.open({
                 target: td,
                 props: {
@@ -187,6 +189,36 @@ export class TableUIPlugin extends Plugin {
                     ...tableMethods,
                 },
             });
+||||||| a4f2604994431787cfc63e92a28e925a3df41649
+            registry
+                .category(this.config.localOverlayContainers.key)
+                .add(this.columnMenuOverlayKey, {
+                    Component: TableMenu,
+                    props: {
+                        type: "column",
+                        target: td,
+                        dropdownState: this.createDropdownState(this.closeRowMenu.bind(this)),
+                        direction: this.config.direction || "ltr",
+                        close: () => this.closeColumnMenu(),
+                        ...tableMethods,
+                    },
+                });
+=======
+            registry
+                .category(this.config.localOverlayContainers.key)
+                .add(this.columnMenuOverlayKey, {
+                    Component: TableMenu,
+                    props: {
+                        document: this.document,
+                        type: "column",
+                        target: td,
+                        dropdownState: this.createDropdownState(this.closeRowMenu.bind(this)),
+                        direction: this.config.direction || "ltr",
+                        close: () => this.closeColumnMenu(),
+                        ...tableMethods,
+                    },
+                });
+>>>>>>> 9d00d12e7c0cb5f64e0c7f42e503e20431028eae
         }
     }
 }
