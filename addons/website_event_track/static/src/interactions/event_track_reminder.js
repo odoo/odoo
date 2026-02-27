@@ -120,9 +120,6 @@ export class WebsiteEventTrackReminder extends Interaction {
 
     modalEmailReminderSubmit(ev) {
         const data = Object.fromEntries(new FormData(ev.target).entries());
-        if (this.favoriteAddedConfirmation) {
-            this.notification.add(this.favoriteAddedConfirmation, {type: "info"});
-        }
         if (data.track_id && !isNaN(data.track_id) && isEmail(data.email)) {
             sessionStorage.setItem("website_event_track.email_reminder_email", data.email);
             this._sendEmailReminder(data.email);
