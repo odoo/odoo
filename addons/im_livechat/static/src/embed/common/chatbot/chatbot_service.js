@@ -394,7 +394,7 @@ export class ChatBotService {
             return "";
         }
         if (this.completed) {
-            return _t("Conversation ended...");
+            return _t("This conversation has ended.");
         }
         switch (this.currentStep?.type) {
             case "question_selection":
