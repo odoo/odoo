@@ -48,6 +48,7 @@ export class DynamicSnippet extends Interaction {
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
         this.withSample = false;
+        this.rpc = rpc;
     }
 
     async willStart() {
@@ -92,7 +93,7 @@ export class DynamicSnippet extends Interaction {
     async fetchData() {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
-            const filterFragments = await this.waitFor(rpc(
+            const filterFragments = await this.waitFor(this.rpc(
                 "/website/snippet/filters",
                 Object.assign({
                     "filter_id": parseInt(nodeData.filterId),
@@ -204,6 +205,19 @@ export class DynamicSnippet extends Interaction {
     }
 }
 
+export const DynamicSnippetCached = (I) =>
+    class extends I {
+        setup() {
+            super.setup();
+            this.rpc = (url, params) => this.services.website_edit.rpcCache({ ...params, url });
+        }
+    };
+
 registry
     .category("public.interactions")
     .add("website.dynamic_snippet", DynamicSnippet);
+
+registry.category("public.interactions.preview").add("website.dynamic_snippet", {
+    Interaction: DynamicSnippet,
+    mixin: DynamicSnippetCached,
+});
