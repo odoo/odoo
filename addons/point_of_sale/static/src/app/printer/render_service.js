@@ -126,6 +126,7 @@ export const htmlToCanvas = async (el, options) => {
                 height: Math.ceil(el.clientHeight),
                 width: Math.ceil(el.clientWidth),
                 pixelRatio: 1,
+                includeQueryParams: true,
             });
         },
     });
