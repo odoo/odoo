@@ -95,6 +95,7 @@ export class HtmlField extends Component {
         });
 
         useRecordObserver((record) => {
+            const key = this.state.key;
             // Reset Wysiwyg when we discard or onchange value
             const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
@@ -104,6 +105,10 @@ export class HtmlField extends Component {
                     this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
                     this.lastValue = value;
                 }
+            }
+            if (key === this.state.key && record.resId !== this.props.record.resId) {
+                // Ensure key is reset for 2 different records with identical html values
+                this.state.key++;
             }
         });
         useRecordObserver((record) => {
