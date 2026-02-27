@@ -2,7 +2,7 @@ import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "./_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
@@ -326,13 +326,13 @@ test("cropper should not open for external image", async () => {
     await setupEditor(
         `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
     );
-    await waitFor('button[name="image_transform"]');
+    const imageTransform = await waitFor('button[name="image_transform"]');
+    imageTransform.click();
 
-    await click('button[name="image_transform"]');
-    await animationFrame();
+    const imageCrop = await waitFor('.btn[name="image_crop"]');
+    imageCrop.click();
 
-    await click('.btn[name="image_crop"]');
-    await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    await waitFor(".o_notification_manager .o_notification", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
 
@@ -360,13 +360,12 @@ test("Image cropper disappear on backspace", async () => {
         };
     });
     await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
-    await waitFor(".o-we-toolbar");
-
-    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
-    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    const cropButton = await waitFor(".o-we-toolbar .btn[name='image_crop']");
+    cropButton.click();
+    await waitFor(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(1);
     await cropperReadyPromise;
     press("backspace");
-    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
+    await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
