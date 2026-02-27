@@ -282,6 +282,14 @@ class HrVersion(models.Model):
             if not contract_period_exists:
                 dates_per_employee[version.employee_id].append((version.contract_date_start, version.contract_date_end, version))
 
+    @api.constrains('hours_per_week', 'hours_per_day')
+    def _verify_hours(self):
+        for employee in self:
+            if (employee.hours_per_week < 0 or employee.hours_per_week > 168):
+                raise ValidationError(self.env._("Hours per week must be between 0 and 168."))
+            if (employee.hours_per_day < 0 or employee.hours_per_day > 24):
+                raise ValidationError(self.env._("Average hours per day must be between 0 and 24."))
+
     def check_contract_finished(self):
         if self.contract_date_start and not self.contract_date_end:
             raise ValidationError(self.env._("Before creating a new contract, close the current one by setting an end date."))
