@@ -1616,6 +1616,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         return bool(not self.picking_id and self.picking_type_id)
 
+    def _process_negative_moves(self):
+        return self._assign_picking()
+
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
@@ -1700,7 +1703,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.picking_type_id = move.picking_type_id.return_picking_type_id
             # We are returning some products, we must take them in the source location
             move.procure_method = 'make_to_stock'
-        neg_r_moves._assign_picking()
+
+        if neg_r_moves:
+            neg_r_moves._process_negative_moves()
 
         # Call `_action_assign` on confirmed moves eligible for auto-assignment at confirmation.
         moves._filtered_for_assign()._action_assign()
@@ -1905,7 +1910,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.context_today(self))
 
     def _filtered_for_assign(self):
-        return self.filtered(lambda move: (move.state in ('confirmed', 'partially_available') or move.origin_returned_move_id) and move._should_assign_at_confirm())
+        return self.filtered(lambda move: (
+            move.state in ('confirmed', 'partially_available')
+            or move.origin_returned_move_id
+            or (move.state == 'waiting'  # A waiting move can be assigned if one of its dependencies is already done.
+                and move.procure_method == 'make_to_stock'
+                and any(orig.state == 'done' for orig in move.move_orig_ids))
+        ) and move._should_assign_at_confirm())
 
     def _get_picked_quantity(self):
         self.ensure_one()
