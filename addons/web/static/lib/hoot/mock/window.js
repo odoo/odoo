@@ -12,7 +12,7 @@ import {
 } from "@web/../lib/hoot-dom/helpers/time";
 import { interactor } from "../../hoot-dom/hoot_dom_utils";
 import { MockEventTarget, strictEqual, waitForDocument } from "../hoot_utils";
-import { ensureTest, getRunner } from "../main_runner";
+import { ensureTest, mainRunner } from "../main_runner";
 import {
     MockAnimation,
     mockedAnimate,
@@ -276,7 +276,7 @@ function matchesQueryPart(mediaQueryString) {
 
 /** @type {addEventListener} */
 function mockedAddEventListener(...args) {
-    const runner = getRunner();
+    const runner = mainRunner();
     if (runner.dry || !runner.suiteStack.length) {
         // Ignore listeners during dry run or outside of a test suite
         return;
@@ -342,7 +342,7 @@ function mockedPreventDefault() {
 
 /** @type {typeof removeEventListener} */
 function mockedRemoveEventListener(...args) {
-    if (getRunner().dry) {
+    if (mainRunner().dry) {
         // Ignore listeners during dry run
         return;
     }
@@ -353,7 +353,7 @@ function mockedRemoveEventListener(...args) {
  * @param {MutationRecord[]} mutations
  */
 function observeAddedNodes(mutations) {
-    const runner = getRunner();
+    const runner = mainRunner();
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (runner.dry) {

@@ -282,20 +282,21 @@ describe(parseUrl(import.meta.url), () => {
          * @param {string[]} itemsList
          * @param {string} [property]
          */
-        const expectQuery = (query, itemsList, property = "key") => {
+        function expectQuery(query, itemsList, property = "key") {
             const keyedItems = itemsList.map((item) => ({ [property]: item }));
             const result = lookup(parseQuery(query), keyedItems);
             return {
                 /**
                  * @param {string[]} expected
                  */
-                toEqual: (expected) =>
+                toEqual(expected) {
                     expect(result).toEqual(
                         expected.map((item) => ({ [property]: item })),
                         { message: `query ${query} should match ${expected}` }
-                    ),
+                    );
+                },
             };
-        };
+        }
 
         const list = [
             "Frodo",

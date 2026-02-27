@@ -37,11 +37,11 @@ const $$ = queryAll;
 /**
  * @param {...string} queryAllSelectors
  */
-const expectSelector = (...queryAllSelectors) => {
+function expectSelector(...queryAllSelectors) {
     /**
      * @param {string} nativeSelector
      */
-    const toEqualNodes = (nativeSelector, options) => {
+    function toEqualNodes(nativeSelector, options) {
         if (typeof nativeSelector !== "string") {
             throw new Error(`Invalid selector: ${nativeSelector}`);
         }
@@ -65,23 +65,24 @@ const expectSelector = (...queryAllSelectors) => {
         expect(fnNodes).toEqual(nodes, {
             message: `should match ${nodes.length} nodes`,
         });
-    };
+    }
 
     return { toEqualNodes };
-};
+}
 
 /**
  * @param {Document} document
  * @param {HTMLElement} [root]
  * @returns {Promise<HTMLIFrameElement>}
  */
-const makeIframe = (document, root) =>
-    new Promise((resolve) => {
+function makeIframe(document, root) {
+    return new Promise((resolve) => {
         const iframe = document.createElement("iframe");
         iframe.addEventListener("load", () => resolve(iframe));
         iframe.srcdoc = "<body></body>";
         (root || document.body).appendChild(iframe);
     });
+}
 
 const FULL_HTML_TEMPLATE = /* html */ `
     <header>

@@ -595,10 +595,10 @@ export function makeExpect(params) {
      */
     function beforeTest(test) {
         if (test) {
-            test.results.push(new CaseResult(test, params.headless));
+            test.results().push(new CaseResult(test, params.headless));
 
             // Must be retrieved from the list to be proxified
-            currentResult = test.results.at(-1);
+            currentResult = test.lastResults;
         } else {
             currentResult = new CaseResult(null, params.headless);
         }

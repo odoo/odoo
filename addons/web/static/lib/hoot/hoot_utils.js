@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, queryAll } from "@odoo/hoot-dom";
-import { reactive, useComponent, useEffect, useExternalListener } from "@odoo/owl";
+import { App, proxy, signal, types as t, useEffect, useListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -11,7 +11,6 @@ import {
     R_WHITE_SPACE,
     toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
-import { getRunner } from "./main_runner";
 
 /**
  * @typedef {ArgumentPrimitive | `${ArgumentPrimitive}[]` | null} ArgumentType
@@ -55,8 +54,6 @@ import { getRunner } from "./main_runner";
  *  tests: number;
  *  todo: number;
  * }} Reporting
- *
- * @typedef {import("./core/runner").Runner} Runner
  */
 
 /**
@@ -90,7 +87,7 @@ const {
     JSON: { parse: $parse, stringify: $stringify },
     localStorage,
     Map,
-    Math: { floor: $floor, max: $max, min: $min },
+    Math: { floor: $floor, max: $max, min: $min, random: $random },
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
     navigator: { clipboard: $clipboard },
     Object: {
@@ -607,6 +604,7 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
+const destroyed = new WeakSet();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
 const hootKeys = [];
 const labelObjects = new WeakSet();
@@ -672,58 +670,6 @@ export function copyAndBind(object) {
 }
 
 /**
- * @template {(previous: any, ...args: any[]) => any} T
- * @param {T} instanceGetter
- * @param {() => any} [afterCallback]
- * @returns {(...args: DropFirst<Parameters<T>>) => ReturnType<T>}
- */
-export function createJobScopedGetter(instanceGetter, afterCallback) {
-    /** @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>} */
-    function getInstance(...args) {
-        if (runner.dry) {
-            return memoized(...args);
-        }
-
-        const currentJob = runner.state.currentTest || runner.suiteStack.at(-1) || runner;
-        if (!instances.has(currentJob)) {
-            const parentInstance = [...instances.values()].at(-1);
-            instances.set(currentJob, instanceGetter(parentInstance, ...args));
-
-            if (canCallAfter) {
-                runner.after(function instanceGetterCleanup() {
-                    instances.delete(currentJob);
-                    canCallAfter = false;
-                    afterCallback?.();
-                    canCallAfter = true;
-                });
-            }
-        }
-
-        return instances.get(currentJob);
-    }
-
-    /** @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>} */
-    function memoized(...args) {
-        if (!memoizedCalled) {
-            memoizedCalled = true;
-            memoizedValue = instanceGetter(null, ...args);
-        }
-        return memoizedValue;
-    }
-
-    /** @type {Map<Job, Parameters<T>[0]>} */
-    const instances = new Map();
-    const runner = getRunner();
-    let canCallAfter = true;
-    let memoizedCalled = false;
-    let memoizedValue;
-
-    runner.after(() => instances.clear());
-
-    return getInstance;
-}
-
-/**
  * @param {Reporting} [parentReporting]
  */
 export function createReporting(parentReporting) {
@@ -738,7 +684,7 @@ export function createReporting(parentReporting) {
         parentReporting?.add(values);
     }
 
-    const reporting = reactive({
+    const reporting = proxy({
         assertions: 0,
         duration: 0,
         failed: 0,
@@ -857,6 +803,26 @@ export function deepEqual(a, b, options) {
 }
 
 /**
+ * @param {App | import("@odoo/owl").Component} target
+ */
+export function destroy(target) {
+    const app = isInstanceOf(target, App) ? target : target.__owl__.app;
+    if (destroyed.has(app)) {
+        return;
+    }
+    destroyed.add(app);
+    app.destroy();
+}
+
+/**
+ * @template [T=HTMLElement]
+ * @returns {import("@odoo/owl").Signal<T | null>}
+ */
+export function elSignal() {
+    return signal(null, { type: t.or([t.instanceOf(HTMLElement), t.literal(null)]) });
+}
+
+/**
  * @param {any[]} args
  * @param {...(ArgumentType | ArgumentType[])} argumentsDefs
  */
@@ -912,6 +878,17 @@ export function ensureError(value) {
         return ensureError(value.reason || value.message);
     }
     return new Error(String(value || "unknown error"));
+}
+
+/**
+ * @template T
+ * @template {keyof T} K
+ * @param {T} object
+ * @param {K} method
+ * @returns {T[K]}
+ */
+export function exposeMethod(object, method) {
+    return object[method].bind(object);
 }
 
 /**
@@ -986,6 +963,14 @@ export function generateHash(...strings) {
     // Convert the possibly negative number hash code into an 8 character
     // hexadecimal string
     return (hash + 16 ** 8).toString(16).slice(-8);
+}
+
+/**
+ * Generates a random 16-digit number.
+ * This function uses the native (unpatched) {@link Math.random} method.
+ */
+export function generateSeed() {
+    return $floor($random() * 1e16);
 }
 
 /**
@@ -1306,34 +1291,6 @@ export function makeLabelIcon(className) {
 }
 
 /**
- * @template {keyof Runner} T
- * @param {T} name
- * @returns {Runner[T]}
- */
-export function makeRuntimeHook(name) {
-    return {
-        [name](...callbacks) {
-            const runner = getRunner();
-            if (runner.dry) {
-                return;
-            }
-            let valid = Boolean(runner.suiteStack.length);
-            const last = callbacks.at(-1);
-            if (last && typeof last === "object") {
-                callbacks.pop();
-                valid ||= Boolean(last.global);
-            }
-            if (!valid) {
-                throw new HootError(`cannot call "${name}" callback outside of a suite`, {
-                    level: "critical",
-                });
-            }
-            return runner[name](...callbacks);
-        },
-    }[name];
-}
-
-/**
  * Returns whether one of the given `matchers` matches the given `value`.
  *
  * @param {unknown} value
@@ -1575,13 +1532,15 @@ export function toExplicitString(value) {
 }
 
 /**
- * @param {{ el?: HTMLElement }} ref
+ * @param {ReturnType<typeof elSignal<HTMLElement>>} ref
  */
 export function useAutofocus(ref) {
-    /**
-     * @param {HTMLElement} el
-     */
-    function autofocus(el) {
+    let displayed = new Set();
+    useEffect(function autofocus() {
+        const el = ref();
+        if (!el) {
+            return;
+        }
         const nextDisplayed = new Set();
         for (const element of el.querySelectorAll("[autofocus]")) {
             if (!displayed.has(element)) {
@@ -1594,10 +1553,7 @@ export function useAutofocus(ref) {
             nextDisplayed.add(element);
         }
         displayed = nextDisplayed;
-    }
-
-    let displayed = new Set();
-    useEffect(autofocus, () => [ref.el]);
+    });
 }
 
 /**
@@ -1605,9 +1561,8 @@ export function useAutofocus(ref) {
  * @param {(ev: KeyboardEvent) => any} callback
  */
 export function useHootKey(keyStroke, callback) {
-    const component = useComponent();
     /** @type {KeyboardEventInit} */
-    const params = { callback: callback.bind(component) };
+    const params = { callback };
     for (const key of keyStroke) {
         switch (key) {
             case "Alt": {
@@ -1637,7 +1592,18 @@ export function useHootKey(keyStroke, callback) {
 
 /** @type {EventTarget["addEventListener"]} */
 export function useWindowListener(type, callback, options) {
-    return useExternalListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
+    return useListener(windowTarget, type, (ev) => ev.isTrusted && callback(ev), options);
+}
+
+/**
+ * @param {unknown} [seed]
+ */
+export function validateSeed(seed) {
+    if (isNil(seed)) {
+        return generateSeed();
+    }
+    const nSeed = $parseFloat(seed);
+    return $isNaN(nSeed) ? stringToNumber(nSeed) : nSeed;
 }
 
 /**

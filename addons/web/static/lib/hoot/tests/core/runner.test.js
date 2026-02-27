@@ -1,17 +1,9 @@
 /** @odoo-module */
 
-import { after, defineTags, describe, expect, test } from "@odoo/hoot";
-import { parseUrl } from "../local_helpers";
+import { defineTags, describe, expect, test } from "@odoo/hoot";
+import { makeTestRunner, parseUrl } from "../local_helpers";
 
-import { Runner } from "../../core/runner";
 import { Suite } from "../../core/suite";
-import { undefineTags } from "../../core/tag";
-
-const makeTestRunner = () => {
-    const runner = new Runner();
-    after(() => undefineTags(runner.tags.keys()));
-    return runner;
-};
 
 describe(parseUrl(import.meta.url), () => {
     test("can register suites", () => {

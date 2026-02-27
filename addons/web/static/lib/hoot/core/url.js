@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { onWillRender, reactive, useState } from "@odoo/owl";
+import { effect } from "@odoo/owl";
 import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { debounce, ensureArray, isNil } from "../hoot_utils";
-import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config";
+import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA, getConfigValues } from "./config";
 
 /**
  * @typedef {{
@@ -11,9 +11,7 @@ import { CONFIG_KEYS, CONFIG_SCHEMA, FILTER_KEYS, FILTER_SCHEMA } from "./config
  *  ignore?: boolean;
  * }} CreateUrlFromIdOptions
  *
- * @typedef {typeof import("./config").DEFAULT_CONFIG} DEFAULT_CONFIG
- *
- * @typedef {typeof import("./config").DEFAULT_FILTERS} DEFAULT_FILTERS
+ * @typedef {import("./config").HootConfig} HootConfig
  */
 
 //-----------------------------------------------------------------------------
@@ -57,7 +55,14 @@ const debouncedUpdateUrl = debounce(function updateUrl() {
 //-----------------------------------------------------------------------------
 
 /**
- * @param {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} params
+ * @param {import("./config").ConfigManager} config
+ */
+export function bindConfigToUrl(config) {
+    effect(() => setParams(getConfigValues(config, true)));
+}
+
+/**
+ * @param {Partial<HootConfig>} params
  */
 export function createUrl(params) {
     const url = new URL(location.href);
@@ -78,7 +83,7 @@ export function createUrl(params) {
 }
 
 /**
- * @param {Record<keyof DEFAULT_FILTERS, string | Iterable<string>>} specs
+ * @param {Record<keyof HootConfig, string | Iterable<string>>} specs
  * @param {CreateUrlFromIdOptions} [options]
  */
 export function createUrlFromId(specs, options) {
@@ -142,7 +147,7 @@ export function refresh() {
 }
 
 /**
- * @param {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} params
+ * @param {Partial<HootConfig>} params
  */
 export function setParams(params) {
     for (const [key, value] of $entries(params)) {
@@ -159,22 +164,10 @@ export function setParams(params) {
     debouncedUpdateUrl();
 }
 
-/**
- * @param {...(keyof DEFAULT_CONFIG | keyof DEFAULT_FILTERS | "*")} keys
- */
-export function subscribeToURLParams(...keys) {
-    const state = useState(urlParams);
-    if (keys.length) {
-        const observedKeys = keys.includes("*") ? [...CONFIG_KEYS, ...FILTER_KEYS] : keys;
-        onWillRender(() => observedKeys.forEach((key) => state[key]));
-    }
-    return state;
-}
-
 export const EXCLUDE_PREFIX = "-";
 
-/** @type {Partial<DEFAULT_CONFIG & DEFAULT_FILTERS>} */
-export const urlParams = reactive({});
+/** @type {Partial<HootConfig>} */
+export const urlParams = {};
 
 // Update URL params immediatly
 

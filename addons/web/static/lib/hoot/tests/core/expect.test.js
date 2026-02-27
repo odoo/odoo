@@ -520,7 +520,6 @@ describe(parseUrl(import.meta.url), () => {
 
         test("toHaveText", async () => {
             class TextComponent extends Component {
-                static props = {};
                 static template = xml`
                     <div class="with">With<t t-out="this.nbsp" />nbsp</div>
                     <div class="without">Without nbsp</div>
