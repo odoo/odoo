@@ -43,11 +43,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
     )
     model = fields.Char('Related Document Model', compute='_compute_model')
 
-    @api.depends('refuse_reason_id', 'applicant_without_email')
+    @api.depends('refuse_reason_id', 'applicant_without_email', 'template_id')
     def _compute_send_mail(self):
         for wizard in self:
-            template = wizard.refuse_reason_id.template_id
-            wizard.send_mail = template and not wizard.applicant_without_email
+            template = wizard.template_id
+            wizard.send_mail = template.active and not wizard.applicant_without_email
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -90,8 +90,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
     @api.depends('refuse_reason_id')
     def _compute_template_id(self):
         for wizard in self:
-            if wizard.refuse_reason_id:
-                wizard.template_id = wizard.refuse_reason_id.template_id
+            if wizard.refuse_reason_id and (template := wizard.refuse_reason_id.template_id):
+                wizard.template_id = template.active and template
             else:
                 wizard.template_id = False
 
