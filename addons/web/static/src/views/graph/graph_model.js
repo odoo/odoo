@@ -76,7 +76,7 @@ export class GraphModel extends Model {
         if ("measure" in params) {
             const metaData = this._buildMetaData(params);
             await this._fetchDataPoints(metaData);
-            this.useSampleModel = false;
+            this.useSampleModel = false; // can be removed
         } else {
             await this.race.getCurrentProm();
             this.metaData = Object.assign({}, this.metaData, params);
