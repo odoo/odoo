@@ -4,7 +4,6 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    onWillUpdateProps,
     status,
 } from "@odoo/owl";
 import { LazyComponent } from "@web/core/assets";
@@ -84,11 +83,6 @@ export class MassMailingIframe extends Component {
             showFullscreen: false,
             isMobile: false,
             ready: false,
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.showCodeView) {
-                this.state.showFullscreen = false;
-            }
         });
         this.iframeLoaded = new Deferred();
         onMounted(() => {

@@ -76,13 +76,6 @@ export class MassMailingHtmlField extends HtmlField {
             if (nextProps.readonly) {
                 toRaw(this.state).showThemeSelector = false;
             }
-            if (nextProps.record.isNew) {
-                Object.assign(toRaw(this.state), {
-                    activeTheme: undefined,
-                    showCodeView: false,
-                    showThemeSelector: true,
-                });
-            }
         });
 
         let currentKey = this.state.key;
@@ -122,7 +115,7 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     get withBuilder() {
-        return !this.props.readonly && this.state.activeTheme !== "basic";
+        return this.state.activeTheme !== "basic" && !this.props.readonly;
     }
 
     resetIframe() {
@@ -334,6 +327,23 @@ export class MassMailingHtmlField extends HtmlField {
     onTextareaInput(ev) {
         this.onChange();
         ev.target.style.height = ev.target.scrollHeight + "px";
+    }
+
+    /**
+     * Ensure that the emailHtmlConverter is kept alive (in the DOM) until the
+     * change has been committed to the record (even if this component is
+     * destroyed in the meantime).
+     * @override
+     */
+    async commitChanges({ urgent } = {}) {
+        if (!urgent) {
+            await this.mutex.exec(() => {
+                if (this.withBuilder && this.editor && !this.editor.isDestroyed) {
+                    return this.editor.shared.operation.getUnlockedDef();
+                }
+            });
+        }
+        return super.commitChanges(...arguments);
     }
 
     /**
