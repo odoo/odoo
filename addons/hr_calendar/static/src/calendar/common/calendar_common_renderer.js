@@ -10,9 +10,11 @@ const { DateTime } = luxon;
 patch(AttendeeCalendarCommonRenderer.prototype, {
 	setup() {
 		super.setup(...arguments);
-		onWillUpdateProps(() => {
-			this.fc.api.setOption("businessHours", this.props.model.workingHours)
-		});
+        if (this.props.model.isBusineesHoursEnabled) {
+            onWillUpdateProps(() => {
+                this.fc.api.setOption("businessHours", this.props.model.workingHours)
+            });
+        }
 		onPatched(() => {
             // Force to rerender the FC.
             // As it doesn't redraw the header when the event's data changes
@@ -33,7 +35,9 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
 	get options() {
 		return {
             ...super.options,
-			businessHours: this.props.model.workingHours,
+            businessHours: this.props.model.isBusineesHoursEnabled
+                ? this.props.model.workingHours
+                : [],
             dayCellDidMount: this.onDayCellDidMount,
         };
 	},
