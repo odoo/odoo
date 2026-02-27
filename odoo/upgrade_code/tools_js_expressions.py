@@ -8,6 +8,7 @@ TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
 INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
 LEADING_WHITESPACE_RE = re.compile(r'^\s*')
 TRAILING_WHITESPACE_RE = re.compile(r'\s*$')
+MODULE_NAME_RE = re.compile(r'/([\w_]+)/static/')
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -227,26 +228,30 @@ class Template:
         self.calls_from = set()
         self.calls_to = set()
         self.dynamic_calls_to = set()
+        self.file_path = None
 
-    def _get_dependencies(self, dependencies: list[str]):
+    def _add_dependencies(self, dependencies: list[str]):
         for called_template in self.calls_from:
             if called_template.name in dependencies:
                 continue
-            yield called_template.name
             dependencies.append(called_template.name)
-            yield from called_template._get_dependencies(dependencies)
+            called_template._add_dependencies(dependencies)
         if self.parent is not None and self.parent.name not in dependencies:
-            yield self.parent.name
             dependencies.append(self.parent.name)
-            yield from self.parent._get_dependencies(dependencies)
+            self.parent._add_dependencies(dependencies)
 
     def get_dependencies(self):
-        return self._get_dependencies([])
+        deps = []
+        self._add_dependencies(deps)
+        return deps
 
     def get_inherit_chain(self):
-        if self.parent is not None:
-            yield self.parent.name
-            yield from self.parent.get_inherit_chain()
+        chain = []
+        parent = self.parent
+        while parent is not None:
+            chain.append(parent.name)
+            parent = parent.parent
+        return chain
 
     def is_parent_component_template(self):
         return self.parent is not None and self.parent.is_component_template()
@@ -308,6 +313,7 @@ class VariableAggregator:
 
     def __init__(self, component_templates: list[str] = list(), skip_component_template: bool = False):
         self.all_templates = defaultdict()
+        self.duplicated_template_name = defaultdict()
         self.skip_component_template = skip_component_template
         for template_name in component_templates:
             self.all_templates[template_name] = ComponentRootTemplate(template_name)
@@ -323,16 +329,28 @@ class VariableAggregator:
             self.all_templates[template_name] = Template(template_name, self.skip_component_template)
         return self.all_templates[template_name]
 
-    def link_templates(self, root: etree._ElementTree):
-        templates = root.xpath("descendant-or-self::*[@t-name]")
+    def link_templates(self, root: etree._ElementTree, file_path: str = 'anonymous'):
+        templates = root.xpath("descendant-or-self::*[@t-name] | descendant-or-self::*[@t-inherit]")
         for template_node in templates:
-            template_name = template_node.attrib['t-name']
+            template_name = ''
+            if 't-name' in template_node.attrib:
+                template_name = template_node.attrib['t-name']
+            else:
+                count = self.duplicated_template_name.get(file_path, 0) + 1
+                self.duplicated_template_name[file_path] = count
+                template_name = file_path + str(count)
             template = self.add_template(template_name)
+            template.file_path = file_path
 
             if 't-inherit' in template_node.attrib:
                 inherit_template_name = template_node.attrib['t-inherit']
-                inherit_template = self.add_template(inherit_template_name)
-                template.set_parent(inherit_template)
+                if inherit_template_name == template_name:
+                    count = self.duplicated_template_name.get(template_name, 0) + 1
+                    self.duplicated_template_name[template_name] = count
+                    template_name += str(count)
+                else:
+                    inherit_template = self.add_template(inherit_template_name)
+                    template.set_parent(inherit_template)
 
             calls_to_nodes = template_node.xpath("descendant-or-self::*[@t-call]")
             for calls_to_node in calls_to_nodes:
@@ -382,7 +400,7 @@ class VariableAggregator:
             for template_name in self.all_templates:
 
                 template = self.all_templates[template_name]
-                self.full_inherit_and_call_map[template_name] = list(template.get_dependencies())
+                self.full_inherit_and_call_map[template_name] = template.get_dependencies()
 
                 if template.parent is not None:
                     self.inherit_map[template_name] = template.parent.name
@@ -490,6 +508,7 @@ class TemplateCompiler:
         self.inherit_map = aggregator.inherit_map
         self.full_inherit_and_call_map = aggregator.full_inherit_and_call_map  # TODO pass from new Template parser
         self.all_templates = aggregator.all_templates
+        self.duplicated_template_name = defaultdict()
 
         self.modules = modules
         self.template_path = path
@@ -502,22 +521,60 @@ class TemplateCompiler:
         self.warning_vars = set()
 
     def fix_rendering_context(self, root: etree._ElementTree):
-        template_nodes = root.xpath("descendant-or-self::*[@t-name]")
+        template_nodes = root.xpath("descendant-or-self::*[@t-name] | descendant-or-self::*[@t-inherit]")
         if template_nodes:
             for template in template_nodes:
-                self.current_template = template.attrib.get("t-name") or self.template_path
-                if self.current_template in self.excluded_templates:
+                self.current_template = self._get_template_name(template)
+                if self._should_skip_template(self.current_template):
                     continue
 
                 bound_variables = self._collect_bound_variables(template)
-                bound_variables |= set(self.t_call_vars.get(template.attrib["t-name"], {}))
-                bound_variables |= set(self.all_vars.get(template.attrib["t-name"], {}))
+                bound_variables |= set(self.t_call_vars.get(self.current_template, {}))
+                bound_variables |= set(self.all_vars.get(self.current_template, {}))
 
                 self.fix_template(template, bound_variables)
 
         else:
             bound_variables = self._collect_bound_variables(root)
             self.fix_template(root, bound_variables)
+
+    def _get_template_name(self, node: etree._Element):
+        template_name = ''
+        if 't-name' in node.attrib:
+            template_name = node.attrib['t-name']
+        else:
+            template_path = self.template_path or 'anonymous'
+            count = self.duplicated_template_name.get(template_path, 0) + 1
+            self.duplicated_template_name[template_path] = count
+            template_name = template_path + str(count)
+
+        if 't-inherit' in node.attrib:
+            inherit_template_name = node.attrib['t-inherit']
+            if inherit_template_name == template_name:
+                count = self.duplicated_template_name.get(template_name, 0) + 1
+                self.duplicated_template_name[template_name] = count
+                template_name += str(count)
+
+        return template_name
+
+    def _should_skip_template(self, template_name: str):
+        if self.current_template in self.excluded_templates:
+            return True
+
+        if template_name not in self.all_templates:
+            return True
+
+        template = self.all_templates[template_name]
+        if template.file_path is None:
+            return True
+
+        inherit_chain = template.get_inherit_chain()
+        if inherit_chain:
+            template = self.all_templates[inherit_chain[-1]]
+            if template.file_path is None:
+                return True
+
+        return not any(module in re.search(MODULE_NAME_RE, template.file_path)[1] for module in self.modules)
 
     def _should_skip_node(self, node: etree._Element):
         """

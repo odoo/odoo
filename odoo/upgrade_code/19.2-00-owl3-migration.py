@@ -902,7 +902,7 @@ ACCOUNT_WHITELIST = {
     "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
     "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
 }
-THIS_TARGETS = ["mail"]
+THIS_TARGETS = ["account"]
 
 
 def upgrade_this(file_manager, log_info, log_error):
@@ -921,7 +921,7 @@ def upgrade_this(file_manager, log_info, log_error):
     aggregator = VariableAggregator(component_templates)
     for _, file in enumerate(xml_files, start=1):
         def callback(tree):
-            aggregator.link_templates(tree)
+            aggregator.link_templates(tree, file.path._str)
             aggregator.aggregate_inside_vars(tree)
             aggregator.aggregate_call_vars(tree)
 
