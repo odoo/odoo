@@ -1196,6 +1196,7 @@ class SurveySurvey(models.Model):
         return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
+        self.check_access('read')  # avoid cache pollution
         return '/survey/print/%s' % self.access_token
 
     # ------------------------------------------------------------
