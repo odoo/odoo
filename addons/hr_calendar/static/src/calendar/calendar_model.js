@@ -8,13 +8,19 @@ patch(AttendeeCalendarModel.prototype, {
         this.data.workingHours = {};
     },
 
+    get businessHoursMode() {
+        return super.businessHoursMode || "working_hours";
+    },
+
     get workingHours() {
         return this.data.workingHours;
     },
 
     async updateData(data) {
         await super.updateData(...arguments)
-        data.workingHours = await this.fetchWorkingHours(data);
+        if (this.businessHoursMode === "working_hours") {
+            data.workingHours = await this.fetchWorkingHours(data);
+        }
     },
 
     async fetchWorkingHours(data){

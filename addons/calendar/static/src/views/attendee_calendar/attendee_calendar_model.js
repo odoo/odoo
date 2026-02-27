@@ -204,6 +204,14 @@ export class AttendeeCalendarModel extends CalendarModel {
         await this._archiveRecord(record.id, recurrenceUpdate);
     }
 
+    /**
+     * The business hours mode specifying the calculation of business hours.
+     * It is currently used in the appointment & hr_calendar.
+     */
+    get businessHoursMode() {
+        return "";
+    }
+
     async _archiveRecord(id, recurrenceUpdate) {
         if (!recurrenceUpdate && recurrenceUpdate !== "self_only") {
             await this.orm.call(this.resModel, "action_archive", [[id]]);
