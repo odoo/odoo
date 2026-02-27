@@ -25,7 +25,10 @@ export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
             "search_read",
             [this.getDomain(request), ["id", "display_name", "resource_type", "color"]],
             {
-                context: this.props.context,
+                context: {
+                    ...this.props.context,
+                    formatted_display_name: true,
+                },
                 limit: this.props.searchLimit + 1,
             }
         );
