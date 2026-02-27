@@ -1479,7 +1479,7 @@
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
                     <!-- not_paid & partial -->
-                    <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                    <filter name="open" string="Unpaid" domain="[('state', '!=', 'cancel'), ('payment_state', 'in', ('not_paid', 'partial')), ('move_type', '!=', 'entry')]"/>
                     <!-- in_payment & paid -->
                     <filter name="closed" string="Paid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
                     <!-- reversed -->

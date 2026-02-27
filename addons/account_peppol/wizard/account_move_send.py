@@ -184,6 +184,11 @@ class AccountMoveSend(models.TransientModel):
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
+                if invoice._is_exportable_as_self_invoice() and not partner._can_receive_self_billing(invoice.partner_id.commercial_partner_id.ubl_cii_format):
+                    invoice.peppol_move_state = 'error'
+                    invoice_data['error'] = _('The partner has indicated it does not accept this document type, so you cannot send this invoice via Peppol.')
+                    continue
+
                 if len(xml_file) > 64000000:
                     invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
 
