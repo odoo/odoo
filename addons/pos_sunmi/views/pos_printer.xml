@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_printer_view_form_inherit_pos_sunmi" model="ir.ui.view">
+        <field name="name">pos.printer.view.form.inherit.pos.sunmi</field>
+        <field name="model">pos.printer</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_printer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_type']" position="after">
+                <field name="printer_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
