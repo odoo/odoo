@@ -415,6 +415,30 @@ class TestPeppolMessage(AccountTestInvoicingCommon):
                 'move_type': 'in_invoice',
             }])
 
+    def test_peppol_document_retrieval_with_company_context(self):
+        # Ensure that the bill creation is done using the move company/proxy user context
+
+        other_company = self.company_data_2["company"]
+        self.env["ir.default"].create({
+            'company_id': other_company.id,
+            'field_id': self.env['ir.model.fields']._get('res.partner', 'company_id').id,
+            'json_value': other_company.id,
+        })
+        initial_company = self.env.company
+        other_companies = self.env.companies
+        self.env['account_edi_proxy_client.user']\
+            .with_company(other_company)\
+            .with_context(allowed_company_ids=other_companies.ids)\
+            ._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(
+            move, [{
+                'company_id': initial_company.id,
+                'peppol_move_state': 'done',
+                'move_type': 'in_invoice',
+            }])
+
     def test_validate_partner(self):
         new_partner = self.env['res.partner'].create({
             'name': 'Deanna Troi',

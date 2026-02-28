@@ -47,6 +47,7 @@ class ISRTest(AccountTestInvoicingCommon):
             'acc_number': "ISR {} number",
             'partner_id': self.env.company.partner_id.id,
             'l10n_ch_isr_subscription_chf': '01-39139-1',
+            'allow_out_payment': True,
         })
 
         invoice_chf = self.env['account.move'].create({

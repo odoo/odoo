@@ -458,7 +458,7 @@ class AccountFrFec(models.TransientModel):
         return {
             'name': 'FEC',
             'type': 'ir.actions.act_url',
-            'url': f'/download/fec_file/{self.id}',
+            'url': f'/download/fec_file/{self.id}?company_id={company.id}',
             'target': 'self',
         }
 

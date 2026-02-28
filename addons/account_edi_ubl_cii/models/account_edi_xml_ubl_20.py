@@ -85,7 +85,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return {
             'partner': partner,
             'party_identification_vals': self._get_partner_party_identification_vals_list(partner.commercial_partner_id),
-            'party_name_vals': [{'name': partner.display_name}],
+            'party_name_vals': [{'name': partner.display_name if partner.name else partner.commercial_partner_id.display_name}],
             'postal_address_vals': self._get_partner_address_vals(partner),
             'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner.commercial_partner_id, role),
             'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
@@ -652,7 +652,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== Bank Details ====
 
         bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
-        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+        bank_details = [
+            bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
+            for bank_detail_node in bank_detail_nodes
+            if bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID')
+        ]
 
         if bank_details:
             self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
@@ -712,6 +716,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         invoice_line_tag = 'InvoiceLine' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else 'CreditNoteLine'
         for i, invl_el in enumerate(tree.findall('./{*}' + invoice_line_tag)):
+            # Avoid creating a line if its LineExtensionAmount is missing/empty/zero.
+            line_total_node = invl_el.find('./{*}LineExtensionAmount')
+            if line_total_node is None or not (line_total_node.text and line_total_node.text.strip()):
+                continue
+            try:
+                if float(line_total_node.text) == 0:
+                    continue
+            except (ValueError, TypeError):
+                # If the value is not a valid number, skip creating the line.
+                continue
+
             invoice_line = invoice.invoice_line_ids.create({'move_id': invoice.id})
             invl_logs = self._import_fill_invoice_line_form(journal, invl_el, invoice, invoice_line, qty_factor)
             logs += invl_logs
