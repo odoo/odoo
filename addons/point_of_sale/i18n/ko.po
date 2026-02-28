@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:37+0000\n"
+"POT-Creation-Date: 2026-02-27 18:38+0000\n"
 "PO-Revision-Date: 2026-02-14 11:30+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -715,8 +715,8 @@ msgstr "조치 필요"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
-msgstr "활동 취소(%s)"
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1785,8 +1785,8 @@ msgstr "계산 중 발견된 현금 차이 (이익) - 마감"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
-msgstr "금전함 열림(%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2138,8 +2138,26 @@ msgstr "세션 마감"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "%(payment_method)s의 마감 차액 (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5533,6 +5551,24 @@ msgstr "시작 금액"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
 msgstr "제어 메시지 열기:"
 
@@ -8213,7 +8249,8 @@ msgstr "주문 동기화 후 일부 사후 처리가 실패했습니다."
 msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
-msgstr "문제가 발생했습니다. 계속하여 같은 문제가 발생할 경우 고객 지원팀으로 문의하"
+msgstr ""
+"문제가 발생했습니다. 계속하여 같은 문제가 발생할 경우 고객 지원팀으로 문의하"
 "여 지원을 받으세요."
 
 #. module: point_of_sale
@@ -10608,6 +10645,12 @@ msgstr "버튼을 눌러 활성화합니다."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "사용"
+
+#~ msgid "Action cancelled (%s)"
+#~ msgstr "활동 취소(%s)"
+
+#~ msgid "Cash drawer opened (%s)"
+#~ msgstr "금전함 열림(%s)"
 
 #~ msgid "Failed in printing %s changes of the order"
 #~ msgstr "주문 변경 사항%s을 인쇄하지 못했습니다."
