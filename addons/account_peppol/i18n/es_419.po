@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:37+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-01-31 10:30+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
@@ -383,6 +383,7 @@ msgstr "Se desconectó la configuración de Peppol de esta sucursal desde %s."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__display_name
@@ -501,6 +502,7 @@ msgstr "Entendido"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__id
@@ -1155,6 +1157,11 @@ msgstr ""
 "para este contacto."
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
+msgid "UBL BIS Billing 3.0.12"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
 msgstr "Sin revisar"
@@ -1353,6 +1360,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
 msgstr "Su registro debería activarse en un día."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
