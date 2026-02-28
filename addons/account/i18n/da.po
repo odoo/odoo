@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-21 14:17+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 13:43+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -686,10 +686,10 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Kære\n"
+"        Hej\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
-"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -792,10 +792,10 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Kære\n"
+"        Hej\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
-"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -3141,7 +3141,7 @@ msgstr "Tillader udgående betalinger"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "Gør det muligt at bruge omkostningsberegningen."
+msgstr "Gør det muligt at bruge omkostningsregnskab."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -3359,7 +3359,7 @@ msgstr "Omkostningssted"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Omkostningsberegning"
+msgstr "Omkostningsregnskab"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
@@ -4101,6 +4101,12 @@ msgstr "Bank og kontant"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Odoos bank"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -16041,6 +16047,14 @@ msgid ""
 msgstr "Bankkontoen for en bankjournal skal tilhøre den samme virksomhed (%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Kontoudtoget anvendes til bankafstemning"
@@ -16119,8 +16133,9 @@ msgstr "Forretningspartneren har opdateret alle tilhørende bogføringer."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18429,11 +18444,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
-"Leverandørfakturaer kan oprettes på forhånd baseret på ordrer\n"
-"                eller leverancer. Dette giver dig mulighed for at "
-"kontrollere de fakturaer,\n"
-"                du modtager fra leverandører, ud fra\n"
-"                fakturaudkastene i Odoo."
+"Du kan oprette leverandørfakturaer på forhånd baseret på\n"
+"                ordrer eller leverancer, så du kan gennemgå\n"
+"                og kontrollere fakturaerne\n"
+"                i Odoo via fakturaudkastene."
 
 #. module: account
 #. odoo-javascript

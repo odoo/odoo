@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-02-21 13:54+0000\n"
+"PO-Revision-Date: 2026-02-28 13:20+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "google_recaptcha/da/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. module: google_recaptcha
 #: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Generate reCAPTCHA v3 keys"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Generér reCAPTCHA v3-nøgler"
 
 #. module: google_recaptcha
 #: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
@@ -33,6 +33,9 @@ msgid ""
 "By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
 "1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
+"Som standard bør det være en af værdierne 0,1, 0,3, 0,7, 0,9.\n"
+"Der er stor sandsynlighed for, at 1,0 er en god interaktion, mens 0,0 med "
+"meget stor sandsynligt er en bot"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_res_config_settings
@@ -48,7 +51,7 @@ msgstr "Vis navn"
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__enable_recaptcha
 msgid "Enable reCAPTCHA"
-msgstr ""
+msgstr "Aktivér reCAPTCHA"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_ir_http
@@ -64,7 +67,7 @@ msgstr "ID"
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
 msgid "Minimum score"
-msgstr "Minimum score"
+msgstr "Minimumscore"
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -78,6 +81,8 @@ msgid ""
 "Protect your forms from spam and abuse. If no keys are provided, no checks "
 "will be done."
 msgstr ""
+"Beskyt dine formularer mod spam og misbrug. Hvis ingen nøgler er angivet, "
+"foretages der ingen kontrol."
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -93,13 +98,13 @@ msgstr "Hemmelig nøgle"
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
 msgid "Site Key"
-msgstr "Hjemmeside Nøgle"
+msgstr "Hjemmesidenøgle"
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 msgid "Suspicious activity detected by google reCAPTCHA."
-msgstr ""
+msgstr "Mistænkelig aktivitet opdaget af Google reCAPTCHA."
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -111,25 +116,25 @@ msgstr "Servicevilkår"
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 msgid "The reCaptcha private key is invalid."
-msgstr "Den private reCaptcha nøgle er ugyldig."
+msgstr "Den private reCaptcha-nøgle er ugyldig."
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 msgid "The reCaptcha token is invalid."
-msgstr "reCaptcha tokenen er ugyldig."
+msgstr "reCaptcha-tokenet er ugyldigt."
 
 #. module: google_recaptcha
 #. odoo-javascript
 #: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
 msgid "The recaptcha site key is invalid."
-msgstr "Recaptcha sidenøglen er ugyldig."
+msgstr "Recaptcha-hjemmesidenøglen er ugyldig."
 
 #. module: google_recaptcha
 #. odoo-python
 #: code:addons/google_recaptcha/models/ir_http.py:0
 msgid "The request is invalid or malformed."
-msgstr "Anmodningen er ugyldig eller misdannet."
+msgstr "Anmodningen er ugyldig eller fejlformateret."
 
 #. module: google_recaptcha
 #. odoo-python
@@ -150,3 +155,5 @@ msgid ""
 "reCAPTCHA disabled or no site key has been configured. Please check your "
 "settings."
 msgstr ""
+"reCAPTCHA er deaktiveret, eller der er ikke konfigureret nogen "
+"hjemmesidenøgle. Kontrollér venligst dine indstillinger."
