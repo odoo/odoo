@@ -427,6 +427,10 @@ class MrpWorkcenter(models.Model):
         capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
         return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
 
+    def _get_costs_hour(self):
+        self.ensure_one()
+        return self.costs_hour
+
 
 class WorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'

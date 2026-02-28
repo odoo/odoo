@@ -586,6 +586,10 @@ class MrpWorkorder(models.Model):
         vals['leave_id'] = leave.id
         self.write(vals)
 
+    def _get_costs_hour(self):
+        self.ensure_one()
+        return self.costs_hour or self.workcenter_id._get_costs_hour()
+
     def _cal_cost(self, date=False):
         """Returns total cost of time spent on workorder.
 
@@ -598,7 +602,7 @@ class MrpWorkorder(models.Model):
                 for t in workorder.time_ids if t.date_end and (not date or t.date_end < date)
             ])
             duration = sum_intervals(intervals)
-            total += duration * workorder.workcenter_id.costs_hour
+            total += duration * workorder._get_costs_hour()
         return total
 
     def button_start(self, raise_on_invalid_state=False):
@@ -677,7 +681,7 @@ class MrpWorkorder(models.Model):
                 'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': date_finished,
-                'costs_hour': workorder.workcenter_id.costs_hour
+                'costs_hour': workorder._get_costs_hour(),
             }
             if not workorder.date_start or date_finished < workorder.date_start:
                 vals['date_start'] = date_finished
@@ -732,7 +736,7 @@ class MrpWorkorder(models.Model):
         return self.write({
             'state': 'done',
             'date_finished': end_date,
-            'costs_hour': self.workcenter_id.costs_hour
+            'costs_hour': self._get_costs_hour(),
         })
 
     def button_scrap(self):
@@ -923,10 +927,10 @@ class MrpWorkorder(models.Model):
                 wo.duration_percent = 100
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
-        return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        return (self.duration_expected / 60.0) * self._get_costs_hour()
 
     def _compute_current_operation_cost(self):
-        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        return (self.get_duration() / 60.0) * self._get_costs_hour()
 
     def _get_current_theorical_operation_cost(self, without_employee_cost=False):
-        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        return (self.get_duration() / 60.0) * self._get_costs_hour()
