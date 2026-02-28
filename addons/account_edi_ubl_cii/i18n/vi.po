@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-02-21 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/"
@@ -959,6 +959,13 @@ msgstr "Thuế GTGT của %s phải được bắt đầu bằng mã quốc gia 
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "The bank account couldn't be fetched: %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
@@ -993,13 +1000,6 @@ msgstr "Yêu cầu trường %s trên %s."
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
 "Yêu cầu trường 'Số tài khoản đã xác nhận' đối với Ngân hàng người nhận."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "The following bank account numbers got retrieved during the import : %s"
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1145,6 +1145,11 @@ msgstr ""
 "Bạn nên đặt ít nhất một khoản thuế trên mỗi dòng hóa đơn. [BR-CO-04]-Mỗi "
 "dòng hóa đơn (BG-25) sẽ được phân loại bằng mã danh mục thuế GTGT của mặt "
 "hàng được lập hóa đơn (BT-151)."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd
+msgid "ZUGFeRD (CII)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

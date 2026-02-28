@@ -14,13 +14,14 @@
 # Chloe Wang, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 11:38+0000\n"
-"PO-Revision-Date: 2025-09-09 01:40+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-02-16 13:08+0000\n"
+"PO-Revision-Date: 2026-02-25 15:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-17/base/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -216,156 +217,72 @@ msgid ""
 "- **Dansk kontoplan**\n"
 "\n"
 "- Dansk moms\n"
-"        - 25% moms\n"
-"        - Resturationsmoms 6,25%\n"
+"        - 25 % moms\n"
+"        - Restaurationsmoms 6,25 %\n"
 "        - Omvendt betalingspligt\n"
 "\n"
 "- Konteringsgrupper\n"
 "        - EU (Virksomhed)\n"
 "        - EU (Privat)\n"
-"        - 3.lande\n"
+"        - Tredjelande\n"
 "\n"
-"- Finans raporter\n"
-"        - Resulttopgørelse\n"
+"- Finansrapporter\n"
+"        - Resultatopgørelse\n"
 "        - Balance\n"
 "        - Momsafregning\n"
 "            - Afregning\n"
 "            - Rubrik A, B og C\n"
 "\n"
-"- **Anglo-Saxon regnskabsmetode**\n"
+"- **Anglo-saksisk regnskabsmetode**\n"
 "\n"
 ".\n"
 "\n"
-"Produkt setup:\n"
-"==============\n"
+"Produktopsætning:\n"
+"=================\n"
 "\n"
 "**Vare**\n"
 "\n"
-"**Salgsmoms:**      Salgmoms 25%\n"
+"**Salgsmoms:**      Salgsmoms 25 %\n"
 "\n"
-"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"**Salgskonto:**     1.010 Salg af varer inkl. moms\n"
 "\n"
-"**Købsmoms:**       Købsmoms 25%\n"
+"**Købsmoms:**       Købsmoms 25 %\n"
 "\n"
-"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"**Købskonto:**      2.010 Direkte vareomkostninger inkl. moms\n"
 "\n"
 ".\n"
 "\n"
 "**Ydelse**\n"
 "\n"
-"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"**Salgsmoms:**      Salgsmoms 25 %, ydelser\n"
 "\n"
-"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"**Salgskonto:**     1.011 Salg af ydelser inkl. moms\n"
 "\n"
-"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"**Købsmoms:**       Købsmoms 25 %, ydelser\n"
 "\n"
-"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"**Købskonto:**      2.011 Direkte omkostninger ydelser inkl. moms\n"
 "\n"
 ".\n"
 "\n"
 "**Vare med omvendt betalingspligt**\n"
 "\n"
-"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"**Salgsmoms:**      Salg med omvendt betalingspligt\n"
 "\n"
-"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"**Salgskonto:**     1.012 Salg af varer ekskl. moms\n"
 "\n"
-"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"**Købsmoms:**       Køb med omvendt betalingspligt\n"
 "\n"
-"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"**Købskonto:**      2.012 Direkte vareomkostninger ekskl. moms\n"
 "\n"
 "\n"
 ".\n"
 "\n"
 "**Restauration**\n"
 "\n"
-"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"**Købsmoms:**       Restaurationsmoms 6,25 %, købsmoms\n"
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
-"\n"
-".\n"
-"\n"
 msgstr ""
-"\n"
-"\n"
-"Localization Module for Denmark\n"
-"===============================\n"
-"\n"
-"This is the module to manage the **accounting chart for Denmark**. Cover "
-"both one-man business as well as I/S, IVS, ApS and A/S\n"
-"\n"
-"**Modulet opsætter:**\n"
-"\n"
-"- **Dansk kontoplan**\n"
-"\n"
-"- Dansk moms\n"
-"        - 25% moms\n"
-"        - Resturationsmoms 6,25%\n"
-"        - Omvendt betalingspligt\n"
-"\n"
-"- Konteringsgrupper\n"
-"        - EU (Virksomhed)\n"
-"        - EU (Privat)\n"
-"        - 3.lande\n"
-"\n"
-"- Finans raporter\n"
-"        - Resulttopgørelse\n"
-"        - Balance\n"
-"        - Momsafregning\n"
-"            - Afregning\n"
-"            - Rubrik A, B og C\n"
-"\n"
-"- **Anglo-Saxon regnskabsmetode**\n"
-"\n"
-".\n"
-"\n"
-"Produkt setup:\n"
-"==============\n"
-"\n"
-"**Vare**\n"
-"\n"
-"**Salgsmoms:**      Salgmoms 25%\n"
-"\n"
-"**Salgskonto:**     1010 Salg af vare, m/moms\n"
-"\n"
-"**Købsmoms:**       Købsmoms 25%\n"
-"\n"
-"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
-"\n"
-".\n"
-"\n"
-"**Ydelse**\n"
-"\n"
-"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
-"\n"
-"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
-"\n"
-"**Købsmoms:**       Købsmoms 25%, ydelser\n"
-"\n"
-"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
-"\n"
-".\n"
-"\n"
-"**Vare med omvendt betalingspligt**\n"
-"\n"
-"**Salgsmoms:**      Salg omvendt betalingspligt\n"
-"\n"
-"**Salgskonto:**     1012 Salg af vare, u/moms\n"
-"\n"
-"**Købsmoms:**       Køb omvendt betalingspligt\n"
-"\n"
-"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
-"\n"
-"\n"
-".\n"
-"\n"
-"**Restauration**\n"
-"\n"
-"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
-"\n"
-"**Købskonto:**      4010 Restaurationsbesøg\n"
-"\n"
-".\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -1622,6 +1539,14 @@ msgstr ""
 "in the \"Statement Reports\" section).\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_reports_extended
+msgid ""
+"\n"
+"Accounting reports for France Extension\n"
+"========================================\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
 msgid ""
 "\n"
@@ -2348,6 +2273,16 @@ msgstr ""
 "增加从\"文档\"应用管理履历和邮件的能力.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_xml_export
+msgid ""
+"\n"
+"Additional module to allow the export of the Italian monthly tax report to "
+"XML format.\n"
+msgstr ""
+"\n"
+"附加模块，可将意大利月度税务报告导出为 XML 格式。\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_ndd
 msgid ""
 "\n"
@@ -2436,6 +2371,15 @@ msgid ""
 msgstr ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_services
+msgid ""
+"\n"
+"Adds the support for services intrastat codes.\n"
+msgstr ""
+"\n"
+"添加对服务内部统计代码的支持。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -3909,6 +3853,14 @@ msgstr ""
 "桥接模块，使网站电子商务与产品配置器兼容\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_edi_ndd_account_dn
+msgid ""
+"\n"
+"Bridge module to support the debit notes (nota di debito - NDD) by adding "
+"debit note fields.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
 msgid ""
 "\n"
@@ -4869,6 +4821,29 @@ msgid ""
 msgstr ""
 "\n"
 "在丹麦实施电子发票\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_id_efaktur_coretax
+msgid ""
+"\n"
+"E-invoicing feature provided by DJP (Indonesian Tax Office). As of January "
+"1st 2025,\n"
+"Indonesia is using CoreTax system, which changes the file format and content "
+"of E-Faktur.\n"
+"We're changing from CSV files into XML.\n"
+"At the same time, due to tax regulation changes back and forth, for general "
+"E-Faktur now,\n"
+"TaxBase (DPP) has to be mulitplied by factor of 11/12 while multiplied to "
+"tax of 12% which\n"
+"is resulting to 11%.\n"
+msgstr ""
+"\n"
+"由 DJP（印度尼西亚税务局）提供电子发票功能。截至 2025 年 1 月 1 日，\n"
+"印度尼西亚正在使用 CoreTax 系统，该系统改变了 E-Faktur 的文件格式和内容。\n"
+"我们正在将 CSV 文件转换为 XML 文件。\n"
+"同时，由于税收法规的前后变化，现在对于一般的 E-Faktur 而言，\n"
+"税基（DPP）必须乘以 11/12 的系数，再乘以 12% 的税率，\n"
+"结果是 11%。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -6052,6 +6027,16 @@ msgstr ""
 "=======================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_debit_note
+msgid ""
+"\n"
+"GST return filing for Debit Notes\n"
+"=================================\n"
+"This module provides functionality for filing GST returns specifically for "
+"Debit Notes in India.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr
 msgid ""
 "\n"
@@ -6690,6 +6675,17 @@ msgstr ""
 "编号的公司，则只对第一家公司执行步骤 1。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_ewaybill_port
+msgid ""
+"\n"
+"Indian - E-waybill Shipping Ports\n"
+"====================================\n"
+"Introduced a new module to manage Indian port codes, specifically for "
+"transport\n"
+"modes classified as Air or Sea in the e-Way Bill system.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in
 msgid ""
 "\n"
@@ -6785,6 +6781,17 @@ msgstr ""
 "\n"
 "检测报告\n"
 "==================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_intrastat_services
+msgid ""
+"\n"
+"Intrastat Reports for Services\n"
+"==============================\n"
+msgstr ""
+"\n"
+"服务业内部报告\n"
+"==============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_intrastat
@@ -7495,6 +7502,14 @@ msgstr ""
 "通过服务台票据管理产品的售后服务。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_sale_mrp
+msgid ""
+"\n"
+"Manage the inventory of your Kit products and display their availability "
+"status in your eCommerce store.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock
 msgid ""
 "\n"
@@ -7657,6 +7672,24 @@ msgstr ""
 " 安全库存量，供应的最小/最大库存以及手动覆盖将制造的产品数量。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mr_reports
+msgid ""
+"\n"
+"Mauritania accounting reports.\n"
+"====================================================\n"
+"-Profit and Loss\n"
+"-Balance Sheet\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mr
+msgid ""
+"\n"
+"Mauritania basic package that contains the chart of accounts, the taxes, tax "
+"reports, etc.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll
 msgid ""
 "\n"
@@ -7777,6 +7810,19 @@ msgstr ""
 "与每个资源相关联。它还管理每个资源的叶子。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_se_sie4_export
+msgid ""
+"\n"
+"Module for the export of accounting data to SIE 4 standard files.\n"
+"Official website: https://sie.se/\n"
+"XSD and documentation: https://sie.se/format/\n"
+msgstr ""
+"\n"
+"将会计数据导出为 SIE 4 标准文件的模块。\n"
+"官方网页: https://sie.se/\n"
+"XSD 和文档: https://sie.se/format/\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
 msgid ""
 "\n"
@@ -7884,6 +7930,19 @@ msgstr ""
 "\n"
 "SAF-T 文件是某些国家/地区的企业必须向税务机关提交的标准会计报告。\n"
 "该模块允许从这些文件中导入账目、日记账、合作伙伴、税收和移动。\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_se_sie4_import
+msgid ""
+"\n"
+"Module for the import of SIE 4 standard files.\n"
+"Official website: https://sie.se/\n"
+"XSD and documentation: https://sie.se/format/\n"
+msgstr ""
+"\n"
+"用于导入 SIE 4 标准文件的模块。\n"
+"官方网站: https://sie.se/\n"
+"XSD 和文档: https://sie.se/format/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -9042,6 +9101,15 @@ msgstr ""
 "* 可以增加具有最小/最大误差的质量检查测试\n"
 "* 定义质量报警阶段\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_dk_rsu
+msgid ""
+"\n"
+"RSU Denmark Localization.\n"
+"============================\n"
+"Submit your Tax Reports to the Danish tax authorities\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_expense
@@ -10821,6 +10889,17 @@ msgstr ""
 "    - SARS 增值税就绪结构"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_cpv_code
+msgid ""
+"\n"
+"This is the module to add CPV (Common Procurement Vocabulary) identification "
+"number on product.\n"
+"The Romanian CIUS-RO format requires, in some case, the precise "
+"categorisation of products sold to be included in the details of the line of "
+"an invoice.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
 msgid ""
 "\n"
@@ -11686,6 +11765,22 @@ msgstr ""
 "在搜索视图中还会显示相关的分拣参考。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_sms_twilio
+msgid ""
+"\n"
+"This module allows using Twilio as a provider for SMS messaging.\n"
+"The user has to create an account on twilio.com and top\n"
+"up their account to start sending SMS messages.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_debit_note_sequence
+msgid ""
+"\n"
+"This module allows you to add sequence for Debit note\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
 msgid ""
 "\n"
@@ -12145,6 +12240,16 @@ msgstr ""
 "该模块启用了印度供应商账单的二维码扫描功能。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
+msgid ""
+"\n"
+"This module extends the certification to ELM 5.1 and ELM 5.3 adds various "
+"quality of life improvements, such as: \n"
+"- Possibility to attribute LPP amounts in %\n"
+"- Add custom amounts for employer parts for LAAC and IJM\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm_transmission
 msgid ""
 "\n"
@@ -12589,6 +12694,15 @@ msgstr ""
 "\n"
 "使用 SYSCOHADA 会计账目总表。\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_jo_edi_extended
+msgid ""
+"\n"
+"This module improves the Jordan E-invoicing (JoFotara) by the following:\n"
+"       1. Adds support for different invoice types and payment methods.\n"
+"       2. Introduces demo mode.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_edi_extended
@@ -13697,6 +13811,15 @@ msgstr ""
 "    安装本模块时，还请更新意大利会计模块 (l10n_it)。\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_rs_edi
+msgid ""
+"\n"
+"eFaktura E-invoice implementation for Serbia\n"
+msgstr ""
+"\n"
+"eFaktura 为塞尔维亚实施电子发票\n"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
 msgid " Let's choose a Point Relais® as shipping address "
 msgstr " 让我们选择一个罗莱斯®角作为交货地址"
@@ -14637,20 +14760,20 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"<span invisible=\"evaluation_type != 'value' or not update_field_type == "
-"'many2many'\">by</span>"
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">to</span>"
 msgstr ""
-"<span invisible=\"evaluation_type != 'value' or not update_field_type == "
-"'many2many'\">由</span>"
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">至</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"<span invisible=\"evaluation_type != 'value' or update_field_type == "
-"'many2many'\">to</span>"
+"<span invisible=\"evaluation_type != 'value' or update_field_type not in "
+"['one2many', 'many2many']\">by</span>"
 msgstr ""
-"<span invisible=\"evaluation_type != 'value' or update_field_type == "
-"'many2many'\">至</span>"
+"<span invisible=\"evaluation_type != 'value' or update_field_type not in "
+"['one2many', 'many2many']\">由</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -15162,6 +15285,11 @@ msgstr "荷兰支付服务提供商，业务覆盖多个欧洲国家。"
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "A Dutch payment provider covering several countries in Europe."
 msgstr "荷兰支付提供商，业务覆盖欧洲多个国家。"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_worldline
+msgid "A French payment provider covering several European countries."
+msgstr "法国支付提供商。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_sips
@@ -15794,6 +15922,34 @@ msgid "Accounting/Fleet bridge"
 msgstr "会计/车队管理连接器"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid ""
+"Acme Corporation designs, develops, integrates and supports HR and Supply\n"
+"                Chain processes in order to make our customers more "
+"productive,\n"
+"                responsive and profitable."
+msgstr ""
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Acme Corporation designs, develops, integrates and supports HR and Supply "
+"Chain processes in order to make our customers more productive, responsive "
+"and profitable."
+msgstr ""
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid ""
+"Acme Corporation integrates ERP for Global Companies and supports PME\n"
+"                with Open Sources software to manage their businesses. Our\n"
+"                consultants are experts in the following areas:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo__action_id
 #: model:ir.model.fields,field_description:base.field_ir_filters__action_id
@@ -15976,6 +16132,11 @@ msgid "Add OdooBot in discussions"
 msgstr "在讨论中添加 OdooBot"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_add_gln
+msgid "Add Partner GLN"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
 msgid "Add SMS capabilities to CRM"
 msgstr "在CRM中添加短信功能"
@@ -15986,6 +16147,11 @@ msgid ""
 "Add Subcontracting information in Cost Analysis Reports and Production "
 "Analysis"
 msgstr "在成本分析报告和生产分析中添加外包信息"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_es_edi_verifactu_pos
+msgid "Add Veri*Factu support to Point of Sale"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -16024,6 +16190,11 @@ msgstr "在网站上添加任务建议表"
 #: model:ir.module.module,summary:base.module_website_mail_group
 msgid "Add a website snippet for the mail groups."
 msgstr "为邮件组添加网站片段。"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_uy_website_sale
+msgid "Add address Uruguay localisation fields in address page. "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
@@ -16152,8 +16323,8 @@ msgstr "添加"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
-msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr "Addison Olson是Deco Addict一位强大的销售代表。"
+msgid "Addison Olson is a mighty sales representative at Acme Corporation."
+msgstr ""
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -16165,6 +16336,11 @@ msgstr ""
 "Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_ro_efactura_synchronize
+msgid "Additional module to synchronize bills with the SPV"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order
@@ -16666,6 +16842,11 @@ msgstr "允许外包过程使用条码视图"
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
 msgid "Allows the usage of quality checks within the barcode views"
 msgstr "允许在条码视图中使用质量检查"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tr_nilvera_edispatch
+msgid "Allows the users to create the UBL 1.2.1 e-Dispatch file"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_map
@@ -17493,9 +17674,24 @@ msgid "Avatax Brazil"
 msgstr "阿瓦塔斯巴西"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_fiscal_reform
+msgid "Avatax Brazil Fiscal Reform"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_sale_fiscal_reform
+msgid "Avatax Brazil Sale Fiscal Reform"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_sale_services
 msgid "Avatax Brazil Sale for Services"
 msgstr "Avatax 巴西服务销售"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_website_sale_fiscal_reform
+msgid "Avatax Brazil eCommerce Fiscal Reform"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_avatax_services
@@ -17932,6 +18128,11 @@ msgstr "白俄罗斯"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgian Intrastat Declaration"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_services
+msgid "Belgian Intrastat Declaration (Services)"
+msgstr "比利时内部申报（服务）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -19175,6 +19376,11 @@ msgid "CodaBox Bridge Wizard"
 msgstr "CodaBox Bridge Wizard"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_codaclean
+msgid "Codaclean"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Code"
@@ -19667,6 +19873,11 @@ msgstr "刚果 - 会计"
 #: model:ir.module.module,summary:base.module_hw_drivers
 msgid "Connect the Web Client to Hardware Peripherals"
 msgstr "连接网站客户端到并行硬件"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_codaclean
+msgid "Connect to Codaclean and automatically import CODA statements."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -20693,6 +20904,11 @@ msgid "D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY"
 msgstr "D - 电力、燃气、蒸汽和空调供应"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_dhl_rest
+msgid "DHL Express Shipping"
+msgstr "DHL 快递"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Express Shipping (Legacy)"
 msgstr "DHL 快递（传统）"
@@ -20877,6 +21093,12 @@ msgid "Days"
 msgstr "天"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_debit_note_sequence
+#: model:ir.module.module,summary:base.module_account_debit_note_sequence
+msgid "Debit Note Sequence"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
@@ -20923,40 +21145,6 @@ msgstr "对该货币金额进行运算时考虑的小数位数。它由四舍五
 #, python-format
 msgid "Decimalized number"
 msgstr "十进制数"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid ""
-"Deco Addict designs, develops, integrates and supports HR and Supply\n"
-"                Chain processes in order to make our customers more "
-"productive,\n"
-"                responsive and profitable."
-msgstr ""
-"Deco Addict 设计、开发、集成和支持人力资源和供应链流程，以使我们的客户更具生"
-"产力，反应灵敏，有利可图。"
-
-#. module: base
-#: model:res.partner,website_short_description:base.res_partner_2
-#: model:res.partner,website_short_description:base.res_partner_4
-msgid ""
-"Deco Addict designs, develops, integrates and supports HR and Supply Chain "
-"processes in order to make our customers more productive, responsive and "
-"profitable."
-msgstr ""
-"Deco Addict 设计、开发、整合并支持人力资源和供应链流程，以提高客户的工作效"
-"率、响应速度和盈利能力。"
-
-#. module: base
-#: model_terms:res.partner,website_description:base.res_partner_2
-#: model_terms:res.partner,website_description:base.res_partner_4
-msgid ""
-"Deco Addict integrates ERP for Global Companies and supports PME\n"
-"                with Open Sources software to manage their businesses. Our\n"
-"                consultants are experts in the following areas:"
-msgstr ""
-"Deco Addict为全球公司集成ERP并支持PME用开源软件来管理他们的业务。 我们的顾问"
-"是下列领域的专家:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -21044,6 +21232,15 @@ msgstr "删除 API 密钥。"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
 msgid "Delete Access"
 msgstr "删除访问"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Deleting the public user is not allowed. Deleting this profile will "
+"compromise critical functionalities."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -21156,6 +21353,11 @@ msgid "Denmark - Intrastat"
 msgstr "丹麦 - Intrastat"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_dk_rsu
+msgid "Denmark - RSU"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_saft_import
 msgid "Denmark - SAF-T Import"
 msgstr "Denmark - SAF-T Import"
@@ -21169,6 +21371,11 @@ msgstr "丹麦 - UNSPSC 产品代码"
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_audit_trail
 msgid "Denmark - audit trail"
 msgstr "丹麦 - 审计追踪"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_dk_rsu
+msgid "Denmark Localization - RSU"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -21748,8 +21955,8 @@ msgstr "完成！"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
-msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr "道格拉斯·弗莱彻 (Douglas Fletcher) 是 Deco Addict 的强大功能顾问"
+msgid "Douglas Fletcher is a mighty functional consultant at Acme Corporation"
+msgstr ""
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -21815,6 +22022,11 @@ msgstr "电子商务哥伦比亚本地化"
 #: model:ir.module.module,summary:base.module_l10n_ro_edi
 msgid "E-Invoice implementation for Romania"
 msgstr "在罗马尼亚实施电子发票"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_rs_edi
+msgid "E-Invoice implementation for Serbia"
+msgstr "塞尔维亚的电子发票实施"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_dk_oioubl
@@ -22409,6 +22621,11 @@ msgid "Estonia - Rounding"
 msgstr "爱沙尼亚 - 四舍五入"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee_intrastat
+msgid "Estonia Intrastat Declaration"
+msgstr "爱沙尼亚内部申报"
+
+#. module: base
 #: model:res.country,name:base.sz
 msgid "Eswatini"
 msgstr "埃斯瓦蒂尼"
@@ -22649,6 +22866,11 @@ msgid "Export"
 msgstr "导出"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_se_sie4_export
+msgid "Export Accounting Data to SIE 4 files"
+msgstr "将会计数据导出到 SIE 4 文件"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Complete"
 msgstr "导出完成"
@@ -22734,6 +22956,11 @@ msgstr "表达式"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "扩展地址"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_jo_edi_extended
+msgid "Extended features for JoFotara"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi_extended
@@ -23497,8 +23724,8 @@ msgstr "浮动"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
-msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr "Floyd Steward 是 Deco Addict 的一位强大分析师."
+msgid "Floyd Steward is a mighty analyst at Acme Corporation."
+msgstr ""
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -23532,7 +23759,6 @@ msgid "Footer text displayed at the bottom of all reports."
 msgstr "页脚显示在所有报表的下方。"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_l10n_be_codabox
 #: model:ir.module.module,summary:base.module_l10n_be_codabox_bridge
 #: model:ir.module.module,summary:base.module_l10n_be_codabox_bridge_wizard
 msgid "For Accounting Firms"
@@ -23687,6 +23913,11 @@ msgid "France - Accounting Reports"
 msgstr "France - Accounting Reports"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_reports_extended
+msgid "France - Accounting Reports Extension"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
 msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
 msgstr "法国 - 添加强制性发票备注（第 2022-1299 号法令）"
@@ -23808,6 +24039,13 @@ msgid "Function"
 msgstr "功能"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_gstr_document_summary
+msgid ""
+"Functionality to manage GSTR Document Summary (Table 13) for India GST "
+"returns."
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
 msgid ""
 "G - WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
@@ -23877,6 +24115,11 @@ msgstr "GST/HST 编号"
 #: model:res.country,vat_label:base.in
 msgid "GSTIN"
 msgstr "GSTIN"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_document_summary
+msgid "GSTR Document Summary Management"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ga
@@ -23972,6 +24215,7 @@ msgstr "生成可跟踪的简短 URL"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_intrastat
+#: model:ir.module.module,description:base.module_l10n_ee_intrastat
 msgid "Generates Intrastat XML report for declaration."
 msgstr "生成用于申报的内部统计 XML 报表。"
 
@@ -25382,14 +25626,6 @@ msgid "Image is not encoded in base64."
 msgstr "图像未使用 base64 编码。"
 
 #. module: base
-#. odoo-python
-#: code:addons/image.py:0
-#, python-format
-msgid ""
-"Image size excessive, uploaded images must be smaller than %s million pixels."
-msgstr "图片尺寸过大，上传的图片必须小于 %s 百万像素。"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
 msgstr "受影响的应用程序"
@@ -25454,9 +25690,14 @@ msgid "Import Accounting Data from SAF-T files"
 msgstr "从 SAF-T 文件导入会计数据"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_se_sie4_import
+msgid "Import Accounting Data from SIE 4 files"
+msgstr "从 SIE 4 文件导入会计数据"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_l10n_se_sie_import
-msgid "Import Accounting Data from SIE files"
-msgstr "从 SIE 文件导入会计数据"
+msgid "Import Accounting Data from SIE 5 files"
+msgstr "从 SIE 5 文件导入会计数据"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
@@ -25648,6 +25889,11 @@ msgid "Indian - E-waybill Stock"
 msgstr "印度 - 电子运单库存"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_document_summary
+msgid "Indian - GSTR Document Summary"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
 msgid "Indian - GSTR India eFiling"
 msgstr "印度-GSTR印度电子文件"
@@ -25656,6 +25902,11 @@ msgstr "印度-GSTR印度电子文件"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_pos
 msgid "Indian - GSTR India eFiling with POS"
 msgstr "印度 - 商品和服务税（GST）电子申报"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_debit_note
+msgid "Indian - GSTR eFiling for Debit Note"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -25671,6 +25922,11 @@ msgstr "印度- 采购报表(GST)"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_sale
 msgid "Indian - Sale Report(GST)"
 msgstr "印度- 销售报表(GST)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_ewaybill_port
+msgid "Indian - Shipping Ports for E-waybill"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_stock
@@ -25706,6 +25962,11 @@ msgstr "印度尼西亚"
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur
 msgid "Indonesia E-faktur"
 msgstr "印度尼西亚 E-faktur"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur_coretax
+msgid "Indonesia E-faktur (Coretax)"
+msgstr "印度尼西亚电子发票 （Coretax）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id
@@ -26026,6 +26287,11 @@ msgid "Intrastat Reports"
 msgstr "Intrastat报告"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_intrastat_services
+msgid "Intrastat Reports for Services"
+msgstr "服务业内部报告"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "Introspection report on objects"
 msgstr "对象的自省报表"
@@ -26073,13 +26339,6 @@ msgstr "解析 xpath 时出现无效表达式 %r"
 #, python-format
 msgid "Invalid JSON format in Default Value field."
 msgstr "默认值字段中的 JSON 格式无效。"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_default.py:0
-#, python-format
-msgid "Invalid value in Default Value field. Expected type '%s' for '%s.%s'."
-msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26240,6 +26499,13 @@ msgid ""
 "-2,147,483,648 and 2,147,483,647)"
 msgstr ""
 "%s.%s的值无效：%s超出了界限（整数应该在-2,147,483,648至2,147,483,647之间）。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid "Invalid value in Default Value field. Expected type '%s' for '%s.%s'."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -26507,9 +26773,25 @@ msgid ""
 msgstr "意大利 - 电子发票 - 支持借方票据的附加模块 (nota di debito - NDD)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_edi_ndd_account_dn
+msgid ""
+"Italy - E-invoicing - Bridge module between Italy NDD and Account Debit Note"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_edi_sale
+msgid "Italy - Sale E-invoicing"
+msgstr "意大利 - 销售电子发票"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
 msgid "Italy - Stock DDT"
 msgstr "意大利 - 库存滴滴涕"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_xml_export
+msgid "Italy - Tax Report XML Export"
+msgstr "意大利 - 税务报告 XML 导出"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
@@ -26576,6 +26858,11 @@ msgstr "约旦 - 会计"
 #: model:ir.module.module,shortdesc:base.module_l10n_jo_edi
 msgid "Jordan E-Invoicing"
 msgstr "约旦电子发票"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_jo_edi_extended
+msgid "Jordan E-Invoicing Extended Features"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
@@ -26705,6 +26992,11 @@ msgstr "主键必须唯一。"
 #: model:res.country,name:base.ki
 msgid "Kiribati"
 msgstr "基里巴斯"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_mrp
+msgid "Kit Availability"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
@@ -27304,6 +27596,11 @@ msgid "Link module between pos_sale and pos_loyalty"
 msgstr "pos_sale 和 pos_loyalty 之间的链接模块"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_es_edi_tbai_multi_refund
+msgid "Link one refund with multiple invoices"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
@@ -27784,6 +28081,11 @@ msgid ""
 msgstr "管理联系人头衔及其缩写（如 \"先生\"、\"夫人 \"等）。"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_mrp
+msgid "Manage Kit product inventory & availability"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_room
 msgid "Manage Meeting Rooms"
 msgstr "管理会议室"
@@ -28250,6 +28552,12 @@ msgid "Mass mailing sms on sale orders"
 msgstr "销售订单短信群发"
 
 #. module: base
+#: model:ir.module.module,description:base.module_hr_recruitment_sms
+#: model:ir.module.module,summary:base.module_hr_recruitment_sms
+msgid "Mass mailing sms to job applicants"
+msgstr "向求职者群发短信"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
 #: model:ir.module.module,summary:base.module_mrp_mps
 msgid "Master Production Schedule"
@@ -28265,6 +28573,16 @@ msgstr "物料管理"
 #: model:res.country,name:base.mr
 msgid "Mauritania"
 msgstr "毛里塔尼亚"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mr
+msgid "Mauritania - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mr_reports
+msgid "Mauritania - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -28950,6 +29268,11 @@ msgstr "模块依赖性"
 #: model:ir.model,name:base.model_ir_module_module_exclusion
 msgid "Module exclusion"
 msgstr "模块排除"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_es_edi_verifactu
+msgid "Module for sending Spanish Veri*Factu XML to the AEAT"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
@@ -33264,6 +33587,11 @@ msgid "Payment Provider: Stripe"
 msgstr "付款提供商：Stripe"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_payment_worldline
+msgid "Payment Provider: Worldline"
+msgstr "支付提供商：Worldline"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Payment Provider: Worldline SIPS"
 msgstr "付款提供商：Worldline SIPS"
@@ -34635,6 +34963,11 @@ msgid "Qweb field many2many"
 msgstr "Qweb 领域2个以上"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_one2many
+msgid "Qweb field one2many"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R - ARTS, ENTERTAINMENT AND RECREATION"
 msgstr "R - 艺术、娱乐和休闲"
@@ -34785,6 +35118,11 @@ msgstr "记录"
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment"
 msgstr "招聘"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_recruitment_sms
+msgid "Recruitment - SMS"
+msgstr "招聘 - 短信"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_sign
@@ -35225,6 +35563,11 @@ msgid "Romania - Accounting Reports"
 msgstr "罗马尼亚 - 会计报告"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_cpv_code
+msgid "Romania - CPV Code"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
 msgid "Romania - E-Transport"
 msgstr "罗马尼亚 - 电子运输"
@@ -35258,6 +35601,11 @@ msgstr "Romania - SAF-T Import"
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_efactura
 msgid "Romania - Send E-Factura"
 msgstr "罗马尼亚 - 发送电子邮件"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_efactura_synchronize
+msgid "Romania - Synchronize E-Factura"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_saft
@@ -35686,6 +36034,11 @@ msgstr "基于服务外包的销售。"
 #: model:ir.module.module,description:base.module_l10n_br_sales
 msgid "Sale modifications for Brazil"
 msgstr "巴西销售修改"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_it_edi_sale
+msgid "Sale modifications for Italy E-invoicing"
+msgstr "意大利电子发票的销售修改"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
@@ -36217,6 +36570,11 @@ msgid "Send Money"
 msgstr "转出资金"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sms_twilio
+msgid "Send SMS messages using Twilio"
+msgstr "使用 Twilio 发送短信"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
 msgid "Send SMS to Visitor"
 msgstr "向访客发短信"
@@ -36294,29 +36652,48 @@ msgid "Send your parcels through shiprocket and track them online"
 msgstr "通过 shiprocket 发送包裹并在线跟踪"
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_dhl
+#: model:ir.module.module,description:base.module_delivery_dhl_rest
 msgid ""
-"This is the legacy integration with DHL Express that is no longer supported. "
-"Please install the new \"DHL Express Shipping\" module and uninstall this "
-"one as soon as possible."
+"Send your shippings through DHL and track them online. This version of the "
+"DHL connector iscompatible with the DHL REST API available at https://"
+"developer.dhl.com/. It is no longercompatible with the older DHL SOAP APIs "
+"(which have their own credentials)."
 msgstr ""
-"这是与 DHL Express 的传统集成，已不再支持。请安装新的 “DHL 快递 ”模块，并尽快"
-"卸载此模块。"
+"通过 DHL 发送您的货物并在线追踪。此版本的 DHL 连接器与 https://"
+"developer.dhl.com/ 上的 DHL REST API 兼容。它不再与旧版 DHL SOAP API（这些 "
+"API 有自己的凭证）兼容。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
-msgid "Send your shippings through Fedex and track them online"
-msgstr "通过 Fedex 运输货物并线上跟踪物流信息"
+msgid ""
+"Send your shippings through Fedex and track them online. This version of the "
+"FedEx connector iscompatible with the FedEx REST API available at https://"
+"developer.fedex.com/. It is no longercompatible with the older FedEx SOAP "
+"APIs (which have their own credentials)."
+msgstr ""
+"通过 FedEx 发送您的货件并在线追踪。此版本的 FedEx 连接器兼容 FedEx REST API（"
+"详见 https://developer.fedex.com/）。不再兼容旧版 FedEx SOAP API（该 API 使用"
+"独立的凭证）。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
-msgid "Send your shippings through UPS and track them online"
-msgstr "通过UPS运输货物并线上跟踪物流信息"
+msgid ""
+"Send your shippings through UPS and track them online. This new version of "
+"the UPS connector is compatiblewith the newest version of the UPS REST APIs "
+"available at https://developer.ups.com/"
+msgstr ""
+"通过 UPS 发送您的货件并在线追踪。此新版本的 UPS 连接器兼容最新版 UPS REST API"
+"（详见 https://developer.ups.com/）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps_rest
-msgid "Send your shippings through USPS and track them online"
-msgstr "通过USPS运输货物并线上跟踪物流信息"
+msgid ""
+"Send your shippings through USPS and track them online.  This version of the "
+"USPS connector iscompatible with the new USPS REST API available at https://"
+"developers.usps.com/."
+msgstr ""
+"通过 USPS 发送您的货件并在线追踪。此版本的 USPS 连接器兼容新版 USPS REST API"
+"（详见 https://developers.usps.com/）。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -36427,6 +36804,11 @@ msgstr "塞尔维亚 - 会计"
 #: model:ir.module.module,shortdesc:base.module_l10n_rs_reports
 msgid "Serbia - Accounting Reports"
 msgstr "塞尔维亚-会计报告"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_rs_edi
+msgid "Serbia - eFaktura E-invoicing"
+msgstr "塞尔维亚 - eFaktura 电子发票"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__server
@@ -37031,6 +37413,16 @@ msgstr "西班牙 - SII EDI Suministro de Libros"
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai
 msgid "Spain - TicketBAI"
 msgstr "西班牙 - TicketBAI"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_verifactu
+msgid "Spain - Veri*Factu"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_verifactu_pos
+msgid "Spain - Veri*Factu for Point of Sale"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_es_pos
@@ -37661,9 +38053,19 @@ msgid "Sweden - Accounting Reports"
 msgstr "Sweden - Accounting Reports"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_export
+msgid "Sweden - SIE 4 Export"
+msgstr "瑞典 - SIE 4 导出"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_import
+msgid "Sweden - SIE 4 Import"
+msgstr "瑞典 - SIE 4 导入"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_sie_import
-msgid "Sweden - SIE Import"
-msgstr "瑞典 - SIE 进口"
+msgid "Sweden - SIE 5 Import"
+msgstr "瑞典 - SIE 5 导入"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
@@ -37679,6 +38081,11 @@ msgstr "瑞士 - POS 销售点管理"
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission
 msgid "Swissdec Certified Payroll (ELM 5.0)"
 msgstr "Swissdec 认证薪资系统（ELM 5.0）"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
+msgid "Swissdec Certified Payroll ELM 5.3"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -39257,6 +39664,14 @@ msgstr ""
 "达式来表达 \"对象 \"和 \"时间 \"变量。"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_dhl
+msgid ""
+"This is the legacy integration with DHL Express that is no longer "
+"supported.         Please install the new \"DHL Express Shipping\" module "
+"and uninstall this one as soon as possible."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid ""
 "This is the legacy integration with FedEx that is no longer "
@@ -39336,6 +39751,15 @@ msgid "This module adds management features to the sale renting app."
 msgstr "该模块为销售租赁应用程序增加了管理功能。"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_add_gln
+msgid ""
+"This module adds the Global Location Number to the partner. Used on delivery "
+"addresses, it is used to identify stock locations and is mandatory on the "
+"UBL/CII eInvoices (but not only). The module is intended be merged with "
+"account, later on, in master"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
 msgid ""
 "This module adds the OdooBot state and notifications in the user form "
@@ -39343,7 +39767,6 @@ msgid ""
 msgstr "该模块在hr修改的用户表单中增加OdooBot状态和通知."
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_be_codabox
 #: model:ir.module.module,description:base.module_l10n_be_codabox_bridge
 #: model:ir.module.module,description:base.module_l10n_be_codabox_bridge_wizard
 msgid ""
@@ -39357,11 +39780,13 @@ msgstr ""
 "连接必须由会计公司完成。\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_online_payment
+#: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid ""
-"This module allows customers to pay their invoices online using various "
-"payment methods."
-msgstr "该模块允许客户使用各种付款方式在线支付发票。"
+"This module allows connection to CodaBox\n"
+"and automatically imports CODA and SODA statements in Odoo.\n"
+msgstr ""
+"该模块允许连接 CodaBox\n"
+"并在 Odoo 中自动导入 CODA 和 SODA 语句。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_fedex
@@ -39743,6 +40168,11 @@ msgid "Thursday"
 msgstr "星期四"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai_multi_refund
+msgid "TicketBAI multi refund"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
 msgstr "工单、支持、联机客服"
@@ -39930,6 +40360,13 @@ msgstr ""
 "                尤其是出售捕鼠器. 用那个把戏他砍了\n"
 "                IT 预算在过去 2 年内减少了近一半.\n"
 "                著名管理合伙人."
+
+#. module: base
+#. odoo-python
+#: code:addons/image.py:0
+#, python-format
+msgid "Too large image (above %sMpx), reduce the image size."
+msgstr "图像太大（超过 %sMpx），请缩小图像尺寸。"
 
 #. module: base
 #. odoo-python
@@ -40143,6 +40580,11 @@ msgid "Tuvalu"
 msgstr "图瓦卢"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sms_twilio
+msgid "Twilio SMS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
 msgid "Twitter Snippet"
 msgstr "Twitter 摘要"
@@ -40240,6 +40682,11 @@ msgstr "土耳其 - Nilvera"
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
 msgid "Türkiye - Nilvera E-Invoice"
 msgstr "土耳其 - Nilvera 电子发票"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_edispatch
+msgid "Türkiye - e-Irsaliye (e-Dispatch)"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -40447,6 +40894,15 @@ msgstr "无法升级模块 \"%s'\"，因为未发现外部依赖：%s"
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
 msgstr "未分类"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid ""
+"Unicode strings with encoding declaration are not supported in XML.\n"
+"Remove the encoding declaration."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -40754,6 +41210,11 @@ msgstr "乌拉圭 - 会计"
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_edi
 msgid "Uruguay - Electronic Invoice"
 msgstr "乌拉圭 - 电子发票"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_uy_website_sale
+msgid "Uruguay Website"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__name
@@ -42301,6 +42762,13 @@ msgid "You cannot create recursive inherited views."
 msgstr "不能创建递归继承视图。"
 
 #. module: base
+#: model:ir.model.constraint,message:base.constraint_ir_sequence_date_range_unique_range_per_sequence
+msgid ""
+"You cannot create two date ranges for the same sequence with the same date "
+"range."
+msgstr "您不可为相同序列建立两组起迄日期相同的日期范围。"
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
@@ -43306,3 +43774,251 @@ msgstr "是"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "奥兰群岛"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Localization Module for Denmark\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "This is the module to manage the **accounting chart for Denmark**. Cover "
+#~ "both one-man business as well as I/S, IVS, ApS and A/S\n"
+#~ "\n"
+#~ "**Modulet opsætter:**\n"
+#~ "\n"
+#~ "- **Dansk kontoplan**\n"
+#~ "\n"
+#~ "- Dansk moms\n"
+#~ "        - 25% moms\n"
+#~ "        - Resturationsmoms 6,25%\n"
+#~ "        - Omvendt betalingspligt\n"
+#~ "\n"
+#~ "- Konteringsgrupper\n"
+#~ "        - EU (Virksomhed)\n"
+#~ "        - EU (Privat)\n"
+#~ "        - 3.lande\n"
+#~ "\n"
+#~ "- Finans raporter\n"
+#~ "        - Resulttopgørelse\n"
+#~ "        - Balance\n"
+#~ "        - Momsafregning\n"
+#~ "            - Afregning\n"
+#~ "            - Rubrik A, B og C\n"
+#~ "\n"
+#~ "- **Anglo-Saxon regnskabsmetode**\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "Produkt setup:\n"
+#~ "==============\n"
+#~ "\n"
+#~ "**Vare**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salgmoms 25%\n"
+#~ "\n"
+#~ "**Salgskonto:**     1010 Salg af vare, m/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Købsmoms 25%\n"
+#~ "\n"
+#~ "**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Ydelse**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+#~ "\n"
+#~ "**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Købsmoms 25%, ydelser\n"
+#~ "\n"
+#~ "**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Vare med omvendt betalingspligt**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salg omvendt betalingspligt\n"
+#~ "\n"
+#~ "**Salgskonto:**     1012 Salg af vare, u/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Køb omvendt betalingspligt\n"
+#~ "\n"
+#~ "**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+#~ "\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Restauration**\n"
+#~ "\n"
+#~ "**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+#~ "\n"
+#~ "**Købskonto:**      4010 Restaurationsbesøg\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Localization Module for Denmark\n"
+#~ "===============================\n"
+#~ "\n"
+#~ "This is the module to manage the **accounting chart for Denmark**. Cover "
+#~ "both one-man business as well as I/S, IVS, ApS and A/S\n"
+#~ "\n"
+#~ "**Modulet opsætter:**\n"
+#~ "\n"
+#~ "- **Dansk kontoplan**\n"
+#~ "\n"
+#~ "- Dansk moms\n"
+#~ "        - 25% moms\n"
+#~ "        - Resturationsmoms 6,25%\n"
+#~ "        - Omvendt betalingspligt\n"
+#~ "\n"
+#~ "- Konteringsgrupper\n"
+#~ "        - EU (Virksomhed)\n"
+#~ "        - EU (Privat)\n"
+#~ "        - 3.lande\n"
+#~ "\n"
+#~ "- Finans raporter\n"
+#~ "        - Resulttopgørelse\n"
+#~ "        - Balance\n"
+#~ "        - Momsafregning\n"
+#~ "            - Afregning\n"
+#~ "            - Rubrik A, B og C\n"
+#~ "\n"
+#~ "- **Anglo-Saxon regnskabsmetode**\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "Produkt setup:\n"
+#~ "==============\n"
+#~ "\n"
+#~ "**Vare**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salgmoms 25%\n"
+#~ "\n"
+#~ "**Salgskonto:**     1010 Salg af vare, m/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Købsmoms 25%\n"
+#~ "\n"
+#~ "**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Ydelse**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+#~ "\n"
+#~ "**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Købsmoms 25%, ydelser\n"
+#~ "\n"
+#~ "**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Vare med omvendt betalingspligt**\n"
+#~ "\n"
+#~ "**Salgsmoms:**      Salg omvendt betalingspligt\n"
+#~ "\n"
+#~ "**Salgskonto:**     1012 Salg af vare, u/moms\n"
+#~ "\n"
+#~ "**Købsmoms:**       Køb omvendt betalingspligt\n"
+#~ "\n"
+#~ "**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+#~ "\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+#~ "**Restauration**\n"
+#~ "\n"
+#~ "**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+#~ "\n"
+#~ "**Købskonto:**      4010 Restaurationsbesøg\n"
+#~ "\n"
+#~ ".\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "<span invisible=\"evaluation_type != 'value' or not update_field_type == "
+#~ "'many2many'\">by</span>"
+#~ msgstr ""
+#~ "<span invisible=\"evaluation_type != 'value' or not update_field_type == "
+#~ "'many2many'\">由</span>"
+
+#~ msgid ""
+#~ "<span invisible=\"evaluation_type != 'value' or update_field_type == "
+#~ "'many2many'\">to</span>"
+#~ msgstr ""
+#~ "<span invisible=\"evaluation_type != 'value' or update_field_type == "
+#~ "'many2many'\">至</span>"
+
+#~ msgid "Addison Olson is a mighty sales representative at Deco Addict."
+#~ msgstr "Addison Olson是Deco Addict一位强大的销售代表。"
+
+#~ msgid ""
+#~ "Deco Addict designs, develops, integrates and supports HR and Supply\n"
+#~ "                Chain processes in order to make our customers more "
+#~ "productive,\n"
+#~ "                responsive and profitable."
+#~ msgstr ""
+#~ "Deco Addict 设计、开发、集成和支持人力资源和供应链流程，以使我们的客户更具"
+#~ "生产力，反应灵敏，有利可图。"
+
+#~ msgid ""
+#~ "Deco Addict designs, develops, integrates and supports HR and Supply "
+#~ "Chain processes in order to make our customers more productive, "
+#~ "responsive and profitable."
+#~ msgstr ""
+#~ "Deco Addict 设计、开发、整合并支持人力资源和供应链流程，以提高客户的工作效"
+#~ "率、响应速度和盈利能力。"
+
+#~ msgid ""
+#~ "Deco Addict integrates ERP for Global Companies and supports PME\n"
+#~ "                with Open Sources software to manage their businesses. "
+#~ "Our\n"
+#~ "                consultants are experts in the following areas:"
+#~ msgstr ""
+#~ "Deco Addict为全球公司集成ERP并支持PME用开源软件来管理他们的业务。 我们的顾"
+#~ "问是下列领域的专家:"
+
+#~ msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
+#~ msgstr "道格拉斯·弗莱彻 (Douglas Fletcher) 是 Deco Addict 的强大功能顾问"
+
+#~ msgid "Floyd Steward is a mighty analyst at Deco Addict."
+#~ msgstr "Floyd Steward 是 Deco Addict 的一位强大分析师."
+
+#, python-format
+#~ msgid ""
+#~ "Image size excessive, uploaded images must be smaller than %s million "
+#~ "pixels."
+#~ msgstr "图片尺寸过大，上传的图片必须小于 %s 百万像素。"
+
+#~ msgid "Import Accounting Data from SIE files"
+#~ msgstr "从 SIE 文件导入会计数据"
+
+#~ msgid ""
+#~ "This is the legacy integration with DHL Express that is no longer "
+#~ "supported. Please install the new \"DHL Express Shipping\" module and "
+#~ "uninstall this one as soon as possible."
+#~ msgstr ""
+#~ "这是与 DHL Express 的传统集成，已不再支持。请安装新的 “DHL 快递 ”模块，并"
+#~ "尽快卸载此模块。"
+
+#~ msgid "Send your shippings through Fedex and track them online"
+#~ msgstr "通过 Fedex 运输货物并线上跟踪物流信息"
+
+#~ msgid "Send your shippings through UPS and track them online"
+#~ msgstr "通过UPS运输货物并线上跟踪物流信息"
+
+#~ msgid "Send your shippings through USPS and track them online"
+#~ msgstr "通过USPS运输货物并线上跟踪物流信息"
+
+#~ msgid "Sweden - SIE Import"
+#~ msgstr "瑞典 - SIE 进口"
+
+#~ msgid ""
+#~ "This module allows customers to pay their invoices online using various "
+#~ "payment methods."
+#~ msgstr "该模块允许客户使用各种付款方式在线支付发票。"

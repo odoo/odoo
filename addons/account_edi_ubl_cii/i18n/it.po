@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 17:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"PO-Revision-Date: 2026-02-24 14:03+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
@@ -39,7 +39,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "Raggruppa o meno le righe per imposta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -582,7 +582,7 @@ msgstr "BIS3 IT (XInvoice)"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "Impossibile trovare il file di origine, prova a importarlo di nuovo"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -789,7 +789,7 @@ msgstr "Genera formato Peppol in maniera predefinita"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Righe raggruppate per imposta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -971,6 +971,13 @@ msgstr "L'IVA di %s dovrebbe avere il prefisso del codice Paese."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "The bank account couldn't be fetched: %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
@@ -1006,14 +1013,6 @@ msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr ""
 "Il campo \"Numero di conto sanificato\" è obbligatorio per la Banca "
 "destinataria."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "The following bank account numbers got retrieved during the import : %s"
-msgstr ""
-"Durante l'importazione, sono stati recuperati i seguenti numeri di conto: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1079,7 +1078,7 @@ msgstr "File UBL/CII"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Righe non raggruppate da %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1096,7 +1095,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Unknown partner"
-msgstr ""
+msgstr "Partner sconosciuto"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1134,6 +1133,8 @@ msgstr "XRechnung CIUS"
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
 msgstr ""
+"Puoi raggruppare o annullare il raggruppamento solo delle righe di una "
+"fattura in bozza"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1141,6 +1142,8 @@ msgstr ""
 #, python-format
 msgid "You can only (un)group lines of a incoming invoice (vendor bill)"
 msgstr ""
+"Puoi raggruppare o annullare il raggruppamento solo delle righe di una "
+"fattura in entrata (fattura fornitore)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1149,6 +1152,8 @@ msgstr ""
 msgid ""
 "You can only (un)group lines of an invoice not linked to a purchase order"
 msgstr ""
+"Puoi raggruppare o annullare il raggruppamento solo di una fattura non "
+"collegata a un ordine di acquisto"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1164,6 +1169,11 @@ msgstr ""
 "categoria IVA dell'articolo fatturato (BT-151)."
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd
+msgid "ZUGFeRD (CII)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
@@ -1177,3 +1187,10 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#, python-format
+#~ msgid ""
+#~ "The following bank account numbers got retrieved during the import : %s"
+#~ msgstr ""
+#~ "Durante l'importazione, sono stati recuperati i seguenti numeri di conto: "
+#~ "%s"

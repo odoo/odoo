@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-02-21 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -942,6 +942,13 @@ msgstr "增值稅 %s應加上其國家代碼。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "The bank account couldn't be fetched: %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
@@ -975,13 +982,6 @@ msgstr "欄位 %s 是 %s 所必需的。"
 #, python-format
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
 msgstr "必須填寫收款銀行的「已清理格式賬戶號碼」欄位。"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "The following bank account numbers got retrieved during the import : %s"
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1121,6 +1121,11 @@ msgid ""
 msgstr ""
 "每個發票資料行應至少包含一項稅費。[BR-CO-04] - 每個發票行 (BG-25) 應依照已開"
 "立發票項目的增值稅類別代碼 (BT-151) 進行分類。"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd
+msgid "ZUGFeRD (CII)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

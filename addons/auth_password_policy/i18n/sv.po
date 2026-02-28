@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_password_policy
+# * auth_password_policy
 #
 # Translators:
 # Simon S, 2023
@@ -8,20 +8,22 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Lasse L, 2023
 # Martin Trigaux, 2023
-#
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2026-02-24 14:03+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/"
+"auth_password_policy/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
@@ -31,15 +33,15 @@ msgstr "Inställningar"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr "Minsta lösenordslängd"
+msgstr "Minsta antal tecken"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-"Minsta antal tecken som lösenord måste innehålla, sätt till 0 för att "
-"inaktivera."
+"Minsta antal tecken som ett lösenord måste innehålla, ange 0 för att "
+"avaktivera funktionen."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -65,10 +67,10 @@ msgid ""
 "Hint: to increase password strength, increase length, use multiple words, "
 "and use non-letter characters."
 msgstr ""
-"Krävs: %s\n"
+"Krav: %s\n"
 "\n"
-"Tips: för att öka lösenordsstyrkan, öka längden, använd flera ord och använd "
-"icke-bokstavstecken."
+"Tips: öka längden, använd flera ord och använd teckentyper utöver bokstäver "
+"för att göra lösenordet starkare."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -80,7 +82,7 @@ msgstr "Användare"
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
 msgid "at least %s character classes"
-msgstr "minst %s teckenklasser"
+msgstr "minst %s teckentyper"
 
 #. module: auth_password_policy
 #. odoo-javascript
