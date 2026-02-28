@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:19+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:28+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_attendance/ko/>\n"
@@ -336,7 +336,7 @@ msgstr "참석 승인자"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "근태 오류"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -1342,8 +1342,13 @@ msgstr "샘플 데이터 불러오기"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-msgid "Location"
-msgstr "위치"
+msgid "Location (In)"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location (Out)"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1717,6 +1722,12 @@ msgstr "인쇄"
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Print It"
 msgstr "인쇄하기"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Proceed Anyway"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -2197,6 +2208,14 @@ msgid "Try the top"
 msgstr "상단의"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid ""
+"Unable to get a valid location. Do you want to proceed with your check-in/"
+"out anyway?"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/controllers/main.py:0
 msgid "Unknown"
@@ -2416,6 +2435,9 @@ msgstr "다음 비율로"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "선택 사항으로 PIN 코드 포함"
+
+#~ msgid "Location"
+#~ msgstr "위치"
 
 #~ msgid ""
 #~ "Do not have access, user cannot edit the attendances that are not his own."

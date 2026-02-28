@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 13:29+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:29+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_attendance/nl/>\n"
@@ -343,7 +343,7 @@ msgstr "Aanwezigheidsgoedkeurder"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "Aanwezigheid fout"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -722,7 +722,7 @@ msgstr "Sluit een RFID-lezer aan en scan een token."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "Verbinding verbroken. In-/uitchecken kon niet worden geregistreerd."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -887,6 +887,8 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"Geen toegang, gebruiker kan de aanwezigheden die niet van hemzelf zijn niet "
+"bewerken, of als hij niet de aanwezigheidsbeheerder van de werknemer is."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -1364,8 +1366,13 @@ msgstr "Demodata laden"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-msgid "Location"
-msgstr "Locatie"
+msgid "Location (In)"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location (Out)"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1739,6 +1746,12 @@ msgstr "Afdrukken"
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Print It"
 msgstr "Afdrukken"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Proceed Anyway"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -2233,6 +2246,14 @@ msgid "Try the top"
 msgstr "Probeer het"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid ""
+"Unable to get a valid location. Do you want to proceed with your check-in/"
+"out anyway?"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/controllers/main.py:0
 msgid "Unknown"
@@ -2453,6 +2474,9 @@ msgstr "met een tarief van"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "met optionele pincode"
+
+#~ msgid "Location"
+#~ msgstr "Locatie"
 
 #~ msgid ""
 #~ "Do not have access, user cannot edit the attendances that are not his own."

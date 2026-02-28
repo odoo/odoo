@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:10+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:28+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_attendance/id/>\n"
@@ -95,6 +95,8 @@ msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
 "in ['work_days', 'non_work_days']\">Between</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
+"in ['work_days', 'non_work_days']\">Antara</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -134,6 +136,9 @@ msgid ""
 "                                Monthly Hours\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Jam Bulanan\n"
+"                            </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -142,6 +147,9 @@ msgid ""
 "                            Monthly Hours\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Jam Bulanan\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -149,6 +157,8 @@ msgid ""
 "<span colspan=\"2\" class=\"mb-3 fw-bold\">The hours will be considered "
 "extra and submitted to approval.</span>"
 msgstr ""
+"<span colspan=\"2\" class=\"mb-3 fw-bold\">Jam akan dianggap ekstra dan "
+"diserahkan untuk disetujui.</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -251,6 +261,8 @@ msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
 msgstr ""
+"Mengizinkan pengumpulan lokasi GPS, alamat IP, dan detail browser/perangkat "
+"yang digunakan untuk melacak akses dan absensi karyawan"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
@@ -271,7 +283,7 @@ msgstr "Setujui Jam Ekstra"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Approve all overtimes for the same employee and date"
-msgstr ""
+msgstr "Setujui semua lembur untuk karyawan dan tanggal yang sama"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
@@ -304,7 +316,7 @@ msgstr "Sedang Bekerja"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 msgid "At least one rule"
-msgstr ""
+msgstr "Setidaknya satu peraturan"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -331,7 +343,7 @@ msgstr "Penyetuju Absensi"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "Error Absensi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -713,7 +725,7 @@ msgstr "Hubungkan ke pembaca RFID, dan scan token."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "Koneksi terputus. Check in/out tidak dapat direkam."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -875,11 +887,13 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"Tidak memiliki akses, user tidak dapat mengedit absensi yang bukan milik "
+"mereka sendiri atau bila mereka bukan manajer absensi dari karyawan."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "Duration to exceed:"
-msgstr ""
+msgstr "Durasi untuk dilampaui:"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -995,7 +1009,7 @@ msgstr "Jam-Jam Ekstra (dienkode)"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Extra Hours Rules"
-msgstr ""
+msgstr "Peraturan Jam Ekstra"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_overtime_validation
@@ -1073,7 +1087,7 @@ msgstr "Buat URL baru"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_list
 msgid "Get working hours from contract"
-msgstr ""
+msgstr "Dapatkan jam kerja dari kontrak"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1096,6 +1110,8 @@ msgid ""
 "Grants users permission to modify their own attendance entries that are "
 "pending approval."
 msgstr ""
+"Memberikan user izin untuk memodifikasi entri absensi mereka sendiri yang "
+"menunggu persetujuan."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_http
@@ -1208,12 +1224,12 @@ msgstr "Bila dicentang, beberapa pesan mungkin memiliki kesalahan pengiriman."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "If the employee works"
-msgstr ""
+msgstr "Bila karyawan bekerja"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "If the worked hours on a"
-msgstr ""
+msgstr "Bila jam kerja jatuh pada"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_location
@@ -1350,8 +1366,13 @@ msgstr "Muat data sampe"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-msgid "Location"
-msgstr "Lokasi"
+msgid "Location (In)"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location (Out)"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1541,7 +1562,7 @@ msgstr "Di Luar Jam Kerja"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer: Manage all attendances"
-msgstr ""
+msgstr "Petugas; Kelola semua absensi"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
@@ -1634,7 +1655,7 @@ msgstr "Jam Lembur"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Overtime Details"
-msgstr ""
+msgstr "Detail Lembur"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_rule
@@ -1681,7 +1702,7 @@ msgstr "Bayar Jam-Jam Ekstra"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "Pay extra hours"
-msgstr ""
+msgstr "Bayarkan jam ekstra"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1727,9 +1748,15 @@ msgid "Print It"
 msgstr "Cetak"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Proceed Anyway"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Provide a description or sources for this ruleset."
-msgstr ""
+msgstr "Sediakan deskripsi atau sumber untuk kelompok peraturan ini."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -1761,7 +1788,7 @@ msgstr "Token RFID dengan reader pada tablet"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "RFID/Badge Number"
-msgstr ""
+msgstr "Nomor Lencana/RFID"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__amount_rate
@@ -1777,7 +1804,7 @@ msgstr "Tarif Mode Kombinasi"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_list
 msgid "Rate Mode"
-msgstr ""
+msgstr "Rate Mode"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__rating_ids
@@ -1787,7 +1814,7 @@ msgstr "Rating"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Read a badge"
-msgstr ""
+msgstr "Baca lencana"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1809,7 +1836,7 @@ msgstr "Tolak Jam Ekstra"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Refuse all overtimes for the same employee and date"
-msgstr ""
+msgstr "Tolak semua lembur untuk tanggal dan karyawan yang sama"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__refused
@@ -1821,12 +1848,12 @@ msgstr "Ditolak"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Regenerate overtimes"
-msgstr ""
+msgstr "Ulang lembur"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Regenerate overtimes for this ruleset"
-msgstr ""
+msgstr "Ulang lembur untuk kelompok peraturan ini"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
@@ -1883,12 +1910,12 @@ msgstr "Kelompok peraturan"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "Ruleset Name"
-msgstr ""
+msgstr "Nama Kelompok Peraturan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 msgid "Ruleset Search"
-msgstr ""
+msgstr "Pencarian Kelompok Peraturan"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_ruleset_action
@@ -1944,7 +1971,7 @@ msgstr "Pilih Karyawan Tanpa Lencana"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Select a ruleset to manage overtime."
-msgstr ""
+msgstr "Pilih kelompok peraturan untuk mengelola lembur."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1955,7 +1982,7 @@ msgstr "Pilih di Tablet"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own
 msgid "Self Attendance Edit"
-msgstr ""
+msgstr "Edit Absensi Sendiri"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__sequence
@@ -2062,7 +2089,7 @@ msgstr "Pelaporan absensi karyawan Anda akan ditampilkan di sini."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "The rule is based on"
-msgstr ""
+msgstr "Peraturan ini berdasarkan pada"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__attendance_manager_id
@@ -2081,6 +2108,8 @@ msgid ""
 "The user will have access to all attendance records and reports for all "
 "employees."
 msgstr ""
+"User akan memiliki akses ke semua rekaman absensi dan laporan untuk semua "
+"karyawan."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
@@ -2214,6 +2243,14 @@ msgid "Try the top"
 msgstr "Coba yang di ata"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid ""
+"Unable to get a valid location. Do you want to proceed with your check-in/"
+"out anyway?"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/controllers/main.py:0
 msgid "Unknown"
@@ -2285,12 +2322,12 @@ msgstr "Saat karyawan cuti"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "With a tolerance in favor of the employee of"
-msgstr ""
+msgstr "Dengan toleransi yang menguntungkan karyawan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "With a tolerance in favor of the employer of"
-msgstr ""
+msgstr "Dengan toleransi yang menguntungkan employer"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_simple_tree_view
@@ -2368,7 +2405,7 @@ msgstr "hari"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "differs"
-msgstr ""
+msgstr "berbeda"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2379,22 +2416,22 @@ msgstr "misalnya John Doe"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
 msgid "e.g. Legal Rules"
-msgstr ""
+msgstr "contoh. Peraturan Hukum"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "e.g. Over 8 hours daily"
-msgstr ""
+msgstr "contoh. Lebih dari 8 jam per hari"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "from a specific duration"
-msgstr ""
+msgstr "dari durasi spesifik"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "from the amount defined on the contract"
-msgstr ""
+msgstr "dari jumlah yang didefinisikan di kontrak"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2427,13 +2464,16 @@ msgstr "minggu"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "with a rate of"
-msgstr ""
+msgstr "dengan rate"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "dengan kode PIN opsional"
+
+#~ msgid "Location"
+#~ msgstr "Lokasi"
 
 #~ msgid ""
 #~ "Do not have access, user cannot edit the attendances that are not his own."

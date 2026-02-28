@@ -50,8 +50,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:24+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 13:16+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/fi/>\n"
@@ -113,6 +113,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Ota yhteyttä ylläpitäjään."
 
 #. module: account
 #. odoo-python
@@ -255,6 +257,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s on saavuttanut luottorajansa: %(credit_limit)s"
@@ -367,7 +375,7 @@ msgstr "(kopio)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "(from"
-msgstr "(lähettäjä:"
+msgstr "(alkaen"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -487,12 +495,12 @@ msgstr "/ jos ei sovelleta"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr "0% vientiä"
+msgstr "0% viennit"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr "0% tuontia"
+msgstr "0% tuonnit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1720,8 +1728,7 @@ msgstr "<span invisible=\"not early_discount\">-</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
 msgstr ""
-"<span invisible=\"not early_discount\"> % jos maksetaan aikaikkunan sisällä "
-"</span>"
+"<span invisible=\"not early_discount\"> % jos maksetaan aikaikkunassa </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1813,7 +1820,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4026,7 +4033,7 @@ msgid ""
 "All expenses made for your office or workplace that are not material goods"
 msgstr ""
 "Kaikki toimistosi tai työpaikkasi kulut, jotka eivät ole aineellisia "
-"hyödykkeitä."
+"hyödykkeitä"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
@@ -5145,6 +5152,12 @@ msgstr "Pankki ja käteinen"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Odoo-pankki"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -13700,7 +13713,7 @@ msgid ""
 "reconciled! Other ones aren't up for an adventure like that!"
 msgstr ""
 "Oho! Voit muuttaa kautta tai tiliä ainoastaan kirjausten kohdalla, joita ei "
-"ole vielä täsmäytetty. Muut eivät ole valmiita sellaiselle seikkailulle."
+"ole vielä täsmäytetty. Muut eivät ole valmiita sellaiselle seikkailulle!"
 
 #. module: account
 #. odoo-python
@@ -14514,7 +14527,7 @@ msgstr "Maksuehdot: 30% ennakkoon seuraavan kuukauden loppuun mennessä"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Maksuehdot: 30% nyt, loput 60 päivän päästä"
+msgstr "Maksuehdot: 30% nyt, loput 60 päivän kuluessa"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -16452,7 +16465,7 @@ msgstr "Siirrä rahaa"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Send a bill to"
-msgstr "Lähetä lasku:"
+msgstr "Lähetä lasku vastaanottajalle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -18257,6 +18270,14 @@ msgid ""
 msgstr "Pankin päiväkirjan pankkitilin tulee kuulua samalle yritykselle (%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Pankkitäsmäytykseen käytettävä tiliote"
@@ -18336,8 +18357,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18884,6 +18906,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Aikataulutettu toiminto 'Lähetä laskut automaattisesti' on arkistoitu. Et "
+"voi lähettää laskuja erissä."
 
 #. module: account
 #. odoo-python
@@ -19591,7 +19615,7 @@ msgstr "Vinkki: Lopeta tarvitsemiesi asiakirjojen metsästäminen"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
-msgstr "Vastaanottaja:"
+msgstr "Vastaanottajalle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -20105,7 +20129,7 @@ msgstr "Yksikköhinta:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "kpl"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20531,17 +20555,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Poistorivin summan arvo\n"
-"    * Prosenttiosuus: Prosenttiosuus saldosta 0-100 välillä.\n"
-"    * Kiinteä: Poiston kiinteä arvo. Summa lasketaan debettinä jos se on "
-"negatiivinen ja kredittinä jos se on positiivinen.\n"
-"    * Nimikkeestä: Regex-erotinta ei tarvita, ainoastaan regex. Jos "
-"esimerkiksi haluat erottaa summan kohteesta\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"Voit syöttää\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21200,7 +21224,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
-msgstr ""
+msgstr "Et voi muuttaa maksusummaa useilla likviditeettiriveillä."
 
 #. module: account
 #. odoo-python
@@ -21573,7 +21597,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "Et voi vaihtaa asiakirjatyyppiä olemassa olevalla sekvenssinumerolla."
 
 #. module: account
 #. odoo-python
@@ -22383,6 +22407,35 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Itselaskutettu lasku (viite {{ object.name or "
 "'n/a' }})"
+
+#~ msgid ""
+#~ "The company bank account linked to this invoice is not trusted, please "
+#~ "double-check and trust it before confirming, or remove it"
+#~ msgstr ""
+#~ "Tähän laskuun liitetty yrityksen pankkitili ei ole luotettava. Tarkista "
+#~ "se ja lisää se luotettavien tilien joukkoon ennen vahvistamista tai "
+#~ "poista se"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Poistorivin summan arvo\n"
+#~ "    * Prosenttiosuus: Prosenttiosuus saldosta 0-100 välillä.\n"
+#~ "    * Kiinteä: Poiston kiinteä arvo. Summa lasketaan debettinä jos se on "
+#~ "negatiivinen ja kredittinä jos se on positiivinen.\n"
+#~ "    * Nimikkeestä: Regex-erotinta ei tarvita, ainoastaan regex. Jos "
+#~ "esimerkiksi haluat erottaa summan kohteesta\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "Voit syöttää\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<span>1.00</span>\n"

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:11+0000\n"
+"PO-Revision-Date: 2026-02-28 12:33+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "im_livechat/id/>\n"
@@ -154,17 +154,17 @@ msgstr "<span class=\"fw-bold\">Negara: </span>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Happy</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Senang</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Sessions</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Sesi-Sesi</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span>Ongoing Sessions:</span>"
-msgstr ""
+msgstr "<span>Sesi-Sesi Berlanjut:</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -410,7 +410,7 @@ msgstr "Warna Latar Belakang Tombo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Button Colors"
-msgstr ""
+msgstr "Warna Tombol"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -613,7 +613,7 @@ msgstr "Konfigurasi"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "Konfigurasi Channel"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -669,7 +669,7 @@ msgstr "Negara"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Country & Language"
-msgstr ""
+msgstr "Negara & Bahasa"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -1157,7 +1157,7 @@ msgstr "Status Bantuan"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Here's a copy of your conversation with"
-msgstr ""
+msgstr "Berikut salinan percakapan Anda dengan"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1591,7 +1591,7 @@ msgstr "Sejarah Live Chat"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Live Chat Name"
-msgstr ""
+msgstr "Nama Live Chat"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
@@ -1606,7 +1606,7 @@ msgstr "Sesi Live Chat Gagal"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Live Chat Window"
-msgstr ""
+msgstr "Jendela Live Chat"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1957,7 +1957,7 @@ msgstr "Catatan"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Notification Text"
-msgstr ""
+msgstr "Teks Notifikasi"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
@@ -2500,7 +2500,7 @@ msgstr "Sumber"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Bahasa Ucapan"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
@@ -2715,6 +2715,13 @@ msgid ""
 "installed on your server to geolocate visitors. Without it, rules that "
 "include country restrictions will be ignored."
 msgstr ""
+"Untuk menerapkan peraturan hanya ke halaman-halaman tertentu di website "
+"Anda, masukkan URL regex seperti /shop. Ini akan mencocokkan halaman apa pun "
+"yang mulai dengan /shop, seperti /shop/product. Biarkan field kosong untuk "
+"menerapkan peraturan ke semua halaman.<br/>\n"
+"                                    Untuk database on-premise, GeoIP harus "
+"diinstal di server Anda untuk geolokasi pengunjung. Tanpanya, peraturan yang "
+"termasuk batasan negara akan diabaikan."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
@@ -2833,7 +2840,7 @@ msgstr "Jawaban mentah user"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "Lihat Channel"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2987,7 +2994,7 @@ msgstr "Widget"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "Warna Jendela"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -3096,7 +3103,7 @@ msgstr "contoh. Halo, bagaimana saya dapat membantu Anda?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "contoh. Butuh Bantuan? Berbicaralah dengan kami."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:12+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:41+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/mail/es_419/>\n"
@@ -632,6 +632,14 @@ msgstr ""
 "<br/><br/>\n"
 "\n"
 "            Estos son algunos detalles acerca de la conexión:<br/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -1870,7 +1878,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
 msgid "Ask at launch"
-msgstr "Preguntar en el lanzamiento"
+msgstr "Preguntar al iniciar"
 
 #. module: mail
 #. odoo-javascript
@@ -5395,6 +5403,12 @@ msgid "Force a Language"
 msgstr "Definir un idioma"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid "Forever"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
 msgstr "Correo electrónico con formato"
@@ -6526,13 +6540,13 @@ msgstr "Invitar personas o correos electrónicos"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates"
-msgstr "Invitar a miembros del equipo"
+msgstr "Invitar compañeros"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates via email"
-msgstr "Invitar a miembros del equipo pro correo electrónico"
+msgstr "Invitar a compañeros por correo"
 
 #. module: mail
 #. odoo-javascript
@@ -12274,7 +12288,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The plan \"%(plan_name)s\" cannot be launched:"
-msgstr "No se puede poner en marcha el plan \"%(plan_name)s\":"
+msgstr "No es posible iniciar el plan \"%(plan_name)s\":"
 
 #. module: mail
 #. odoo-python
@@ -13196,6 +13210,8 @@ msgstr "Dejar de silenciar conversación"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -14063,16 +14079,9 @@ msgid ""
 "None: never display this type of activity\n"
 "Own Activities: the synchronization user will only count their own "
 "activities of this type\n"
-"All Activities: the synchronization user will count the all the activities "
-"of this type, whatever their owner"
+"All Activities: the synchronization user will count all the activities of "
+"this type, whatever their owner"
 msgstr ""
-"Define si este tipo de actividad debe aparecer en la API del proveedor de "
-"KPI.\n"
-"Ninguna: No muestra este tipo de actividad.\n"
-"Actividades propias: El usuario de sincronización solo cuenta sus propias "
-"actividades de este tipo.\n"
-"Todas las actividades: El usuario de sincronización cuenta todas las "
-"actividades de este tipo sin importar a quién le pertenecen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -15136,6 +15145,23 @@ msgstr "tu alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” en “%(channel_name)s”"
+
+#~ msgid ""
+#~ "Whether this type of activity should be displayed in the KPI Provider "
+#~ "API.\n"
+#~ "None: never display this type of activity\n"
+#~ "Own Activities: the synchronization user will only count their own "
+#~ "activities of this type\n"
+#~ "All Activities: the synchronization user will count the all the "
+#~ "activities of this type, whatever their owner"
+#~ msgstr ""
+#~ "Define si este tipo de actividad debe aparecer en la API del proveedor de "
+#~ "KPI.\n"
+#~ "Ninguna: No muestra este tipo de actividad.\n"
+#~ "Actividades propias: El usuario de sincronización solo cuenta sus propias "
+#~ "actividades de este tipo.\n"
+#~ "Todas las actividades: El usuario de sincronización cuenta todas las "
+#~ "actividades de este tipo sin importar a quién le pertenecen."
 
 #~ msgid "Remove Channel Admin"
 #~ msgstr "Eliminar administrador del canal"

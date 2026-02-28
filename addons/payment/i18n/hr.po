@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:37+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2025-11-11 17:16+0000\n"
 "Last-Translator: Zvonimir Galić <zvonimir.galic@viavista.ba>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/payment/"
@@ -1511,6 +1511,11 @@ msgid "MoMo"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile
+msgid "Mobile"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
 msgstr ""
@@ -2855,6 +2860,11 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_toss_payments
+msgid "Toss Payments"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
 msgid "Touch'n Go"
 msgstr ""
@@ -3168,6 +3178,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_toss_payments
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
@@ -3195,6 +3206,7 @@ msgstr "Vaše plaćanje je odobreno."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_toss_payments
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
@@ -3222,6 +3234,7 @@ msgstr "Vaše plaćanje je otkazano."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_toss_payments
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed but is waiting for approval."
@@ -3248,6 +3261,7 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,done_msg:payment.payment_provider_toss_payments
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit

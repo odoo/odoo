@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-24 08:34+0000\n"
-"PO-Revision-Date: 2026-02-14 12:17+0000\n"
+"PO-Revision-Date: 2026-02-28 13:00+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "base/id/>\n"
@@ -15277,7 +15277,7 @@ msgstr "# Peraturan Record"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "# Records"
-msgstr ""
+msgstr "# Rekaman"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
@@ -15609,6 +15609,9 @@ msgid ""
 "                        No Outgoing Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Belum Ada Server Keluar\n"
+"                    </b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15757,7 +15760,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15767,21 +15770,26 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-key me-1 text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Login / Email\" "
+"invisible=\"login != email\"/>\n"
+"                                    <i class="
+"\"fa fa-fw fa-key me-1 text-primary\" title=\"Login\" invisible="
+"\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"fa fa-fw fa-phone me-1 text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone me-1 text-primary\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-phone text-primary\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15800,13 +15808,13 @@ msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"Email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-map-marker\" title=\"Lokasi\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15818,7 +15826,7 @@ msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Telepon\"/>"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-phone\" title=\"Telepon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15829,7 +15837,7 @@ msgstr "<i class=\"fa fa-fw me-1 fa-suitcase text-primary\" title=\"Posisi\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"fa fa-fw me-1 fa-suitcase\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-suitcase\" title=\"Posisi\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15875,6 +15883,12 @@ msgid ""
 "                                            Update if compromised.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                            Ubah Password\n"
+"                                        </span>\n"
+"                                        <span class=\"text-muted\">\n"
+"                                            Update bila dikompromi.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -15942,6 +15956,10 @@ msgid ""
 "                                            Check if they are yours.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Periksa bila mereka adalah milik "
+"Anda.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15951,6 +15969,9 @@ msgid ""
 "                                            Connect external services.\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                                            Konek layanan eksternal.\n"
+"                                        </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -16051,6 +16072,8 @@ msgid ""
 "<span invisible=\"impacted_application_count == 1\"> apps</span><span "
 "invisible=\"impacted_application_count &gt; 1\"> app</span>"
 msgstr ""
+"<span invisible=\"impacted_application_count == 1\"> app</span><span "
+"invisible=\"impacted_application_count &gt; 1\"> app</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -16058,6 +16081,8 @@ msgid ""
 "<span invisible=\"impacted_module_count == 1\"> modules</span><span "
 "invisible=\"impacted_module_count &gt; 1\"> module</span>"
 msgstr ""
+"<span invisible=\"impacted_module_count == 1\"> modul</span><span invisible="
+"\"impacted_module_count &gt; 1\"> modul</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -16065,6 +16090,8 @@ msgid ""
 "<span invisible=\"model_count == 1\"> models</span><span "
 "invisible=\"model_count &gt; 1\"> model</span>"
 msgstr ""
+"<span invisible=\"model_count == 1\"> model</span><span invisible="
+"\"model_count &gt; 1\"> model</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -16123,7 +16150,7 @@ msgstr "<span>Nama</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "<span>No diff available</span>"
-msgstr ""
+msgstr "<span>Tidak ada perbedaan tersedia</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -16205,6 +16232,8 @@ msgstr "<strong>Label</strong>"
 msgid ""
 "<strong>Let's first confirm it's you. Enter your current password:</strong>"
 msgstr ""
+"<strong>Ayo konfirmasi terlebih dahulu bahwa ini Anda. Masukkan password "
+"Anda saat ini:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -17255,7 +17284,7 @@ msgstr "Tambah"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add API Key"
-msgstr ""
+msgstr "Tambahkan API Key"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_avatax
@@ -21162,7 +21191,7 @@ msgstr "Base Automation Tests: Ensure Flow Robustness"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base Currency"
-msgstr ""
+msgstr "Mata Uang Dasar"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -21213,7 +21242,7 @@ msgstr "Tampilan dasar"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base/Unit"
-msgstr ""
+msgstr "Dasar/Unit"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -22177,6 +22206,10 @@ msgid ""
 "                                    the rightmost column (value) contains "
 "the translations"
 msgstr ""
+"Format CSV: Anda dapat edit langsung dengan software spreadsheet favorit "
+"Anda,,\n"
+"                                    kolom paling kanan (value) memiliki "
+"terjemahan"
 
 #. module: base
 #: model:res.country,vat_label:base.ar
@@ -23271,7 +23304,7 @@ msgstr "Detail Perusahaan"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Company Employer"
-msgstr ""
+msgstr "Employer Perusahaan"
 
 #. module: base
 #. odoo-python
@@ -27494,7 +27527,7 @@ msgstr "Tanggal Kedaluwarsa"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Expires on:"
-msgstr ""
+msgstr "Kedaluwarsa pada:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -30655,7 +30688,7 @@ msgstr "Termasuk"
 #. module: base
 #: model:res.groups,comment:base.group_everyone
 msgid "Includes all users. This makes group restrictions more convenient."
-msgstr ""
+msgstr "Termasuk semua user. Ini membuat pembatasan kelompok lebih praktis."
 
 #. module: base
 #. odoo-python
@@ -30977,7 +31010,7 @@ msgstr "Versi yang Dipasang"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Installing"
-msgstr ""
+msgstr "Menginstal"
 
 #. module: base
 #: model:ir.module.module,description:base.module_bus
@@ -34966,7 +34999,7 @@ msgstr "Nama"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Name (company or person)"
-msgstr ""
+msgstr "Nama (perusahaan atau orang)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__currency_field
@@ -35222,7 +35255,7 @@ msgstr "Tidak ada tipe tampilan default '%s' yang dapat ditemukan!"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "No file could be exported."
-msgstr ""
+msgstr "Tidak ada file yang dapat diekspor."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__no_gap
@@ -35505,7 +35538,7 @@ msgstr "OHADA - Akuntansi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "ORM API Documentation"
-msgstr ""
+msgstr "Dokumentasi ORM API"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
@@ -40862,6 +40895,10 @@ msgid ""
 "                They usually do not belong to the usual Odoo groups.\n"
 "                This makes group restrictions more convenient."
 msgstr ""
+"User-user publik memiliki hak akses tertentu "
+"(seperti peraturan rekaman dan menu terbatas).\n"
+"                Mereka biasanya tidak berasal ke kelompok Odoo.\n"
+"                Ini membuat pembatasan kelompok lebih praktis."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
@@ -41853,7 +41890,7 @@ msgstr "Extension restoran untuk POS "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "Restore Revision"
-msgstr ""
+msgstr "Pulihkan Revisi"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
@@ -41944,7 +41981,7 @@ msgstr "Peran / Administrator"
 #. module: base
 #: model:res.groups,name:base.group_everyone
 msgid "Role / Everyone"
-msgstr ""
+msgstr "Peran / Semua Orang"
 
 #. module: base
 #: model:res.groups,name:base.group_portal
@@ -41959,7 +41996,7 @@ msgstr "Peran / Publik"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Role / User"
-msgstr ""
+msgstr "Peran / User"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -42852,7 +42889,7 @@ msgstr "Lingkup"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
-msgstr ""
+msgstr "Cakupan:"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -44800,7 +44837,7 @@ msgstr "Manajemen Subkontrak dengan Stock Valuation"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Subject to VAT"
-msgstr ""
+msgstr "Dikenakan PPN"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -46557,6 +46594,9 @@ msgid ""
 "file encoding, please be sure to view and edit\n"
 "                               using the same encoding."
 msgstr ""
+"File ini dibuat menggunakan encoding file universal <strong>Unicode/UTF-8</"
+"strong>, pastikan untuk melihat dan mengedit\n"
+"                               menggunakan ecoding yang sama."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__views
@@ -47246,7 +47286,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "This will remove:"
-msgstr ""
+msgstr "Ini akan menghapus:"
 
 #. module: base
 #. odoo-python
@@ -48114,7 +48154,7 @@ msgstr "Tidak Dapat Dipasang"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Uninstallation"
-msgstr ""
+msgstr "Uninstal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
@@ -48127,6 +48167,8 @@ msgid ""
 "Uninstalling modules can be risky. We recommend to try it on a testing "
 "environment first."
 msgstr ""
+"Menguninstal modul bisa beresiko. Kami merekomendasikan untuk mencobanya "
+"terlebih dahulu di environment."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -48136,7 +48178,7 @@ msgstr "Uninstal…"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Unit/Base"
-msgstr ""
+msgstr "Unit/Base"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -48368,7 +48410,7 @@ msgstr "Perbarui Daftar Modul"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Update Preferences"
-msgstr ""
+msgstr "Update Preferensi"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
@@ -48397,7 +48439,7 @@ msgstr "Upgrade Modul"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrading"
-msgstr ""
+msgstr "Mengupgrade"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -49062,7 +49104,7 @@ msgstr "Lihat dan buat laporan"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "View code history and restore a previous version"
-msgstr ""
+msgstr "Lihat sejarah kode dan pulihkan versi sebelumnya"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_list
@@ -50383,7 +50425,7 @@ msgstr "aktif"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "address"
-msgstr ""
+msgstr "alamat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_fields
@@ -50482,7 +50524,7 @@ msgstr "delivery_mondialrelay"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "do not contain translatable terms.<br/>"
-msgstr ""
+msgstr "tidak memiliki istilah yang dapat diterjemahkan.<br/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -50492,7 +50534,7 @@ msgstr "dokumentasi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "does not contain translatable terms.<br/>"
-msgstr ""
+msgstr "tidak memiliki istilah yang dapat diterjemahkan.<br/>"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done
@@ -50559,7 +50601,7 @@ msgstr "misalnya John Doe"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Lumber Inc or Brandon Freeman"
-msgstr ""
+msgstr "contoh. Lumber Inc atau Brandon Freeman"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form

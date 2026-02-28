@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 13:29+0000\n"
+"PO-Revision-Date: 2026-02-28 12:31+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_holidays/id/>\n"
@@ -378,7 +378,7 @@ msgstr "<span class=\"mx-1\">-</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"mx-1\">–</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\">–</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -387,6 +387,9 @@ msgid ""
 "                                        <span class=\"mx-2\" "
 "invisible=\"request_unit != 'hour'\">hours</span>"
 msgstr ""
+"<span class=\"mx-2\" invisible=\"request_unit == 'hour'\">hari</span>\n"
+"                                        <span class=\"mx-2\" invisible="
+"\"request_unit != 'hour'\">jam</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -475,6 +478,9 @@ msgid ""
 "are displayed in the employee's work timezone</span>\n"
 "                                ("
 msgstr ""
+"<span>Karyawan memiliki zonawaktu yang berbeda dari Anda! Berikut tanggal "
+"dan waktu yang ditampilkan di zona waktu kerja karyawan</span>\n"
+"                                ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -719,7 +725,7 @@ msgstr "Karyawan Aktif"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Employees"
-msgstr ""
+msgstr "Karyawan Aktif"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1108,7 +1114,7 @@ msgstr "Diarsipkan"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Archived Employees"
-msgstr ""
+msgstr "Karyawan yang Diarsip"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1231,7 +1237,7 @@ msgstr "Kembali pada %(date)s"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Back to Approval"
-msgstr ""
+msgstr "Kembali ke Approval"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1541,7 +1547,7 @@ msgstr "Kontak"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count as"
-msgstr ""
+msgstr "Dihitung sebagai"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2178,6 +2184,8 @@ msgid ""
 "For your reference, the equivalent times in your timezone are displayed "
 "below."
 msgstr ""
+"Untuk referensi Anda, waktu yang sesuai di zona waktu Anda ditampilkan di "
+"bawah."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -2903,7 +2911,7 @@ msgstr "Rapat"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__member_of_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__member_of_department
 msgid "Member of Department"
-msgstr ""
+msgstr "Anggota Departemen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
@@ -5319,7 +5327,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_my_days_off_dashboard_calendar
 msgid "You have no time off yet!"
-msgstr ""
+msgstr "Anda belum memiliki cuti!"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -5363,7 +5371,7 @@ msgstr "Cuti Anda"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Your Timezone"
-msgstr ""
+msgstr "Zona Waktu Anda"
 
 #. module: hr_holidays
 #. odoo-python

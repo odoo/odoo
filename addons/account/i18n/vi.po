@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:24+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 13:18+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/vi/>\n"
@@ -219,6 +219,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s đã đạt hạn mức tín dụng là: %(credit_limit)s"
@@ -376,8 +382,8 @@ msgid ""
 msgstr ""
 "- Nên áp dụng làm tròn theo từng khoản thuế nếu giá của bạn không bao gồm "
 "thuế. Điều này giúp giảm thiểu sai số làm tròn tích lũy vì nó tính tổng tất "
-"cả các khoản thuế chưa làm tròn trước tiên và chỉ làm tròn tổng thuế cuối "
-"cùng một lần."
+"cả khoản thuế chưa làm tròn trước tiên và chỉ làm tròn tổng thuế cuối cùng "
+"một lần."
 "\\n                                                                                                                                                                                "
 "- Nên áp dụng làm tròn theo từng dòng nếu giá của bạn đã bao gồm thuế. Như "
 "vậy, tổng của các dòng phụ sẽ bằng tổng bao gồm thuế."
@@ -5108,6 +5114,12 @@ msgid "Bank of odoo"
 msgstr "Ngân hàng Odoo"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
 msgstr "Thiết lập ngân hàng thủ công"
@@ -8203,7 +8215,7 @@ msgstr "Phân bổ khi thuế được sử dụng trên một hóa đơn"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_distributions
 msgid "Distributions"
-msgstr ""
+msgstr "Phân phối"
 
 #. module: account
 #: model:account.account,name:account.1_dividends
@@ -10058,7 +10070,7 @@ msgstr "Cách tổng tiền thuế được tính trong đơn hàng hoặc hóa 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -14524,7 +14536,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pension
 msgid "Pension"
-msgstr ""
+msgstr "Lương hưu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -18165,6 +18177,14 @@ msgstr ""
 "(%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Sao kê ngân hàng này được sử dụng cho việc đối chiếu ngân hàng"
@@ -18245,8 +18265,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -19770,7 +19791,7 @@ msgstr "Thương mại %s"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_training
 msgid "Training and Documentation"
-msgstr ""
+msgstr "Đào tạo và tài liệu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -20432,17 +20453,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Giá trị cho số tiền của dòng xoá bỏ\n"
-"    * Phần trăm: Phần trăm của số dư, nằm giữa 0 và 100.\n"
-"    * Cố định: Giá trị cố định của số tiền xoá bỏ. Số tiền sẽ được tính là "
-"nợ nếu âm và là có nếu dương.\n"
-"    * Từ nhãn: Không cần dấu phân cách regex, chỉ cần regex. Ví dụ, nếu bạn "
-"muốn trích xuất số tiền từ\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"Bạn có thể điền\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -22285,6 +22306,27 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Giá trị cho số tiền của dòng xoá bỏ\n"
+#~ "    * Phần trăm: Phần trăm của số dư, nằm giữa 0 và 100.\n"
+#~ "    * Cố định: Giá trị cố định của số tiền xoá bỏ. Số tiền sẽ được tính "
+#~ "là nợ nếu âm và là có nếu dương.\n"
+#~ "    * Từ nhãn: Không cần dấu phân cách regex, chỉ cần regex. Ví dụ, nếu "
+#~ "bạn muốn trích xuất số tiền từ\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "Bạn có thể điền\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<br/>\n"

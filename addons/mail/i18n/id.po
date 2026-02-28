@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:14+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:51+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "mail/id/>\n"
@@ -618,6 +618,9 @@ msgid ""
 "                        No Incoming Servers yet\n"
 "                    </b>"
 msgstr ""
+"<b class=\"o_view_nocontent_smiling_face\">\n"
+"                        Belum ada Server Masuk\n"
+"                    </b>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -638,6 +641,14 @@ msgstr ""
 "<br/><br/>\n"
 "\n"
 "            Berikut beberapa detail mengenai connection:<br/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -662,13 +673,13 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-in\" role=\"img\"/> Bergabung"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-out\" role=\"img\"/> Keluar"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -736,22 +747,22 @@ msgstr "<span class=\"d-block w-75 py-2\">Teks Tombo</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Credential:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Kredensial:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Type:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Tipe:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">URI:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">URI:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Username:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Username:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -770,6 +781,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not "
 "has_external_mail_server\">Outgoing Mail Server</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"has_external_mail_server\">Server Email Keluar</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -1281,7 +1294,7 @@ msgid ""
 "                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project "
 "Milestone Meeting\", ...)"
 msgstr ""
-"Rencana kegiatan digunakan untuk menugaskan daftar kegiatan dengan beberapa "
+"Rencana kegiatan digunakan untuk menetapkan daftar kegiatan dalam beberapa "
 "klik saja\n"
 "                    (contoh, \"Onboarding\", \"Follow-up Prospek,\", "
 "\"Meeting Milestone Project:, ...)"
@@ -2088,7 +2101,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Available everywhere"
-msgstr ""
+msgstr "Tersedia di mana saja"
 
 #. module: mail
 #. odoo-javascript
@@ -2398,7 +2411,7 @@ msgstr "Melalui Email"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
-msgstr ""
+msgstr "Oleh urutan prioritas server"
 
 #. module: mail
 #. odoo-javascript
@@ -2672,7 +2685,7 @@ msgstr "Tidak dapat menulis di pesan partner"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Capture replies in the chatter"
-msgstr ""
+msgstr "Merekam balasan di obrolan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -3058,7 +3071,7 @@ msgstr "Sering datang ke sini? Instal app untuk akses cepat dan mudah!"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "Salinan persis terpisah koma dari alamat penerima"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3156,7 +3169,7 @@ msgstr "Konfigurasi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure ICE Servers"
-msgstr ""
+msgstr "Konfigurasi Server ICE"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3628,17 +3641,17 @@ msgstr "Pesan Kustom yang Dikembalikan"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Server with Twilio"
-msgstr ""
+msgstr "Server ICE Kustom dengan Twilio"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "Server ICE Kustom"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "Server SFU Kustom"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3980,7 +3993,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Describe when this template should be used"
-msgstr ""
+msgstr "Deskripsikan kapan templat ini harus digunakan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -5357,6 +5370,12 @@ msgstr "Paksa Kirim"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language"
+msgstr "Paksakan Bahasa"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid "Forever"
 msgstr ""
 
 #. module: mail
@@ -5503,6 +5522,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
 msgid "Group related channels together to make them easier to find."
 msgstr ""
+"Kelompokkan bersama channel terkait untuk membuat mereka lebih gampang "
+"dicari."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_tree
@@ -5767,7 +5788,7 @@ msgstr "Server ICE"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE Server Configuration"
-msgstr ""
+msgstr "Konfigurasi Server ICE"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
@@ -6725,7 +6746,7 @@ msgstr "Bergabung ke Panggilan dengan Kamera"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Joined"
-msgstr ""
+msgstr "Bergabung"
 
 #. module: mail
 #. odoo-javascript
@@ -7396,7 +7417,7 @@ msgstr "Lampiran Utama"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Main partner's language"
-msgstr ""
+msgstr "Bahasa utama partner"
 
 #. module: mail
 #. odoo-javascript
@@ -7517,7 +7538,8 @@ msgstr "Anggota"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr "Anggota-anggota dari mana nama channel dihitung saat field nama kosong."
+msgstr ""
+"Anggota-anggota dari mana nama channel dihitung saat field nama kosong."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -8185,7 +8207,7 @@ msgstr "Tidak ada Pengikut"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
 msgid "No ICE servers found. Let's create one!"
-msgstr ""
+msgstr "Tidak ada server ICe yang ditemukan. Ayo buat satu!"
 
 #. module: mail
 #. odoo-javascript
@@ -8211,7 +8233,7 @@ msgstr "Tidak ada tanggapan otomatis yang ditemukan. Ayo buat baru!"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
 msgid "No categories found. Let's create one!"
-msgstr ""
+msgstr "Tidak ada kategori yang ditemukan. Ayo buat baru!"
 
 #. module: mail
 #. odoo-javascript
@@ -8375,7 +8397,7 @@ msgstr "Tidak Ada"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "Tidak ada yang direncanakan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8393,7 +8415,7 @@ msgstr "Tidak Dikonfirmasi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Not Joined"
-msgstr ""
+msgstr "Tidak Bergabung"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
@@ -10445,7 +10467,7 @@ msgstr "Batasi penggunaan edisi templat email dan placeholder QWEB."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "Restrict usage to a user"
-msgstr ""
+msgstr "Batasi penggunaan ke user"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__restricted_attachment_count
@@ -10728,7 +10750,7 @@ msgstr "Cari Alias"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "Cari Server ICE"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -11008,7 +11030,7 @@ msgstr "Kirim Dari"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "Kirim Instan"
 
 #. module: mail
 #. odoo-javascript
@@ -11090,7 +11112,7 @@ msgstr "Kirim pesan ini ke tong sampah?"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "Pengirim & Penerima"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -11110,7 +11132,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "Email pengirim"
 
 #. module: mail
 #. odoo-javascript
@@ -11240,12 +11262,16 @@ msgstr ""
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
+"Setup server Anda sendiri untuk panggilan kelompok besar dengan routing "
+"koneksi secara terpusat"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
 msgstr ""
+"Setup server Anda sendiri untuk panggilan kelompok kecil menggunakan koneksi "
+"peer-to-peer"
 
 #. module: mail
 #: model:ir.actions.act_url,name:mail.action_open_discuss_settings
@@ -11279,7 +11305,7 @@ msgstr "Dibagikan"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users"
-msgstr ""
+msgstr "Dibagikan dengan semua user"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -12614,7 +12640,7 @@ msgstr "Zona Waktu"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Tip: Write /field to insert dynamic content!"
-msgstr ""
+msgstr "Tip: Tulis /field untuk memasukkan konten dinamis!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -13116,6 +13142,8 @@ msgstr "Batalkan Semu Percakapan"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -13371,6 +13399,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
+"Gunakan server Anda sendiri untuk panggilan untuk mengelola traffic berat "
+"dan memastikan keandalan bila Twilio tidak tersedia"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -13378,6 +13408,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"Gunakan server Anda sendiri untuk panggilan untuk mengelola traffic padat "
+"dan memastikan keandalan jika Twilio tidak tersedia."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -13484,7 +13516,7 @@ msgstr "User hanya bisa vote sekali per opsi."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "Email user"
 
 #. module: mail
 #. odoo-javascript
@@ -13736,7 +13768,7 @@ msgstr "Lihat channel %(channel_name)s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
 msgid "Visible"
-msgstr ""
+msgstr "Terlihat"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -13975,15 +14007,9 @@ msgid ""
 "None: never display this type of activity\n"
 "Own Activities: the synchronization user will only count their own "
 "activities of this type\n"
-"All Activities: the synchronization user will count the all the activities "
-"of this type, whatever their owner"
+"All Activities: the synchronization user will count all the activities of "
+"this type, whatever their owner"
 msgstr ""
-"Apakah tipe aktivitas ini akan ditampilkan diKPI Provider API.\n"
-"None: tidak pernah menampilkan tipe aktivitas ini\n"
-"Own Activities: user sinkronisasi hanya akan menghitung aktivitas tipe "
-"mereka sendiri\n"
-"All Activities: user sinkronisasi akan menghitung semua aktivitas tipe ini, "
-"siapa pun pemiliknya"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -14378,7 +14404,7 @@ msgstr "Nama anda"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "Pesan sedang di luar kantor Anda..."
 
 #. module: mail
 #. odoo-python
@@ -14625,7 +14651,7 @@ msgstr "mis. Diskusi Proposal"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
 msgid "e.g. General"
-msgstr ""
+msgstr "contoh. Umum"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
@@ -14651,7 +14677,7 @@ msgstr "contoh Jadwalkan meeting"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. Welcome to MyCompany!"
-msgstr ""
+msgstr "contoh. Welcome to MyCompany!"
 
 #. module: mail
 #. odoo-javascript
@@ -14663,7 +14689,7 @@ msgstr "contoh. halo"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "contoh. info@company.com"
 
 #. module: mail
 #. odoo-javascript
@@ -14954,7 +14980,7 @@ msgstr "stun:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 atau turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
@@ -15042,6 +15068,22 @@ msgstr "alias Anda"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” di “%(channel_name)s”"
+
+#~ msgid ""
+#~ "Whether this type of activity should be displayed in the KPI Provider "
+#~ "API.\n"
+#~ "None: never display this type of activity\n"
+#~ "Own Activities: the synchronization user will only count their own "
+#~ "activities of this type\n"
+#~ "All Activities: the synchronization user will count the all the "
+#~ "activities of this type, whatever their owner"
+#~ msgstr ""
+#~ "Apakah tipe aktivitas ini akan ditampilkan diKPI Provider API.\n"
+#~ "None: tidak pernah menampilkan tipe aktivitas ini\n"
+#~ "Own Activities: user sinkronisasi hanya akan menghitung aktivitas tipe "
+#~ "mereka sendiri\n"
+#~ "All Activities: user sinkronisasi akan menghitung semua aktivitas tipe "
+#~ "ini, siapa pun pemiliknya"
 
 #~ msgid "Remove Channel Admin"
 #~ msgstr "Hapus Admin Channel"

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-21 13:43+0000\n"
+"PO-Revision-Date: 2026-02-28 13:12+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale/id/>\n"
@@ -121,11 +121,53 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                    animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: 80.5px 28.5px;\n"
+"                }\n"
+"                .tilt {\n"
+"                    animation: tilt 1s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: bottom left;\n"
+"                }\n"
+"                @keyframes heartBeat {\n"
+"                    0% {\n"
+"                    transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    14% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    28% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    42% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    70% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"                }\n"
+"                @keyframes tilt {\n"
+"                    0% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                    50% {\n"
+"                        transform: rotate(-7deg);\n"
+"                    }\n"
+"                    100% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                }"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "/shop"
-msgstr ""
+msgstr "/shop"
 
 #. module: website_sale
 #. odoo-javascript
@@ -194,6 +236,9 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\">Add "
 "to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                    <span class=\"d-none d-md-inline\""
+">Tambahkan ke keranjang</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -225,11 +270,15 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
+"\n"
+"                    <span class=\"o_label small ms-1\">Tambahkan ke "
+"Keranjang</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "<i class=\"fa fa-long-arrow-right\"/> All Products"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right\"/> Semua Produk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
@@ -249,7 +298,7 @@ msgstr "<i class=\"fa fa-print me-2\"/>Cetak"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "<i class=\"fa fa-rotate-left me-2\"/>Quick reorder"
-msgstr ""
+msgstr "<i class=\"fa fa-rotate-left me-2\"/>Pesan ulang cepat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -266,6 +315,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span class="
+"\"o_label small ms-1\">Tambahkan ke Keranjang</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -273,6 +324,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    Tambahkan ke keranjang"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -296,7 +349,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Tambahkan Alamat"
 
 #. module: website_sale
 #. odoo-python
@@ -340,6 +393,13 @@ msgid ""
 "                Shipping: 2-3 Business Days\n"
 "            </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"                <a href=\"/terms\" class=\"o_translate_inline text-muted\">\n"
+"                    <u>Syarat dan Ketentuan</u>\n"
+"                </a><br/>\n"
+"                Garansi uang kembali 30-hari<br/>\n"
+"                Pengiriman: 2-3 Hari Kerja\n"
+"            </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -349,7 +409,7 @@ msgstr "<span class=\"align-middle\">Sudah memiliki akun?</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">untuk mengikuti pesanan Anda.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -420,6 +480,11 @@ msgid ""
 "small>\n"
 "            </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
+"name=\"price\">\n"
+"                <small class=\"fw-normal\">Pilih untuk menghitung tarif "
+"pengiriman</small>\n"
+"            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -446,6 +511,22 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
+"\n"
+"                                    <i class="
+"\"fa fa-dollar fa-fw o_not-animable\"/> Harga Rendah\n"
+"                                </span>\n"
+"                                <span class="
+"\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">\n"
+"                                    <i class="
+"\"fa fa-shopping-basket fa-fw o_not-animable\"/>\n"
+"                                    Pengembalian Mudah\n"
+"                                </span>\n"
+"                                <span class="
+"\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">\n"
+"                                    <i class="
+"\"fa fa-truck fa-fw o_not-animable\"/> Pengiriman Cepat\n"
+"                                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -501,6 +582,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\""
+">Harga</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -509,11 +592,14 @@ msgid ""
 "                        Same as delivery address\n"
 "                    </span>"
 msgstr ""
+"<span name=\"use_delivery_as_billing_text\">\n"
+"                        Sama dengan alamat pengiriman\n"
+"                    </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.all_products_link_name
 msgid "<span placeholder=\"All products\">All products</span>"
-msgstr ""
+msgstr "<span placeholder=\"All products\">Semua produk</span>"
 
 #. module: website_sale
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
@@ -552,17 +638,17 @@ msgstr "<span>Pratinjau Video</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>days after publication.</span>"
-msgstr ""
+msgstr "<span>hari setelah publikasi.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
+msgstr "<span>untuk</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<strong>Documents</strong>"
-msgstr ""
+msgstr "<strong>Dokumen</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -1248,6 +1334,8 @@ msgstr ""
 msgid ""
 "A detailed, formatted description to promote your product on your eCommerce."
 msgstr ""
+"Deskripsi rinci, yang diformat untuk mempromosikan produk Anda di eCommerce "
+"Anda."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1388,6 +1476,8 @@ msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to "
 "the                           sale price"
 msgstr ""
+"Tambahkan referensi harga per satuan ukuran di produk (contoh $/kg), di "
+"tambah                           harga jual"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -1409,7 +1499,7 @@ msgstr "Tambahkan harga yang dicoret, sebagai perbandingan"
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Add an address"
-msgstr ""
+msgstr "Tambahkan alamat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -1544,7 +1634,7 @@ msgstr "Mitra express checkout tanpa nama untuk pesanan %s"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Apparel"
-msgstr ""
+msgstr "Pakaian"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -1555,6 +1645,7 @@ msgstr "Terapkan"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply specific prices or currency per country, customer, products, etc."
 msgstr ""
+"Terapkan harga tertentu atau mata uang per negara, pelanggan, produk, dsb."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1612,7 +1703,7 @@ msgstr "Auto-crop"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automate abandoned checkout emails"
-msgstr ""
+msgstr "Otomatiskan email checkout yang ditelantarkan"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
@@ -1706,7 +1797,7 @@ msgstr "BeNeLux"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Beauty"
-msgstr ""
+msgstr "Beauty"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_beds
@@ -1775,6 +1866,11 @@ msgid ""
 "minimum purchase amount, period). Rewards can be discounts (% or "
 "amount)                            or free products."
 msgstr ""
+"Dorong penjualan Anda dengan lebih dari satu program: Kupon, "
+"Promosi,                            Gift Card, Loyalitas. Syarat-syarat "
+"tertentu dapat ditentukan (produk, pelanggan,                            "
+"jumlah pembelian minimal, periode). Hadiah dapat merupakan diskon "
+"(% atau jumlah)                            atau produk gratis."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1948,7 +2044,7 @@ msgstr "Category Footer"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
 msgid "Category Image"
-msgstr ""
+msgstr "Gambar Kategori"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_category_list
@@ -1960,7 +2056,7 @@ msgstr "Daftar Kategori"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
 msgid "Category image"
-msgstr ""
+msgstr "Gambar Kategori"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -2105,7 +2201,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Click here"
-msgstr ""
+msgstr "Klik di sini"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2267,12 +2363,12 @@ msgstr "Konfigurasi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Konfigurasi Metode Pengiriman"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Konfigurasi Metode"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2280,6 +2376,8 @@ msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Konfigurasi metode pengiriman atau bekerja dengan provider pengiriman "
+"menggunakan integrasi yang tersedia."
 
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
@@ -2316,7 +2414,7 @@ msgstr "Pesanan Dikonfirmasi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Connect your eCommerce via a product file."
-msgstr ""
+msgstr "Hubungkan eCommerce Anda melalui file produk."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -2348,7 +2446,7 @@ msgstr "Lebar Konten"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_list
 msgid "Copy URL"
-msgstr ""
+msgstr "Salin URL"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -2358,7 +2456,7 @@ msgstr "Sofa"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Coupon, Gift card, Promo-code?"
-msgstr ""
+msgstr "Kupon, Gift card, Promo-code?"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__cover_image
@@ -2369,7 +2467,7 @@ msgstr "Cover Image"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
 msgid "Crafting Beautiful Spaces"
-msgstr ""
+msgstr "Membuat Ruang yang Indah"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2589,7 +2687,7 @@ msgstr "Hapus Ribbon"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Deliver to pickup point"
-msgstr ""
+msgstr "Kirim ke poin pickup"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -2673,7 +2771,7 @@ msgstr "Design & Planning"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
 msgid "Designing elegant, inviting environments that inspire and delight."
-msgstr ""
+msgstr "Designing elegant, inviting environments that inspire and delight."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_desk
@@ -2889,6 +2987,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for the shop page."
 msgstr ""
+"Tarik blok penyusun ke sini untuk mengustomisasi header untuk halaman toko."
 
 #. module: website_sale
 #. odoo-python
@@ -2998,7 +3097,7 @@ msgstr "Masukkan nama untuk produk baru Anda"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Essentials"
-msgstr ""
+msgstr "Esensial"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3086,7 +3185,7 @@ msgstr "File Drawers"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3099,12 +3198,12 @@ msgstr "Penyaring"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Temukan Provider Pengiriman"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Fitness"
-msgstr ""
+msgstr "Fitness"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3162,7 +3261,7 @@ msgstr "Foldable Desks"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Follow up abandoned carts"
-msgstr ""
+msgstr "Follow up keranjang belanja"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -3198,6 +3297,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                    sale orders or checkout."
 msgstr ""
+"Untuk formula atau harga tetap, harga asli tidak ditunjukkan di\n"
+"                    sale order atau checkout."
 
 #. module: website_sale
 #. odoo-javascript
@@ -3253,7 +3354,7 @@ msgstr "GMC: Batas Produk Dilampaui"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Gadgets"
-msgstr ""
+msgstr "Gadget"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_gaming
@@ -3300,7 +3401,7 @@ msgstr "Pergi ke keranjang belanja"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Google Address Validation"
-msgstr ""
+msgstr "Validasi Google Address"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
@@ -3619,7 +3720,7 @@ msgstr "Urutan terbalik"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoice automatically on payment."
-msgstr ""
+msgstr "Faktur otomatis pada pembayaran."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3864,12 +3965,12 @@ msgstr "User yang login"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "Login to reorder"
-msgstr ""
+msgstr "Login untuk memesan ulang"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Long Description"
-msgstr ""
+msgstr "Deskripsi Panjang"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_luxury
@@ -3890,7 +3991,7 @@ msgstr "Gambar Utama"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage feeds"
-msgstr ""
+msgstr "Kelola feed"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -4061,7 +4162,7 @@ msgstr "Baru"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "New Collection"
-msgstr ""
+msgstr "Koleksi Baru"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__new_period
@@ -4293,6 +4394,7 @@ msgstr "Setelah Anda klik <b>Simpan</b>, produk Anda diperbarui."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, etc.)"
 msgstr ""
+"Satu produk mungkin memiliki atribut yang berbeda-beda (ukuran, warna, dsb.)"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -4425,7 +4527,7 @@ msgstr "Order"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Orders Assignment"
-msgstr ""
+msgstr "Penugasan Pesanan"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -4436,12 +4538,12 @@ msgstr "Pesanan Untuk Difaktur"
 #: model_terms:ir.ui.view,arch_db:website_sale.price_dynamic_filter_template_product_product
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Original price"
-msgstr ""
+msgstr "Harga asli"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Our payment methods"
-msgstr ""
+msgstr "Metode pembayaran kami"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
@@ -4604,7 +4706,7 @@ msgstr "Preset-Preset"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_history
 msgid "Press 'Enter' to add to cart"
-msgstr ""
+msgstr "Tekan 'Enter' untuk menambahkan ke keranjang"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -4657,7 +4759,7 @@ msgstr "Harga Per Unit"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Price information"
-msgstr ""
+msgstr "Informasi harga"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -4976,7 +5078,7 @@ msgstr "Promosikan"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Promotions, coupons, loyalty cards, gift cards & eWallet"
-msgstr ""
+msgstr "Promosi, kupon, kartu loyalitas, gift card & eWallet"
 
 #. module: website_sale
 #. odoo-python
@@ -4996,7 +5098,7 @@ msgstr "Tanggal Posting"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Publish on"
-msgstr ""
+msgstr "Terbitkan pada"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
@@ -5062,7 +5164,7 @@ msgstr "Kuantitas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Quick reorder"
-msgstr ""
+msgstr "Pemesanan ulang cepat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5194,7 +5296,7 @@ msgstr "Hapus dari keranjang"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "Remove from recently viewed"
-msgstr ""
+msgstr "Hapus dari yang dilihat terkini"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -5339,7 +5441,7 @@ msgstr "Analisis Penjualan"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale price"
-msgstr ""
+msgstr "Harga jual"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
@@ -5427,7 +5529,7 @@ msgstr "Cari secara global"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in {{0}}"
-msgstr ""
+msgstr "Cari di {{0}}"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -5729,7 +5831,7 @@ msgstr "Sidebar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "Sign Up"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -6111,6 +6213,9 @@ msgid ""
 "product                            created but not of products already "
 "existing."
 msgstr ""
+"Mode yang dipilih di sini berlaku sebagai kebijakan pemfakturan produk baru "
+"apa pun                            yang dibuat tapi bukan pada produk yang "
+"sudah tersedia."
 
 #. module: website_sale
 #. odoo-python
@@ -6219,6 +6324,8 @@ msgid ""
 "This note is added to sales orders, invoices, eCommerce listing and SEO "
 "descriptions."
 msgstr ""
+"Catatan ini ditambahkan ke sales order, faktur, listing eCommerce dan "
+"deskripsi SEO."
 
 #. module: website_sale
 #. odoo-python
@@ -6289,6 +6396,10 @@ msgid ""
 "ones                            in list view and click on 'Portal Access "
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
+"Untuk mengirim undangan di mode B2B, buka kontak atau pilih "
+"beberapa                            di tampilan list dan klik pada opsi "
+"'Manajemen Akses Portal' di menu                             dropdown "
+"*Action*."
 
 #. module: website_sale
 #. odoo-python
@@ -6389,7 +6500,7 @@ msgstr "Belum dipublikasikan"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Unschedule"
-msgstr ""
+msgstr "Batalkan penjadwalan"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
@@ -6410,7 +6521,7 @@ msgstr "Url"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses"
-msgstr ""
+msgstr "Gunakan Google Places API untuk memvalidasi alamat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6966,12 +7077,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr ""
+msgstr "jam."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
 msgstr ""
+"bila Anda ingin menggabungkan keranjang Anda sebelumnya ke keranjang saat "
+"ini."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -6979,6 +7092,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"Bila Anda ingin memulihkan keranjang Anda sebelumnya. Keranjang Anda saat "
+"ini akan diganti dengan keranjang Anda sebelumnya."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -6998,6 +7113,9 @@ msgid ""
 "                                    <i class=\"oi oi-arrow-down ms-1\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"barang - Scroll untuk lebih\n"
+"                                    <i class=\"oi oi-arrow-down ms-1\" aria-"
+"hidden=\"true\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary_content
@@ -7006,6 +7124,9 @@ msgid ""
 "                        <i class=\"oi oi-arrow-down ms-1\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"barang - Scroll untuk lebih\n"
+"                        <i class=\"oi oi-arrow-down ms-1\" aria-hidden="
+"\"true\"/>"
 
 #. module: website_sale
 #. odoo-python
@@ -7121,7 +7242,7 @@ msgstr "syarat &amp; ketentuan"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
-msgstr ""
+msgstr "{{0}} gambar"
 
 #~ msgid ""
 #~ "<strong>\n"

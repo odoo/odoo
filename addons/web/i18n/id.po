@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:22+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"PO-Revision-Date: 2026-02-28 13:15+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "web/id/>\n"
@@ -485,11 +485,23 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Dipisah (satu "
+"per tab)</option>\n"
+"                                        <option value=\"temporal\">Temporal "
+"(eksperimental)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" "
+"class=\"alert alert-warning\" style=\"display:none\"><b>Peringatan:</b> Mode "
+"temporal akan menggabungkan semua sampel.<br/>Ini akan berujung ke hasil "
+"yang secara parsial tidak valid pada kasus profil yang bersamaan.<br/"
+">Gunakan dengan hati-hati </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 3,613.50</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">$ 3,613.50</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -497,6 +509,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">1,400.00</"
 "span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">1,400.00</"
+"span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -513,6 +527,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">240.00</"
 "span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">240.00</"
+"span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -531,7 +547,7 @@ msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">12.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">12.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -541,7 +557,7 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">70.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">70.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -556,6 +572,10 @@ msgid ""
 "                                Rd<br/>Pleasant Hill CA 94523<br/>United "
 "States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
+"Barbara\n"
+"                                Rd<br/>Pleasant Hill CA 94523<br/>United "
+"States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -565,7 +585,7 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span itemprop=\"name\">Acme Corporation</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Acme Corporation</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -576,6 +596,11 @@ msgid ""
 "protect it\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        Pelindung lantai kursi<br/>\n"
+"                                        Kursi kantor dapat melukai lantai "
+"Anda: lindungi\n"
+"                                    </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -586,6 +611,11 @@ msgid ""
 "work\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        [FURN_7777] Office Chair<br/>\n"
+"                                        Comfortable yellow chair for daily "
+"work\n"
+"                                    </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -596,16 +626,21 @@ msgid ""
 "Steel Grey Colour\n"
 "                                    </span>"
 msgstr ""
+"<span>\n"
+"                                        [FURN_8999] Three-Seat Sofa<br/>\n"
+"                                        Three Seater Sofa with Lounger in "
+"Steel Grey Colour\n"
+"                                    </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">24,090.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">24,090.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>20.00</span>"
-msgstr ""
+msgstr "<span>20.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -628,6 +663,8 @@ msgid ""
 "<span>Invoice</span>\n"
 "                <span>INV/2023/00003</span>"
 msgstr ""
+"<span>Faktur</span>\n"
+"                <span>INV/2023/00003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -656,6 +693,9 @@ msgid ""
 "                                    Four person modern office workstation</"
 "span>"
 msgstr ""
+"<span>[FURN_8220] Four Person Desk<br/>\n"
+"                                    Four person modern office workstation</"
+"span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -665,6 +705,10 @@ msgid ""
 "class=\"oe_currency_value\">27,703.50</span>\n"
 "                                                </strong>"
 msgstr ""
+"<strong class=\"text-nowrap\">\n"
+"                                                    $ <span "
+"class=\"oe_currency_value\">27,703.50</span>\n"
+"                                                </strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -4414,7 +4458,7 @@ msgstr "Warna Sekunder Logo"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
 #. module: web
 #. odoo-javascript
@@ -4546,12 +4590,12 @@ msgstr "Pokok Pertemuan"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory limit (in bytes)"
-msgstr ""
+msgstr "Batas memori (dalam byte)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory profile"
-msgstr ""
+msgstr "Profil memori"
 
 #. module: web
 #. odoo-javascript
@@ -5033,8 +5077,8 @@ msgstr "Tidak ada perangkat yang ditemukan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji matches your search"
-msgstr "Tidak ada emoji yang cocok dengan pencarian Anda"
+msgid "No emojis match your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5521,7 +5565,7 @@ msgstr "File PDF"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
 msgid "Page 1 / 1"
-msgstr ""
+msgstr "Halaman 1/1"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_footer_content
@@ -6975,7 +7019,7 @@ msgstr "Desain Meja"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Tables"
-msgstr ""
+msgstr "Meja"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -27128,6 +27172,9 @@ msgstr "“vacancy”"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "No emoji matches your search"
+#~ msgstr "Tidak ada emoji yang cocok dengan pencarian Anda"
 
 #~ msgid "<span itemprop=\"name\">Deco Addict</span>"
 #~ msgstr "<span itemprop=\"name\">Penikmat Dekorasi</span>"

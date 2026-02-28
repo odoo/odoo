@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:15+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 12:54+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/mrp/pl/"
 ">\n"
@@ -54,8 +54,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp
@@ -229,7 +229,7 @@ msgstr "'Przegląd MO - %s' % object.display_name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
 msgid "'Production Order - %s' % object.name"
-msgstr "'Zamówienie produkcji - %s'% object.name"
+msgstr "'Zlecenie produkcyjne - %s'% object.name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_workorder
@@ -393,21 +393,18 @@ msgid ""
 "                                        <span class=\"o_annotation "
 "o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\">Zegar "
-"czasu pracy</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\">Kontrola "
-"jakości</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\">Pętla "
-"sprzężenia zwrotnego</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Rejestracja materiałów</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Wybór "
-"operatora</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Zegar czasu pracy</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_2 o_annotation_end position-absolute\">Kontrola jakości</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_3 o_annotation_start position-absolute\">Pętla sprzężenia "
+"zwrotnego</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_4 o_annotation_start position-absolute\">Rejestracja "
+"materiałów</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_5 o_annotation_start position-absolute\">Wybór operatora</span>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -423,21 +420,16 @@ msgid ""
 "                    <span class=\"o_annotation o_annotation_5 "
 "o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\">Zegar "
-"czasu pracy</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\">Kontrola "
-"jakości</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\">Pętla "
-"sprzężenia zwrotnego</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Rejestracja materiałów</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Wybór "
-"operatora</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Zegar czasu pracy</span>\n"
+"                    <span class=\"o_annotation o_annotation_2 "
+"o_annotation_end position-absolute\">Kontrola jakości</span>\n"
+"                    <span class=\"o_annotation o_annotation_3 "
+"o_annotation_start position-absolute\">Pętla sprzężenia zwrotnego</span>\n"
+"                    <span class=\"o_annotation o_annotation_4 "
+"o_annotation_start position-absolute\">Rejestracja materiałów</span>\n"
+"                    <span class=\"o_annotation o_annotation_5 "
+"o_annotation_start position-absolute\">Wybór operatora</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -555,8 +547,8 @@ msgid ""
 msgstr ""
 "<span class=\"text-muted\">\n"
 "                        Zmiana ilości do wyprodukowania spowoduje również "
-"zmianę ilości komponentów zużywanych w ramach tego zlecenia produkcyjnego. <"
-"br/>\n"
+"zmianę ilości komponentów zużywanych w ramach tego zlecenia produkcyjnego. "
+"<br/>\n"
 "Jeśli planujesz wyprodukować pozostałą ilość w późniejszym terminie, podziel "
 "zlecenie produkcyjne.\n"
 "                   </span>"
@@ -569,10 +561,10 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\""
-">minuty</span>\n"
-"                                    <span invisible=\"time_mode == 'manual'\""
-"> /ostatnie </span>"
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minuty</"
+"span>\n"
+"                                    <span invisible=\"time_mode == "
+"'manual'\"> /ostatnie </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -584,8 +576,8 @@ msgstr "<span invisible=\"time_mode == 'manual'\">zlecenia robocze</span>"
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
-"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Do "
-"wyprodukowania</span>"
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Do wyprodukowania</"
+"span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -1829,7 +1821,7 @@ msgstr "Obliczone na podstawie ostatniego"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -2065,7 +2057,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
 msgid "Created Production Order"
-msgstr "Utworzone Zamówienie produkcji"
+msgstr "Utworzone Zlecenie produkcyjne"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__create_uid
@@ -2540,8 +2532,8 @@ msgid ""
 "Each operation can have multiple steps (scan products, view instructions) or "
 "even quality checks."
 msgstr ""
-"Każda operacja może składać się z wielu etapów "
-"(skanowanie produktów, przeglądanie instrukcji), a nawet kontroli jakości."
+"Każda operacja może składać się z wielu etapów (skanowanie produktów, "
+"przeglądanie instrukcji), a nawet kontroli jakości."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__effective_bom_id
@@ -3745,7 +3737,7 @@ msgstr "Typ operacji produkcyjnej"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Manufacturing Order"
-msgstr "Zamówienie produkcji"
+msgstr "Zlecenie produkcyjne"
 
 #. module: mrp
 #. odoo-python
@@ -4926,17 +4918,17 @@ msgstr "Strefa dla produkcji"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Production Order"
-msgstr "Zamówienie produkcji"
+msgstr "Zlecenie produkcyjne"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
 msgid "Production Order for components"
-msgstr "Zamówienie produkcji dla komponentów"
+msgstr "Zlecenie produkcyjne dla komponentów"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
-msgstr "Zamówienie produkcji dla ukończonych produktów"
+msgstr "Zlecenie produkcyjne dla ukończonych produktów"
 
 #. module: mrp
 #. odoo-python
@@ -6119,6 +6111,12 @@ msgstr ""
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr "Na gniazdach produkcyjnych %s nie ma zdefiniowanego kalendarza."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -7450,7 +7448,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "manufacturing order"
-msgstr "Zamówienie produkcji"
+msgstr "Zlecenie produkcyjne"
 
 #. module: mrp
 #. odoo-python

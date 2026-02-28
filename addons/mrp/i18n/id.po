@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-02-14 12:13+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 12:45+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "mrp/id/>\n"
@@ -357,6 +357,17 @@ msgid ""
 "                                        <span class=\"o_annotation "
 "o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Jam Waktu</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_2 o_annotation_end position-absolute\">Quality Control</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_3 o_annotation_start position-absolute\">Feedback Loop</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_4 o_annotation_start position-absolute\">Daftarkan Bahan</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_5 o_annotation_start position-absolute\">Pilih Operator</span>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -372,11 +383,21 @@ msgid ""
 "                    <span class=\"o_annotation o_annotation_5 "
 "o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Time Clock</span>\n"
+"                    <span class=\"o_annotation o_annotation_2 "
+"o_annotation_end position-absolute\">Quality Control</span>\n"
+"                    <span class=\"o_annotation o_annotation_3 "
+"o_annotation_start position-absolute\">Feedback Loop</span>\n"
+"                    <span class=\"o_annotation o_annotation_4 "
+"o_annotation_start position-absolute\">Register Materials</span>\n"
+"                    <span class=\"o_annotation o_annotation_5 "
+"o_annotation_start position-absolute\">Select Operator</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Add Operation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tambahkan Operasi</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -396,7 +417,7 @@ msgstr "<span class=\"o_stat_text\">Child MO</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Salin Operasi yang Tersedia</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -459,7 +480,7 @@ msgstr "<span class=\"o_stat_text\">Buang</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nomor Seri</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -487,6 +508,13 @@ msgid ""
 "quantity later.\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                        Memodifikasi kuantitas untuk diproduksi juga akan "
+"memodifikasi kuantitas komponen untuk dikonsumsi untuk MO ini.\n"
+"                        <br/>\n"
+"                        Pisahkan MO bila Anda berencana untuk memproduksi "
+"kuantitas tersisa nanti.\n"
+"                    </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -496,17 +524,23 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">menit</"
+"span>\n"
+"                                    <span invisible=\"time_mode == "
+"'manual'\"> / terakhir </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span invisible=\"time_mode == 'manual'\">work orders</span>"
-msgstr ""
+msgstr "<span invisible=\"time_mode == 'manual'\">SPK</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Untuk Diproduksi</"
+"span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -963,6 +997,8 @@ msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
 "This action cannot be undone."
 msgstr ""
+"Apakah Anda yakin ingin membatalkan MO ini?\n"
+"Tindakan ini tidak dapat dibatalkan."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -970,6 +1006,8 @@ msgid ""
 "Are you sure you want to cancel this manufacturing order?\n"
 "This action cannot be undone."
 msgstr ""
+"Apakah Anda yakin ingin membatalkan MO ini?\n"
+"Tindakan ini tidak dapat dibatalkan."
 
 #. module: mrp
 #. odoo-python
@@ -1484,22 +1522,22 @@ msgstr "Batal"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Manufacturing Order"
-msgstr ""
+msgstr "Batalkan MO"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel Manufacturing Orders"
-msgstr ""
+msgstr "Batalkan MO"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel these Orders"
-msgstr ""
+msgstr "Batalkan Pesanan-Pesanan ini"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel this Order"
-msgstr ""
+msgstr "Batalkan Pesanan ini"
 
 #. module: mrp
 #. odoo-javascript
@@ -1632,7 +1670,7 @@ msgstr "Bersihkan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Clears the selected lot/serial number"
-msgstr ""
+msgstr "Kosongkan nomor seri/lot terpilih"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1728,6 +1766,8 @@ msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
 msgstr ""
+"Hitung hari yang diperlukan untuk menyupai ulang semua komponen dari BOM, "
+"baik dengan membeli atau memanufaktur komponen dan/atau subassembly."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -2038,12 +2078,12 @@ msgstr "Dibuat pada"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Creates a new lot number"
-msgstr ""
+msgstr "Membuat nomor lot baru"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Creates a new serial number"
-msgstr ""
+msgstr "Membuat nomor seri baru"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
@@ -2450,6 +2490,8 @@ msgid ""
 "Each operation can have multiple steps (scan products, view instructions) or "
 "even quality checks."
 msgstr ""
+"Setiap operasi dapat memiliki lebih dari satu langkah (scan produk, lihat "
+"instruksi) atau bahkan pemeriksaan kualitas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__effective_bom_id
@@ -2755,12 +2797,12 @@ msgstr "Buat"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate Lot"
-msgstr ""
+msgstr "Buat Lot"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate Serial"
-msgstr ""
+msgstr "Buat Seri"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
@@ -3922,7 +3964,7 @@ msgstr "Tidak ada BoM yang Ditemukan"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "No Operations Yet !"
-msgstr ""
+msgstr "Belum Ada Operasi !"
 
 #. module: mrp
 #. odoo-python
@@ -4212,7 +4254,7 @@ msgstr "Tipe Operasi"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Operation..."
-msgstr ""
+msgstr "Operasi..."
 
 #. module: mrp
 #. odoo-javascript
@@ -5209,6 +5251,8 @@ msgid ""
 "Run your Shop Floor with work orders for each operation defined on your bill "
 "of material."
 msgstr ""
+"Jalankan Shop Floor Anda dengan SPK untuk setiap operasi didefinisikan di "
+"BoM Anda."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_sms_error
@@ -5352,7 +5396,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
 msgid "Set as Bill of Materials"
-msgstr ""
+msgstr "Tetapkan sebagai BOM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -6010,6 +6054,12 @@ msgstr ""
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr "Tidak ada kalender yang ditetapkan pada pusat kerja %s."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -7296,7 +7346,7 @@ msgstr "dibatalkan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "copy paste a list and/or use Generate"
-msgstr ""
+msgstr "salin tempel list dan/atau gunakan Buat"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

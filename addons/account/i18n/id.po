@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-21 13:45+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 13:17+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/id/>\n"
@@ -81,6 +81,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Silakan hubungi administrator Anda."
 
 #. module: account
 #. odoo-python
@@ -219,6 +221,12 @@ msgid ""
 msgstr ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Difaktur, %"
 "(quantity_delivered)s Dikirim dengan harga masing-masing %(unit_price)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "%(order)s - %(order_line)s; price difference for %(product)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -378,11 +386,18 @@ msgid ""
 "- A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotal equals the total with taxes."
 msgstr ""
+"- Pembulatan per pajak disarankan bila harga Anda tidak termasuk pajak. Ini "
+"meminimalisasikan error pembulatan kumulatif karena menggabungkan semua "
+"jumlah pajak yang tidak dibulatkan pertama-tama dan hanya membulatkan pajak "
+"final total sekali."
+"\\n                                                                                                                                                                                "
+"- Pembulatan per baris disarankan bila harga Anda sesudah pajak. Dengan "
+"begini, jumlah subtotal baris sama dengan total dengan pajak."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "- Ending"
-msgstr ""
+msgstr "- Ending"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1384,6 +1399,11 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Hapus semua duplikat</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Hapus duplikat</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1414,6 +1434,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Anda dapat memilih bagaimana Anda ingin mengirim "
+"faktur Anda, dan dengan format elektronik apa.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
@@ -1422,6 +1446,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        Untuk Ditinjau\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1662,7 +1689,7 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr ""
+msgstr "<span invisible=\"not account_id\">pada</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1690,7 +1717,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"repartition_type == 'base'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1761,7 +1788,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1880,7 +1907,7 @@ msgstr "<span>Akun Bank dapat merupakan duplikat dari</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>This document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Dokumen ini mungkin duplikat dari</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1998,7 +2025,7 @@ msgstr "<strong>Subtotal</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>Suplai yang Dipajak</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2015,7 +2042,7 @@ msgstr "<strong>Tipe: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid "<strong>WARNING - This change is irreversible</strong>"
-msgstr ""
+msgstr "<strong>PERINGATAN - Perubahan ini tidak dapat dibatalkan</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
@@ -3251,7 +3278,7 @@ msgstr "Grup Akun Pajak"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
 msgid "Account Tax Repartition Line"
-msgstr ""
+msgstr "Account Tax Repartition Line"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -5092,7 +5119,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Bank accounts"
-msgstr ""
+msgstr "Akun bank"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
@@ -5104,6 +5131,12 @@ msgstr "Bank dan Tunai"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Bank of odoo"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -6440,7 +6473,7 @@ msgstr "Data korup pada entri jurnal dengan id %(id)s (%(name)s)."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Cost and Revenue"
-msgstr ""
+msgstr "Biaya dan Pendapatan"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -9594,7 +9627,7 @@ msgstr "Dari"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "From Category"
-msgstr ""
+msgstr "Dari Kategori"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -9823,7 +9856,7 @@ msgstr "Grup"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Group 1"
-msgstr ""
+msgstr "Kelompok 1"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__groupby
@@ -10094,7 +10127,7 @@ msgstr "Bagaimana jumlah pajak total dihitung pada order dan faktur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -10414,6 +10447,8 @@ msgid ""
 "If you check this box, you will be able to register your payment using "
 "SEPA / ISO20022."
 msgstr ""
+"Bila Anda mencentang kotak ini, Anda akan dapat mendaftarkan pembayaran Anda "
+"menggunakan SEPA / ISO20022."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -13471,7 +13506,7 @@ msgstr "Nilai Numerik"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "OSS Tax mapping"
-msgstr ""
+msgstr "OSS Tax mapping"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__10
@@ -14142,7 +14177,7 @@ msgstr "Sebagian"
 #. module: account
 #: model:res.groups,name:account.group_partial_purchase_deductibility
 msgid "Partial Purchase Deductibility"
-msgstr ""
+msgstr "Partial Purchase Deductibility"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
@@ -14271,6 +14306,7 @@ msgstr "Bayar"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service / ISO20022"
 msgstr ""
+"Bayar tagihan Anda dengan satu-klik menggunakan Euro SEPA Service / ISO20022"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_payable
@@ -15682,7 +15718,7 @@ msgstr "Resequence"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset the currency rate to the default accordingly to the invoice date"
-msgstr ""
+msgstr "Reset tarif mata uang menjadi default sesuai dengan tanggal faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16348,7 +16384,7 @@ msgstr "Pilih tipe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old purchase document"
-msgstr ""
+msgstr "Pilih dokumen pembelian tua"
 
 #. module: account
 #. odoo-javascript
@@ -16393,7 +16429,7 @@ msgstr "Tagihan Mandiri"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "Nota Kredit Tagihan Mandiri"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_credit_note
@@ -17044,7 +17080,7 @@ msgstr "Komunikasi standar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "Starting"
-msgstr ""
+msgstr "Mulai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -17247,7 +17283,7 @@ msgstr "Subtotal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed"
-msgstr ""
+msgstr "Sukses membatalkan langganan"
 
 #. module: account
 #. odoo-python
@@ -18246,6 +18282,14 @@ msgstr ""
 "Akun bank dari jurnal bank harus termasuk dalam perusahaan yang sama (%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Rekening koran yang digunakan untuk rekonsiliasi bank"
@@ -18325,8 +18369,9 @@ msgstr "Partner komersil telah diupdate untuk semua entri akuntansi terkait."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18879,6 +18924,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Action 'Kirim Faktur otomatis' yang terjadwal telah diarsip. Anda tidak "
+"dapat mengirim faktur dalam batch."
 
 #. module: account
 #. odoo-python
@@ -18890,7 +18937,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "The selected"
-msgstr ""
+msgstr "Yang terpilih"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
@@ -19546,7 +19593,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Pengaturan ini dikunci setelah entri jurnal dibuat."
 
 #. module: account
 #. odoo-python
@@ -19775,7 +19822,7 @@ msgstr "Total Sisa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Total Residual at date"
-msgstr ""
+msgstr "Residu Total pada tanggal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -20111,7 +20158,7 @@ msgstr "Harga Satuan:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Unit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20542,17 +20589,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Nilai untuk jumlah yang di writeoff\n"
-"    * Persentase: Persentase saldo, di antara 0 dan 100.\n"
-"    * Tetap: Nilai tetap dari writeoff. Jumlah yang akan dihitung sebagai "
-"debit bila negatif, sebagai kredit bila positif.\n"
-"    * Dari Label: Tidak perlu regex delimiter, hanya regex yang dibutuhkan. "
-"Misalnya bila Anda ingin extract jumlah dari\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"Anda dapat memasukkan\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20918,7 +20965,7 @@ msgstr "Tahunan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Yes, confirm and secure them now."
-msgstr ""
+msgstr "Ya, konfirmasi dan amankan mereka sekarang."
 
 #. module: account
 #. odoo-javascript
@@ -20929,7 +20976,7 @@ msgstr "Anda sebentar lagi akan mengirimkan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You are about to unsubscribe"
-msgstr ""
+msgstr "Anda akan segera berhenti berlangganan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -20938,6 +20985,9 @@ msgid ""
 "                            tax amounts, accounting amounts, reports. This "
 "is probably not intended."
 msgstr ""
+"Anda akan mengubah angka desimal di seluruh database Anda, termasuk faktur,\n"
+"                            jumlah pajak, jumlah akuntansi, laporan. Ini "
+"juga mungkin tidak disengaja."
 
 #. module: account
 #. odoo-python
@@ -21041,6 +21091,8 @@ msgid ""
 "You can unsubscribe from emails received upon invoice sending and reception "
 "here."
 msgstr ""
+"Anda dapat berhenti berlangganan dari email yang diterima setelah mengirim "
+"dan menerima faktur di sini."
 
 #. module: account
 #. odoo-python
@@ -21878,7 +21930,7 @@ msgstr "jumlah untuk"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "and will not be posted automatically."
-msgstr ""
+msgstr "dan tidak akan dipost secara otomatis."
 
 #. module: account
 #. odoo-javascript
@@ -22020,7 +22072,7 @@ msgstr "contoh Perusahaan Saya"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. finance@example.com; accountant@example.com"
-msgstr ""
+msgstr "contoh. finance@example.com; accountant@example.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -22063,7 +22115,7 @@ msgstr "posisi fiskal [%s]"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "from invoice notifications."
-msgstr ""
+msgstr "dari notifikasi faktur."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -22348,11 +22400,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will be posted. Some of them may be future-dated or require hashing,"
 msgstr ""
+"akan diposting. Beberapa dari mereka bahkan mungkin ditanggal di masa depan "
+"atau memerlukan hashing,"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will be secured with hash."
-msgstr ""
+msgstr "dan akan diamankan dengan hash."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -22420,6 +22474,35 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Faktur tagihan mandiri (Ref {{ object.name or "
 "'n/a' }})"
+
+#~ msgid ""
+#~ "The company bank account linked to this invoice is not trusted, please "
+#~ "double-check and trust it before confirming, or remove it"
+#~ msgstr ""
+#~ "Akun bank perusahaan yang terhubung ke faktur ini tidak dapat dipercaya, "
+#~ "silakan periksa kembali dan percayai rekening tersebut sebelum "
+#~ "mengonfirmasi, atau hapus"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Nilai untuk jumlah yang di writeoff\n"
+#~ "    * Persentase: Persentase saldo, di antara 0 dan 100.\n"
+#~ "    * Tetap: Nilai tetap dari writeoff. Jumlah yang akan dihitung sebagai "
+#~ "debit bila negatif, sebagai kredit bila positif.\n"
+#~ "    * Dari Label: Tidak perlu regex delimiter, hanya regex yang "
+#~ "dibutuhkan. Misalnya bila Anda ingin extract jumlah dari\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "Anda dapat memasukkan\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<br/>\n"

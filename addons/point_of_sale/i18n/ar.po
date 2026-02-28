@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
 "PO-Revision-Date: 2026-02-21 13:32+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -9905,7 +9905,7 @@ msgstr "إجمالي السعر شامل الضريبة:"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "إجمالي ضريبة القيمة المضافة:"
 
@@ -10227,10 +10227,15 @@ msgstr "المعرف الفريد عالمياً"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "ضريبة القيمة المضافة"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "ضريبة القيمة المضافة:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10882,11 +10887,6 @@ msgid "forecasted"
 msgstr "المتوقعة"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "مجاناً"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
@@ -11016,6 +11016,9 @@ msgstr "لتفعيل الأزرار."
 msgid "using"
 msgstr "باستخدام"
 
+#~ msgid "free"
+#~ msgstr "مجاناً"
+
 #~ msgid ""
 #~ "This journal is associated with payment method %(payment_method)s that is "
 #~ "being used by order %(pos_order)s in the active pos session %"
@@ -11033,9 +11036,6 @@ msgstr "باستخدام"
 #~ "تعذر إنشاء فاتورة/فواتير موحدة لأن الطلبات التالية لا يمكن فوترتها.\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "ضريبة القيمة المضافة:"
 
 #~ msgid "Barcode Scanner/Card Reader"
 #~ msgstr "ماسح الباركود/قاريء البطاقات"

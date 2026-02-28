@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:35+0000\n"
-"PO-Revision-Date: 2026-02-21 13:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 12:57+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/mail/"
 "pl/>\n"
@@ -54,8 +54,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail
@@ -666,6 +666,14 @@ msgstr ""
 "<br/><br/>\n"
 "\n"
 "            Poniżej znajdziesz szczegóły na temat połączenia:<br/>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"to\"/>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -3179,7 +3187,7 @@ msgstr "Konferencja: %s"
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__configuration
@@ -5399,6 +5407,12 @@ msgstr "Wymuś wysyłkę"
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language"
 msgstr "Wymuś język"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid "Forever"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -13171,6 +13185,8 @@ msgstr "Wyłącz wyciszenie rozmowy"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -14032,16 +14048,9 @@ msgid ""
 "None: never display this type of activity\n"
 "Own Activities: the synchronization user will only count their own "
 "activities of this type\n"
-"All Activities: the synchronization user will count the all the activities "
-"of this type, whatever their owner"
+"All Activities: the synchronization user will count all the activities of "
+"this type, whatever their owner"
 msgstr ""
-"Czy ten typ aktywności powinien być wyświetlany w interfejsie API dostawcy "
-"KPI.\n"
-"Brak: nigdy nie wyświetlaj tego typu aktywności.\n"
-"Własne aktywności: użytkownik synchronizacji będzie liczył tylko własne "
-"aktywności tego typu.\n"
-"Wszystkie aktywności: użytkownik synchronizacji będzie liczył wszystkie "
-"aktywności tego typu, niezależnie od ich gospodarza."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
@@ -15098,6 +15107,23 @@ msgstr "Twój alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” w “%(channel_name)s”"
+
+#~ msgid ""
+#~ "Whether this type of activity should be displayed in the KPI Provider "
+#~ "API.\n"
+#~ "None: never display this type of activity\n"
+#~ "Own Activities: the synchronization user will only count their own "
+#~ "activities of this type\n"
+#~ "All Activities: the synchronization user will count the all the "
+#~ "activities of this type, whatever their owner"
+#~ msgstr ""
+#~ "Czy ten typ aktywności powinien być wyświetlany w interfejsie API "
+#~ "dostawcy KPI.\n"
+#~ "Brak: nigdy nie wyświetlaj tego typu aktywności.\n"
+#~ "Własne aktywności: użytkownik synchronizacji będzie liczył tylko własne "
+#~ "aktywności tego typu.\n"
+#~ "Wszystkie aktywności: użytkownik synchronizacji będzie liczył wszystkie "
+#~ "aktywności tego typu, niezależnie od ich gospodarza."
 
 #~ msgid "Remove Channel Admin"
 #~ msgstr "Usuń administratora kanału"

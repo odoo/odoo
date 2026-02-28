@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-07 12:28+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 12:45+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/cs/>\n"
@@ -3349,7 +3349,7 @@ msgstr "Slevy"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Zobrazovací název"
+msgstr "Zobrazovaný název"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9944,7 +9944,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr ""
 
@@ -10270,10 +10270,15 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "DIČ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "DPH:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10934,11 +10939,6 @@ msgid "forecasted"
 msgstr "předpokládané"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "zdarma"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
@@ -11068,6 +11068,9 @@ msgstr ""
 msgid "using"
 msgstr "s použitím"
 
+#~ msgid "free"
+#~ msgstr "zdarma"
+
 #~ msgid ""
 #~ "This journal is associated with payment method %(payment_method)s that is "
 #~ "being used by order %(pos_order)s in the active pos session %"
@@ -11087,9 +11090,6 @@ msgstr "s použitím"
 #~ "fakturovat.\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "DPH:"
 
 #~ msgid "Barcode Scanner/Card Reader"
 #~ msgstr "Čtečka čárových kódů / čtečka platebních karet"

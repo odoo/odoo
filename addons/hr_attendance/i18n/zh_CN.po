@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 06:54+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1332,8 +1332,13 @@ msgstr "加载样本数据"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
-msgid "Location"
-msgstr "位置"
+msgid "Location (In)"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Location (Out)"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1706,6 +1711,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Print It"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid "Proceed Anyway"
 msgstr ""
 
 #. module: hr_attendance
@@ -2178,6 +2189,14 @@ msgid "Try the top"
 msgstr "试试顶部"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+msgid ""
+"Unable to get a valid location. Do you want to proceed with your check-in/"
+"out anyway?"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/controllers/main.py:0
 msgid "Unknown"
@@ -2397,6 +2416,9 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "- 使用可选用的 PIN 个人密码"
+
+#~ msgid "Location"
+#~ msgstr "位置"
 
 #~ msgid ""
 #~ "Do not have access, user cannot edit the attendances that are not his own."

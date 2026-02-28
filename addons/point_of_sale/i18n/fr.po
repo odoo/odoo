@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:15+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
+"PO-Revision-Date: 2026-02-28 12:54+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/fr/>\n"
@@ -6076,7 +6076,7 @@ msgstr "Lignes de commande"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Order saved for later"
-msgstr ""
+msgstr "Commande enregistrée pour plus tard"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -10128,7 +10128,7 @@ msgstr "Prix total TTC :"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total VAT:"
 msgstr "TVA totale :"
 
@@ -10459,10 +10459,15 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "TVA"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "VAT:"
+msgstr "TVA :"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10767,6 +10772,8 @@ msgid ""
 "You cannot archive a product that is set as a special product in a Point of "
 "Sale configuration. Please change the configuration first."
 msgstr ""
+"Vous ne pouvez pas archiver un produit défini comme produit spécial dans une "
+"configuration de point de vente. Veuillez d’abord modifier la configuration."
 
 #. module: point_of_sale
 #. odoo-python
@@ -11151,11 +11158,6 @@ msgid "forecasted"
 msgstr "prévu"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "gratuit"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
@@ -11285,6 +11287,9 @@ msgstr "pour activer les boutons."
 msgid "using"
 msgstr "utilisant"
 
+#~ msgid "free"
+#~ msgstr "gratuit"
+
 #~ msgid ""
 #~ "This journal is associated with payment method %(payment_method)s that is "
 #~ "being used by order %(pos_order)s in the active pos session %"
@@ -11313,9 +11318,6 @@ msgstr "utilisant"
 #~ "commandes suivantes ne peuvent pas être facturées.\n"
 #~ "\n"
 #~ "%s"
-
-#~ msgid "VAT:"
-#~ msgstr "TVA :"
 
 #~ msgid "Barcode Scanner/Card Reader"
 #~ msgstr "Lecteur de codes-barres/Lecteur de cartes"

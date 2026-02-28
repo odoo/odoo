@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-02-27 18:35+0000\n"
 "PO-Revision-Date: 2026-02-14 12:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
@@ -727,7 +727,8 @@ msgstr ""
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
+msgstr ""
+"キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -2989,7 +2990,8 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
+msgstr ""
+"有効項目をFalse にセットすると、リソースレコードは削除することなく非表示にで"
 "きます。"
 
 #. module: mrp
@@ -4050,7 +4052,8 @@ msgstr ""
 msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
-msgstr "プロダクト:  '%s' は有効な製造オーダにリンクしているため、そのプロダクトを製"
+msgstr ""
+"プロダクト:  '%s' は有効な製造オーダにリンクしているため、そのプロダクトを製"
 "造オーダで使用することが可能な状態です。"
 
 #. module: mrp
@@ -6017,6 +6020,12 @@ msgid "There is no defined calendar on workcenter %s."
 msgstr "作業区%sに定義されたカレンダがありません。"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "プロダクトの移動はまだありません"
@@ -6682,8 +6691,8 @@ msgstr ""
 "調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペ"
 "レーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みま"
 "す。そうでない場合、オペレーションタイプは部品表検索では考慮されません。これ"
-"により、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できます"
-"。"
+"により、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できま"
+"す。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -7005,7 +7014,8 @@ msgstr ""
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
-msgstr "少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
+msgstr ""
+"少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
 "ことはできません。"
 
 #. module: mrp
