@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:44+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-1/mail/"
@@ -103,6 +103,12 @@ msgstr "# Poruka"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
 msgstr "%(activity)s, dodijeljena %(name)s, sa rokom na%(deadline)s"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/thread_actions.js:0
+msgid "%(amount)s items marked as read"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -285,11 +291,11 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s to mention "
-"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple "
-"people%(new_line)s%(bold_start)s#channel%(bold_end)s to link a "
-"channel%(new_line)s%(bold_start)s/command%(bold_end)s to run a "
-"command%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned "
-"response%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji"
+"someone%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people%"
+"(new_line)s%(bold_start)s#channel%(bold_end)s to link a channel%(new_line)s%"
+"(bold_start)s/command%(bold_end)s to run a command%(new_line)s%"
+"(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
+"(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
 
 #. module: mail
@@ -356,8 +362,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"%(user_name)s has invited you to the "
-"%(strong_start)s%(channel_name)s%(strong_end)s channel."
+"%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
+"(strong_end)s channel."
 msgstr ""
 
 #. module: mail
@@ -521,6 +527,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/thread_actions.js:0
+msgid "1 item marked as read"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_patch.js:0
 msgid "1 new message"
 msgstr "1 nova poruka"
@@ -588,6 +600,14 @@ msgid ""
 "<br/><br/>\n"
 "\n"
 "            Here are some details about the connection:<br/>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"to\"/>"
 msgstr ""
 
 #. module: mail
@@ -1285,12 +1305,6 @@ msgstr "Dodaj sljedbenike"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
-msgid "Add GIFs"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add a Reaction"
 msgstr "Dodaj reakciju"
@@ -1298,8 +1312,8 @@ msgstr "Dodaj reakciju"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://developers.google."
-"com/tenor/guides/quickstart#setup"
+"Add a Tenor GIF API key to enable GIFs support. https://"
+"developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
 
 #. module: mail
@@ -1367,6 +1381,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
 msgid "Add/Remove Followers"
 msgstr "Dodaj/Ukloni Pratitelje"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Added %(name)s to Favorites"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1495,17 +1515,17 @@ msgstr "Alias"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with "
-"%(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s "
-"%(parent_model_name)s."
+"Alias %(matching_name)s (%(current_id)s) is already linked with %"
+"(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
+"(parent_model_name)s."
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"Alias %(matching_name)s (%(current_id)s) is already linked with "
-"%(alias_model_name)s (%(matching_id)s)."
+"Alias %(matching_name)s (%(current_id)s) is already linked with %"
+"(alias_model_name)s (%(matching_id)s)."
 msgstr ""
 
 #. module: mail
@@ -1732,7 +1752,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
+#: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
 msgid "Are you sure you want to bid farewell to this message forever?"
 msgstr ""
 
@@ -1748,6 +1768,12 @@ msgstr "Jeste li sigurni da želite otkazati zakazanu poruku?"
 msgid ""
 "Are you sure you want to delete \"%s\"?\n"
 "This action cannot be undone."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "Are you sure you want to pin this message to %(conversation)s?"
 msgstr ""
 
 #. module: mail
@@ -1767,6 +1793,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "Are you sure you want to unpin this message?"
 msgstr ""
 
 #. module: mail
@@ -2243,8 +2275,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid ""
-"Bounce/Catchall '%(matching_alias_name)s' is already used by "
-"%(document_name)s. Choose another alias or change it on the other document."
+"Bounce/Catchall '%(matching_alias_name)s' is already used by %"
+"(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
 
 #. module: mail
@@ -2498,8 +2530,8 @@ msgstr "Pripremljen odgovor"
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
 msgid ""
 "Canned response that will automatically be substituted with longer content "
-"in your messages. Type '::' followed by the name of your shortcut (e.g. ::"
-"hello) to use in your messages."
+"in your messages. Type '::' followed by the name of your shortcut "
+"(e.g. ::hello) to use in your messages."
 msgstr ""
 
 #. module: mail
@@ -3077,12 +3109,6 @@ msgstr "Postavi svoje valstite email poslužitelje"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_confirm_dialog.js:0
-msgid "Confirm"
-msgstr "Potvrdi"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 msgid "Confirmation"
 msgstr "Potvrda"
@@ -3097,18 +3123,6 @@ msgstr "Potvrđeno"
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 msgid "Congratulations, you're done with your activities."
 msgstr "Čestitke, gotovi ste sa svojim aktivnostima."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "Congratulations, your inbox is empty"
-msgstr "Čestitamo! Vaš inbox je prazan"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/discuss_app/discuss_app_patch.js:0
-msgid "Congratulations, your inbox is empty!"
-msgstr "Čestitke, vaša dolazna pošta je prazna!"
 
 #. module: mail
 #. odoo-python
@@ -3821,7 +3835,7 @@ msgstr "Jedinica kašnjenja"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
 #: code:addons/mail/static/src/core/common/message_actions.js:0
-#: code:addons/mail/static/src/core/common/message_model.js:0
+#: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Delete"
 msgstr "Obriši"
@@ -3948,9 +3962,11 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 #: code:addons/mail/static/src/core/common/link_preview_confirm_delete.xml:0
-#: code:addons/mail/static/src/core/common/message_confirm_dialog.xml:0
+#: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
+#: code:addons/mail/static/src/core/common/message_pin_dialog.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
@@ -5196,12 +5212,12 @@ msgstr "Na 8 sati"
 #: model:ir.model.fields,help:mail.field_ir_cron__value
 msgid ""
 "For Python expressions, this field may hold a Python expression that can use "
-"the same values as for the code field on the server action,e.g. `env.user."
-"name` to set the current user's name as the value or `record.id` to set the "
-"ID of the record on which the action is run.\n"
+"the same values as for the code field on the server action,e.g. "
+"`env.user.name` to set the current user's name as the value or `record.id` "
+"to set the ID of the record on which the action is run.\n"
 "\n"
-"For Static values, the value will be used directly without evaluation, e.g."
-"`42` or `My custom name` or the selected record."
+"For Static values, the value will be used directly without evaluation, "
+"e.g.`42` or `My custom name` or the selected record."
 msgstr ""
 
 #. module: mail
@@ -5223,6 +5239,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Force Send"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
+#: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
+msgid "Forever"
 msgstr ""
 
 #. module: mail
@@ -6302,7 +6324,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Invitation link copied!"
+msgid "Invitation link copied"
 msgstr ""
 
 #. module: mail
@@ -6485,6 +6507,12 @@ msgid ""
 "It appears you're trying to create a channel member, but it seems like you "
 "forgot to specify the related channel. To move forward, please make sure to "
 "provide the necessary channel information."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "It will remain pinned until you decide to remove it."
 msgstr ""
 
 #. module: mail
@@ -7201,8 +7229,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Mailing or posting with a source should not be called with an empty "
-"%(source_type)s"
+"Mailing or posting with a source should not be called with an empty %"
+"(source_type)s"
 msgstr ""
 
 #. module: mail
@@ -7766,6 +7794,7 @@ msgstr "Isključi mikrofon"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Mute Conversation"
 msgstr "Isključi obavijesti za razgovor"
 
@@ -7911,8 +7940,8 @@ msgstr "Nova poruka"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
-msgid "New messages appear here."
-msgstr "Nove poruke se pojavljuju ovdje."
+msgid "New messages will appear here."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -8085,7 +8114,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
-msgid "No people found to invite."
+msgid "No one found to invite."
 msgstr ""
 
 #. module: mail
@@ -8106,8 +8135,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
-"No responsible specified for %(activity_type_name)s: %(activity_summary)s."
-"%(error_detail)s"
+"No responsible specified for %(activity_type_name)s: %(activity_summary)s.%"
+"(error_detail)s"
 msgstr ""
 
 #. module: mail
@@ -8283,16 +8312,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive attachments records as a list of IDs (received "
-"%(aids)s)"
+"Notification should receive attachments records as a list of IDs (received %"
+"(aids)s)"
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Notification should receive partners given as a list of IDs (received "
-"%(pids)s)"
+"Notification should receive partners given as a list of IDs (received %"
+"(pids)s)"
 msgstr ""
 
 #. module: mail
@@ -8652,8 +8681,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
-"Only messages type comment can have their content updated on model 'discuss."
-"channel'"
+"Only messages type comment can have their content updated on model "
+"'discuss.channel'"
 msgstr ""
 
 #. module: mail
@@ -8666,8 +8695,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: "
-"%(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue with this value: %"
+"(template_txt)s. Correct it and try again."
 msgstr ""
 
 #. module: mail
@@ -9174,7 +9203,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Permission denied: invitation link copy failed!"
+msgid "Permission denied: invitation link copy failed"
 msgstr ""
 
 #. module: mail
@@ -9232,9 +9261,15 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Pin It"
-msgstr "Prikvači"
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "Pin Message"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "Pin this message?"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__pinned_at
@@ -9538,8 +9573,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid ""
-"Posting a message should receive partners as a list of IDs (received "
-"%(pids)s)"
+"Posting a message should receive partners as a list of IDs (received %"
+"(pids)s)"
 msgstr ""
 
 #. module: mail
@@ -9574,19 +9609,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid ""
-"Press %(open_samp)sESC%(close_samp)s %(open_em)sto "
-"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)sto "
-"%(open_save)ssave%(close_save)s%(close_em)s"
+"Press %(open_samp)sESC%(close_samp)s %(open_em)sto %(open_cancel)scancel%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
+"(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 
 #. module: mail
@@ -10045,14 +10079,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
-msgid "Remove from Favorites"
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Remove from Bookmarks"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Remove from bookmarks"
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Remove from Favorites"
 msgstr ""
 
 #. module: mail
@@ -10066,6 +10100,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/follower.xml:0
 msgid "Remove this follower"
 msgstr "Ukloni sljedbenika"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Removed %(name)s from Favorites"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_info
@@ -10802,6 +10842,12 @@ msgid "Send From"
 msgstr "Pošalji s adrese"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
+msgid "Send GIF"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send GIFs"
 msgstr ""
@@ -10884,7 +10930,7 @@ msgstr "Pošalji poruku"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
+#: code:addons/mail/static/src/core/common/message_delete_dialog.xml:0
 msgid "Send this message to the great trash can in the sky?"
 msgstr ""
 
@@ -11427,12 +11473,6 @@ msgid "Stop presenting"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.xml:0
-msgid "Stop replying"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
 msgstr ""
@@ -11690,8 +11730,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Template rendering should only be called with a list of IDs. Received "
-"“%(res_ids)s” instead."
+"Template rendering should only be called with a list of IDs. Received “%"
+"(res_ids)s” instead."
 msgstr ""
 
 #. module: mail
@@ -11799,8 +11839,8 @@ msgstr ""
 #: code:addons/mail/models/mail_activity_plan_template.py:0
 msgid ""
 "The activity type \"%(activity_type_name)s\" is not compatible with the plan "
-"\"%(plan_name)s\" because it is limited to the model "
-"\"%(activity_type_model)s\"."
+"\"%(plan_name)s\" because it is limited to the model \"%"
+"(activity_type_model)s\"."
 msgstr ""
 
 #. module: mail
@@ -11899,8 +11939,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address "
-"%(alias_display_name)s.\n"
+"The message below could not be accepted by the address %"
+"(alias_display_name)s.\n"
 "                 Only %(contact_description)s are allowed to contact it.<br /"
 "><br />\n"
 "                 Please make sure you are using the correct address or "
@@ -11911,8 +11951,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"The message below could not be accepted by the address "
-"%(alias_display_name)s.\n"
+"The message below could not be accepted by the address %"
+"(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
 
@@ -11948,8 +11988,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu za<jobs@example."
-"odoo.com>"
+"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu "
+"za<jobs@example.odoo.com>"
 
 #. module: mail
 #. odoo-python
@@ -12013,8 +12053,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid ""
-"The role '%(role_name)s' is not supported for the channel type "
-"'%(channel_type)s'."
+"The role '%(role_name)s' is not supported for the channel type '%"
+"(channel_type)s'."
 msgstr ""
 
 #. module: mail
@@ -12791,6 +12831,7 @@ msgstr "Uključi zvuk"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
+#: code:addons/mail/static/src/core/web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Undo"
 msgstr ""
@@ -12879,7 +12920,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
 msgid "Unpin Message"
 msgstr ""
 
@@ -13064,8 +13105,8 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid ""
-"Use canned responses to quickly insert prewritten messages with <i>::"
-"shortcut</i>. You can edit the text before sending."
+"Use canned responses to quickly insert prewritten messages with "
+"<i>::shortcut</i>. You can edit the text before sending."
 msgstr ""
 
 #. module: mail
@@ -13574,8 +13615,8 @@ msgstr "Upozorenje"
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain "
-"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain %"
+"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
 
@@ -13583,8 +13624,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid ""
-"We could not create alias %(alias_name)s because domain "
-"%(alias_domain_name)s belongs to company %(alias_company_names)s while the "
+"We could not create alias %(alias_name)s because domain %"
+"(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
 
@@ -13610,13 +13651,6 @@ msgstr "Tjedni"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid ""
-"Well, nothing lasts forever, but are you sure you want to unpin this message?"
 msgstr ""
 
 #. module: mail
@@ -13686,8 +13720,8 @@ msgid ""
 "None: never display this type of activity\n"
 "Own Activities: the synchronization user will only count their own "
 "activities of this type\n"
-"All Activities: the synchronization user will count the all the activities "
-"of this type, whatever their owner"
+"All Activities: the synchronization user will count all the activities of "
+"this type, whatever their owner"
 msgstr ""
 
 #. module: mail
@@ -13738,21 +13772,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Yeah, pin it!"
-msgstr "Da, prikvači!"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Yes"
 msgstr "Da"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "Yes, remove it please"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13871,6 +13893,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid ""
 "You are the administrator of this channel. Are you sure you want to leave?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_pin_dialog.js:0
+msgid "You can always pin it again later if needed."
 msgstr ""
 
 #. module: mail
@@ -14007,13 +14035,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-msgid "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr ""
-"Sigurno želiš da ova poruka ostane pričvršćena %(conversation)szauvijek ?"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 msgid "You will not receive any notifications"
 msgstr ""
@@ -14032,6 +14053,12 @@ msgstr ""
 msgid ""
 "You're about to notify %(amount)s people with %(mention)s. Do you want to "
 "continue?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/thread_patch.xml:0
+msgid "You're all caught up!"
 msgstr ""
 
 #. module: mail
@@ -14063,8 +14090,8 @@ msgstr " "
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
-"E-pošta vašeg korisničkog računa promijenjena je iz %(old_email)s u "
-"%(new_email)s."
+"E-pošta vašeg korisničkog računa promijenjena je iz %(old_email)s u %"
+"(new_email)s."
 
 #. module: mail
 #. odoo-python
@@ -14788,3 +14815,26 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "Confirm"
+#~ msgstr "Potvrdi"
+
+#~ msgid "Congratulations, your inbox is empty"
+#~ msgstr "Čestitamo! Vaš inbox je prazan"
+
+#~ msgid "Congratulations, your inbox is empty!"
+#~ msgstr "Čestitke, vaša dolazna pošta je prazna!"
+
+#~ msgid "New messages appear here."
+#~ msgstr "Nove poruke se pojavljuju ovdje."
+
+#~ msgid "Pin It"
+#~ msgstr "Prikvači"
+
+#~ msgid "Yeah, pin it!"
+#~ msgstr "Da, prikvači!"
+
+#~ msgid ""
+#~ "You sure want this message pinned to %(conversation)s forever and ever?"
+#~ msgstr ""
+#~ "Sigurno želiš da ova poruka ostane pričvršćena %(conversation)szauvijek ?"

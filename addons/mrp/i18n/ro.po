@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:45+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
@@ -63,9 +63,8 @@ msgstr " <br/><br/> Componentele vor fi preluate din <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> Produsele fabricate vor fi mutate către <b>%(destination)s</b>, "
 "<br/> conform destinației specificate din <b>%(operation)s</b>."
@@ -520,16 +519,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / last </span>"
+msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minute</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / ultimul </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -591,24 +582,13 @@ msgstr "<span>COMENZI DE LUCRU</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "<span>minutes</span>"
-msgstr "<span>minute</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "<span> (minutes)</span>"
-msgstr "<span> (minute)</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr "<strong class=\"mr8 oe_inline\">la</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>Durata actuală (minute)</strong>"
+msgid "<strong>Actual Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -627,8 +607,8 @@ msgstr "<strong>Descriere:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>Durată (minute)</strong>"
+msgid "<strong>Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -1663,13 +1643,9 @@ msgstr "Alegeți dacă să tipăriți etichete de produs sau lot/serie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time"
 msgstr "Timp de curățare"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Cleanup Time (minutes)"
-msgstr "Timp de curățare (minute)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2231,6 +2207,14 @@ msgid "Default Duration"
 msgstr "Durată implicită"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
+msgid ""
+"Default operation time. Base unit in minutes.\n"
+"If you are in the computed duration mode, enter an estimate since there "
+"aren't any work orders yet."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid ""
 "Define the components and finished products you wish to use in\n"
@@ -2434,11 +2418,6 @@ msgstr "Sertar cu rotile pentru o utilizare excelentă."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
-#: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration"
-msgstr "Durată"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
@@ -2446,8 +2425,8 @@ msgstr "Durată"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Duration (minutes)"
-msgstr "Durată (minutes)"
+msgid "Duration"
+msgstr "Durată"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
@@ -2577,18 +2556,14 @@ msgstr "Estimat %s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
-msgid "Expected Duration"
-msgstr "Durată estinată"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Expected Duration (minutes)"
-msgstr "Durată estimată (minute)"
+msgid "Expected Duration"
+msgstr "Durată estinată"
 
 #. module: mrp
 #. odoo-javascript
@@ -2860,8 +2835,6 @@ msgid "Hourly processing cost."
 msgstr "Costul de procesare pe oră."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "Ore"
@@ -3814,11 +3787,6 @@ msgid "Minimum Inventory Rule"
 msgstr "Regula inventarului minim"
 
 #. module: mrp
-#. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
 msgstr "Minute"
@@ -5091,14 +5059,10 @@ msgstr "Costuri reale"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
-msgid "Real Duration"
-msgstr "Durata reală"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-msgid "Real Duration (minutes)"
-msgstr ""
+msgid "Real Duration"
+msgstr "Durata reală"
 
 #. module: mrp
 #. odoo-javascript
@@ -5425,13 +5389,9 @@ msgstr "Setări"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Setup Time"
 msgstr "Timp de pregătire"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Setup Time (minutes)"
-msgstr "Timp de pregătire (minute)"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
@@ -6003,8 +5963,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already "
 "been produced"
 msgstr ""
-"Numărul de serie%(number)s utilizat pentru produsul secundar "
-"%(product_name)s a fost deja produs"
+"Numărul de serie%(number)s utilizat pentru produsul secundar %"
+"(product_name)s a fost deja produs"
 
 #. module: mrp
 #. odoo-python
@@ -6068,6 +6028,12 @@ msgstr ""
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr "Nu există un calendar definit pe centrul de lucru %s."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6196,15 +6162,6 @@ msgid "Time in minutes for the setup."
 msgstr "Timp în minute pentru configurare."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-msgid ""
-"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
-"time when there aren't any work orders yet"
-msgstr ""
-"Timp în minute:- În modul fix, timpul utilizat- În modul calculat, primul "
-"timp presupus când nu există încă comenzi de lucru"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
 msgid "Timezone"
 msgstr "Fus orar"
@@ -6325,13 +6282,9 @@ msgstr "Cost total producție"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr "Durată Totală"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-msgid "Total Duration (minutes)"
-msgstr "Durata Totală (minute)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -6684,8 +6637,8 @@ msgstr "În așteptarea altei operații"
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Se așteaptă comanda de lucru anterioară, planificat de la %(start)s până la "
-"%(end)s"
+"Se așteaptă comanda de lucru anterioară, planificat de la %(start)s până la %"
+"(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -7293,8 +7246,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 "Trebuie să furnizați numărul de lot/serie pentru produse și să le "
 "'consumați': %(missing_products)s"
@@ -7393,13 +7346,6 @@ msgid "merged"
 msgstr "fuzionat"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "minutes"
-msgstr "minute"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
 msgstr "de"
@@ -7429,3 +7375,51 @@ msgstr "durată reală"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divizat"
+
+#~ msgid ""
+#~ "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
+#~ "span>\n"
+#~ "                                    <span invisible=\"time_mode == "
+#~ "'manual'\"> / last </span>"
+#~ msgstr ""
+#~ "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minute</"
+#~ "span>\n"
+#~ "                                    <span invisible=\"time_mode == "
+#~ "'manual'\"> / ultimul </span>"
+
+#~ msgid "<span>minutes</span>"
+#~ msgstr "<span>minute</span>"
+
+#~ msgid "<span> (minutes)</span>"
+#~ msgstr "<span> (minute)</span>"
+
+#~ msgid "<strong>Actual Duration (minutes)</strong>"
+#~ msgstr "<strong>Durata actuală (minute)</strong>"
+
+#~ msgid "<strong>Duration (minutes)</strong>"
+#~ msgstr "<strong>Durată (minute)</strong>"
+
+#~ msgid "Cleanup Time (minutes)"
+#~ msgstr "Timp de curățare (minute)"
+
+#~ msgid "Duration (minutes)"
+#~ msgstr "Durată (minutes)"
+
+#~ msgid "Expected Duration (minutes)"
+#~ msgstr "Durată estimată (minute)"
+
+#~ msgid "Setup Time (minutes)"
+#~ msgstr "Timp de pregătire (minute)"
+
+#~ msgid ""
+#~ "Time in minutes:- In fixed mode, time used- In computed mode, supposed "
+#~ "first time when there aren't any work orders yet"
+#~ msgstr ""
+#~ "Timp în minute:- În modul fix, timpul utilizat- În modul calculat, primul "
+#~ "timp presupus când nu există încă comenzi de lucru"
+
+#~ msgid "Total Duration (minutes)"
+#~ msgstr "Durata Totală (minute)"
+
+#~ msgid "minutes"
+#~ msgstr "minute"

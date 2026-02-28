@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:20+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -80,8 +80,8 @@ msgstr "ĐƠN HOÀN TIỀN %(name)s"
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành "
-"%(new_amount)s"
+"%(old_pm)s được thay đổi thành %(new_pm)s và từ %(old_amount)s thành %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -151,6 +151,12 @@ msgstr "%s có tổng số tiền là %s, bạn có chắc chắn muốn xoá đ
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "%s left"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
 msgstr ""
@@ -206,6 +212,12 @@ msgid "0014-001-00001"
 msgstr "0014-001-00001"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "1 Hour"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "10"
 msgstr "10"
@@ -251,6 +263,12 @@ msgid "1234567890"
 msgstr "1234567890"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "2 Hours"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "9:00 sáng ngày 2-03-2000"
@@ -258,6 +276,12 @@ msgstr "9:00 sáng ngày 2-03-2000"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "38.83"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "4 Hours"
 msgstr ""
 
 #. module: point_of_sale
@@ -318,13 +342,13 @@ msgstr "99,99"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -348,13 +372,13 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Xin chào <t t-"
 "out=\"client_name\">Tên khách hàng</t>,</t>\n"
@@ -410,9 +434,9 @@ msgstr "<i class=\"fa fa-pencil\"/> Chỉnh sửa"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt "
-"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
-"%(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
 "<p>Xin chào %(client_name)s,<br/>Đây là Biên lai của bạn %(is_invoiced)s "
 "cho             %(pos_name)s với số tiền là %(amount)s từ %(company_name)s. "
@@ -1166,8 +1190,8 @@ msgstr "Số tiền đã trả"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
 msgstr ""
-"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành "
-"%(new_amount)s"
+"Số tiền cho %(old_pm)s đã được thay đổi từ %(old_amount)s thành %"
+"(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1286,6 +1310,7 @@ msgstr "Bánh táo"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
@@ -1760,6 +1785,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cancel"
@@ -3350,6 +3376,7 @@ msgstr "CK:"
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
@@ -3499,6 +3526,14 @@ msgstr "Hiển thị giá sản phẩm của bạn thông qua nhãn giá điện
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Do you want to open the customer list to select customer?"
 msgstr "Bạn có muốn mở danh sách khách hàng để chọn khách hàng không?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid ""
+"Do you want to stop the snooze early and make the product available again "
+"immediately?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5105,6 +5140,12 @@ msgid "Magnetic Board"
 msgstr "Bảng nam châm"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "Make %s unavailable for:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Thanh toán"
@@ -5449,6 +5490,12 @@ msgstr "Danh sách đơn hàng tiếp theo"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Next session"
 msgstr ""
 
 #. module: point_of_sale
@@ -6019,8 +6066,8 @@ msgstr "Sản phẩm tuỳ chọn:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart (e."
-"g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart "
+"(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Các sản phẩm tùy chọn sẽ được gợi ý khi khách hàng thêm mặt hàng vào giỏ "
 "hàng (VD: việc thêm một chiếc burger sẽ gợi ý nước ngọt hoặc khoai tây "
@@ -6136,6 +6183,12 @@ msgstr "Đơn hoàn tiền mà các mặt hàng từ đơn hàng này đã đư�
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
 msgstr "Chi tiết đơn hàng"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -6335,6 +6388,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
+msgid "POS: Product Snooze cleanup"
 msgstr ""
 
 #. module: point_of_sale
@@ -6662,8 +6720,8 @@ msgstr "Vui lòng tạo/chọn một POS ở trên để hiển thị các tùy 
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' (id:"
-"%(id)d)."
+"Vui lòng xác định tài khoản thu nhập cho sản phẩm này: '%(product)s' (id:%"
+"(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8050,11 +8108,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
 msgstr ""
-"Đảo ngược bút toán đóng phiên POS %(entry)s cho đơn hàng %(order)s từ phiên "
-"%(session)s"
+"Đảo ngược bút toán đóng phiên POS %(entry)s cho đơn hàng %(order)s từ phiên %"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8459,6 +8517,7 @@ msgstr "Sự cố giao tiếp máy chủ"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
@@ -8738,6 +8797,12 @@ msgid "Small Shelf"
 msgstr "Giá nhỏ"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Snooze"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
 msgid "Snoozed Products"
 msgstr ""
@@ -8910,6 +8975,12 @@ msgstr "Ngừng"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop Barcode Scanner"
 msgstr "Ngừng máy quét mã vạch"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Stop Snooze"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -9090,6 +9161,12 @@ msgstr "Giá chưa bao gồm thuế"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
 msgid "Tax-Included Price"
 msgstr "Giá bao gồm thuế"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Tax:"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10226,7 +10303,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total Tax:"
 msgstr ""
 
@@ -10556,8 +10633,6 @@ msgid "Uuid"
 msgstr "Uuid"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "VAT"
 msgstr "Mã số thuế"
@@ -10741,6 +10816,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Yes"
 msgstr "Có"
@@ -10854,11 +10930,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr ""
 "Bạn không thể lưu trữ '%(picking_type)s' vì nó đang được dùng trong cấu hình "
 "POS '%(config)s'."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10992,8 +11076,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Bạn đã bật tùy chọn \"Xác định khách hàng\" cho phương thức thanh toán "
-"%(payment_method)s, nhưng đơn hàng %(order)s không chứa khách hàng."
+"Bạn đã bật tùy chọn \"Xác định khách hàng\" cho phương thức thanh toán %"
+"(payment_method)s, nhưng đơn hàng %(order)s không chứa khách hàng."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:15+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -58,9 +58,8 @@ msgstr " <br/><br/> Các thành phần được lấy từ <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/>Sản phẩm được sản xuất sẽ được chuyển đến <b>%(destination)s</b>, "
 "<br/>như được chỉ định từ đích đến của <b>%(operation)s</b>."
@@ -525,11 +524,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / last </span>"
+msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
 msgstr ""
 
 #. module: mrp
@@ -591,24 +586,13 @@ msgstr "<span>CÔNG ĐOẠN</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "<span>minutes</span>"
-msgstr "<span>phút</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "<span> (minutes)</span>"
-msgstr "<span> (phút)</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr "<strong class=\"mr8 oe_inline\">đến</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>Thời lượng thực tế (phút)</strong>"
+msgid "<strong>Actual Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -627,8 +611,8 @@ msgstr "<strong>Mô tả:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>Thời lượng (phút)</strong>"
+msgid "<strong>Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -1012,8 +996,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác "
-"%(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
+"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác %"
+"(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
 "lưu trữ sản phẩm và tạo sản phẩm mới."
 
 #. module: mrp
@@ -1654,13 +1638,9 @@ msgstr "Chọn in nhãn sản phẩm hay số lô/sê-ri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time"
 msgstr "Thời gian dọn dẹp"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Cleanup Time (minutes)"
-msgstr "Thời gian dọn dẹp (phút)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2215,6 +2195,14 @@ msgid "Default Duration"
 msgstr "Thời lượng mặc định"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
+msgid ""
+"Default operation time. Base unit in minutes.\n"
+"If you are in the computed duration mode, enter an estimate since there "
+"aren't any work orders yet."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid ""
 "Define the components and finished products you wish to use in\n"
@@ -2418,11 +2406,6 @@ msgstr "Ngăn kéo dạng có bánh xe giúp việc sử dụng hiệu quả hơ
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
-#: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration"
-msgstr "Thời lượng"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
@@ -2430,8 +2413,8 @@ msgstr "Thời lượng"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Duration (minutes)"
-msgstr "Thời lượng (phút)"
+msgid "Duration"
+msgstr "Thời lượng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
@@ -2559,18 +2542,14 @@ msgstr "%s dự kiến"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
-msgid "Expected Duration"
-msgstr "Thời lượng dự kiến"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Expected Duration (minutes)"
-msgstr "Thời lượng dự kiến (phút)"
+msgid "Expected Duration"
+msgstr "Thời lượng dự kiến"
 
 #. module: mrp
 #. odoo-javascript
@@ -2840,8 +2819,6 @@ msgid "Hourly processing cost."
 msgstr "Chi phí xử lý mỗi giờ."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "Giờ"
@@ -3783,11 +3760,6 @@ msgid "Minimum Inventory Rule"
 msgstr "Quy tắc tồn kho tối thiểu"
 
 #. module: mrp
-#. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
 msgstr "Phút"
@@ -5047,14 +5019,10 @@ msgstr "Chi phí thực tế"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
-msgid "Real Duration"
-msgstr "Thời lượng thực tế"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-msgid "Real Duration (minutes)"
-msgstr ""
+msgid "Real Duration"
+msgstr "Thời lượng thực tế"
 
 #. module: mrp
 #. odoo-javascript
@@ -5240,8 +5208,8 @@ msgstr "Ngày đã lên lịch"
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Được lên lịch trước công đoạn trước đó, được lên kế hoạch từ %(start)s đến "
-"%(end)s"
+"Được lên lịch trước công đoạn trước đó, được lên kế hoạch từ %(start)s đến %"
+"(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5377,13 +5345,9 @@ msgstr "Cài đặt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Setup Time"
 msgstr "Thời gian thiết lập"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Setup Time (minutes)"
-msgstr "Thời gian thiết lập (phút)"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
@@ -6015,6 +5979,12 @@ msgid "There is no defined calendar on workcenter %s."
 msgstr "Không có lịch nào được xác định cho khu vực sản xuất %s."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "Chưa có dịch chuyển sản phẩm nào"
@@ -6133,15 +6103,6 @@ msgstr "Thời gian dọn dẹp tính bằng phút."
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Time in minutes for the setup."
 msgstr "Thời gian thiết lập tính bằng phút."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-msgid ""
-"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
-"time when there aren't any work orders yet"
-msgstr ""
-"Thời gian tính bằng phút:- Ở chế độ cố định, là thời gian đã sử dụng- Ở chế "
-"độ tính toán, là thời gian dự kiến đầu tiên khi chưa có công đoạn nào"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6264,13 +6225,9 @@ msgstr "Tổng chi phí sản xuất"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr "Tổng thời lượng"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-msgid "Total Duration (minutes)"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -7216,11 +7173,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
-"Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'sử dụng' chúng: "
-"%(missing_products)s"
+"Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'sử dụng' chúng: %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7316,13 +7273,6 @@ msgid "merged"
 msgstr "đã hợp nhất"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "minutes"
-msgstr "phút"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
 msgstr "của"
@@ -7352,3 +7302,37 @@ msgstr "thời lượng thực tế"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "tách"
+
+#~ msgid "<span>minutes</span>"
+#~ msgstr "<span>phút</span>"
+
+#~ msgid "<span> (minutes)</span>"
+#~ msgstr "<span> (phút)</span>"
+
+#~ msgid "<strong>Actual Duration (minutes)</strong>"
+#~ msgstr "<strong>Thời lượng thực tế (phút)</strong>"
+
+#~ msgid "<strong>Duration (minutes)</strong>"
+#~ msgstr "<strong>Thời lượng (phút)</strong>"
+
+#~ msgid "Cleanup Time (minutes)"
+#~ msgstr "Thời gian dọn dẹp (phút)"
+
+#~ msgid "Duration (minutes)"
+#~ msgstr "Thời lượng (phút)"
+
+#~ msgid "Expected Duration (minutes)"
+#~ msgstr "Thời lượng dự kiến (phút)"
+
+#~ msgid "Setup Time (minutes)"
+#~ msgstr "Thời gian thiết lập (phút)"
+
+#~ msgid ""
+#~ "Time in minutes:- In fixed mode, time used- In computed mode, supposed "
+#~ "first time when there aren't any work orders yet"
+#~ msgstr ""
+#~ "Thời gian tính bằng phút:- Ở chế độ cố định, là thời gian đã sử dụng- Ở "
+#~ "chế độ tính toán, là thời gian dự kiến đầu tiên khi chưa có công đoạn nào"
+
+#~ msgid "minutes"
+#~ msgstr "phút"

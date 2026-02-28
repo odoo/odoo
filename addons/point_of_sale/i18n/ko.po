@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-14 12:16+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 13:50+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -148,6 +148,12 @@ msgstr "%s의 총액은 %s입니다. 이 주문을 삭제하시겠습니까?"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "%s left"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
 msgstr "%s 필요"
@@ -203,6 +209,12 @@ msgid "0014-001-00001"
 msgstr "0014-001-00001"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "1 Hour"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "10"
 msgstr "10"
@@ -248,6 +260,12 @@ msgid "1234567890"
 msgstr "1234567890"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "2 Hours"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "2-03-2000 9:00 AM"
@@ -256,6 +274,12 @@ msgstr "2-03-2000 9:00 AM"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "38.83"
 msgstr "38.83"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "4 Hours"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -313,13 +337,13 @@ msgstr "99.99"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -343,13 +367,13 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">안녕하세요 <t t-"
 "out=\"client_name\">Client name</t> 고객님,</t>\n"
@@ -358,8 +382,8 @@ msgstr ""
 "                    <br/>\n"
 "                    <div>저희 <t t-out=\"store_name\">Store name</t> 스토어"
 "를 이용해 주셔서 감사합니다!</div>\n"
-"                    <div>첨부한  <span><t t-out=\"format_datetime(dt=object."
-"date_order, tz=tz, dt_format=&quot;EEEE d "
+"                    <div>첨부한  <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
 "MMMM&quot;,                          lang_code=lg) or ''\">date</t>  <t t-"
 "out=\"format_time(time=object.date_order, tz=tz, "
 "time_format='short',                          lang_code=lg)\">time</t> 기준"
@@ -405,9 +429,9 @@ msgstr "<i class=\"fa fa-pencil\"/> 편집"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt "
-"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
-"%(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
 "<p>안녕하세요 %(client_name)s님,<br/>영수증%(is_invoiced)s이 발행되었습니"
 "다.             %(pos_name)s 금액 %(amount)s이 %(company_name)s에 청구되었습"
@@ -1268,6 +1292,7 @@ msgstr "애플파이"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
@@ -1596,7 +1621,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Base"
-msgstr ""
+msgstr "기준액"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__basic_receipt
@@ -1619,7 +1644,7 @@ msgstr "차액 마감 전"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr ""
+msgstr "공급업체 청구서"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1737,6 +1762,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cancel"
@@ -2088,7 +2114,7 @@ msgstr "팁 변경"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Change:"
-msgstr ""
+msgstr "잔액:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2233,7 +2259,7 @@ msgstr "시나몬 롤"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "City"
-msgstr ""
+msgstr "시/군/구"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
@@ -3314,6 +3340,7 @@ msgstr "할인율 :"
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
@@ -3460,6 +3487,14 @@ msgstr "전자 가격표를 통해 제품 가격 표시"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Do you want to open the customer list to select customer?"
 msgstr "고객 목록을 열어서 고객을 선택하시겠습니까?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid ""
+"Do you want to stop the snooze early and make the product available again "
+"immediately?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3629,7 +3664,7 @@ msgstr "다른 주문 전에 환불을 승인해야 합니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Enter"
-msgstr ""
+msgstr "엔터"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_ip
@@ -3831,7 +3866,7 @@ msgstr "멋진 아이콘 폰트 예: fa-tasks"
 #. module: point_of_sale
 #: model:product.category,name:point_of_sale.product_category_food
 msgid "Food"
-msgstr ""
+msgstr "푸드"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5053,6 +5088,12 @@ msgid "Magnetic Board"
 msgstr "마그네틱 보드"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "Make %s unavailable for:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "결제하기"
@@ -5205,7 +5246,7 @@ msgstr "모바일"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Mode"
-msgstr ""
+msgstr "모드"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_module_module
@@ -5397,6 +5438,12 @@ msgstr "다음 주문 목록"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
 msgstr "다음 번호:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Next session"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5961,8 +6008,8 @@ msgstr "선택 품목:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart (e."
-"g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart "
+"(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "고객이 장바구니에 항목을 추가하면 선택 품목이 추천됩니다(예: 햄버거를 추가하"
 "면 시원한 음료나 감자튀김 추천)."
@@ -6079,6 +6126,12 @@ msgid "Order lines"
 msgstr "주문 명세"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Order(s)"
 msgstr "주문"
@@ -6167,7 +6220,7 @@ msgstr "미결제 계정"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
 msgid "PAYMENTS:"
-msgstr ""
+msgstr "결제:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
@@ -6277,6 +6330,11 @@ msgid "POS order line from config #%s"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
+msgid "POS: Product Snooze cleanup"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
@@ -6300,7 +6358,7 @@ msgstr "상위 카테고리"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "Partners"
-msgstr ""
+msgstr "파트너"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_pastries
@@ -7980,8 +8038,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
 msgstr ""
 "POS 마감 항목 %(entry)s 중 %(order)s 주문을 %(session)s에서 취소했습니다."
 
@@ -8048,12 +8106,12 @@ msgstr "결제 내역의 반올림 오류"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Rounding:"
-msgstr ""
+msgstr "반올림:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Roundings"
-msgstr ""
+msgstr "반올림"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8388,6 +8446,7 @@ msgstr "서버 통신 문제"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
@@ -8643,7 +8702,7 @@ msgstr "로그인"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_tip_receipt
 msgid "Signature:"
-msgstr ""
+msgstr "서명:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -8661,6 +8720,12 @@ msgstr "슬롯"
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
 msgstr "작은 선반"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Snooze"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
@@ -8772,7 +8837,7 @@ msgstr "개시 잔액"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "State"
-msgstr ""
+msgstr "상태"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__state
@@ -8836,6 +8901,12 @@ msgid "Stop Barcode Scanner"
 msgstr "바코드 스캐너 중지"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Stop Snooze"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__order_edit_tracking
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_order_edit_tracking
@@ -8851,7 +8922,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "Street..."
-msgstr ""
+msgstr "상세 주소"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8891,7 +8962,7 @@ msgstr "할인없는 소계"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_tip_receipt
 msgid "Subtotal:"
-msgstr ""
+msgstr "소계:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8939,12 +9010,12 @@ msgstr "티셔츠 세트"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
 msgid "TAXES:"
-msgstr ""
+msgstr "세금:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
 msgid "TOTAL:"
-msgstr ""
+msgstr "합계:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9020,6 +9091,12 @@ msgstr "세금 포함 가격"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Tax:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
@@ -9058,7 +9135,7 @@ msgstr "기술 관련"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.company_info_receipt
 msgid "Tel."
-msgstr ""
+msgstr "전화"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
@@ -10120,7 +10197,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total Tax:"
 msgstr ""
 
@@ -10445,8 +10522,6 @@ msgid "Uuid"
 msgstr "Uuid"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "VAT"
 msgstr "부가가치세"
@@ -10532,7 +10607,7 @@ msgstr "경고, 결제 금액이 총 금액보다 높습니다. (금액차: %s)"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_custom_website
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Website"
-msgstr ""
+msgstr "웹사이트"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__custom_website_placeholder
@@ -10627,6 +10702,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Yes"
 msgstr "예"
@@ -10736,10 +10812,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr ""
 "'%(picking_type)s'는 POS 설정 '%(config)s'에서 사용되므로 보관할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -10955,7 +11039,7 @@ msgstr "내 {{ object.config_id.name }} 영수증"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "ZIP"
-msgstr ""
+msgstr "우편번호"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_tip_receipt
@@ -11061,7 +11145,7 @@ msgstr "예: 청량 음료"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
 msgid "ePoS"
-msgstr ""
+msgstr "ePoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form

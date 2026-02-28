@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:47+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/mrp/th/"
@@ -60,9 +60,8 @@ msgstr " <br/><br/> ส่วนประกอบจะถูกนำมาจ
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> สินค้าที่ผลิตจะถูกเคลื่อนย้ายไปยัง<b>%(destination)s</b><br/> "
 "ที่ระบุจากปลายทาง <b>%(operation)s</b>"
@@ -492,11 +491,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / last </span>"
+msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
 msgstr ""
 
 #. module: mrp
@@ -558,24 +553,13 @@ msgstr "<span>คำสั่งงาน</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "<span>minutes</span>"
-msgstr "<span>นาที</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "<span> (minutes)</span>"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr "<strong class=\"mr8 oe_inline\">ถึง</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>ระยะเวลาจริง (นาที)</strong>"
+msgid "<strong>Actual Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -594,8 +578,8 @@ msgstr "<strong>คำอธิบาย:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>ระยะเวลา (นาที)</strong>"
+msgid "<strong>Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -1607,13 +1591,9 @@ msgstr "เลือกว่าจะพิมพ์ฉลากสินค้
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time"
 msgstr "เวลาการทำความสะอาด"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Cleanup Time (minutes)"
-msgstr "เวลาทำความสะอาด (นาที)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2155,6 +2135,14 @@ msgid "Default Duration"
 msgstr "ระยะเวลาเริ่มต้น"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
+msgid ""
+"Default operation time. Base unit in minutes.\n"
+"If you are in the computed duration mode, enter an estimate since there "
+"aren't any work orders yet."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid ""
 "Define the components and finished products you wish to use in\n"
@@ -2358,11 +2346,6 @@ msgstr "ลิ้นชักบนล้อเลื่อนเพื่อก
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
-#: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration"
-msgstr "ระยะเวลา"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
@@ -2370,8 +2353,8 @@ msgstr "ระยะเวลา"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Duration (minutes)"
-msgstr "ระยะเวลา (นาที)"
+msgid "Duration"
+msgstr "ระยะเวลา"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
@@ -2496,18 +2479,14 @@ msgstr "คาดว่า %s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
-msgid "Expected Duration"
-msgstr "ระยะเวลาที่คาดหวัง"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Expected Duration (minutes)"
-msgstr "ระยะเวลาที่คาดหวัง (นาที)"
+msgid "Expected Duration"
+msgstr "ระยะเวลาที่คาดหวัง"
 
 #. module: mrp
 #. odoo-javascript
@@ -2772,8 +2751,6 @@ msgid "Hourly processing cost."
 msgstr "ต้นทุนดำเนินการรายชั่วโมง"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "ชั่วโมง"
@@ -3699,11 +3676,6 @@ msgid "Minimum Inventory Rule"
 msgstr "กฎขั้นต่ำของสินค้าคงคลัง"
 
 #. module: mrp
-#. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
 msgstr "นาที"
@@ -4954,14 +4926,10 @@ msgstr "ต้นทุนจริง"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
-msgid "Real Duration"
-msgstr "ระยะเวลาจริง"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-msgid "Real Duration (minutes)"
-msgstr ""
+msgid "Real Duration"
+msgstr "ระยะเวลาจริง"
 
 #. module: mrp
 #. odoo-javascript
@@ -5281,13 +5249,9 @@ msgstr "การตั้งค่า"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Setup Time"
 msgstr "ตั้งเวลา"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Setup Time (minutes)"
-msgstr "เวลาตั้งค่า (นาที)"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
@@ -5711,8 +5675,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
-"ค่าคุณลักษณะ%(attribute)s ที่ตั้งบนสินค้า %(product)s ไม่ตรงกับ BoM "
-"ของสินค้า%(bom_product)s"
+"ค่าคุณลักษณะ%(attribute)s ที่ตั้งบนสินค้า %(product)s ไม่ตรงกับ BoM ของสินค้า%"
+"(bom_product)s"
 
 #. module: mrp
 #. odoo-python
@@ -5904,6 +5868,12 @@ msgid "There is no defined calendar on workcenter %s."
 msgstr "ไม่มีปฏิทินที่กำหนดไว้ในศูนย์งาน %s"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "ยังไม่มีการเคลื่อนย้ายสินค้า"
@@ -6020,13 +5990,6 @@ msgstr "เวลาเป็นนาทีสำหรับการทำค
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Time in minutes for the setup."
 msgstr "เวลาเป็นนาทีสำหรับการตั้งค่า"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-msgid ""
-"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
-"time when there aren't any work orders yet"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6149,13 +6112,9 @@ msgstr "ต้นทุนการผลิตทั้งหมด"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr "ระยะเวลารวม"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-msgid "Total Duration (minutes)"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -7074,8 +7033,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 "คุณต้องระบุหมายเลขล็อต/หมายเลขซีเรียลสำหรับผลิตภัณฑ์และ \"บริโภค\" :%(missing_products)s"
 
@@ -7169,13 +7128,6 @@ msgid "merged"
 msgstr "ผสานแล้ว"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "minutes"
-msgstr "นาที"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
 msgstr "ของ"
@@ -7205,3 +7157,27 @@ msgstr "ระยะเวลาจริง"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "แยก"
+
+#~ msgid "<span>minutes</span>"
+#~ msgstr "<span>นาที</span>"
+
+#~ msgid "<strong>Actual Duration (minutes)</strong>"
+#~ msgstr "<strong>ระยะเวลาจริง (นาที)</strong>"
+
+#~ msgid "<strong>Duration (minutes)</strong>"
+#~ msgstr "<strong>ระยะเวลา (นาที)</strong>"
+
+#~ msgid "Cleanup Time (minutes)"
+#~ msgstr "เวลาทำความสะอาด (นาที)"
+
+#~ msgid "Duration (minutes)"
+#~ msgstr "ระยะเวลา (นาที)"
+
+#~ msgid "Expected Duration (minutes)"
+#~ msgstr "ระยะเวลาที่คาดหวัง (นาที)"
+
+#~ msgid "Setup Time (minutes)"
+#~ msgstr "เวลาตั้งค่า (นาที)"
+
+#~ msgid "minutes"
+#~ msgstr "นาที"

@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-14 12:06+0000\n"
+"PO-Revision-Date: 2026-02-28 13:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/crm/de/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/crm/de/"
 ">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -195,7 +195,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"me-1\"> of </span>"
-msgstr ""
+msgstr "<span class=\"me-1\"> von </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -229,7 +229,7 @@ msgstr "<span class=\"o_stat_text\"> Leads</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<span class=\"o_stat_text\">Opportunities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Verkaufschancen</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -277,6 +277,10 @@ msgid ""
 "default.\n"
 "                                </span>"
 msgstr ""
+"<span>Weisen Sie Leads regelmäßig anhand von Prioritäten und Filtern "
+"zu.</span><br/> <span invisible=\"not crm_use_auto_assignment\"> Alle "
+"Verkaufsteams verwenden diese Einstellung standardmäßig.\n"
+"                               </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -711,7 +715,7 @@ msgstr "Nächstes Ausführungsdatum für automatische Zuweisungen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_rules
 msgid "Auto-Assignment Rules"
-msgstr ""
+msgstr "Regeln zur automatischen Zuweisung"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -1388,7 +1392,7 @@ msgstr "Anzeigename"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Display your partners on a dedicated website page."
-msgstr ""
+msgstr "Präsentieren Sie Ihre Partner auf einer eigenen Website."
 
 #. module: crm
 #. odoo-python
@@ -1711,7 +1715,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Generate leads from Outlook & Gmail"
-msgstr ""
+msgstr "Leads aus Outlook und Gmail generieren"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
@@ -2002,7 +2006,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Keep current user"
-msgstr ""
+msgstr "Aktuellen Benutzer beibehalten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -2288,7 +2292,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 msgid "Leads merged"
-msgstr ""
+msgstr "Leads zusammengeführt"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -2762,7 +2766,7 @@ msgstr "Kein Betreff"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
 msgid "No activities scheduled"
-msgstr ""
+msgstr "Keine Aktivitäten geplant"
 
 #. module: crm
 #. odoo-python
@@ -2894,7 +2898,7 @@ msgstr "Anzahl der Aktionen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunity_count
 msgid "Number of assigned opportunities"
-msgstr ""
+msgstr "Anzahl zugewiesener Verkaufschancen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
@@ -2973,7 +2977,7 @@ msgstr "Laufend"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Only assign if"
-msgstr ""
+msgstr "Nur zuweisen, wenn"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3187,12 +3191,12 @@ msgstr "Partner steht auf schwarzer Liste"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_partnership
 msgid "Partners Website Page"
-msgstr ""
+msgstr "Webseite des Partners"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 msgid "Pause auto assignment"
-msgstr ""
+msgstr "Automatische Zuweisung pausieren"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3387,7 +3391,7 @@ msgstr "Qualifiziert"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Qualify leads with a Survey"
-msgstr ""
+msgstr "Leads mit einer Umfrage qualifizieren"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rating_ids
@@ -3405,7 +3409,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Reassign To"
-msgstr ""
+msgstr "Neu zuweisen an"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -3437,7 +3441,7 @@ msgstr "Wiederkehrende Umsätze"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Reference"
-msgstr ""
+msgstr "Referenz"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred

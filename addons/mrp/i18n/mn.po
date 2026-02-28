@@ -29,7 +29,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:45+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
@@ -71,9 +71,8 @@ msgstr " <br/><br/> Бүрэлдэхүүн хэсгүүдийг нь авна <b
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> Үйлдвэрлэгдсэн бэлэн бүтээгдэхүүн <b>%(destination)s</b> "
 "байрлалд, <br/>  <b>%(operation)s</b> үйл ажиллагааны чиглэлийн дагуу "
@@ -507,11 +506,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / last </span>"
+msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
 msgstr ""
 
 #. module: mrp
@@ -573,24 +568,13 @@ msgstr "<span>АЖЛЫН ЗАХИАЛГУУД</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "<span>minutes</span>"
-msgstr "<span>Минут</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "<span> (minutes)</span>"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr "<strong class=\"mr8 oe_inline\">руу</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>Бодит үргэлжлэх хугацаа (минут)</strong>"
+msgid "<strong>Actual Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -609,8 +593,8 @@ msgstr "<strong>Тайлбар:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>Үргэлжлэх хугацаа (минут)</strong>"
+msgid "<strong>Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -1641,13 +1625,9 @@ msgstr "Хэвлэх шошго нь бараа эсвэл серийн дуга
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time"
 msgstr "Цэвэрлэх хугацаа"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Cleanup Time (minutes)"
-msgstr "Цэвэрлэх хугацаа (минут)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2193,6 +2173,14 @@ msgid "Default Duration"
 msgstr "Үндсэн Үргэлжлэх хугацаа"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
+msgid ""
+"Default operation time. Base unit in minutes.\n"
+"If you are in the computed duration mode, enter an estimate since there "
+"aren't any work orders yet."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid ""
 "Define the components and finished products you wish to use in\n"
@@ -2396,11 +2384,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
-#: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration"
-msgstr "Үргэлжлэх хугацаа"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
@@ -2408,8 +2391,8 @@ msgstr "Үргэлжлэх хугацаа"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Duration (minutes)"
-msgstr "Үргэлжлэх хугацаа (минут)"
+msgid "Duration"
+msgstr "Үргэлжлэх хугацаа"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
@@ -2534,18 +2517,14 @@ msgstr "Тооцоолсон %s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
-msgid "Expected Duration"
-msgstr "Таамагласан Үргэлжлэх хугацаа"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Expected Duration (minutes)"
-msgstr "Тооцоолсон хугацаа (минут)"
+msgid "Expected Duration"
+msgstr "Таамагласан Үргэлжлэх хугацаа"
 
 #. module: mrp
 #. odoo-javascript
@@ -2808,8 +2787,6 @@ msgid "Hourly processing cost."
 msgstr "Цаг тутмын боловсруулах өртөг"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "Цаг"
@@ -3749,11 +3726,6 @@ msgid "Minimum Inventory Rule"
 msgstr "Зохистой нөөцийн дүрэм"
 
 #. module: mrp
-#. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
 msgstr "Минут"
@@ -5007,14 +4979,10 @@ msgstr "Бодит өртөг"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
-msgid "Real Duration"
-msgstr "Бодит Үргэлжлэх хугацаа"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-msgid "Real Duration (minutes)"
-msgstr ""
+msgid "Real Duration"
+msgstr "Бодит Үргэлжлэх хугацаа"
 
 #. module: mrp
 #. odoo-javascript
@@ -5333,12 +5301,8 @@ msgstr "Тохиргоо"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
-msgid "Setup Time"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Setup Time (minutes)"
+msgid "Setup Time"
 msgstr ""
 
 #. module: mrp
@@ -5945,6 +5909,12 @@ msgid "There is no defined calendar on workcenter %s."
 msgstr ""
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "Барааны ямар нэг хөдөлгөөн одоогоор алга"
@@ -6051,13 +6021,6 @@ msgstr "Цэвэрлэгээний хугацаа минутаар."
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Time in minutes for the setup."
 msgstr "Тохиргооны хугацаа минутаар."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-msgid ""
-"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
-"time when there aren't any work orders yet"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6180,13 +6143,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr "Нийт хугацаа"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-msgid "Total Duration (minutes)"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -7133,8 +7092,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
 "Дараах хянагддаг бүтээгдэхүүнүүдийн хувьд багц/сери дугаар оруулж, "
 "зарцуулалтыг бүртгэх шаардлагатай байна: %(missing_products)s"
@@ -7233,13 +7192,6 @@ msgid "merged"
 msgstr "нэгтгэгдсэн"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "minutes"
-msgstr "минут"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
 msgstr "ын"
@@ -7269,3 +7221,24 @@ msgstr "бодит хугацаа"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "хуваах"
+
+#~ msgid "<span>minutes</span>"
+#~ msgstr "<span>Минут</span>"
+
+#~ msgid "<strong>Actual Duration (minutes)</strong>"
+#~ msgstr "<strong>Бодит үргэлжлэх хугацаа (минут)</strong>"
+
+#~ msgid "<strong>Duration (minutes)</strong>"
+#~ msgstr "<strong>Үргэлжлэх хугацаа (минут)</strong>"
+
+#~ msgid "Cleanup Time (minutes)"
+#~ msgstr "Цэвэрлэх хугацаа (минут)"
+
+#~ msgid "Duration (minutes)"
+#~ msgstr "Үргэлжлэх хугацаа (минут)"
+
+#~ msgid "Expected Duration (minutes)"
+#~ msgstr "Тооцоолсон хугацаа (минут)"
+
+#~ msgid "minutes"
+#~ msgstr "минут"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-02-27 18:38+0000\n"
 "PO-Revision-Date: 2026-02-14 12:22+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/web/fr/"
@@ -564,10 +564,10 @@ msgstr "<span id=\"line_tax_ids\">15%</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid ""
-"<span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:"
-"none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead "
-"to partially invalid result in case of concurrent profiles.<br/>Use with "
-"caution </span>"
+"<span id=\"temporal_warning\" class=\"alert alert-warning\" "
+"style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples."
+"<br/>It can lead to partially invalid result in case of concurrent profiles."
+"<br/>Use with caution </span>"
 msgstr ""
 
 #. module: web
@@ -2714,8 +2714,8 @@ msgstr "Affiche ou masque l'heure dans la valeur de la date."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
-"Affiche la date soit au format 31/01/%(year)s, soit au format 31 janv. "
-"%(year)s"
+"Affiche la date soit au format 31/01/%(year)s, soit au format 31 janv. %"
+"(year)s"
 
 #. module: web
 #. odoo-javascript
@@ -4028,11 +4028,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid ""
-"It will be removed for everyone using the \"%(parentName)s\" "
-"%(parentFieldLabel)s."
+"It will be removed for everyone using the \"%(parentName)s\" %"
+"(parentFieldLabel)s."
 msgstr ""
-"Cet élément sera supprimé pour tous les utilisateurs du/ de "
-"\"%(parentName)s\" %(parentFieldLabel)s."
+"Cet élément sera supprimé pour tous les utilisateurs du/ de \"%"
+"(parentName)s\" %(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
@@ -5127,8 +5127,8 @@ msgstr "Aucun appareil ne peut être trouvé."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji matches your search"
-msgstr "Aucun emoji ne correspond à votre recherche"
+msgid "No emojis match your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5397,8 +5397,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
-"Parmi les %(selectedRecord)s enregistrements sélectionnés, seuls "
-"les%(firstRecords)s premiers ont été archivés/désarchivés."
+"Parmi les %(selectedRecord)s enregistrements sélectionnés, seuls les%"
+"(firstRecords)s premiers ont été archivés/désarchivés."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -5442,15 +5442,15 @@ msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
 msgstr ""
-"Seuls les premiers %(count)s enregistrements ont été supprimés (parmi les "
-"%(total)s selectionnés)."
+"Seuls les premiers %(count)s enregistrements ont été supprimés (parmi les %"
+"(total)s selectionnés)."
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for category (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for category (found type %"
+"(field_type)s)"
 msgstr ""
 "Seuls les types %(supported_types)s sont pris en charge pour la catégorie "
 "(type %(field_type)s trouvé)"
@@ -5459,11 +5459,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid ""
-"Only types %(supported_types)s are supported for filter (found type "
-"%(field_type)s)"
+"Only types %(supported_types)s are supported for filter (found type %"
+"(field_type)s)"
 msgstr ""
-"Seuls les types %(supported_types)s sont pris en charge pour filtrer (type "
-"%(field_type)s trouvé)"
+"Seuls les types %(supported_types)s sont pris en charge pour filtrer (type %"
+"(field_type)s trouvé)"
 
 #. module: web
 #. odoo-javascript
@@ -5498,8 +5498,8 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Oops! You cannot edit the %(parentFieldLabel)s \"%(parentName)s\"."
 msgstr ""
-"Oups ! Vous ne pouvez pas modifier le/la %(parentFieldLabel)s "
-"\"%(parentName)s\"."
+"Oups ! Vous ne pouvez pas modifier le/la %(parentFieldLabel)s \"%"
+"(parentName)s\"."
 
 #. module: web
 #. odoo-javascript
@@ -7306,15 +7306,15 @@ msgstr "Le fichier n’est pas une image, le redimensionnement est impossible"
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
 msgstr ""
-"Les ids dans %(field_name)s ne doivent pas être dupliqués : "
-"\"%(action_ids)s\""
+"Les ids dans %(field_name)s ne doivent pas être dupliqués : \"%"
+"(action_ids)s\""
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid ""
-"The ids in %(field_name)s must only be integers or \"false\": "
-"“%(action_ids)s”"
+"The ids in %(field_name)s must only be integers or \"false\": “%"
+"(action_ids)s”"
 msgstr ""
 "Les ids dans %(field_name)s doivent uniquement être des entiers ou "
 "\"false\" : \"%(action_ids)s\""
@@ -7346,11 +7346,11 @@ msgstr "Le champ sélectionné sera utilisé pour préremplir la signature"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid ""
-"The selected file (%(size)sB) is larger than the maximum allowed file size "
-"(%(maxSize)sB)."
+"The selected file (%(size)sB) is larger than the maximum allowed file size (%"
+"(maxSize)sB)."
 msgstr ""
-"Le fichier sélectionné (%(size)sB) dépasse la taille maximale autorisée "
-"(%(maxSize)sB)."
+"Le fichier sélectionné (%(size)sB) dépasse la taille maximale autorisée (%"
+"(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -7744,8 +7744,8 @@ msgstr "Impossible d'accéder à la caméra"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/reports/utils.js:0
 msgid ""
-"Unable to find Wkhtmltopdf on this system. The report will be shown in html."
-"%(link)s"
+"Unable to find Wkhtmltopdf on this system. The report will be shown in html.%"
+"(link)s"
 msgstr ""
 "Impossible de trouver Wkhtmltopdf sur ce système. Le rapport sera affiché en "
 "HTML.%(link)s"
@@ -7930,8 +7930,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.js:0
 msgid ""
-"Use the operators \"+=\", \"-=\" to update the current date by days "
-"(%(days)s), \n"
+"Use the operators \"+=\", \"-=\" to update the current date by days (%"
+"(days)s), \n"
 "            weeks (%(weeks)s), months (%(months)s), years (%(years)s), hours "
 "(%(hours)s), \n"
 "            minutes (%(minutes)s) and seconds (%(seconds)s)."
@@ -27375,3 +27375,6 @@ msgstr "\"chambres disponibles\""
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ココ"
 msgstr "ココ"
+
+#~ msgid "No emoji matches your search"
+#~ msgstr "Aucun emoji ne correspond à votre recherche"

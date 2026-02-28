@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-02-14 12:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -53,11 +53,11 @@ msgid ""
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
 "                    <t t-set=\"country\" t-value=\"client.country_id.name or "
 "''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -65,13 +65,14 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"format_amount(object.amount_total,object."
-"currency_id)\">$xx.xx</t> has been confirmed. <span t-if=\"object."
-"preset_time or client.street\">It will be ready</span> <span t-if=\"object."
-"preset_time\">at <t t-out=\"format_time(time=object.preset_time, tz=tz, "
-"time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client."
-"street\">at <t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t "
-"t-out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time or client.street\">It will "
+"be ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
 "out=\"country\">country</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
@@ -93,11 +94,11 @@ msgstr ""
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
 "                    <t t-set=\"country\" t-value=\"client.country_id.name or "
 "''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\"><t t-out=\"client_name\">顧客"
 "名</t>様</t>\n"
@@ -105,15 +106,16 @@ msgstr ""
 "ざいます。</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>お客様さまのご注文<t t-out=\"object."
-"tracking_number\">...</t> 金額:<t t-out=\"format_amount(object.amount_total,"
-"object.currency_id)\">$xx.xx</t> が確定されました。 <span t-if=\"object."
-"preset_time or client.street\">ご注文は</span> <span t-if=\"object."
-"preset_time\"> <t t-out=\"format_time(time=object.preset_time, tz=tz, "
-"time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client."
-"street\">に<t t-out=\"street\">street</t> <t t-out=\"state\">state</t> <t t-"
-"out=\"client.zip or ''\">zip</t> <t t-out=\"city\">city</t><t t-"
-"out=\"country\">country</t>にて</span>ご用意いたします。</div>\n"
+"                    <div>お客様さまのご注文<t t-"
+"out=\"object.tracking_number\">...</t> 金額:<t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> が確"
+"定されました。 <span t-if=\"object.preset_time or client.street\">ご注文は</"
+"span> <span t-if=\"object.preset_time\"> <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">に<t t-"
+"out=\"street\">street</t> <t t-out=\"state\">state</t> <t t-out=\"client.zip "
+"or ''\">zip</t> <t t-out=\"city\">city</t><t t-out=\"country\">country</t>に"
+"て</span>ご用意いたします。</div>\n"
 "                    <br/>\n"
 "                    <div>何卒、よろしくお願いいたします。</div>\n"
 "                    <br/>\n"
@@ -130,11 +132,11 @@ msgstr ""
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -142,11 +144,11 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"format_amount(object.amount_total,object."
-"currency_id)\">$xx.xx</t> has been confirmed. <span t-if=\"object."
-"preset_time\">It will be ready at <t t-out=\"format_time(time=object."
-"preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></"
-"span></div>\n"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
@@ -159,11 +161,11 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\"> <t t-out=\"client_name\">顧"
 "客名</t>様</t>\n"
@@ -171,12 +173,12 @@ msgstr ""
 "す。</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>お客さまのご注文 <t t-out=\"object."
-"tracking_number\">...</t> 金額: <t t-out=\"format_amount(object.amount_total,"
-"object.currency_id)\">$xx.xx</t> が確定されました。 <span t-if=\"object."
-"preset_time\">ご注文は <t t-out=\"format_time(time=object.preset_time, "
-"tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t>に</span>ご用意されて"
-"いただきます。</div>\n"
+"                    <div>お客さまのご注文 <t t-"
+"out=\"object.tracking_number\">...</t> 金額: <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> が確"
+"定されました。 <span t-if=\"object.preset_time\">ご注文は <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t>に</span>ご用意されていただきます。</div>\n"
 "                    <br/>\n"
 "                    <div>よろしくお願いいたします。</div>\n"
 "                    <br/>\n"
@@ -293,6 +295,7 @@ msgstr "利用可能なインターフェイス言語"
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Back"
 msgstr "戻る"
@@ -364,12 +367,6 @@ msgstr "顧客がいつ支払うかを選択"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Choose your"
 msgstr "選択する"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "City"
-msgstr "都市町村"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -605,12 +602,6 @@ msgid "Easily load a set of configuration options"
 msgstr "設定オプションのセットを簡単に読み込みます。"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Email"
-msgstr "Eメール"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
 msgstr "確認メール"
@@ -774,8 +765,8 @@ msgstr "このプロダクトがセルフオーダスクリーンで利用可能
 msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to "
 "acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey."
-"com or https://www.qr-code-generator.com"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
 "カスタマイズされたQRコードが必要な場合は、関連するQRコードをスキャンしてURLを"
 "取得することから始めます。次に\n"
@@ -820,6 +811,12 @@ msgstr "情報"
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Internet Connection Lost"
 msgstr "インターネット接続が切断されました"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid preset"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -949,12 +946,6 @@ msgstr "自分のオーダ"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "My Orders"
 msgstr "自分のオーダ"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Name"
-msgstr "名称"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
@@ -1111,12 +1102,6 @@ msgid ""
 msgstr ""
 "1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソ"
 "ナライズします"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Phone"
-msgstr "電話"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
@@ -1515,12 +1500,6 @@ msgid "Status"
 msgstr "ステータス"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Street and Number"
-msgstr "町名番地"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
 msgid "Style"
 msgstr "スタイル"
@@ -1646,6 +1625,12 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
 msgstr "URL:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+msgid "Unavailable"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1782,12 +1767,6 @@ msgstr "お客様の {{ object.config_id.name }} レシート"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Zip"
-msgstr "郵便番号"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
 msgstr "は"
@@ -1842,3 +1821,21 @@ msgstr "在庫がなくなりました。オーダに戻って編集してくだ
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "City"
+#~ msgstr "都市町村"
+
+#~ msgid "Email"
+#~ msgstr "Eメール"
+
+#~ msgid "Name"
+#~ msgstr "名称"
+
+#~ msgid "Phone"
+#~ msgstr "電話"
+
+#~ msgid "Street and Number"
+#~ msgstr "町名番地"
+
+#~ msgid "Zip"
+#~ msgstr "郵便番号"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-01-15 21:54+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -55,11 +55,11 @@ msgid ""
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
 "                    <t t-set=\"country\" t-value=\"client.country_id.name or "
 "''\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -67,13 +67,14 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"format_amount(object.amount_total,object."
-"currency_id)\">$xx.xx</t> has been confirmed. <span t-if=\"object."
-"preset_time or client.street\">It will be ready</span> <span t-if=\"object."
-"preset_time\">at <t t-out=\"format_time(time=object.preset_time, tz=tz, "
-"time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client."
-"street\">at <t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t "
-"t-out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time or client.street\">It will "
+"be ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
 "out=\"country\">country</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
@@ -91,11 +92,11 @@ msgstr ""
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -103,11 +104,11 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"format_amount(object.amount_total,object."
-"currency_id)\">$xx.xx</t> has been confirmed. <span t-if=\"object."
-"preset_time\">It will be ready at <t t-out=\"format_time(time=object."
-"preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></"
-"span></div>\n"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Thank you,</div>\n"
 "                    <br/>\n"
@@ -224,6 +225,7 @@ msgstr "Kullanılabilir arayüz dilleri"
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Back"
 msgstr "Geri"
@@ -295,12 +297,6 @@ msgstr "Müşterinin ne zaman ödeme yapacağını seçin"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Choose your"
 msgstr "Seçim yapın:"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "City"
-msgstr "Şehir"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -538,12 +534,6 @@ msgid "Easily load a set of configuration options"
 msgstr "Bir dizi yapılandırma seçeneğini kolayca yükleyin"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Email"
-msgstr "E-Posta"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
 msgstr "Email Doğrulama"
@@ -708,8 +698,8 @@ msgstr "Bu ürün Self Servis Sipariş ekranlarında mevcutsa"
 msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to "
 "acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey."
-"com or https://www.qr-code-generator.com"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
 "Özelleştirilmiş QR kodlarına ihtiyacınız varsa, URL'yi almak için ilgili QR "
 "kodunu tarayarak başlayın. Ardından\n"
@@ -754,6 +744,12 @@ msgstr "Info"
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Internet Connection Lost"
 msgstr "İnternet Bağlantısı Kesildi"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid preset"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -888,12 +884,6 @@ msgstr "Siparişim"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "My Orders"
 msgstr "Siparişlerim"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Name"
-msgstr "Adı"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
@@ -1051,12 +1041,6 @@ msgid ""
 msgstr ""
 "Bir slayt gösterisi oluşturmak için bir veya birden fazla görsel ekleyerek "
 "açılış ekranınızı kişiselleştirin."
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Phone"
-msgstr "Telefon"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_order_receipt_header
@@ -1454,12 +1438,6 @@ msgid "Status"
 msgstr "Durumu"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Street and Number"
-msgstr "Cadde/Sokak ve Numara"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
 msgid "Style"
 msgstr "Stil"
@@ -1585,6 +1563,12 @@ msgstr "URL"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
 msgstr "URL:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+msgid "Unavailable"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1723,12 +1707,6 @@ msgstr "{{ object.config_id.name }} makbuzunuz"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Zip"
-msgstr "PK"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
 msgstr "vardır"
@@ -1783,3 +1761,21 @@ msgstr "artık mevcut değil. Lütfen geri dönün ve siparişinizi düzenleyin.
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "City"
+#~ msgstr "Şehir"
+
+#~ msgid "Email"
+#~ msgstr "E-Posta"
+
+#~ msgid "Name"
+#~ msgstr "Adı"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "Street and Number"
+#~ msgstr "Cadde/Sokak ve Numara"
+
+#~ msgid "Zip"
+#~ msgstr "PK"

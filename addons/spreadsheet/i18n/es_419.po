@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:02+0000\n"
+"POT-Creation-Date: 2026-02-27 18:38+0000\n"
 "PO-Revision-Date: 2026-02-14 12:18+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -5259,8 +5259,8 @@ msgstr "Fórmula de punto de inflexión menor no válida"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
 msgstr ""
 "El número de argumentos para la función %(functionName)s no es válido. "
 "Esperaba %(maxArgPossible)s como máximo, pero recibió %(nbrArgSupplied)s."
@@ -5269,8 +5269,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Invalid number of arguments for the %(functionName)s function. Expected "
-"%(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
+"Invalid number of arguments for the %(functionName)s function. Expected %"
+"(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
 msgstr ""
 "El número de argumentos para la función %(functionName)s no es válido. "
 "Esperaba %(minArgRequired)s como mínimo, pero recibió %(nbrArgSupplied)s."
@@ -5280,13 +5280,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Invalid number of arguments for the %(functionName)s function. Repeatable "
-"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to "
-"%(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
+"arguments should be supplied in groups of %(nbrArgRepeating)s, with up to %"
+"(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
 msgstr ""
 "El número de argumentos de la función %(functionName)s no es válido. "
 "Proporciona los argumentos que se repiten en grupos de %(nbrArgRepeating)s, "
-"con un máximo de %(nbrArgOptional)s de forma opcional. Obtuviste "
-"%(nbrValueRemaining)s de más."
+"con un máximo de %(nbrArgOptional)s de forma opcional. Obtuviste %"
+"(nbrValueRemaining)s de más."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6077,12 +6077,6 @@ msgstr "Minuto"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Minute component of a specific time."
 msgstr "Componente de minutos de una hora específica."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Misc"
-msgstr "Varios"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9098,12 +9092,12 @@ msgstr "El valor base no es válido"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The case-sensitive format of the result, enclosed in quotation marks. "
-"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for hour:"
-"minutes:seconds."
+"Examples: \"0.00\" rounded to 2 decimal places, \"hh:mm:ss\" for "
+"hour:minutes:seconds."
 msgstr ""
 "El formato que distingue entre mayúsculas y minúsculas del resultado, "
-"incluido entre comillas. Ejemplos: \"0.00\" redondeado a 2 decimales, \"hh:"
-"mm:ss\" por hora:minutos:segundos."
+"incluido entre comillas. Ejemplos: \"0.00\" redondeado a 2 decimales, "
+"\"hh:mm:ss\" por hora:minutos:segundos."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9638,8 +9632,8 @@ msgstr "La end_date (%s) debe ser positiva o cero."
 msgid ""
 "The end_period (%(end)s) must be smaller or equal to the life (%(life)s)."
 msgstr ""
-"El periodo_de_finalización (%(end)s) debe ser menor o igual a la vida útil "
-"(%(life)s)."
+"El periodo_de_finalización (%(end)s) debe ser menor o igual a la vida útil (%"
+"(life)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9797,11 +9791,11 @@ msgstr "El primer valor."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The first_period (%(first)s) must be smaller or equal to the last_period "
-"(%(last)s)."
+"The first_period (%(first)s) must be smaller or equal to the last_period (%"
+"(last)s)."
 msgstr ""
-"El primer_periodo (%(first)s) debe ser menor o igual al último_periodo "
-"(%(last)s)."
+"El primer_periodo (%(first)s) debe ser menor o igual al último_periodo (%"
+"(last)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10102,8 +10096,8 @@ msgid ""
 "The last_period (%(last)s) must be smaller or equal to the number_of_periods "
 "(%(nPeriods)s)."
 msgstr ""
-"El último_periodo (%(last)s) debe ser menor o igual a número_de_periodos "
-"(%(nPeriods)s)."
+"El último_periodo (%(last)s) debe ser menor o igual a número_de_periodos (%"
+"(nPeriods)s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10157,8 +10151,8 @@ msgstr "La matriz no es reversible."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The maturity (%(maturity)s) must be strictly greater than the settlement "
-"(%(settlement)s)."
+"The maturity (%(maturity)s) must be strictly greater than the settlement (%"
+"(settlement)s)."
 msgstr ""
 "El vencimiento (%(maturity)s) debe ser estrictamente mayor que la "
 "liquidación (%(settlement)s)."
@@ -10980,8 +10974,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The purchase_date (%(purchaseDate)s) must be before the first_period_end "
-"(%(firstPeriodEnd)s)."
+"The purchase_date (%(purchaseDate)s) must be before the first_period_end (%"
+"(firstPeriodEnd)s)."
 msgstr ""
 "La fecha_de_compra (%(purchaseDate)s) debe ser antes del "
 "fin_del_primer_periodo (%(firstPeriodEnd)s)."
@@ -11595,8 +11589,8 @@ msgstr "La start_date (%s) debe ser positiva o cero."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"The start_period (%(start)s) must be smaller or equal to the end_period "
-"(%(end)s)."
+"The start_period (%(start)s) must be smaller or equal to the end_period (%"
+"(end)s)."
 msgstr ""
 "El periodo_de_inicio (%(start)s) debe ser menor o igual al "
 "periodo_de_finalización (%(end)s)."
@@ -13609,8 +13603,8 @@ msgstr "Número de semana del año."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 msgid ""
-"Week value must be a string in the format %(example)s, but received "
-"%(received_value)s instead."
+"Week value must be a string in the format %(example)s, but received %"
+"(received_value)s instead."
 msgstr ""
 "El valor de la semana debe ser una cadena en el formato %(example)s, pero se "
 "recibió %(received_value)s."
@@ -14366,3 +14360,6 @@ msgstr "mañana"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "ayer"
+
+#~ msgid "Misc"
+#~ msgstr "Varios"

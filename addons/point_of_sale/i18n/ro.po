@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:51+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -158,6 +158,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "%s left"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "%s required"
 msgstr "%s necesar"
@@ -213,6 +219,12 @@ msgid "0014-001-00001"
 msgstr "0014-001-00001"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "1 Hour"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "10"
 msgstr "10"
@@ -258,6 +270,12 @@ msgid "1234567890"
 msgstr "1234567890"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "2 Hours"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
 msgstr "2-03-2000 9:00 AM"
@@ -266,6 +284,12 @@ msgstr "2-03-2000 9:00 AM"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "38.83"
 msgstr "38.83"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "4 Hours"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -326,13 +350,13 @@ msgstr "99,99"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Hello <t t-"
 "out=\"client_name\">Client name</t>,</t>\n"
@@ -356,13 +380,13 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id."
-"name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id."
-"name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user."
-"lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">Bună <t t-"
 "out=\"client_name\">Nume client</t>,</t>\n"
@@ -418,12 +442,12 @@ msgstr "<i class=\"fa fa-pencil\"/> Editează"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt "
-"%(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from "
-"%(company_name)s. </p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
-"<p>Dragă %(client_name)s,<br/>Aici este bonul tău %(is_invoiced)spentru "
-"%(pos_name)s în valoare de %(amount)s de la %(company_name)s. </p>"
+"<p>Dragă %(client_name)s,<br/>Aici este bonul tău %(is_invoiced)spentru %"
+"(pos_name)s în valoare de %(amount)s de la %(company_name)s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1292,6 +1316,7 @@ msgstr "Plăcintă cu mere"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
@@ -1765,6 +1790,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_default_printer_popup/select_default_printer_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cancel"
@@ -3363,6 +3389,7 @@ msgstr "Redu:"
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
@@ -3513,6 +3540,14 @@ msgstr "Afișează prețul produselor prin etichete electronice de preț"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Do you want to open the customer list to select customer?"
 msgstr "Doriți să deschideți lista de clienți pentru a selecta clientul?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid ""
+"Do you want to stop the snooze early and make the product available again "
+"immediately?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4535,8 +4570,8 @@ msgstr "Stare factură"
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
 msgstr ""
-"Plata facturii pentru %(order)s (%(account_move)s) folosind "
-"%(payment_method)s"
+"Plata facturii pentru %(order)s (%(account_move)s) folosind %"
+"(payment_method)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -5122,6 +5157,12 @@ msgid "Magnetic Board"
 msgstr "Tablă magnetică"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
+msgid "Make %s unavailable for:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Make Payment"
 msgstr "Faceți plata"
@@ -5471,6 +5512,12 @@ msgstr "Următoarea listă de comenzi"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
 msgstr "Următorul număr:"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Next session"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6040,8 +6087,8 @@ msgstr "Produse opționale:"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__pos_optional_product_ids
 #: model:ir.model.fields,help:point_of_sale.field_product_template__pos_optional_product_ids
 msgid ""
-"Optional products are suggested when customers add items to their cart (e."
-"g., adding a burger suggests cold drinks or fries)."
+"Optional products are suggested when customers add items to their cart "
+"(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
 "Produsele opționale sunt sugerate atunci când clienții adaugă articole în "
 "coș (de exemplu, adăugarea unui burger sugerează băuturi reci sau cartofi "
@@ -6157,6 +6204,12 @@ msgstr "Comanda din care au fost returnate articole în această comandă"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
 msgstr "Linii comandă"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order saved for later"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -6357,6 +6410,11 @@ msgstr "Comandă POS din configurația #%s"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
 msgstr "Linie comandă POS din configurația #%s"
+
+#. module: point_of_sale
+#: model:ir.actions.server,name:point_of_sale.ir_cron_snooze_cleanup_ir_actions_server
+msgid "POS: Product Snooze cleanup"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6683,8 +6741,8 @@ msgstr ""
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
-"Vă rugăm să definiți contul de venituri pentru acest produs: "
-"'%(product)s' (id:%(id)d)."
+"Vă rugăm să definiți contul de venituri pentru acest produs: '%(product)s' "
+"(id:%(id)d)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8076,8 +8134,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
 msgstr ""
 "Reversarea înregistrării de închidere POS %(entry)s pentru comanda %(order)s "
 "din sesiunea %(session)s"
@@ -8488,6 +8546,7 @@ msgstr "Problemă de comunicare cu serverul"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_id
@@ -8767,6 +8826,12 @@ msgid "Small Shelf"
 msgstr "Raft mic"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Snooze"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_snooze_ids
 msgid "Snoozed Products"
 msgstr ""
@@ -8944,6 +9009,12 @@ msgstr "Stop"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop Barcode Scanner"
 msgstr "Oprește scanerul de coduri de bare"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Stop Snooze"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -9128,6 +9199,12 @@ msgstr "Prețul inclus în taxe"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+msgid "Tax:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
@@ -9274,8 +9351,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "Suma liniilor dvs. de plată trebuie rotunjită pentru a valida tranzacția.\n"
-"Precizia de rotunjire este %(rounding)s, așa că ar trebui să setați "
-"%(expectedAmount)s ca sumă de plată în loc de %(paidAmount)s."
+"Precizia de rotunjire este %(rounding)s, așa că ar trebui să setați %"
+"(expectedAmount)s ca sumă de plată în loc de %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10286,7 +10363,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total Tax:"
 msgstr ""
 
@@ -10617,8 +10694,6 @@ msgid "Uuid"
 msgstr "Uuid"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "VAT"
 msgstr "TVA"
@@ -10802,6 +10877,7 @@ msgstr "Doriți să continuați fără imprimare sau să reîncercați?"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Yes"
 msgstr "Da"
@@ -10915,11 +10991,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr ""
 "Nu puteți arhiva '%(picking_type)s' deoarece este folosit de configurația "
 "POS '%(config)s'."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"You cannot archive a product that is set as a special product in a Point of "
+"Sale configuration. Please change the configuration first."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -11063,8 +11147,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
-"Ați activat opțiunea \"Identificați clientul\" pentru metoda de plată "
-"%(payment_method)s, dar comanda %(order)s nu conține un client."
+"Ați activat opțiunea \"Identificați clientul\" pentru metoda de plată %"
+"(payment_method)s, dar comanda %(order)s nu conține un client."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action

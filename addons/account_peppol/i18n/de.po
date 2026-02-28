@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-02-07 12:13+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -133,15 +133,15 @@ msgid ""
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
 "{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: {{ object."
-"email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Send invoices\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object."
-"uses_default_logo\">\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
 "                                        <img t-att-src=\"'/logo.png?"
 "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
 "10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
@@ -219,15 +219,15 @@ msgstr ""
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
 "target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
 "{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: {{ object."
-"email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"important; font-weight: 400; background-color: "
+"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Rechnungen senden\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not object."
-"uses_default_logo\">\n"
+"                                    <t t-if=\"not "
+"object.uses_default_logo\">\n"
 "                                        <img t-att-src=\"'/logo.png?"
 "company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
 "10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
@@ -259,9 +259,9 @@ msgstr ""
 "zum <strong>Peppol-Netzwerk</strong> hinzugefügt.</p>\n"
 "\n"
 "                                    <p>Sie können nun über Odoo "
-"elektronische Rechnungen <strong>versenden<t t-if=\"object."
-"account_peppol_proxy_state == 'receiver'\"> und empfangen</t></strong> — und "
-"zwar kostenlos!</p>\n"
+"elektronische Rechnungen <strong>versenden<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> und empfangen</t></"
+"strong> — und zwar kostenlos!</p>\n"
 "\n"
 "                                    <p>Mit freundlichen Grüßen,</p>\n"
 "\n"
@@ -836,6 +836,7 @@ msgstr "Itsme-Anmeldung anzeigen"
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__display_name
@@ -990,6 +991,7 @@ msgstr "Ich denke, ich darf dieses Unternehmen registrieren."
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__id
@@ -1846,8 +1848,8 @@ msgstr "Das Netzwerk für elektronische Rechnungsstellung"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
-"The eb3:Message header copied to the fragment header does not match the eb3:"
-"Message header in the reassembled source message."
+"The eb3:Message header copied to the fragment header does not match the "
+"eb3:Message header in the reassembled source message."
 msgstr ""
 "Der in den Fragment-Header kopierte eb3:Message-Header stimmt nicht mit dem "
 "eb3:Message-Header in der wieder zusammengesetzten Quellnachricht überein."
@@ -2116,6 +2118,11 @@ msgstr "Token nicht synchronisiert"
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
 msgstr "UBL 2.0"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
+msgid "UBL BIS Billing 3.0.12"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2426,6 +2433,22 @@ msgstr "Ihre Registrierung sollte innerhalb eines Tages aktiviert werden."
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
 msgstr "Ihre Anfrage wird derzeit bearbeitet."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

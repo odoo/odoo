@@ -44,7 +44,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-16 05:43+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
@@ -87,9 +87,8 @@ msgstr " <br/><br/> Komponentit tullaan ottamaan <b>%ssta</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> Valmistetut tuotteet siirretään kohti <b>%(destination)s</b>, "
 "<br/> eriteltynä osoitteesta <b>%(operation)s</b> määränpää."
@@ -546,16 +545,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / last </span>"
+msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minuuttia</"
-"span>\n"
-"                                    <span invisible=\"time_mode == "
-"'manual'\"> / viimeinen </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -617,24 +608,13 @@ msgstr "<span>TYÖTILAUKSET</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "<span>minutes</span>"
-msgstr "<span>minuuttia</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-msgid "<span> (minutes)</span>"
-msgstr "<span> (minuuttia)</span>"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<strong class=\"mr8 oe_inline\">to</strong>"
 msgstr "<strong class=\"mr8 oe_inline\">osoitteeseen</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>Todellinen kesto (minuuttia)</strong>"
+msgid "<strong>Actual Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -653,8 +633,8 @@ msgstr "<strong>Kuvaus:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>Kesto (minuuttia)</strong>"
+msgid "<strong>Duration</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -1044,9 +1024,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. "
-"%(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei "
-"voida tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
+"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. %"
+"(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei voida "
+"tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1686,13 +1666,9 @@ msgstr "Valitse, tulostetaanko tuote- vai erä/sarjanumero-etikettejä"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
 msgid "Cleanup Time"
 msgstr "Siivousaika"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Cleanup Time (minutes)"
-msgstr "Siivousaika (minuuttia)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2251,6 +2227,14 @@ msgid "Default Duration"
 msgstr "Vakiokesto"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
+msgid ""
+"Default operation time. Base unit in minutes.\n"
+"If you are in the computed duration mode, enter an estimate since there "
+"aren't any work orders yet."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
 msgid ""
 "Define the components and finished products you wish to use in\n"
@@ -2454,11 +2438,6 @@ msgstr "Laatikko on pyörillä, minkä ansiosta se on hyvinkäytettävä."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
-#: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration"
-msgstr "Kesto"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
@@ -2466,8 +2445,8 @@ msgstr "Kesto"
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Duration (minutes)"
-msgstr "Kesto (minuuttia)"
+msgid "Duration"
+msgstr "Kesto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode
@@ -2596,18 +2575,14 @@ msgstr "Odotettu %s"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
-msgid "Expected Duration"
-msgstr "Odotettu kesto"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
-msgid "Expected Duration (minutes)"
-msgstr "Odotettu kesto (minuuttia)"
+msgid "Expected Duration"
+msgstr "Odotettu kesto"
 
 #. module: mrp
 #. odoo-javascript
@@ -2875,8 +2850,6 @@ msgid "Hourly processing cost."
 msgstr "Tuntikohtaiset käsittelykustannukset."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Hours"
 msgstr "Tunnit"
@@ -3819,11 +3792,6 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimivarastosääntö"
 
 #. module: mrp
-#. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
 msgstr "Minuutit"
@@ -5094,14 +5062,10 @@ msgstr "Todelliset kustannukset"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
-msgid "Real Duration"
-msgstr "Todellinen kesto"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-msgid "Real Duration (minutes)"
-msgstr ""
+msgid "Real Duration"
+msgstr "Todellinen kesto"
 
 #. module: mrp
 #. odoo-javascript
@@ -5289,8 +5253,8 @@ msgstr "Suunniteltu päivämäärä"
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
 msgstr ""
-"Aikataulutettu ennen edellistä työtilausta, suunniteltu välillä %(start)s - "
-"%(end)s"
+"Aikataulutettu ennen edellistä työtilausta, suunniteltu välillä %(start)s - %"
+"(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5426,13 +5390,9 @@ msgstr "Asetukset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
 msgid "Setup Time"
 msgstr "Asetusaika"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Setup Time (minutes)"
-msgstr "Asetusaika (minuuttia)"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
@@ -5822,8 +5782,8 @@ msgstr "Tekninen kenttä työkeskusnäkymiä varten"
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
-"Tekninen kenttä, jonka avulla voidaan tarkistaa, voidaanko Tuota kaikki -"
-"painiketta näyttää"
+"Tekninen kenttä, jonka avulla voidaan tarkistaa, voidaanko Tuota kaikki "
+"-painiketta näyttää"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
@@ -6067,6 +6027,12 @@ msgid "There is no defined calendar on workcenter %s."
 msgstr "Työkeskuksessa %s ei ole määriteltyä kalenteria."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid "There's no product move yet"
 msgstr "Tuotetta ei ole vielä siirretty"
@@ -6191,15 +6157,6 @@ msgid "Time in minutes for the setup."
 msgstr "Aika minuutteina asennukseen."
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
-msgid ""
-"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
-"time when there aren't any work orders yet"
-msgstr ""
-"Aika minuuteissa: - Kiinteässä tilassa; käytetty aika - Laskennallisessa "
-"tilassa; oletettu ensimmäinen kerta, jolloin työtilauksia ei vielä ole"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
 msgid "Timezone"
 msgstr "Aikavyöhyke"
@@ -6320,13 +6277,9 @@ msgstr "Tuotannon kokonaiskustannukset"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
 msgstr "Kokonaiskesto"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-msgid "Total Duration (minutes)"
-msgstr "Kokonaiskesto (minuuttia)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -7274,11 +7227,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr ""
-"Sinun on annettava tuotteiden erä-/sarjanumero ja \"kulutettava\" ne: "
-"%(missing_products)s"
+"Sinun on annettava tuotteiden erä-/sarjanumero ja \"kulutettava\" ne: %"
+"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7374,13 +7327,6 @@ msgid "merged"
 msgstr "yhdistetty"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-msgid "minutes"
-msgstr "minuutit"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
 msgstr "of"
@@ -7410,3 +7356,51 @@ msgstr "todellinen kesto"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "jaa"
+
+#~ msgid ""
+#~ "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
+#~ "span>\n"
+#~ "                                    <span invisible=\"time_mode == "
+#~ "'manual'\"> / last </span>"
+#~ msgstr ""
+#~ "<span invisible=\"time_mode == 'auto' and workorder_count != "
+#~ "0\">minuuttia</span>\n"
+#~ "                                    <span invisible=\"time_mode == "
+#~ "'manual'\"> / viimeinen </span>"
+
+#~ msgid "<span>minutes</span>"
+#~ msgstr "<span>minuuttia</span>"
+
+#~ msgid "<span> (minutes)</span>"
+#~ msgstr "<span> (minuuttia)</span>"
+
+#~ msgid "<strong>Actual Duration (minutes)</strong>"
+#~ msgstr "<strong>Todellinen kesto (minuuttia)</strong>"
+
+#~ msgid "<strong>Duration (minutes)</strong>"
+#~ msgstr "<strong>Kesto (minuuttia)</strong>"
+
+#~ msgid "Cleanup Time (minutes)"
+#~ msgstr "Siivousaika (minuuttia)"
+
+#~ msgid "Duration (minutes)"
+#~ msgstr "Kesto (minuuttia)"
+
+#~ msgid "Expected Duration (minutes)"
+#~ msgstr "Odotettu kesto (minuuttia)"
+
+#~ msgid "Setup Time (minutes)"
+#~ msgstr "Asetusaika (minuuttia)"
+
+#~ msgid ""
+#~ "Time in minutes:- In fixed mode, time used- In computed mode, supposed "
+#~ "first time when there aren't any work orders yet"
+#~ msgstr ""
+#~ "Aika minuuteissa: - Kiinteässä tilassa; käytetty aika - Laskennallisessa "
+#~ "tilassa; oletettu ensimmäinen kerta, jolloin työtilauksia ei vielä ole"
+
+#~ msgid "Total Duration (minutes)"
+#~ msgstr "Kokonaiskesto (minuuttia)"
+
+#~ msgid "minutes"
+#~ msgstr "minuutit"

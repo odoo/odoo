@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2026-01-13 16:12+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -172,8 +172,8 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any "
 "custom page."
 msgstr ""
-"不能将 “前往网址” 设置为 “/”。若要更改主页内容，请使用网站设置中的“主页网"
-"址”字段，或任何自定义页面上的页面属性。"
+"不能将 “前往网址” 设置为 “/”。若要更改主页内容，请使用网站设置中的“主页网址”"
+"字段，或任何自定义页面上的页面属性。"
 
 #. module: website
 #. odoo-python
@@ -875,17 +875,19 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Send an "
+"email\">info@yourcompany.example.com</a>"
 msgstr ""
-"<a class=\"o_translate_inline\" href=\"mail-to:info@yourcompany.example."
-"com\" title=\"Send an email\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" href=\"mail-"
+"to:info@yourcompany.example.com\" title=\"Send an "
+"email\">info@yourcompany.example.com</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
 msgid ""
-"<a class=\"o_translate_inline\" href=\"mailto:info@yourcompany.example."
-"com\">info@yourcompany.example.com</a>"
+"<a class=\"o_translate_inline\" "
+"href=\"mailto:info@yourcompany.example.com\">info@yourcompany.example.com</a>"
 msgstr ""
 
 #. module: website
@@ -1804,11 +1806,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> info@yourcompany."
-"example.com</small>"
+"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"info@yourcompany.example.com</small>"
 msgstr ""
-"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> info@yourcompany."
-"example.com</small>"
+"<small><i class=\"fa fa-1x fa-fw fa-envelope me-1\"/> "
+"info@yourcompany.example.com</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -7786,8 +7788,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid ""
-"Entered date or time is not correct! It must be before %(start)s "
-"(%(format)s)."
+"Entered date or time is not correct! It must be before %(start)s (%"
+"(format)s)."
 msgstr ""
 
 #. module: website
@@ -7817,8 +7819,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid ""
-"Entered date or time is not correct! It must not be within %(start)s and "
-"%(end)s (%(format)s)."
+"Entered date or time is not correct! It must not be within %(start)s and %"
+"(end)s (%(format)s)."
 msgstr ""
 
 #. module: website
@@ -11559,6 +11561,7 @@ msgstr "正在加载"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/builder_urlpicker.js:0
 #: code:addons/website/static/src/components/dialog/add_page_dialog.js:0
 #: code:addons/website/static/src/js/editor/html_editor.js:0
 #: code:addons/website/static/src/xml/website.background.video.xml:0
@@ -14053,6 +14056,12 @@ msgstr "预览图像"
 #: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 msgid "Preview of"
 msgstr "预览"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/builder_urlpicker.xml:0
+msgid "Preview this URL in a new tab"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -17976,8 +17985,8 @@ msgstr ""
 "        302 暂时移动：浏览器不会保留缓存新 URL，下次再次询问新 URL。\n"
 "        404 未找到：如果您想要删除特定网页/控制器（例如：安装了电子商务，但您"
 "不希望/在特定网站上购物）\n"
-"        308 重定向/重写：如果您想要使用新 URL 重命名控制器。（例如： /shop -"
-"> /花园 - 两个网址都可访问，但 /shop 将自动重定向到 /garden）\n"
+"        308 重定向/重写：如果您想要使用新 URL 重命名控制器。（例如： /shop "
+"-> /花园 - 两个网址都可访问，但 /shop 将自动重定向到 /garden）\n"
 "    "
 
 #. module: website
@@ -19658,9 +19667,10 @@ msgstr "您只能使用以 dynamic_filter_template_ 为前缀的模板 "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
 msgid ""
-"You can reach our customer support team by emailing info@yourcompany.example."
-"com, calling +1 555-555-5556, or using the live chat on our website. Our "
-"dedicated team is available 24/7 to assist with any inquiries or issues."
+"You can reach our customer support team by emailing "
+"info@yourcompany.example.com, calling +1 555-555-5556, or using the live "
+"chat on our website. Our dedicated team is available 24/7 to assist with any "
+"inquiries or issues."
 msgstr ""
 "您可以发送电子邮件至 info@yourcompany.example.com、致电 +1 555-555-5556，或使"
 "用网站上的即时聊天工具联系我们的客户支持团队。我们的专业团队全天候为您提供服"

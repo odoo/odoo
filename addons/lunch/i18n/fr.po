@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2026-01-24 12:26+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-28 13:44+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/lunch/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/lunch/"
 "fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -128,13 +128,13 @@ msgid ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Here is, today orders for <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Here is, today orders for <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -208,13 +208,13 @@ msgstr ""
 "<t>\n"
 "<t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
 "<t t-set=\"order\" t-value=\"ctx.get('order', {})\"/>\n"
-"<t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order."
-"get('currency_id'))\"/>\n"
+"<t t-set=\"currency\" t-"
+"value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "<p>\n"
 "Bonjour <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "</p><p>\n"
-"Voici les commandes du jour pour <t t-out=\"order.get('company_name', "
-"'')\">LunchCompany</t>:\n"
+"Voici les commandes du jour pour <t t-out=\"order.get('company_name', '')"
+"\">LunchCompany</t>:\n"
 "</p>\n"
 "\n"
 "<t t-if=\"sites\">\n"
@@ -420,6 +420,7 @@ msgstr "Nombre de pièces jointes"
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
 msgid "Automatic Email Sending Time should be between 0 and 24"
 msgstr ""
+"L’heure d’envoi automatique des e-mails doit être comprise entre 0 et 24"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -1267,32 +1268,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Déjeuner : Commande du fournisseur"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Déjeuner : Alerte notification via Chat (Alerte pour le bureau 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Déjeuner : Envoyer un e-mail automatique au fournisseur de déjeuner"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Déjeuner : Envoyer un e-mail automatique à Sushi Shop"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Déjeuner : Envoyer un e-mail automatique à The Corner"
 
@@ -1503,7 +1504,7 @@ msgstr "Temps de notification"
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
 msgid "Notification time must be between 0 and 24"
-msgstr ""
+msgstr "L'heure de notification doit être comprise entre 0 et 24"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
