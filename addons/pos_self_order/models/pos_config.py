@@ -110,7 +110,7 @@ class PosConfig(models.Model):
             'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
-            'status', 'self_ordering_image_background_ids',
+            'status', 'self_ordering_image_background_ids', 'other_devices',
         ]
 
     def _update_access_token(self):
@@ -302,10 +302,10 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
-            'account.tax.group', 'pos.printer', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
+            'res.currency', 'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
-            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
+            'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state', 'mail.template']
 
     @api.model
