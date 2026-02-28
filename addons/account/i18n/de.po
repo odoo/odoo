@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-20 17:16+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-25 14:49+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -95,6 +95,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Bitte wenden Sie sich an Ihren Administrator."
 
 #. module: account
 #. odoo-python
@@ -240,7 +242,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; Preisdifferenz für %(product)s"
 
 #. module: account
 #. odoo-python
@@ -1784,7 +1786,7 @@ msgstr "<span><span class=\"oe_currency_value\">19 250,00</span> €</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5154,6 +5156,12 @@ msgstr "Bank und Kasse"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Bank von Odoo"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -13536,7 +13544,7 @@ msgstr "Nummer"
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
+msgstr "Anzahl Aktionen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
@@ -18424,6 +18432,14 @@ msgstr ""
 "Das Bankkonto eines Bankjournals muss demselben Unternehmen (%s) angehören."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Der Kontoauszug, der zur Abstimmung verwendet wird"
@@ -18506,8 +18522,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -19064,6 +19081,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Die geplante Aktion „Rechnungen automatisch versenden“ wurde archiviert. Sie "
+"können keine Rechnungen mehr stapelweise versenden."
 
 #. module: account
 #. odoo-python
@@ -20293,7 +20312,7 @@ msgstr "Einzelpreis:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Einheit(en)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20744,17 +20763,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Wert für den Betrag der Abschreibungszeile\n"
-"* Prozentsatz: Prozentsatz des Saldos, zwischen 0 und 100.\n"
-"* Fest: Der feste Wert der Abschreibung. Der Betrag wird als Belastung "
-"gezählt, wenn er negativ ist, und als Gutschrift, wenn er positiv ist.\n"
-"* Aus Buchungstext: Es ist kein Regex-Begrenzer erforderlich, nur der Regex "
-"wird benötigt. Wenn Sie zum Beispiel den Betrag extrahieren möchten aus\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"Sie könnten eingeben\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -22676,6 +22695,36 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "The company bank account linked to this invoice is not trusted, please "
+#~ "double-check and trust it before confirming, or remove it"
+#~ msgstr ""
+#~ "Das mit dieser Rechnung verknüpfte Unternehmensbankkonto ist nicht "
+#~ "vertrauenswürdig. Bitte überprüfen Sie es sorgfältig und vertrauen Sie "
+#~ "es, bevor Sie bestätigen, oder entfernen Sie es."
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Wert für den Betrag der Abschreibungszeile\n"
+#~ "* Prozentsatz: Prozentsatz des Saldos, zwischen 0 und 100.\n"
+#~ "* Fest: Der feste Wert der Abschreibung. Der Betrag wird als Belastung "
+#~ "gezählt, wenn er negativ ist, und als Gutschrift, wenn er positiv ist.\n"
+#~ "* Aus Buchungstext: Es ist kein Regex-Begrenzer erforderlich, nur der "
+#~ "Regex wird benötigt. Wenn Sie zum Beispiel den Betrag extrahieren möchten "
+#~ "aus\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "Sie könnten eingeben\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<span>1.00</span>\n"

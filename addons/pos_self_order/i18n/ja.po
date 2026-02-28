@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:38+0000\n"
 "PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -526,12 +526,6 @@ msgid "Easily load a set of configuration options"
 msgstr "設定オプションのセットを簡単に読み込みます。"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Email"
-msgstr "Eメール"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
 msgstr "確認メール"
@@ -727,6 +721,12 @@ msgstr "情報"
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Internet Connection Lost"
 msgstr "インターネット接続が切断されました"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid preset"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1031,12 +1031,6 @@ msgid ""
 msgstr ""
 "1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソ"
 "ナライズします"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Phone"
-msgstr "電話"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1426,12 +1420,6 @@ msgid "Status"
 msgstr "ステータス"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Street and Number"
-msgstr "町名番地"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
 msgid "Style"
 msgstr "スタイル"
@@ -1687,12 +1675,6 @@ msgstr "お客様の {{ object.config_id.name }} レシート"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Zip"
-msgstr "郵便番号"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
 msgstr "は"
@@ -1747,6 +1729,18 @@ msgstr "在庫がなくなりました。オーダに戻って編集してくだ
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "Email"
+#~ msgstr "Eメール"
+
+#~ msgid "Phone"
+#~ msgstr "電話"
+
+#~ msgid "Street and Number"
+#~ msgstr "町名番地"
+
+#~ msgid "Zip"
+#~ msgstr "郵便番号"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"

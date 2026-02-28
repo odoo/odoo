@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * event
 #
-# Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Oakarmin Iron <oakarminiron@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 19:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"PO-Revision-Date: 2026-02-25 14:55+0000\n"
+"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/event/my/"
 ">\n"
 "Language: my\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -376,10 +376,10 @@ msgid ""
 "my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}"
 "\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
-"color: {{object.event_id.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
-"color: {{object.event_id.user_id.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius:3px\">\n"
+"color: {{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "                        Download Badges\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -411,9 +411,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color:"
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -625,8 +625,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -699,13 +699,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -758,10 +758,10 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; font-"
-"size: 12px; color: {{object.event_id.user_id.company_id.email_primary_color "
-"or '#FFFFFF'}}; text-decoration: none !important; font-weight: 400; "
-"background-color: {{object.event_id.user_id.company_id.email_secondary_color "
-"or '#875A7B'}}; border-radius:3px\">\n"
+"size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
 "                        <a t-else=\"event_website_url\" t-att-"
@@ -811,9 +811,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -1029,8 +1029,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\"/></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\"/></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1096,14 +1096,14 @@ msgid ""
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "        Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "        <t t-if=\"'website_url' in object.event_id and "
 "object.event_id.website_url\">\n"
 "            <br/>\n"
 "            Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "        </t>\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1156,10 +1156,9 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
-"font-size: 12px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none !important; font-weight: 400; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
@@ -1210,7 +1209,7 @@ msgid ""
 "event\n"
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
-"style=\"color: {{object.event_id.user_id.company_id.email_secondary_color or "
+"style=\"color: {{object.event_id.company_id.email_secondary_color or "
 "'#875A7B'}}; text-decoration:none;font-weight:bold;\" t-"
 "out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
 "                        </t>\n"
@@ -1442,8 +1441,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1516,13 +1515,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -1595,7 +1594,7 @@ msgstr "အက်တစ်"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "လှုပ်ရှားမှုများ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1605,7 +1604,7 @@ msgstr ""
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
 msgid "Activity"
-msgstr ""
+msgstr "လှုပ်ရှားမှု"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
@@ -2022,7 +2021,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__cancelled
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__cancel
 msgid "Cancelled"
-msgstr "ဖကြျသိမျးခဲ့သညျ"
+msgstr "ဖျက်သိမ်းခဲ့သည်"
 
 #. module: event
 #. odoo-javascript
@@ -2562,13 +2561,13 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr ""
+msgstr "ပွဲအဆင့်"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "ပွဲအဆင့်များ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -3718,7 +3717,7 @@ msgstr ""
 #: model:event.tag,name:event.event_tag_category_3_tag_1
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Online"
-msgstr ""
+msgstr "အွန်လိုင်း"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -4227,7 +4226,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__event_slot_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Slot"
-msgstr ""
+msgstr "စလော့"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
@@ -4258,7 +4257,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "စလော့များ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
@@ -4270,7 +4269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_sold_out
 #: model:ir.model.fields,field_description:event.field_event_slot__is_sold_out
 msgid "Sold Out"
-msgstr ""
+msgstr "ရောင်းကုန်ပြီ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_source_id
@@ -4287,7 +4286,7 @@ msgstr ""
 #: model:event.tag,name:event.event_tag_category_2_tag_3
 #: model:event.type,name:event.event_type_2
 msgid "Sport"
-msgstr ""
+msgstr "အားကစား"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
@@ -4311,7 +4310,7 @@ msgstr ""
 #: model:event.event.ticket,name:event.event_3_ticket_0
 #: model:event.event.ticket,name:event.event_7_ticket_1
 msgid "Standard"
-msgstr ""
+msgstr "စံ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin

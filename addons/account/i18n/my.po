@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-11 17:42+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-25 14:51+0000\n"
 "Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/account/"
 "my/>\n"
@@ -2876,7 +2876,7 @@ msgstr "အက်တစ်"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "လှုပ်ရှားမှုများ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -3596,7 +3596,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Any currency"
-msgstr ""
+msgstr "မည်သည့်ငွေကြေးမဆို"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -4257,6 +4257,12 @@ msgid "Bank of odoo"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
 msgstr ""
@@ -4665,7 +4671,7 @@ msgstr "ပယ်ပြီး"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__cancel
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
-msgstr "ဖကြျသိမျးခဲ့သညျ"
+msgstr "ဖျက်သိမ်းခဲ့သည်"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4780,22 +4786,22 @@ msgstr "ငွေသား"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
-msgstr ""
+msgstr "ငွေသား အကောင့်"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_158
 msgid "Cash Bakery"
-msgstr ""
+msgstr "ငွေသား မုန့်ဖို"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_160
 msgid "Cash Bar"
-msgstr ""
+msgstr "ငွေသား ဘား"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr ""
+msgstr "ငွေသား အခြေခံ"
 
 #. module: account
 #. odoo-python
@@ -4803,18 +4809,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_created_move_ids
 msgid "Cash Basis Entries"
-msgstr ""
+msgstr "ငွေသား အခြေခံ စာရင်းများ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr ""
+msgstr "ငွေသား အခြေခံ ဂျာနယ်"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_origin_move_id
 msgid "Cash Basis Origin"
-msgstr ""
+msgstr "ငွေသား အခြေခံ ၏မူလ"
 
 #. module: account
 #. odoo-python
@@ -4832,12 +4838,12 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_157
 msgid "Cash Clothes Shop"
-msgstr ""
+msgstr "ငွေသား အဝတ် ဆိုင်"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense"
-msgstr ""
+msgstr "ငွေ ဒစ်စကောင့် ကုန်ကျမှူများ"
 
 #. module: account
 #. odoo-python
@@ -4850,7 +4856,7 @@ msgstr "ငွေ ဒစ်စကောင့် အရ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income"
-msgstr ""
+msgstr "ငွေ ဒစ်စကောင့် အဝင်"
 
 #. module: account
 #. odoo-python
@@ -4894,7 +4900,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_156
 msgid "Cash Furn. Shop"
-msgstr ""
+msgstr "ငွေသား ပရိဘောဂ ဆိုင်"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -5201,7 +5207,7 @@ msgstr "အရောင်ညွှန်းကိန်း"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__column_ids
 msgid "Columns"
-msgstr ""
+msgstr "ကော်လံများ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__groupby
@@ -5216,7 +5222,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Commercial Entity"
-msgstr ""
+msgstr "ကူးသန်းရောင်းဝယ် အဖွဲ့အစည်း"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__commercial_partner_country
@@ -5226,7 +5232,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.2_account_account_us_common_stock
 msgid "Common Stock"
-msgstr ""
+msgstr "ဘုံစတော့"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -5306,12 +5312,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Company Bank Account"
-msgstr ""
+msgstr "ကုမ္ပဏီ ဘာဏ် အကောင့်"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "ကုမ္ပဏီ ၏ နိုင်ငံ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
@@ -5324,7 +5330,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "ကုမ္ပဏီ ၏ ငွေကြေး"
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
@@ -5393,7 +5399,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_end
 msgid "Computed Balance"
-msgstr ""
+msgstr "တွက်ပြီး လက်ကျန်"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_computers
@@ -6890,7 +6896,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Digitization"
-msgstr ""
+msgstr "ဒစ်ဂျစ်တယ်ပြောင်းခြင်း"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6902,7 +6908,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
 #: model:ir.model.fields,field_description:account.field_account_move__direction_sign
 msgid "Direction Sign"
-msgstr ""
+msgstr "ညွှန်ပြချက် သင်္ကေတ"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disability_insurance
@@ -9537,7 +9543,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "In Process"
-msgstr ""
+msgstr "ဆောင်ရွက်ဆဲ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -11204,7 +11210,7 @@ msgstr "လိုဂို"
 #. module: account
 #: model:ir.ui.menu,name:account.account_logs_menu
 msgid "Logs"
-msgstr ""
+msgstr "လော့ဂျ်များ"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_base_document_layout
@@ -11390,7 +11396,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "ကိုက်ညီချက်"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
@@ -11420,7 +11426,7 @@ msgstr "မာဂျင် စိတ်ဖြာလေ့လာခြင်း"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Mark as Sent"
-msgstr ""
+msgstr "ပို့ပြီးအဖြစ်မှတ်"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
@@ -11516,7 +11522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_register__communication
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Memo"
-msgstr ""
+msgstr "မှတ်စု(မီမို)"
 
 #. module: account
 #. odoo-javascript
@@ -14394,7 +14400,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_expense_rent
 msgid "Rent"
-msgstr ""
+msgstr "အငှား"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_rent
@@ -14420,7 +14426,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__replacing_tax_ids
 msgid "Replaced by"
-msgstr ""
+msgstr "အစားထိုး"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__original_tax_ids
@@ -14430,7 +14436,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__report_id
 msgid "Report"
-msgstr ""
+msgstr "ရီပို့"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_actions_report
@@ -15797,7 +15803,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__state
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr "ပြည်နယ်"
+msgstr "အခြေအနေ"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_state_income_tax
@@ -16913,6 +16919,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr ""
@@ -16980,8 +16994,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18481,7 +18496,7 @@ msgstr ""
 #: model:account.account,name:account.1_unaffected_earnings_account
 #: model:account.account,name:account.2_unaffected_earnings_account
 msgid "Undistributed Profits/Losses"
-msgstr ""
+msgstr "ခွဲဝေမထားသော အမြတ်/အရှံး"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
@@ -18957,7 +18972,16 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
 
 #. module: account

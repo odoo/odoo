@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product_expiry
+# * product_expiry
 #
 # Translators:
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
@@ -8,33 +8,35 @@
 # Stefan Stieranka <stieranka@itec.sk>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Martin Trigaux, 2022
-#
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-02-27 21:13+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"product_expiry/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "\t--Expire on %(date)s--"
-msgstr ""
+msgstr "\t--Exspiruje %(date)s--"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "\t--Expired--"
-msgstr ""
+msgstr "\t--Expirované--"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -45,6 +47,11 @@ msgid ""
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime(‚%Y-%m-%d %H:%M:%S‘) &lt; expiration_date)\""
+">Expiruje</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">Expirované</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -53,16 +60,19 @@ msgid ""
 "invisible=\"product_qty &lt;= 0 or not product_expiry_alert or not "
 "expiration_date\"/>"
 msgstr ""
+"<span title=\"Upozornenie\" class="
+"\"fa fa-exclamation-triangle text-danger me-2\" invisible="
+"\"product_qty &lt;= 0 or not product_expiry_alert or not expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days after receipt</span>"
-msgstr ""
+msgstr "<span> dni po prijatí</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span> days before expiration date</span>"
-msgstr ""
+msgstr "<span> dní pred dátumom exspirácie</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -75,22 +85,22 @@ msgstr "Dátum výstrahy"
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Dátum výstrahy dosiahnuté"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Alert Lots"
-msgstr ""
+msgstr "Šarže s výstrahou"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Alert from"
-msgstr ""
+msgstr "Výstraha od"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
 msgid "Available Quantity"
-msgstr ""
+msgstr "Dostupné množstvo"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__free_qty
@@ -104,22 +114,30 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Dostupné množstvo (vypočítané ako množstvo na sklade - rezervované množstvo -"
+" množstvo na odstránenie)\n"
+"V kontexte s jedným skladovým miestom to zahŕňa tovar uskladnený na tomto "
+"mieste alebo na ktoromkoľvek z jeho podriadených miest.\n"
+"V kontexte s jedným skladom to zahŕňa tovar uskladnený na skladovom mieste "
+"tohto skladu alebo na ktoromkoľvek z jeho podriadených miest.\n"
+"V ostatných prípadoch to zahŕňa tovar uskladnený na akomkoľvek skladovom "
+"mieste typu „interné“."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "B.b."
-msgstr ""
+msgstr "Min. trvanlivosť"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Best Before Date"
-msgstr ""
+msgstr "Dátum minimálnej trvanlivosti"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Best before"
-msgstr ""
+msgstr "Min. trvanlivosť"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
@@ -139,7 +157,7 @@ msgstr "Potvrdiť"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "Potvrdiť exspiráciu"
 
 #. module: product_expiry
 #. odoo-python
@@ -164,6 +182,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Dátum na určenie exspirovaných šarží a sériových čísel pomocou filtra „"
+"Upozornenia na exspiráciu“."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -184,7 +204,7 @@ msgstr "Zrušiť"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr ""
+msgstr "Zobrazenie dátumov spotreby na dodacích listoch"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -205,17 +225,17 @@ msgstr "Zobrazovaný názov"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Exp."
-msgstr ""
+msgstr "Exsp."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Expiration"
-msgstr ""
+msgstr "Exspirácia"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration Alerts"
-msgstr ""
+msgstr "Upozornenia na exspiráciu"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
@@ -231,38 +251,38 @@ msgstr "Dátum spotreby"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr ""
+msgstr "Dátumy spotreby budú uvedené na dodacom liste"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid "Expiration:"
-msgstr ""
+msgstr "Exspirácia:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr ""
+msgstr "Exspirované šarže"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Expired Lots"
-msgstr ""
+msgstr "Exspirované šarže"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "Expired Stock"
-msgstr ""
+msgstr "Exspirované zásoby"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "Bola vytvorená upomienka o uplynutí platnosti"
 
 #. module: product_expiry
 #: model:product.removal,name:product_expiry.removal_fefo
 msgid "First Expiry First Out (FEFO)"
-msgstr ""
+msgstr "First Expiry First Out (FEFO)"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__virtual_available
@@ -276,16 +296,24 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Očakávané množstvo (vypočítané ako množstvo na sklade - odoslané + prijaté - "
+"množstvo na odstránenie)\n"
+"V kontexte s jedným skladovým miestom to zahŕňa tovar uskladnený na tomto "
+"mieste alebo na ktoromkoľvek z jeho podriadených miest.\n"
+"V kontexte s jedným skladom to zahŕňa tovar uskladnený na skladovom mieste "
+"tohto skladu alebo na ktoromkoľvek z jeho podriadených miest.\n"
+"V ostatných prípadoch to zahŕňa tovar uskladnený na akomkoľvek skladovom "
+"mieste typu „interný“."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "Očakávané množstvo"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Množstvo k dispozícii "
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -306,7 +334,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr ""
+msgstr "Uviesť dátumy spotreby na dodacom liste"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
@@ -326,7 +354,7 @@ msgstr "Šarža"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Šarža/sériové"
+msgstr "Šarža/sériové číslo"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
@@ -336,6 +364,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Počet dní po prijatí výrobkov (od dodávateľa alebo skladom po výrobe), po "
+"uplynutí ktorých sa tovar môže stať nebezpečným a nesmie sa konzumovať. "
+"Vypočíta sa na základe čísla šarže/sériového čísla."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -345,6 +376,9 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
+"Počet dní pred dátumom exspirácie, po uplynutí ktorých by malo byť vydané "
+"upozornenie týkajúce sa čísla šarže/sériového čísla. Vypočíta sa na základe "
+"čísla šarže/sériového čísla."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -354,6 +388,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore.It will be computed on the lot/serial number."
 msgstr ""
+"Počet dní pred dátumom exspirácie, po ktorom by malo byť tovar vyradený zo "
+"skladu a už sa nezapočítava do použiteľných disponibilných skladových zásob. "
+"Vypočíta sa na základe čísla šarže/sériového čísla."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -363,6 +400,8 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the lot/"
 "serial number."
 msgstr ""
+"Počet dní pred dátumom exspirácie, po ktorom sa tovar začne kaziť, bez toho, "
+"aby bol nebezpečný. Vypočíta sa na základe čísla šarže/sériového čísla."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__available_quantity
@@ -370,16 +409,18 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
+"Množstvo na sklade, ktoré nebolo rezervované na skladový pohyb a je stále "
+"čerstvé/použiteľné, v predvolenej merné jednotke produktu"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
 msgid "Picking"
-msgstr "Vyberanie"
+msgstr "Skladový presun"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "Pokračovať okrem exspirovaných"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -390,7 +431,7 @@ msgstr "Produkt"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Varovanie na exspiráciu produktu"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move_line
@@ -405,7 +446,7 @@ msgstr "Varianta produktu"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "Kvanty"
+msgstr "Množstvá"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -415,49 +456,49 @@ msgstr "Kvanty"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Removal Date"
-msgstr "Dátum odstránenia"
+msgstr "Dátum vyradenia"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid "Removal:"
-msgstr ""
+msgstr "Vyradenie:"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
-msgstr ""
+msgstr "Zobraziť šarže"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
 msgid "Stock Move"
-msgstr "Pohyb skladu"
+msgstr "Skladový pohyb"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_report_stock_quantity
 msgid "Stock Quantity Report"
-msgstr ""
+msgstr "Prehľad skladových zásob"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Prehľad doplnenia zásob"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Skladové pravidlo"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
 msgid "The Expiration Date has been reached."
-msgstr ""
+msgstr "Bol dosiahnutý dátum exspirácie."
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "Dátum upozornenia pre túto šaržu/sériové číslo bol dosiahnutý"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
@@ -478,6 +519,9 @@ msgid ""
 "removed from the stock and not be counted in the Fresh On Hand Stock "
 "anymore. This date will be used in FEFO removal strategy."
 msgstr ""
+"Toto je dátum, kedy by mal byť tovar s týmto sériovým číslom vyradený zo "
+"skladu a už by sa nemal započítavať do použiteľných dostupných skladových "
+"zásob. Tento dátum sa použije v stratégii vyraďovania FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
@@ -492,24 +536,24 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
 msgid "To Remove"
-msgstr ""
+msgstr "Na vyradenie"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove now"
-msgstr ""
+msgstr "Na odstránenie ihneď"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "Na odstránenie k"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
 msgid "Transfer"
-msgstr "Prevod"
+msgstr "Presun"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
@@ -519,7 +563,7 @@ msgstr "Prevod"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
 msgid "Use Expiration Date"
-msgstr ""
+msgstr "Použiť dátum exspirácie"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
@@ -533,6 +577,9 @@ msgid ""
 "product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
+"Ak je toto políčko zaškrtnuté, máte možnosť určiť dátumy na riadenie "
+"exspirácie produktu, na produkte a na príslušných číslach šarže/sériových "
+"číslach"
 
 #. module: product_expiry
 #. odoo-python
@@ -541,6 +588,8 @@ msgid ""
 "You are going to deliver some product expired lots.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Chystáte sa dodať niektoré produkty s prekročenou dobou spotreby.\n"
+"Potvrdzujete, že chcete pokračovať?"
 
 #. module: product_expiry
 #. odoo-python
@@ -550,11 +599,14 @@ msgid ""
 "expired or should at least be removed from stock.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
+"Chystáte sa dodať produkt %(product_name)s, %(lot_name)s, ktorého exspiračná "
+"doba uplynula alebo ktorý by mal byť prinajmenšom stiahnutý zo skladu.\n"
+"Potvrdzujete, že chcete pokračovať?"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^A0N,44,33^FDUse by:"
-msgstr ""
+msgstr "^A0N,44,33^FDSpotrebovať do:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -562,11 +614,13 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,150"
-msgstr ""
+msgstr "^FO100,150"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -574,6 +628,8 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDBest before:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FDMinimálna trvanlivosť:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -581,11 +637,13 @@ msgid ""
 "^FO100,150\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FDSpotrebovať do:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200"
-msgstr ""
+msgstr "^FO100,200"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -593,11 +651,13 @@ msgid ""
 "^FO100,200\n"
 "^A0N,44,33^FDUse by:"
 msgstr ""
+"^FO100,200\n"
+"^A0N,44,33^FDSpotrebovať do:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FO100,200^BY3"
-msgstr ""
+msgstr "^FO100,200^BY3"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -605,11 +665,13 @@ msgid ""
 "^FO100,50\n"
 "^A0N,44,33^FD"
 msgstr ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -618,6 +680,9 @@ msgid ""
 "^FO100,100\n"
 "^A0N,44,33^FDLN/SN:"
 msgstr ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -627,6 +692,10 @@ msgid ""
 "^BCN,100,Y,N,N\n"
 "^FD"
 msgstr ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
@@ -634,11 +703,13 @@ msgid ""
 "^FS\n"
 "^FO100,250^BY3"
 msgstr ""
+"^FS\n"
+"^FO100,250^BY3"
 
 #. module: product_expiry
 #: model:product.removal,method:product_expiry.removal_fefo
 msgid "fefo"
-msgstr ""
+msgstr "fefo"
 
 #~ msgid "Procurement Group"
 #~ msgstr "Skupina obstarávania"

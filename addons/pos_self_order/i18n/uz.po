@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -594,13 +594,6 @@ msgid "Easily load a set of configuration options"
 msgstr "Sozlamalar to‘plamini osongina yuklang"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-#, fuzzy
-msgid "Email"
-msgstr "Elektron pochta"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 #, fuzzy
 msgid "Email Confirmation"
@@ -823,6 +816,12 @@ msgstr "Ma'lumot"
 #, fuzzy
 msgid "Internet Connection Lost"
 msgstr "Internet aloqasi uzildi"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid preset"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1180,13 +1179,6 @@ msgid ""
 msgstr ""
 "Slayd-shou yaratish uchun bir yoki bir nechta rasm qo‘shib, boshlang‘ich "
 "ekranni moslashtiring"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-#, fuzzy
-msgid "Phone"
-msgstr "Telefon"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1642,13 +1634,6 @@ msgid "Status"
 msgstr "Holat"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-#, fuzzy
-msgid "Street and Number"
-msgstr "Ko‘cha va uy raqami"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
 #, fuzzy
 msgid "Style"
@@ -1951,13 +1936,6 @@ msgstr "Sizning {{ object.config_id.name }} chekingiz"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-#, fuzzy
-msgid "Zip"
-msgstr "Pochta indeksi"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 #, fuzzy
 msgid "are"
@@ -2023,6 +2001,22 @@ msgstr ""
 #, fuzzy
 msgid "odoo"
 msgstr "odoo"
+
+#, fuzzy
+#~ msgid "Email"
+#~ msgstr "Elektron pochta"
+
+#, fuzzy
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#, fuzzy
+#~ msgid "Street and Number"
+#~ msgstr "Ko‘cha va uy raqami"
+
+#, fuzzy
+#~ msgid "Zip"
+#~ msgstr "Pochta indeksi"
 
 #, fuzzy
 #~ msgid ""

@@ -40,8 +40,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-20 17:16+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-27 14:41+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/account/"
 "sv/>\n"
@@ -104,6 +104,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Vänligen kontakta din administratör."
 
 #. module: account
 #. odoo-python
@@ -516,7 +518,7 @@ msgstr "15 dagar"
 #: model:account.tax,name:account.1_purchase_tax_template
 #: model:account.tax,name:account.1_sale_tax_template
 msgid "15%"
-msgstr "15%"
+msgstr "15 %"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1590,7 +1592,7 @@ msgstr "<span class=\"o_stat_text\">Fakturerad</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr "<span class=\"o_stat_text\">Bokföringsposter</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1790,7 +1792,7 @@ msgstr "<span>1</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>5.00</span>"
-msgstr "<span>5.00</span>"
+msgstr "<span>5,00</span>"
 
 #. module: account
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
@@ -1813,7 +1815,7 @@ msgstr "<span>Belopp i valuta</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
-msgstr "<span>Belopp</span>"
+msgstr "<span>Summa</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1834,7 +1836,7 @@ msgstr "<span>Rabatt %</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span>Draft</span>"
-msgstr "<span>Utdrag</span>"
+msgstr "<span>Utkast</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -2914,7 +2916,7 @@ msgstr "Kontoinnehavare"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_tree
 msgid "Account Journal"
-msgstr "Journal"
+msgstr "Verifikationsserie"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
@@ -2952,7 +2954,7 @@ msgstr "Backa bokföringstransaktion"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr "Skicka Transaktioner"
+msgstr "Skicka transaktioner"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
@@ -3624,7 +3626,7 @@ msgstr "Justeringsposter har skapats för denna faktura:"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry"
-msgstr "Justering av Journal Entry"
+msgstr "Justering av bokföringspost"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_label
@@ -4735,7 +4737,7 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Bankkontonummer som fakturan kommer att betalas till. Ett företagsbankkonto "
-"om detta är en kundfaktura eller leverantörskreditnota, annars ett "
+"om detta är en kundfaktura eller leverantörskreditfaktura, annars ett "
 "partnerbankkontonummer."
 
 #. module: account
@@ -4804,7 +4806,7 @@ msgstr "Bankinställning"
 #: model:ir.model,name:account.model_account_bank_statement
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank Statement"
-msgstr "Kontoutdrag från bank"
+msgstr "Bankkontoutdrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
@@ -4819,7 +4821,7 @@ msgstr "Rad på kontoutdrag"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
-msgstr "Kontoutdrag"
+msgstr "Bankkontoutdrag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
@@ -4872,6 +4874,12 @@ msgstr "Bank och kassa"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Odoo-banken"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5066,7 +5074,7 @@ msgstr "Leverantörsfakturor"
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all_supp
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Fakturaanlyser"
+msgstr "Analyser av leverantörsfakturor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5091,7 +5099,7 @@ msgstr "Fakturor att betala"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Leverantörsfakturor att bekräfta"
+msgstr "Fakturor att validera"
 
 #. module: account
 #. odoo-python
@@ -5315,7 +5323,7 @@ msgstr "Avbrutna fakturor"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr "Annullerad proforma kreditnota"
+msgstr "Annullerad proforma kreditfaktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6071,7 +6079,7 @@ msgstr "Inställningar"
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Configuration"
-msgstr "Konfiguration"
+msgstr "Inställningar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6343,7 +6351,7 @@ msgstr "Skapa"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Skapa automatiska poster"
+msgstr "Skapa bokföringsposter automatiskt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -6386,7 +6394,7 @@ msgstr "Skapa en faktura manuellt"
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type_non_legacy
 msgid "Create a credit note"
-msgstr "Skapa en kreditnota"
+msgstr "Skapa en kreditfaktura"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice
@@ -6472,7 +6480,7 @@ msgstr "Skapa en leverantörsfaktura"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Skapa en leverantörskreditnota"
+msgstr "Skapa en leverantörskreditfaktura"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -6722,7 +6730,7 @@ msgstr "Kreditnota Valuta"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr "Kreditnota: Sändning"
+msgstr "Kreditfaktura: Skickas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -6733,7 +6741,7 @@ msgstr "Kreditnota: Sändning"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Credit Notes"
-msgstr "Kreditnotor"
+msgstr "Kreditfakturor"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_credit_statement_tree
@@ -7071,7 +7079,7 @@ msgstr "LEVERERAT TULL BETALT"
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Instrumentpanel"
+msgstr "Anslagstavla"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -8078,7 +8086,7 @@ msgstr "Fakturautkast"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Credit Note"
-msgstr "Utkast för kreditnota"
+msgstr "Utkast till kreditfaktura"
 
 #. module: account
 #. odoo-python
@@ -8117,7 +8125,7 @@ msgstr "Betalningsutkast"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr "Utkast till proforma kreditnota"
+msgstr "Utkast till proforma kreditfaktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8140,7 +8148,7 @@ msgstr "Utkast för försäljningskvitto"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Vendor Credit Note"
-msgstr "Utkast för leverantörskreditnota"
+msgstr "Utkast till leverantörskreditfaktura"
 
 #. module: account
 #. odoo-javascript
@@ -9091,7 +9099,7 @@ msgstr "Skatteområde"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Finanspolitiska positioner"
+msgstr "Skattepositioner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -11117,7 +11125,7 @@ msgstr "Fakturor, betalningar och grundläggande fakturarapportering."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Invoices/Bills/Mandates"
-msgstr "Fakturor/räkningar/mandat"
+msgstr "Fakturor/leverantörsfakturor/mandat"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -11363,7 +11371,7 @@ msgstr "januari"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Journal"
-msgstr "Bokföringskonto"
+msgstr "Verifikationsserie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -11392,7 +11400,7 @@ msgstr "Journalvaluta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 msgid "Journal Entries"
-msgstr "Journal Entry"
+msgstr "Verifikationsserier"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -11424,7 +11432,7 @@ msgstr "Journal Entry till Hash"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Bokföringspost"
+msgstr "Verifikation"
 
 #. module: account
 #. odoo-javascript
@@ -11563,7 +11571,7 @@ msgstr "Journal:"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journals"
-msgstr "Journal Entry"
+msgstr "Bokföringskonton"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -11593,7 +11601,7 @@ msgstr "KPI-leverantör"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "Kanban-instrumentpanel"
+msgstr "Kanban-vy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard_graph
@@ -12428,7 +12436,7 @@ msgstr "Memo:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_merge_wizard_form
 msgid "Merge"
-msgstr "Sammanslagning"
+msgstr "Sammanfoga"
 
 #. module: account
 #. odoo-python
@@ -12619,7 +12627,7 @@ msgstr "Mer precision på produktpriser"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 #: model:ir.model.fields,field_description:account.field_validate_account_move__move_ids
 msgid "Move"
-msgstr "Transaktion"
+msgstr "Flytta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -13453,7 +13461,7 @@ msgstr "Endast leverantörsfakturor medger avdrag för produkter/tjänster."
 #. odoo-python
 #: code:addons/account/controllers/terms.py:0
 msgid "Oops"
-msgstr "Oops"
+msgstr "Ojdå"
 
 #. module: account
 #. odoo-python
@@ -13598,7 +13606,7 @@ msgstr "Ursprungsrad"
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
-msgstr "Originalfakturor"
+msgstr "Ursprungsfakturor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_lock_date
@@ -14835,7 +14843,7 @@ msgstr "Intäktskonto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
-msgstr "Proforma kreditnota"
+msgstr "Proforma kreditfaktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -14850,7 +14858,7 @@ msgstr "Proforma leverantörsfaktura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr "Proforma kreditnota till leverantör"
+msgstr "Proforma leverantörskreditfaktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -15067,7 +15075,7 @@ msgstr "Anledning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
-msgstr "Motivering som visas på kreditnotan"
+msgstr "Motivering som anges på kreditfakturan"
 
 #. module: account
 #. odoo-javascript
@@ -15265,7 +15273,7 @@ msgstr "Återbetalningsvaluta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Refunds"
-msgstr "Återbetalning"
+msgstr "Återbetalningar"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -15650,7 +15658,7 @@ msgstr "Ogiltigförklarad den"
 #: model:ir.ui.menu,name:account.account_audit_menu
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Review"
-msgstr "Granska"
+msgstr "Analyser"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -15784,7 +15792,7 @@ msgstr "SEPA-autogiro (SDD)"
 #: model:ir.model.fields,field_description:account.field_res_company__message_has_sms_error
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveransfel"
+msgstr "SMS kunde inte skickas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16162,12 +16170,12 @@ msgstr "Självfakturering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr "Kreditnota för självfakturering"
+msgstr "Kreditfaktura för självfakturering"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr "Kreditnota för självfakturering: Skickas"
+msgstr "Kreditfaktura för självfakturering: Skickas"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_invoice
@@ -17048,7 +17056,7 @@ msgstr "Observationskonto"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
 msgid "Switch into invoice/credit note"
-msgstr "Växla till faktura/kreditnota"
+msgstr "Växla till faktura/kreditfaktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -18008,6 +18016,14 @@ msgid ""
 msgstr "Bankkontot i en bankjournal måste tillhöra samma företag (%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Bankkontoutdrag som används för bankavstämning"
@@ -18086,8 +18102,9 @@ msgstr "Handelspartnern har uppdaterats för alla relaterade bokföringsposter."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -19306,7 +19323,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
 msgid "Those states are ignored by the fiscal positions"
-msgstr "Dessa stater ignoreras av de finanspolitiska positionerna"
+msgstr "Dessa stater ignoreras av skattepositionerna"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
@@ -20285,17 +20302,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Värde för avskrivningsradens belopp\n"
-"* Procent: Andel av saldot, mellan 0 och 100.\n"
-"* Fast: Det fasta värdet på avskrivningen. Beloppet kommer att räknas som en "
-"debet om det är negativt, som en kredit om det är positivt.\n"
-"* Från etikett: Det finns inget behov av regex-avgränsare, bara regex "
-"behövs. Till exempel om du vill extrahera mängden från\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"Du skriver bara\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20388,7 +20405,7 @@ msgstr "Leverantörsfakturskonto för rabatter"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Leverantörskreditnota"
+msgstr "Leverantörskreditfaktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -20526,7 +20543,7 @@ msgstr "Webbplats"
 #: model:ir.model.fields,field_description:account.field_res_company__website_message_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__website_message_ids
 msgid "Website Messages"
-msgstr "Webbplatsmeddelanden"
+msgstr "Hemsidesmeddelanden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__website_message_ids
@@ -20540,7 +20557,7 @@ msgstr "Webbplatsmeddelanden"
 #: model:ir.model.fields,help:account.field_res_company__website_message_ids
 #: model:ir.model.fields,help:account.field_res_partner_bank__website_message_ids
 msgid "Website communication history"
-msgstr "Webbplatsens kommunikationshistorik"
+msgstr "Hemsidans kommunikationshistorik"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__paired_internal_transfer_payment_id
@@ -21388,8 +21405,8 @@ msgid ""
 "credit note or refund."
 msgstr ""
 "Du kan inte godkänna en faktura med ett negativt totalbelopp. Du bör "
-"istället skapa en kreditnota. Använd åtgärdsmenyn för att omvandla den till "
-"en kreditnota eller återbetalning."
+"istället skapa en kreditfaktura. Använd åtgärdsmenyn för att omvandla den "
+"till en kreditfaktura eller återbetalning."
 
 #. module: account
 #. odoo-python
@@ -22119,7 +22136,7 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Kreditnota (Ref {{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Kreditfaktura (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -22140,7 +22157,7 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Kreditnota för självfakturering (Ref "
+"{{ object.company_id.name }} Kreditfaktura för självfakturering (Ref "
 "{{ object.name or 'n/a' }})"
 
 #. module: account
@@ -22151,6 +22168,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Faktura för självfakturering (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Värde för avskrivningsradens belopp\n"
+#~ "* Procent: Andel av saldot, mellan 0 och 100.\n"
+#~ "* Fast: Det fasta värdet på avskrivningen. Beloppet kommer att räknas som "
+#~ "en debet om det är negativt, som en kredit om det är positivt.\n"
+#~ "* Från etikett: Det finns inget behov av regex-avgränsare, bara regex "
+#~ "behövs. Till exempel om du vill extrahera mängden från\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "Du skriver bara\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<span>1.00</span>\n"

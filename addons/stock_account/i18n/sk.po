@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-02-27 18:37+0000\n"
 "PO-Revision-Date: 2026-01-31 19:02+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
@@ -749,7 +749,8 @@ msgstr "V nastaveniach prosím nastavte denník pre oceňovanie zásob."
 #: code:addons/stock_account/models/res_company.py:0
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr "Pre oceňovanie zásob nastavte prosím v nastaveniach účet hodnoty zásob."
+msgstr ""
+"Pre oceňovanie zásob nastavte prosím v nastaveniach účet hodnoty zásob."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -882,8 +883,8 @@ msgid ""
 msgstr ""
 "Pevná cena: Produkty sú ocenené pevnou cenou definovanou na produkte.\n"
 "        Priemerná cena: Produkty sú ocenené podľa priemernej váženej ceny.\n"
-"        First In First Out (FIFO): Produkty sú ocenené metódou "
-"\"prvý dnu - prvý von\", tie ktoré vstúpili na sklad prvé budú prvé vydané.\n"
+"        First In First Out (FIFO): Produkty sú ocenené metódou \"prvý dnu - "
+"prvý von\", tie ktoré vstúpili na sklad prvé budú prvé vydané.\n"
 "        "
 
 #. module: stock_account
@@ -986,8 +987,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
-"Táto operácia môže viesť k strate dát. Ocenení budú identické pre všetky šarž"
-"e/sériové čísla. Chcete pokračovať? "
+"Táto operácia môže viesť k strate dát. Ocenení budú identické pre všetky "
+"šarže/sériové čísla. Chcete pokračovať? "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -1115,8 +1116,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Hodnota šarže (automaticky vypočítaná v primernej cene).\n"
-"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena "
-"(napr. úprava zásob).\n"
+"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena (napr. "
+"úprava zásob).\n"
 "        Používa sa na výpočet marží pri predajných objednávkach."
 
 #. module: stock_account
@@ -1128,8 +1129,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "Hodnota produktu (automaticky vypočítaná v priemernej cene).\n"
-"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena "
-"(napr. úprava zásob).\n"
+"        Používa sa na ocenenie produktu, ak nie je známa nákupná cena (napr. "
+"úprava zásob).\n"
 "        Používa sa na výpočet marží pri predajných objednávkach."
 
 #. module: stock_account
@@ -1192,11 +1193,9 @@ msgstr "Na vyhľadávanie v poli ocenenia môžete použiť iba operátor „=�
 #. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
-"You cannot modify the scheduled date of this operation because it falls "
-"within a locked fiscal period."
+"You cannot modify the scheduled date of operation %s because it falls within "
+"a locked fiscal period."
 msgstr ""
-"Plánovaný dátum tejto operácie nie je možné zmeniť, pretože spadá do "
-"uzamknutého fiškálneho obdobia."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
@@ -1207,6 +1206,13 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "jednotky"
+
+#~ msgid ""
+#~ "You cannot modify the scheduled date of this operation because it falls "
+#~ "within a locked fiscal period."
+#~ msgstr ""
+#~ "Plánovaný dátum tejto operácie nie je možné zmeniť, pretože spadá do "
+#~ "uzamknutého fiškálneho obdobia."
 
 #~ msgid "Account Move"
 #~ msgstr "Pohyb účtu"

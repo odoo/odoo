@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
 "PO-Revision-Date: 2025-11-20 12:08+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/account/"
@@ -4880,6 +4880,12 @@ msgstr "Banka ve Kasa"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Odoo Bankası"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -18010,6 +18016,14 @@ msgid ""
 msgstr "Bir banka günlüğünün banka hesabı aynı şirkete ait olmalıdır ( %s )."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Banka denkleştirmesi için kullanılan banka hesap ekstresi"
@@ -18087,8 +18101,9 @@ msgstr "İlgili tüm muhasebe kayıtlarında ticari ortak bilgisi güncellendi."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -20272,17 +20287,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Silme satırı için tutar değeri\n"
-"    * Yüzde: Bakiyenin yüzdesi olarak, 0 ile 100 arasında bir değer.\n"
-"    * Sabit: Silme satırının sabit değeri. Tutar negatifse borç (debit), "
-"pozitifse alacak (credit) olarak değerlendirilir.\n"
-"    * Etiket Bazlı: Regex ayırıcıya gerek yoktur, yalnızca düzenli ifade "
-"yeterlidir. Örneğin, aşağıdaki satırdan tutarı çıkarmak istiyorsanız\n"
-"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
-"şu ifadeyi kullanabilirsiniz\n"
-"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -22140,6 +22155,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Kendi kendine faturalandırma faturası (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Silme satırı için tutar değeri\n"
+#~ "    * Yüzde: Bakiyenin yüzdesi olarak, 0 ile 100 arasında bir değer.\n"
+#~ "    * Sabit: Silme satırının sabit değeri. Tutar negatifse borç (debit), "
+#~ "pozitifse alacak (credit) olarak değerlendirilir.\n"
+#~ "    * Etiket Bazlı: Regex ayırıcıya gerek yoktur, yalnızca düzenli ifade "
+#~ "yeterlidir. Örneğin, aşağıdaki satırdan tutarı çıkarmak istiyorsanız\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "şu ifadeyi kullanabilirsiniz\n"
+#~ "BRT: ([\\d,]+)"
 
 #~ msgid ""
 #~ "<span>1.00</span>\n"

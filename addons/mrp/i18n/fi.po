@@ -45,11 +45,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-02-19 09:49+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-25 14:46+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/mrp/fi/>"
-"\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/mrp/fi/"
+">\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -449,6 +449,11 @@ msgstr "<span class=\"o_stat_text\">Osaluettelon (BoM) yleiskatsaus</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
 msgstr "<span class=\"o_stat_text\">Alempi tuotantotilaus (MO)</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -1340,8 +1345,9 @@ msgid ""
 "manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Materiaaliluetteloiden avulla voit määritellä tuotteen valmistamiseksi "
-"tarvittavat tuotteet (raaka-aineet) tai tuotesettiin kuuluvat tuotteet."
+"Materiaaliluetteloiden avulla voit määritellä tuotteen\n"
+"                valmistamiseksi tarvittavat raaka-aineet; tuotantotilauksen\n"
+"                tai tuotepakkauksen kautta."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -1571,7 +1577,7 @@ msgstr "Kuljetettu määrä"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Catalog"
-msgstr "Luettelo"
+msgstr "Katalogi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
@@ -2845,7 +2851,7 @@ msgstr "On valmistettu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__has_kits
 msgid "Has Kits"
-msgstr "Sisältää kittejä"
+msgstr "Sisältää settejä"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__has_message
@@ -3217,7 +3223,7 @@ msgstr "Kanban-koontinäytön kaavio"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Kit"
-msgstr "Tuotesetti"
+msgstr "Setti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -4722,12 +4728,12 @@ msgstr "Tuotekapasiteetit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
 msgid "Product Catalog Product Is In Bom"
-msgstr "Tuoteluettelon tuote on osaluettelossa"
+msgstr "Tuotekuvaston tuote on osaluettelossa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
 msgid "Product Catalog Product Is In Mo"
-msgstr "Tuoteluettelo tuote on valmistustilauksessa"
+msgstr "Tuotekuvaston tuote on tuotantotilauksessa"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_document
@@ -5442,6 +5448,11 @@ msgid "Show Bom Tab"
 msgstr "Näytä materiaaliluettelo-välilehti"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
+msgid "Show Copy Operations Button"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Show Details"
 msgstr "Näytä tiedot"
@@ -5810,6 +5821,13 @@ msgid "Technical field to check when we can unreserve"
 msgstr "Tekninen kenttä tarkistaa, milloin voimme purkaa varaukset"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__show_copy_operations_button
+msgid ""
+"Technical field used to control the visibility of the 'Copy Existing "
+"Operations' button."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
 msgstr "Osaluetteloa on päivitetty valmistustilauksen luomisen jälkeen"
@@ -6004,6 +6022,12 @@ msgstr "Kulutettavia komponentteja ei ole. Oletko varma, että haluat jatkaa?"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr "Työkeskuksessa %s ei ole määriteltyä kalenteria."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves

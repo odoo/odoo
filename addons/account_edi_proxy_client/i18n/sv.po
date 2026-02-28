@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-14 15:25+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-26 16:05+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_proxy_client/sv/>\n"
 "Language: sv\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -29,22 +30,22 @@ msgid ""
 "your information."
 msgstr ""
 "En användare med dessa inloggningsuppgifter finns redan på vår server. "
-"Kontrollera din information."
+"Vänligen kontrollera din information."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr "Konto EDI proxy-användare"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr "Konto Edi Proxy Klient"
+msgstr "EDI-överföringar genom en proxy för kunder"
 
 #. module: account_edi_proxy_client
 #: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
 msgid "Account Journal"
-msgstr "Journal"
+msgstr "Verifikationsserie"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -79,7 +80,7 @@ msgstr "Kryptografiska nycklar"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr "Demoläge"
+msgstr "Demo-läge"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -91,12 +92,12 @@ msgstr "Visningsnamn"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr "EDI Proxy Användare"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr "Användare av EDI-proxy"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
@@ -106,7 +107,7 @@ msgstr "Driftläge för EDI"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr "Identifiering av Edi"
+msgstr "Identifiering av EDI"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -129,7 +130,7 @@ msgstr "ID"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
-msgstr "Kund-ID"
+msgstr "Kundnummer"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
@@ -154,7 +155,7 @@ msgstr "Produktionsläge"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
-msgstr "Typ av fullmakt"
+msgstr "Typ av proxy"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -169,14 +170,14 @@ msgstr "Testläge"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_id
 msgid "The key to encrypt all the user's data"
-msgstr "Nyckel för att kryptera alla användarens data"
+msgstr "Nyckel för att kryptera användarens data"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "The unique id that identifies this user, typically the vat"
 msgstr ""
-"Det unika id som identifierar denna användare, vanligtvis "
-"momsregistreringsnummret"
+"Det unika nummer som identifierar användaren, vanligtvis utgörs det av "
+"användarens momsregistreringsnummer"
 
 #. module: account_edi_proxy_client
 #. odoo-python

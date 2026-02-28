@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-18 17:59+0000\n"
+"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"PO-Revision-Date: 2026-02-26 16:04+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
 ">\n"
@@ -82,6 +82,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Neem contact op met je beheerder."
 
 #. module: account
 #. odoo-python
@@ -227,7 +229,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; prijsverschil voor %(product)s"
 
 #. module: account
 #. odoo-python
@@ -328,7 +330,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
 msgstr ""
-"(*) Geleverde goederen die niet gefactureerd zijn (permanente waardering)"
+"(*) Gefactureerde, maar niet geleverde goederen (permanente waardering)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -1769,7 +1771,7 @@ msgstr "<span>$<span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3619,7 +3621,7 @@ msgstr "Totaal overlopende boekingen"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
 msgid "Accumulated Depreciation"
-msgstr "Geaccumuleerde afschrijving"
+msgstr "Gecumuleerde afschrijving"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -3722,13 +3724,13 @@ msgstr "Activiteitsfase"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Activity type"
-msgstr "Soort activiteit"
+msgstr "Activiteitstype"
 
 #. module: account
 #. odoo-javascript
@@ -5121,6 +5123,12 @@ msgstr "Bank en kas"
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
 msgstr "Bank van Odoo"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank settings"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -9286,7 +9294,7 @@ msgstr "Eerste nieuwe reeks"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "Eerste herhalende invoer"
+msgstr "Eerste terugkerende invoer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -9546,8 +9554,8 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Dwingt alle boekinsgregels in deze rekening om een specifieke valuta te "
-"hebben (d.w.z. bankjournalen). Als er geen valuta is ingesteld, kunnen "
+"Dwingt alle boekingsregels in deze rekening om een specifieke valuta te "
+"hebben (d.w.z. bankdagboeken). Als er geen valuta is ingesteld, kunnen "
 "boekingen elke valuta gebruiken."
 
 #. module: account
@@ -15212,7 +15220,7 @@ msgstr "Inkoopvergrendelingsdatum"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
-msgstr "Kassabon"
+msgstr "Inkoopbewijs"
 
 #. module: account
 #. odoo-python
@@ -17109,7 +17117,7 @@ msgid ""
 "and any similar recurring invoices."
 msgstr ""
 "Geef op of deze boeking automatisch wordt geboekt op de boekhouddatum en "
-"eventuele soortgelijke herhalende facturen."
+"eventuele soortgelijke terugkerende facturen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -18327,6 +18335,14 @@ msgstr ""
 "(%s)."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The bank account of your company is not trusted. Please ask an admin or "
+"someone with approval rights to check it."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "Het rekeningafschrift dat wordt gebruikt voor bankaflettering"
@@ -18407,8 +18423,9 @@ msgstr "De commerciële partner is bijgewerkt voor alle gerelateerde boekingen."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The company bank account linked to this invoice is not trusted, please "
-"double-check and trust it before confirming, or remove it"
+"The company bank account (%(account_number)s) linked to this invoice is not "
+"trusted. Go to the Bank Settings, double-check that it is yours or correct "
+"the number, and click on Send Money to trust it."
 msgstr ""
 
 #. module: account
@@ -18958,6 +18975,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"De geplande actie 'Facturen automatisch verzenden' is gearchiveerd. Je kunt "
+"geen facturen in batch verzenden."
 
 #. module: account
 #. odoo-python
@@ -19600,7 +19619,7 @@ msgstr "Dit aflettermodel heeft tot dusver geen boeking opgeleverd"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This recurring entry originated from %s"
-msgstr "Deze herhalende boeking is afkomstig van %s"
+msgstr "Deze terugkerende boeking is afkomstig van %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -20172,7 +20191,7 @@ msgstr "Prijs:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Stuk(s)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20623,17 +20642,17 @@ msgid ""
 "needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
-"BRT: ([\\d,]+)"
+"BRT: ([\\d,]+)\n"
+"    If the label is \"01870912 0009065 00115\" and you need the amount in "
+"decimal\n"
+"    format (e.g. 90.65), you can use a regex with capturing groups, for "
+"example:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In this case:\n"
+"    • the first group captures the integer part\n"
+"    • the second group captures the decimal part (last two digits)\n"
+"    "
 msgstr ""
-"Waarde voor het bedrag van de afschrijvingsregel\n"
-"* Percentage: percentage van het saldo, tussen 0 en 100.\n"
-"* Vast: de vaste waarde van de afschrijving. Het aantal telt als een "
-"afschrijving als het negatief is, als een krediet als het positief is.\n"
-"* Van label: er is geen regex-scheidingsteken nodig, alleen de regex is "
-"nodig. Als je bijvoorbeeld het aantal wilt extraheren\n"
-"R:9672938 10/07 AX 9415126318 T: 5L:NA BRT: 3358,07 C:\n"
-"Zou je moeten schrijven\n"
-"BRT: ([\\ d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20881,7 +20900,7 @@ msgstr "Websiteberichten"
 #: model:ir.model.fields,help:account.field_res_company__website_message_ids
 #: model:ir.model.fields,help:account.field_res_partner_bank__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__paired_internal_transfer_payment_id
@@ -22524,6 +22543,35 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "The company bank account linked to this invoice is not trusted, please "
+#~ "double-check and trust it before confirming, or remove it"
+#~ msgstr ""
+#~ "De bedrijfsbankrekening die aan deze factuur is gekoppeld, is niet "
+#~ "vertrouwd. Controleer en vertrouw de rekening voordat je bevestigt, of "
+#~ "verwijder de rekening"
+
+#~ msgid ""
+#~ "Value for the amount of the writeoff line\n"
+#~ "    * Percentage: Percentage of the balance, between 0 and 100.\n"
+#~ "    * Fixed: The fixed value of the writeoff. The amount will count as a "
+#~ "debit if it is negative, as a credit if it is positive.\n"
+#~ "    * From Label: There is no need for regex delimiter, only the regex is "
+#~ "needed. For instance if you want to extract the amount from\n"
+#~ "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+#~ "You could enter\n"
+#~ "BRT: ([\\d,]+)"
+#~ msgstr ""
+#~ "Waarde voor het bedrag van de afschrijvingsregel\n"
+#~ "* Percentage: percentage van het saldo, tussen 0 en 100.\n"
+#~ "* Vast: de vaste waarde van de afschrijving. Het aantal telt als een "
+#~ "afschrijving als het negatief is, als een krediet als het positief is.\n"
+#~ "* Van label: er is geen regex-scheidingsteken nodig, alleen de regex is "
+#~ "nodig. Als je bijvoorbeeld het aantal wilt extraheren\n"
+#~ "R:9672938 10/07 AX 9415126318 T: 5L:NA BRT: 3358,07 C:\n"
+#~ "Zou je moeten schrijven\n"
+#~ "BRT: ([\\ d,]+)"
 
 #~ msgid ""
 #~ "<span>1.00</span>\n"
