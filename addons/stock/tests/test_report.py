@@ -1400,6 +1400,12 @@ class TestReports(TestReportsCommon):
             }
         ])
 
+        # Ensure that a move from a sublocation doesn't create a negative 'in_transit' line.
+        delivery.action_assign()
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertFalse(any(line['in_transit'] for line in lines))
+        self.assertEqual(len(lines), 2)
+
     def test_report_forecast_14_ongoing_multi_step_delivery(self):
         """ Check that an ongoing multi-step delivery is properly picked up by the forecast report.
         """

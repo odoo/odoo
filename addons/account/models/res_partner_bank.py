@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import werkzeug
 import werkzeug.exceptions
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.fields import SQL
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.image import image_data_uri
@@ -61,9 +61,8 @@ class ResPartnerBank(models.Model):
     def _check_allow_out_payment(self):
         """ Block enabling the setting, but it can be set to false without the group. (For example, at creation) """
         for bank in self:
-            if bank.allow_out_payment:
-                if not self.env.user.has_group('account.group_validate_bank_account'):
-                    raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
+            if bank.allow_out_payment and not bank._user_can_trust():
+                raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
 
     @api.depends('acc_number')
     def _compute_duplicate_bank_partner_ids(self):
@@ -122,9 +121,8 @@ class ResPartnerBank(models.Model):
     @api.depends('acc_number')
     @api.depends_context('uid')
     def _compute_user_has_group_validate_bank_account(self):
-        user_has_group_validate_bank_account = self.env.user.has_group('account.group_validate_bank_account')
         for bank in self:
-            bank.user_has_group_validate_bank_account = user_has_group_validate_bank_account
+            bank.user_has_group_validate_bank_account = bank._user_can_trust()
 
     @api.depends('allow_out_payment')
     def _compute_lock_trust_fields(self):
@@ -271,14 +269,24 @@ class ResPartnerBank(models.Model):
         """
         return None
 
+    def _user_can_trust(self):
+        return super()._user_can_trust() and (
+            self.env.su
+            or self.env.user.has_group('account.group_validate_bank_account')
+            or self.env.user.has_group('base.group_system')
+        ) and (
+            # Prevent crons from trusting bank accounts (OdooBot), except when loading demo data
+            self.env.user.id != SUPERUSER_ID
+            or self.env.context.get('install_mode')
+            or tools.config['test_enable']
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
-
-        if not self.env.user.has_group('account.group_validate_bank_account'):
-            for vals in vals_list:
-                # force the allow_out_payment field to False in order to prevent scam payments on newly created bank accounts
-                vals['allow_out_payment'] = False
+        to_trust = [vals.get('allow_out_payment') for vals in vals_list]
+        for vals in vals_list:
+            vals['allow_out_payment'] = False
 
         for vals in vals_list:
             if (partner_id := vals.get('partner_id')) and (acc_number := vals.get('acc_number')):
@@ -286,11 +294,13 @@ class ResPartnerBank(models.Model):
                 if archived_res_partner_bank:
                     raise UserError(_("A bank account with Account Number %(number)s already exists for Partner %(partner)s, but is archived. Please unarchive it instead.", number=acc_number, partner=archived_res_partner_bank.partner_id.name))
 
-        res = super().create(vals_list)
-        for account in res:
+        accounts = super().create(vals_list)
+        for account, trust in zip(accounts, to_trust):
+            if trust and account._user_can_trust():
+                account.allow_out_payment = True
             msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
             account.partner_id._message_log(body=msg)
-        return res
+        return accounts
 
     def write(self, vals):
         # EXTENDS base res.partner.bank
@@ -332,7 +342,7 @@ class ResPartnerBank(models.Model):
         ):
             raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
 
-        if 'allow_out_payment' in vals and not self.env.user.has_group('account.group_validate_bank_account') and not self.env.su:
+        if 'allow_out_payment' in vals and not self._user_can_trust():
             raise UserError(_("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)

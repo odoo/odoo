@@ -697,7 +697,10 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            bank = self.filtered(lambda r: r.type == 'bank').bank_account_id
+            if bank and bank._user_can_trust():
+                bank.allow_out_payment = True
         return result
 
     def _alias_get_creation_values(self):
@@ -894,28 +897,27 @@ class AccountJournal(models.Model):
 
         for journal, vals in zip(journals, vals_list):
             # Create the bank_account_id if necessary
-            if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
-                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+            if journal.type == 'bank':
+                if not journal.bank_account_id and vals.get('bank_acc_number'):
+                    journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+                if journal.bank_account_id and journal.bank_account_id._user_can_trust():
+                    journal.bank_account_id.allow_out_payment = True
 
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
-        res_partner_bank = self.env['res.partner.bank'].search([
-            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
-            ('partner_id', '=', self.company_id.partner_id.id),
-        ], limit=1)
-        if res_partner_bank:
-            self.bank_account_id = res_partner_bank.id
-        else:
-            self.bank_account_id = self.env['res.partner.bank'].create({
-                'acc_number': acc_number,
+        self.bank_account_id = self.env['res.partner.bank']._find_or_create_bank_account(
+            account_number=acc_number,
+            partner=self.company_id.partner_id, allow_company_account_creation=True,
+            company=self.company_id,
+            extra_create_vals={
                 'bank_id': bank_id,
                 'currency_id': self.currency_id.id,
-                'partner_id': self.company_id.partner_id.id,
                 'journal_id': self,
-            }).id
+            }
+        )
 
     @api.depends('currency_id')
     def _compute_display_name(self):

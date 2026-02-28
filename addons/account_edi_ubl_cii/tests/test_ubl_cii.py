@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from lxml import etree
 from unittest.mock import patch
 from odoo import fields, Command
@@ -430,6 +429,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         }])
 
     def test_import_bill(self):
+        self.env['res.partner.bank'].sudo().create({
+            'acc_number': 'Test account',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
+        })
         partner = self.env['res.partner'].create({
             'name': "My Belgian Partner",
             'vat': "BE0477472701",
@@ -454,6 +458,31 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
             'amount_currency': 1000.00,
             'quantity': 1.0}])
+
+    def test_importing_bill_shouldnt_set_current_company_bank_account(self):
+        partner = self.env['res.partner'].create({
+            'name': "My Belgian Partner",
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})]
+        })
+        invoice.action_post()
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """
+            <xpath expr="(//*[local-name()='PaymentMeans']/*[local-name()='PaymentID'])" position="after">
+                <PayeeFinancialAccount><ID>Test account</ID></PayeeFinancialAccount>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        move = self.env['account.journal']\
+            .with_context(default_journal_id=self.company_data['default_journal_sale'].id)\
+            ._create_document_from_attachment(xml_attachment.id)
+        self.assertTrue(any('add your own bank account manually' in message.body for message in move.message_ids))
 
     def test_import_discount(self):
         invoice = self.env['account.move'].create({
@@ -794,3 +823,262 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'amount_tax': 369,
             'amount_total': 2269.00,
         }])
+
+    def test_bank_details_import(self):
+        acc_number = '1234567890'
+        partner_bank = self.env['res.partner.bank'].create({
+            'active': False,
+            'acc_number': acc_number,
+            'partner_id': self.partner_a.id
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # will not raise sql constraint because the sql is not commited yet
+        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
+        self.assertFalse(invoice.partner_bank_id)
+
+        partner_bank.active = True
+        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
+        self.assertEqual(invoice.partner_bank_id, partner_bank)
+
+    def test_invoice_optional_fields(self):
+        """Test that optional invoice and invoice lines custom fields added by the user are exported correctly"""
+        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
+        model = self.env["ir.model"].search([("model", "=", "account.move")])
+
+        IrModelFields.create([
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_tax_point_date",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_contract_document_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_despatch_document_reference_id",
+            },
+            {
+                "ttype": "monetary",
+                "model_id": model.id,
+                "name": "x_studio_peppol_accounting_cost",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_project_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_reference_id",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_start_date",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_end_date",
+            },
+        ])
+
+        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+
+        IrModelFields.create([
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_line_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_buyers_item_id",
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                'x_studio_peppol_buyers_item_id': "item1-1234",
+            }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_project_reference_id': "project-1234",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        project_reference_id = xml_tree.find('.//cac:ProjectReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(project_reference_id.text, 'project-1234')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')
+
+    def test_credit_note_optional_fields(self):
+        """Test that optional credit note and credit note lines custom fields added by the user are exported correctly"""
+        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
+        model = self.env["ir.model"].search([("model", "=", "account.move")])
+
+        IrModelFields.create([
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_tax_point_date",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_contract_document_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_despatch_document_reference_id",
+            },
+            {
+                "ttype": "monetary",
+                "model_id": model.id,
+                "name": "x_studio_peppol_accounting_cost",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_reference_id",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_start_date",
+            },
+            {
+                "ttype": "date",
+                "model_id": model.id,
+                "name": "x_studio_peppol_invoice_period_end_date",
+            },
+        ])
+
+        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+
+        IrModelFields.create([
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_order_line_reference_id",
+            },
+            {
+                "ttype": "char",
+                "model_id": model.id,
+                "name": "x_studio_peppol_buyers_item_id",
+            },
+        ])
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_refund',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                'x_studio_peppol_buyers_item_id': "item1-1234",
+            }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:CreditNoteLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:CreditNoteLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')

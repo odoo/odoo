@@ -32,8 +32,6 @@ class MockIAPReveal(MockIAPEnrich):
         def _iap_contact_mining(params, timeout):
             self.assertMineCallParams(params)
 
-            if sim_error and sim_error == 'credit':
-                raise iap_tools.InsufficientCreditError('InsufficientCreditError')
             if sim_error and sim_error == 'jsonrpc_exception':
                 raise exceptions.AccessError(
                     'The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was [STRIPPED]'
@@ -56,7 +54,7 @@ class MockIAPReveal(MockIAPEnrich):
 
             return {
                 'data': response,
-                'credit_error': False
+                'credit_error': sim_error == 'credit',
             }
 
         with patch.object(CRMLeadMiningRequest, '_iap_contact_mining', side_effect=_iap_contact_mining), \

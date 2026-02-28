@@ -88,6 +88,11 @@ class TestUBLROCommon(TestUBLCommon):
             **kwargs
         )
 
+    def get_attachment(self, move):
+        self.assertTrue(move.ubl_cii_xml_id)
+        self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
+        return move.ubl_cii_xml_id
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLRO(TestUBLROCommon):
@@ -95,11 +100,6 @@ class TestUBLRO(TestUBLROCommon):
     ####################################################
     # Test export - import
     ####################################################
-
-    def get_attachment(self, move):
-        self.assertTrue(move.ubl_cii_xml_id)
-        self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
-        return move.ubl_cii_xml_id
 
     def test_export_invoice(self):
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
@@ -186,6 +186,17 @@ class TestUBLRO(TestUBLROCommon):
     def test_export_no_vat_but_have_company_registry_without_prefix_new(self):
         self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
         self.test_export_no_vat_but_have_company_registry_without_prefix()
+
+    def test_export_invoice_no_vat_prefix(self):
+        self.company_data['company'].vat = self.company_data['company'].vat[2:]
+        no_vat_partner = self.partner_a.copy({'name': 'Roasted Romanian Roller', 'vat': False, 'invoice_edi_format': 'ciusro'})
+        invoice = self.create_move("out_invoice", partner_id=no_vat_partner.id, currency_id=self.company.currency_id.id)
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_defaults.xml')
+
+    def test_export_invoice_defaults_new(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
+        self.test_export_invoice_no_vat_prefix()
 
     def test_export_no_vat_and_no_company_registry_raises_error(self):
         self.company_data['company'].write({'vat': False, 'company_registry': False})
