@@ -7,15 +7,15 @@
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # erpgo translator <jumshud@erpgo.az>, 2025
-# ERPGo Odoo <erpgo.odoo@gmail.com>, 2025.
+# ERPGo Odoo <erpgo.odoo@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-12-16 15:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-26 14:43+0000\n"
+"Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
 "hr_holidays/az/>\n"
 "Language: az\n"
@@ -418,7 +418,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr "Hesablama Vəsaiti"
+msgstr "Yığılan məzuniyyət payı"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -653,7 +653,7 @@ msgstr "Məzuniyyət Payı Rejimi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr "Məzuniyyət Payı Bildirişi Alt tipi"
+msgstr "Məzuniyyət payı bildiriş alt növü"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
@@ -1706,8 +1706,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
-"type_request_unit-i  asılı olan saatlar və günlərdə məzuniyyət payı "
-"müddətini görməyə imkan verən xana "
+"type_request_unit asılı olaraq məzuniyyət payının müddətini gün və ya saatla "
+"göstərən xana"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -2450,7 +2450,7 @@ msgstr "Məzuniyyət Payı"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "New Allocation Request"
-msgstr "Yeni Ayrılma Sorğusu"
+msgstr "Yeni məzuniyyət payı sorğusu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2459,8 +2459,8 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of %"
 "(allocation_type)s"
 msgstr ""
-"%(user)s Tərəfindən yaradılan Yeni Məzuniyyət payı İstəyi: %(count)s %"
-"(allocation_type)s günü"
+"%(user)s tərəfindən yeni məzuniyyət payı sorğusu yaradıldı: %"
+"(allocation_type)s üzrə %(count)s gün"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -2925,7 +2925,7 @@ msgstr "Hesabatlıq"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Allocation"
-msgstr "Məzuniyyət payı İstə"
+msgstr "Məzuniyyət payı tələb et"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
@@ -2940,7 +2940,7 @@ msgstr "Sorğunun Başlanğıc Tarixi"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "Məzuniyyət Sorğu et"
+msgstr "Məzuniyyət tələb et"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
@@ -3031,7 +3031,7 @@ msgstr "Məzuniyyət Növü Axtarışı"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Search allocations"
-msgstr "Məzuniyyət payının Axtarışı"
+msgstr "Məzuniyyət paylarını axtar"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__second_approver_id
@@ -4257,7 +4257,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "Siz %s vəziyyətində olan məzuniyyət payı istəyini silə bilməzsiniz"
+msgstr "Siz %s vəziyyətində olan məzuniyyət payı istəyini silə bilməzsiniz."
 
 #. module: hr_holidays
 #. odoo-python
