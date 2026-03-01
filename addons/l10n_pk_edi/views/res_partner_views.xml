@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">view.partner.form.inherit.l10n_pk_edi</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div/field[@name='state_id']/.." position="after">
+                    <label for="l10n_pk_edi_fbr_customer_status" invisible="country_code != 'PK'"/>
+                    <div class="row" invisible="country_code != 'PK'">
+                        <div class="col-4">
+                            <field name="l10n_pk_edi_fbr_customer_status" readonly="1"/>
+                        </div>
+                        <div class="col-8 pt-0">
+                            <button name="check_fbr_customer_registration"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Fetch Registration Status"
+                                    help="Verify partner Status on FBR"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
