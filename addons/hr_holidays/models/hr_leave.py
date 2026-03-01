@@ -782,7 +782,42 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
+    def _get_accrual_allocations_across_carryover(self):
+        """Return accrual allocations for which these leaves fall in a previous
+        period (before a carryover that has already been processed)."""
+        valid_leaves = self.filtered(
+            lambda l: l.date_from and l.date_to and l.employee_id and l.holiday_status_id
+        )
+        if not valid_leaves:
+            return self.env['hr.leave.allocation']
+
+        allocs = self.env['hr.leave.allocation'].search([
+            ('employee_id', 'in', valid_leaves.employee_id.ids),
+            ('holiday_status_id', 'in', valid_leaves.holiday_status_id.ids),
+            ('allocation_type', '=', 'accrual'),
+            ('state', '=', 'validate'),
+            ('accrual_plan_id', '!=', False),
+        ])
+        if not allocs:
+            return self.env['hr.leave.allocation']
+
+        leave_by_employee_status = {
+            (l.employee_id.id, l.holiday_status_id.id): l for l in valid_leaves
+        }
+        affected_allocations = self.env['hr.leave.allocation']
+        for alloc in allocs:
+            leave = leave_by_employee_status.get((alloc.employee_id.id, alloc.holiday_status_id.id))
+            if leave and alloc.lastcall:
+                carryover_date = alloc._get_carryover_date(leave.date_from.date())
+                if leave.date_from.date() < carryover_date <= alloc.lastcall:
+                    affected_allocations |= alloc
+        return affected_allocations
+
     def _check_validity(self):
+        affected_allocations = self._get_accrual_allocations_across_carryover()
+        if affected_allocations:
+            affected_allocations.sudo()._recompute_accrual_allocations()
+
         sorted_leaves = defaultdict(lambda: self.env['hr.leave'])
         for leave in self:
             sorted_leaves[(leave.holiday_status_id, leave.date_from.date())] |= leave
@@ -1040,10 +1075,14 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
 
     def unlink(self):
+        affected_allocations = self._get_accrual_allocations_across_carryover()
         self._force_cancel(_("deleted by %s (uid=%d).",
             self.env.user.display_name, self.env.user.id
         ))
-        return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
+        res = super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
+        if affected_allocations:
+            affected_allocations.sudo()._recompute_accrual_allocations()
+        return res
 
     def copy_data(self, default=None):
         if default and 'request_date_from' in default and 'request_date_to' in default:
@@ -1219,11 +1258,14 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
             raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
+        affected_allocations = self._get_accrual_allocations_across_carryover()
         self.write({
             'state': 'draft',
             'first_approver_id': False,
             'second_approver_id': False,
         })
+        if affected_allocations:
+            affected_allocations.sudo()._recompute_accrual_allocations()
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:
             linked_requests.action_draft()
@@ -1445,6 +1487,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 holiday.message_post(
                     body=_('Your %(leave_type)s planned on %(date)s has been refused', leave_type=holiday.holiday_status_id.display_name, date=holiday.date_from),
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
+
+        affected_allocations = self._get_accrual_allocations_across_carryover()
+        if affected_allocations:
+            affected_allocations.sudo()._recompute_accrual_allocations()
 
         self.activity_update()
         return True

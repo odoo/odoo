@@ -472,7 +472,8 @@ class HolidaysAllocation(models.Model):
             employee_days_per_allocation = allocation.employee_id.with_context(precomputed_allocations=precomputed_allocations)._get_consumed_leaves(
                 allocation.holiday_status_id, allocation.nextcall, ignore_future=True)[0]
             origin = allocation._origin
-            leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
+            leaves_field = 'virtual_leaves_taken' if self.env.context.get('include_pending_leaves') else 'leaves_taken'
+            leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin][leaves_field]
             return leaves_taken
 
         date_to = date_to or fields.Date.today()
@@ -583,6 +584,35 @@ class HolidaysAllocation(models.Model):
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
+
+    def _recompute_accrual_allocations(self):
+        """Replay accrual plans from scratch for allocations whose balance
+        may have changed because a backdated leave was validated, refused,
+        or cancelled."""
+        for allocation in self:
+            if allocation.allocation_type != 'accrual' or allocation.state != 'validate':
+                continue
+            if not allocation.accrual_plan_id or not allocation.accrual_plan_id.level_ids:
+                continue
+            if not allocation.lastcall:
+                continue
+
+            fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
+            fake_allocation.nextcall = False
+            fake_allocation.lastcall = allocation.date_from
+            fake_allocation.already_accrued = False
+            if allocation.accrual_plan_id.accrued_gain_time == 'start':
+                first_level = allocation.accrual_plan_id.level_ids.sorted('sequence')[0]
+                initial_days = first_level.added_value
+                if first_level.added_value_type == 'hour':
+                    initial_days /= (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                fake_allocation.number_of_days = initial_days
+            else:
+                fake_allocation.number_of_days = 0
+
+            fake_allocation.sudo().with_context(include_pending_leaves=True)._process_accrual_plans(date_to=allocation.lastcall, log=False)
+            allocation.number_of_days = fake_allocation.number_of_days
+            fake_allocation.invalidate_recordset()
 
     def _get_future_leaves_on(self, accrual_date):
         # As computing future accrual allocation days automatically updates the allocation,

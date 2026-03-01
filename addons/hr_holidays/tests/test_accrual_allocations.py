@@ -65,6 +65,23 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
             })],
         })
+        cls.accrual_plan_yearly_max_postponed_days_start = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '21 days per year, 5 carryover max',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids': [
+                Command.create({
+                    "start_count": 0,
+                    "added_value": 21,
+                    "frequency": "yearly",
+                    "yearly_day": 1,
+                    "yearly_month": "jan",
+                    "action_with_unused_accruals": "maximum",
+                    "postpone_max_days": 5,
+                })
+            ],
+        })
 
     def setAllocationCreateDate(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date
@@ -3076,3 +3093,127 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_get_allocation_future_leaves_regular2(self):
         self._test_get_allocation_future_leaves_regular(regular_before=True)
+
+    def test_backdated_leave_absorbed_by_surplus_buffer(self):
+        """
+        Scenario A: Backdated leave absorbed by lost surplus buffer.
+        Testing Goal: Verify that a leave taken in a previous period does NOT reduce
+        the current balance if the employee had 'lost surplus' days to cover it.
+
+        1. Setup: End of 2025, employee has 21 days. Carry-over cap is 5 days.
+        2. Refresh: Jan 1st, 2026, 16 days are 'lost' (21 - 5).
+           The new balance is 26 (5 carry-over + 21 new grant).
+        3. Action: User records a leave for Dec 31, 2025, AFTER the refresh.
+        4. Logic: Balance on Dec 31 was 21. 21 - 1 = 20. 20 is still > 5 (Cap).
+           The carry-over amount should remain 5.
+        5. Result: The 2026 balance remains 26.0. The leave was absorbed by the surplus.
+        """
+        accrual_plan = self.accrual_plan_yearly_max_postponed_days_start
+
+        with freeze_time('2025-01-01'):
+            allocation = self._create_test_allocation(self.leave_type, '2025-01-01', self.employee_emp, accrual_plan, 21)
+            allocation.action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 21, self.employee_emp)
+
+        with freeze_time('2026-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+            leave = self._take_leave_and_validate(self.employee_emp, self.leave_type, '2025-12-31', '2025-12-31')
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+            leave.action_refuse()
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+
+    def test_backdated_leave_deducted_when_under_cap(self):
+        """
+        Scenario B: Backdated leave deducted when under the carry-over cap.
+        Testing Goal: Verify that a leave taken in a previous period DOES reduce
+        the current balance if the employee was already at or below their carry-over limit.
+
+        1. Setup: End of 2025, employee has 3 days. Carry-over cap is 5 days.
+        2. Refresh: Jan 1st, 2026, 0 days are lost because 3 < 5.
+           The new balance is 23 (2 carry-over + 21 new grant).
+        3. Action: User records a leave for Dec 31, 2025, AFTER the refresh.
+        4. Logic: Balance on Dec 31 was 2. 2 - 1 = 1. 1 is the new carry-over amount.
+        5. Result: The 2026 balance drops to 22.0 (1 carry-over + 21 new).
+           The leave is correctly deducted from the real savings.
+        """
+        accrual_plan = self.accrual_plan_yearly_max_postponed_days_start
+
+        with freeze_time('2025-01-01'):
+            allocation = self._create_test_allocation(self.leave_type, '2025-01-01', self.employee_emp, accrual_plan, 21)
+            allocation.action_validate()
+            self.assert_virtual_leaves_equal(self.leave_type, 21, self.employee_emp)
+
+        with freeze_time('2026-01-01'):
+            allocation._update_accrual()
+            leave_june = self._take_leave_and_validate(self.employee_emp, self.leave_type, '2025-06-02', '2025-06-26')
+            self.assert_virtual_leaves_equal(self.leave_type, 23, self.employee_emp)
+            leave_dec = self._take_leave_and_validate(self.employee_emp, self.leave_type, '2025-12-31', '2025-12-31')
+            self.assert_virtual_leaves_equal(self.leave_type, 22, self.employee_emp)
+            leave_dec.action_refuse()
+            self.assert_virtual_leaves_equal(self.leave_type, 23, self.employee_emp)
+            leave_june.action_refuse()
+            self.assert_virtual_leaves_equal(self.leave_type, 26, self.employee_emp)
+
+    def test_backdated_leave_multi_level_accrual(self):
+        """
+            Test 'Surplus Shield' logic with a leave spanning across the year-end reset.
+
+            Scenario:
+            - 2024 (Level 1): 2 days/month (24 total). Carryover Cap: 5 days.
+            - 2025 (Level 2): 3 days/month.
+            - Initial 2025 Balance: 8.0 (5.0 carryover + 3.0 new grant).
+
+            Logic:
+            1. Nov 2024 Leave (12 days):
+            Absorbed by the 19-day surplus (24 earned - 5 cap).
+            Live balance stays 8.0.
+
+            2. Dec 23 - Jan 2 Leave (9 days total):
+            - 2024 Slice (7 days): The remaining 2024 surplus is exactly 7 days
+                (12 remaining - 5 cap). The leave consumes exactly the surplus.
+                Carryover remains intact at 5.0.
+            - 2025 Slice (2 days): Deducted from the new 3.0 grant.
+                Remaining 2025 grant: 1.0.
+
+            Final Result: 5.0 (Carryover) + 1.0 (Net Grant) = 6.0.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Multi-level Test Plan',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids': [
+                Command.create({
+                    'added_value': 2,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'maximum',
+                    'postpone_max_days': 5,
+                    'start_count': 0,
+                    'start_type': 'day',
+                }),
+                Command.create({
+                    'added_value': 3,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'maximum',
+                    'postpone_max_days': 10,
+                    'start_count': 1,
+                    'start_type': 'year',
+                })
+            ]
+        })
+
+        with freeze_time('2024-01-01'):
+            allocation = self._create_test_allocation(self.leave_type, '2024-01-01', self.employee_emp, accrual_plan)
+            allocation.action_validate()
+
+        with freeze_time('2025-01-01'):
+            allocation._update_accrual()
+            self.assert_virtual_leaves_equal(self.leave_type, 8, self.employee_emp)
+
+            leave_nov = self._take_leave_and_validate(self.employee_emp, self.leave_type, '2024-11-04', '2024-11-19')
+            self.assert_virtual_leaves_equal(self.leave_type, 8, self.employee_emp)
+            self._take_leave_and_validate(self.employee_emp, self.leave_type, '2024-12-23', '2025-01-02')
+            self.assert_virtual_leaves_equal(self.leave_type, 6, self.employee_emp)
+            leave_nov.action_refuse()
+            self.assert_virtual_leaves_equal(self.leave_type, 8, self.employee_emp)
