@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pk_edi_test_log_view_list" model="ir.ui.view">
+        <field name="name">l10n_pk_edi.test.log.list</field>
+        <field name="model">l10n_pk_edi.test.log</field>
+        <field name="arch" type="xml">
+            <list string="EDI Test Logs" create="false" edit="false" delete="false">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge" decoration-success="state == 'success'" decoration-danger="state == 'failed'"/>
+                <field name="error_message"/>
+                <button name="action_rerun" type="object" class="btn btn-link p-0" icon="fa-refresh" title="Re-run test" invisible="state != 'failed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rerun_pk_edi_test" model="ir.actions.server">
+        <field name="name">Re-run Tests</field>
+        <field name="model_id" ref="model_l10n_pk_edi_test_log"/>
+        <field name="binding_model_id" ref="model_l10n_pk_edi_test_log"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_rerun()</field>
+    </record>
+
+    <record id="action_l10n_pk_edi_test_log" model="ir.actions.act_window">
+        <field name="name">EDI Test Logs</field>
+        <field name="res_model">l10n_pk_edi.test.log</field>
+        <field name="view_id" ref="l10n_pk_edi_test_log_view_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No EDI test logs yet
+            </p>
+        </field>
+    </record>
+</odoo>

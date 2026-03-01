@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_tax_form" model="ir.ui.view">
+        <field name="name">l10n_br_account.tax.form.inherit.l10n_pk_edi</field>
+        <field name="model">account.tax</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']/.." position="after">
+                <field name="amount" invisible="country_code != 'PK' or amount_type != 'code'"/>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="l10n_pk_edi_is_further_tax" invisible="country_code != 'PK' or amount &lt; 0"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

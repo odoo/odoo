@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem
+        id="menu_l10n_pk_edi"
+        name="Federal Bureau of Revenue"
+        parent="account.menu_finance_configuration"
+        sequence="100"
+    />
+    <menuitem
+        id="menu_l10n_pk_edi_sro"
+        name="Statutory Regulatory Order Schedules"
+        parent="menu_l10n_pk_edi"
+        action="action_l10n_pk_edi_sro"
+        sequence="200"
+    />
+    <menuitem
+        id="menu_l10n_pk_edi_sro_item"
+        name="Statutory Regulatory Order Items"
+        parent="menu_l10n_pk_edi"
+        action="action_l10n_pk_edi_sro_item"
+        sequence="210"
+    />
+</odoo>

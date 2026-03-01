@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@id='qrcode_info']" position="replace">
+            <div id="logo_fbr" class="d-flex mb-3 avoid-page-break-inside">
+                <img src="/l10n_pk_edi/static/src/img/img_fbr_einvoice.png" style="width: 1in; height: 1in; object-fit: contain;"/>
+            </div>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']" position="inside">
+            <t t-if="o.l10n_pk_edi_reference">
+                <br/>FBR Invoice Number:
+                <span class="fw-bold" t-field="o.l10n_pk_edi_reference"/>
+                <span t-if="l10n_pk_edi_testing_scenario_type">*Test*</span>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_pk_edi.report_invoice_document'"
+               t-call="l10n_pk_edi.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

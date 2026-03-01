@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_pk_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block id="pakistan_localization" title="Pakistan Electronic Invoicing (FBR)" invisible="country_code != 'PK'">
+                    <div class="content-group">
+                        <setting company_dependent="1" string="Enable Electronic Invoicing">
+                            <field name="l10n_pk_edi_enable"/>
+                        </setting>
+                        <div invisible="not l10n_pk_edi_enable">
+                            <div role="tabpanel" id="settings" class="tab-pane active text-muted o_web_settings_compact_subtitle fw-bold mb-1">
+                                Update FBR portal to whitelist Odoo with the following details.
+                            </div>
+                            <ul class="list-unstyled">
+                                <li class="d-flex">
+                                    <div class="text-muted col-3">System Provider</div>
+                                    <div class="user-heading">Odoo</div>
+                                </li>
+                                <li class="d-flex">
+                                    <div class="text-muted col-3">Software Type</div>
+                                    <div class="user-heading">Cloud</div>
+                                </li>
+                                <li class="d-flex">
+                                    <div class="text-muted col-3">Software Version</div>
+                                    <widget name='l10n_pk_edi_res_config_edition'/>
+                                </li>
+                                <li class="d-flex">
+                                    <label for="l10n_pk_edi_iap_server_ip" class="col-3"/>
+                                    <div class="col d-flex">
+                                        <field name="l10n_pk_edi_iap_server_ip" class="w-25"/>
+                                        <button name="action_refresh_iap_server_ip" type="object" class="btn btn-link p-0" title="Fetch IP">
+                                            <i role="img" aria-label="Fetch now" class="fa fa-fw fa-refresh"/>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <field name="l10n_pk_edi_production_auth_token" class="w-75" password="True" placeholder="Enter Production Token"/>
+                            <div class="alert alert-warning w-75" role="alert">
+                                <strong>Note:</strong>
+                                Scenarios SN011, SN022, SN023 and SN024 are not currently supported.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-group" invisible="not l10n_pk_edi_enable">
+                        <setting company_dependent="1" string="First Time Integration">
+                            <field name="l10n_pk_edi_first_time_setup"/>
+                        </setting>
+                        <div invisible="not l10n_pk_edi_first_time_setup">
+                            <div class="text-muted oe_inline mb-3">
+                                <ul>
+                                    <li>Fill the following fields and run tests to obtain your FBR production token.</li>
+                                    <li><strong>NTN/CNIC</strong> of a registered business is required to pass scenarios that involve registered businesses.</li>
+                                </ul>
+                            </div>
+                            <div class="col d-flex justify-content-between">
+                                <field name="l10n_pk_edi_test_vat" class="w-50" placeholder="Enter NTN/CNIC"/>
+                                <button name="button_pk_edi_check_registration" type="object" class="btn btn-primary w-25" string="Verify"
+                                        invisible="l10n_pk_edi_test_vat_verified not in (False, 'not_checked')"/>
+                                <button name="button_pk_edi_check_registration" type="object" class="btn btn-success w-25" icon="fa-check" string="Registered"
+                                        invisible="l10n_pk_edi_test_vat_verified != 'registered'"/>
+                                <button name="button_pk_edi_check_registration" type="object" class="btn btn-danger w-25" icon="fa-times" string="Not Registered"
+                                        invisible="l10n_pk_edi_test_vat_verified != 'unregistered'"/>
+                            </div>
+                            <div class="col d-flex justify-content-between">
+                                <field name="l10n_pk_edi_test_auth_token" password="True" class="w-50" placeholder="Enter Sandbox Token"/>
+                                <button name="action_l10n_pk_edi_run_sandbox_tests" type="object" string="Run Tests" class="btn btn-primary mt-1 w-25" title="Verify NTN/STRN registration against the FBR Sandbox"/>
+                            </div>
+                            <div class="mt8">
+                                <button class="btn-link" name="action_l10n_pk_edi_view_company_test_logs" type="object" string="View Test Logs" icon="oi-arrow-right"/>
+                            </div>
+                            <setting company_dependent="1" string="Enable Manual Sandbox Invoice Testing" groups="base.group_no_one">
+                                <field name="l10n_pk_edi_test_environment"/>
+                            </setting>
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Warning:</strong>
+                                When enabled, all invoices will be submitted to the sandbox environment instead of production.
+                            </div>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
