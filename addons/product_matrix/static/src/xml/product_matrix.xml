@@ -32,10 +32,14 @@
                             class="o_matrix_input_td text-end"
                             t-attf-class="{{cell_last?'o_matrix_pe':''}}">
                             <div t-if="cell.is_possible_combination" class="input-group">
-                                <input  type="number"
-                                        class="o_input o_field_number o_matrix_input border-0 text-end"
-                                        t-att="{'ptav_ids': cell.ptav_ids,'value': cell.qty}"
-                                        onClick="this.select();"/>
+                                <input  
+                                    type="number"
+                                    class="o_input o_field_number o_matrix_input border-0 text-end"
+                                    onClick="this.select();"
+                                    t-att="{'ptav_ids': cell.ptav_ids, 'value': cell.qty}"
+                                    t-att-class="{ 'opacity-25': cell.qty === 0 }"
+                                    t-on-input="toggleOpacity"
+                                />
                             </div>
                             <span t-else=""
                                   class="text-muted overflow-auto">

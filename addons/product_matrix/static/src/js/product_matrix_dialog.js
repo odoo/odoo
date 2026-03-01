@@ -9,6 +9,7 @@ export class ProductMatrixDialog extends Component {
     static props = {
         header: { type: Object },
         rows: { type: Object },
+        dialogTitle: { type: String }, 
         editedCellAttributes: { type: String },
         product_template_id: { type: Number },
         record: { type: Object },
@@ -50,6 +51,10 @@ export class ProductMatrixDialog extends Component {
                 document.getElementsByClassName('o_matrix_input')[0].select();
             }
         });
+    }
+
+    toggleOpacity(ev) {
+        ev.target.classList.toggle('opacity-25', ev.target.value === '0');
     }
 
     _format({price, currency_id}) {

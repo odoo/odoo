@@ -3,7 +3,7 @@ import { stepUtils } from "@web_tour/tour_utils";
 import * as tourUtils from "@sale/js/tours/tour_utils";
 
 let EXPECTED = [
-    "Matrix", "PAV11", "PAV12 + $ 50.00",
+    "", "PAV11", "PAV12 + $ 50.00",
 ];
 for (let no of ['PAV41', 'PAV42']) {
     for (let dyn of ['PAV31', 'PAV32']) {
