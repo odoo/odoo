@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="l10n_pk_edi_iap_endpoint" model="ir.config_parameter">
+        <field name="key">l10n_pk_edi.iap_endpoint</field>
+        <field name="value">https://iap-services.odoo.com</field>
+    </record>
+
+    <!-- To run the FBR whitelisting manually, set the mode to 'test' and the scenario id
+         to one of SN001 ... SN028. -->
+    <record id="l10n_pk_edi_mode" model="ir.config_parameter">
+        <field name="key">l10n_pk_edi.mode</field>
+        <field name="value">production</field>
+    </record>
+
+    <record id="l10n_pk_edi_test_scenario_id" model="ir.config_parameter">
+        <field name="key">l10n_pk_edi.test_scenario_id</field>
+    </record>
+</odoo>
