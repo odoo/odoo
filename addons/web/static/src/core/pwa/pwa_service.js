@@ -125,7 +125,7 @@ const pwaService = {
         async function getManifest() {
             if (!_manifest) {
                 const manifest = await get(
-                    document.querySelector("link[rel=manifest")?.getAttribute("href"),
+                    document.querySelector("link[rel=manifest]")?.getAttribute("href"),
                     "text"
                 );
                 _manifest = JSON.parse(manifest);
