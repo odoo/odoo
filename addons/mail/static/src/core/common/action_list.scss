@@ -14,7 +14,7 @@
         &:not(.o-hasBtnBg) {
             background-color: inherit;
         }
-    
+
         &.o-simulateDarkTheme {
             &.o-hasBtnBg:hover {
                 filter: brightness(1.3);
@@ -31,7 +31,12 @@
                 &:where(.rounded-circle) {
                     aspect-ratio: 1;
                 }
-                &:hover, &:focus, &:active, &.active, &:focus-visible {
+
+                &:hover,
+                &:focus,
+                &:active,
+                &.active,
+                &:focus-visible {
                     color: var(--o-mail-ActionList-Button-color--hover);
                     opacity: var(--o-mail-ActionList-Button-opacity--hover);
                 }
@@ -46,8 +51,9 @@
             }
         }
 
-        &:not(.o-inline) > i {
+        &:not(.o-inline)>i {
             opacity: 65%;
+
             .o_bottom_sheet_sheet:has(&) {
                 opacity: 100%;
             }
@@ -57,7 +63,8 @@
             color: white !important;
         }
 
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item, .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
+        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item,
+        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
             i {
                 opacity: 100%;
                 background: var(--btn-bg);
@@ -70,21 +77,25 @@
                 box-sizing: content-box;
             }
 
-            &:hover, &:focus-visible {
+            &:hover,
+            &:focus-visible {
                 i {
                     background: var(--btn-hover-bg);
                     color: var(--btn-hover-color);
                 }
             }
         }
+
         &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
             font-size: 0.7em !important;
             &:is(.fa-phone, .fa-video-camera)::before {
                 transform: translateY(1px);
             }
         }
+
         .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
             font-size: 0.9em !important;
+
             &.fa-phone::before {
                 transform: translateY(.5px);
             }
@@ -99,6 +110,7 @@
                         background-color: rgba($color, .9);
                     }
                 }
+
                 &:not(.focus) {
                     color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
                     &.o-tag-PRIMARY {
@@ -106,8 +118,10 @@
                     }
                 }
             }
+
             &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL):not(.o-hasBtnBg) {
                 color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+
                 &:active {
                     background-color: inherit;
                 }
@@ -115,7 +129,7 @@
         }
     }
 
-    .o_popover > & {
+    .o_popover>& {
         .o-mail-ActionList-button {
             --btn-group-gap: 0px;
         }
@@ -128,4 +142,15 @@
             font-weight: $o-font-weight-medium !important;
         }
     }
+
+    & button.o-simulateDarkTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+        background-color: #{$gray-700};
+
+        &.active {
+            // Same colors than dark theme since dark theme is simulated for call view.
+            background-color: #17373b;
+            border-color: #03f9e3 !important;
+        }
+    }
+
 }
