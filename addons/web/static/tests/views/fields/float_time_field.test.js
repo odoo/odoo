@@ -7,19 +7,22 @@ import {
     models,
     mountView,
     onRpc,
+    webModels,
 } from "@web/../tests/web_test_helpers";
 
-class Partner extends models.Model {
+const { ResCompany, ResUsers, ResPartner } = webModels;
+
+class Foo extends models.Model {
     qux = fields.Float();
 
     _records = [{ id: 5, qux: 9.1 }];
 }
 
-defineModels([Partner]);
+defineModels([Foo, ResPartner, ResCompany, ResUsers]);
 
 test("FloatTimeField in form view", async () => {
-    expect.assertions(5);
-    onRpc("partner", "web_save", ({ args }) => {
+    expect.assertions(4);
+    onRpc("foo", "web_save", ({ args }) => {
         // 48 / 60 = 0.8
         expect(args[1].qux).toBe(-11.8, {
             message: "the correct float value should be saved",
@@ -28,7 +31,7 @@ test("FloatTimeField in form view", async () => {
 
     await mountView({
         type: "form",
-        resModel: "partner",
+        resModel: "foo",
         arch: `
             <form>
                 <sheet>
@@ -44,7 +47,6 @@ test("FloatTimeField in form view", async () => {
     });
 
     await contains(".o_field_float_time[name=qux] input").edit("-11:48");
-    expect(".o_duration_popover").toHaveText("-11:48");
     expect(".o_field_float_time[name=qux] input").toHaveValue("-11:48", {
         message: "The new value should be displayed properly in the input.",
     });
@@ -56,15 +58,15 @@ test("FloatTimeField in form view", async () => {
 });
 
 test("FloatTimeField value formatted on blur", async () => {
-    expect.assertions(4);
-    onRpc("partner", "web_save", ({ args }) => {
+    expect.assertions(5);
+    onRpc("foo", "web_save", ({ args }) => {
         expect(args[1].qux).toBe(9.5, {
             message: "the correct float value should be saved",
         });
     });
     await mountView({
         type: "form",
-        resModel: "partner",
+        resModel: "foo",
         arch: `
             <form>
                 <field name="qux" widget="float_time"/>
@@ -77,6 +79,7 @@ test("FloatTimeField value formatted on blur", async () => {
     });
 
     await contains(".o_field_float_time[name=qux] input").edit("9.5");
+    expect(".o_duration_popover").toHaveText("9h 30m");
     expect(".o_field_float_time[name=qux] input").toHaveValue("9h 30m", {
         message: "The new value should be displayed properly in the input.",
     });
@@ -90,7 +93,7 @@ test("FloatTimeField value formatted on blur", async () => {
 test("FloatTimeField with invalid value", async () => {
     await mountView({
         type: "form",
-        resModel: "partner",
+        resModel: "foo",
         arch: `
             <form>
                 <field name="qux" widget="float_time"/>
@@ -110,7 +113,7 @@ test("FloatTimeField with invalid value", async () => {
 test("float_time field does not have an inputmode attribute", async () => {
     await mountView({
         type: "form",
-        resModel: "partner",
+        resModel: "foo",
         arch: `
             <form>
                 <field name="qux" widget="float_time"/>
@@ -118,4 +121,32 @@ test("float_time field does not have an inputmode attribute", async () => {
     });
 
     expect(".o_field_widget[name='qux'] input").not.toHaveAttribute("inputmode");
+});
+
+test("float_time apply beautiful duration on sum", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="qux" sum="Sum" widget="float_time"/>
+            </list>`,
+    });
+
+    expect(".o_field_widget[name='qux'] time").toHaveText("9h 6m");
+    expect(".o_list_footer .o_list_number").toHaveText("9h 6m");
+});
+
+test("float_time apply options duration on sum", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="qux" sum="Sum" widget="float_time" options="{'numeric': 1, 'show_seconds': 0}"/>
+            </list>`,
+    });
+
+    expect(".o_field_widget[name='qux'] time").toHaveText("9:06");
+    expect(".o_list_footer .o_list_number").toHaveText("9:06");
 });

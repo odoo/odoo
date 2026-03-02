@@ -9,6 +9,7 @@ import { parseDuration, parseFloatDuration } from "../parsers";
 
 import { Component } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
@@ -47,6 +48,13 @@ export class FloatTimeField extends Component {
             numeric: this.props.numeric,
             unit: this.props.unit,
         });
+        if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
+            this.resultPopover.close();
+        } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
+            this.resultPopover.open(this.inputFloatTimeRef.el, {
+                state: this.state,
+            });
+        }
     }
 
     openPopover() {
@@ -120,8 +128,8 @@ export const floatTimeField = {
     supportedTypes: ["float"],
     isEmpty: () => false,
     extractProps: ({ options }) => ({
-        showSeconds: options.show_seconds,
-        numeric: options.numeric,
+        showSeconds: exprToBoolean(options.show_seconds ?? true),
+        numeric: exprToBoolean(options.numeric),
         unit: options.unit,
     }),
 };
