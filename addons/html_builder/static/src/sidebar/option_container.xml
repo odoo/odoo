@@ -7,20 +7,20 @@
          t-on-pointerenter="this.onPointerEnter" t-on-pointerleave="this.onPointerLeave">
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t t-set="isActionable" t-value="Object.keys(this.props.snippetModel).length > 0"></t>
-            <div
+            <t
+                t-tag="this.props.toggleFold ? 'button' : 'div'"
                 class="options-container-label py-2 flex-grow-1 d-flex align-items-center"
-                t-att-class="{
-                    'options-container-label-actionable cursor-pointer': isActionable,
-                }"
-                t-att-role="isActionable ? 'button' : 'heading'"
+                t-att-class="this.props.toggleFold ? 'options-container-label-actionable o-hb-btn btn' : ''"
+                t-att-aria-expanded="this.props.toggleFold ? `${!this.props.folded}` : undefined"
+                t-att-aria-controls="this.containerId"
                 t-on-click="this.props.toggleFold ?? (() => {})"
             >
-                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1" role="img" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"></i>
+                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1" aria-hidden="true" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"/>
                 <span t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title"/>
                 <t t-if="this.props.optionTitleComponents" t-foreach="this.props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                     <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
                 </t>
-            </div>
+            </t>
 
             <div class="d-flex align-items-center gap-1 p-2">
                 <div t-if="this.props.headerMiddleButtons">
@@ -60,7 +60,7 @@
                 </t>
             </div>
         </div>
-        <div t-if="!this.props.folded" class="we-bg-options-container pb-3" t-custom-ref="content">
+        <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-custom-ref="content">
             <t t-foreach="this.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
                 <BuilderContext applyTo="OptionClass.applyTo">
                     <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
