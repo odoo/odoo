@@ -19,7 +19,7 @@ class DiscussGifController(Controller):
         response = None
         try:
             response = requests.get(
-                f"https://tenor.googleapis.com/v2/{endpoint}", timeout=3
+                f"https://api.klipy.com/v2/{endpoint}", timeout=3
             )
             response.raise_for_status()
         except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
@@ -33,12 +33,12 @@ class DiscussGifController(Controller):
     def search(self, search_term, locale="en", country="US", position=None, readonly=True):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        if not ir_config.get_bool("discuss.use_tenor_api"):
+        if not ir_config.get_bool("discuss.use_klipy_api"):
             return
         query_string = werkzeug.urls.url_encode(
             {
                 "q": search_term,
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -56,11 +56,11 @@ class DiscussGifController(Controller):
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        if not ir_config.get_bool("discuss.use_tenor_api"):
+        if not ir_config.get_bool("discuss.use_klipy_api"):
             return
         query_string = werkzeug.urls.url_encode(
             {
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "limit": TENOR_GIF_LIMIT,
                 "contentfilter": TENOR_CONTENT_FILTER,
@@ -76,7 +76,7 @@ class DiscussGifController(Controller):
     def add_favorite(self, tenor_gif_id):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        if not ir_config.get_bool("discuss.use_tenor_api"):
+        if not ir_config.get_bool("discuss.use_klipy_api"):
             return
         request.env["discuss.gif.favorite"].create({"tenor_gif_id": tenor_gif_id})
 
@@ -86,7 +86,7 @@ class DiscussGifController(Controller):
         query_string = werkzeug.urls.url_encode(
             {
                 "ids": ",".join(ids),
-                "key": ir_config.get_str("discuss.tenor_api_key"),
+                "key": ir_config.get_str("discuss.klipy_api_key"),
                 "client_key": request.env.cr.dbname,
                 "media_filter": "tinygif",
             }
@@ -99,18 +99,20 @@ class DiscussGifController(Controller):
     def get_favorites(self, offset=0):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        if not ir_config.get_bool("discuss.use_tenor_api"):
+        if not ir_config.get_bool("discuss.use_klipy_api"):
             return
         tenor_gif_ids = request.env["discuss.gif.favorite"].search(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
+        if not tenor_gif_ids.mapped("tenor_gif_id"):
+            return ([],)
         return (self._gif_posts(tenor_gif_ids.mapped("tenor_gif_id")) or [],)
 
     @route("/discuss/gif/remove_favorite", type="jsonrpc", auth="user")
     def remove_favorite(self, tenor_gif_id):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        if not ir_config.get_bool("discuss.use_tenor_api"):
+        if not ir_config.get_bool("discuss.use_klipy_api"):
             return
         request.env["discuss.gif.favorite"].search(
             [
