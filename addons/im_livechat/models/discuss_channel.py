@@ -935,7 +935,7 @@ class DiscussChannel(models.Model):
                 operator_name=human_operator.livechat_username if human_operator.livechat_username else human_operator.name,
             )
             channel_sudo._add_next_step_message_to_store(chatbot_script_step)
-            channel_sudo._broadcast(human_operator.partner_id.ids)
+            channel_sudo._broadcast(human_operator)
             self.self_member_id.last_interest_dt = fields.Datetime.now()
         else:
             # sudo: discuss.channel - visitor tried getting operator, outcome must be updated

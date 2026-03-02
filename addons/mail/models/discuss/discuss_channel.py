@@ -1154,16 +1154,15 @@ class DiscussChannel(models.Model):
     # ------------------------------------------------------------
 
     # Anonymous method
-    def _broadcast(self, partner_ids):
-        """ Broadcast the current channel header to the given partner ids
-            :param partner_ids : the partner to notify
+    def _broadcast(self, users):
+        """ Broadcast the current channel header to the given users
+            :param users : the users to notify
         """
-        for partner in self.env['res.partner'].browse(partner_ids):
-            if user := partner.main_user_id:
-                Store(bus_channel=user).add(
-                    self.with_user(user).with_context(allowed_company_ids=[]),
-                    "_store_channel_fields",
-                ).bus_send()
+        for user in users:
+            Store(bus_channel=user).add(
+                self.with_user(user).with_context(allowed_company_ids=[]),
+                "_store_channel_fields",
+            ).bus_send()
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
@@ -1397,7 +1396,7 @@ class DiscussChannel(models.Model):
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
             channel.self_member_id.write({"last_interest_dt": last_interest_dt, "unpin_dt": False})
-            channel._broadcast(self.env.user.partner_id.ids)
+            channel._broadcast(self.env.user)
         else:
             # create a new one
             channel = self.create(
@@ -1418,7 +1417,7 @@ class DiscussChannel(models.Model):
                     "name": ", ".join(partners.mapped("name")),
                 }
             )
-            channel._broadcast(partners.ids)
+            channel._broadcast(partners.user_ids)
         return channel
 
     def _allow_invite_by_email(self):
@@ -1519,7 +1518,7 @@ class DiscussChannel(models.Model):
                 "name": name,
             }
         )
-        channel._broadcast(channel.channel_member_ids.partner_id.ids)
+        channel._broadcast(channel.channel_member_ids.partner_id.user_ids)
         return channel
 
     def _create_sub_channel(self, from_message_id=None, name=None):

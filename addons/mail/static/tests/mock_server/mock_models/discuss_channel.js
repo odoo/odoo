@@ -234,8 +234,6 @@ export class DiscussChannel extends models.ServerModel {
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
         const id = this.create({
             channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
@@ -252,8 +250,7 @@ export class DiscussChannel extends models.ServerModel {
                 message_type: "notification",
             })
         );
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        this._broadcast([id], [partner]);
+        this._broadcast([id], [this.env.user.id]);
         return DiscussChannel.browse(id);
     }
 
@@ -346,7 +343,7 @@ export class DiscussChannel extends models.ServerModel {
         });
         this._broadcast(
             [id],
-            partners.map(({ id }) => id)
+            partners.flatMap((partner) => partner.user_ids)
         );
         return DiscussChannel.browse(id);
     }
@@ -504,7 +501,7 @@ export class DiscussChannel extends models.ServerModel {
         });
         this._broadcast(
             [id],
-            partners.map((partner) => partner.id)
+            partners.flatMap((partner) => partner.user_ids)
         );
         return DiscussChannel.browse(id);
     }
@@ -521,7 +518,7 @@ export class DiscussChannel extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
-        /** @type {import {"mock_model"}.ResPartner} */
+        /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
         const self = this.browse(ids)[0];
         let message;
@@ -854,30 +851,30 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      */
-    _broadcast(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    _broadcast(ids, user_ids) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
-        partner_ids = kwargs.partner_ids;
+        user_ids = kwargs.user_ids;
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
 
-        const notifications = this._channel_channel_notifications(ids, partner_ids);
+        const notifications = this._channel_channel_notifications(ids, user_ids);
         BusBus._sendmany(notifications);
     }
 
     /**
      * @param {number} id
-     * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      */
-    _channel_channel_notifications(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    _channel_channel_notifications(ids, user_ids) {
+        const kwargs = getKwArgs(arguments, "ids", "user_ids");
         ids = kwargs.ids;
         delete kwargs.ids;
-        partner_ids = kwargs.partner_ids;
+        user_ids = kwargs.user_ids;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
@@ -887,14 +884,14 @@ export class DiscussChannel extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         const notifications = [];
-        for (const partner_id of partner_ids) {
-            const user = ResUsers._filter([["partner_id", "in", partner_id]])[0];
+        for (const user_id of user_ids) {
+            const user = ResUsers.browse(user_id)[0];
             if (!user) {
                 continue;
             }
             // Note: `_to_store` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
-            const [relatedPartner] = ResPartner.search_read([["id", "=", partner_id]]);
+            const [relatedPartner] = ResPartner.search_read([["id", "=", user.partner_id]]);
             for (const channelId of ids) {
                 notifications.push([
                     relatedPartner,
