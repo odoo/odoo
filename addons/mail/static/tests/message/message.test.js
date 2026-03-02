@@ -2300,7 +2300,7 @@ test("display the notification message's posting date and time", async () => {
     });
 });
 
-test("Pause GIF when thread is not focused", async () => {
+test("Pause GIF attachment when thread is not focused", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
