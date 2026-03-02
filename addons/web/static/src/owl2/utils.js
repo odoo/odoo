@@ -30,7 +30,7 @@ class Component extends owl.Component {
     render(deep = false) {
         this.__owl__.render(deep === true);
     }
-};
+}
 owl.Component = Component;
 
 function getCurrentNode() {
@@ -251,3 +251,13 @@ class App extends owl.App {
     }
 }
 owl.App = App;
+
+/**
+ * @param {any} C
+ * @param {any} target
+ * @param {any} config
+ */
+async function mount(C, target, config = {}) {
+    return new App(C, config).mount(target, config);
+}
+owl.mount = mount;
