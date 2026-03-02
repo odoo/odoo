@@ -30,6 +30,7 @@ from . import test_download_docs
 from . import test_fiscal_position
 from . import test_kpi_provider
 from . import test_l10n
+from . import test_res_partner_bank
 from . import test_sequence_mixin
 from . import test_tax
 from . import test_taxes_base_lines_tax_details
@@ -65,5 +66,4 @@ from . import test_account_merge_wizard
 from . import test_account_move_attachment
 from . import test_account_bill_deductibility
 from . import test_dict_to_xml
-from . import test_duplicate_res_partner_bank
 from . import test_account_move_import_template
