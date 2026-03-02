@@ -246,7 +246,7 @@
                     </div>
                     <div class="d-flex align-items-center ms-auto gap-2">
                         <t t-if="!showGroupPager(group)" class="m-1">
-                            <span><t t-out="group.count"/></span>
+                            <span class="text-muted"><t t-out="formattedGroupCount(group)"/></span>
                         </t>
                         <div t-att-class="showGroupPager(group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
                             <Pager t-props="getGroupPagerProps(group)"/>

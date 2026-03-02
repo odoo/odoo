@@ -1995,6 +1995,13 @@ export class ListRenderer extends Component {
     /**
      * @param {Group} group
      */
+    formattedGroupCount(group) {
+        return _t("Count: %s", group.count);
+    }
+
+    /**
+     * @param {Group} group
+     */
     showGroupConfigMenu(group) {
         return group.value && ["many2one", "many2many"].includes(group.groupByField.type);
     }
