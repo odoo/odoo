@@ -426,7 +426,7 @@
                     t-out="input.textContent"
                 />
             </BuilderSelect>
-            <BuilderSelect t-if="this.domStateDependency.isMultipleInputs || this.domStateDependency.nodeName === 'SELECT'"
+            <BuilderSelect t-if="this.domStateDependency.isRecordField || this.domStateDependency.isMultipleInputs || this.domStateDependency.nodeName === 'SELECT'"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -482,8 +482,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'fileSet'">Is set</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!fileSet'">Is not set</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderSelect t-if="this.domStateDependency.isRecordField ||
-                (!this.domStateDependency.isMultipleInputs and this.domStateDependency.type === 'checkbox')"
+            <BuilderSelect t-if="!this.domStateDependency.isMultipleInputs and this.domStateDependency.type === 'checkbox'"
                 id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -504,15 +503,6 @@
                 sortable="false"
                 isEditable="false"
                 itemShape="{ display_name: 'text', selected: 'boolean' }"/>
-            <BuilderSelect t-if="this.state.conditionValueList and this.domStateDependency.isRecordField"
-                id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
-            >
-                <!-- checkbox, select, radio possible values -->
-                <BuilderSelectItem t-foreach="this.state.conditionValueList" t-as="record" t-key="record.value"
-                    dataAttributeActionValue="record.value"
-                    t-out="record.textContent"
-                />
-            </BuilderSelect>
             <BuilderTextInput t-if="this.isTextConditionValueVisible"
                 id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
             />

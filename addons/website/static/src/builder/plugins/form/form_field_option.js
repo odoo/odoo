@@ -272,9 +272,11 @@ export class FormFieldOption extends BaseOptionComponent {
     get isMultiSelectVisible() {
         const el = this.env.getEditingElement();
         const dependencyEl = getDependencyEl(el);
+        const containerEl = dependencyEl.closest(".s_website_form_field");
         return (
             (["checkbox", "radio"].includes(dependencyEl.type) ||
-                dependencyEl.nodeName === "SELECT") &&
+                dependencyEl.nodeName === "SELECT" ||
+                containerEl?.dataset.type === "record") &&
             ["contains", "!contains"].includes(el.dataset.visibilityComparator)
         );
     }
