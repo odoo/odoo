@@ -59,12 +59,12 @@ test("show loading on initial opening", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
-    await contains(".o-mail-NotificationItem:text('General')", { count: 0 });
+    await contains(".o-mail-NotificationItem-name:text('General')", { count: 0 });
     await expect.waitForSteps(["before channels_as_member"]);
     resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
-    await contains(".o-mail-NotificationItem:text('General')");
+    await contains(".o-mail-NotificationItem-name:text('General')");
 });
 
 test("can leave channel in mobile", async () => {

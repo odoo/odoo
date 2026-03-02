@@ -140,7 +140,7 @@ test("show call UI in chat window when in call", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('General')");
+    await click(".o-mail-NotificationItem-name:text('General')");
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", { count: 0 });
     await click(".o-mail-ChatWindow-header [title='Start Call']");

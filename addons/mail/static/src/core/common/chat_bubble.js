@@ -9,6 +9,7 @@ import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
 
 class ChatBubblePreview extends Component {
     static components = { MessageSeenIndicator };
@@ -22,10 +23,7 @@ class ChatBubblePreview extends Component {
 
     get previewText() {
         const lastMessage = this.channel.newestPersistentOfAllMessage;
-        if (!lastMessage) {
-            return false;
-        }
-        return lastMessage.previewText;
+        return lastMessage?.previewText || _t("This is the start of your conversation");
     }
 }
 

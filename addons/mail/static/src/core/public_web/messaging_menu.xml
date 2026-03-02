@@ -59,10 +59,11 @@
                         <t t-else=""><Priority t-if="thread.priority" thread="thread"/> <t t-out="thread.displayName"/></t>
                     </t>
                     <t t-set-slot="body">
-                        <t t-if="message?.hasOnlyAttachments">
-                            <t t-out="message.previewText" />
+                        <t t-if="!message">
+                            This is the start of your conversation
                         </t>
-                        <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <t t-elif="message.hasOnlyAttachments" t-out="message.previewText"/>
+                        <span t-else="" t-out="message.previewText" t-att-class="{ 'opacity-75': message.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
                         <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>

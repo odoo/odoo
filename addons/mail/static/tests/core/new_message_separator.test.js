@@ -238,7 +238,7 @@ test("keep new message separator when switching between chat window and discuss 
     pyEnv["discuss.channel"].create({ channel_type: "channel", name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button:text('General')");
+    await click(".o-mail-NotificationItem-name:text('General')");
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
     await click(".o-mail-Message [title='Expand']");

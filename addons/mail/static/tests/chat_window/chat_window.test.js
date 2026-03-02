@@ -352,12 +352,12 @@ test("open 2 different chat windows: enough screen width", async () => {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('Channel_1')");
+    await click(".o-mail-NotificationItem-name:text('Channel_1')");
     await contains(".o-mail-ChatWindow:has(:text('Channel_1'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('Channel_2')");
+    await click(".o-mail-NotificationItem-name:text('Channel_2')");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow:has(:text('Channel_1'))");
     await contains(".o-mail-ChatWindow:has(:text('Channel_2'))", {
@@ -402,7 +402,7 @@ test("chat window: switch on TAB", async () => {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('channel1')");
+    await click(".o-mail-NotificationItem-name:text('channel1')");
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
         contains: [".o-mail-Composer-input:focus"],
@@ -412,7 +412,7 @@ test("chat window: switch on TAB", async () => {
         contains: [".o-mail-Composer-input:focus"],
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('channel2')");
+    await click(".o-mail-NotificationItem-name:text('channel2')");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow:has(:text('channel2'))", {
         contains: [".o-mail-Composer-input:focus"],
@@ -868,7 +868,7 @@ test("Notification settings rendering in chatwindow", async () => {
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('general')");
+    await click(".o-mail-NotificationItem-name:text('general')");
     await contains(".o-mail-ChatWindow", { count: 1 });
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");

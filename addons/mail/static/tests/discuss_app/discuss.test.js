@@ -2408,7 +2408,7 @@ test("Correct breadcrumb when open discuss from chat window then see settings as
     });
     await start();
     await click(".o_main_navbar i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem:text('General')");
+    await click(".o-mail-NotificationItem-name:text('General')");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
