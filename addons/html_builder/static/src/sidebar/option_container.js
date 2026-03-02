@@ -11,6 +11,7 @@ import {
     useGetItemValue,
     useVisibilityObserver,
 } from "../core/utils";
+import { uniqueId } from "@web/core/utils/functions";
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
@@ -43,6 +44,7 @@ export class OptionsContainer extends BaseOptionComponent {
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);
         super.setup();
+        this.containerId = uniqueId("option-container-");
         this.notification = useService("notification");
         this.getItemValue = useGetItemValue();
         useVisibilityObserver("content", useApplyVisibility("root"));
