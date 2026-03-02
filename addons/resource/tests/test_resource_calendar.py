@@ -167,3 +167,29 @@ class TestResourceCalendar(TransactionCase):
         calendar_form.save()
         self.assertEqual(calendar.hours_per_day, 7)
         self.assertEqual(calendar.hours_per_week, 21)
+
+    def test_duration_based_average_hours(self):
+        """Checks that the average hours for days and weeks are correctly computed when the option Define Amount of
+        Hours per Day has been checked. In 19.2, for an attendance to be duration based, we simply create an attendance
+        without hour_from and hour_to."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based Calendar',
+            'attendance_ids': False,
+        })
+        with Form(calendar) as form:
+            with form.attendance_ids.new() as monday_attendance:
+                monday_attendance.dayofweek = '0'
+                monday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as tuesday_attendance:
+                tuesday_attendance.dayofweek = '1'
+                tuesday_attendance.duration_hours = 4.0
+
+            with form.attendance_ids.new() as wednesday_attendance:
+                wednesday_attendance.dayofweek = '2'
+                wednesday_attendance.duration_hours = 4.0
+
+            self.assertEqual(
+                (form.hours_per_week, form.hours_per_day),
+                (12, 4),
+            )
