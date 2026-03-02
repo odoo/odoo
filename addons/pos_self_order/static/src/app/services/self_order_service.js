@@ -477,9 +477,6 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
-        if (this.config.self_ordering_mode !== "kiosk") {
-            return;
-        }
         let useLna = false;
         for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
@@ -490,6 +487,11 @@ export class SelfOrder extends Reactive {
 
             useLna = useLna || printerConfig.use_lna;
         }
+
+        if (this.config.self_ordering_mode !== "kiosk") {
+            return;
+        }
+
         for (const relPrinter of this.config.receipt_printer_ids) {
             const printerDevice = this.createPrinter(relPrinter);
             this.printer.setFallbackPrinter(printerDevice);
