@@ -8,7 +8,8 @@ definePosModels();
 describe("pos.order restaurant patches", () => {
     test("customer count and amount per guest", async () => {
         const store = await setupPosEnv();
-        const order = await getFilledOrder(store);
+        const table = store.models["restaurant.table"].get(2);
+        const order = await getFilledOrder(store, { table_id: table });
         order.setCustomerCount(3);
         expect(order.getCustomerCount()).toBe(3);
         order.setCustomerCount(4);

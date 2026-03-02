@@ -276,8 +276,21 @@ export function isChildTable(child) {
         trigger: table({ name: child }).trigger + ` .opacity-50`,
     };
 }
-export function clickNewOrder() {
-    return { trigger: ".new-order", run: "click" };
+export function clickNewOrder(presetSelection = false) {
+    const steps = [
+        {
+            trigger: ".new-order",
+            run: "click",
+        },
+    ];
+    if (presetSelection) {
+        steps.push({
+            content: `click preset 'Eat in' from preset modal`,
+            trigger: `.modal-body button:contains("Eat in")`,
+            run: "click",
+        });
+    }
+    return steps;
 }
 
 export function clickEditPlan() {

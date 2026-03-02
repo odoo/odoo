@@ -697,7 +697,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         [
             Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
             Chrome.startPoS(),
-            FloorScreen.clickNewOrder(),
+            FloorScreen.clickNewOrder(true),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
@@ -759,7 +759,7 @@ registry.category("web_tour.tours").add("test_cancel_future_order", {
             Chrome.freezeDateTime(1739370000000),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickNewOrder(),
+            FloorScreen.clickNewOrder(true),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway", false),
             TextInputPopup.inputText("John"),

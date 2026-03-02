@@ -1330,10 +1330,14 @@ export class PosStore extends WithLazyGetterTrap {
         order.setPricelist(this.config.pricelist_id);
 
         if (this.config.use_presets && !data["preset_id"]) {
-            this.selectPreset(this.config.default_preset_id, order);
+            this.selectPreset(this.config.default_preset_id, order, this.shouldSelectPreset(order));
         }
 
         return order;
+    }
+    // Meant to be overridden by pos_restaurant.
+    shouldSelectPreset(order) {
+        return false;
     }
     addNewOrder(data = {}) {
         if (this.getOrder()) {
@@ -2045,8 +2049,8 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
     }
-    async selectPreset(preset = false, order = this.getOrder()) {
-        if (!preset) {
+    async selectPreset(preset = false, order = this.getOrder(), presetSelection = false) {
+        if (!preset || presetSelection) {
             const selectionList = this.config.available_preset_ids.map((preset) => ({
                 id: preset.id,
                 label: preset.name,
@@ -2059,7 +2063,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             preset =
-                selectionList.length === 2
+                selectionList.length === 2 && !presetSelection
                     ? selectionList.find((preset) => !preset.isSelected).item
                     : await makeAwaitable(this.dialog, SelectionPopup, {
                           title: _t("Select preset"),

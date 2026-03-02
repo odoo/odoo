@@ -72,6 +72,9 @@ patch(PosStore.prototype, {
 
         return order;
     },
+    shouldSelectPreset(order) {
+        return order.isDirectSale && this.config.available_preset_ids.length > 1;
+    },
     async preSyncAllOrders(orders) {
         if (this.config.module_pos_restaurant) {
             for (const order of orders) {
