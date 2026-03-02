@@ -83,7 +83,6 @@ export class DesignTabPlugin extends Plugin {
             isRemovable: false,
             options: [Option],
             optionsContainerTopButtons: [],
-            snippetModel: {},
         };
     }
 }

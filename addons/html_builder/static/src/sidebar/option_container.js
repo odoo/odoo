@@ -13,7 +13,6 @@ export class OptionsContainer extends BaseOptionComponent {
     static dependencies = ["builderOptions", "remove", "clone"];
     static props = {
         toggleOverlayPreview: { type: Function, optional: true },
-        snippetModel: { type: Object },
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: { type: Boolean, optional: true },

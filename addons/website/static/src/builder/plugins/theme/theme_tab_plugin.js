@@ -260,7 +260,6 @@ export class ThemeTabPlugin extends Plugin {
             isRemovable: false,
             options: optionsArray,
             optionsContainerTopButtons: [],
-            snippetModel: {},
         };
     }
 }

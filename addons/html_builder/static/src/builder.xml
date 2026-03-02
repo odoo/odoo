@@ -44,7 +44,7 @@
                 <BlockTab snippetsName="this.props.snippetsName" />
             </t>
             <t t-if="this.state.activeTab === 'customize'">
-                <CustomizeTab currentOptionsContainers="this.state.currentOptionsContainers" snippetModel="this.snippetModel"/>
+                <CustomizeTab currentOptionsContainers="this.state.currentOptionsContainers"/>
             </t>
             <t t-if="this.state.activeTab === 'theme'">
                 <t t-component="this.ThemeTab" colorPresetToShow="this.colorPresetToShow" shadowSizeToShow="this.shadowSizeToShow"/>

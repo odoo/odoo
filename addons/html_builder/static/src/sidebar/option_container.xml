@@ -5,7 +5,6 @@
     <div t-if="this.options.length"
         class="options-container mb-1" t-custom-ref="root" t-att-data-container-title="this.title">
         <div class="options-container-header d-flex align-items-center justify-content-between">
-            <t t-set="isActionable" t-value="Object.keys(this.props.snippetModel).length > 0"></t>
             <t
                 t-tag="this.props.toggleFold ? 'button' : 'div'"
                 class="options-container-label py-2 flex-grow-1 d-flex align-items-center"
