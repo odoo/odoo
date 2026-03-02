@@ -131,10 +131,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             let duplicatedRecordIdx = -1;
             for (const event of Object.values(data.records)) {
                 const eventData = event.rawRecord;
-                const attendees =
-                    eventData.partner_ids && eventData.partner_ids.length
-                        ? eventData.partner_ids
-                        : [eventData.partner_id[0]];
+                const attendees = [...new Set([...eventData.partner_ids, ...eventData.partner_id])]
                 let duplicatedRecords = 0;
                 for (const attendee of attendees) {
                     if (!activeAttendeeIds.has(attendee)) {
