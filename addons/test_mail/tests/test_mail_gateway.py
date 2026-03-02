@@ -26,35 +26,23 @@ from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 @tagged('mail_gateway')
 class TestEmailParsing(MailCommon):
 
-    def test_message_parse_and_replace_binary_octetstream(self):
-        """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
-        received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
-        with self.assertLogs('odoo.addons.mail.models.mail_thread', level="WARNING") as capture:
-            extracted_mail = self.env['mail.thread']._message_parse_extract_payload(received_mail, {})
+    def test_message_parse_and_replace_bad_content_type(self):
+        """Incoming emails with unsupported attachment Content-Types should not crash parsing."""
+        for content_type in ('binary/octet-stream', '*/*', 'bin/plain'):
+            with self.subTest(content_type=content_type):
+                received_mail = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime=content_type)
+                self.assertIn(f"Content-Type: {content_type}", received_mail, f"{content_type} content-type not found")
+                with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
+                    extracted_mail = self.env['mail.thread'].message_parse(self.from_string(received_mail))
 
-        self.assertEqual(len(extracted_mail['attachments']), 1)
-        attachment = extracted_mail['attachments'][0]
-        self.assertEqual(attachment.fname, 'hello_world.dat')
-        self.assertEqual(attachment.content, b'Hello world\n')
-        self.assertEqual(capture.output, [
-            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
-             "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
-        ])
-
-    def test_message_parse_and_replace_wildcard(self):
-        """Incoming email containing a wrong Content-Type (*/*) as described in RFC2046/section-3"""
-        mail_with_wildcard_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="*/*")
-        self.assertIn("Content-Type: */*", mail_with_wildcard_mime, "Wildcard for content-type not found")
-        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
-            extracted_mail = self.env['mail.thread'].message_parse(self.from_string(mail_with_wildcard_mime))
-
-        self.assertEqual(len(extracted_mail['attachments']), 1)
-        attachment = extracted_mail['attachments'][0]
-        self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
-        self.assertEqual(capture.output, [
-            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
-             "Content-Type '*/*', assuming 'application/octet-stream'"),
-        ])
+                self.assertEqual(len(extracted_mail['attachments']), 1)
+                attachment = extracted_mail['attachments'][0]
+                self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
+                self.assertEqual(attachment.content, test_mail_data.PDF_PARSED)
+                self.assertEqual(capture.output, [
+                    ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
+                    f"Content-Type '{content_type}', assuming 'application/octet-stream'"),
+                ])
 
     def test_message_parse_body(self):
         # test pure plaintext
