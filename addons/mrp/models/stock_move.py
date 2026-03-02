@@ -603,8 +603,11 @@ class StockMove(models.Model):
 
     def _search_picking_for_assignation_domain(self):
         domain = super()._search_picking_for_assignation_domain()
-        domain += [('production_group_id', '=', self.production_group_id.id)]
+        domain += self._get_production_assignation_domain()
         return domain
+
+    def _get_production_assignation_domain(self):
+        return [('production_group_id', '=', self.production_group_id.id)]
 
     def action_open_reference(self):
         res = super().action_open_reference()
