@@ -9,12 +9,11 @@ registerComposerAction("add-gif", {
     actionPanelComponent: GifPicker,
     actionPanelComponentProps: ({ action, owner }) => ({
         onSelect: async (gif) => {
-            const href = encodeURI(gif.url);
+            const gifUrl = gif.media_formats.tinygif.url;
+            const href = encodeURI(gifUrl);
             await owner._sendMessage(
-                markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
-                {
-                    parentId: owner.props.composer.replyToMessage?.id,
-                }
+                markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
+                { parentId: owner.props.composer.replyToMessage?.id }
             );
         },
         onClose: () => action.actionPanelClose(),
