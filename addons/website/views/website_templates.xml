@@ -218,6 +218,10 @@
         </t>
     </xpath>
 
+    <xpath expr="//header//nav" position="before">
+        <t t-call="website.placeholder_header_disclaimer"/>
+    </xpath>
+
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
@@ -1594,6 +1598,20 @@
 
 <template id="placeholder_header_brand" name="Placeholder Header Brand">
     <span id="o_fake_navbar_brand"/><!-- Need a fake element so that the menu is still placed correctly -->
+</template>
+
+<template id="placeholder_header_disclaimer" name="Placeholder Header Disclaimer">
+    <span id="o_fake_header_disclaimer"/>
+</template>
+
+<template id="option_header_disclaimer" inherit_id="website.placeholder_header_disclaimer" name="Header Disclaimer" active="False">
+    <xpath expr="//*[@id='o_fake_header_disclaimer']" position="replace">
+        <div class="s_headline oe_no_drop_above o_colored_level o_cc o_cc5 pt4 pb4">
+            <div style="text-align: center;">
+                <small> Free Returns and Standard Shipping </small>
+            </div>
+        </div>
+    </xpath>
 </template>
 
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
