@@ -100,9 +100,9 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image: url(#{website.image_url(user, 'avatar_1024')});"/>
-                            <a class="btn btn-primary d-inline-block d-md-none"
-                                t-if="env.user == user and user.karma != 0"
-                                data-bs-toggle="modal" data-bs-target="#o_wprofile_edit_profile_modal">
+                            <a class="btn o_wprofile_editor btn-primary d-inline-block d-md-none"
+                                t-if="(env.user == user and user.karma != 0) or env.user._is_admin()"
+                                t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None">
                                 <i class="fa fa-pencil me-1"/>EDIT
                             </a>
                         </div>
