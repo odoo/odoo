@@ -1,6 +1,6 @@
 # ruff: noqa: E402, F401
 import typing
-from collections.abc import Collection, Mapping
+from collections.abc import Mapping
 
 from .commands import Command
 from .domains import Domain
@@ -15,4 +15,5 @@ ContextType = Mapping[str, typing.Any]
 ValuesType = dict[str, typing.Any]
 ModelType = typing.TypeVar("ModelType", bound=BaseModel)
 
-CommandValue = tuple[Command, int, typing.Literal[0] | ValuesType | Collection[int]]
+if typing.TYPE_CHECKING:
+    from .commands import CommandValue

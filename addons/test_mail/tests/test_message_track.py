@@ -8,6 +8,7 @@ from markupsafe import Markup
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.models.mail_track_mixin import MailTrackMixin
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
@@ -45,6 +46,32 @@ class TestTrackingCommon(MailCommon):
 @tagged('mail_track')
 class TestTrackingAPI(TestTrackingCommon):
     """ Test main API and methods of tracking, to be called in py code. """
+
+    @users('employee')
+    def test_mail_track_mixin(self):
+        mixin_records = self.env['mail.test.track.mixin'].create([
+            {
+                'char_field': 'init 1',
+                'selection_field': 'first',
+            }, {
+                'char_field': 'init 2',
+                'selection_field': False,
+            }
+        ])
+        self.flush_tracking()
+
+        original_track_finalize = MailTrackMixin._track_finalize
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records._track_prepare(mixin_records._track_get_fields())
+            mixin_records.write({
+                'char_field': 'updated 1',
+                'selection_field': 'second',
+            })
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 1)
+        self.assertFalse(self._new_msgs)
 
     @users('employee')
     def test_tracking_create(self):
@@ -1099,18 +1126,16 @@ class TestTrackingInternals(TestTrackingCommon):
 
         # raise on non existing field
         with self.assertRaises(ValueError):
-            self.env['mail.tracking.value']._create_tracking_values(
+            test_record._create_mail_tracking_values(
                 '', 'Test',
                 'not_existing_field', {'string': 'Test', 'type': 'char'},
-                test_record,
             )
 
         # raise on unsupported field type
         with self.assertRaises(NotImplementedError):
-            self.env['mail.tracking.value']._create_tracking_values(
+            test_record._create_mail_tracking_values(
                 '', '<p>Html</p>',
                 'html_field', {'string': 'HTML', 'type': 'html'},
-                test_record,
             )
 
     @users('employee')

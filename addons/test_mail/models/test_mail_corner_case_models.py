@@ -240,6 +240,35 @@ class MailTestTrackGroups(models.Model):
     secret = fields.Char(tracking=3, groups="base.group_user")
 
 
+class MailTestTrackMixin(models.Model):
+    _description = 'Test tracking with base mixin'
+    _name = "mail.test.track.mixin"
+    _inherit = ['mail.track.mixin']
+
+    boolean_field = fields.Boolean('Boolean', tracking=1)
+    char_field = fields.Char('Char', tracking=2)
+    company_id = fields.Many2one('res.company')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    date_field = fields.Date('Date', tracking=3)
+    datetime_field = fields.Datetime('Datetime', tracking=4)
+    float_field = fields.Float('Float', tracking=5)
+    float_field_with_digits = fields.Float('Precise Float', digits=(10, 8), tracking=5)
+    html_field = fields.Html('Html', tracking=False)
+    integer_field = fields.Integer('Integer', tracking=7)
+    many2many_field = fields.Many2many(
+        'mail.test.track.all.m2m', string='Many2Many',
+        tracking=8)
+    many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
+    monetary_field = fields.Monetary('Monetary', tracking=10)
+    selection_field = fields.Selection(
+        string='Selection',
+        selection=[('first', 'FIRST'), ('second', 'SECOND')],
+        tracking=11)
+    text_field = fields.Text('Text', tracking=12)
+
+    name = fields.Char('Name')
+
+
 class MailTestTrackMonetary(models.Model):
     _description = 'Test tracking monetary field'
     _name = "mail.test.track.monetary"

@@ -192,8 +192,8 @@ class AccountLock_Exception(models.Model):
             field = exception.lock_date_field
             value = exception.lock_date
             field_info = exception.fields_get([field])[field]
-            tracking_value = self.env['mail.tracking.value']._create_tracking_values(
-                company[field], value, field, field_info, exception,
+            tracking_value = exception._create_mail_tracking_values(
+                company[field], value, field, field_info,
             )
 
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime

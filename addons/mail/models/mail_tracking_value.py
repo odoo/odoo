@@ -3,10 +3,7 @@ from __future__ import annotations
 
 import typing
 
-from datetime import datetime
-
-from odoo import api, fields, models
-from odoo.models import BaseModel
+from odoo import fields, models
 
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
@@ -70,148 +67,13 @@ class MailTrackingValue(models.Model):
 
         return self.filtered(has_free_access)
 
-    @api.model
-    def _create_tracking_values(
-            self,
-            initial_value: typing.Any, new_value: typing.Any,
-            col_name: str, col_info: ValuesType, record: BaseModel,
-        ) -> ValuesType:
-        """ Prepare values to create a mail.tracking.value. It prepares old and
-        new value according to the field type.
-
-        :param typing.Any initial_value: field value before the change. Relational
-            fields should contain RecordSets;
-        :param typing.Any new_value: field value after the change. Relational fields
-            should contain RecordSets;
-        :param str col_name: technical field name, column name (e.g. 'user_id);
-        :param ValuesType col_info: result of fields_get(col_name);
-        :param BaseModel record: record on which tracking is performed, used fto find
-            field information based on column name and record model e.g. finding
-            currency of monetary fields;
-
-        :return: a dict values valid for 'mail.tracking.value' creation;
-        """
-        field = self.env['ir.model.fields']._get(record._name, col_name)
-        if not field:
-            raise ValueError(f'Unknown field {col_name} on model {record._name}')
-
-        values = {'field_id': field.id}
-
-        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
-            values.update({
-                f'old_value_{col_info["type"]}': initial_value,
-                f'new_value_{col_info["type"]}': new_value
-            })
-        elif col_info['type'] == 'monetary':
-            values.update({
-                'currency_id': record[col_info['currency_field']].id,
-                'old_value_float': initial_value,
-                'new_value_float': new_value
-            })
-        elif col_info['type'] == 'date':
-            values.update({
-                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
-                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
-            })
-        elif col_info['type'] == 'boolean':
-            values.update({
-                'old_value_integer': initial_value,
-                'new_value_integer': new_value
-            })
-        elif col_info['type'] == 'selection':
-            values.update({
-                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
-                'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
-            })
-        elif col_info['type'] == 'many2one':
-            # Can be:
-            # - False value
-            # - recordset, in case of standard field
-            # - (id, display name), in case of properties (read format)
-            if not initial_value:
-                initial_value = (0, '')
-            elif isinstance(initial_value, models.BaseModel):
-                initial_value = (initial_value.id, initial_value.display_name)
-
-            if not new_value:
-                new_value = (0, '')
-            elif isinstance(new_value, models.BaseModel):
-                new_value = (new_value.id, new_value.display_name)
-
-            values.update({
-                'old_value_integer': initial_value[0],
-                'new_value_integer': new_value[0],
-                'old_value_char': initial_value[1],
-                'new_value_char': new_value[1]
-            })
-        elif col_info['type'] in {'one2many', 'many2many', 'tags'}:
-            # Can be:
-            # - False value
-            # - recordset, in case of standard field
-            # - [(id, display name), ...], in case of properties (read format)
-            model_name = self.env['ir.model']._get(field.relation).display_name
-            if not initial_value:
-                old_value_char = ''
-            elif isinstance(initial_value, models.BaseModel):
-                old_value_char = ', '.join(
-                    value.display_name or self.env._(
-                        'Unnamed %(record_model_name)s (%(record_id)s)',
-                        record_model_name=model_name, record_id=value.id
-                    )
-                    for value in initial_value
-                )
-            else:
-                old_value_char = ', '.join(value[1] for value in initial_value)
-            if not new_value:
-                new_value_char = ''
-            elif isinstance(new_value, models.BaseModel):
-                new_value_char = ', '.join(
-                    value.display_name or self.env._(
-                        'Unnamed %(record_model_name)s (%(record_id)s)',
-                        record_model_name=model_name, record_id=value.id
-                    )
-                    for value in new_value
-                )
-            else:
-                new_value_char = ', '.join(value[1] for value in new_value)
-
-            values.update({
-                'old_value_char': old_value_char,
-                'new_value_char': new_value_char,
-            })
-        else:
-            raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
-
-        return values
-
-    @api.model
-    def _create_tracking_values_property(
-            self, initial_value: typing.Any,
-            col_name: str, col_info: ValuesType, record: BaseModel
-        ) -> ValuesType:
-        """Generate the values for the <mail.tracking.values> corresponding to a property."""
-        col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
-
-        field_info = {
-            'desc': f"{col_info['string']}: {initial_value['string']}",
-            'name': col_name,
-            'type': initial_value['type'],
-        }
-        value = initial_value.get('value', False)
-        if value and initial_value['type'] == 'tags':
-            value = [t for t in initial_value.get('tags', []) if t[0] in value]
-
-        tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-            value, False, col_name, col_info, record)
-        return {**tracking_values, 'field_info': field_info}
-
     def _tracking_value_format(self) -> list[ValuesType]:
         """ Return structured formatted data to be used by chatter to display
         tracking values. It is organized by model.
 
         :return: for each tracking value in self, their formatted display
           values given as a dict;
-        :rtype: list[VAluesType]
+        :rtype: list[ValuesType]
         """
         model_map = {}
         for tracking in self:

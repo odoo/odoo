@@ -16,7 +16,7 @@ from odoo.tools import parse_contact_from_email, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 if typing.TYPE_CHECKING:
-    from odoo.api import CommandValue, ValuesType
+    from odoo.api import ValuesType
 
 _logger = logging.getLogger(__name__)
 
@@ -249,7 +249,7 @@ class Base(models.AbstractModel):
 
     def _mail_track(
             self, tracked_fields_get: dict[str, ValuesType], initial_values: ValuesType
-        ) -> tuple[set[str], list[CommandValue]]:
+        ) -> tuple[set[str], list[ValuesType]]:
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
         The method accepts a single record or an empty one (where all field
@@ -263,13 +263,12 @@ class Base(models.AbstractModel):
         :return: a tuple (changes, tracking_value_ids) where
           changes: set of updated column names; contains onchange tracked fields
           that changed;
-          tracking_value_ids: a list of ORM (0, 0, values) commands to create
-          ``mail.tracking.value`` records;
+          tracking_values: a values to create ``mail.tracking.value`` records;
         """
         if len(self) > 1:
             raise ValueError(f"Expected empty or single record: {self}")
         updated = set()
-        tracking_value_ids = []
+        tracking_values = []
 
         fields_track_info = self._mail_track_order_fields(tracked_fields_get)
         for col_name, _sequence in fields_track_info:
@@ -287,10 +286,8 @@ class Base(models.AbstractModel):
                     continue
 
                 updated.add(col_name)
-                tracking_value_ids.extend(
-                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
-                        property_, col_name, tracked_fields_get[col_name], self,
-                    )]
+                tracking_values.extend(
+                    self._create_mail_tracking_values_property(property_, col_name, tracked_fields_get[col_name])
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
                     if property_['type'] not in ('separator', 'html', 'signature') and property_.get('value')
@@ -298,14 +295,12 @@ class Base(models.AbstractModel):
                 continue
 
             updated.add(col_name)
-            tracking_value_ids.append(
-                [0, 0, self.env['mail.tracking.value']._create_tracking_values(
-                    initial_value, new_value,
-                    col_name, tracked_fields_get[col_name],
-                    self
-                )])
+            tracking_values.append(self._create_mail_tracking_values(
+                initial_value, new_value,
+                col_name, tracked_fields_get[col_name],
+            ))
 
-        return updated, tracking_value_ids
+        return updated, tracking_values
 
     def _mail_track_order_fields(
             self,

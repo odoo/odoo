@@ -5,7 +5,7 @@ import typing
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
-    from .types import CommandValue, ValuesType
+    from .types import ValuesType
 
 
 class Command(enum.IntEnum):
@@ -124,3 +124,7 @@ class Command(enum.IntEnum):
         Return the command triple :samp:`(SET, 0, {ids})`
         """
         return (cls.SET, 0, ids)
+
+
+if typing.TYPE_CHECKING:
+    CommandValue = tuple[Command, int, typing.Literal[0] | ValuesType | Collection[int]]

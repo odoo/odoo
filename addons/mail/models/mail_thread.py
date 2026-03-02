@@ -51,7 +51,7 @@ from odoo.tools.mail import (
 )
 
 if typing.TYPE_CHECKING:
-    from odoo.api import CommandValue, ValuesType
+    from odoo.api import ValuesType
     from odoo.models import BaseModel
 
 
@@ -542,7 +542,7 @@ class MailThread(models.AbstractModel):
 
     def _track_execute(
         self, track_init_values: dict[int, ValuesType],
-        trackings: dict[int, tuple[set[str], list[CommandValue]]]
+        trackings: dict[int, tuple[set[str], list[ValuesType]]]
     ):
         # override to generate tracking messages
         super()._track_execute(track_init_values, trackings)
@@ -581,7 +581,7 @@ class MailThread(models.AbstractModel):
 
     def _track_log(
             self, track_init_values: dict[int, ValuesType],
-            trackings: dict[int, tuple[set[str], list[CommandValue]]]
+            trackings: dict[int, tuple[set[str], list[ValuesType]]]
         ):
         """ Generate message for each record, based on generated trackings. It
         contains the tracked updated values. This message can be linked to a
@@ -590,7 +590,7 @@ class MailThread(models.AbstractModel):
 
         :param dict[int, ValuesType] track_init_values: mapping
             {record_id: initial_values} where initial_values is a dict {field_name: value, ... }
-        :param dict[int, tuple[set[str], list[CommandValue]]] trackings: for
+        :param dict[int, tuple[set[str], list[ValuesType]]] trackings: for
             each existing record, changes and generate tracking values
         """
         # find content to log as body
@@ -598,7 +598,7 @@ class MailThread(models.AbstractModel):
         authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
 
         for record in self:
-            changes, tracking_value_ids = trackings.get(record.id, (None, None))
+            changes, tracking_values = trackings.get(record.id, (None, None))
             if not changes:
                 continue
 
@@ -616,13 +616,13 @@ class MailThread(models.AbstractModel):
                     body=body,
                     author_id=author_id,
                     subtype_id=subtype.id,
-                    tracking_value_ids=tracking_value_ids
+                    tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
                 )
-            elif tracking_value_ids:
+            elif tracking_values:
                 record._message_log(
                     body=body,
                     author_id=author_id,
-                    tracking_value_ids=tracking_value_ids,
+                    tracking_value_ids=[(0, 0, vals) for vals in tracking_values],
                 )
 
     def _track_log_get_default_body(self, track_init_values: ValuesType) -> str | Markup:
