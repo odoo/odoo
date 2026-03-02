@@ -29,10 +29,10 @@ class TestReadProgressBar(common.TransactionCase):
         """The labels associated to each record in read_progress_bar should match
         the ones from formatted_read_group, even in edge cases like en_US locale on sundays
         """
-        context = {"lang": "en_US"}
-        groupby = "date:week"
-        self.Model.create({'date': '2021-05-02', 'name': "testWeekGrouping_first"})  # Sunday
-        self.Model.create({'date': '2021-05-09', 'name': "testWeekGrouping_second"})  # Sunday
+        context = {"lang": "en_US", "tz": 'Europe/Brussels'}
+        groupby = "datetime:week"
+        self.Model.create({'datetime': '2021-05-02 08:00:00', 'name': "testWeekGrouping_first"})  # Sunday
+        self.Model.create({'datetime': '2021-05-09 08:00:00', 'name': "testWeekGrouping_second"})  # Sunday
         progress_bar = {
             'field': 'name',
             'colors': {

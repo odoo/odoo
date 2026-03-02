@@ -1318,6 +1318,8 @@ class Base(models.AbstractModel):
         def adapt(value):
             if isinstance(value, BaseModel):
                 return value.id
+            if isinstance(value, datetime.datetime):
+                value = value.replace(tzinfo=self.env.tz).astimezone(datetime.UTC).replace(tzinfo=None)
             return value
 
         result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
