@@ -357,7 +357,7 @@ class TestProjectTemplates(TestProjectCommon):
             "name": "Task Template without Project",
             "project_id": False,
             "is_template": True,
-            "parent_id": self.task_inside_template.id,
+            "parent_id": self.task_template_inside_template.id,
             "depend_on_ids": [Command.set(self.task_template_inside_template.ids)],
         })
 
