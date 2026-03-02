@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr.hr_org_chart_employee">
-    <t t-set="is_self" t-value="employee.id == view_employee_id"/>
+    <t t-set="is_self" t-value="employee.id == this.view_employee_id"/>
 
-    <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
-        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} position-relative d-flex align-items-center overflow-visible #{managers.length &gt; 0 ? 'o_treeEntry' : ''}">
+    <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{this.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
+        <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} position-relative d-flex align-items-center overflow-visible #{this.managers.length &gt; 0 ? 'o_treeEntry' : ''}">
             <t t-call="hr.hr_org_chart_employee_content">
                 <t t-set="is_self" t-value="is_self"/>
             </t>
@@ -70,14 +70,14 @@
 
         -->
     <t t-set="emp_count" t-value="0"/>
-    <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
-        <div t-if='managers_more' class="o_org_chart_more pe-3" t-attf-class="{{max_level !== null ? 'invisible' : ''}}">
-            <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
+    <div t-if='this.managers.length &gt; 0' class="o_org_chart_group_up position-relative">
+        <div t-if='this.managers_more' class="o_org_chart_more pe-3" t-attf-class="{{this.max_level !== null ? 'invisible' : ''}}">
+            <a href="#" t-att-data-employee-id="this.managers[0].id" class="o_employee_more_managers d-block bg-100 px-2" t-on-click.prevent="() => this._onEmployeeMoreManager(this.managers[0].id)">
                 <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
             </a>
         </div>
 
-        <t t-foreach="managers" t-as="employee" t-key="employee_index">
+        <t t-foreach="this.managers" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-call="hr.hr_org_chart_employee">
                 <t t-set="employee_type" t-value="'manager'"/>
@@ -85,12 +85,12 @@
         </t>
     </div>
 
-    <t t-if="children.length || managers.length" t-call="hr.hr_org_chart_employee">
+    <t t-if="this.children.length || this.managers.length" t-call="hr.hr_org_chart_employee">
         <t t-set="employee_type" t-value="'self'"/>
-        <t t-set="employee" t-value="self"/>
+        <t t-set="employee" t-value="this.self"/>
     </t>
 
-    <t t-if="!children.length &amp;&amp; !managers.length">
+    <t t-if="!this.children.length &amp;&amp; !this.managers.length">
         <p class="mb-3 text-muted fst-italic">Set a manager or reports to show in org chart.</p>
         <div class="o_org_chart_entry_self_container opacity-50">
             <div class="o_org_chart_entry o_org_chart_entry_self d-flex py-2 pe-none">
@@ -131,8 +131,8 @@
         </section>
     </t>
 
-    <div t-if="children.length" t-attf-class="o_org_chart_group_down position-relative #{managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
-        <t t-foreach="children" t-as="employee" t-key="employee_index">
+    <div t-if="this.children.length" t-attf-class="o_org_chart_group_down position-relative #{this.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
+        <t t-foreach="this.children" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
                 <t t-call="hr.hr_org_chart_employee">
@@ -141,14 +141,14 @@
             </t>
         </t>
 
-        <t t-if="(children.length + managers.length) &gt; 19">
+        <t t-if="(this.children.length + this.managers.length) &gt; 19">
             <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
                 <div class="o_media_left position-relative">
                     <a href="#"
-                        t-att-data-employee-id="self.id"
-                        t-att-data-employee-name="self.name"
+                        t-att-data-employee-id="this.self.id"
+                        t-att-data-employee-name="this.self.name"
                         class="o_org_chart_show_more o_employee_sub_redirect btn btn-link ps-2"
-                        t-on-click.prevent="_onEmployeeSubRedirect">See All</a>
+                        t-on-click.prevent="this._onEmployeeSubRedirect">See All</a>
                 </div>
             </div>
         </t>
@@ -160,40 +160,40 @@
         <div class="tooltip-arrow"/>
         <h3 class="popover-header">
             <div class="d-flex align-items-center">
-                <span class="o_media_object flex-shrink-0 rounded me-1" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/\")"'/>
-                <b class="flex-grow-1 fw-medium"><t t-out="props.employee.name"/></b>
-                <a href="#" class="o_employee_redirect btn btn-link" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-user" role="img" aria-label='View employee' title="View employee"/></a>
+                <span class="o_media_object flex-shrink-0 rounded me-1" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + this.props.employee.id + "/avatar_1024/\")"'/>
+                <b class="flex-grow-1 fw-medium"><t t-out="this.props.employee.name"/></b>
+                <a href="#" class="o_employee_redirect btn btn-link" t-att-data-employee-id="this.props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(this.props.employee.id)"><i class="fa fa-user" role="img" aria-label='View employee' title="View employee"/></a>
             </div>
         </h3>
         <div class="popover-body">
             <table class="table table-sm table-borderless mb-0">
                 <tbody>
                     <tr>
-                        <td class="text-end"><b t-out="props.employee.direct_sub_count"/></td>
+                        <td class="text-end"><b t-out="this.props.employee.direct_sub_count"/></td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='direct'
-                                    t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
-                                    t-on-click.prevent="_onEmployeeSubRedirect">
+                                    t-att-data-employee-name="this.props.employee.name" t-att-data-employee-id="this.props.employee.id"
+                                    t-on-click.prevent="this._onEmployeeSubRedirect">
                                 <b>Direct subordinates</b></a>
                         </td>
                     </tr>
                     <tr>
                         <td class="text-end">
-                            <b t-out="props.employee.indirect_sub_count - props.employee.direct_sub_count"/>
+                            <b t-out="this.props.employee.indirect_sub_count - this.props.employee.direct_sub_count"/>
                         </td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='indirect'
-                                    t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
-                                    t-on-click.prevent="_onEmployeeSubRedirect">
+                                    t-att-data-employee-name="this.props.employee.name" t-att-data-employee-id="this.props.employee.id"
+                                    t-on-click.prevent="this._onEmployeeSubRedirect">
                                 Indirect subordinates</a>
                         </td>
                     </tr>
                     <tr>
-                        <td class="text-end"><b t-out="props.employee.indirect_sub_count"/></td>
+                        <td class="text-end"><b t-out="this.props.employee.indirect_sub_count"/></td>
                         <td>
                             <a href="#" class="o_employee_sub_redirect" data-type='total'
-                                    t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
-                                    t-on-click.prevent="_onEmployeeSubRedirect">
+                                    t-att-data-employee-name="this.props.employee.name" t-att-data-employee-id="this.props.employee.id"
+                                    t-on-click.prevent="this._onEmployeeSubRedirect">
                                 Total</a>
                         </td>
                     </tr>
