@@ -200,6 +200,8 @@ class ProductProduct(models.Model):
         }
         if self.website_meta_description or self.description_sale:
             markup_data['description'] = self.website_meta_description or self.description_sale
+        if self.barcode:
+            markup_data['gtin'] = self.barcode
         return markup_data
 
     def _get_image_1920_url(self):
