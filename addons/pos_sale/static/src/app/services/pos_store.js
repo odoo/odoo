@@ -74,6 +74,15 @@ patch(PosStore.prototype, {
             id,
             this.config.id,
         ]);
+        const sale_order = (await this.data.read("sale.order", [id]))[0];
+        const orderlines = await this.data.read("sale.order.line", sale_order.raw.order_line);
+        sale_order.order_line = orderlines;
+        const customValueIds = orderlines.flatMap(
+            (l) => l.raw.product_custom_attribute_value_ids || []
+        );
+        if (customValueIds.length) {
+            await this.data.read("product.attribute.custom.value", customValueIds);
+        }
         return result["sale.order"][0];
     },
     async settleSO(sale_order, orderFiscalPos) {
@@ -116,6 +125,25 @@ patch(PosStore.prototype, {
                 customer_note: line.customer_note,
                 description: line.name,
                 order_id: this.getOrder(),
+                attribute_value_ids: [
+                    ...(line.product_no_variant_attribute_value_ids ?? [])
+                        .filter((ptav) => !ptav.is_custom)
+                        .map((ptav) => ["link", ptav]),
+                    ...(line.product_custom_attribute_value_ids ?? []).flatMap(
+                        ({ custom_product_template_attribute_value_id: ptav }) =>
+                            ptav ? [["link", ptav]] : []
+                    ),
+                ],
+                custom_attribute_value_ids: (line.product_custom_attribute_value_ids ?? []).map(
+                    (cav) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                cav.custom_product_template_attribute_value_id,
+                            custom_value: cav.custom_value,
+                        },
+                    ]
+                ),
             };
             if (line.display_type === "line_section") {
                 continue;
