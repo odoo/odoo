@@ -1,4 +1,5 @@
-import { Component, useRef, useState, useExternalListener, useSubEnv } from "@odoo/owl";
+import { Component, useRef, useState, useExternalListener, useSubEnv, useEffect } from "@odoo/owl";
+import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 
@@ -25,7 +26,6 @@ export class CallDropdown extends Component {
 
     setup() {
         super.setup();
-        this.triggerRef = useRef("trigger");
         this.menuRef = useRef("menu");
         this.state = useState({ isOpen: this.props.openByDefault });
         usePosition("menu", () => this.triggerRef.el, {
@@ -47,6 +47,20 @@ export class CallDropdown extends Component {
                 return [];
             },
         });
+        this.handleClick = this.handleClick.bind(this);
+        useEffect(
+            (triggerEl) => {
+                if (triggerEl) {
+                    triggerEl.addEventListener("click", this.handleClick);
+                    return () => triggerEl.removeEventListener("click", this.handleClick);
+                }
+            },
+            () => [this.triggerRef.el]
+        );
+    }
+
+    get triggerRef() {
+        return { el: getFirstElementOfNode(this.__owl__.bdom) };
     }
 
     get window() {
