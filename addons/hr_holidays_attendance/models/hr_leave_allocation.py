@@ -32,9 +32,29 @@ class HrLeaveAllocation(models.Model):
             ('state', '=', 'validated'),
         ])
 
+<<<<<<< 7349287698e25ca2bddddb94dcd72a2bb3f1b77b
         attendance_intervals = []
         for att in attendances:
             attendance_intervals.append((att.check_in, att.check_out, att))
+||||||| fb11a4e4d14c90eddcac5d9dfdc214ca1be21d0d
+        total_worked_hours = 0.0
+        for attendance in attendances:
+            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+=======
+        total_worked_hours = 0.0
+        for attendance in attendances:
+            worked_hours = attendance._get_worked_hours_in_range(start_dt, end_dt)
+            # Only the approved extra hours count: the ones still to approve or refused are left out
+            approved_overtime = attendance.validated_overtime_hours if attendance.overtime_status == 'approved' else 0.0
+            unapproved_overtime = max(0.0, attendance.overtime_hours - approved_overtime)
+            if worked_hours and unapproved_overtime:
+                # Prorated to the part of the attendance in the period (an attendance across midnight)
+                attendance_hours = attendance.worked_hours or attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
+                if attendance_hours:
+                    unapproved_overtime *= min(1.0, worked_hours / attendance_hours)
+                worked_hours = max(0.0, worked_hours - unapproved_overtime)
+            total_worked_hours += worked_hours
+>>>>>>> b610b25aa82974f3bc080f0205272897753a2599
 
         worked_interval = Intervals(attendance_intervals) & Intervals([(start_dt, end_dt, self.env['hr.attendance'])])
         return sum_intervals(worked_interval)
