@@ -54,7 +54,7 @@
                                 t-if="sectionId === false and this.state.isAddingSection === 'top'"
                                 class="ms-2 o_section_input"
                                 type="text"
-                                t-model="this.state.newSectionName"
+                                t-custom-model="this.state.newSectionName"
                                 t-on-keydown="onSectionInputKeydown"
                                 t-on-blur="createSection"
                             />
@@ -77,7 +77,7 @@
                     class="o_section_input py-1"
                     type="text"
                     placeholder="Enter a description"
-                    t-model="this.state.newSectionName"
+                    t-custom-model="this.state.newSectionName"
                     t-on-keydown="onSectionInputKeydown"
                     t-on-blur="createSection"
                 />

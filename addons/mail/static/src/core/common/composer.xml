@@ -82,7 +82,7 @@
                                 t-on-focusout="onFocusout"
                                 t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                                 t-on-paste="onPaste"
-                                t-model="props.composer.composerText"
+                                t-custom-model="props.composer.composerText"
                                 t-on-input="(ev) => this.onInput(ev)"
                                 t-att-placeholder="placeholder"
                                 t-att-readOnly="!state.active"

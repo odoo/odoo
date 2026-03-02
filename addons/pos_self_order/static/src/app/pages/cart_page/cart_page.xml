@@ -85,7 +85,7 @@
                     <t t-if="this.state.showOrderNote">
                         <textarea
                             class="form-control bg-white rounded-4 mt-1 order-note-textarea"
-                            t-model="this.orderNote"
+                            t-custom-model="this.orderNote"
                             t-on-input="(ev) => this.state.orderNoteValue = ev.target.value"
                             t-att-readonly="!display_change_quantity"
                             placeholder="E.g: Don't use food color, Extra spicy"

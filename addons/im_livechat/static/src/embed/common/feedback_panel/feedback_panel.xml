@@ -18,7 +18,7 @@
             </t>
         </div>
         <div t-if="state.rating and state.step === STEP.RATING" class="d-flex flex-column mb-5">
-            <textarea t-model="state.feedback" class="form-control my-2" placeholder="Explain your note"/>
+            <textarea t-custom-model="state.feedback" class="form-control my-2" placeholder="Explain your note"/>
             <button class="btn btn-primary align-self-end" t-on-click="onClickSendFeedback">Send</button>
         </div>
         <label class="mb-5 w-100" t-if="store.self_user?.share === false">

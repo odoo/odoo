@@ -23,7 +23,7 @@
                         required=""
                         placeholder="Property Name"
                         autocomplete="off"
-                        t-model="state.propertyDefinition.string"
+                        t-custom-model="state.propertyDefinition.string"
                         t-on-change="onPropertyLabelChange"
                         t-on-keypress="onPropertyLabelKeypress"
                     />
@@ -153,7 +153,7 @@
                             type="text"
                             placeholder=""
                             autocomplete="off"
-                            t-model="state.propertyDefinition.suffix"
+                            t-custom-model="state.propertyDefinition.suffix"
                             t-on-change="onSuffixChange"
                         />
                     </div>

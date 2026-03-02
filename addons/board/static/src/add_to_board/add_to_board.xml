@@ -11,7 +11,7 @@
                 <t t-set-slot="content">
                     <div class="px-3 pb-2">
                         <label class="mb-2">Add to my dashboard</label>
-                        <input type="text" class="o_input mb-3" t-custom-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
+                        <input type="text" class="o_input mb-3" t-custom-ref="autofocus" t-custom-model.trim="state.name" t-on-keydown="onInputKeydown" />
                         <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
                     </div>
                 </t>

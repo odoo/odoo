@@ -15,7 +15,7 @@
             <div class="d-flex flex-column text-center justify-content-center">
                 <div class="d-flex flex-column" t-if="store.self_guest and !store.self_user">
                     <label class="fs-4 mb-2">What's your name?</label>
-                    <input class="form-control bg-white rounded" type="text" name="guest_name" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                    <input class="form-control bg-white rounded" type="text" name="guest_name" placeholder="Your name" t-custom-model="state.userName" t-on-keydown="onKeydownInput"/>
                     <small class="form-text text-end" t-att-class="{'text-danger': state.userName.length > 60}"><t t-out="state.userName.length"/>/60</small>
                 </div>
                 <div t-if="store.self_user">

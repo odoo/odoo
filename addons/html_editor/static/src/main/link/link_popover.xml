@@ -5,7 +5,7 @@
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-custom-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
-                        <input name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
+                        <input name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-custom-model="state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
@@ -48,7 +48,7 @@
                         <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
                             <input t-custom-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.label"
+                                t-custom-model="state.label"
                                 title="Label"
                                 placeholder="Add a label for your link"
                                 t-on-input="onChange"/>
@@ -57,7 +57,7 @@
                             <input t-custom-ref="url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.url"
+                                t-custom-model="state.url"
                                 title="URL"
                                 placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="onKeydownEnter"
@@ -94,11 +94,11 @@
                             </Dropdown>
                         </div>
                         <div t-if="props.includeStyling and state.type !== 'link'" class="input-group mb-2">
-                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
+                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-custom-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
                                 <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
                                     t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
                             </select>
-                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
+                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-custom-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
                                 <option t-foreach="this.buttonShapesData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
                                     t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
                             </select>

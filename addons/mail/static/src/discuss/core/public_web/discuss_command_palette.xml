@@ -27,10 +27,10 @@
         <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
             <div class="d-flex flex-column" t-on-keydown="onKeydown">
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
-                <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
+                <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-custom-model="state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
                 <div class="form-check mt-2">
-                    <input type="checkbox" id="readonly" class="form-check-input" name="readonly" t-model="state.is_readonly" />
+                    <input type="checkbox" id="readonly" class="form-check-input" name="readonly" t-custom-model="state.is_readonly" />
                     <label for="readonly" class="form-check-label">Read-only</label>
                 </div>
             </div>
