@@ -671,7 +671,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.user_root.id,
                 "default_display_mode": False,
-                "description": "General announcements for all employees.",
+                "description": "A place to connect and exchange news with colleagues across the company.",
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -684,7 +684,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "member_count": len(self.group_user.all_user_ids),
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
-                "name": "general",
+                "name": "General",
                 "parent_channel_id": False,
                 "uuid": channel.uuid,
             }
@@ -1332,7 +1332,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "body": ["markup", "<p>test</p>"],
                 "create_date": create_date,
                 "date": date,
-                "default_subject": "general",
+                "default_subject": "General",
                 "email_from": '"Ernest Employee" <e.e@example.com>',
                 "id": last_message.id,
                 "incoming_email_cc": False,
@@ -1351,7 +1351,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     {"content": "😁", "message": last_message.id},
                     {"content": "😊", "message": last_message.id},
                 ],
-                "record_name": "general",
+                "record_name": "General",
                 "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
                 "res_id": 1,
                 "scheduledDatetime": False,
@@ -1846,7 +1846,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "rating_count": 0,
         }
         if channel == self.channel_general:
-            return {**common_data, "display_name": "general"}
+            return {**common_data, "display_name": "General"}
         if channel == self.channel_channel_public_1:
             return {**common_data, "display_name": "public channel 1"}
         if channel == self.channel_channel_public_2:
