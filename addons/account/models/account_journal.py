@@ -821,9 +821,9 @@ class AccountJournal(models.Model):
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
         if 'bank_acc_number' in vals or 'bank_account_id' in vals:
-            bank = self.filtered(lambda r: r.type == 'bank').bank_account_id
-            if bank and bank._user_can_trust():
-                bank.allow_out_payment = True
+            for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
+                if bank._user_can_trust():
+                    bank.allow_out_payment = True
         return result
 
     def _alias_get_creation_values(self):
