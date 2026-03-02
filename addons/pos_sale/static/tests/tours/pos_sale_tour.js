@@ -683,3 +683,16 @@ registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentWithExtraLine", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
