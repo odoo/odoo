@@ -101,7 +101,9 @@ export class SelectMany2X extends Component {
     }
     async search(searchValue) {
         const domain = Object.values(this.props.domain).filter((item) => item !== null);
-        const selectedIds = this.props.selected.map((e) => e.id);
+        const selectedIds = this.props.selected
+            .map((e) => e.id)
+            .filter((value) => typeof value === "number");
         if (selectedIds.length) {
             domain.push(["id", "not in", selectedIds]);
         }

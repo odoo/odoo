@@ -1,7 +1,7 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { reactive, xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -145,4 +145,42 @@ test("basic many2many: toggle dropdown without changing search term or selection
     expect(selection).toEqual([{ id: 1, name: "First", display_name: "First" }]);
     expect(executeCount).toBe(2);
     expect.verifySteps(["name_search", "name_search"]);
+});
+
+test("basic many2many: search with uncreated records", async () => {
+    onRpc("test", "name_search", ({ kwargs }) => {
+        expect.step("name_search");
+        expect(kwargs.domain).toEqual([["id", "not in", [1, 2]]]);
+    });
+    class TestComponent extends BaseOptionComponent {
+        static selector = ".test-options-target";
+        static template = xml`<BasicMany2Many selection="this.selection" model="'test'" limit="1" setSelection="this.setSelection.bind(this)"/>`;
+        setup() {
+            this.selection = [
+                { id: 1, name: "First" },
+                { id: 2, name: "Second" },
+                { id: "new-3", name: "Third" },
+            ]
+        }
+        setSelection() {
+            //Not used but necessary for the component
+        }
+    }
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: TestComponent,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    // Number of items in selection
+    expect("table tr").toHaveCount(3);
+
+    // Click to open, 1st search should be done
+    await contains(".btn.o-dropdown").click();
+    await advanceTime(300); // debounce
+    await animationFrame();
+
+    expect.verifySteps(["name_search"]);
 });
