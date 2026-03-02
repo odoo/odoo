@@ -1,13 +1,15 @@
 import { test, expect } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { mockDate } from "@odoo/hoot-mock";
-const { DateTime } = luxon;
+const { DateTime, Settings } = luxon;
 
 definePosModels();
 
 test("uiState", async () => {
-    mockDate("2025-01-09 12:00:00");
+    const fixedTs = new Date("2025-01-09T12:00:00").valueOf();
+    const memoNow = Settings.now;
+    Settings.now = () => fixedTs;
+
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
@@ -15,8 +17,10 @@ test("uiState", async () => {
 
     expect(paymentline.uiState).toEqual({
         qrCode: null,
-        initStateDate: new DateTime.now(),
+        initStateDate: DateTime.fromMillis(fixedTs),
     });
+
+    Settings.now = memoNow;
 });
 
 test("updateCustomerDisplayQrCode", async () => {
