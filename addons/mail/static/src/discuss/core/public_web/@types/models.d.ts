@@ -16,7 +16,6 @@ declare module "models" {
         lastSubChannelLoaded: DiscussChannel;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
         loadSubChannelsDone: boolean;
-        notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
         subChannelsInSidebar: DiscussChannel[];
     }

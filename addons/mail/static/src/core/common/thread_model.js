@@ -113,7 +113,7 @@ export class Thread extends Record {
     /** @type {string} */
     defaultSubject;
     /** @type {string} */
-    description;
+    topic;
     /** @type {string} */
     display_name;
     followers = fields.Many("mail.followers", {

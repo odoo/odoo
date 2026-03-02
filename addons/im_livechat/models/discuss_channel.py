@@ -411,7 +411,7 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
-        res["internal_users"].attr("description", predicate=is_livechat_channel)
+        res["internal_users"].attr("topic", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
@@ -435,7 +435,7 @@ class DiscussChannel(models.Model):
         )
         if res.is_for_internal_users():
             res.one("livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True)
-            res.attr("description", predicate=is_livechat_channel)
+            res.attr("topic", predicate=is_livechat_channel)
             res.one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
             res.attr("livechat_note", predicate=is_livechat_channel)
             res.attr("livechat_outcome", predicate=is_livechat_channel)

@@ -671,7 +671,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.user_root.id,
                 "default_display_mode": False,
-                "description": "General announcements for all employees.",
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -686,6 +685,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "general",
                 "parent_channel_id": False,
+                "topic": "General announcements for all employees.",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
@@ -694,7 +694,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -709,6 +708,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 1,
                 "name": "public channel 1",
                 "parent_channel_id": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_2:
@@ -717,7 +717,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -732,6 +731,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "public channel 2",
                 "parent_channel_id": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_1:
@@ -740,7 +740,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -758,6 +757,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "parent_channel_id": False,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtc_session_ids": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_2:
@@ -766,7 +766,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -781,6 +780,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "group restricted channel 2",
                 "parent_channel_id": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_group_1:
@@ -790,7 +790,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "channel_type": "group",
                 "create_uid": self.env.user.id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
@@ -802,6 +801,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "",
                 "parent_channel_id": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_1:
@@ -875,7 +875,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "country_id": self.env.ref("base.in").id,
                 "create_uid": self.users[1].id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
@@ -896,6 +895,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "test1 Ernest Employee",
                 "requested_by_operator": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_2:
@@ -905,7 +905,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "country_id": self.env.ref("base.be").id,
                 "create_uid": self.env.ref("base.public_user").id,
                 "default_display_mode": False,
-                "description": False,
                 "discuss_category_id": False,
                 "fetchChannelInfoState": "fetched",
                 "id": channel.id,
@@ -926,6 +925,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_needaction_counter": 0,
                 "name": "Visitor Ernest Employee",
                 "requested_by_operator": False,
+                "topic": False,
                 "uuid": channel.uuid,
             }
         return {}
