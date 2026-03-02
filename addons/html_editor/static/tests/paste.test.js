@@ -75,7 +75,7 @@ describe("Html Paste cleaning - whitelist", () => {
                 );
             },
             contentAfter:
-                '<p>123a</p><table class="table table-bordered o_table"><tbody><tr><th>h</th></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
+                '<p>123a</p><table class="table table-bordered o_table"><tbody><tr><th class="o_table_header">h</th></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
         });
     });
 
@@ -4490,8 +4490,8 @@ ${"        "}
                         <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
-                                    <th>1</th>
-                                    <th>2</th>
+                                    <th class="o_table_header">1</th>
+                                    <th class="o_table_header">2</th>
                                 </tr>
                                 <tr>
                                     <td>1</td>
