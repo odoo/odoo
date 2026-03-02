@@ -114,7 +114,6 @@ class AccountAccount(models.Model):
         context={'append_fields': ['type_tax_use', 'company_id']})
     note = fields.Text('Internal Notes', tracking=True)
     company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
-        depends_context=('uid',),  # To avoid cache pollution between sudo / non-sudo uses of the field
         default=lambda self: self.env.company)
     code_mapping_ids = fields.One2many(comodel_name='account.code.mapping', inverse_name='account_id')
     # Ensure `code_mapping_ids` is written before `company_ids` so we don't trigger the `_ensure_code_is_unique`
