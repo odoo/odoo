@@ -56,7 +56,7 @@ class ResUsers(models.Model):
         return {
             "channels": channels._channel_info(),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
-            "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.tenor_api_key")),
+            "hasGifPickerFeature": bool(self.env["ir.config_parameter"].sudo().get_param("discuss.klipy_api_key")),
             # sudo: ir.config_parameter - reading hard-coded key to check its existence, safe to return if the feature is enabled
             'hasMessageTranslationFeature': bool(self.env["ir.config_parameter"].sudo().get_param("mail.google_translate_api_key")),
             **super()._init_messaging(),
