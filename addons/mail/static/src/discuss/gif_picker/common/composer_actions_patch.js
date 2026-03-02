@@ -27,9 +27,10 @@ registerComposerAction("add-gif", {
                 undefined,
                 {
                     onSelect: async (gif) => {
-                        const href = encodeURI(gif.url);
+                        const gifUrl = gif.media_formats.tinygif.url;
+                        const href = encodeURI(gifUrl);
                         await owner._sendMessage(
-                            markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
+                            markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
                             {
                                 parentId: owner.props.composer.replyToMessage?.id,
                             }

@@ -486,10 +486,12 @@ async function mail_link_preview(request) {
     const { message_id } = await parseRequestParams(request);
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
     const link = createDocumentFragmentFromContent(markup(message.body)).querySelector(
-        "a[href^='https://tenor.com'], a[href^='https://make-link-preview.com']"
+        "a[href^='https://tenor.com'], a[href^='https://make-link-preview.com'], a[href^='https://media.tenor.com']"
     );
     if (link) {
-        const isGifPreview = link.href.startsWith("https://tenor.com");
+        const isGifPreview =
+            link.href.startsWith("https://tenor.com") ||
+            link.href.startsWith("https://media.tenor.com");
         const linkPreviewId = MailLinkPreview.create({
             og_description: isGifPreview ? "Click to view the GIF" : "test description",
             og_image: isGifPreview ? link.href : undefined,
