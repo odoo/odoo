@@ -72,7 +72,14 @@ patch(PosStore.prototype, {
             id,
             this.config.id,
         ]);
-        return result["sale.order"][0];
+        const sale_order = result["sale.order"][0];
+        const customValueIds = (sale_order.order_line || []).flatMap(
+            (l) => l.raw.product_custom_attribute_value_ids || []
+        );
+        if (customValueIds.length) {
+            await this.data.read("product.attribute.custom.value", customValueIds);
+        }
+        return sale_order;
     },
     getConvertedQuantityFromSaleOrderline(convertedLine, soLine) {
         const type = convertedLine.product_id.type;
@@ -124,16 +131,25 @@ patch(PosStore.prototype, {
                 customer_note: line.customer_note,
                 description: line.name,
                 order_id: this.getOrder(),
-                custom_attribute_value_ids: Object.values(
-                    line.product_custom_attribute_value_ids || {}
-                ).map((value_line) => [
-                    "create",
-                    {
-                        custom_product_template_attribute_value_id:
-                            value_line.custom_product_template_attribute_value_id,
-                        custom_value: value_line.custom_value,
-                    },
-                ]),
+                attribute_value_ids: [
+                    ...(line.product_no_variant_attribute_value_ids || [])
+                        .filter((ptav) => !ptav.is_custom)
+                        .map((ptav) => ["link", ptav]),
+                    ...(line.product_custom_attribute_value_ids || []).flatMap(
+                        ({ custom_product_template_attribute_value_id: ptav }) =>
+                            ptav ? [["link", ptav]] : []
+                    ),
+                ],
+                custom_attribute_value_ids: (line.product_custom_attribute_value_ids || []).map(
+                    (cav) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                cav.custom_product_template_attribute_value_id,
+                            custom_value: cav.custom_value,
+                        },
+                    ]
+                ),
             };
             if (["line_section", "line_subsection"].includes(line.display_type)) {
                 continue;
