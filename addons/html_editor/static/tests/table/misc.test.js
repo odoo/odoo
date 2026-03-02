@@ -147,3 +147,76 @@ test("remove text from single selected cell", async () => {
         '<p o-we-hint-text="Type &quot;/&quot; for commands" class="o-we-hint"><br></p>'
     );
 });
+
+describe("selected cell color in toolbar", () => {
+    test("cell's selected color should be shown in toolbar (1)", async () => {
+        await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">[ab</div></td>
+                    <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">c]</div></td>
+                    <td>ef</td>
+                    <td>ef</td>
+                </tr>
+            </tbody>
+        </table>`);
+
+        await expandToolbar();
+        expect(".fa-paint-brush").toHaveCount(1);
+        expect(".fa-paint-brush").toHaveStyle({
+            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+        });
+    });
+    test("cell's selected color should be shown in toolbar (2)", async () => {
+        await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">[ab</div></td>
+                    <td style="background-color: rgba(107, 173, 222, 0.6);"><div class="o-paragraph">c]</div></td>
+                    <td>ef</td>
+                </tr>
+            </tbody>
+        </table>`);
+
+        await expandToolbar();
+        await animationFrame();
+        expect(".fa-paint-brush").toHaveCount(1);
+        expect(".fa-paint-brush").toHaveStyle({
+            "border-bottom": "2px solid rgba(0, 0, 0, 0)",
+        });
+    });
+    test("cell's selected color should be shown in toolbar (3)", async () => {
+        await setupEditor(`
+        <table>
+            <tbody>
+                <tr>
+                    <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">[ab</div></td>
+                    <td style="background-color: rgba(255, 0, 0, 0.6);"><div class="o-paragraph">c]</div></td>
+                    <td class="non_styled_1">a</td>
+                    <td class="non_styled_2">c</td>
+                </tr>
+            </tbody>
+        </table>`);
+
+        await expandToolbar();
+        expect(".fa-paint-brush").toHaveCount(1);
+        expect(".fa-paint-brush").toHaveStyle({
+            "border-bottom": "2px solid rgba(255, 0, 0, 0.6)",
+        });
+        const nonStyledCellOne = queryFirst(".non_styled_1");
+        const nonStyledCellTwo = queryFirst(".non_styled_2");
+        setSelection({
+            anchorNode: nonStyledCellOne,
+            anchorOffset: 0,
+            focusNode: nonStyledCellTwo,
+            focusOffset: 1,
+        });
+        await animationFrame();
+        expect(".fa-paint-brush").toHaveCount(1);
+        expect(".fa-paint-brush").toHaveStyle({
+            "border-bottom": "2px solid rgba(0, 0, 0, 0)",
+        });
+    });
+});
