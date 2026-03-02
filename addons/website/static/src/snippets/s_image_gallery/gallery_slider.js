@@ -11,7 +11,8 @@ import { isVisible } from "@html_editor/utils/dom_info";
  **/
 export class GallerySlider extends Interaction {
     // TODO in master: use `.o_slideshow:not([data-vjs])`
-    static selector = ".o_slideshow:not([data-vcss]), .o_slideshow[data-vcss='001']";
+    static selector =
+        ".o_slideshow:not([data-vcss]):not(.o_image_lightbox .o_slideshow), .o_slideshow[data-vcss='001']";
     dynamicContent = {
         ".carousel": {
             "t-on-slide.bs.carousel": this.onSlideCarousel,
