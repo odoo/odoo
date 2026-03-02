@@ -6,6 +6,7 @@ from re import findall
 
 from odoo.tests import tagged, Form, TransactionCase
 from odoo import Command
+from odoo.api import NewId
 
 
 class TestReportsCommon(TransactionCase):
@@ -2098,3 +2099,8 @@ class TestReports(TestReportsCommon):
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [0.0, 2.0])
         self.env['report.stock.report_reception'].action_assign(out_move.ids, [1.0], picking_in.move_ids.ids)
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [1.0, 2.0])
+
+    def test_newids_while_opening_reception_report(self):
+        report_values = self.env['report.stock.report_reception']._get_report_values(docids=[NewId()])
+        self.assertEqual(report_values['pickings'], False)
+        self.assertEqual(report_values['reason'], 'No transfers selected or a delivery order selected')

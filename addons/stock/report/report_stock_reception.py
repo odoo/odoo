@@ -187,6 +187,7 @@ class ReportStockReport_Reception(models.AbstractModel):
 
     def _get_docs(self, docids):
         docids = self.env.context.get('default_picking_ids', docids)
+        docids = [id for id in docids if isinstance(id, int)]
         return self.env['stock.picking'].search([('id', 'in', docids), ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'cancel')])
 
     def _get_doc_model(self):
