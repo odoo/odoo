@@ -28,7 +28,6 @@ function changeDescriptionContentAndSave(newContent) {
 
 registry.category("web_tour.tours").add("project_todo_history_tour", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: "/odoo?debug=1,tests",
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the Todo app",
         trigger: ".o_app[data-menu-xmlid='project_todo.menu_todo_todos']",

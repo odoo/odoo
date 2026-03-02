@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { getPriceListChecksSteps } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
 
 registry.category("web_tour.tours").add("event_sale_pricelists_different_currencies", {
-    url: "/event",
     steps: () => [
         // Register for tickets
         {

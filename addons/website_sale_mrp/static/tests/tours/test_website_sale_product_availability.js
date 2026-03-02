@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { addToCart, searchProduct } from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("test_website_sale_availability_kit", {
-    url: "/shop",
     steps: () => [
         ...addToCart({ productName: "Consumable Component", expectUnloadPage: true }),
         { trigger: "a[href='/shop']", run: "click", expectUnloadPage: true },

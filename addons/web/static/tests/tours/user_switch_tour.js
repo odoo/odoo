@@ -38,7 +38,6 @@ function logout() {
 }
 
 registry.category("web_tour.tours").add("test_user_switch", {
-    url: "/odoo",
     steps: () => [
         ...logout(),
         {

@@ -89,7 +89,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        self.start_tour("/", 'event_buy_tickets', login="admin")
+        self.start_tour("/event", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
@@ -103,7 +103,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
-        self.start_tour("/", 'event_buy_tickets', login="demo")
+        self.start_tour("/event", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
@@ -117,7 +117,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
     def test_pricelists_different_currencies(self):
         self.env.user.group_ids += self.env.ref('product.group_product_pricelist')
-        self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
+        self.start_tour("/event", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.
 
 

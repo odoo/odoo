@@ -6,7 +6,6 @@ const leaveDateFrom = "01/04/2021";
 const leaveDateTo = "01/04/2021";
 
 registry.category("web_tour.tours").add("request_overtime_leave_from_attendance_calendar", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

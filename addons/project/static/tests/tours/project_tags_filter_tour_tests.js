@@ -21,7 +21,6 @@ function changeFilter(filterName) {
 }
 
 registry.category("web_tour.tours").add("project_tags_filter_tour", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

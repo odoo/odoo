@@ -166,7 +166,6 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
 ]});
 
 registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disallowed_milestones", {
-    url: "/my/projects",
     steps: () => [
         {
             id: "project_sharing_feature",
@@ -213,7 +212,6 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disall
 });
 
 registry.category("web_tour.tours").add("test_04_project_sharing_chatter_message_reactions", {
-    url: "/my/projects",
     steps: () => [
         {
             trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
@@ -228,7 +226,6 @@ registry.category("web_tour.tours").add("test_04_project_sharing_chatter_message
 });
 
 registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_users", {
-    url: "/my/projects",
     steps: () => [
         {
             trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",

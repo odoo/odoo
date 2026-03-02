@@ -4,7 +4,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 const websiteName = "Website Test Settings";
 
 registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

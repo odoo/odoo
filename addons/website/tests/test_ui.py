@@ -426,7 +426,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_1', login='admin')
-        self.start_tour('/odoo', 'conditional_visibility_2', login='website_user')
+        self.start_tour('/?utm_medium=Email', 'conditional_visibility_2', login='website_user')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_3', login='admin', timeout=180)
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'conditional_visibility_5', login='admin')
@@ -771,7 +771,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_alt_a_with_foreign_language(self):
         self.add_fr_language_to_website()
-        self.start_tour('/', 'alt_a_translation', login='admin')
+        self.start_tour('/fr', 'alt_a_translation', login='admin')
 
     def test_alt_a_not_on_foreign_language_page(self):
         self.add_fr_language_to_website()

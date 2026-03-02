@@ -41,7 +41,6 @@ registry.category("web_tour.tours").add("alt_a_edit", {
 });
 
 registry.category("web_tour.tours").add("alt_a_translation", {
-    url: "/fr",
     steps: () => [
         pressAltA(),
         {

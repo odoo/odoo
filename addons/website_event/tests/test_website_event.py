@@ -133,7 +133,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             })]
         })
 
-        self.start_tour("/", 'test_tickets_questions', login="portal")
+        self.start_tour("/event", 'test_tickets_questions', login="portal")
 
         registrations = self.env['event.registration'].search([
             ('email', 'in', ['attendee-a@gmail.com', 'attendee-b@gmail.com'])

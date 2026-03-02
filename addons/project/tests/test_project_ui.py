@@ -47,4 +47,4 @@ class TestUi(odoo.tests.HttpCase):
             'project_id': project.id,
         })
 
-        self.start_tour('/odoo', 'project_task_last_history_steps_tour', login='admin')
+        self.start_tour('/odoo?debug=1,tests', 'project_task_last_history_steps_tour', login='admin')

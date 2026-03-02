@@ -41,4 +41,4 @@ class TestWebsiteProfile(HttpCaseGamification):
         self.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
-        self.start_tour("/", 'website_profile_description', login="admin")
+        self.start_tour("/profile/users", 'website_profile_description', login="admin")

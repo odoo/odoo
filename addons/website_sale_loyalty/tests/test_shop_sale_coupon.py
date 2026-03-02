@@ -240,7 +240,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             'program_id': program_id,
             'points': 1000,
         } for program_id in ewallet_programs.ids])
-        self.start_tour('/', 'website_sale_loyalty.ewallet', login='admin')
+        self.start_tour('/shop', 'website_sale_loyalty.ewallet', login='admin')
 
 
 @tagged('post_install', '-at_install')

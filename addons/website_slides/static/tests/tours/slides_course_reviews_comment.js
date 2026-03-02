@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("course_reviews_comment", {
-    url: "/slides",
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",

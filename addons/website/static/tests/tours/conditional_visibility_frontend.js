@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("conditional_visibility_2", {
-    url: "/?utm_medium=Email",
     steps: () => [
         {
             content: "The content previously hidden should now be visible",

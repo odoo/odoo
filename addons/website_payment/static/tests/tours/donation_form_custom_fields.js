@@ -55,7 +55,6 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add("donation_form_custom_field_submit", {
-    url: "/donation/pay",
     steps: () => [
         {
             content: "Verify that the donation form is displayed",

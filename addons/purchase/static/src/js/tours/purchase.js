@@ -5,7 +5,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
 
 registry.category("web_tour.tours").add("purchase_tour", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

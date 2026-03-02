@@ -28,7 +28,6 @@ registry.category("web_tour.tours").add("hr_employee_tour", {
 });
 
 registry.category("web_tour.tours").add("hr_officer_create_employee_tour", {
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

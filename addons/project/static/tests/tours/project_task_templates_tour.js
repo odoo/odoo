@@ -3,7 +3,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("project_task_templates_tour", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: "/odoo",
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {

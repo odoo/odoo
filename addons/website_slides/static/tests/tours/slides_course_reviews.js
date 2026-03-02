@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
  * add only one review and react to them.
  */
 registry.category("web_tour.tours").add("course_reviews", {
-    url: "/slides",
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",

@@ -19,7 +19,6 @@ const answerBothQuestions = [
     },
 ];
 registry.category("web_tour.tours").add("website_livechat.chatbot_trigger_selection", {
-    url: "/contactus",
     steps: () => [
         {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
