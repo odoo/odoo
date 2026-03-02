@@ -197,3 +197,175 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             # Counts the whole attendance: 9 hours
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 1.125)  # 9 / 8 = 1.125
+
+    def test_accrual_allocation_excludes_unapproved_overtime(self):
+        self.employee_emp.tz = 'UTC'
+        self.employee_emp.version_id.write({
+            'date_version': '2024-01-01',
+            'contract_date_start': '2024-01-01',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'worked_hours',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-04-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_approve()
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 2, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 2, 19, 0, 0),
+        })
+
+        attendance.write({
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.8)
+
+        attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 3, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 3, 19, 0, 0),
+        })
+
+        attendance2.write({
+            'overtime_status': 'approved',
+            'validated_overtime_hours': 1,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 4, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 1.7)
+
+        # Extra hours still to approve don't count, even with their proposed validated hours
+        attendance3 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 4, 4, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 4, 4, 19, 0, 0),
+        })
+        attendance3.write({
+            'overtime_status': 'to_approve',
+            'validated_overtime_hours': attendance3.overtime_hours,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 5, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 2.5)
+
+    def test_accrual_allocation_multiple_attendances_same_day(self):
+        self.employee_emp.tz = 'UTC'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'worked_hours',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-02-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_approve()
+
+        # Attendance 1: 5 hours normal work
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 2, 1, 8, 0, 0),
+            'check_out': datetime.datetime(2024, 2, 1, 13, 0, 0),
+        })
+
+        # Attendance 2: 5 hours with 2 hours overtime refused
+        attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': datetime.datetime(2024, 2, 1, 14, 0, 0),
+            'check_out': datetime.datetime(2024, 2, 1, 19, 0, 0),
+        })
+
+        attendance2.write({
+            'overtime_hours': 2,
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 2, 2, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 0.8)
+
+    def test_accrual_allocation_cross_midnight_overtime_only_counted_once(self):
+        self.employee_emp.tz = 'UTC'
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': True,
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'added_value': 0.1,
+                'added_value_type': 'day',
+                'frequency': 'worked_hours',
+                'cap_accrued_time': True,
+                'maximum_leave': 100,
+            })]
+        })
+
+        with freeze_time("2024-04-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_approve()
+
+        check_in = datetime.datetime(2024, 4, 1, 22, 0, 0)
+        check_out = datetime.datetime(2024, 4, 2, 7, 0, 0)
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee_emp.id,
+            'check_in': check_in,
+            'check_out': check_out,
+        })
+        attendance.write({
+            'overtime_hours': 2,
+            'validated_overtime_hours': 0,
+        })
+
+        with freeze_time(datetime.datetime(2024, 4, 2, 20, 0, 0)):
+            allocation._update_accrual()
+
+        with freeze_time(datetime.datetime(2024, 4, 3, 20, 0, 0)):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 0.7)
