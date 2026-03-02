@@ -9,7 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('us')
     def _get_us_template_data(self):
         return {
-            'code_digits': '0',
             'property_account_receivable_id': 'account_account_us_receivable',
             'property_account_payable_id': 'account_account_us_payable',
         }

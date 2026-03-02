@@ -437,7 +437,8 @@ class AccountChartTemplate(models.AbstractModel):
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
                     if 'code' in values:
-                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
+                        # Inactive accounts are typically parents — skip padding to avoid code collisions
+                        normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}' if values.get("active", True) else values["code"]
                         if not account or not re.match(f'^{values["code"]}0*$', account.code):
                             query = self.env['account.account'].with_context(active_test=False)._search(
                                 self.env['account.account']._check_company_domain(company)
@@ -534,7 +535,8 @@ class AccountChartTemplate(models.AbstractModel):
         code_digits = int(template_data.get('code_digits', 6))
         for key, account_data in data.get('account.account', {}).items():
             if 'code' in account_data:
-                data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
+                # Inactive accounts are typically parents — skip padding to avoid code collisions
+                data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}' if account_data.get("active", True) else account_data["code"]
 
         for model in ('account.fiscal.position', 'account.reconcile.model'):
             if model in data:
