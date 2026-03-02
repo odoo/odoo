@@ -1,0 +1,57 @@
+                                            Table "public.ir_model"
+      Column       |            Type             | Collation | Nullable |               Default                
+-------------------+-----------------------------+-----------+----------+--------------------------------------
+ id                | integer                     |           | not null | nextval('ir_model_id_seq'::regclass)
+ create_uid        | integer                     |           |          | 
+ write_uid         | integer                     |           |          | 
+ model             | character varying           |           | not null | 
+ order             | character varying           |           | not null | 
+ state             | character varying           |           |          | 
+ name              | jsonb                       |           | not null | 
+ info              | text                        |           |          | 
+ transient         | boolean                     |           |          | 
+ create_date       | timestamp without time zone |           |          | 
+ write_date        | timestamp without time zone |           |          | 
+ is_mail_thread    | boolean                     |           |          | 
+ is_mail_activity  | boolean                     |           |          | 
+ is_mail_blacklist | boolean                     |           |          | 
+Indexes:
+    "ir_model_pkey" PRIMARY KEY, btree (id)
+    "ir_model_obj_name_uniq" UNIQUE CONSTRAINT, btree (model)
+Foreign-key constraints:
+    "ir_model_create_uid_fkey" FOREIGN KEY (create_uid) REFERENCES res_users(id) ON DELETE SET NULL
+    "ir_model_write_uid_fkey" FOREIGN KEY (write_uid) REFERENCES res_users(id) ON DELETE SET NULL
+Referenced by:
+    TABLE "base_language_export" CONSTRAINT "base_language_export_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE SET NULL
+    TABLE "calendar_event" CONSTRAINT "calendar_event_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "fetchmail_server" CONSTRAINT "fetchmail_server_object_id_fkey" FOREIGN KEY (object_id) REFERENCES ir_model(id) ON DELETE SET NULL
+    TABLE "gamification_goal_definition" CONSTRAINT "gamification_goal_definition_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_client" CONSTRAINT "ir_act_client_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_report_xml" CONSTRAINT "ir_act_report_xml_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_server" CONSTRAINT "ir_act_server_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_server" CONSTRAINT "ir_act_server_crud_model_id_fkey" FOREIGN KEY (crud_model_id) REFERENCES ir_model(id) ON DELETE SET NULL
+    TABLE "ir_act_server" CONSTRAINT "ir_act_server_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_server" CONSTRAINT "ir_act_server_update_related_model_id_fkey" FOREIGN KEY (update_related_model_id) REFERENCES ir_model(id) ON DELETE SET NULL
+    TABLE "ir_act_url" CONSTRAINT "ir_act_url_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_act_window" CONSTRAINT "ir_act_window_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_actions" CONSTRAINT "ir_actions_binding_model_id_fkey" FOREIGN KEY (binding_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_access" CONSTRAINT "ir_model_access_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_constraint" CONSTRAINT "ir_model_constraint_model_fkey" FOREIGN KEY (model) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_fields" CONSTRAINT "ir_model_fields_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_inherit" CONSTRAINT "ir_model_inherit_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_inherit" CONSTRAINT "ir_model_inherit_parent_id_fkey" FOREIGN KEY (parent_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_model_relation" CONSTRAINT "ir_model_relation_model_fkey" FOREIGN KEY (model) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "ir_rule" CONSTRAINT "ir_rule_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mail_activity_plan" CONSTRAINT "mail_activity_plan_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mail_activity" CONSTRAINT "mail_activity_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mail_activity_schedule" CONSTRAINT "mail_activity_schedule_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mail_alias" CONSTRAINT "mail_alias_alias_model_id_fkey" FOREIGN KEY (alias_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mail_alias" CONSTRAINT "mail_alias_alias_parent_model_id_fkey" FOREIGN KEY (alias_parent_model_id) REFERENCES ir_model(id) ON DELETE SET NULL
+    TABLE "mail_template" CONSTRAINT "mail_template_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mailing_filter" CONSTRAINT "mailing_filter_mailing_model_id_fkey" FOREIGN KEY (mailing_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "mailing_mailing" CONSTRAINT "mailing_mailing_mailing_model_id_fkey" FOREIGN KEY (mailing_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "privacy_lookup_wizard_line" CONSTRAINT "privacy_lookup_wizard_line_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "rating_rating" CONSTRAINT "rating_rating_parent_res_model_id_fkey" FOREIGN KEY (parent_res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "rating_rating" CONSTRAINT "rating_rating_res_model_id_fkey" FOREIGN KEY (res_model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+    TABLE "sms_template" CONSTRAINT "sms_template_model_id_fkey" FOREIGN KEY (model_id) REFERENCES ir_model(id) ON DELETE CASCADE
+
