@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -1334,8 +1330,8 @@ export class TablePlugin extends Plugin {
     }
 
     handleTableInsert(insertContainer) {
-        const thead = insertContainer.querySelector("THEAD");
-        if (thead) {
+        const theads = insertContainer.querySelectorAll("THEAD");
+        for (const thead of theads) {
             const tbody = thead.nextElementSibling;
             if (tbody) {
                 const thChildren = thead.querySelectorAll("TH");
