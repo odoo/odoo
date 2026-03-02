@@ -45,6 +45,7 @@ class ProductTemplate(models.Model):
         precompute=True,
         store=True,
         readonly=False,
+        required=True,
         tracking=True,
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
         "Delivered Quantity: Invoice quantities delivered to the customer.",
