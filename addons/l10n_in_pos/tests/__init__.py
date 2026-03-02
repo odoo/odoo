@@ -6,3 +6,4 @@ from . import common
 from . import test_pos_flow
 from . import test_gstr_section
 from . import test_product_screen
+from . import test_standard_flows
