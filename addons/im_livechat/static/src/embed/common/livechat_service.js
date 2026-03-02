@@ -6,6 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 
@@ -124,10 +125,10 @@ export class LivechatService {
         if (this.thread && !this.thread.isTransient) {
             return this.thread;
         }
-        if (this._persistResolvers) {
-            return this._persistResolvers.promise;
+        if (this._persistDeferred) {
+            return this._persistDeferred;
         }
-        this._persistResolvers = Promise.withResolvers();
+        this._persistDeferred = new Deferred();
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
         const deleteTemporary = async () => {
@@ -152,8 +153,8 @@ export class LivechatService {
             deleteTemporary();
             this.thread.openChatWindow({ focus: true });
         });
-        this._persistResolvers.resolve(this.thread);
-        this._persistResolvers = null;
+        this._persistDeferred.resolve(this.thread);
+        this._persistDeferred = null;
         return this.thread;
     }
 
