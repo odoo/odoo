@@ -20,6 +20,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
     static props = {
         value: { type: String },
         languageId: { type: String },
+        codeWrap: { type: Boolean, optional: true },
         onTextareaFocus: { type: Function },
         convertToParagraph: { type: Function },
         host: { type: Object },
@@ -175,6 +176,18 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             this.props.onTextareaFocus();
             this.embeddedState.languageId = languageId;
         }
+    }
+
+    /**
+     * Toggles content wrapping via the code toolbar.
+     */
+    toggleCodeWrap() {
+        if (Object.hasOwn(this.embeddedState, "codeWrap")) {
+            delete this.embeddedState.codeWrap;
+        } else {
+            this.embeddedState.codeWrap = true;
+        }
+        this.props.host.classList.toggle("o-code-wrap", this.embeddedState.codeWrap);
     }
 }
 

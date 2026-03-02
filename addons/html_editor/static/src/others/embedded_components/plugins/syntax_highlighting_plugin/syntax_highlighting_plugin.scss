@@ -8,7 +8,7 @@
     pre, textarea.o_prism_source {
         direction: ltr #{"/*rtl:ignore*/"};
         margin: 0;
-        padding: 8px 16px;
+        padding: 16px;
     }
 
     pre {
@@ -63,6 +63,12 @@
     &:focus-within {
         .o_code_toolbar {
             display: flex;
+        }
+    }
+
+    &.o-code-wrap {
+        pre, textarea {
+            white-space: pre-wrap !important;
         }
     }
 }

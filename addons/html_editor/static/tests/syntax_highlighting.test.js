@@ -1263,3 +1263,63 @@ test("should keep textarea focused after copying code content", async () => {
     // Ensure focus remains on the textarea after copying
     expect(document.activeElement).toBe(textarea);
 });
+
+test("should add data-code-wrap attribute on pre when toggling wrap on", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<pre>some code</pre>",
+        contentBeforeEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "some code" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        stepFunction: async (editor) => {
+            // Focus the textarea inside the code block
+            const textarea = editor.document.querySelector("textarea");
+            await click(textarea);
+
+            // Wait for the code toolbar and trigger the wrap action
+            await waitFor(".o_code_toolbar");
+            await click(".o_code_toolbar button[name='wrap']");
+        },
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "some code", textareaRange: 9, codeWrap: true }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext" data-code-wrap="">some code</pre>[]`,
+    });
+});
+
+test("should toggle code wrapping via the code toolbar", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<pre>some code</pre>",
+        contentBeforeEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "some code" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        stepFunction: async (editor) => {
+            // Focus the textarea inside the code block
+            const textarea = editor.document.querySelector("textarea");
+            await click(textarea);
+
+            // Wait for the code toolbar and trigger the wrap action
+            await waitFor(".o_code_toolbar");
+            await click(".o_code_toolbar button[name='wrap']");
+
+            await compareHighlightedContent(
+                getContent(editor.editable),
+                '<p data-selection-placeholder=""><br></p>' +
+                    highlightedPre({ value: "some code", textareaRange: 9, codeWrap: true }) +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+                "Code block should be wrapped after clicking the wrap button in the code toolbar",
+                editor
+            );
+
+            // Trigger the wrap action again to unwrap
+            await click(".o_code_toolbar button[name='wrap']");
+        },
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "some code", textareaRange: 9 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">some code</pre>[]`,
+    });
+});

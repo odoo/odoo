@@ -19,6 +19,10 @@
                     </t>
                 </Dropdown>
                 <CopyButton content="this.props.getContent" copyText.translate="Copy" successText.translate="Code copied to the clipboard." t-on-pointerdown.prevent="() => {}"/>
+                <button class="text-nowrap btn" name="wrap" t-on-click="this.props.toggleCodeWrap" title="Wrap the code">
+                    <span class="mx-1 fa fa-level-down fa-rotate-90"></span>
+                    <span>Wrap</span>
+                </button>
                 <button class="text-nowrap btn"
                     t-on-click="this.props.convertToParagraph"
                 >

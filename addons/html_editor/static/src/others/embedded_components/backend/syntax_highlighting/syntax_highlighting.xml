@@ -5,6 +5,7 @@
         <CodeToolbar target="this.state.host" currentLanguage="this.embeddedState.languageId"
             getContent="() => this.textarea.value" onLanguageChange="this.onLanguageChange.bind(this)"
             convertToParagraph="this.props.convertToParagraph"
+            toggleCodeWrap="this.toggleCodeWrap.bind(this)"
         />
         <pre t-custom-ref="pre"/>
         <textarea t-custom-ref="textarea" class="o_prism_source" contenteditable="true" placeholder="Code"
