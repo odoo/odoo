@@ -106,3 +106,18 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         task = self.env["project.task"].browse(task_id)
         self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'))
         self.assertEqual(task.message_ids[0].notified_partner_ids, self.user_projectuser.partner_id)
+
+    def test_subtask_count_ignores_template_child_on_normal_parent(self):
+        """Template subtasks should not be counted on a normal parent task."""
+        parent_task = self.env["project.task"].create({
+            "name": "Normal Parent",
+            "project_id": self.project_with_templates.id,
+        })
+        self.env["project.task"].create({
+            "name": "Template Child",
+            "project_id": self.project_with_templates.id,
+            "parent_id": parent_task.id,
+            "is_template": True,
+        })
+
+        self.assertEqual(parent_task.subtask_count, 0, "Template subtasks should not be counted on a normal parent task.")

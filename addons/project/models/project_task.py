@@ -234,7 +234,7 @@ class ProjectTask(models.Model):
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
     parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]", export_string_translation=False)
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain=[('recurring_task', '=', False), '|', ('parent_id.is_template', '=', True), ('is_template', '=', False)], export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility", tracking=False)
@@ -637,7 +637,12 @@ class ProjectTask(models.Model):
         total_and_closed_subtask_count_per_parent_id = {
             parent.id: (count, sum(s in CLOSED_STATES for s in states))
             for parent, states, count in self.env['project.task']._read_group(
-                [('parent_id', 'in', self.ids)],
+                [
+                    ('parent_id', 'in', self.ids),
+                    '|',
+                    ('parent_id.is_template', '=', True),
+                    ('is_template', '=', False),
+                ],
                 ['parent_id'],
                 ['state:array_agg', '__count'],
             )
@@ -1832,6 +1837,14 @@ class ProjectTask(models.Model):
             'type': 'ir.actions.act_window',
             'context': self._context
         }
+
+    def action_open_subtasks(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.project_task_action_sub_task')
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        if not self.is_template:
+            action['domain'].append(('is_template', '=', False))
+        return action
 
     def action_project_sharing_open_task(self):
         action = self.action_open_task()
