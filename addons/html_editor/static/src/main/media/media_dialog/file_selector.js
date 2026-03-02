@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
 
@@ -273,41 +274,36 @@ export class FileSelector extends Component {
     }
 
     async fetchAttachments(limit, offset) {
-        this.state.isFetchingAttachments = true;
-        let attachments = [];
-        try {
-            attachments = await this.orm.call("ir.attachment", "search_read", [], {
-                domain: this.attachmentsDomain,
-                fields: [
-                    "name",
-                    "mimetype",
-                    "description",
-                    "checksum",
-                    "url",
-                    "type",
-                    "res_id",
-                    "res_model",
-                    "public",
-                    "access_token",
-                    "image_src",
-                    "image_width",
-                    "image_height",
-                    "original_id",
-                ],
-                order: "id desc",
-                // Try to fetch first record of next page just to know whether there is a next page.
-                limit,
-                offset,
-            });
-            attachments.forEach((attachment) => (attachment.mediaType = "attachment"));
-        } catch (e) {
+        if (!user.isInternalUser) {
             // Reading attachments as a portal user is not permitted and will raise
-            // an access error so we catch the error silently and don't return any
-            // attachment so he can still use the wizard and upload an attachment
-            if (e.exceptionName !== "odoo.exceptions.AccessError") {
-                throw e;
-            }
+            // an access error so we don't return any attachment
+            return [];
         }
+        this.state.isFetchingAttachments = true;
+        const attachments = await this.orm.call("ir.attachment", "search_read", [], {
+            domain: this.attachmentsDomain,
+            fields: [
+                "name",
+                "mimetype",
+                "description",
+                "checksum",
+                "url",
+                "type",
+                "res_id",
+                "res_model",
+                "public",
+                "access_token",
+                "image_src",
+                "image_width",
+                "image_height",
+                "original_id",
+            ],
+            order: "id desc",
+            // Try to fetch first record of next page just to know whether there is a next page.
+            limit,
+            offset,
+        });
+        attachments.forEach((attachment) => (attachment.mediaType = "attachment"));
         this.state.canLoadMoreAttachments =
             attachments.length >= this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY;
         this.state.isFetchingAttachments = false;
