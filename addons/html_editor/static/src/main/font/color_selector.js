@@ -27,10 +27,12 @@ export class ColorSelector extends Component {
         enabledTabs: { type: Array, optional: true },
         cssVarColorPrefix: { type: String, optional: true },
         onClose: Function,
+        useDefaultThemeColors: { type: Boolean, optional: true },
     };
     static defaultProps = {
         cssVarColorPrefix: "",
         enabledTabs: ["solid", "gradient", "custom"],
+        useDefaultThemeColors: true,
     };
 
     setup() {
@@ -69,6 +71,7 @@ export class ColorSelector extends Component {
                 colorPrefix: this.props.colorPrefix,
                 enabledTabs: this.props.enabledTabs,
                 cssVarColorPrefix: this.props.cssVarColorPrefix,
+                useDefaultThemeColors: this.props.useDefaultThemeColors,
             },
             {
                 env: this.__owl__.childEnv,
