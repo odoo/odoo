@@ -45,11 +45,16 @@ patch(Thread.prototype, {
         this.readyToSwapDeferred = new Deferred();
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.channel?.chatbot && !this.channel.livechat_end_dt;
+                return Boolean(
+                    this.channel?.chatbot &&
+                        !this.channel.chatbot.completed &&
+                        !this.channel.livechat_end_dt
+                );
             },
             onUpdate() {
+                const shouldToggle = this._toggleChatbot;
                 this.isLoadedDeferred.then(() => {
-                    if (this._toggleChatbot) {
+                    if (shouldToggle) {
                         this.channel.chatbot.start();
                     } else {
                         this.channel?.chatbot?.stop();
