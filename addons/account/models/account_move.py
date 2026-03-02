@@ -5237,7 +5237,7 @@ class AccountMove(models.Model):
                     "So you cannot confirm the invoice."
                 ))
             if invoice.partner_bank_id and invoice.is_inbound() and not invoice.partner_bank_id.allow_out_payment:
-                if self.env.user.id == SUPERUSER_ID or self.user_has_groups('base.group_public') or self.user_has_groups('base.group_portal'):
+                if self.env.user.id == SUPERUSER_ID or self.env.user.has_groups('base.group_public') or self.env.user.has_groups('base.group_portal'):
                     # Do not block in case of automated flows, simply remove the information
                     invoice.partner_bank_id = False
                 elif invoice.partner_bank_id._user_can_trust():
