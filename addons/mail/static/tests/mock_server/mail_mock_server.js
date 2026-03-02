@@ -1125,6 +1125,9 @@ function _process_request_for_all(store, name, params, context = {}) {
             store.add(channel, makeKwArgs({ delete: true }));
         }
     }
+    if (name === "partners_no_fields") {
+        store.add(ResPartner.browse(params.partner_ids), makeKwArgs({ fields: ["id"] }));
+    }
     if (name === "/discuss/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
         store.add(channelId).resolve_data_request({
