@@ -2093,9 +2093,13 @@ class SaleOrder(models.Model):
         return super().message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        # Give access button to users and portal customer as portal is integrated
-        # in sale. Customer and portal group have probably no right to see
-        # the document so they don't have the access button.
+        """
+        Adjust notification recipient groups access:
+        - In proforma context, disables button access for portal_customer,
+            portal, customers and followers.
+        - Portal customers get a button on draft/sent documents.
+        - Customers and followers are granted access to the quotation via button actions.
+        """
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -2119,6 +2123,11 @@ class SaleOrder(models.Model):
             access_opt = customer_portal_group[2].setdefault("button_access", {})
             if self.state in ("draft", "sent"):
                 access_opt["title"] = _("View Quotation")
+
+        # followers and customers have access to the quotation
+        for group in groups:
+            if group[0] in ("customer", "follower"):
+                group[2].update({"has_button_access": True, "button_access": access_opt})
 
         return groups
 
