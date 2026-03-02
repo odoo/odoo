@@ -31,11 +31,14 @@ class EmbedCodeOptionPlugin extends Plugin {
         // elements are removed in edit mode.
         for (const embedCodeEl of root.querySelectorAll(".s_embed_code")) {
             const embedTemplateEl = embedCodeEl.querySelector(".s_embed_code_saved");
-            if (embedTemplateEl) {
-                embedCodeEl
-                    .querySelector(".s_embed_code_embedded")
-                    .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+            // Remove snippet if embed was saved empty
+            if (!embedTemplateEl.innerHTML.trim()) {
+                embedCodeEl.remove();
+                continue;
             }
+            embedCodeEl
+                .querySelector(".s_embed_code_embedded")
+                .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
         }
     }
 }
@@ -61,9 +64,6 @@ export class EditCodeAction extends BuilderAction {
         return newContent;
     }
     apply({ editingElement, loadResult: content }) {
-        if (!content) {
-            return;
-        }
         // Remove scripts tags from the DOM as we don't want them to
         // interfere during edition, but keeps them in a
         // `<template>` that will be saved to the database.
