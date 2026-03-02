@@ -2,7 +2,7 @@
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCase
-from odoo.tests import Form, users
+from odoo.tests import Form
 from odoo.tests.common import tagged
 
 
