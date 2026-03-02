@@ -179,3 +179,41 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         self.assertEqual(task_2.repeat_unit, "month", "The created task should have the same repeat unit as the template as the project has recurring tasks enabled.")
         self.assertEqual(task_2.repeat_interval, 3, "The created task should have the same repeat interval as the template as the project has recurring tasks enabled.")
         self.assertEqual(task_2.depend_on_ids, self.template_task, "The created task should have the same dependencies as the template as the project has task dependencies enabled.")
+
+    def test_subtask_count_ignores_template_child_on_normal_parent(self):
+        """Template subtasks should not be counted on a normal parent task."""
+        parent_task = self.env["project.task"].create({
+            "name": "Normal Parent",
+            "project_id": self.project_with_templates.id,
+        })
+        self.env["project.task"].create({
+            "name": "Template Child",
+            "project_id": self.project_with_templates.id,
+            "parent_id": parent_task.id,
+            "is_template": True,
+        })
+
+        self.assertEqual(parent_task.subtask_count, 0, "Template subtasks should not be counted on a normal parent task.")
+
+    def test_open_task_count_on_template_parent(self):
+        """Template parents should not count normal children in project open_task_count."""
+        self.assertEqual(
+            self.project_with_templates.open_task_count,
+            0,
+            "Template parent child tasks should not be counted in project open_task_count.",
+        )
+
+    def test_template_parent_counts_template_subtasks_in_subtask_count(self):
+        """Template parents should still count template subtasks."""
+        self.env["project.task"].create({
+            "name": "Template Child",
+            "project_id": self.project_with_templates.id,
+            "parent_id": self.template_task.id,
+            "is_template": True,
+        })
+
+        self.assertEqual(
+            self.template_task.subtask_count,
+            2,
+            "Template parent tasks should count template subtasks in subtask_count.",
+        )
