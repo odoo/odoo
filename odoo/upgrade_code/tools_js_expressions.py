@@ -220,8 +220,8 @@ def get_inheritance_chain(template_name, inherit_map):
 # ------------------------------------------------------------------------------
 
 class Template:
-    def __init__(self, name: str, skip_component_template: bool = False):
-        self.skip_component_template = skip_component_template
+    def __init__(self, name: str, is_testing: bool = False):
+        self.is_testing = is_testing
         self.name = name
         self.parent = None
         self.children = set()
@@ -257,7 +257,7 @@ class Template:
         return self.parent is not None and self.parent.is_component_template()
 
     def is_self_called(self):
-        if self.skip_component_template:
+        if self.is_testing:
             return False
         for template in self.calls_from:
             if template == self:
@@ -265,7 +265,7 @@ class Template:
         return False
 
     def is_called_by_component_template(self):
-        if self.skip_component_template:
+        if self.is_testing:
             return False
         for template in self.calls_from:
             if template == self:
@@ -275,7 +275,7 @@ class Template:
         return False
 
     def is_component_template(self):
-        return not self.skip_component_template and self.is_parent_component_template() or self.is_called_by_component_template()
+        return not self.is_testing and self.is_parent_component_template() or self.is_called_by_component_template()
 
     def set_parent(self, parent):
         self.parent = parent
@@ -291,13 +291,13 @@ class Template:
 
 class ComponentRootTemplate(Template):
     def is_parent_component_template(self):
-        return not self.skip_component_template
+        return not self.is_testing
 
     def is_called_by_component_template(self):
-        return not self.skip_component_template
+        return not self.is_testing
 
     def is_component_template(self):
-        return not self.skip_component_template
+        return not self.is_testing
 
 
 # ------------------------------------------------------------------------------
@@ -311,10 +311,10 @@ class VariableAggregator:
         does not take nested inherits or t-call vars not instide the t-call on purpose.
     """
 
-    def __init__(self, component_templates: list[str] = list(), skip_component_template: bool = False):
+    def __init__(self, component_templates: list[str] = list(), is_testing: bool = False):
         self.all_templates = defaultdict()
         self.duplicated_template_name = defaultdict()
-        self.skip_component_template = skip_component_template
+        self.is_testing = is_testing
         for template_name in component_templates:
             self.all_templates[template_name] = ComponentRootTemplate(template_name)
         self.all_vars = defaultdict(set)
@@ -326,7 +326,7 @@ class VariableAggregator:
 
     def add_template(self, template_name: str):
         if template_name not in self.all_templates:
-            self.all_templates[template_name] = Template(template_name, self.skip_component_template)
+            self.all_templates[template_name] = Template(template_name, self.is_testing)
         return self.all_templates[template_name]
 
     def link_templates(self, root: etree._ElementTree, file_path: str = 'anonymous'):
@@ -515,6 +515,7 @@ class TemplateCompiler:
         self.current_template = path  # default to the file path but if inside a t-name takes that value
         self.excluded_templates = excluded_templates
         self.warnings = []
+        self.is_testing = aggregator.is_testing
 
         # Dynamic attributes can change on each nodes
         self.node_vars = set()
@@ -560,6 +561,9 @@ class TemplateCompiler:
     def _should_skip_template(self, template_name: str):
         if self.current_template in self.excluded_templates:
             return True
+
+        if self.is_testing:
+            return False
 
         if template_name not in self.all_templates:
             return True
@@ -900,7 +904,7 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
 
 
 def run_tests_main(test):
-    res, warnings = update_template("", test["content"], [], VariableAggregator(skip_component_template=True), {})
+    res, warnings = update_template("", test["content"], [], VariableAggregator(is_testing=True), {})
     return res
 
 
@@ -1804,7 +1808,7 @@ def run_test_specific_modules(test):
     modules = test.get("modules", False)
     path = test.get("path", False)
 
-    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator = VariableAggregator(is_testing=True)
     aggregator.all_vars = variables
 
     res, warnings = update_template(path, test["content"], modules, aggregator, {})
@@ -1966,7 +1970,7 @@ def run_test_exclude_modules(test):
     modules = test.get("modules", False)
     path = test.get("path", False)
 
-    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator = VariableAggregator(is_testing=True)
     aggregator.inherit_map = {'web.abc': 'web.xyz'}
 
     res, warnings = update_template(path, test["content"], modules, aggregator, test.get('excluded_templates', {}))
@@ -2026,7 +2030,7 @@ test_exclude_templates = [
 
 
 def run_test_vars(test):
-    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator = VariableAggregator(is_testing=True)
     aggregator.all_vars = test["inside_vars"]
     aggregator.t_call_vars = test["outside_vars"]
     aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
@@ -2146,7 +2150,7 @@ test_vars = [
 
 
 def run_test_aggregator(test):
-    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator = VariableAggregator(is_testing=True)
 
     if "inside_vars" in test:
         aggregator.all_vars.update(test["inside_vars"])
@@ -2271,7 +2275,7 @@ test_vars_collection = [
 # ------------------------------------------------------------------------------
 
 def run_test_warnings(test):
-    aggregator = VariableAggregator(skip_component_template=True)
+    aggregator = VariableAggregator(is_testing=True)
     aggregator.all_vars = test.get("all_vars", {})
     aggregator.inherit_map = test.get("inherit_map", {})
     aggregator.full_inherit_and_call_map = test.get("full_inherit_and_call_map", {})
