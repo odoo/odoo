@@ -37,12 +37,11 @@ const composerPatch = {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
     async sendGifMessage(gif) {
-        const href = encodeURI(gif.url);
+        const gifUrl = gif.media_formats.tinygif.url;
+        const href = encodeURI(gifUrl);
         await this._sendMessage(
-            markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gif.url}</a>`,
-            {
-                parentId: this.props.composer.replyToMessage?.id,
-            }
+            markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
+            { parentId: this.props.composer.replyToMessage?.id }
         );
     },
 };
