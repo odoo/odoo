@@ -86,6 +86,9 @@ class HolidaysAllocation(models.Model):
 
         total_worked_hours = 0.0
         for attendance in attendances:
-            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+            worked_in_range = attendance._get_worked_hours_in_range(start_dt, end_dt)
+            unapproved_overtime = max(0.0, attendance.overtime_hours - attendance.validated_overtime_hours)
+            effective_hours = max(0.0, worked_in_range - unapproved_overtime)
+            total_worked_hours += effective_hours
 
         return total_worked_hours
