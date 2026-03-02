@@ -217,6 +217,7 @@ class ProductProduct(models.Model):
             ('product_id', '=', self.id),
             ('move_id', '=', False),
             ('lot_id', '=', False),
+            ('company_id', '=', self.env.company.id),
         ])
         product_value = self.env['product.value'].search(product_value_domain & Domain([('date', '<=', date)]), limit=1, order="date DESC, id DESC")
         if not product_value:
