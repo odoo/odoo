@@ -56,14 +56,15 @@ class ResConfigSettings(models.TransientModel):
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
     use_tenor_api = fields.Boolean(
-        "Use Tenor API",
-        help="If you want to use Tenor API to share GIFs in conversations.",
-        config_parameter='discuss.use_tenor_api',
+        "Use Klipy API",
+        help="If you want to use Klipy API to share GIFs in conversations.",
+        config_parameter='discuss.use_klipy_api',
     )
     tenor_api_key = fields.Char(
-        'Tenor API key',
-        config_parameter='discuss.tenor_api_key',
-        help="Add a Tenor GIF API key to enable GIFs support. https://developers.google.com/tenor/guides/quickstart#setup",
+        'Klipy API key',
+        config_parameter='discuss.klipy_api_key',
+        help="Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/getting-started\n"
+        "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), please replace it here with a Klipy GIF API key",
     )
     use_google_translate_api = fields.Boolean(
         "Use Google Translate API",

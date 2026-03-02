@@ -76,7 +76,7 @@ class IrConfig_Parameter(models.Model):
     #     configuration parameters when using web push notifications;
     #   * 'mail.use_call_server', 'mail.use_twilio_rtc_servers', 'mail.use_sfu_server',
     #     'mail.sfu_server_url' and 'mail.sfu_server_key': rtc server usage and configuration;
-    #   * 'discuss.use_tenor_api', 'discuss.tenor_api_key': used for gif fetch service;
+    #   * 'discuss.use_klipy_api', 'discuss.klipy_api_key': used for gif fetch service;
     #   * 'mail.server.outlook.iap.endpoint': URL of the IAP endpoint
     #     for outlook oauth server
     #   * 'mail.server.gmail.iap.endpoint': URL of the IAP endpoint
