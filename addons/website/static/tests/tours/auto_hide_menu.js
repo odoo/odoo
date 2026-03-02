@@ -64,11 +64,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that modal has disappeared",
-            trigger: "body:not(:has(.modal))",
-        },
-        {
-            trigger: `:iframe .o_homepage_editor_welcome_message:contains(welcome to your homepage)`,
+            content: "Check that the menus have been saved",
+            trigger: ":iframe #top_menu:has(a[role='menuitem']:contains(name):count(5))",
         },
         ...clickOnEditAndWaitEditMode(),
         getTheLayoutChildren,
