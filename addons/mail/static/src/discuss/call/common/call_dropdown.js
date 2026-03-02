@@ -1,7 +1,8 @@
-import { useExternalListener, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
+import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
 
 /**
  * CallDropdown is an alternative to the web popover for calls to make them available
@@ -26,7 +27,6 @@ export class CallDropdown extends Component {
 
     setup() {
         super.setup();
-        this.triggerRef = useRef("trigger");
         this.menuRef = useRef("menu");
         this.state = useState({ isOpen: this.props.openByDefault });
         usePosition("menu", () => this.triggerRef.el, {
@@ -48,6 +48,20 @@ export class CallDropdown extends Component {
                 return [];
             },
         });
+        this.handleClick = this.handleClick.bind(this);
+        useLayoutEffect(
+            (triggerEl) => {
+                if (triggerEl) {
+                    triggerEl.addEventListener("click", this.handleClick);
+                    return () => triggerEl.removeEventListener("click", this.handleClick);
+                }
+            },
+            () => [this.triggerRef.el]
+        );
+    }
+
+    get triggerRef() {
+        return { el: getFirstElementOfNode(this.__owl__.bdom) };
     }
 
     get window() {
