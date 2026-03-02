@@ -185,52 +185,77 @@ export class WebsiteLoader extends Component {
     };
 
     /**
+     * Returns the feature messages configuration. Override this method to add
+     * additional feature messages.
+     */
+    getFeatureMessages() {
+        return [{
+            sequence: 6,
+            title: _t("Enabling your %s."),
+            name: _t("blog"),
+            description: _t("Share your thoughts and ideas with the world."),
+        }, {
+            sequence: 7,
+            title: _t("Setting up your %s."),
+            name: _t("success stories"),
+            description: _t("Showcase your best case studies."),
+        }, {
+            sequence: 8,
+            title: _t("Integrating your %s."),
+            name: _t("recruitment platform"),
+            description: _t("Find the best talent for your team."),
+        }, {
+            sequence: 9,
+            title: _t("Activating your %s."),
+            name: _t("online store"),
+            description: _t("Start selling your products and services today."),
+        }, {
+            sequence: 10,
+            title: _t("Setting up your %s."),
+            name: _t("events"),
+            description: _t("Publish on-site and online events."),
+        }, {
+            sequence: 11,
+            title: _t("Setting up your %s."),
+            name: _t("forum"),
+            description: _t("Engage with your community and build relationships."),
+        }, {
+            sequence: 12,
+            title: _t("Activating your %s."),
+            name: _t("live chat"),
+            description: _t("Chat with visitors in real time."),
+        }, {
+            sequence: 13,
+            title: _t("Installing your %s."),
+            name: _t("e-learning platform"),
+            description: _t("Offer online courses and learning opportunities."),
+        }, {
+            sequence: 15,
+            title: _t("Configuring your %s."),
+            name: _t("store locator"),
+            description: _t("Help customers find your locations."),
+        }];
+    }
+
+    /**
      * Depending on the features selected, returns the right waiting messages.
      *
      * @param {integer[]} selectedFeatures
      * @returns {Object[]} - the messages filtered by the selected features
      */
     getWaitingMessages(selectedFeatures) {
-        const websiteFeaturesMessages = [{
-            id: 5,
-            title: _t("Enabling your %s."),
-            name: _t("blog"),
-            description: _t("Share your thoughts and ideas with the world."),
-        }, {
-            id: 7,
-            title: _t("Integrating your %s."),
-            name: _t("recruitment platform"),
-            description: _t("Find the best talent for your team."),
-        }, {
-            id: 8,
-            title: _t("Activating your %s."),
-            name: _t("online store"),
-            description: _t("Start selling your products and services today."),
-        }, {
-            id: 9,
-            title: _t("Configuring your %s."),
-            name: _t("online appointment system"),
-            description: _t("Make it easy for clients to book appointments with you."),
-        }, {
-            id: 10,
-            title: _t("Setting up your %s."),
-            name: _t("forum"),
-            description: _t("Engage with your community and build relationships."),
-        }, {
-            id: 12,
-            title: _t("Installing your %s."),
-            name: _t("e-learning platform"),
-            description: _t("Offer online courses and learning opportunities."),
-        }, {
-            // Always the last message if there is at least 1 feature selected.
-            id: "last",
-            title: _t("Activating the last features."),
-            description: _t("A bit more patience as your website takes shape."),
-        }];
+        const featureMessages = [
+            ...this.getFeatureMessages(),
+            {
+                sequence: "last",
+                title: _t("Activating the last features."),
+                description: _t("A bit more patience as your website takes shape."),
+            },
+        ];
 
-        const filteredIds = [...selectedFeatures, "last"];
-        const messagesList = websiteFeaturesMessages.filter((msg) => {
-            if (filteredIds.includes(msg.id)) {
+        const selectedSequences = [...selectedFeatures, "last"];
+        return featureMessages.filter((msg) => {
+            if (selectedSequences.includes(msg.sequence)) {
                 if (msg.name) {
                     const highlight = sprintf(
                         '<span class="o_website_loader_text_highlight">%s</span>', msg.name
@@ -240,7 +265,6 @@ export class WebsiteLoader extends Component {
                 return true;
             }
         });
-        return messagesList;
     };
 
     /**

@@ -394,6 +394,7 @@ class Website(models.Model):
         configurator_features = self.env['website.configurator.feature'].search([])
         r['features'] = [{
             'id': feature.id,
+            'sequence': feature.sequence,
             'name': feature.name,
             'description': feature.description,
             'type': 'page' if feature.page_view_id else 'app',

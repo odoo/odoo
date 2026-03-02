@@ -360,10 +360,12 @@ class ApplyConfiguratorScreen extends Component {
         };
 
         if (themeName !== undefined) {
-            const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+            const selectedFeatures = Object.values(this.state.features).filter(
+                (feature) => feature.selected
+            );
             this.websiteService.showLoader({
                 showTips: true,
-                selectedFeatures: selectedFeatures,
+                selectedFeatures: selectedFeatures.map((feature) => feature.sequence),
                 showWaitingMessages: true,
             });
             let selectedPalette = this.state.selectedPalette.name;
@@ -378,7 +380,7 @@ class ApplyConfiguratorScreen extends Component {
             }
 
             const data = {
-                'selected_features': selectedFeatures,
+                selected_features: selectedFeatures.map((feature) => feature.id),
                 'industry_id': this.state.selectedIndustry.id,
                 'industry_name': this.state.selectedIndustry.label.toLowerCase(),
                 'selected_palette': selectedPalette,
