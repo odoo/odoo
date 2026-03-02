@@ -812,11 +812,25 @@ class AccountJournal(models.Model):
         # Create the bank_account_id if necessary
         if 'bank_account_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
+<<<<<<< b042bcc5a6f95734913047b88f2f74fc69f01786
                 journal.set_bank_account(vals.get('bank_account_number'), vals.get('bank_bic'))
         if 'bank_account_number' in vals or 'bank_account_id' in vals:
             for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
                 if bank._user_can_trust():
                     bank.allow_out_payment = True
+||||||| 23bd7962944726004cf2e9b4ac019cc47f8a578f
+                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            bank = self.filtered(lambda r: r.type == 'bank').bank_account_id
+            if bank and bank._user_can_trust():
+                bank.allow_out_payment = True
+=======
+                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+        if 'bank_acc_number' in vals or 'bank_account_id' in vals:
+            for bank in self.filtered(lambda r: r.type == 'bank').bank_account_id:
+                if bank._user_can_trust():
+                    bank.allow_out_payment = True
+>>>>>>> c8bdf3dea103a3251d303129adc6633119b865b0
         return result
 
     def _alias_get_creation_values(self):
