@@ -963,11 +963,13 @@ export class Form extends Interaction {
             `.s_website_form_input[name="${dependencyName}"]`
         );
         const visibilityCondition = fieldEl.dataset.visibilityCondition;
+        const containerEl = dependencyEl.closest(".s_website_form_field");
 
         const isMultiValueDependency =
             ["contains", "!contains"].includes(comparator) &&
             (["checkbox", "radio"].includes(dependencyEl.type) ||
-                dependencyEl.nodeName === "SELECT");
+                dependencyEl.nodeName === "SELECT" ||
+                containerEl?.dataset.type === "record");
 
         return () => {
             // To be visible, at least one field with the dependency name must be visible.
