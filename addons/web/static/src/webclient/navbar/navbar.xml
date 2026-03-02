@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.NavBar">
-    <header class="o_navbar" t-ref="root">
+    <header class="o_navbar" t-custom-ref="root">
       <nav
         class="o_main_navbar d-print-none"
         data-command-category="disabled"
@@ -74,7 +74,7 @@
 
   <t t-name="web.NavBar.AppsMenu">
     <t t-if="env.isSmall">
-      <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': currentApp?.webIconData}" accesskey="h" t-ref="menuApps" t-on-click.prevent="_openAppMenuSidebar">
+      <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': currentApp?.webIconData}" accesskey="h" t-custom-ref="menuApps" t-on-click.prevent="_openAppMenuSidebar">
         <t t-call="web.NavBar.AppsMenu.Sidebar"/>
       </a>
     </t>
@@ -147,7 +147,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu">
-    <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-ref="appSubMenus" role="menu">
+    <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-custom-ref="appSubMenus" role="menu">
         <t t-if="!env.isSmall">
             <DropdownGroup>
                 <t t-foreach="sections" t-as="section" t-key="section.id">

@@ -13,7 +13,7 @@
                 class="o_input_file d-none"
                 t-att-multiple="props.multiUpload"
                 t-att-accept="props.acceptedFileExtensions"
-                t-ref="file-input"
+                t-custom-ref="file-input"
                 t-att-disabled="state.isDisable"
                 t-on-change="onFileInputChange"
             />

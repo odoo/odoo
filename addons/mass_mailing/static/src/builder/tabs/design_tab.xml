@@ -2,7 +2,7 @@
 
 <t t-name="mass_mailing.DesignTab">
     <div class="o_design_tab h-100">
-        <div t-ref="content" class="d-flex flex-column h-100">
+        <div t-custom-ref="content" class="d-flex flex-column h-100">
             <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                 <!-- TODO EGGMAIL (check theme_tab.xml todo) Define a more basic kind of options container -->
                 <OptionsContainer

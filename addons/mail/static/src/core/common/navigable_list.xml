@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NavigableList">
-        <div class="o-mail-NavigableList bg-view m-0 p-0 shadow-sm" t-ref="root" t-att-class="props.class">
+        <div class="o-mail-NavigableList bg-view m-0 p-0 shadow-sm" t-custom-ref="root" t-att-class="props.class">
             <div t-if="show" class="o-open d-flex flex-column bg-inherit" t-on-mousedown.prevent="">
                 <div t-if="state.showLoading" t-att-class="{ 'position-absolute bg-inherit smaller o-mail-NavigableList-floatingLoading': props.options.length, 'bg-300': props.options.length and state.activeIndex === 0, 'o-mail-NavigableList-item': !props.options.length }">
                     <t t-call="mail.NavigableList.spinner"/>

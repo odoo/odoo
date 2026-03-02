@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.TipScreen">
         <div class="tip-screen screen h-100 bg-100">
-            <div class="pos-receipt-container text-center" t-ref="pos-receipt-container"/>
+            <div class="pos-receipt-container text-center" t-custom-ref="pos-receipt-container"/>
             <div class="screen-content d-flex flex-column h-100">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
                     <button class="button btn btn-lg btn-outline-primary" t-on-click="goPreviousScreen">

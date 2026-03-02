@@ -5,12 +5,12 @@
         <div
             class="o_field_tags d-inline-flex flex-wrap gap-1 mw-100"
             t-att-class="{'o_tags_input o_input': !props.readonly}"
-            t-ref="many2ManyTagsField"
+            t-custom-ref="many2ManyTagsField"
         >
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
                 <Tag t-props="tag.props"/>
             </TagsList>
-            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-custom-ref="autoComplete">
                 <Many2XAutocomplete
                     id="props.id"
                     placeholder="tags.length ? '' : props.placeholder"

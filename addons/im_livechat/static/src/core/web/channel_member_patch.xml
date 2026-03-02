@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="discuss.ChannelMember" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='displayName']" position="inside">
+        <xpath expr="//*[@t-custom-ref='displayName']" position="inside">
                 <div t-if="member.channel_id.channel_type === 'livechat'" class="ms-2 d-flex flex-wrap">
                     <span t-if="member.getLangName()" class="me-2">
                         <i class="fa fa-comment-o me-1" aria-label="Lang"/>

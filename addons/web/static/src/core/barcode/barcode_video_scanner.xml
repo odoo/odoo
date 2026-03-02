@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.BarcodeVideoScanner">
         <CropOverlay onResize.bind="this.onResize" isReady="state.isReady">
-            <video t-ref="videoPreview" muted="true" autoplay="true" playsinline="true" t-att-class="props.cssClass"/>
+            <video t-custom-ref="videoPreview" muted="true" autoplay="true" playsinline="true" t-att-class="props.cssClass"/>
         </CropOverlay>
     </t>
 </templates>

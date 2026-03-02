@@ -8,7 +8,7 @@
                         Enable Bus Logging <input class="form-check-input" t-att-checked="busLogsService.enabled" type="checkbox"/>
                     </label>
                 </div>
-                <button class="btn btn-light text-muted ms-2" title="Download logs" t-ref="downloadButton" t-on-click="onClickDownload"><i class="fa fa-download"/></button>
+                <button class="btn btn-light text-muted ms-2" title="Download logs" t-custom-ref="downloadButton" t-on-click="onClickDownload"><i class="fa fa-download"/></button>
             </div>
         </DropdownItem>
     </t>

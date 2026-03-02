@@ -3,7 +3,7 @@
     <t t-name="web.login_user_switch">
         <t t-if="state.users.length">
             <t t-if="state.displayUserChoice">
-                <div class="oe_login_form o_user_switch user-select-none my-4" t-ref="root">
+                <div class="oe_login_form o_user_switch user-select-none my-4" t-custom-ref="root">
                     <p>Choose a user</p>
                     <div class="list-group my-3">
                         <t t-foreach="state.users" t-as="user" t-key="user_index">

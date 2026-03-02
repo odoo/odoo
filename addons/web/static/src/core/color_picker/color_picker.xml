@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
     <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
-        t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root"
+        t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-custom-ref="root"
         t-on-mouseenter="this.onMouseEnter">
         <div class="px-1 mb-1 pt-2 d-flex">
             <t t-if="isMobileOS">

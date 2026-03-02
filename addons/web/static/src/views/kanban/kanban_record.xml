@@ -12,7 +12,7 @@
             t-on-touchmove="onTouchMoveOrCancel"
             t-on-touchcancel="onTouchMoveOrCancel"
             t-on-touchend="onTouchEnd"
-            t-ref="root">
+            t-custom-ref="root">
                 <span t-if="props.selectionAvailable" class="o_record_selection_tooltip d-none position-absolute p-2 rounded-3 start-50 top-50">Click to select</span>
                 <t t-call="{{ this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
                 <t t-call="{{ this.constructor.menuTemplate }}"/>

@@ -1,12 +1,12 @@
-import { reactive, useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    toRaw,
-    xml,
-} from "@odoo/owl";
+    reactive,
+    useComponent,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
+import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
 
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
@@ -236,7 +236,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 
 export class UseHoverOverlay extends Component {
     static props = ["slots", "hover"];
-    static template = xml`<div t-ref="root"><t t-slot="default"/></div>`;
+    static template = xml`<div t-custom-ref="root"><t t-slot="default"/></div>`;
 
     setup() {
         super.setup();

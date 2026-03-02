@@ -18,7 +18,7 @@
             t-on-click="onClick"
             t-on-mousedown="onMouseDown"
             t-on-touchmove="onTouchMove"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <!-- card -->
             <t t-if="!props.isSidebarItem and props.cardData.type === 'screen' and rtc.screenTrack and !rtc.screenTrack.enabled">

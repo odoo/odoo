@@ -3,7 +3,7 @@
 
 
 <t t-name="html_builder.SnippetViewer">
-    <div t-ref="content"
+    <div t-custom-ref="content"
          class="row g-0 o_snippets_preview_row"
          t-att-class="{ 'flex-row-reverse': props.frontendDirection !== backendDirection }"
          t-att-dir="props.frontendDirection">

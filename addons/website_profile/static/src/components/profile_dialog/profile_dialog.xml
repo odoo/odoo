@@ -7,7 +7,7 @@
                 <div class="col-12 col-sm-3 mb-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-ref="profileImg" t-attf-src="/web/image/res.users/#{user.id}/avatar_128"/>
+                            <img class="o_wforum_avatar_img w-100 mb-3" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{user.id}/avatar_128"/>
                             <div class="d-flex justify-content-center gap-1">
                                 <FileUploader onUploaded.bind="onUploadProfileImg" acceptedFileExtensions="'image/*'">
                                     <t t-set-slot="toggler">
@@ -33,7 +33,7 @@
                         <div class="mb-3 col-12">
                             <label class="text-primary mb-1 d-block fw-bold" for="website_profile_profile_dialog_user_name">Name</label>
                             <input type="text" t-attf-class="form-control #{state.nameHasError ? 'is-invalid': ''}" name="name" id="website_profile_profile_dialog_user_name" required="True"
-                                t-model="user.name" t-ref="name"/>
+                                t-model="user.name" t-custom-ref="name"/>
                         </div>
 
                         <div class="mb-3 col-6">

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.CheckBox">
-    <div class="o-checkbox form-check" t-attf-class="{{ props.slots ? 'form-check' : '' }}"  t-att-class="props.className" t-on-click="onClick" t-ref="root">
+    <div class="o-checkbox form-check" t-attf-class="{{ props.slots ? 'form-check' : '' }}"  t-att-class="props.className" t-on-click="onClick" t-custom-ref="root">
         <input
             t-att-id="props.id or id"
             type="checkbox"

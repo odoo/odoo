@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorList">
-        <div class="o_colorlist d-grid gap-3 gap-md-2" aria-atomic="true" t-ref="colorlist">
+        <div class="o_colorlist d-grid gap-3 gap-md-2" aria-atomic="true" t-custom-ref="colorlist">
             <t t-if="!props.forceExpanded and !state.isExpanded">
                 <button t-on-click="onToggle" role="menuitem" t-att-title="colors[props.selectedColor]" t-att-data-color="props.selectedColor" t-att-aria-label="colors[props.selectedColor]" t-attf-class="border-0 rounded-circle o_colorlist_toggler o_colorlist_item_color_{{ props.selectedColor }}"/>
             </t>

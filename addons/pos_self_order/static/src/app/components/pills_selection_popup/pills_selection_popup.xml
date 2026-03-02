@@ -13,7 +13,7 @@
                     </div>
                     <button class="btn btn-close" t-on-click="props.close"/>
                 </div>
-                <div t-ref="category-list" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
+                <div t-custom-ref="category-list" class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2 flex-shrink-0">
                     <button class="btn py-3 d-flex flex-column align-items-center text-center text-nowrap"
                         t-foreach="categories" t-as="category" t-key="category.id"
                         t-on-click="(ev) => this.onClickScrollTracked(ev, category.id)"

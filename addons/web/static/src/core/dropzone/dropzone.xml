@@ -8,7 +8,7 @@
         t-on-dragenter="() => state.isDraggingInside = true"
         t-on-dragleave="() => state.isDraggingInside = false"
         t-on-drop="props.onDrop"
-        t-ref="root"
+        t-custom-ref="root"
     >
         <t t-slot="default">
             <h4>Drag Files Here <i class="fa fa-download"/></h4>

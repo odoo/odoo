@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="mass_mailing.OptionsContainer" t-inherit="html_builder.OptionsContainer">
-        <xpath expr="//div[@t-ref='content']" position="replace">
+        <xpath expr="//div[@t-custom-ref='content']" position="replace">
             <t t-if="versionState.isUpToDate">$0</t>
             <t t-else="">
                 <div t-if="!this.props.folded" class="o_we_version_control d-flex flex-column p-3 pt-4 align-items-center text-center text-white">

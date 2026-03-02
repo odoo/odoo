@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve" >
     <t t-name="pos_self_order.EatingLocationPage">
         <div class="o_self_eating_location_box d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
-            <div class="d-flex flex-column flex-grow-1 overflow-y-auto" t-ref="scrollContainer">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto" t-custom-ref="scrollContainer">
                <div class="container o_self_container my-auto">
                    <h1 class="text-center mt-4">Where do you want to eat?</h1>
                    <div class="grid py-3 py-lg-4 gap-3 gap-sm-4" t-att-class="{'d-flex justify-content-center': presets.length === 1}">

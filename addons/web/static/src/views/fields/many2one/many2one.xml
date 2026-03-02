@@ -29,7 +29,7 @@
                 </t>
             </t>
             <t t-else="">
-                <div class="o_field_many2one_selection" t-ref="root">
+                <div class="o_field_many2one_selection" t-custom-ref="root">
                     <Many2XAutocomplete t-props="many2XAutocompleteProps"/>
                     <t t-if="hasLinkButton">
                         <button class="o_external_button btn btn-link text-action px-1" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : env.inDialog ? 'dialog' : 'action')">

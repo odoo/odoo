@@ -3,7 +3,7 @@
 
 <t t-name="website.SocialMediaLinks">
     <div class="p-1 px-2 ps-3">
-        <table t-ref="root" class="o_social_media_list">
+        <table t-custom-ref="root" class="o_social_media_list">
             <tbody>
                 <!-- The `fabricatedKey` is a hack. I wish I could use `item.id` for the `t-key`. But the `applyTo`s are not properly updated, and thus it does not target the correct element if the domPosition changes (for example, after a deletion of an earlier item in the list). So `fabricatedKey` is a mix of `item.id` and `item.domPosition`. This causes the inner components to be re-created as soon as one of the two changes -->
                 <tr t-foreach="this.computeItems()" t-as="item" t-key="item.fabricatedKey" t-att-data-id="item.id">

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="mail.Tabs">
-    <div t-attf-class="o-mail-Tabs d-flex border-top bg-view h-100 w-100" t-ref="ref" t-att-class="{'o-mail-Tabs-vertical': props.direction === 'v', 'flex-column o-mail-Tabs-horizontal': props.direction === 'h'}">
+    <div t-attf-class="o-mail-Tabs d-flex border-top bg-view h-100 w-100" t-custom-ref="ref" t-att-class="{'o-mail-Tabs-vertical': props.direction === 'v', 'flex-column o-mail-Tabs-horizontal': props.direction === 'h'}">
         <div class="position-relative d-flex bg-100 flex-shrink-0" t-att-class="{'border-bottom flex-row mh-25': props.direction === 'h', 'border-end flex-column mw-25': props.direction === 'v'}">
             <button t-if="scrollState.hasScrollbar" t-att-disabled="!scrollState.canScrollBefore" class="btn border-transparent o-mail-Tabs-scroller flex-shrink-0 bg-100 rounded-0" t-on-click="() => this.scroll(-1)"><i class="oi smaller" t-att-class="{'oi-chevron-up': props.direction === 'v', 'oi-chevron-left': props.direction === 'h'}"/></button>
-            <nav class="o-mail-Tabs-scrollContainer d-flex flex-grow-1 overflow-auto gap-2 p-1" t-att-class="{'flex-row': props.direction === 'h', 'flex-column': props.direction === 'v'}" t-ref="nav">
+            <nav class="o-mail-Tabs-scrollContainer d-flex flex-grow-1 overflow-auto gap-2 p-1" t-att-class="{'flex-row': props.direction === 'h', 'flex-column': props.direction === 'v'}" t-custom-ref="nav">
                 <t t-slot="headers"/>
             </nav>
             <button t-if="scrollState.hasScrollbar" t-att-disabled="!scrollState.canScrollAfter" class="btn border-transparent o-mail-Tabs-scroller flex-shrink-0 rounded-0 bg-100" t-on-click="() => this.scroll(1)"><i class="oi smaller" t-att-class="{'oi-chevron-down': props.direction === 'v', 'oi-chevron-right': props.direction === 'h'}"/></button>
@@ -21,7 +21,7 @@
         t-att-class="{'o-active': isActive, 'bg-transparent text-muted opacity-75': !isActive}"
         t-att-title="props.title"
         t-on-click="onClick"
-        t-ref="root"
+        t-custom-ref="root"
         t-att-data-header-id="props.id"
     >
         <t t-slot="default"/>

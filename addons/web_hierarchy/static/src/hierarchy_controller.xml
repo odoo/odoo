@@ -12,7 +12,7 @@
         </div>
     </t>
     <t t-name="web_hierarchy.HierarchyView">
-        <div t-attf-class="o_hierarchy_view {{ isMobile ? 'o_action_delegate_scroll' : '' }} {{ props.className }}" t-ref="root">
+        <div t-attf-class="o_hierarchy_view {{ isMobile ? 'o_action_delegate_scroll' : '' }} {{ props.className }}" t-custom-ref="root">
             <Layout className="(model.useSampleModel ? 'o_view_sample_data' : '') + ' d-flex'" display="props.display">
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu/>

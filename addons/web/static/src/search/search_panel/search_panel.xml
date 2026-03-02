@@ -52,7 +52,7 @@
     <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto position-relative"
          t-att-class="env.searchModel.searchPanelInfo.className"
          t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
-         t-ref="root">
+         t-custom-ref="root">
         <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
             <i class="oi oi-panel-right fa-flip-horizontal"/>
         </button>
@@ -147,7 +147,7 @@
 <t t-name="web.SearchPanel.Small">
     <div
         class="o_search_panel w-100 overflow-visible"
-        t-ref="root"
+        t-custom-ref="root"
         >
         <div class="d-flex overflow-auto align-items-center px-2 border-top">
             <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">

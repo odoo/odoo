@@ -4,12 +4,12 @@
     <t t-name="slide.quiz.question.input">
         <div
             t-attf-class="o_wsildes_quiz_question_input mt-3 #{!props.update ? 'col' : ''}">
-            <form class="mb-3" t-ref="form">
+            <form class="mb-3" t-custom-ref="form">
                 <div class="o_wslides_quiz_question row align-items-center me-0 mb-2">
                     <div class="input-group">
-                        <span class="input-group-text o_wslides_quiz_question_sequence" t-ref="sequence"><t t-out="props.question.sequence"/></span>
+                        <span class="input-group-text o_wslides_quiz_question_sequence" t-custom-ref="sequence"><t t-out="props.question.sequence"/></span>
                         <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
-                            t-model="props.question.text" t-ref="input"/>
+                            t-model="props.question.text" t-custom-ref="input"/>
                     </div>
                 </div>
                 <div class="text-muted mb-2">

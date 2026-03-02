@@ -58,7 +58,7 @@
                     Angle
                     <span class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-center align-items-center my-auto me-2 position-relative gradient-angle-knob"
-                            t-ref="gradientAngleKnob"
+                            t-custom-ref="gradientAngleKnob"
                             t-attf-style="--angle: #{this.state.angle - 90}deg;"
                             t-on-mousedown="onKnobMouseDown">
                             <div class="position-absolute gradient-angle-thumb"></div>

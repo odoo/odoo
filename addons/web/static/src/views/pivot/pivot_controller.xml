@@ -20,7 +20,7 @@
     </t>
 
     <t t-name="web.PivotView">
-        <div t-att-class="props.className" t-ref="root">
+        <div t-att-class="props.className" t-custom-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu/>

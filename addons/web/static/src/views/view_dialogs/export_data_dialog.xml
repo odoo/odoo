@@ -38,7 +38,7 @@
                         </CheckBox>
                     </div>
                     <h4 class="mt-3">Available fields</h4>
-                    <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
+                    <input t-custom-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="fieldsAvailable">
@@ -76,7 +76,7 @@
                         <div class="input-group mb-3">
                             <t t-if="state.templateId === 'new_template'">
                                 <label class="pt-2 mb-0 fw-bold">Save as: </label>
-                                <input t-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="newTemplateText" />
+                                <input t-custom-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="newTemplateText" />
                             </t>
                             <t t-else="">
                                 <label class="pt-2 mb-0 fw-bold">Template: </label>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <div class="o_right_field_panel h-100 px-2 overflow-auto border">
-                        <ul class="o_fields_list list-unstyled" t-ref="draggable">
+                        <ul class="o_fields_list list-unstyled" t-custom-ref="draggable">
                             <t t-foreach="state.exportList" t-as="field" t-key="field.id">
                                 <li t-attf-class="o_export_field d-inline-block w-100 {{ state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
                                     <span t-if="!state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ state.exportList.length === 1 ? 0 : 1 }}" />

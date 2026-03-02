@@ -9,7 +9,7 @@
                 'o_bottom_sheet_snapping': state.isSnappingEnabled,
             }"
             t-attf-style="--BottomSheet-progress: {{state.progress}}"
-            t-ref="container"
+            t-custom-ref="container"
             >
             <!-- Scroll container that handles drag gestures -->
             <div
@@ -17,7 +17,7 @@
                 t-att-class="{
                         o_bottom_sheet_rail_prevent_overscroll : props.preventDismissOnContentScroll
                     }"
-                t-ref="scrollRail"
+                t-custom-ref="scrollRail"
                 >
                 <!-- Backdrop overlay -->
                 <div class="o_bottom_sheet_backdrop" t-on-click="slideOut"/>
@@ -32,7 +32,7 @@
                 <div
                     class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden"
                     role="dialog"
-                    t-ref="sheet"
+                    t-custom-ref="sheet"
                     >
 
                     <!-- Handle bar -->
@@ -50,7 +50,7 @@
                         class="o_bottom_sheet_body offcanvas-body"
                         role="menu"
                         t-att-class="props.class"
-                        t-ref="ref"
+                        t-custom-ref="ref"
                         >
 
                         <!-- Render dynamic component if provided -->

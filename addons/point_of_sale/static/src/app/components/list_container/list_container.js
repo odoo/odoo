@@ -44,7 +44,7 @@ export class ListContainer extends Component {
             </button>
             <span t-if="props.onClickPlus" class="navbar-separator mx-1"/>
             <div class="overflow-hidden flex-grow-1">
-                <div t-ref="container" class="list-container-items d-flex align-items-center gap-1">
+                <div t-custom-ref="container" class="list-container-items d-flex align-items-center gap-1">
                     <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible order-2': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>

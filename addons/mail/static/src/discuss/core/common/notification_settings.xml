@@ -18,7 +18,7 @@
                         'o-ps-2_5 o-pe-1_5': !env[DROPDOWN_NESTING],
                         'opacity-100': muteConversationDropdownState.isOpen,
                         'opacity-75': !muteConversationDropdownState.isOpen,
-                    }" t-ref="mute-button">
+                    }" t-custom-ref="mute-button">
                         <span class="text-wrap text-start text-break">Mute Conversation</span>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
                         <i t-if="!env[DROPDOWN_NESTING]" class="fa fa-caret-right fa-lg mx-2"/>
@@ -52,7 +52,7 @@
     </t>
 
     <t t-name="discuss.NotificationSettings.muteSttings">
-        <div class="d-flex flex-column" t-attf-class="{{ store.discussDropdownMenuClass(this) }}" t-ref="mute-menu">
+        <div class="d-flex flex-column" t-attf-class="{{ store.discussDropdownMenuClass(this) }}" t-custom-ref="mute-menu">
             <t t-if="props.channel.channel_type !== 'channel'" t-call="discuss.NotificationSettings.unMuteSttings" />
             <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
                 <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn btn-secondary rounded-0 d-flex align-items-center px-3 o-py-1_5 m-0'" onSelected="()=>this.setMute(mute.value)"><t t-out="mute.name"/></DropdownItem>

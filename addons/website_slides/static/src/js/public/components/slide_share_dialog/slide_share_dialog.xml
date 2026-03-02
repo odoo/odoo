@@ -49,7 +49,7 @@
                 <div class="col-12 o_wslides_embed_code" t-if="this.props.embedCode">
                     <h5 class="mt-4">Embed in another Website</h5>
                     <div class="input-group">
-                        <textarea t-ref="codeInput" class="form-control" t-att-value="this.props.embedCode"
+                        <textarea t-custom-ref="codeInput" class="form-control" t-att-value="this.props.embedCode"
                                   readonly="readonly" onClick="this.select();"/>
                         <CopyButton content="this.props.embedCode" copyText="copyEmbedCodeText"
                                     successText="successText"/>

@@ -9,7 +9,7 @@
         </xpath>
     </t>
     <t t-inherit="mail.DiscussSidebarCategory" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='floatingCategoryName']" position="after">
+        <xpath expr="//*[@t-custom-ref='floatingCategoryName']" position="after">
             <span t-if="category.livechat_channel_id?.are_you_inside" class="d-flex align-items-center">
                 <i class="fa fa-circle text-success o-xxxs me-1"/>
                 <span class="text-muted smaller fst-italic text-success pe-1">joined</span>

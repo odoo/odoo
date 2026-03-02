@@ -4,7 +4,7 @@
         <input
             type="file"
             multiple="true"
-            t-ref="uploadFileInput"
+            t-custom-ref="uploadFileInput"
             t-att-accept="props.allowedMIMETypes"
             class="o_input_file o_hidden"
             t-on-change.stop="onFileInputChange"

@@ -4,7 +4,7 @@
     <t t-name="website_slides.EmailSharingInput">
         <div class="o_wslides_js_share_email">
             <div t-if="!this.state.isDone and !this.isWebsiteUser" class="input-group">
-                <input t-ref="input" type="text" placeholder="friend1@email.com, friend2@email.com"
+                <input t-custom-ref="input" type="text" placeholder="friend1@email.com, friend2@email.com"
                        class="form-control" t-att-class="{'is-invalid': this.state.isInvalid}"
                        t-on-keypress="onKeyPress"/>
                 <button type="button" class="btn btn-primary" t-on-click.stop="onShareByEmailClick">

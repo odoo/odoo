@@ -41,7 +41,7 @@
         <div class="o_web_sign_name_and_signature">
             <div t-if="!props.noInputName" class="o_web_sign_name_group">
                 <label class="col-form-label" t-att-for="'o_web_sign_name_input_' + htmlId">Full Name</label>
-                <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + htmlId" class="o_web_sign_name_input form-control" t-on-input="onInputSignName" t-att-value="props.signature.name" t-ref="signNameInput" placeholder="Type your name to sign" required=""/>
+                <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + htmlId" class="o_web_sign_name_input form-control" t-on-input="onInputSignName" t-att-value="props.signature.name" t-custom-ref="signNameInput" placeholder="Type your name to sign" required=""/>
             </div>
 
             <!--
@@ -90,14 +90,14 @@
                         <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">
                             <button type="button" id="loadFileXml" t-on-click="uploadFile"
                                 class="btn btn-link fa fa-upload" />
-                            <input t-ref="signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
+                            <input t-custom-ref="signInputLoad" type="file" accept="image/png, image/jpeg" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="o_web_sign_signature_container position-relative">
                     <div class="o_signature_stroke position-absolute"/>
-                    <canvas t-if="state.showSignatureArea" t-ref="signature" class="o_web_sign_signature z-1"/>
+                    <canvas t-if="state.showSignatureArea" t-custom-ref="signature" class="o_web_sign_signature z-1"/>
                 </div>
 
                 <div t-if="loadIsInvalid" t-attf-class="o_web_sign_load_invalid card-footer d-none">

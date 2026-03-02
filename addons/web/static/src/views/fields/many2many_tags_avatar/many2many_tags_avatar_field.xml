@@ -5,7 +5,7 @@
         <div
             class="many2many_tags_avatar_field_container o_field_tags d-inline-flex flex-wrap mw-100 gap-1"
             t-att-class="{'o_tags_input o_input': !props.readonly}"
-            t-ref="many2ManyTagsField"
+            t-custom-ref="many2ManyTagsField"
         >
             <t t-if="this.canDisplayQuickAssignAvatar">
                 <a class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="0" t-attf-class="{{ this.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" t-att-data-tooltip="this.assignBtnTooltip" t-att-aria-label="this.assignBtnTooltip" t-on-click.stop.prevent="this.openPopover"/>
@@ -13,7 +13,7 @@
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
                 <Tag t-props="tag.props"/>
             </TagsList>
-            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-custom-ref="autoComplete">
                 <Many2XAutocomplete
                     id="props.id"
                     placeholder="tags.length ? '' : props.placeholder"

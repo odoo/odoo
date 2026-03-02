@@ -8,7 +8,7 @@
     <t t-name="mail.ListActivityButton" t-inherit="mail.ActivityButton">
         <xpath expr="//button[hasclass('o-mail-ActivityButton')]" position="replace">
             <button class="o-mail-ActivityButton btn btn-link btn-dark p-0 w-100 text-start text-truncate"
-                t-on-click.prevent.stop="onClick" t-ref="button" t-att-aria-label="title" t-att-title="title">
+                t-on-click.prevent.stop="onClick" t-custom-ref="button" t-att-aria-label="title" t-att-title="title">
                 <i class="fa fa-fw fa-lg" t-att-class="buttonClass" role="img"/>
                 <t t-slot="default"/>
             </button>

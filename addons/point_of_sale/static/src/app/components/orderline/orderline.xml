@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <t t-set="vals" t-value="lineScreenValues" />
-        <li t-ref="root" t-if="line.order_id" t-att-class="lineContainerClasses" class="orderline">
+        <li t-custom-ref="root" t-if="line.order_id" t-att-class="lineContainerClasses" class="orderline">
             <div t-if="vals.productImage" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="vals.productImage"/>
             </div>

@@ -6,7 +6,7 @@
         <input t-else="" 
             t-att-id="props.id" 
             t-att-type="props.inputType" 
-            t-ref="numpadDecimal" 
+            t-custom-ref="numpadDecimal" 
             t-on-focus="() => this.openPopover()"
             t-on-focusout="() => this.closePopover()"
             t-on-input="(ev) => this.onValueChange(ev)"

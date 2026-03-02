@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="web_tour.TourPointer">
         <div 
-            t-ref="anchor"
+            t-custom-ref="anchor"
             class="o_tour_anchor"
         />
         <div
-            t-ref="pointer"
+            t-custom-ref="pointer"
             t-if="isVisible"
             t-attf-class="
                 o_tour_pointer
@@ -18,7 +18,7 @@
             "
         >   
             <div
-                t-ref="dropzone"
+                t-custom-ref="dropzone"
                 t-if="props.pointerState.isZone"
                 class="o_tour_dropzone pe-none"
             />

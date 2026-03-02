@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderSlidingPanel">
-    <button t-ref="openButton"
+    <button t-custom-ref="openButton"
         class="o-hb-btn btn"
         t-on-click="showSlidingPanel"
         t-att-class="props.extraClasses"
     >
         <t t-slot="default"/>
     </button>
-    <div t-ref="slidingPanel"
+    <div t-custom-ref="slidingPanel"
         class="hb-sliding-panel mb-1 h-100 d-none"
         t-on-click="onBackdropClick"
         t-att-class="{'hb-sliding-panel-dark': props.darkBackground}"

@@ -67,7 +67,7 @@
                         <div class="text-muted">zip, ttf, woff, woff2, otf</div>
                     </div>
                     <div class="col-md-8">
-                        <input t-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
+                        <input t-custom-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
                             id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
                             t-on-change="onUploadChange"
                         />

@@ -7,7 +7,7 @@
         </t>
         <div t-else="" class="h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate': isTranslatable}">
             <t t-if="state.showCodeView">
-                <textarea t-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="onChange"/>
+                <textarea t-custom-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="onChange"/>
             </t>
             <t t-if="!this.sandboxedPreview">
                 <Wysiwyg
@@ -24,7 +24,7 @@
                 />
             </t>
         </div>
-        <div t-if="state.showCodeView || (sandboxedPreview and !props.readonly)" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
+        <div t-if="state.showCodeView || (sandboxedPreview and !props.readonly)" t-custom-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
             <button class="o_codeview_btn btn btn-primary">
                 <i class="fa fa-code" />
             </button>

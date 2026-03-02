@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyTags">
         <!-- Copy many2many tags style without duplicating all the CSS -->
-        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{props.readonly ? 'readonly' : ''}}" t-ref="propertyTags">
+        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{props.readonly ? 'readonly' : ''}}" t-custom-ref="propertyTags">
             <t t-foreach="tagListItems" t-as="tag" t-key="tag.id">
                 <BadgeTag color="tag.color" text="tag.text" onDelete="tag.onDelete" onClick="tag.onClick"/>
             </t>

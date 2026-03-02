@@ -61,7 +61,7 @@
                             <a id="external_link" t-if="data.external_url" t-attf-href="#{data.external_url}" target="_blank" class="ms-2 fa fa-external-link btn-secondary" style="font-size: 1rem;"/>
                         </t>
                     </div>
-                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-ref="link-target-blank"/>
+                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-custom-ref="link-target-blank"/>
                 </div>
             </td>
         </xpath>

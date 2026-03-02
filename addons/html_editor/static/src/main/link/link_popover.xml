@@ -2,10 +2,10 @@
 
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
-            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
+            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-custom-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
-                        <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
+                        <input name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
@@ -46,7 +46,7 @@
                 <t t-else="">
                     <div class="col p-2 o_link_popover_container">
                         <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
-                            <input t-ref="label"
+                            <input t-custom-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
                                 t-model="state.label"
                                 title="Label"
@@ -54,7 +54,7 @@
                                 t-on-input="onChange"/>
                         </div>
                         <div class="input-group mb-2">
-                            <input t-ref="url"
+                            <input t-custom-ref="url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
                                 t-model="state.url"
