@@ -106,13 +106,13 @@
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
     <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="EUR">300.00</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
     <cac:InvoicePeriod>
       <cbc:StartDate>2026-01-20</cbc:StartDate>
       <cbc:EndDate>2026-02-19</cbc:EndDate>
     </cac:InvoicePeriod>
     <cac:Item>
-      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012346GHJKL</cbc:Description>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
       <cbc:Name>NA</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
@@ -121,8 +121,41 @@
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:ClassifiedTaxCategory>
+      <!-- VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'SerialNumber' -->
       <cac:AdditionalItemProperty>
         <cbc:Name>SerialNumber</cbc:Name>
+        <cbc:Value>ABCDEF012345GHJKL</cbc:Value>
+      </cac:AdditionalItemProperty>
+      <cac:AdditionalItemProperty>
+        <cbc:Name>OtherInfo</cbc:Name>
+        <cbc:Value>TEST</cbc:Value>
+      </cac:AdditionalItemProperty>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:InvoicePeriod>
+      <cbc:StartDate>2026-01-20</cbc:StartDate>
+      <cbc:EndDate>2026-02-19</cbc:EndDate>
+    </cac:InvoicePeriod>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
+      <cbc:Name>NA</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+      <!-- VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'VIN' -->
+      <cac:AdditionalItemProperty>
+        <cbc:Name>VIN</cbc:Name>
         <cbc:Value>ABCDEF012346GHJKL</cbc:Value>
       </cac:AdditionalItemProperty>
       <cac:AdditionalItemProperty>
@@ -131,18 +164,19 @@
       </cac:AdditionalItemProperty>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="EUR">300.00</cbc:PriceAmount>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
   <cac:InvoiceLine>
-    <cbc:ID>2</cbc:ID>
+    <cbc:ID>3</cbc:ID>
     <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="EUR">300.00</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
     <cac:InvoicePeriod>
       <cbc:StartDate>2026-01-20</cbc:StartDate>
       <cbc:EndDate>2026-02-19</cbc:EndDate>
     </cac:InvoicePeriod>
     <cac:Item>
+      <!-- VIN in Item/Description -->
       <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012347GHJKL</cbc:Description>
       <cbc:Name>NA</cbc:Name>
       <cac:ClassifiedTaxCategory>
@@ -152,29 +186,69 @@
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:ClassifiedTaxCategory>
-      <cac:AdditionalItemProperty>
-        <cbc:Name>SerialNumber</cbc:Name>
-        <cbc:Value>ABCDEF012347GHJKL</cbc:Value>
-      </cac:AdditionalItemProperty>
-      <cac:AdditionalItemProperty>
-        <cbc:Name>OtherInfo</cbc:Name>
-        <cbc:Value>TEST</cbc:Value>
-      </cac:AdditionalItemProperty>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="EUR">300.00</cbc:PriceAmount>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
   <cac:InvoiceLine>
-    <cbc:ID>3</cbc:ID>
+    <cbc:ID>4</cbc:ID>
     <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="EUR">400.00</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
     <cac:InvoicePeriod>
       <cbc:StartDate>2026-01-20</cbc:StartDate>
       <cbc:EndDate>2026-02-19</cbc:EndDate>
     </cac:InvoicePeriod>
     <cac:Item>
-      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012348GHJKL</cbc:Description>
+      <!-- LICENSE PLATE in Item/Description -->
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE 1-ABC-123</cbc:Description>
+      <cbc:Name>NA</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>5</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:InvoicePeriod>
+      <cbc:StartDate>2026-01-20</cbc:StartDate>
+      <cbc:EndDate>2026-02-19</cbc:EndDate>
+    </cac:InvoicePeriod>
+    <cac:Item>
+      <!-- combine LICENSE PLATE and VIN in Item/Description -->
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 ABCDEF012345GHJKL VOITURE PARTICULIERE ESSENCE 1-ABC-123</cbc:Description>
+      <cbc:Name>NA</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>21</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>6</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">200.00</cbc:LineExtensionAmount>
+    <cac:InvoicePeriod>
+      <cbc:StartDate>2026-01-20</cbc:StartDate>
+      <cbc:EndDate>2026-02-19</cbc:EndDate>
+    </cac:InvoicePeriod>
+    <cac:Item>
+      <cbc:Description>Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE</cbc:Description>
       <cbc:Name>NA</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
@@ -189,7 +263,7 @@
         <cbc:Value>ABCDEF012348GHJKL</cbc:Value>
       </cac:AdditionalItemProperty>
       <cac:AdditionalItemProperty>
-        <cbc:Name>SerialNumber</cbc:Name>
+        <cbc:Name>VIN</cbc:Name>
         <cbc:Value>ABCDEF012349GHJKL</cbc:Value>
       </cac:AdditionalItemProperty>
       <cac:AdditionalItemProperty>
@@ -198,7 +272,7 @@
       </cac:AdditionalItemProperty>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="EUR">400.00</cbc:PriceAmount>
+      <cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
 </Invoice>
