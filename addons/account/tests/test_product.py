@@ -136,3 +136,13 @@ class TestProduct(AccountTestInvoicingCommon):
             "Customer invoice line should use grandparent category's income account")
         self.assertEqual(bill.invoice_line_ids.account_id, child_expense,
             "Vendor bill line should use child category's expense account")
+
+    def test_retrieve_product_by_name(self):
+        Product = self.env['product.product']
+        Product.create({'name': 'Wireless bluetooth speaker battery'})
+        product_A = Product.create({'name': 'Network Cables'})
+
+        # Similar but not similar enough to be considered the same product
+        self.assertFalse(Product._retrieve_product(name='Wireless bluetooth speaker'))
+        self.assertEqual(product_A, Product._retrieve_product(name='Network Cable'))
+        self.assertEqual(product_A, Product._retrieve_product(name='network cables'))  # case insensitive exact match
