@@ -252,6 +252,11 @@ class TestStructure(TransactionCase):
         test_partner.write({"vat": "BE0477.47.27.01"})
         self.assertEqual(test_partner.vat, 'BE0477472701')
 
+    def test_revised_nri_gstin_format(self):
+        """Test valid NRI GSTIN number is accepted"""
+        in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
+        in_partner.vat = "9922JPN29001OSU"
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
