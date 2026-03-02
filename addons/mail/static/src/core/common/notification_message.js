@@ -19,7 +19,7 @@ export class NotificationMessage extends Component {
      * @param {MouseEvent} ev
      */
     async onClickNotificationMessage(ev) {
-        this._handleClickOnLink(ev);
+        this.store.handleClickOnLink(ev, this.props.thread);
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(

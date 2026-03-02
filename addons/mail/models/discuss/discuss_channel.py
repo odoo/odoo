@@ -724,7 +724,7 @@ class DiscussChannel(models.Model):
     def _get_member_join_notification(self, member):
         if member.is_self:
             return self.env._("joined the channel")
-        return self.env._("invited %s to the channel", member._get_html_link(for_persona=True))
+        return self.env._("invited %s to the channel", member._get_member_html_link())
 
     def invite_by_email(self, emails):
         """
@@ -1630,7 +1630,7 @@ class DiscussChannel(models.Model):
         else:
             if members := self.channel_member_ids.filtered(lambda m: not m.is_self):
                 member_names = html_escape(format_list(self.env, [f"%(member_{member.id})s" for member in members])) % {
-                    f"member_{member.id}": member._get_html_link(for_persona=True)
+                    f"member_{member.id}": member._get_member_html_link()
                     for member in members
                 }
                 msg = _(
@@ -1666,7 +1666,7 @@ class DiscussChannel(models.Model):
             else:
                 list_params.append(_("you"))
             member_names = html_escape(format_list(self.env, list_params)) % {
-                f"member_{member.id}": member._get_html_link(for_persona=True)
+                f"member_{member.id}": member._get_member_html_link()
                 for member in members
             }
             msg = _(
