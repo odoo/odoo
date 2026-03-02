@@ -50,7 +50,7 @@ class ResUsers(models.Model):
         # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
         # return whether the features are enabled
         get_str = self.env["ir.config_parameter"].sudo().get_str
-        res.attr("hasGifPickerFeature", bool(get_str("discuss.tenor_api_key")))
+        res.attr("hasGifPickerFeature", bool(get_str("discuss.klipy_api_key")))
         res.attr("hasMessageTranslationFeature", bool(get_str("mail.google_translate_api_key")))
         res.attr(
             "hasCannedResponses",
