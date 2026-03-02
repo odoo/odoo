@@ -79,17 +79,21 @@
                 <field name="company_id" invisible="1"/>
                 <field name="category_id" invisible="1"/>
                 <header>
-                    <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled'"/>
+                    <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled' or not id"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="state != 'cancelled'"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}" invisible="state == 'cancelled'"/>
                 </header>
                 <sheet>
-                    <field name="state" widget="maintenance_request_state_selection" class="float-end"/>
-                    <div class="oe_title">
-                        <label for="name" string="Request"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Screen not working"/>
-                        </h1>
+                    <div class="d-flex">
+                        <div class="oe_title flex-grow-1">
+                            <h1>
+                                <field name="name" placeholder="e.g. Screen not working"/>
+                            </h1>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center flex-shrink-0 ms-auto">
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <field name="state" widget="maintenance_request_state_selection"/>
+                        </div>
                     </div>
                     <group>
                         <group>
@@ -101,9 +105,8 @@
                         </group>
                         <group>
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="user_id" string="Responsible"/>
-                            <field name="schedule_date"/>
-                            <field name="schedule_end"/>
+                            <field name="user_id" string="Assignee"/>
+                            <field name="schedule_date" string="Planned Date" widget="daterange" options="{'end_date_field': 'schedule_end', 'always_range': True}"/>
                             <label for="recurring_maintenance" invisible="maintenance_type == 'corrective'"/>
                             <div class="d-inline-flex" invisible="maintenance_type == 'corrective'">
                                 <field name="recurring_maintenance" nolabel="1" class="ms-0" style="width: fit-content;"/>
@@ -115,7 +118,6 @@
                                 <field name="repeat_type" required="recurring_maintenance" class="me-2" style="max-width: 15rem !important;" />
                                 <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'" class="me-2" />
                             </div>
-                            <field name="priority" widget="priority"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>

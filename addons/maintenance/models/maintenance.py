@@ -298,7 +298,7 @@ class MaintenanceRequest(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='State', required=True, default='normal', tracking=True, copy=False)
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
-    schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
+    schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ", default=fields.Datetime.now)
     schedule_end = fields.Datetime(
         string="Scheduled End", compute='_compute_schedule_end',
         help="Expected completion date and time of the maintenance request.",
