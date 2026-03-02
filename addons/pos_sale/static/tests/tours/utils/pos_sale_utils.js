@@ -63,6 +63,14 @@ export function downPaymentFirstOrder(amount) {
             run: "click",
         },
         Numpad.click(amount),
+        {
+            content: `wait for down payment amount to be set`,
+            trigger: `.modal:not(.o_inactive_modal) .input-value:contains('% ${amount.replace(
+                "+",
+                ""
+            )}')`,
+        },
+
         Dialog.confirm("Apply"),
     ];
 }
