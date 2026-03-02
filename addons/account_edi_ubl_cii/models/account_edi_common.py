@@ -1,9 +1,11 @@
 import re
+from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, models
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero, float_repr
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
@@ -1126,6 +1128,7 @@ class AccountEdiCommon(models.AbstractModel):
             return False
         default_parent_node_path = './{*}Item/{*}AdditionalItemProperty'
         default_value_path = './{*}Value'
+        default_linked_field = 'vin_sn'
 
         def default_condition(parent_node, node, value):
             return parent_node.findtext('./{*}Name') == value
@@ -1133,14 +1136,33 @@ class AccountEdiCommon(models.AbstractModel):
             # {
             #   'path_type': 'line' or 'move'
             #   'parent_node_path': 'path to the parent node',
-            #   'condition': lambda prent_node, node, value: 'where parent_node = parent node, node = node containing VIN Number, value = vin_identifier',
+            #   'condition': lambda parent_node, node, value: 'where parent_node = parent node, node = node containing VIN Number, value = identifier',
             #   'value_path': 'path to the node where the information is to be found',
-            #   'vin_identifier': 'to be used in condition, to perform a check',
+            #   'identifier': 'to be used in condition to perform a check, inner tex of a node allowing to identify the node to read',
+            #   'linked_field': the field to search in DB (vin_sn, license_plate),
+            #   'pattern': if the value to search is not in a field specific to it (with other words like in a description)
             # }
-            {'path_type': 'line', 'vin_identifier': 'SerialNumber'},  # BNP Leasing
-            {'path_type': 'line', 'vin_identifier': 'VIN'},  # BMW
+            {'path_type': 'line', 'identifier': 'SerialNumber'},  # VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'SerialNumber'
+            {'path_type': 'line', 'identifier': 'VIN'},  # VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'VIN'
             {
-                # Tesla
+                # VIN in Item/Description
+                'path_type': 'line',
+                'parent_node_path': './{*}Item',
+                'condition': lambda parent_node, node, value: True,
+                'value_path': './{*}Description',
+                'pattern': r'[A-Za-z0-9]{17}',
+            },
+            {
+                # LICENSE PLATE in Item/Description
+                'path_type': 'line',
+                'parent_node_path': './{*}Item',
+                'condition': lambda parent_node, node, value: True,
+                'value_path': './{*}Description',
+                'linked_field': 'license_plate',
+                'pattern': r'\d-[A-Za-z]{3}-\d{3}',  # BE license plate format
+            },
+            {
+                # VIN in AdditionalDocumentReference/ID with schemeID == 'AKG' (1 vin for the whole invoice)
                 'path_type': 'move',
                 'parent_node_path': './{*}AdditionalDocumentReference',
                 'condition': lambda parent_node, node, value: node.get('schemeID') == 'AKG',
@@ -1148,23 +1170,32 @@ class AccountEdiCommon(models.AbstractModel):
             },
         ]
 
-        chassis_numbers = []
-        for path in [p for p in paths if p.get('path_type') == tree_type]:
+        results = defaultdict(set)  # {field (vin_sn|license_plate): {'AZERTYUIOP', 'POIUYTREZA'}}
+        for path in [p for p in paths if p['path_type'] == tree_type]:
             parent_nodes = tree.findall(path.get('parent_node_path', default_parent_node_path))
             for parent_node in parent_nodes:
-                vin_node = parent_node.find(path.get('value_path', default_value_path))
-                if vin_node is not None and path.get('condition', default_condition)(parent_node, vin_node, path.get('vin_identifier', '')):
-                    vin_sn = vin_node.text
-                    if vin_sn and re.fullmatch(r'[A-Za-z0-9]{17}', vin_sn):  # applies to vin after 1981
-                        chassis_numbers.append(vin_sn)
+                value_node = parent_node.find(path.get('value_path', default_value_path))
+                if value_node is None or not path.get('condition', default_condition)(parent_node, value_node, path.get('identifier', '')):
+                    continue
+                value = value_node.text
+                if value is None:
+                    continue
+                if path.get('pattern'):
+                    # we need to find the car identifier in the node
+                    if candidates := re.findall(path['pattern'], value or ''):
+                        results[path.get('linked_field', default_linked_field)].update(candidates)
+                else:
+                    # the car identifier is the full text of the node
+                    results[path.get('linked_field', default_linked_field)].add(value)
 
-        if len(chassis_numbers) != 1:
+        if len(results) == 0 or any(len(vals) != 1 for vals in results.values()):
             return False
 
         vehicles = self.env.get('fleet.vehicle').search([
-            ('vin_sn', 'in', chassis_numbers),
             ('company_id', '=', company.id),
-        ], limit=2)
+        ] + Domain.OR([
+            [(field, 'in', vals)] for field, vals in results.items()
+        ]), limit=2)
         if len(vehicles) == 1:
             return vehicles.id
         return False

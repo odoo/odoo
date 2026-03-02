@@ -915,6 +915,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         car = self.env['fleet.vehicle'].create({
             'model_id': model.id,
             'vin_sn': 'ABCDEF012345GHJKL',
+            'license_plate': '1-ABC-123',
         })
         car2 = self.env['fleet.vehicle'].create({
             'model_id': model.id,
@@ -944,9 +945,12 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         xml_attachment_line = create_attachment("bis3_bill_vehicle_line.xml")
         bill_line = self._import_as_attachment_on(attachment=xml_attachment_line)
         self.assertRecordValues(bill_line.invoice_line_ids, [
-            {'vehicle_id': car2.id},
-            {'vehicle_id': car3.id},
-            {'vehicle_id': False},
+            {'vehicle_id': car.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
+            {'vehicle_id': car2.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
+            {'vehicle_id': car3.id},  # search VIN in Item/Description
+            {'vehicle_id': car.id},  # search License Plate in Item/Description
+            {'vehicle_id': car.id},  # search combined License Plate and VIN in Item/Description
+            {'vehicle_id': False},  # Double vin -> no vehicle linked
         ])
 
     def test_generate_pdf_when_xml_does_not_provide_one(self):
