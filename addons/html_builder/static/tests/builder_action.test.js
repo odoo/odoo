@@ -109,6 +109,38 @@ test("Prepare is triggered on props updated", async () => {
     expect.verifySteps(["prepare"]);
 });
 
+test("prepare is triggered before getValue(useInputBuilderComponent)", async () => {
+    const prepareDeferred = Promise.withResolvers();
+    class TestOption extends BaseOptionComponent {
+        static template = xml`<BuilderList action="'customAction'"/>`;
+        static selector = ".test-options-target";
+        static props = {};
+    }
+    class CustomAction extends BuilderAction {
+        static id = "customAction";
+        async prepare() {
+            expect.step("prepare-start");
+            await prepareDeferred.promise;
+            expect.step("prepare-end");
+        }
+        getValue() {
+            expect.step("getValue");
+            return false;
+        }
+        apply() {}
+    }
+    addBuilderAction({
+        CustomAction,
+    });
+    addBuilderOption(TestOption);
+    await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+    await contains(":iframe .test-options-target").click();
+    expect.verifySteps(["prepare-start"]);
+    prepareDeferred.resolve();
+    await animationFrame();
+    expect.verifySteps(["prepare-end", "getValue"]);
+});
+
 test("Data Attribute action works with non string values", async () => {
     addBuilderOption({
         selector: ".s_test",
