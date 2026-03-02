@@ -542,6 +542,9 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_attachments(self, invoice, tree):
         # Import the embedded documents in the xml if some are found
         attachments = self.env['ir.attachment']
+        if invoice.message_main_attachment_id:
+            # Invoice look like it was already imported, don't import attachments again
+            return attachments
         additional_docs = tree.findall('./{*}AdditionalDocumentReference')
         for document in additional_docs:
             attachment_name = document.find('{*}ID')
