@@ -1269,3 +1269,28 @@ test("open conversation from call invitation (discuss app)", async () => {
     await click("[title='Join Call']");
     await contains(".o-mail-DiscussContent-threadName[title=General]");
 });
+
+test("show warning when blur hardware acceleration is not available", async () => {
+    const pyEnv = await startServer();
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        getContext(type) {
+            if (type.includes("webgl")) {
+                return false;
+            }
+            return super.getContext(type);
+        },
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("button[title='Turn camera on']");
+    await click("button[title='Video Settings']");
+    await click(":has(:text(Blur background)) .form-switch");
+    await contains(".o-discuss-BlurPerformanceWarning-button");
+    expect(".o-discuss-BlurPerformanceWarning-button").toBeVisible();
+    await contains(".o-discuss-CallDropdown-content:has(:text('Performance Warning:'))");
+    expect(".o-discuss-CallDropdown-content:has(:text('Performance Warning:'))").toBeVisible();
+    await click("[title='Dismiss warning']");
+    await contains(".o-discuss-BlurPerformanceWarning-button", { count: 0 });
+});
