@@ -672,6 +672,16 @@ registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount"
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_settle_so_custom_attribute_value", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Inscription: Custom: Value" }),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
     steps: () =>
         [
