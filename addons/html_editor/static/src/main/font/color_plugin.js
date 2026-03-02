@@ -68,9 +68,14 @@ export class ColorPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        selectionchange_handlers: withSequence(100, this.updateSelectedColor.bind(this)),
         remove_format_handlers: this.removeAllColor.bind(this),
         normalize_handlers: this.normalize.bind(this),
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            10,
+            this.computeBackgroundColorForTextNode.bind(this)
+        ),
     };
 
     setup() {
@@ -104,7 +109,7 @@ export class ColorPlugin extends Plugin {
         };
     }
 
-    updateSelectedColor() {
+    computeBackgroundColorForTextNode() {
         const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
@@ -133,10 +138,40 @@ export class ColorPlugin extends Plugin {
             }
         }
 
+        return hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
+    }
+
+    updateSelectedColor() {
+        // Compute and update the background color.
+        let backgroundColor;
+        for (const provider of this.getResource("selected_background_color_providers")) {
+            const providedBackgroundColor = provider();
+            if (providedBackgroundColor) {
+                backgroundColor = providedBackgroundColor;
+                break;
+            }
+        }
+
+        this.selectedColors.backgroundColor = backgroundColor || "#00000000";
+
+        // Compute and update the text color.
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
+        if (nodes.length === 0) {
+            this.selectedColors.color = "";
+            return;
+        }
+        const el = closestElement(nodes[0]);
+        if (!el) {
+            this.selectedColors.color = "";
+            return;
+        }
+        const elStyle = getComputedStyle(el);
+        const backgroundImage = elStyle.backgroundImage;
+        const hasGradient = isColorGradient(backgroundImage);
+        const hasTextGradientClass = el.classList.contains("text-gradient");
+
         this.selectedColors.color =
             hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
-        this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
     }
 
     /**
