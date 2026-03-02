@@ -666,8 +666,8 @@ class ProjectProject(models.Model):
                 vals['favorite_user_ids'] = [self.env.uid]
         projects = super().create(vals_list)
         for project in projects:
-            if project.privacy_visibility == 'portal':
-                project.message_subscribe(partner_ids=[project.partner_id.id])
+            if project.privacy_visibility in ['invited_users', 'portal'] and project.partner_id:
+                project.message_subscribe(partner_ids=project.partner_id.ids)
         return projects
 
     def write(self, vals):
@@ -712,6 +712,10 @@ class ProjectProject(models.Model):
             vals.pop('last_update_status')
         if vals.get('privacy_visibility'):
             self._change_privacy_visibility(vals['privacy_visibility'])
+
+        if vals.get('partner_id'):
+            projects = self.filtered(lambda p: (vals.get('privacy_visibility') or p.privacy_visibility) in ['invited_users', 'portal'])
+            projects.message_subscribe(partner_ids=[vals.get('partner_id')])
 
         date_start = vals.get('date_start', True)
         date_end = vals.get('date', True)

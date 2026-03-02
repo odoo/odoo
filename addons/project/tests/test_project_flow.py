@@ -490,3 +490,9 @@ class TestProjectFlow(TestProjectCommon, MailCase):
             self.partner_1, project.message_partner_ids,
             "Customer should be automatically subscribed to the project when visibility is set to 'public'."
         )
+
+        project.partner_id = self.partner_2.id
+        self.assertIn(
+            self.partner_2, project.message_partner_ids,
+            "New customer should be automatically subscribed when partner changes on a public project."
+        )
