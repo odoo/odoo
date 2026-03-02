@@ -80,6 +80,16 @@ class HrLeaveAllocation(models.Model):
 
         total_worked_hours = 0.0
         for attendance in attendances:
-            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+            worked_hours = attendance._get_worked_hours_in_range(start_dt, end_dt)
+            # Only the approved extra hours count: the ones still to approve or refused are left out
+            approved_overtime = attendance.validated_overtime_hours if attendance.overtime_status == 'approved' else 0.0
+            unapproved_overtime = max(0.0, attendance.overtime_hours - approved_overtime)
+            if worked_hours and unapproved_overtime:
+                # Prorated to the part of the attendance in the period (an attendance across midnight)
+                attendance_hours = attendance.worked_hours or attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
+                if attendance_hours:
+                    unapproved_overtime *= min(1.0, worked_hours / attendance_hours)
+                worked_hours = max(0.0, worked_hours - unapproved_overtime)
+            total_worked_hours += worked_hours
 
         return total_worked_hours
