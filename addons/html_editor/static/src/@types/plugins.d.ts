@@ -26,7 +26,7 @@ declare module "plugins" {
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
-    import { ColorUIShared } from "@html_editor/main/font/color_ui_plugin";
+    import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
     import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
@@ -244,6 +244,7 @@ declare module "plugins" {
         paste_media_url_command_providers: paste_media_url_command_providers;
         removable_descendants_providers: removable_descendants_providers;
         selectors_for_feff_providers: selectors_for_feff_providers;
+        selected_background_color_providers: selected_background_color_providers
 
         // Data
         advanced_popover_options: advanced_popover_options;
