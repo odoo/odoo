@@ -3,11 +3,23 @@
 
 <t t-name="html_builder.AddSnippetDialog">
     <Dialog
-        title.translate="Insert a block"
         contentClass="'o_add_snippet_dialog h-100'"
         footer="false"
         size="'xl'"
         modalRef="modalRef">
+        <t t-set-slot="header" t-slot-scope="scope">
+            <h4 class="modal-title">Insert a block</h4>
+            <div class="ms-auto align-items-center">
+                <button class="btn btn-success-color-active border-0"
+                        t-on-click="toggleMobilePreviewSnippet"
+                        t-att-class="{ active: state.isMobilePreviewSnippet }"
+                        title="Mobile Preview"
+                        aria-label="Mobile Preview">
+                    <i class="fa fa-mobile" style="margin-top: 2px; font-size: 25px"></i>
+                </button>
+                <button class="btn btn-close" t-on-click="props.close"/>
+            </div>
+        </t>
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">
                 <aside class="border-end overflow-auto">
@@ -54,14 +66,32 @@
                             </p>
                         </div>
                     </t>
-                    <iframe class="border-0 fade bg-200 position-relative o_add_snippet_iframe"
-                            t-ref="iframe"
+                    <iframe t-if="!state.isMobilePreviewSnippet" class="border-0 fade bg-200 position-relative o_add_snippet_iframe"
+                            t-ref="pcIframe"
                             role="tabpanel"
                             t-att-aria-labelledby="'tab_' + state.groupSelected"
                             t-att-id="'tabpanel_' + state.groupSelected"
                             t-att-class="state.showIframe ? 'show' : '' "
                             src="about:blank"
                             height="333%" width="333%"/>
+                    <div t-else="" class="d-flex w-100 h-100 o_add_snippet_mobile_iframes fade overflow-hidden" 
+                        t-att-class="state.showIframe ? 'show' : '' ">
+                        <iframe class="border-0 position-relative o_add_snippet_iframe flex-grow-1 bg-200"
+                                t-ref="mobIframe0"
+                                src="about:blank"
+                                scrolling="no"
+                                width="33.33%" height="100%"/>
+                        <iframe class="border-0 position-relative o_add_snippet_iframe flex-grow-1 bg-200 ms-1"
+                                t-ref="mobIframe1"
+                                src="about:blank"
+                                scrolling="no"
+                                width="33.33%" height="100%"/>
+                        <iframe class="border-0 position-relative o_add_snippet_iframe flex-grow-1 bg-200 ms-1"
+                                t-ref="mobIframe2"
+                                src="about:blank"
+                                scrolling="no"
+                                width="33.33%" height="100%"/>
+                    </div>
                 </div>
             </div>
         </div>

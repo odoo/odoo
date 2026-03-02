@@ -1,11 +1,18 @@
 .o_add_snippet_dialog {
     max-height: $modal-lg !important;
 
+    .btn-success-color-active {
+        --btn-active-color: #0dffa3;
+    }
+
     .modal-body {
         display: flex;
         padding: 0;
 
         aside {
+            .position-relative.p-2:not(.border-bottom) {
+                width: 90%;
+            }
             input[type="search"] {
                 // Chromium-based browsers render a "cancel" button by default.
                 // When visible, adapt its position in order to visually
@@ -40,6 +47,28 @@
         background-color: var(--SearchBar-bg-color, #{$o-white});
     }
 }
+
+.o_is_mobile_preview {
+    [data-snippet-id="s_parallax"] {
+        .s_parallax_bg {
+            left: 0% !important;
+            top: 0% !important;
+            transform: scale(1.5) !important;
+        }
+    }
+    [data-snippet-id="s_newsletter_benefits_popup"] {
+        .s_popup {
+            min-height: 1135px !important;
+        }
+    }
+    .o_snippets_preview_row .o_snippet_preview_wrap[data-label]:not([data-label=""])::before {
+        transform: scale(2.5);
+    }
+    .o_snippets_preview_row .o_snippet_preview_wrap.o_snippet_preview_install > .o_snippet_preview_install_btn {
+        transform: scale(2.3);
+    }
+}
+
 .o_add_snippet_dialog_iframe_loader {
     // This loader will appear after a 1s delay, ensuring it doesn't disrupt the
     // experience for users with a good connection.
