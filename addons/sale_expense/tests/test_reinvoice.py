@@ -538,3 +538,35 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'is_expense': True,
             },
         ])
+
+    def test_expense_reinvoice_unit_price_based_on_quantities(self):
+        """
+        Ensure that when reinvoicing an expense with multiple quantities,
+        the generated sale order line has a proper unit price
+        """
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        sale_order.action_confirm()
+
+        expense = self.create_expenses([{
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.company_data['service_order_cost_price'].id,
+            'quantity': 5,
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': sale_order.id,
+            'payment_mode': 'company_account',
+        }])
+
+        # The price_unit include the tax
+        self.assertRecordValues(expense, [
+            {'quantity': 5.0, 'price_unit': 235.28, 'untaxed_amount': 1045.7, 'total_amount': 1176.4},
+        ])
+
+        expense.action_submit()
+        expense._do_approve()
+        self.post_expenses_with_wizard(expense)
+
+        # The tax line isn't added so there is a difference in the price_unit
+        self.assertRecordValues(sale_order.order_line, [
+            {'product_uom_qty': 5.0, 'qty_delivered': 5.0, 'price_unit': 209.14, 'price_subtotal': 1045.7, 'price_total': 1176.4},
+        ])
