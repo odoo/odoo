@@ -61,9 +61,6 @@ export class EditCodeAction extends BuilderAction {
         return newContent;
     }
     apply({ editingElement, loadResult: content }) {
-        if (!content) {
-            return;
-        }
         // Remove scripts tags from the DOM as we don't want them to
         // interfere during edition, but keeps them in a
         // `<template>` that will be saved to the database.
