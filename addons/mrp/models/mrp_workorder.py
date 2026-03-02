@@ -145,7 +145,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
     remaining_time = fields.Float('Remaining Working Time', compute='_compute_remaining_time',
-                                  help="The remaining time to finish this work order in hours.")
+                                  help="The remaining time to finish this work order.")
     color = fields.Integer('Color', related="production_id.id")
 
     @api.depends('qty_ready')

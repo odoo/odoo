@@ -92,6 +92,9 @@ class MrpProduction(models.Model):
         domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=False, required=True, check_company=True)
+    product_name = fields.Char(compute='_compute_product_name')  # technical: used in views only
+    product_default_code = fields.Char(related='product_id.default_code')  # technical: used in views only
+
     production_group_id = fields.Many2one('mrp.production.group', 'Production Group', index=True, copy=False)
 
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
@@ -260,6 +263,8 @@ class MrpProduction(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')
+    mrp_production_all_child_count = fields.Integer("Number of all generated MO", compute='_compute_mrp_production_all_child_count')
+    mrp_production_all_child_done_count = fields.Integer("Number of done all generated MO", compute='_compute_mrp_production_all_child_count')
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
     mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
     show_lock = fields.Boolean('Show Lock/unlock buttons', compute='_compute_show_lock')
@@ -283,6 +288,7 @@ class MrpProduction(models.Model):
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
+    is_due_today = fields.Boolean(compute='_compute_is_delayed')
     search_date_category = fields.Selection([
         ('before', 'Before'),
         ('yesterday', 'Yesterday'),
@@ -295,6 +301,9 @@ class MrpProduction(models.Model):
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
     note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
+    remaining_time = fields.Float('Remaining Working Time', compute='_compute_remaining_time',
+                                  help="The remaining time to finish this production in hours.")
+    active_workcenter_ids = fields.Many2many('mrp.workcenter', compute='_compute_active_workcenter_ids')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -309,6 +318,13 @@ class MrpProduction(models.Model):
     def _compute_mrp_production_child_count(self):
         for production in self:
             production.mrp_production_child_count = len(production._get_children())
+
+    @api.depends('production_group_id.child_ids.production_ids')
+    def _compute_mrp_production_all_child_count(self):
+        for production in self:
+            all_children = production._get_all_children()
+            production.mrp_production_all_child_count = len(all_children)
+            production.mrp_production_all_child_done_count = len(all_children.filtered(lambda p: p.state == 'done'))
 
     @api.depends('production_group_id.parent_ids.production_ids')
     def _compute_mrp_production_source_count(self):
@@ -406,7 +422,7 @@ class MrpProduction(models.Model):
             else:
                 forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
                 if forecast_date:
-                    production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
+                    production.components_availability = _('Exp %s', format_date(self.env, forecast_date, date_format='MMM d'))
                     if production.date_start:
                         production.components_availability_state = 'late' if forecast_date > production.date_start else 'expected'
 
@@ -900,7 +916,11 @@ class MrpProduction(models.Model):
         for record in self:
             record.is_delayed = bool(
                 record.state in ['confirmed', 'progress', 'to_close'] and (
-                    record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
+                    record.date_deadline and (record.date_deadline.date() < datetime.date.today() or record.date_deadline.date() < record.date_finished.date()))
+            )
+            record.is_due_today = bool(
+                record.state in ['confirmed', 'progress', 'to_close'] and (
+                    record.date_deadline and (record.date_deadline.date() == datetime.date.today()))
             )
 
     def _search_date_category(self, operator, value):
@@ -919,6 +939,26 @@ class MrpProduction(models.Model):
                 production.serial_numbers_count = 0
                 continue
             production.serial_numbers_count = len(production.lot_producing_ids)
+
+    @api.depends('product_id')
+    def _compute_product_name(self):
+        for production in self:
+            production.product_name = production.product_id.with_context(display_default_code=False).display_name
+
+    @api.depends('workorder_ids.remaining_time')
+    def _compute_remaining_time(self):
+        for production in self:
+            production.remaining_time = sum(production.workorder_ids.mapped('remaining_time'))
+
+    @api.depends('workorder_ids.time_ids')
+    def _compute_active_workcenter_ids(self):
+        active_workcenters_by_mo = self.env["mrp.workcenter.productivity"]._read_group(
+            [("workorder_id", "in", self.workorder_ids.ids), ("date_end", "=", False)],
+            ["production_id"], ["workcenter_id:recordset"],
+        )
+        self.active_workcenter_ids = False
+        for production, workcenters in active_workcenters_by_mo:
+            production.active_workcenter_ids = workcenters
 
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
@@ -1494,6 +1534,11 @@ class MrpProduction(models.Model):
         self.ensure_one()
         return self.production_group_id.child_ids.production_ids
 
+    def _get_all_children(self):
+        direct_children = self.production_group_id.child_ids.production_ids
+        indirect_children = direct_children._get_all_children() if direct_children else self.env['mrp.production']
+        return direct_children | indirect_children
+
     def _get_sources(self):
         self.ensure_one()
         return self.production_group_id.parent_ids.production_ids
@@ -1505,6 +1550,26 @@ class MrpProduction(models.Model):
     def action_view_mrp_production_childs(self):
         self.ensure_one()
         mrp_production_ids = self._get_children().ids
+        action = {
+            'res_model': 'mrp.production',
+            'type': 'ir.actions.act_window',
+        }
+        if len(mrp_production_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': mrp_production_ids[0],
+            })
+        else:
+            action.update({
+                'name': _("%s Child MO's", self.name),
+                'domain': [('id', 'in', mrp_production_ids)],
+                'view_mode': 'list,form',
+            })
+        return action
+
+    def action_view_mrp_production_all_childs(self):
+        self.ensure_one()
+        mrp_production_ids = self._get_all_children().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',

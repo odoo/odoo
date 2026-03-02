@@ -1905,12 +1905,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         (move1 | move2 | move3)._action_confirm()
 
         mo.invalidate_recordset(['components_availability', 'components_availability_state'])
-        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow, date_format='MMM d')}')
         check_availability_state('late')
 
         mo.date_start = after_tommorrow
 
-        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow, date_format='MMM d')}')
         self.assertEqual(mo.components_availability_state, 'expected')
         check_availability_state('expected')
 
@@ -1918,7 +1918,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         (move1 | move2)._action_done()
 
         # Still expected because move3 not yet done
-        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
+        self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow, date_format='MMM d')}')
         self.assertEqual(mo.components_availability_state, 'expected')
         check_availability_state('expected')
 
