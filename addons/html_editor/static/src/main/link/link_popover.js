@@ -668,7 +668,7 @@ export class LinkPopover extends Component {
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
         const { resModel, resId } = this.props.recordInfo;
-        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        const [attachment] = await upload({ resModel, resId }, { accessToken: true });
         if (!attachment) {
             // No file selected or upload failed
             return;
