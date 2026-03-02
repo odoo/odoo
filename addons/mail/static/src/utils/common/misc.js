@@ -215,6 +215,7 @@ export function convertToEmbedURL(url) {
  */
 export const hasHardwareAcceleration = memoize(() => {
     const canvas = document.createElement("canvas");
+    console.log(canvas, canvas.getContext)
     const gl =
         canvas.getContext("webgl2") ||
         canvas.getContext("webgl") ||
