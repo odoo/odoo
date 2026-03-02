@@ -11,3 +11,19 @@
 .o_nocontent_help:has(.oe_view_nocontent_attendance_mobile) {
     position: relative;
 }
+
+.hide_add_line .o_list_table tr.d-print-none:hover td {
+    background-color: var(--table-hover-bg) !important;
+    box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.0) !important;
+}
+
+.hide_add_line .o_list_table tr.d-print-none td {
+    background-color: transparent !important;
+}
+
+.hide_add_line .o_field_x2many_list_row_add a {
+    color: transparent !important;
+    pointer-events: none !important;
+    display: block;
+    width: 100%;
+}

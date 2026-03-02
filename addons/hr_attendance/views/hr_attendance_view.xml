@@ -202,7 +202,10 @@
                     <notebook invisible="not overtime_status">
                         <page string="Overtime Details">
                             <field name="linked_overtime_ids">
-                                <list editable="bottom">
+                                <list editable="bottom" create="0" class="hide_add_line">
+                                    <control>
+                                         <create string="&#160;"/>
+                                    </control>
                                     <field name="rule_ids" widget="many2many_tags" readonly="1"/>
                                     <field name="duration" widget="float_time" readonly="1"/>
                                     <field name="manual_duration" widget="float_time" readonly="0"/>
