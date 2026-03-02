@@ -16,6 +16,7 @@ export class DiscussAvatar extends Component {
         "typing?",
         "className?",
         "imgRoundedClass?",
+        "rtcSession?",
     ];
     static defaultProps = { className: "", size: 32, typing: true };
     static components = { ImStatus, ThreadIcon };
@@ -29,12 +30,16 @@ export class DiscussAvatar extends Component {
         return this.props.channel ?? this.props.thread?.channel;
     }
 
+    get member() {
+        return this.props.member ?? this.props.rtcSession?.channel_member_id;
+    }
+
     get thread() {
         return this.props.thread ?? this.props.channel?.thread;
     }
 
     get isTyping() {
-        if (!this.props.typing) {
+        if (!this.props.typing || this.props.rtcSession) {
             return false;
         }
         if (this.channel) {
@@ -46,12 +51,29 @@ export class DiscussAvatar extends Component {
         return false;
     }
 
-    get showIcon() {
+    get showTopLeftIcon() {
+        if (this.props.rtcSession) {
+            return this.props.rtcSession.raisingHand;
+        }
+        return false;
+    }
+
+    get showTopRightIcon() {
+        if (this.props.rtcSession) {
+            return true; // managed in SCSS for :hover
+        }
+        return false;
+    }
+
+    get showBottomRightIcon() {
         if (this.channel) {
             return this.channel.showThreadIcon({ ignoreTyping: !this.props.typing });
         }
         if (this.props.member || this.props.persona) {
             return true;
+        }
+        if (this.props.rtcSession) {
+            return this.props.rtcSession.is_deaf || this.props.rtcSession.is_muted;
         }
         return false;
     }

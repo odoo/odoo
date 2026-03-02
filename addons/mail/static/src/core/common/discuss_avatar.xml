@@ -4,17 +4,48 @@
         <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="props.className">
             <mask t-att-id="uniqueId" width="32" height="32">
                 <rect x="0" y="0" height="32" width="32" fill="white"/>
-                <rect t-if="showIcon" color="black" t-att-x="isTyping ? 15 : 19" y="19" t-att-width="isTyping ? 24 : 16" t-att-height="isTyping ? 15 : 16" rx="8" ry="8"/>
+                <t t-if="showTopRightIcon">
+                    <rect t-if="props.rtcSession" class="o-mail-DiscussAvatar-rtcSessionTopRightMask" color="black" x="23" y="-3" width="12" height="12" rx="8" ry="8"/>
+                </t>
+                <t t-if="showBottomRightIcon">
+                    <rect t-if="isTyping" color="black" x="15" y="19" width="24" height="15" rx="8" ry="8"/>
+                    <rect t-elif="props.rtcSession" color="black" x="21" y="21" width="12" height="12" rx="8" ry="8"/>
+                    <rect t-else="" color="black" x="19" y="19" width="16" height="16" rx="8" ry="8"/>
+                </t>
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="showIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20)'">
-                <svg width="25" height="15" viewBox="0 0 25 15">
+            <g t-if="showTopLeftIcon" t-att-transform="props.rtcSession ? 'translate(-2, -2)' : ''">
+                <t t-if="props.rtcSession">
+                    <svg width="12" height="12" viewBox="0 0 15 15" transform="translate(0, 1)">
+                        <rect fill="grey" x="0" y="0" width="100%" height="100%" rx="50%" ry="50%"/>
+                    </svg>
+                    <svg width="15" height="15" viewBox="-5 -6 30 30">
+                        <foreignObject x="0" y="0" width="15" height="15">
+                            <t t-call="mail.DiscussAvatar.topLeftIcon"/>
+                        </foreignObject>
+                    </svg>
+                </t>
+            </g>
+            <!-- <g t-if="showTopRightIcon">
+                <t t-if="props.rtcSession">
+                    <svg width="15" height="15" viewBox="-5 -6 30 30">
+                        <foreignObject x="0" y="0" width="15" height="15">
+                            <t t-call="mail.DiscussAvatar.topRightIcon"/>
+                        </foreignObject>
+                    </svg>
+                </t>
+            </g> -->
+            <g t-if="showBottomRightIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20)'">
+                <svg t-if="props.rtcSession" width="15" height="15" viewBox="-6 -7 30 30">
+                    <foreignObject x="0" y="0" width="15" height="15">
+                        <t t-call="mail.DiscussAvatar.bottomRightIcon"/>
+                    </foreignObject>
+                </svg>
+                <svg t-else="" width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
-                        <ThreadIcon t-if="thread" thread="thread" typing="props.typing"/>
-                        <ImStatus t-elif="props.member" member="props.member" className="'d-flex'" size="'md'" typing="props.typing"/>
-                        <ImStatus t-elif="props.persona" persona="props.persona" typing="props.typing"/>
+                        <t t-call="mail.DiscussAvatar.bottomRightIcon"/>
                     </foreignObject>
                 </svg>
             </g>
@@ -23,7 +54,21 @@
 
     <t t-name="mail.DiscussAvatar.avatarImg">
         <img t-if="thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-2': !props.imgRoundedClass }" t-att-src="thread.channel?.parent_channel_id?.avatarUrl ?? thread.channel?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-        <img t-elif="props.member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-3': !props.imgRoundedClass }" t-att-src="props.member.avatarUrl"/>
+        <img t-elif="member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-3': !props.imgRoundedClass }" t-att-src="member.avatarUrl"/>
         <img t-elif="props.persona" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded': !props.imgRoundedClass }" t-att-src="props.persona.avatarUrl"/>
+    </t>
+
+    <t t-name="mail.DiscussAvatar.topLeftIcon">
+        <i t-if="props.rtcSession" class="fa fa-hand-paper-o d-flex" title="raising hand" aria-label="raising hand"/>
+    </t>
+
+    <t t-name="mail.DiscussAvatar.bottomRightIcon">
+        <ThreadIcon t-if="thread" thread="thread" typing="props.typing"/>
+        <t t-elif="props.rtcSession">
+            <i t-if="props.rtcSession.is_deaf" class="fa fa-deaf d-flex o-opacity-65" title="deaf" aria-label="deaf"/>
+            <i t-elif="props.rtcSession.is_muted" class="fa fa-microphone-slash d-flex o-opacity-65" title="muted" aria-label="muted"/>
+        </t>
+        <ImStatus t-elif="props.member" member="props.member" className="'d-flex'" size="'md'" typing="props.typing"/>
+        <ImStatus t-elif="props.persona" persona="props.persona" typing="props.typing"/>
     </t>
 </templates>

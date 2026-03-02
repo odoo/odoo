@@ -29,7 +29,7 @@
             bottom: 5vh;
         }
 
-        .o-discuss-CallParticipantCard-avatar img {
+        .o-discuss-CallParticipantCard-avatar {
             max-height: #{"min(70%, 70px)"};
             max-width: #{"min(70%, 70px)"};
         }
@@ -55,6 +55,11 @@
         background-position: 0% 100%;
     }
 }
+}
+
+.o-discuss-CallParticipantCard-avatar.o-minimized {
+    max-height: #{"min(100%, 80px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 80px)"};
 }
 
 .o-discuss-CallParticipantCard-avatar img {
