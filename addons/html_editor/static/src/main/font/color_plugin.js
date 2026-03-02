@@ -31,7 +31,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { READ, withSequence } from "@html_editor/utils/resource";
+import { withSequence } from "@html_editor/utils/resource";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -92,7 +92,7 @@ export class ColorPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: withSequence(READ, this.updateSelectedColor.bind(this)),
+        selectionchange_handlers: withSequence(100, this.updateSelectedColor.bind(this)),
         remove_format_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
@@ -117,6 +117,11 @@ export class ColorPlugin extends Plugin {
         format_class_predicates: (className) =>
             TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
         normalize_handlers: this.normalize.bind(this),
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            10,
+            this.computeBackgroundColorForTextNode.bind(this)
+        ),
     };
 
     setup() {
@@ -159,7 +164,7 @@ export class ColorPlugin extends Plugin {
         };
     }
 
-    updateSelectedColor() {
+    computeBackgroundColorForTextNode() {
         const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
             return;
@@ -169,7 +174,7 @@ export class ColorPlugin extends Plugin {
             return;
         }
 
-        Object.assign(this.selectedColors, this.getElementColors(el));
+        return this.getElementColors(el).backgroundColor;
     }
 
     getElementColors(el) {
@@ -202,6 +207,33 @@ export class ColorPlugin extends Plugin {
                     ? gradient
                     : normalizeCSSColor(backgroundColor),
         };
+    }
+
+    updateSelectedColor() {
+        // Compute and update the background color.
+        let backgroundColor;
+        for (const provider of this.getResource("selected_background_color_providers")) {
+            const providedBackgroundColor = provider();
+            if (providedBackgroundColor) {
+                backgroundColor = providedBackgroundColor;
+                break;
+            }
+        }
+
+        this.selectedColors.backgroundColor = backgroundColor || "#00000000";
+
+        // Compute and update the text color.
+        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
+        if (nodes.length === 0) {
+            this.selectedColors.color = "";
+            return;
+        }
+        const el = closestElement(nodes[0]);
+        if (!el) {
+            this.selectedColors.color = "";
+            return;
+        }
+        this.selectedColors.color = this.getElementColors(el).color;
     }
 
     /**
@@ -346,8 +378,8 @@ export class ColorPlugin extends Plugin {
                 const li = closestElement(node, "li");
                 if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
                     const existingColor = li.style.color
-                    ? li.style.color
-                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                        ? li.style.color
+                        : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
                     return rgbaToHex(existingColor).toLowerCase() !== hexColor;
                 }
                 return true;
