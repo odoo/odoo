@@ -86,6 +86,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_lock_exception_views.xml',
         'views/report_templates.xml',
         'wizard/account_merge_wizard_views.xml',
+        'data/ir_config_parameter_data.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
