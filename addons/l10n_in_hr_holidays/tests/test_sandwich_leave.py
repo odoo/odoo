@@ -161,6 +161,34 @@ class TestSandwichLeave(TransactionCase):
         self.assertEqual(holiday_leave.number_of_days, 4)
 
     @freeze_time('2025-01-15')
+    def test_updating_older_leave_does_not_reclaim_sandwich_days(self):
+        friday_leave = self.env['hr.leave'].create({
+            'name': 'Friday Leave',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2025-01-17",
+            'request_date_to': "2025-01-17",
+        })
+        monday_leave = self.env['hr.leave'].create({
+            'name': 'Monday Leave',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2025-01-20",
+            'request_date_to': "2025-01-20",
+        })
+        self.assertTrue(monday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_leave.number_of_days, 3)
+
+        friday_leave.write({
+            'request_date_from': "2025-01-16",
+            'request_date_to': "2025-01-17",
+        })
+        self.assertFalse(friday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(friday_leave.number_of_days, 2)
+        self.assertTrue(monday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_leave.number_of_days, 3)
+
+    @freeze_time('2025-01-15')
     def test_sandwich_leave_saturday_monday(self):
         holiday_leave = self.env['hr.leave'].create({
             'name': 'Test Leave',
@@ -758,3 +786,53 @@ class TestSandwichLeave(TransactionCase):
         wed_leave.action_approve()
         self.assertEqual(fri_mon_leave.number_of_days, 4)
         self.assertEqual(wed_leave.number_of_days, 2)
+
+    @freeze_time('2026-03-10')
+    def test_sandwich_leave_multi_public_holiday_bridge(self):
+        self.env['resource.calendar.leaves'].create([{
+            'name': "Public Holiday 17 March",
+            'date_from': "2026-03-17 00:00:00",
+            'date_to': "2026-03-17 23:59:59",
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        }, {
+            'name': "Public Holiday 19 March",
+            'date_from': "2026-03-19 00:00:00",
+            'date_to': "2026-03-19 23:59:59",
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        }])
+
+        self.env['hr.leave'].create({
+            'name': "Before Leave",
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-03-13",
+            'request_date_to': "2026-03-13",
+        })
+        after_leave = self.env['hr.leave'].create({
+            'name': "After Leave",
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-03-14",
+            'request_date_to': "2026-03-17",
+        })
+        self.assertEqual(after_leave.number_of_days, 3)
+
+        leave_20_23 = self.env['hr.leave'].create({
+            'name': "Leave 20 to 23 March",
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-03-20",
+            'request_date_to': "2026-03-23",
+        })
+        self.assertEqual(leave_20_23.number_of_days, 4)
+
+        leave_18 = self.env['hr.leave'].create({
+            'name': "Leave 18 March",
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-03-18",
+            'request_date_to': "2026-03-18",
+        })
+        self.assertEqual(leave_18.number_of_days, 3)

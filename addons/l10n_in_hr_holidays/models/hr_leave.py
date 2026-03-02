@@ -94,7 +94,15 @@ class HrLeave(models.Model):
             current += timedelta(days=step)
         return count
 
-    def _l10n_in_find_linked_leave(self, start_date, public_holiday_dates, resource_calendar, leaves_by_date, reverse=False):
+    def _l10n_in_find_linked_leave(
+        self,
+        start_date,
+        public_holiday_dates,
+        resource_calendar,
+        leaves_by_date,
+        reverse=False,
+        check_extendability=False,
+    ):
         step = -1 if reverse else 1
         current_date = start_date
         for _ in range(30):
@@ -104,7 +112,40 @@ class HrLeave(models.Model):
         linked_leave = leaves_by_date.get(current_date, self.env["hr.leave"])
         if linked_leave and not linked_leave._l10n_in_is_full_day_request():
             return self.env["hr.leave"]
-        return linked_leave
+        if not linked_leave:
+            return linked_leave
+        if not check_extendability:
+            return linked_leave
+
+        # If linked leave itself is not sandwich, we can keep it as a valid link.
+        if not linked_leave.l10n_in_contains_sandwich_leaves:
+            return linked_leave
+
+        # For sandwich leaves, check linkability on the same side:
+        linked_side_date = linked_leave.request_date_from if reverse else linked_leave.request_date_to
+        side_linked_leave = linked_leave._l10n_in_find_linked_leave(
+            linked_side_date,
+            public_holiday_dates,
+            linked_leave.resource_calendar_id,
+            leaves_by_date,
+            reverse=reverse,
+            check_extendability=False,
+        )
+        if side_linked_leave:
+            return linked_leave
+
+        # No linked leave on that side: keep it only if it still has adjacent
+        # non-working days in that direction, otherwise drop it.
+        if any(
+            not linked_leave._l10n_in_is_working(
+                linked_leave.request_date_from + timedelta(days=x),
+                public_holiday_dates,
+                linked_leave.resource_calendar_id
+            )
+            for x in range((linked_leave.request_date_to - linked_leave.request_date_from).days + 1)
+        ):
+            return linked_leave
+        return self.env["hr.leave"]
 
     def _l10n_in_get_linked_leaves(self, leaves_dates_by_employee, public_holidays_date_by_company):
         linked_before = self.env["hr.leave"]
