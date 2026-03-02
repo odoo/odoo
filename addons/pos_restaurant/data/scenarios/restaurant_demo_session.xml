@@ -214,6 +214,11 @@
         <!-- Open Session -->
         <record id="customer_1" model="res.partner">
             <field name="name">John Doe</field>
+            <field name="street">404 Monolith Tower</field>
+            <field name="city">West Hollywood</field>
+            <field name="state_id" ref='base.state_us_5'/>
+            <field name="zip">94523</field>
+            <field name="country_id" ref="base.us"/>
         </record>
 
         <record id="pos_open_session_2" model="pos.session" forcecreate="False">
@@ -305,7 +310,9 @@
             <field name="table_id" ref="table_04" />
             <field name="customer_count">5</field>
             <field name="ticket_code">qrs2t</field>
-            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="preset_id" eval="ref('pos_takeout_preset', raise_if_not_found=False)"/>
+            <field name="preset_time"
+                eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M:%S')" />
         </record>
 
         <record id="pos_orderline_6" model="pos.order.line" forcecreate="False">
@@ -340,7 +347,7 @@
             <field name="table_id" ref="table_06" />
             <field name="customer_count">1</field>
             <field name="ticket_code">cv34t</field>
-            <field name="preset_id" eval="ref('pos_takein_preset', raise_if_not_found=False)"/>
+            <field name="preset_id" eval="ref('pos_delivery_preset', raise_if_not_found=False)"/>
         </record>
 
         <record id="pos_orderline_8" model="pos.order.line" forcecreate="False">
