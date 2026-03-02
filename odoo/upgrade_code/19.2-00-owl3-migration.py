@@ -545,6 +545,33 @@ def upgrade_t_ref(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(files))
 
 
+def upgrade_t_model(file_manager, log_info, log_error):
+    files = JSTooling.get_template_files(file_manager)
+    reg_t_model = re.compile(r'\b(?<!-)t-model([^=\s]*\s*=)')
+
+    def apply_transformations(text):
+        text = reg_t_model.sub(r't-custom-model\1', text)
+        return text
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            raw_content = file.path.read_bytes()
+            content = raw_content.decode("utf-8", errors="ignore")
+
+            if file.path.suffix == ".js":
+                new_content = JSTooling.transform_xml_literals(content, apply_transformations)
+            else:
+                new_content = apply_transformations(content)
+
+            if new_content != content:
+                file.content = new_content
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -563,5 +590,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-portal", upgrade_tportal)
     collector.run_sub("Migrating t-esc", upgrade_t_esc)
     collector.run_sub("Migrating t-ref", upgrade_t_ref)
+    collector.run_sub("Migrating t-model", upgrade_t_model)
 
     collector.finalize()
