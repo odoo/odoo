@@ -29,7 +29,7 @@
                             className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 ' + (showsChatLocalDateTime ? 'fs-5' : 'fs-4')"
                             enabled="!!thread.channel?.isAllowedToRename"
                             onValidate.bind="renameThread"
-                            value="thread.displayName || ''"
+                            value="threadName"
                         />
                         <t t-if="thread.channel?.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
                             <div class="flex-shrink-0 mx-1 py-2 border-start"/>
@@ -41,6 +41,28 @@
                                 placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
                                 value="thread.description or ''"
                             />
+                        </t>
+                        <t t-if="thread.model === 'mail.box'">
+                            <Dropdown>
+                                <button class="ms-2 btn btn-outline-secondary" title="Change Mailbox Filter">
+                                    <i class="fa fa-filter"/> <t t-esc="store.discuss.thread.display_name"/> <i class="fa fa-caret-down"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <DropdownItem t-esc="store.inbox.display_name" class="{ 'active': store.inbox.discussAppAsThread }" onSelected="() => this.onMailboxSelected(store.inbox)"/>
+                                    <DropdownItem t-esc="store.history.display_name" class="{ 'active': store.history.discussAppAsThread }" onSelected="() => this.onMailboxSelected(store.history)"/>
+                                    <DropdownItem t-esc="store.bookmarkBox.display_name" class="{ 'active': store.bookmarkBox.discussAppAsThread }" onSelected="() => this.onMailboxSelected(store.bookmarkBox)"/>
+                                    <hr class="my-1"/>
+                                    <DropdownItem
+                                        t-foreach="store.mailboxFilters" t-as="filter" t-key="filter.id"
+                                        class="{ 'active': filter === store.activeMailboxFilter }"
+                                        onSelected="() => this.onMailboxFilterSelected(filter)"
+                                        t-esc="filter.label"
+                                    />
+                                </t>
+                            </Dropdown>
+                            <button t-if="store.activeMailboxFilter" title="Remove Filter" class="btn btn-outline-secondary ms-1" t-on-click="() => this.onMailboxFilterSelected(store.activeMailboxFilter)">
+                                <i class="oi oi-close"/> <t t-esc="store.activeMailboxFilter.label"/>
+                            </button>
                         </t>
                     </div>
                     <div t-if="showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="state.correspondentLocalDateTimeFormatted"/>

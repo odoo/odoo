@@ -37,6 +37,14 @@ class MailboxController(WebclientController):
             message_fetch_domain = Domain("needaction", "=", False)
         if name == "/mail/bookmark/messages":
             message_fetch_domain = Domain("bookmarked_partner_ids", "in", [request.env.user.partner_id.id])
+        if mailboxFilter := params and params.get("mailboxFilter"):
+            if mailboxFilter == "messages":
+                message_fetch_domain &= Domain("message_type", "=", "comment")
+            elif mailboxFilter == "mentioning_me":
+                message_fetch_domain &= Domain("message_type", "=", "comment")
+                message_fetch_domain &= Domain("partner_ids", "in", [request.env.user.partner_id.id])
+            elif mailboxFilter == "tracked_changes":
+                message_fetch_domain &= Domain("tracking_value_ids", "!=", False)
         if message_fetch_domain:
             self._resolve_messages(
                 store,

@@ -14,6 +14,9 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 
 export class DiscussContent extends Component {
     static components = {
@@ -24,6 +27,8 @@ export class DiscussContent extends Component {
         ThreadIcon,
         Composer,
         FileUploader,
+        Dropdown,
+        DropdownItem,
     };
     static props = ["thread?"];
     static template = "mail.DiscussContent";
@@ -116,5 +121,38 @@ export class DiscussContent extends Component {
         if (newDescription !== this.thread.channel.description) {
             await this.thread.channel.notifyDescriptionToServer(newDescription);
         }
+    }
+
+    get threadName() {
+        if (this.thread.model === "mail.box") {
+            return this.store.self_user?.notification_type === "inbox"
+                ? _t("Inbox")
+                : _t("Bookmarks");
+        }
+        return this.thread.displayName || "";
+    }
+
+    onMailboxSelected(mailbox) {
+        mailbox.setAsDiscussThread();
+        this.refetch(mailbox);
+    }
+
+    onMailboxFilterSelected(filter) {
+        this.store.activeMailboxFilter =
+            this.store.activeMailboxFilter === filter ? undefined : filter;
+        this.refetch(this.store.discuss.thread);
+    }
+
+    async refetch(thread) {
+        Object.assign(thread, {
+            status: "new",
+            isLoaded: false,
+            loadOlder: false,
+            loadNewer: false,
+            scrollTop: undefined,
+            phantomMessage: thread.messages,
+        });
+        thread.messages = await thread.fetchMessages();
+        thread.phantomMessages = [];
     }
 }

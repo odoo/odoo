@@ -102,7 +102,9 @@ export class MailCoreWeb {
         if (notifId > inbox.counter_bus_id) {
             inbox.counter++;
         }
-        inbox.messages.add(message);
+        if (!this.store.activeMailboxFilter || this.store.activeMailboxFilter.condition(message)) {
+            inbox.messages.add(message);
+        }
         if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
             message.thread.message_needaction_counter++;
         }
