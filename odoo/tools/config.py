@@ -536,14 +536,23 @@ class configmanager:
             f'/var/lib/{release.product_name}'
         )
 
-        if os.name == 'nt':
+        default_config_dir = (
+            appdirs.user_config_dir(release.product_name, release.author)
+            if os.path.isdir(os.path.expanduser('~')) else
+            appdirs.site_config_dir(release.product_name, release.author)
+        )
+        default_config_file = os.path.join(default_config_dir, 'odoo.conf')
+
+        if os.path.isfile(default_config_file):
+            rcfilepath = default_config_file
+        elif os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
             pass
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):
             self._warn("Since ages ago, the ~/.openerp_serverrc file has been replaced by ~/.odoorc", DeprecationWarning)
         else:
-            rcfilepath = '~/.odoorc'
+            rcfilepath = default_config_file
         self._default_options['config'] = self._normalize(rcfilepath)
 
     _log_entries = []   # helpers for log() and warn(), accumulate messages
