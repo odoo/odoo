@@ -37,6 +37,12 @@ reaped server-side as well with a threshold that can be set via an
 optional config parameter `sessions.max_inactivity_seconds`.
 """
 
+SESSION_ROTATION_EXCLUDED_PATHS = (
+    '/websocket/peek_notifications',
+    '/websocket/update_bus_presence',
+)  # Naughty list, don't add more routes in it.
+""" URL paths for which automatic session rotation is disabled. """
+
 SESSION_ROTATION_INTERVAL = 60 * 60 * 3  # 3 hours
 """
 The default duration before a session is rotated, changing the session
