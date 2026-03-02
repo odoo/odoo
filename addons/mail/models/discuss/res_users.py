@@ -50,7 +50,7 @@ class ResUsers(models.Model):
         # sudo: ir.config_parameter - reading hard-coded config params to check their existence, safe to
         # return whether the features are enabled
         get_bool = self.env["ir.config_parameter"].sudo().get_bool
-        res.attr("hasGifPickerFeature", get_bool("discuss.use_tenor_api"))
+        res.attr("hasGifPickerFeature", get_bool("discuss.use_klipy_api"))
         res.attr("hasMessageTranslationFeature", get_bool("mail.use_google_translate_api"))
         res.attr(
             "hasCannedResponses",
