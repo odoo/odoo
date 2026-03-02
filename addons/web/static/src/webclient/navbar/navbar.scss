@@ -255,3 +255,14 @@ body.o_is_superuser .o_menu_systray {
     border-image: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px) 2;
     border-image-width: map-get($border-widths, 2);
 }
+
+.o_app_menu_sidebar .o_burger_menu_content.o_burger_menu_app li {
+    color: $dropdown-link-color;
+    font-weight: 400;
+}
+
+.o-navbar-section {
+    color: $dropdown-header-color;
+    font-weight: 500;
+    @include font-size($font-size-sm);
+}
