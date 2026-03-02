@@ -98,11 +98,15 @@ export const changesToOrder = (order, orderPreparationCategories, cancelled = fa
  */
 export const getOrderChanges = (order, orderPreparationCategories) => {
     const prepaCategoryIds = orderPreparationCategories;
-    const oldChanges = order.last_order_preparation_change.lines;
+    const lopcLines = order.last_order_preparation_change.lines;
     const changes = {};
     const noteUpdate = {};
     let changesCount = 0;
     let changeAbsCount = 0;
+    const incrementChangesCount = (value) => {
+        changesCount += value;
+        changeAbsCount += Math.abs(value);
+    };
 
     const hasPreparationCategory = (product) => {
         if (!product) {
@@ -113,7 +117,10 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
 
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
+    const orderlineUuids = new Set();
     for (const orderline of order.getOrderlines()) {
+        orderlineUuids.add(orderline.uuid);
+
         const product = orderline.getProduct();
         const note = orderline.getNote();
         const customerNote = orderline.getCustomerNote();
@@ -124,96 +131,79 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
             hasPreparationCategory(orderline.combo_parent_id?.product_id) ||
             orderline.combo_line_ids?.some((line) => hasPreparationCategory(line.getProduct())) ||
             false;
-        if (
-            hasPrepaCategory &&
-            order.last_order_preparation_change[lineKey]?.ignoreQty !== quantity
-        ) {
-            const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
-                k.startsWith(orderline.uuid)
-            ); // find old data but note changed
 
-            const relatedKey = key !== lineKey ? key : lineKey; // if note update key would be different
-            const quantityDiff =
-                (oldChanges[relatedKey] ? quantity - oldChanges[relatedKey].quantity : quantity) ||
-                0;
-            const noteChange =
-                oldChanges[relatedKey] &&
-                (oldChanges[relatedKey].note !== note ||
-                    oldChanges[relatedKey].customer_note !== customerNote);
-
-            const lineDetails = {
-                uuid: orderline.uuid,
-                name: orderline.getFullProductName(),
-                basic_name: orderline.product_id.name,
-                isCombo: Boolean(orderline?.combo_line_ids?.length),
-                combo_parent_uuid: orderline?.combo_parent_id?.uuid,
-                product_id: product.id,
-                attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
-                quantity: quantityDiff,
-                note: getStrNotes(note),
-                customer_note: customerNote,
-                pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
-                pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
-                display_name: product.display_name,
-                group: receiptLineGrouper.getGroup(orderline),
-            };
-
-            if (quantityDiff) {
-                // if note update with qty add
-                changes[lineKey] = lineDetails;
-                changesCount += quantityDiff;
-                changeAbsCount += Math.abs(quantityDiff);
-                if (noteChange) {
-                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
-                    noteUpdate[lineKey] = lineDetails;
-                }
-
-                orderline.setHasChange(true);
-            } else {
-                if (quantityDiff) {
-                    orderline.setHasChange(false);
-                } else {
-                    // If only note updated
-                    if (noteChange) {
-                        lineDetails.quantity = orderline.qty;
-                        noteUpdate[lineKey] = lineDetails;
-                        orderline.setHasChange(true);
-                        changesCount += 1;
-                    } else {
-                        orderline.setHasChange(false);
-                    }
-                }
-            }
-        } else {
+        if (!hasPrepaCategory) {
             orderline.setHasChange(false);
+            continue;
+        }
+
+        const lopcLine = lopcLines[lineKey];
+        const quantityDiff = quantity - (lopcLine?.quantity || 0);
+        const noteChange =
+            lopcLine && (lopcLine.note !== note || lopcLine.customer_note !== customerNote);
+
+        if (quantityDiff === 0 && !noteChange) {
+            orderline.setHasChange(false);
+            continue;
+        }
+
+        const lineDetails = {
+            uuid: orderline.uuid,
+            name: orderline.getFullProductName(),
+            basic_name: orderline.product_id.name,
+            isCombo: Boolean(orderline?.combo_line_ids?.length),
+            combo_parent_uuid: orderline?.combo_parent_id?.uuid,
+            product_id: product.id,
+            attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
+            quantity: quantityDiff,
+            note: getStrNotes(note),
+            customer_note: customerNote,
+            pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+            pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+            display_name: product.display_name,
+            group: receiptLineGrouper.getGroup(orderline),
+        };
+
+        if (quantityDiff !== 0) {
+            changes[lineKey] = lineDetails;
+            orderline.setHasChange(true);
+            incrementChangesCount(quantityDiff);
+        }
+
+        if (noteChange) {
+            noteUpdate[lineKey] = lineDetails;
+            orderline.setHasChange(true);
+
+            if (quantityDiff === 0) {
+                noteUpdate[lineKey].quantity = quantity;
+                incrementChangesCount(1);
+            }
         }
     }
+
     // Checks whether an orderline has been deleted from the order since it
     // was last sent to the preparation tools. If so we add this to the changes.
-    for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change.lines)) {
-        if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
-            const quantity = isNaN(lineResume["quantity"]) ? 0 : lineResume["quantity"];
-            if (!changes[lineKey]) {
-                changes[lineKey] = {
-                    uuid: lineResume["uuid"],
-                    product_id: lineResume["product_id"],
-                    name: lineResume["name"],
-                    basic_name: lineResume["basic_name"],
-                    display_name: lineResume["display_name"],
-                    isCombo: Boolean(lineResume["isCombo"]),
-                    combo_parent_uuid: lineResume["combo_parent_uuid"],
-                    note: getStrNotes(lineResume["note"]),
-                    customer_note: lineResume["customer_note"],
-                    attribute_value_names: lineResume["attribute_value_names"],
-                    group: lineResume["group"],
-                    quantity: -quantity,
-                };
-                changeAbsCount += Math.abs(quantity);
-                changesCount += quantity;
-            } else {
-                changes[lineKey]["quantity"] -= quantity;
-            }
+    for (const [uuid, lopcLine] of Object.entries(lopcLines)) {
+        if (orderlineUuids.has(uuid) || lopcLine.quantity === 0) {
+            orderlineUuids.delete(uuid);
+            continue;
         }
+
+        changes[uuid] = {
+            uuid: lopcLine.uuid,
+            product_id: lopcLine.product_id,
+            name: lopcLine.name,
+            basic_name: lopcLine.basic_name,
+            display_name: lopcLine.display_name,
+            isCombo: lopcLine.isCombo,
+            combo_parent_uuid: lopcLine.combo_parent_uuid,
+            note: getStrNotes(lopcLine.note),
+            customer_note: lopcLine.customer_note,
+            attribute_value_names: lopcLine.attribute_value_names,
+            group: lopcLine.group,
+            quantity: -lopcLine.quantity,
+        };
+        incrementChangesCount(-lopcLine.quantity);
     }
 
     const result = {

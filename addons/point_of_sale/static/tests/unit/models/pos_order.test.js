@@ -9,7 +9,6 @@ test("uiState", async () => {
     const order = store.addNewOrder();
 
     expect(order.uiState).toEqual({
-        unmerge: {},
         lineToRefund: {},
         displayed: true,
         booked: false,

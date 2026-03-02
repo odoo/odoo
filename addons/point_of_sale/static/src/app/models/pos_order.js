@@ -72,7 +72,6 @@ export class PosOrder extends PosOrderAccounting {
         super.initState();
         // !!Keep all uiState in one object!!
         this.uiState = {
-            unmerge: {},
             lineToRefund: {},
             displayed: this.state !== "cancel",
             booked: false,
@@ -241,6 +240,9 @@ export class PosOrder extends PosOrderAccounting {
             if (this.last_order_preparation_change.lines[line.preparationKey]) {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     ...this.last_order_preparation_change.lines[line.preparationKey],
+                    to_move_quantity:
+                        line.getQuantity() -
+                        this.last_order_preparation_change.lines[line.preparationKey].quantity,
                     quantity: line.getQuantity(),
                     note: line.getNote(),
                     customer_note: line.getCustomerNote(),
@@ -248,6 +250,7 @@ export class PosOrder extends PosOrderAccounting {
             } else {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                    attribute_value_ids: line.attribute_value_ids.map((a) => a.id),
                     uuid: line.uuid,
                     isCombo: Boolean(line?.combo_line_ids?.length),
                     combo_parent_uuid: line?.combo_parent_id?.uuid,
@@ -256,21 +259,27 @@ export class PosOrder extends PosOrderAccounting {
                     basic_name: line.getProduct().name,
                     display_name: line.getProduct().display_name,
                     note: line.getNote(),
+                    to_move_quantity: line.getQuantity(),
                     quantity: line.getQuantity(),
                     customer_note: line.getCustomerNote(),
+                    history: [],
                 };
             }
             line.setHasChange(false);
             line.uiState.savedQuantity = line.getQuantity();
         });
-        // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools or updated. If so we delete older changes.
+        // Checks whether an orderline has been deleted from the order since it was last sent to the preparation tools or updated.
+        // If so, we update the quantity and to_move_quantity.
         for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
             const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
             const lineNote = orderline?.note;
             const changeNote = change?.note;
             if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
-                delete this.last_order_preparation_change.lines[key];
+                this.last_order_preparation_change.lines[key] = {
+                    ...change,
+                    to_move_quantity: -change.quantity,
+                    quantity: 0,
+                };
             }
         }
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;

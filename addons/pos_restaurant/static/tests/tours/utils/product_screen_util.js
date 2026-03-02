@@ -3,14 +3,30 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
-export function clickOrderButton() {
+export function clickOrderButton(data) {
     return [
+        ...(data ? orderButtonContains(data) : []),
         {
             content: "click order button",
             trigger: ".actionpad .submit-order",
             run: "click",
         },
     ];
+}
+export function orderButtonContains(data) {
+    let trigger = ".actionpad .submit-order";
+    data = Array.isArray(data) ? data : [data];
+    for (const { name, qty } of data) {
+        trigger += `:has(label.product-category-label:contains("${name}") + label:contains("${qty}"))`;
+    }
+
+    return [{ content: `check order button contain data: ${JSON.stringify(data)}`, trigger }];
+}
+export function noSubmitOrderButton() {
+    return {
+        content: "check submit order button does not exist",
+        trigger: ".actionpad:not(:has(.submit-order))",
+    };
 }
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
@@ -19,6 +35,12 @@ export function orderlineIsToOrder(name) {
     return Order.hasLine({
         productName: name,
         withClass: ".orderline.has-change",
+    });
+}
+export function orderlineIsNotToOrder(name) {
+    return Order.hasLine({
+        productName: name,
+        withoutClass: ".orderline.has-change",
     });
 }
 export function guestNumberIs(num) {
