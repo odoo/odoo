@@ -1,7 +1,11 @@
 import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
+
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
+
 import { _t } from "@web/core/l10n/translation";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { setElementContent } from "@web/core/utils/html";
 
 /**
  * @typedef Data
@@ -105,6 +109,18 @@ export class Activity extends Record {
     icon = "fa-tasks";
     /** @type {number} */
     id;
+    /** @type {boolean} */
+    isNoteEmpty = Record.attr(true, {
+        /** @this {import("models").Activity} */
+        compute() {
+            if (!this.note) {
+                return true;
+            }
+            const element = document.createElement("div");
+            setElementContent(element, this.note);
+            return isEmptyBlock(element);
+        },
+    });
     /** @type {Object[]} */
     mail_template_ids;
     note = Record.attr("", { html: true });
