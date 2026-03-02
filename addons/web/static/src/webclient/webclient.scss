@@ -261,7 +261,7 @@ select {
 //== Buttons
 
 // Disable unnecessary box-shadows on mouse hover
-.btn:focus:hover {
+.btn:focus:hover:not(:focus-visible) {
   box-shadow: none;
 }
 

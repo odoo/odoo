@@ -19,8 +19,11 @@
         color: $o-we-fg-light;
         font-size: $o-we-font-size-lg;
 
-        &-actionable:hover {
-            color: $o-we-fg-lighter
+        &-actionable {
+            &:hover, &:focus {
+                color: $o-we-fg-lighter;
+                background-color: unset;
+            }
         }
     }
 
