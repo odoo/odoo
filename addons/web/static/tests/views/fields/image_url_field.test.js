@@ -224,3 +224,19 @@ test("onchange update image fields", async () => {
         message: "the image should have the onchange src",
     });
 });
+
+test("ImageUrlField with width attribute is auto when Studio is set", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="foo" widget="image_url" options="{'size': [0, 270]}" /> 
+            </form>
+        `,
+        resId: 1,
+
+    });
+
+    expect(`.o_field_widget[name=foo] img`).toHaveAttribute("style", "width: auto; max-height: 270px;");
+});
