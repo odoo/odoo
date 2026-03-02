@@ -71,6 +71,10 @@ class ResConfigSettings(models.TransientModel):
     rating_email_template_id = fields.Many2one(
         related='website_id.rating_email_template_id', readonly=False
     )
+    auto_unpublish_out_of_stock = fields.Boolean(
+        related='website_id.auto_unpublish_out_of_stock',
+        readonly=False,
+    )
 
     # Additional settings
     account_on_checkout = fields.Selection(

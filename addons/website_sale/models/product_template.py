@@ -166,6 +166,10 @@ class ProductTemplate(models.Model):
     )
     description = fields.Html(index='trigram')
     description_sale = fields.Text(index='trigram')
+    is_published = fields.Boolean(
+        compute="_compute_is_published",
+        store=True
+    )
 
     # === INDEXES === #
 
@@ -200,6 +204,16 @@ class ProductTemplate(models.Model):
         return super()._auto_init()
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('product_variant_ids.qty_available')
+    def _compute_is_published(self):
+        website = self.env['website'].get_current_website()
+        for template in self:
+            if not website or not website.auto_unpublish_out_of_stock:
+                continue
+            qty = sum(template.product_variant_ids.mapped('qty_available'))
+            if qty <= 0:
+                template.is_published = False
 
     @api.depends('is_published')
     def _compute_publish_date(self):

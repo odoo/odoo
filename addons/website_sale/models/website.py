@@ -57,7 +57,9 @@ class Website(models.Model):
         return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
 
     #=== FIELDS ===#
-
+    auto_unpublish_out_of_stock = fields.Boolean(
+        string="Auto Unpublish Out-of-Stock Products"
+    )
     salesperson_id = fields.Many2one(
         string="Salesperson",
         comodel_name='res.users',

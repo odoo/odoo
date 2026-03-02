@@ -17,6 +17,16 @@ class ProductTemplate(models.Model):
     show_availability = fields.Boolean(string="Show availability Qty", default=False)
     out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
+    @api.depends('product_variant_ids.free_qty')
+    def _compute_is_published(self):
+        website = self.env["website"].get_current_website()
+        for template in self:
+            if not website or not website.auto_unpublish_out_of_stock:
+                continue
+            qty = sum(template.product_variant_ids.mapped("free_qty"))
+            if qty <= 0:
+                template.is_published = False
+
     def _is_sold_out(self):
         """Return whether the product is sold out (no available quantity).
 
