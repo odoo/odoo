@@ -460,7 +460,11 @@ class Request:
 
         if sess.should_rotate:
             session_store().rotate(sess, env)  # it saves
-        elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
+        elif (
+            sess.uid
+            and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
+            and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+        ):
             session_store().rotate(sess, env, soft=True)
         elif sess.is_dirty:
             session_store().save(sess)
@@ -507,6 +511,7 @@ from .geoip import GeoIP
 from .response import FutureResponse, Response
 from .session import (
     DEFAULT_LANG,
+    SESSION_ROTATION_EXCLUDED_PATHS,
     SESSION_ROTATION_INTERVAL,
     STORED_SESSION_BYTES,
     get_default_session,
