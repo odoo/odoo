@@ -2273,6 +2273,52 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.assertEqual(sale_order.amount_unpaid, 0.0)
 
+    def test_settle_so_custom_attribute_value(self):
+        """When settling a sale order (e.g. from the website) in POS, free-text custom
+        attribute values must appear in the orderline's product name via
+        constructFullProductName, not just the placeholder (e.g. 'Custom').
+        """
+        attr = self.env['product.attribute'].create({
+            'name': 'Inscription',
+            'create_variant': 'no_variant',
+        })
+        attr_value = self.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': attr.id,
+            'is_custom': True,
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'type': 'service',
+            'list_price': 10.0,
+            'taxes_id': [],
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attr.id,
+                'value_ids': [Command.link(attr_value.id)],
+            })],
+        })
+        ptav = product_tmpl.attribute_line_ids.product_template_value_ids
+        product = product_tmpl.product_variant_ids[0]
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Website Customer'}).id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'price_unit': 10.0,
+                'product_no_variant_attribute_value_ids': [Command.link(ptav.id)],
+                'product_custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': ptav.id,
+                    'custom_value': 'Value',
+                })],
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosSaleAccount(TestPoSCommon):
