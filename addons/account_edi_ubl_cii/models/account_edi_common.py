@@ -689,11 +689,8 @@ class AccountEdiCommon(models.AbstractModel):
         # line_net_subtotal (mandatory)
         price_subtotal = None
         line_total_amount_node = tree.find(xpath_dict['line_total_amount'])
-        if line_total_amount_node is None or line_total_amount_node.text is None or not line_total_amount_node.text.strip():
-            return None
-        price_subtotal = float(line_total_amount_node.text)
-        if price_subtotal == 0:
-            return None
+        if line_total_amount_node is not None and line_total_amount_node.text and line_total_amount_node.text.strip():
+            price_subtotal = float(line_total_amount_node.text)
 
         ####################################################
         # Setting the values on the invoice_line
@@ -741,6 +738,7 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'product_uom_id': product_uom_id,
             'fixed_taxes_list': fixed_taxes_list,
+            'price_subtotal': price_subtotal,
         }
 
     def _import_retrieve_fixed_tax(self, invoice_line, fixed_tax_vals):
