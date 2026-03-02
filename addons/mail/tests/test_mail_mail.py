@@ -29,3 +29,20 @@ class MailCase(TransactionCase):
         )
         # if we get here SMTPServerDisconnected was not raised
         self.assertEqual(mail.state, "outgoing")
+
+    def test_mail_mail_read_all(self):
+        """E-mail created by root has message which is not visible to admin.
+        Yet, the admin must be able to see it.
+        """
+        mail = self.env["mail.mail"].create({})
+        mail = mail.with_user(self.ref('base.user_admin'))
+        self.assertTrue(mail.has_access('read'))
+        msg = mail.mail_message_id
+        self.assertFalse(msg.has_access('read'))
+        mail.invalidate_model()
+
+        # should be able to read the following items
+        for field_name in ('message_type', 'body'):
+            with self.subTest(field=field_name):
+                msg.invalidate_model()
+                mail[field_name]

@@ -97,6 +97,14 @@ class MailMail(models.Model):
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
     fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True, index='btree_not_null')
 
+    def _post_model_setup__(self):  # noqa: PLW3201
+        # Hack to make all inherited field computed in sudo because users may
+        # not have access to all fields.
+        for field in self._fields.values():
+            if field.inherited:
+                field.compute_sudo = True
+        return super()._post_model_setup__()
+
     @api.constrains('mail_message_id', 'mail_server_id')
     def _check_mail_server_id(self):
         for mail in self:
