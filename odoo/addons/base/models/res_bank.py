@@ -185,7 +185,7 @@ class ResPartnerBank(models.Model):
         """
         bank_account = self.env['res.partner.bank'].sudo().with_context(active_test=False).search([
             ('acc_number', '=', account_number),
-            ('partner_id', 'child_of', partner.id),
+            ('partner_id', 'child_of', partner.commercial_partner_id.id),
         ])
         if not bank_account:
             if not allow_company_account_creation and partner.id in self.env['res.company']._get_company_partner_ids():
@@ -203,4 +203,4 @@ class ResPartnerBank(models.Model):
         return bank_account.filtered_domain([
             *self.env['res.partner.bank']._check_company_domain(company),
             ('active', '=', True),
-        ]).sudo(False)
+        ]).sorted(lambda b: b.partner_id != partner).sudo(False)[:1]
