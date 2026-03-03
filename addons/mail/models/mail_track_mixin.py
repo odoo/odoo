@@ -267,9 +267,9 @@ class MailTrackMixin(models.AbstractModel):
         """ Prepare values to create a mail.tracking.value. It prepares old and
         new value according to the field type.
 
-        :param typing.Any initial_value: field value before the change. Relational
+        :param Any initial_value: field value before the change. Relational
             fields should contain RecordSets;
-        :param typing.Any new_value: field value after the change. Relational fields
+        :param Any new_value: field value after the change. Relational fields
             should contain RecordSets;
         :param str col_name: technical field name, column name (e.g. 'user_id);
         :param ValuesType col_info: result of fields_get(col_name);
@@ -280,7 +280,14 @@ class MailTrackMixin(models.AbstractModel):
         if not field:
             raise ValueError(f'Unknown field {col_name} on model {self._name}')
 
-        values = {'field_id': field.id}
+        # field information (to be popped, kept for post processing)
+        values = {
+            'field_id': field.id,
+            'field_name': col_name,
+            'field_type': col_info['type'],
+            'old_value': initial_value,
+            'new_value': new_value,
+        }
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
