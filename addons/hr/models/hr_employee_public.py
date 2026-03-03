@@ -220,5 +220,12 @@ class HrEmployeePublic(models.Model):
         res.one("department_id", ["name"])
         res.one("user_id", lambda res: (res.attr("share"), res.one("partner_id", ["im_status", "tz"])))
         res.one("work_location_id", ["location_type", "name"])
-        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
+        res.extend([
+            "active",
+            "company_id",
+            "hr_icon_display",
+            "job_title",
+            "name",
+            "show_hr_icon_display",
+        ])
         res.extend(["work_email", "work_phone"])
