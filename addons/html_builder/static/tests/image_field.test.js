@@ -19,6 +19,7 @@ test("replacing an image should display the image tool options", async () => {
     onRpc("/html_editor/get_image_info", () => ({
         original: {
             image_src: dummyBase64Img,
+            mimetype: "image/png",
         },
     }));
     onRpc("ir.attachment", "search_read", () => [
