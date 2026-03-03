@@ -896,11 +896,11 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    resetContent(value) {
+    resetContent(value, isSavePoint = true) {
         value = value || '<p><br></p>';
         this.editable.innerHTML = fixInvalidHTML(value);
         this.sanitize(this.editable);
-        this.historyStep(true, { isReset: true });
+        this.historyStep(true, { isSavePoint });
         // The unbreakable protection mechanism detects an anomaly and attempts
         // to trigger a rollback when the content is reset using `innerHTML`.
         // Prevent this rollback as it would otherwise revert the new content.
@@ -1333,7 +1333,7 @@ export class OdooEditor extends EventTarget {
     }
 
     // One step completed: apply to vDOM, setup next history step
-    historyStep(skipRollback = false, { stepId, restoredStepId, isReset } = {}) {
+    historyStep(skipRollback = false, { stepId, restoredStepId, isSavePoint } = {}) {
         if (!this._historyStepsActive) {
             return;
         }
@@ -1354,7 +1354,7 @@ export class OdooEditor extends EventTarget {
         const previousStep = peek(this._historySteps);
         currentStep.clientId = this._collabClientId;
         currentStep.previousStepId = previousStep.id;
-        currentStep.isReset = isReset;
+        currentStep.isSavePoint = isSavePoint;
         currentStep.restoredStepId = restoredStepId;
 
         this._historySteps.push(currentStep);
