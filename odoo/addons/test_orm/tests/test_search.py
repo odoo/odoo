@@ -1527,12 +1527,7 @@ class TestSearchAccessOperator(TransactionCase):
             FROM "test_orm_discussion"
             WHERE EXISTS(SELECT FROM (
                 SELECT "test_orm_message"."discussion" AS __inverse FROM "test_orm_message"
-                LEFT JOIN "test_orm_discussion" AS "test_orm_message__discussion"
-                ON ("test_orm_message"."discussion" = "test_orm_message__discussion"."id")
                 WHERE ("test_orm_message"."active" IS TRUE AND "test_orm_message"."discussion" IS NOT NULL AND "test_orm_message"."name" ILIKE %s)
-                AND ("test_orm_message"."discussion" IS NOT NULL
-                    AND "test_orm_message__discussion"."id" IS NOT NULL
-                    AND "test_orm_message__discussion"."id" < %s)
             ) AS __sub WHERE __inverse = "test_orm_discussion"."id")
             AND "test_orm_discussion"."id" < %s
             ORDER BY ...

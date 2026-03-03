@@ -194,6 +194,7 @@ class _Relational(Field[BaseModel]):
         corecords = getter(records)
         if operator in ('any', 'any!'):
             assert isinstance(value, Domain)
+            corecords = corecords.with_context(search_from_field=self)
             if operator == 'any' and records.env.context.get('filter_function_reset_sudo'):
                 corecords = corecords.sudo(False)._filtered_access('read')
             corecords = corecords.filtered_domain(value)
@@ -500,7 +501,7 @@ class Many2one(_Relational):
             return super().condition_to_sql(table, field_expr, operator, value)
 
         model = table._model
-        comodel = model.env[self.comodel_name]
+        comodel = model.env[self.comodel_name].with_context(search_from_field=self)
         sql_field = table[field_expr]
         can_be_null = self not in model.env.registry.not_null_fields
         bypass_access = operator in ('any!', 'not any!') or self.bypass_search_access
@@ -565,7 +566,7 @@ class Many2one(_Relational):
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
         and return the joined table's corresponding model and alias.
         """
-        model = table._model
+        model = table._model.with_context(search_from_field=self)
         comodel = model.env[self.comodel_name]
         can_be_null = self not in model.env.registry.not_null_fields
         if self.compute_sudo or self.delegate or model.env.su:
@@ -868,7 +869,7 @@ class _RelationalMulti(_Relational):
                 # ('id', 'any!', Query), so we can just use the query
                 query = domain.value
             else:
-                comodel = comodel.with_context(**self.context)
+                comodel = comodel.with_context(**dict(self.context, search_from_field=self))
                 query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
