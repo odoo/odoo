@@ -7,9 +7,14 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { contains as mailContains, start } from "@mail/../tests/mail_test_helpers";
+import {
+    click as mailClick,
+    contains as mailContains,
+    start,
+} from "@mail/../tests/mail_test_helpers";
 import { defineHrModels } from "@hr/../tests/hr_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
+import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
 defineHrModels();
@@ -184,5 +189,75 @@ test("avatar card preview with hr (partner_id field)", async () => {
         "Odoo",
     ]);
     await contains(".o_action_manager:eq(0)").click();
+    await mailContains(".o_avatar_card", { count: 0 });
+});
+
+test("avatar card displays the relevant employee info", async () => {
+    // "relevant" means active employee and in active company of current user
+    const { env } = await makeMockServer();
+    const partnerId = env["res.partner"].create({ name: "John" });
+    const userId = env["res.users"].create({ partner_id: partnerId });
+    const otherCompanyId = env["res.company"].create({ name: "Other Company" });
+    const [department1Id, department2Id, department3Id] = env["hr.department"].create([
+        { name: "R&D" },
+        { name: "Sales" },
+        { name: "HR" },
+    ]);
+    env["hr.employee"].create([
+        {
+            department_id: department1Id,
+            work_contact_id: partnerId,
+            company_id: otherCompanyId,
+        },
+    ]);
+    env["m2x.avatar.user"].create({ partner_id: partnerId });
+    await mountView({
+        type: "kanban",
+        resModel: "m2x.avatar.user",
+        arch: `<kanban>
+            <templates>
+                <t t-name="card">
+                    <field name="partner_id" widget="many2one_avatar_user"/>
+                </t>
+            </templates>
+        </kanban>`,
+    });
+    await mailClick(".o_m2o_avatar > img");
+    await mailContains(".o_avatar_card");
+    await mailContains(".o_card_user_infos > span:contains('R&D')");
+    await mailClick(".o_action_manager:eq(0)"); // click away
+    await mailContains(".o_avatar_card", { count: 0 });
+    env["hr.employee"].create([
+        {
+            department_id: department2Id,
+            work_contact_id: partnerId,
+            company_id: user.activeCompany.id,
+        },
+    ]);
+    await mailClick(".o_m2o_avatar > img");
+    await mailContains(".o_avatar_card");
+    await mailContains(".o_card_user_infos > span:contains('Sales')");
+    await mailClick(".o_action_manager:eq(0)"); // click away
+    await mailContains(".o_avatar_card", { count: 0 });
+    const employee3Id = env["hr.employee"].create([
+        {
+            department_id: department3Id,
+            work_contact_id: partnerId,
+            company_id: user.activeCompany.id,
+            user_id: userId,
+        },
+    ]);
+    await mailClick(".o_m2o_avatar > img");
+    await mailContains(".o_avatar_card");
+    await mailContains(".o_card_user_infos > span:contains('HR')");
+    await mailClick(".o_action_manager:eq(0)"); // click away
+    await mailContains(".o_avatar_card", { count: 0 });
+    env["hr.employee"].write(employee3Id, {
+        active: false,
+    });
+    await mailClick(".o_m2o_avatar > img");
+    await mailContains(".o_avatar_card");
+    await mailContains(".o_card_user_infos > span:contains('Sales')");
+    await mailClick(".o_action_manager:eq(0)"); // click away
     await mailContains(".o_avatar_card", { count: 0 });
 });

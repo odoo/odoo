@@ -4,6 +4,7 @@ import { fields, models } from "@web/../tests/web_test_helpers";
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
 
+    active = fields.Boolean({ related: false });
     department_id = fields.Many2one({ relation: "hr.department" });
     name = fields.Char();
     user_id = fields.Many2one({ relation: "res.users" });
@@ -19,6 +20,7 @@ export class HrEmployee extends models.ServerModel {
         res.one("user_id", "_store_avatar_card_fields");
         res.one("work_location_id", ["location_type", "name"]);
         res.extend([
+            "active",
             "company_id",
             "hr_icon_display",
             "job_title",
@@ -30,7 +32,7 @@ export class HrEmployee extends models.ServerModel {
 
     _store_im_status_fields(res) {
         res.one("user_id", "_store_im_status_fields");
-        res.attr("work_location_type");
+        res.extend(["active", "company_id", "work_location_type"]);
     }
 
     _get_working_periods_by_field(employeeIds, start_time, end_time, field_key) {
