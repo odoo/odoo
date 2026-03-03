@@ -30,7 +30,7 @@
             <th></th>
         </xpath>
         <xpath expr="//button[@id='add_button']" position="attributes">
-            <attribute name="t-on-click">() => props.onAdd({ context: { default_line_type_id: skill_group[1].id }})</attribute>
+            <attribute name="t-on-click">() => this.props.onAdd({ context: { default_line_type_id: skill_group[1].id }})</attribute>
         </xpath>
     </t>
 

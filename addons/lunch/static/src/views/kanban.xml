@@ -5,7 +5,7 @@
             <div class="o_lunch_content_container flex-grow-1">
                 <t t-call="lunch.WebKanbanRenderer"/>
             </div>
-            <LunchDashboard openOrderLine.bind="openOrderLine"/>
+            <LunchDashboard openOrderLine.bind="this.openOrderLine"/>
         </div>
     </t>
 

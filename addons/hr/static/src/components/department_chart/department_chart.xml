@@ -3,23 +3,23 @@
     <t t-name="hr.DepartmentChart">
         <div class="o_hr_department_chart w-100">
             <div class="o_horizontal_separator mb-3 text-uppercase fw-bolder small">Department Organization</div>
-            <t t-if="state.hierarchy.self">
+            <t t-if="this.state.hierarchy.self">
                 <div class="o_hr_department_chart_parent">
-                    <t t-set="dept" t-value="state.hierarchy.parent"/>
+                    <t t-set="dept" t-value="this.state.hierarchy.parent"/>
                     <t t-set="hideTree" t-value="true"/>
                     <t t-call="hr.DepartmentChart.Department"/>
                 </div>
 
-                <div t-att-class="state.hierarchy.parent?'ms-4':''">
+                <div t-att-class="this.state.hierarchy.parent?'ms-4':''">
                     <div class="o_hr_department_chart_self">
-                        <t t-set="dept" t-value="state.hierarchy.self"/>
-                        <t t-set="hideTree" t-value="!state.hierarchy.parent"/>
+                        <t t-set="dept" t-value="this.state.hierarchy.self"/>
+                        <t t-set="hideTree" t-value="!this.state.hierarchy.parent"/>
                         <t t-call="hr.DepartmentChart.Department"/>
                     </div>
 
                     <t t-set="hideTree" t-value="false"/>
                     <div class="o_hr_department_chart_children ms-4">
-                        <t t-foreach="state.hierarchy.children" t-as="dept" t-key="dept.name">
+                        <t t-foreach="this.state.hierarchy.children" t-as="dept" t-key="dept.name">
                             <t t-call="hr.DepartmentChart.Department"/>
                         </t>
                     </div>

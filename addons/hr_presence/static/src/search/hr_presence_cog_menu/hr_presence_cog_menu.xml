@@ -18,7 +18,7 @@
                 <span class="o_dropdown_title">Presence Control</span>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="PresenceActionItems" t-as="item" t-key="item.key">
+                <t t-foreach="this.PresenceActionItems" t-as="item" t-key="item.key">
                     <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                         <div role="separator" class="dropdown-divider"/>
                     </t>

@@ -3,7 +3,7 @@
 
     <t t-name="hr_holidays.CalendarRenderer">
         <div class="o_timeoff_calendar d-flex flex-column">
-            <TimeOffDashboard t-if="showDashboard" employeeId="employeeId"/>
+            <TimeOffDashboard t-if="this.showDashboard" employeeId="this.employeeId"/>
             <t t-call="web.CalendarRenderer"/>
         </div>
     </t>

@@ -3,8 +3,8 @@
     <t t-name="hr_attendance.AttendanceActionHelper">
         <div class="o_view_nocontent">
             <div class="o_nocontent_help">
-                <t t-if="hasAttendanceRight and isHrUser">
-                    <t t-if="env.isSmall">
+                <t t-if="this.hasAttendanceRight and this.isHrUser">
+                    <t t-if="this.env.isSmall">
                         <t t-call="hr_attendance.AttendanceActionHelperMobileScreen"/>
                     </t>
                     <t t-else="">
@@ -45,7 +45,7 @@
                     </em>
                 </h3>
             </div>
-            <t t-if="!state.hasDemoData">
+            <t t-if="!this.state.hasDemoData">
                 <div class="d-flex gap-3 align-items-center or-separator">
                     <hr class="flex-grow-1"/>
                     or
@@ -86,7 +86,7 @@
                     icon (e.g for work from home)</em></h3>
                 </div>
             </div>
-            <t t-if="!state.hasDemoData">
+            <t t-if="!this.state.hasDemoData">
                     <div class="d-flex gap-3 align-items-center or-separator">
                         <hr class="flex-grow-1"/>
                         or

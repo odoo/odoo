@@ -16,7 +16,7 @@
     </t>
 
     <t t-name="hr_holidays.CalendarView.Buttons">
-        <button t-if="canCreateGroupTimeOff" class="btn btn-secondary" t-on-click="onNewGroupTimeOff">
+        <button t-if="this.canCreateGroupTimeOff" class="btn btn-secondary" t-on-click="this.onNewGroupTimeOff">
             New Group Time Off
         </button>
     </t>

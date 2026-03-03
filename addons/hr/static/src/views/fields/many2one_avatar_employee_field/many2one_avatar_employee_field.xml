@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="hr.Many2OneAvatarEmployeeField">
-        <t t-set="value" t-value="props.record.data[props.name]"/>
+        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
         <div class="o_input_box">
             <t t-if="value !== false">
-                <AvatarEmployee cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="relation" resId="value.id" noSpacing="true" uniqueId="uniqueId"/>
+                <AvatarEmployee cssClass="'o_m2o_avatar o_input_box_overlay_start'" resModel="this.relation" resId="value.id" noSpacing="true" uniqueId="this.uniqueId"/>
             </t>
-            <Many2One t-props="m2oProps">
+            <Many2One t-props="this.m2oProps">
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
-                        <AvatarEmployee resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
+                        <AvatarEmployee resModel="this.relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
                         <span t-out="autoCompleteItemScope.label"/>
                     </div>
                 </t>

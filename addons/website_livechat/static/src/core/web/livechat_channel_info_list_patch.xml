@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website_livechat.LivechatChannelInfoList" t-inherit="im_livechat.LivechatChannelInfoList" t-inherit-mode="extension">
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
-            <t t-set="visitor" t-value="props.thread.livechat_visitor_id"/>
+            <t t-set="visitor" t-value="this.props.thread.livechat_visitor_id"/>
             <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
@@ -11,11 +11,11 @@
                 </div>
                 <span t-out="visitor.pageVisitHistoryText"/>
             </div>
-            <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
+            <div t-if="!this.props.thread.livechat_end_dt and this.recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
                     <a
-                        t-foreach="recentConversations" t-as="channel" t-key="channel.localId"
+                        t-foreach="this.recentConversations" t-as="channel" t-key="channel.localId"
                         class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary btn-group-item d-flex flex-column w-100 m-0 px-3 py-1"
                         t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}"
                         target="_blank"
@@ -29,7 +29,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fa fa-external-link me-2 o-mt-0_5 opacity-75"/>
                             <span>
-                                <t t-if="channel.livechat_end_dt" t-out="CLOSED_ON_TEXT(channel)"/>
+                                <t t-if="channel.livechat_end_dt" t-out="this.CLOSED_ON_TEXT(channel)"/>
                                 <t t-else="">Conversation ongoing</t>
                             </span>
                         </div>
