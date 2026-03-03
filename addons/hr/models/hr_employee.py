@@ -1367,7 +1367,10 @@ class HrEmployee(models.Model):
         if operation == 'read' and self.env.context.get('_allow_read_hr_employee') is _ALLOW_READ_HR_EMPLOYEE:
             return Domain.TRUE
 
-        return super()._access_domain(operation)
+        if not self.env['ir.model.access'].check(self._name, operation, raise_exception=False):
+            return Domain.FALSE
+
+        return self.env['ir.rule']._compute_domain(self._name, operation, include_inherits=False)
 
     def _check_private_fields(self, field_names):
         """ Check whether ``field_names`` contain private fields. """

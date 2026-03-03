@@ -144,8 +144,6 @@ class IrRule(models.Model):
         global_domains: list[Domain] = []
         if include_inherits:
             for parent_model_name, parent_field_name in model._inherits.items():
-                if not model._fields[parent_field_name].store:
-                    continue
                 if domain := self._compute_domain(parent_model_name, mode):
                     global_domains.append(Domain(parent_field_name, 'any', domain))
 
