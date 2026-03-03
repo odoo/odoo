@@ -20,7 +20,7 @@ import {
     setupWebsiteBuilderOeId,
 } from "./website_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
-import { testImg } from "./image_test_helpers";
+import { testGifImg, testImg, testSvgImg } from "./image_test_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
@@ -369,3 +369,25 @@ test("Save image with correct parameter", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     await expect.waitForSteps(["modify_image"]);
 });
+
+test("Correct options appear when clicking on a gif image", async () => {
+    await clickOnImgAndCheckOptions(testGifImg);
+});
+
+test("Correct options appear when clicking on a svg image", async () => {
+    await clickOnImgAndCheckOptions(testSvgImg);
+});
+
+async function clickOnImgAndCheckOptions(imgEl) {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${imgEl}
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+    // Check that the options that need a canvas to work are not displayed
+    expect("[data-action-id='cropImage']").not.toHaveCount();
+    expect("[data-action-id='setImageFormat']").not.toHaveCount();
+    expect("[data-action-id='setImageQuality']").not.toHaveCount();
+}
