@@ -4,7 +4,10 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
 
+    active = fields.Boolean({ related: false });
+    company_id = fields.Many2one({ relation: "res.company" });
     department_id = fields.Many2one({ relation: "hr.department" });
+    user_id = fields.Many2one({ relation: "res.users" });
     work_email = fields.Char();
     work_phone = fields.Char();
     work_location_type = fields.Char();
@@ -13,8 +16,10 @@ export class HrEmployee extends models.ServerModel {
 
     _get_store_avatar_card_fields() {
         return [
+            "active",
             "company_id",
             mailDataHelpers.Store.one("department_id", ["name"]),
+            "user_id",
             "work_email",
             mailDataHelpers.Store.one("work_location_id", ["location_type", "name"]),
             "work_phone",
