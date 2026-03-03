@@ -1856,6 +1856,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _res_for_employee(self, employee):
         return {
+            "active": employee.active,
+            "company_id": employee.company_id.id,
             "id": employee.id,
             "leave_date_to": False,
+            "user_id": employee.user_id.id,
         }
