@@ -59,7 +59,7 @@ def field_employee(field_type: type[fields.Field], name: str, *, field_name='', 
             return Domain('id', 'in', user.ids)
 
     # mark the compute function for identification later
-    compute_employee_field.is_field_employee = True
+    compute_employee_field.employee_field_name = name
     return field_type(
         **kw,
         compute=compute_employee_field,
@@ -76,6 +76,17 @@ class ResUsers(models.Model):
         # employee_ids is considered a safe field and as such will be fetched as sudo.
         # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
         return [('company_id', 'in', self.env.companies.ids)]
+
+    def _post_model_setup__(self):  # noqa: PLW3201
+        for field in self._fields.values():
+            if callable(field.compute) and hasattr(field.compute, 'employee_field_name'):
+                related_field = self.env.registry['hr.employee']._fields[field.compute.employee_field_name]
+                if 'string' not in field._args__:
+                    field.string = related_field.string
+                if 'help' not in field._args__:
+                    field.help = related_field.help
+
+        return super()._post_model_setup__()
 
     # note: a user can only be linked to one employee per company (see sql constraint in `hr.employee`)
     employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
@@ -205,7 +216,7 @@ class ResUsers(models.Model):
             field_name: field
             for field_name, field in self._fields.items()
             if field_name in vals
-            if callable(field.compute) and hasattr(field.compute, 'is_field_employee')
+            if callable(field.compute) and hasattr(field.compute, 'employee_field_name')
         }
 
         employee_domain = [
