@@ -586,7 +586,7 @@ export class Thread extends Record {
             return { channel_id: this.id };
         }
         if (this.model === "mail.box") {
-            return {};
+            return { mailboxFilter: this.store.activeMailboxFilter?.id };
         }
         return {
             thread_id: this.id,

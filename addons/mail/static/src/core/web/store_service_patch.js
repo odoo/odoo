@@ -43,6 +43,24 @@ const StorePatch = {
             },
             eager: true,
         });
+        this.mailboxFilters = [
+            {
+                id: "messages",
+                label: _t("Messages"),
+                condition: (m) => m.message_type === "comment",
+            },
+            {
+                id: "mentioning_me",
+                label: _t("Mentioning Me"),
+                condition: (m) => m.message_type === "comment" && m.partner_ids.includes(this.self),
+            },
+            {
+                id: "tracked_changes",
+                label: _t("Tracked Changes"),
+                condition: (m) => m.trackingValues.length > 0,
+            },
+        ];
+        this.activeMailboxFilter = undefined;
     },
     computeGlobalCounter() {
         return this.inbox?.counter ?? 0;
@@ -61,7 +79,7 @@ const StorePatch = {
     onStarted() {
         super.onStarted(...arguments);
         this.inbox = {
-            display_name: _t("Inbox"),
+            display_name: _t("Unread"),
             id: "inbox",
             model: "mail.box",
         };
@@ -71,7 +89,7 @@ const StorePatch = {
             model: "mail.box",
         };
         this.history = {
-            display_name: _t("History"),
+            display_name: _t("Read"),
             id: "history",
             model: "mail.box",
         };
