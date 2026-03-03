@@ -858,3 +858,78 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # Check total value in SVL:
         # 120 * 110 + 95 + 70 * 110 = 20995
         self.assertAlmostEqual(self.product1.value_svl, 20995)
+
+    def test_landed_cost_partial_cogs(self):
+        """ Check that when billing a landed cost product and then creating the associate
+        landed cost, the default accounts are correct
+        """
+        self.landed_cost.landed_cost_ok = True
+        self.landed_cost.categ_id.property_cost_method = 'average'
+        self.landed_cost.categ_id.property_valuation = 'real_time'
+        self.product_a.categ_id = self.landed_cost.categ_id
+        self.product_a.is_storable = True
+        lc_stock_valuation_account = self.landed_cost.categ_id.property_stock_valuation_account_id
+        lc_expense_account = self.landed_cost.categ_id.property_account_expense_categ_id
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.company_data['currency'].id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'price_unit': 100.0,
+                    'tax_ids': False,
+                }),
+                Command.create({
+                    'name': self.landed_cost.name,
+                    'product_id': self.landed_cost.id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': False
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.button_validate()
+
+        move = self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom_qty': 3,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'move_line_ids': [Command.create({
+                'quantity': 3,
+                'product_id': self.product_a.id,
+            })]
+        })
+        move.picked = True
+        move._action_done()
+
+        # bill the product and the landed cost
+        po.action_create_invoice()
+        bill = po.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        # create and validate the landed cost
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        landed_cost = lc_form.save()
+        landed_cost.button_validate()
+
+        # check the amls
+        bill_landed_cost_amls = bill.line_ids.filtered(lambda l: l.product_id == self.landed_cost)
+        self.assertRecordValues(bill_landed_cost_amls, [
+            {'account_id': lc_expense_account.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+        landed_cost_amls = landed_cost.account_move_id.line_ids.sorted('credit')
+        self.assertRecordValues(landed_cost_amls, [
+            {'account_id': lc_stock_valuation_account.id, 'debit':  70.0,   'credit':  0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 70.0},
+        ])
