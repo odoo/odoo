@@ -127,7 +127,7 @@ class TestSelfAccessRights(TestHrCommon):
             (k, field)
             for k, field in cls.env['res.users']._fields.items()
             # get fields built with `employee_field` function
-            if callable(field.compute) and hasattr(field.compute, 'is_field_employee')
+            if callable(field.compute) and hasattr(field.compute, 'employee_field_name')
         ])
 
     # Read hr.employee #
