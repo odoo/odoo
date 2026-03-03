@@ -702,6 +702,7 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
+<<<<<<< 84d4e17108166e68304e42f67ba58d9533102d35
                     : allRecipients
                           .filter((r) => r.recipient_type !== "cc")
                           .map((r) => r.partner_id),
@@ -711,6 +712,13 @@ export class Composer extends Component {
                     : allRecipients
                           .filter((r) => r.recipient_type === "cc")
                           .map((r) => r.partner_id),
+||||||| 51e342eec7b76a19c19cbc778b444544321416ab
+                    : allRecipients.map((recipient) => recipient.partner_id),
+=======
+                    : allRecipients
+                          .filter((recipient) => recipient.partner_id)
+                          .map((recipient) => recipient.partner_id),
+>>>>>>> dd830c5b52028531e156ed712666fed48e6344ec
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
