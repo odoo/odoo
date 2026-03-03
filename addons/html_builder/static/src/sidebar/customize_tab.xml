@@ -19,7 +19,10 @@
                     <OptionsContainer
                         toggleOverlayPreview.bind="this.toggleOverlayPreview"
                         folded="optionsContainer.folded"
-                        toggleFold="() => optionsContainer.folded = !optionsContainer.folded"
+                        toggleFold="() => {
+                            optionsContainer.folded = !optionsContainer.folded;
+                            optionsContainer.foldedIntent = optionsContainer.folded;
+                        }"
                         editingElement="optionsContainer.element"
                         options="optionsContainer.options"
                         containerTitle="optionsContainer.containerTitle"

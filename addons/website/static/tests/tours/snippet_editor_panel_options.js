@@ -121,7 +121,6 @@ registerWebsitePreviewTour(
         checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
         // Test keeping the text selection when removing all columns of a
         // snippet.
-        ...unfoldOptionsGroup("Text"),
         ...changeOptionInPopover("Text", "Layout", "[data-action-value='0']"),
         {
             content: "The snippet should have the correct number of columns.",
