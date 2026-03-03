@@ -16,6 +16,16 @@ class AccountChartTemplate(models.AbstractModel):
             'sequence': 1,
         }
 
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if 'ar_base' in self._get_parent_template(template_code):
+            return {
+                '1.1.1.02.': 'account_group_bancos',
+                '1.1.1.01.': 'account_group_caja',
+                '6.0.00.00.': 'account_group_cuentas_puentes',
+            }.get(code_prefix)
+
+        return super()._get_account_parent_xmlid(code_prefix, template_code)
+
     @template('ar_base', 'res.company')
     def _get_ar_base_res_company(self):
         return {

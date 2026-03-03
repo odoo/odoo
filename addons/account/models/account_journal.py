@@ -900,6 +900,7 @@ class AccountJournal(models.Model):
         return {
             'name': vals.get('name'),
             'code': code,
+            'parent_id': vals.get('parent_id'),
             'account_type': 'asset_cash',
             'currency_id': vals.get('currency_id'),
             'company_ids': [Command.link(company.id)],
@@ -910,6 +911,7 @@ class AccountJournal(models.Model):
         return {
             'name': vals.get('name'),
             'code': code,
+            'parent_id': vals.get('parent_id'),
             'account_type': 'liability_credit_card',
             'currency_id': vals.get('currency_id'),
             'company_ids': [Command.link(company.id)],
@@ -931,13 +933,17 @@ class AccountJournal(models.Model):
         else:
             account_prefix = ''
 
+        account_vals = {
+            **vals,
+            'parent_id': self.env['account.chart.template'].with_company(company)._get_account_parent_id(account_prefix),
+        }
         start_code = account_prefix.ljust(digits, '0')
         default_account_code = self.env['account.account'].with_company(company)._search_new_account_code(start_code)
 
         if journal_type in ('bank', 'cash'):
-            default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
+            default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, account_vals)
         elif journal_type == 'credit':
-            default_account_vals = self._prepare_credit_account_vals(company, default_account_code, vals)
+            default_account_vals = self._prepare_credit_account_vals(company, default_account_code, account_vals)
         else:
             default_account_vals = {}
 

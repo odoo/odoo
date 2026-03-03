@@ -17,6 +17,18 @@ class AccountChartTemplate(models.AbstractModel):
             'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if template_code == 'mx':
+            return {
+                '102.01.0': 'account_subgroup_bancos_nacionales',
+                '101.01.0': 'account_subgroup_caja_y_efectivo',
+                '102.01.01': 'account_subgroup_bancos_nacionales',
+                '403.01': 'account_subgroup_otros_ingresos_1',
+                '601.84': 'account_subgroup_otros_gastos_generales',
+            }.get(code_prefix)
+
+        return super()._get_account_parent_xmlid(code_prefix, template_code)
+
     @template('mx', 'res.company')
     def _get_mx_res_company(self):
         return {
@@ -66,10 +78,12 @@ class AccountChartTemplate(models.AbstractModel):
             accounts_data.update({
                 'default_cash_difference_income_account_id': {
                     'name': _('Other Income'),
+                    'parent_id': self._get_account_parent_id('403.01'),
                     'code': '403.01.01'
                 },
                 'default_cash_difference_expense_account_id': {
                     'name': 'Cash Difference Loss',
+                    'parent_id': self._get_account_parent_id('601.84'),
                     'code': '601.84.02',
                 }
             })

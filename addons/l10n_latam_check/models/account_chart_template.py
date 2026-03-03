@@ -63,12 +63,14 @@ class AccountChartTemplate(models.AbstractModel):
             return {
                 'base_outstanding_receipts': {
                     'name': _("Outstanding Receipts"),
+                    'parent_id': self._get_account_parent_xmlid('1.1.1.02.', template_code),
                     'code': '1.1.1.02.003',
                     'reconcile': True,
                     'account_type': 'asset_current',
                 },
                 'base_outstanding_payments': {
                     'name': _("Outstanding Payments"),
+                    'parent_id': self._get_account_parent_xmlid('1.1.1.02.', template_code),
                     'code': '1.1.1.02.004',
                     'reconcile': True,
                     'account_type': 'asset_current',
