@@ -46,6 +46,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
         }
 
+    def setUp(self):
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_all_caches)
+        super().setUp()
+
     def test_export_import_product(self):
         products = self.env['product.product'].create([{
             'name': 'XYZ',
@@ -847,75 +852,53 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_invoice_optional_fields(self):
         """Test that optional invoice and invoice lines custom fields added by the user are exported correctly"""
-        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
-        model = self.env["ir.model"].search([("model", "=", "account.move")])
+        model_id = self.env["ir.model"]._get_id("account.move")
+        invoice_fields = [
+            ("x_studio_peppol_tax_point_date", "date"),
+            ("x_studio_peppol_contract_document_reference_id", "char"),
+            ("x_studio_peppol_despatch_document_reference_id", "char"),
+            ("x_studio_peppol_accounting_cost", "char"),
+            ("x_studio_peppol_project_reference_id", "char"),
+            ("x_studio_peppol_order_reference_id", "char"),
+            ("x_studio_peppol_invoice_period_start_date", "date"),
+            ("x_studio_peppol_invoice_period_end_date", "date"),
+        ]
 
-        IrModelFields.create([
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_tax_point_date",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_contract_document_reference_id",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_despatch_document_reference_id",
-            },
-            {
-                "ttype": "monetary",
-                "model_id": model.id,
-                "name": "x_studio_peppol_accounting_cost",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_project_reference_id",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_order_reference_id",
-            },
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_invoice_period_start_date",
-            },
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_invoice_period_end_date",
-            },
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in invoice_fields
         ])
 
-        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+        model_id = self.env["ir.model"]._get_id("account.move.line")
+        invoice_line_fields = [
+            ("x_studio_peppol_order_line_reference_id", "char"),
+            ("x_studio_peppol_buyers_item_id", "char"),
+        ]
 
-        IrModelFields.create([
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_order_line_reference_id",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_buyers_item_id",
-            },
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move.line",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in invoice_line_fields
         ])
 
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'move_type': 'out_invoice',
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
-                'x_studio_peppol_buyers_item_id': "item1-1234",
-            }),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                    'x_studio_peppol_buyers_item_id': "item1-1234",
+                }),
                 Command.create({
                     'product_id': self.product_a.id,
                     'x_studio_peppol_order_line_reference_id': "order_line2-1234",
@@ -971,60 +954,42 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_credit_note_optional_fields(self):
         """Test that optional credit note and credit note lines custom fields added by the user are exported correctly"""
-        IrModelFields = self.env["ir.model.fields"].with_context(studio=True)
-        model = self.env["ir.model"].search([("model", "=", "account.move")])
+        model_id = self.env["ir.model"]._get_id("account.move")
 
-        IrModelFields.create([
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_tax_point_date",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_contract_document_reference_id",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_despatch_document_reference_id",
-            },
-            {
-                "ttype": "monetary",
-                "model_id": model.id,
-                "name": "x_studio_peppol_accounting_cost",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_order_reference_id",
-            },
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_invoice_period_start_date",
-            },
-            {
-                "ttype": "date",
-                "model_id": model.id,
-                "name": "x_studio_peppol_invoice_period_end_date",
-            },
+        credit_note_fields = [
+            ("x_studio_peppol_tax_point_date", "date"),
+            ("x_studio_peppol_contract_document_reference_id", "char"),
+            ("x_studio_peppol_despatch_document_reference_id", "char"),
+            ("x_studio_peppol_accounting_cost", "char"),
+            ("x_studio_peppol_order_reference_id", "char"),
+            ("x_studio_peppol_invoice_period_start_date", "date"),
+            ("x_studio_peppol_invoice_period_end_date", "date"),
+        ]
+
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in credit_note_fields
         ])
 
-        model = self.env["ir.model"].search([("model", "=", "account.move.line")])
+        model_id = self.env["ir.model"]._get_id("account.move.line")
+        credit_note_line_fields = [
+            ("x_studio_peppol_order_line_reference_id", "char"),
+            ("x_studio_peppol_buyers_item_id", "char"),
+        ]
 
-        IrModelFields.create([
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_order_line_reference_id",
-            },
-            {
-                "ttype": "char",
-                "model_id": model.id,
-                "name": "x_studio_peppol_buyers_item_id",
-            },
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in credit_note_line_fields
         ])
 
         invoice = self.env['account.move'].create({
