@@ -103,6 +103,7 @@ class PosConfig(models.Model):
             'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session', 'self_ordering_takeaway',
             'epson_printer_ip', 'iface_tax_included', 'status', 'takeaway_fp_id', 'takeaway', 'trusted_config_ids',
+            'other_devices',
         ]
 
     def _update_access_token(self):
