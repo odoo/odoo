@@ -128,15 +128,24 @@
             <BuilderRow label.translate="Author">
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_author']}"/>
             </BuilderRow>
-            <BuilderRow label.translate="Date">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_date']}"/>
-            </BuilderRow>
             <BuilderRow
                 label.translate="Stats"
                 tooltip.translate="Display the number of comments and views for each blog post">
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_stats']}"/>
             </BuilderRow>
         </t>
+
+        <BuilderRow label.translate="Date">
+            <BuilderCheckbox id="'blog_posts_show_date_opt'" actionParam="{views: ['website_blog.opt_posts_loop_show_date']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Format" t-if="isActiveItem('blog_posts_show_date_opt')" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem id="'blog_posts_date_fmt_MMM_dd'" actionParam="{views: ['website_blog.opt_posts_loop_date_format_MMM_dd']}">MMM DD</BuilderSelectItem>
+                <BuilderSelectItem id="'blog_posts_date_fmt_dd_MMM'" actionParam="{views: ['website_blog.opt_posts_loop_date_format_dd_MMM']}">DD MMM</BuilderSelectItem>
+                <BuilderSelectItem id="'blog_posts_date_fmt_dd_MMM_yyyy'" actionParam="{views: ['website_blog.opt_posts_loop_date_format_dd_MMM_yyyy']}">DD MMM YYYY</BuilderSelectItem>
+                <BuilderSelectItem id="'blog_posts_date_fmt_dd_MM_yyyy'" actionParam="{views: ['website_blog.opt_posts_loop_date_format_dd_MM_yyyy']}">DD/MM/YYYY</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
 
         <!-- Only display tags on compact list view -->
         <BuilderRow label.translate="Tags" t-if="this.isActiveItem('blog_posts_compact_list_opt')">

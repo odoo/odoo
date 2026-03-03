@@ -44,6 +44,14 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_grid_view" t-value="not opt_blog_simple_list_view and not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view"/>
         <t t-set="opt_blog_fullwidth" t-value="is_view_active('website_blog.opt_blog_fullwidth')"/>
         <t t-set="opt_posts_loop_show_date" t-value="is_view_active('website_blog.opt_posts_loop_show_date')"/>
+        <!-- Date format: determined by the active format option (MMM dd is the default) -->
+        <t t-set="opt_posts_loop_date_format" t-value="
+            'MMM dd' if is_view_active('website_blog.opt_posts_loop_date_format_MMM_dd') else
+            'dd MMM' if is_view_active('website_blog.opt_posts_loop_date_format_dd_MMM') else
+            'dd MMM yyyy' if is_view_active('website_blog.opt_posts_loop_date_format_dd_MMM_yyyy') else
+            'dd/MM/yyyy' if is_view_active('website_blog.opt_posts_loop_date_format_dd_MM_yyyy') else
+            'MMM dd'
+        "/>
 
         <div id="o_wblog_blog_top" t-att-class="blog and 'o_wblog_homepage_top'">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->

@@ -132,12 +132,17 @@
 </template>
 
 <template id="post_author">
-    <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-lg-none">&#44;</span><span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
+    <div class="o_not_editable">
+        <t t-out="blog_post.author_name"/><span
+            t-if="opt_posts_loop_show_date and (opt_blog_list_view or opt_blog_large_list_view or (opt_blog_grid_view and not opt_blog_cards_design))"
+            t-att-class="(opt_blog_list_view or opt_blog_large_list_view) and 'd-lg-none' or ''"
+        >&#44;</span>
+    </div>
 </template>
 
 <template id="post_date">
-    <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
-    <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
+    <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'MMM dd', 'date_only': True}"/>
+    <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'MMM dd', 'date_only': True}"/>
 </template>
 
 <!-- ======   Template: Post Breadcrumbs   =====================================
@@ -280,7 +285,8 @@ Display a sidebar beside the post content.
                 is_post_page.f="true"
                 additionnal_classes.f="d-flex align-items-center"
                 opt_posts_loop_show_author.f="True"
-                opt_posts_loop_show_date.f="True"/>
+                opt_posts_loop_show_date.f="True"
+                opt_posts_loop_date_format.f="'MMM dd'"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>

@@ -271,13 +271,13 @@ according to the enabled options.
                                         <t t-if="posts_list_show_parent_blog and not is_minimal_list">
                                             <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
                                         </t>
-                                        <t t-if="opt_blog_simple_list_view">
-                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': 'true'}" class="text-muted flex-shrink-0"/>
-                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': 'true'}" class="text-muted flex-shrink-0"/>
+                                        <t t-if="opt_blog_simple_list_view and opt_posts_loop_show_date">
+                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
+                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
                                         </t>
-                                        <t t-elif="opt_blog_compact_list_view">
-                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': 'true'}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
-                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': 'true'}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
+                                        <t t-elif="opt_blog_compact_list_view and opt_posts_loop_show_date">
+                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd MMM', 'date_only': True}" class="flex-shrink-0 mt-1"/>
+                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd MMM', 'date_only': True}" class="flex-shrink-0 mt-1"/>
                                         </t>
                                         <div t-attf-class="#{opt_blog_simple_list_view and '' or 'd-flex flex-grow-1 justify-content-between flex-wrap gap-1'} #{opt_blog_compact_list_view and 'align-items-start' or ''}">
                                             <t t-if="opt_blog_simple_list_view">
@@ -447,5 +447,11 @@ according to the enabled options.
 
 <!-- (Option) Posts List: Show Date -->
 <template id="opt_posts_loop_show_date" name="Date" inherit_id="website_blog.posts_loop" active="True"/>
+
+<!-- (Option) Posts List: Date format options -->
+<template id="opt_posts_loop_date_format_MMM_dd" name="Date format: MMM DD" inherit_id="website_blog.posts_loop" active="True"/>
+<template id="opt_posts_loop_date_format_dd_MMM" name="Date format: DD MMM" inherit_id="website_blog.posts_loop" active="False"/>
+<template id="opt_posts_loop_date_format_dd_MMM_yyyy" name="Date format: DD MMM YYYY" inherit_id="website_blog.posts_loop" active="False"/>
+<template id="opt_posts_loop_date_format_dd_MM_yyyy" name="Date format: DD/MM/YYYY" inherit_id="website_blog.posts_loop" active="False"/>
 
 </odoo>
