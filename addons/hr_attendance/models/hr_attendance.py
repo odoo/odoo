@@ -80,6 +80,22 @@ class HrAttendance(models.Model):
     expected_hours = fields.Float(string="Theoretical Hours", compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
     linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
+    day_of_date = fields.Selection(
+        compute='_compute_day_of_date',
+        store=True,
+        string="Day",
+        index=True,
+        selection=[('0', "Monday"), ('1', "Tuesday"), ('2', "Wednesday"), ('3', "Thursday"), ('4', "Friday"), ('5', "Saturday"), ('6', "Sunday")],
+    )
+    resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
+
+    @api.depends('date')
+    def _compute_day_of_date(self):
+        for record in self:
+            if record.date:
+                record.day_of_date = str(record.date.weekday())
+            else:
+                record.day_of_date = False
 
     @api.depends("check_in", "employee_id")
     def _compute_date(self):
