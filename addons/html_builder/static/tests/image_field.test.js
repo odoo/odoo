@@ -19,6 +19,7 @@ test("replacing an image should display the image tool options", async () => {
     onRpc("/html_editor/get_image_info", () => ({
         original: {
             image_src: dummyBase64Img,
+            mimetype: "image/png",
         },
     }));
     onRpc("ir.attachment", "search_read", () => [
@@ -54,7 +55,7 @@ test("replacing an image should display the image tool options", async () => {
     expect("div[data-label=Shape] div[role=button]").toHaveCount(1);
     expect("div[data-label=Transform] button[data-action-id=cropImage]").toHaveCount(1);
     expect("div[data-label=Transform] button[data-action-id=transformImage]").toHaveCount(0);
-    expect("div[data-label=Format] button").toHaveCount(1)
+    expect("div[data-label=Format] button").toHaveCount(1);
 
     // Fields that should not appear in [data-oe-type='image'] > img for a binary field image
     expect("div[data-label=Description] input").toHaveCount(0);
