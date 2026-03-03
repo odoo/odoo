@@ -1815,8 +1815,11 @@ class PosOrderLine(models.Model):
             if line._is_product_storable_fifo_avco() and stock_moves:
                 moves = line._get_stock_moves_to_consider(stock_moves, product)
                 product_cost = moves._get_price_unit()
-                if (cost_currency.is_zero(product_cost) and line.order_id.shipping_date and line.refunded_orderline_id):
-                    product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
+                if cost_currency.is_zero(product_cost) and line.order_id.shipping_date:
+                    if line.refunded_orderline_id:
+                        product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
+                    else:
+                        product_cost = product.standard_price
             else:
                 product_cost = product.standard_price
             line.total_cost = line.qty * cost_currency._convert(
