@@ -13,12 +13,12 @@ from zeep.wsdl import Document
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        def check_vies(vat_number, timeout=10):
-            return {'valid': vat_number == 'BE0477472701'}
+        def _check_vies_iap(record):
+            return "valid" if record.vat == 'BE0477472701' else "unassigned"
 
         super().setUpClass()
         cls.env.user.company_id.vat_check_vies = False
-        cls._vies_check_func = check_vies
+        cls._check_vies_iap = _check_vies_iap
 
     def test_peru_ruc_format(self):
         """Only values that has the length of 11 will be checked as RUC, that's what we are proving. The second part
@@ -70,7 +70,7 @@ class TestStructure(TransactionCase):
         })
 
         # reactivate it and correct the vat number
-        with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
             self.env.user.company_id.vat_check_vies = True
             with self.assertRaises(ValidationError):
                 company.vat = "BE0987654321"  # VIES refused, don't fallback on other check
@@ -136,7 +136,7 @@ class TestStructure(TransactionCase):
     def test_no_vies_revalidation_when_creating_company_from_contact(self):
         # Test that we don't revalidate the VAT when create a company from a contact where it's already validated
         self.env.user.company_id.vat_check_vies = True
-        with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
             partner = self.env["res.partner"].create({
                 'name': 'Dummy Partner',
                 'company_name': 'My Company',
@@ -145,8 +145,8 @@ class TestStructure(TransactionCase):
             })
             self.assertEqual(partner.vies_valid, True)
 
-        with patch('odoo.addons.base_vat.models.res_partner.check_vies',
-                   side_effect=Exception('should not call check_vies()')):
+        with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
+                   side_effect=Exception('should not call _check_vies_iap()')):
             partner.create_company()
             self.assertEqual(partner.vies_valid, True)
             self.assertEqual(partner.parent_id.name, 'My Company')
