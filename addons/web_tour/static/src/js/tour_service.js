@@ -53,10 +53,8 @@ const stepSchemaDebug = {
 };
 
 const tourSchema = {
-    name: { type: String, optional: true },
     steps: Function,
     url: { type: String, optional: true },
-    wait_for: { type: [Function, Object], optional: true },
     undeterministicTour_doNotCopy: { type: Boolean, optional: true },
 };
 
@@ -187,21 +185,15 @@ export class TourService {
                     : Array.isArray(tour.steps)
                     ? tour.steps
                     : [],
-            waitFor: tour.wait_for || Promise.resolve(),
         };
     }
 
     /**
-     * Wait the tour is ready (only for automatic tour)
+     * Check that the registry contains the tour (only for automatic tour)
      * @param {string} name The name of the tour
      */
-    async isTourReady(name) {
-        if (!tourRegistry.contains(name)) {
-            return false;
-        }
-        const tour = tourRegistry.get(name);
-        await (tour.wait_for || Promise.resolve());
-        return true;
+    isTourReady(name) {
+        return tourRegistry.contains(name);
     }
 
     async resumeTour() {
