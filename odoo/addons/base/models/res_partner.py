@@ -845,7 +845,7 @@ class ResPartner(models.Model):
             # This is wrong if the user is not active, as partner.user_ids only returns active users.
             # Hence this temporary hack until the ORM updates inverse fields correctly.
             self.invalidate_recordset(['user_ids'])
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids), ('active', '=', True)])
             if users:
                 if users.sudo(False).has_access('write'):
                     error_msg = _('You cannot archive contacts linked to an active user.\n'
