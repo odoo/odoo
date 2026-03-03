@@ -12,7 +12,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import BinaryBytes, file_open
+from odoo.tools import SQL, BinaryBytes, file_open, split_every
 
 from odoo.addons.website_sale import const
 
@@ -90,11 +90,9 @@ class Website(models.Model):
     )
     contact_us_link_url = fields.Char(string="Link URL", translate=True, default="/contactus")
     cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
-    send_abandoned_cart_email = fields.Boolean(
-        string="Send email to customers who abandoned their cart."
-    )
+    send_abandoned_cart_followup = fields.Boolean(string="Send Follow-up")
     send_abandoned_cart_email_activation_time = fields.Datetime(
-        string="Time when the 'Send abandoned cart email' feature was activated.",
+        string="Time when the 'Send abandoned cart' feature was activated for emails followup.",
         compute="_compute_send_abandoned_cart_email_activation_time",
         store=True,
     )
@@ -315,10 +313,10 @@ class Website(models.Model):
         msg = "website.currency_id is not searchable"
         raise ValueError(msg)  # depends on request
 
-    @api.depends("send_abandoned_cart_email")
+    @api.depends("send_abandoned_cart_followup", "cart_recovery_mail_template_id")
     def _compute_send_abandoned_cart_email_activation_time(self):
         for website in self:
-            if website.send_abandoned_cart_email:
+            if website.send_abandoned_cart_followup and website.cart_recovery_mail_template_id:
                 website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
 
     @api.depends("company_id.account_fiscal_country_id")
@@ -941,35 +939,71 @@ class Website(models.Model):
         )
 
     @api.model
-    def _send_abandoned_cart_email(self):
-        for website in self.search([]):
-            if not website.send_abandoned_cart_email:
-                continue
-            all_abandoned_carts = self.env["sale.order"].search([
-                ("is_abandoned_cart", "=", True),
-                ("cart_recovery_email_sent", "=", False),
-                ("website_id", "=", website.id),
-                ("date_order", ">=", website.send_abandoned_cart_email_activation_time),
-            ])
-            if not all_abandoned_carts:
-                continue
+    def _cron_send_abandoned_cart_email(self):
+        website_domain = Domain([
+            ("send_abandoned_cart_followup", "=", True),
+            ("cart_recovery_mail_template_id", "!=", False),
+        ])
 
-            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
-            # Mark abandoned carts that failed the filter as sent to avoid rechecking them more than
-            # once.
-            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
-            for sale_order in abandoned_carts:
-                sale_order._portal_ensure_token()
-                template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to,email_to were emptied or default recipients
-                # is false
-                email_vals = (
-                    {}
-                    if template.email_to or template.partner_to or template.use_default_to
-                    else {"email_to": sale_order.partner_id.email_formatted}
+        all_abandoned_carts = self.env["sale.order"]._read_group(
+            Domain([
+                ("is_abandoned_cart", "=", True),
+                ("website_id", "in", website_domain),
+                ("cart_recovery_email_sent", "=", False),
+            ])
+            & Domain.custom(
+                to_sql=lambda table: SQL(
+                    "%s >= %s",
+                    table.date_order,
+                    table._join("website_id").send_abandoned_cart_email_activation_time,
                 )
-                template.send_mail(sale_order.id, email_values=email_vals)
-                sale_order.cart_recovery_email_sent = True
+            ),
+            groupby=["website_id"],
+            aggregates=["id:recordset", "id:count"],
+        )
+        if not all_abandoned_carts:
+            return
+
+        self.env["ir.cron"]._commit_progress(
+            remaining=sum(count for _website, _cart, count in all_abandoned_carts)
+        )
+
+        # `_filter_can_send_abandoned_cart_followup` has to be called per `website_id`
+        for _website, cart_group, _count in all_abandoned_carts:
+            abandoned_carts = cart_group._filter_can_send_abandoned_cart_followup().filtered(
+                "partner_id.email"
+            )
+            # Mark abandoned carts that failed the filter as sent to avoid rechecking them more
+            # than once.
+            failed_carts = cart_group - abandoned_carts
+            failed_carts.write({"cart_recovery_email_sent": True})
+            self.env["ir.cron"]._commit_progress(len(failed_carts))
+            for carts_batch in split_every(10, abandoned_carts.ids, self.env["sale.order"].browse):
+                carts_batch._cart_recovery_email_send()
+                self.env["ir.cron"]._commit_progress(len(carts_batch))
+
+    @api.model
+    def _toggle_abandoned_cart_email_cron(self):
+        """Enable the abandoned cart email cron if the feature is enabled on some website,
+        disable it otherwise."""
+        cron = self.env.ref("website_sale.ir_cron_send_abandoned_email", raise_if_not_found=False)
+        if not cron:
+            return
+        cron.sudo().active = bool(
+            self.sudo().search_count(
+                [
+                    ("send_abandoned_cart_followup", "=", True),
+                    ("cart_recovery_mail_template_id", "!=", False),
+                ],
+                limit=1,
+            )
+        )
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "send_abandoned_cart_followup" in vals or "cart_recovery_mail_template_id" in vals:
+            self._toggle_abandoned_cart_email_cron()
+        return res
 
     @api.model_create_multi
     def create(self, vals_list):

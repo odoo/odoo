@@ -120,9 +120,9 @@ class SaleOrder(models.Model):
 
         return updated_line
 
-    def _filter_can_send_abandoned_cart_mail(self):
+    def _filter_can_send_abandoned_cart_followup(self):
         # Prevent carts with expired/sold out tickets from being subject of reminder emails
-        return super()._filter_can_send_abandoned_cart_mail().filtered(
+        return super()._filter_can_send_abandoned_cart_followup().filtered(
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
 
