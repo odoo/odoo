@@ -101,6 +101,33 @@ const defaultLightbox = `
     </main>
 `;
 
+const defaultLightboxWithoutIndicators = `
+    <main class="modal-body o_slideshow bg-transparent">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;">
+        </button>
+        <div style="margin: 0 12px;" id="slideshow_3" class="carousel slide undefined" data-bs-ride="false" data-bs-interval="0">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_03" alt="">
+                </div>
+                <div class="carousel-item undefined">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_10" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="o_carousel_controllers">
+                <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="prev" aria-label="Previous" title="Previous" data-bs-target="#slideshow_3">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="next" aria-label="Next" title="Next" data-bs-target="#slideshow_3">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+    </main>
+`;
+
 // TODO Obtain rendering from `website.gallery.slideshow` template.
 const defaultOldLightbox = `
     <main class="modal-body o_slideshow bg-transparent">
@@ -187,6 +214,20 @@ test("gallery_slider interaction on lightbox", async () => {
     const img3El = queryOne(".carousel-item.active img");
     expect(imgEl).not.toBe(img3El);
     expect(img2El).not.toBe(img3El);
+});
+
+test("gallery_slider interaction on lightbox without indicators", async () => {
+    const { core } = await startInteractions(defaultLightboxWithoutIndicators);
+    expect(core.interactions).toHaveLength(1);
+    await onceAllImagesLoaded(getFixture());
+    await advanceTime(SLIDE_DURATION);
+    const imgEl = queryOne(".carousel-item.active img");
+    await click(".carousel-control-next");
+    await animationFrame();
+    await onceAllImagesLoaded(getFixture());
+    await advanceTime(SLIDE_DURATION);
+    const img2El = queryOne(".carousel-item.active img");
+    expect(imgEl).not.toBe(img2El);
 });
 
 test("gallery_slider interaction on old lightbox", async () => {

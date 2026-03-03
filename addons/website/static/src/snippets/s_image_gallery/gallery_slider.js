@@ -107,7 +107,7 @@ export class GallerySlider extends Interaction {
     }
 
     hide() {
-        for (let i = 0; i < this.liEls.length; i++) {
+        for (let i = 0; i < this.liEls?.length; i++) {
             this.liEls[i].classList.toggle("d-none", i < this.page * this.nbPerPage || i >= (this.page + 1) * this.nbPerPage);
         }
         if (this.prevEl) {
