@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 const cannedResponseButtonSelector = "button[title='Insert a Canned response']";
 
 registry.category("web_tour.tours").add("portal_composer_actions_tour_internal_user", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: `#chatterRoot:shadow .o-mail-Composer ${cannedResponseButtonSelector}`,
@@ -22,8 +21,10 @@ registry.category("web_tour.tours").add("portal_composer_actions_tour_internal_u
 });
 
 registry.category("web_tour.tours").add("portal_composer_actions_tour_portal_user", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Thread",
+        },
         {
             trigger: `#chatterRoot:shadow .o-mail-Composer:not(:has(${cannedResponseButtonSelector}))`,
         },
