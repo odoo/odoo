@@ -1,4 +1,4 @@
-import { Component, useRef, onMounted, onWillUnmount, useEffect, useState } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
@@ -62,21 +62,6 @@ export class ProductListPage extends Component {
         useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
         useDraggableScroll(this.subCategoryListRef);
 
-        useEffect(
-            (lines) => {
-                this.state.quantityByProductTmplId = lines
-                    .filter((line) => !line.combo_parent_id)
-                    .reduce((acc, { product_id, changes: { qty } }) => {
-                        const tmplId = product_id.product_tmpl_id.id;
-                        if (tmplId != null) {
-                            acc[tmplId] = (acc[tmplId] || 0) + qty;
-                        }
-                        return acc;
-                    }, {});
-            },
-            () => [this.selfOrder.currentOrder.lines]
-        );
-
         onMounted(() => {
             this.toggleSubCategoryPanel();
             this.ensureCategoryVisible();
@@ -89,6 +74,24 @@ export class ProductListPage extends Component {
             this.selfOrder.currentCategory = this.state.selectedCategory;
             savedScrollTop = this.productListRef.el?.scrollTop || 0;
         });
+    }
+
+    get quantityByProductTmplId() {
+        return this.selfOrder.currentOrder.lines
+            .filter((line) => !line.combo_parent_id)
+            .reduce((acc, line) => {
+                const tmplId = line.product_id.product_tmpl_id.id;
+                if (tmplId != null) {
+                    const qty = this.selfOrder.isSyncedOrderRestricted
+                        ? line.changes.qty
+                        : line.qty;
+
+                    if (qty) {
+                        acc[tmplId] = (acc[tmplId] || 0) + qty;
+                    }
+                }
+                return acc;
+            }, {});
     }
 
     selectCategory(category) {

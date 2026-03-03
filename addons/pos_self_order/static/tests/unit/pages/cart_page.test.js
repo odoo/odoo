@@ -52,6 +52,17 @@ test("canChangeQuantity", async () => {
 
     expect(comp.canChangeQuantity(line)).toBe(true);
     await comp.pay();
+    expect(comp.canChangeQuantity(line)).toBe(true);
+});
+
+test("canChangeQuantity restricted", async () => {
+    const store = await setupSelfPosEnv("mobile", "counter", "each");
+    const order = await getFilledSelfOrder(store);
+    const line = order.lines[0];
+    const comp = await mountWithCleanup(CartPage, {});
+
+    expect(comp.canChangeQuantity(line)).toBe(true);
+    await comp.pay();
     expect(comp.canChangeQuantity(line)).toBe(false);
 });
 

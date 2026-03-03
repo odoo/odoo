@@ -39,7 +39,9 @@ export class OrderWidget extends Component {
 
         if (currentPage === "product_list") {
             label = _t("Checkout");
-            disabled = isNoLine || hasNotAllLinesSent.length === 0;
+            disabled =
+                isNoLine ||
+                (this.selfOrder.isSyncedOrderRestricted && hasNotAllLinesSent.length === 0);
         } else if (
             payAfter === "meal" &&
             Object.keys(this.selfOrder.currentOrder.changes).length > 0
@@ -55,6 +57,18 @@ export class OrderWidget extends Component {
 
     // TODO: remove in master
     get lineNotSend() {
+        const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+
+        if (payAfter === "each" && order.isSynced && !this.selfOrder.isSyncedOrderRestricted) {
+            return {
+                priceWithTax: order.priceIncl,
+                priceWithoutTax: order.priceExcl,
+                count: order.totalQuantity,
+                tax: order.amountTaxes,
+            };
+        }
+
         return this.selfOrder.orderLineNotSend;
     }
 
