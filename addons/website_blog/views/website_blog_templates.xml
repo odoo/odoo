@@ -43,6 +43,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_posts_loop_show_stats" t-value="is_view_active('website_blog.opt_posts_loop_show_stats')"/>
         <t t-set="opt_blog_grid_view" t-value="not opt_blog_simple_list_view and not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view"/>
         <t t-set="opt_blog_fullwidth" t-value="is_view_active('website_blog.opt_blog_fullwidth')"/>
+        <t t-set="opt_posts_loop_show_date" t-value="is_view_active('website_blog.opt_posts_loop_show_date')"/>
 
         <div id="o_wblog_blog_top" t-att-class="blog and 'o_wblog_homepage_top'">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
@@ -357,10 +358,11 @@ list of filtered posts (by date or tag).
                         <div t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_line_clamp lead"  placeholder="Subtitle"/>
                     </div>
                     <div t-if="opt_blog_post_header_author_avatar_display or opt_blog_post_header_share_links_display" class="d-flex flex-column flex-md-row justify-content-between gap-3 gap-md-0 mt-5">
-                        <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_author">
-                            <t t-set="is_post_page" t-value="True"/>
-                            <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
-                        </t>
+                        <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
+                            is_post_page.f="True"
+                            additionnal_classes.f="'d-inline-flex me-2'"
+                            opt_posts_loop_show_author.f="True"
+                            opt_posts_loop_show_date.f="True"/>
                         <t t-if="opt_blog_post_header_share_links_display" t-snippet-call="website.s_share">
                             <t t-set="_classes" t-value="'no_icon_color'"/>
                             <t t-set="_icon_classes" t-value="'rounded-circle o_sm_custom_size'"/>
@@ -403,10 +405,11 @@ list of filtered posts (by date or tag).
                         </div>
                     </div>
                     <div class="d-flex flex-column gap-3 mt-auto">
-                        <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_author">
-                            <t t-set="is_post_page" t-value="True"/>
-                            <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
-                        </t>
+                        <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
+                            is_post_page.f="True"
+                            additionnal_classes.f="'d-inline-flex me-2'"
+                            opt_posts_loop_show_author.f="True"
+                            opt_posts_loop_show_date.f="True"/>
                         <t t-if="opt_blog_post_header_share_links_display">
                             <t t-snippet-call="website.s_share">
                                 <t t-set="_classes" t-value="'no_icon_color'"/>
@@ -437,33 +440,30 @@ list of filtered posts (by date or tag).
     Used when regular_cover or split_cover is enabled
 ============================================================================ -->
 <template id="blog_post_next_compact" name="Next Post Compact">
-    <t t-if="next_post">
-        <div class="mb-4">
-            <hr class="mt-5"/>
-            <h2 class="h5 mb-3">Recommended</h2>
-            <div class="d-flex gap-4 bg-light rounded-3 p-3">
-                <t t-call="website.record_cover"
-                    _record="next_post"
-                    use_size="False"
-                    additionnal_classes.f="o_cc3 flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
-                <div class="d-flex flex-column flex-basis-75">
-                    <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
-                    <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp small text-muted" placeholder="Subtitle"/>
-                    <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="text-decoration-none">
-                        Read more <i class="oi oi-arrow-right ms-1" aria-hidden="true"/>
-                    </a>
-                </div>
+    <div class="mb-4">
+        <hr class="mt-5"/>
+        <h2 class="h5 mb-3">Recommended</h2>
+        <div class="d-flex gap-4 bg-light rounded-3 p-3">
+            <t t-call="website.record_cover"
+                _record="next_post"
+                use_size="False"
+                additionnal_classes.f="o_cc3 flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
+            <div class="d-flex flex-column flex-basis-75">
+                <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
+                <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp small text-muted" placeholder="Subtitle"/>
+                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="text-decoration-none">
+                    Read more <i class="oi oi-arrow-right ms-1" aria-hidden="true"/>
+                </a>
             </div>
         </div>
-    </t>
+    </div>
 </template>
 
 <!-- ====== Blog Post Next Article (Full Cover Style) ===========================
     Used when no_cover is enabled
 ============================================================================ -->
 <template id="blog_post_next_full_cover" name="Next Post Full Cover">
-    <t t-if="next_post">
-        <div id="o_wblog_next_container" class="d-flex flex-column">
+    <div id="o_wblog_next_container" class="d-flex flex-column">
             <button aria-labelledby="o_wblog_next_title" class="o_wblog_next_button o_button_area btn z-1"/>
             <t t-call="website.record_cover"
                 _record="next_post"
@@ -504,7 +504,6 @@ list of filtered posts (by date or tag).
                 </div>
             </t>
         </div>
-    </t>
 </template>
 
 <!-- (Option) Post : Read Next Article
@@ -518,16 +517,12 @@ list of filtered posts (by date or tag).
 
     <!-- Render compact next post in main section when using regular or split cover -->
     <xpath expr="//div[@id='o_wblog_post_content']" position="inside">
-        <t t-if="opt_blog_post_regular_cover or opt_blog_post_split_cover">
-            <t t-call="website_blog.blog_post_next_compact"/>
-        </t>
+        <t t-if="next_post and (opt_blog_post_regular_cover or opt_blog_post_split_cover)" t-call="website_blog.blog_post_next_compact"/>
     </xpath>
 
     <!-- Render full cover next post in footer when NOT using regular or split cover -->
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
-        <t t-if="not (opt_blog_post_regular_cover or opt_blog_post_split_cover)">
-            <t t-call="website_blog.blog_post_next_full_cover"/>
-        </t>
+        <t t-if="next_post and not (opt_blog_post_regular_cover or opt_blog_post_split_cover)" t-call="website_blog.blog_post_next_full_cover"/>
     </xpath>
 </template>
 

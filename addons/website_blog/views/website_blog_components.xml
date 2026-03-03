@@ -114,18 +114,30 @@
 
 <!-- ======   Template: Post Author   ==========================================
 ============================================================================ -->
-<template id="post_author">
+<template id="post_published_info">
     <div t-attf-class="d-flex #{additionnal_classes or ''}">
-        <div t-if="blog_post.author_avatar"
-             t-field="blog_post.author_avatar"
-             t-options='{"widget": "image", "alt": "", "class": "o_not_editable o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
-             t-att-class="'flex-shrink-0 ' + ((opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-lg-flex' or '')"/>
+        <div t-if="blog_post.author_avatar and opt_posts_loop_show_author"
+                t-field="blog_post.author_avatar"
+                t-options='{"widget": "image", "alt": "", "class": "o_not_editable o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
+                t-att-class="'flex-shrink-0 ' + ((opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-lg-flex' or '')"/>
         <div t-attf-class="small lh-sm #{extra_classes or ''} #{opt_blog_cards_design and 'flex-grow-1' or ''}">
-            <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-lg-none">&#44;</span><span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
-            <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
-            <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
+            <div t-if="opt_posts_loop_show_author">
+                <t t-call="website_blog.post_author"/>
+            </div>
+            <div t-if="opt_posts_loop_show_date">
+                <t t-call="website_blog.post_date"/>
+            </div>
         </div>
     </div>
+</template>
+
+<template id="post_author">
+    <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-lg-none">&#44;</span><span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
+</template>
+
+<template id="post_date">
+    <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
+    <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'format': 'MMM dd', 'date_only': 'true'}"/>
 </template>
 
 <!-- ======   Template: Post Breadcrumbs   =====================================
@@ -264,9 +276,11 @@ Display a sidebar beside the post content.
     <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="before">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Written by</h2>
-            <t t-call="website_blog.post_author"
+            <t t-call="website_blog.post_published_info"
                 is_post_page.f="true"
-                additionnal_classes.f="d-flex align-items-center"/>
+                additionnal_classes.f="d-flex align-items-center"
+                opt_posts_loop_show_author.f="True"
+                opt_posts_loop_show_date.f="True"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>
