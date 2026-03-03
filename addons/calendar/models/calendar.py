@@ -624,7 +624,9 @@ class Meeting(models.Model):
         # The start date is naive
         # the timezone will be applied, if necessary, at the very end of the process
         # to allow for DST timezone reevaluation
-        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+        # Strip RFC 7529 parameters (RSCALE, SKIP) not supported by python-dateutil
+        rule_str = re.sub(r';?(?:RSCALE|SKIP)=[^;:\s]+', '', str(self.rrule))
+        rset1 = rrule.rrulestr(rule_str, dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
 
         recurring_meetings_ids = self.env.context.get('recurrent_siblings_cache', {}).get(self.id)
         if recurring_meetings_ids is not None:
