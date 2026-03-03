@@ -103,6 +103,7 @@
                                     groups="hr_attendance.group_hr_attendance_user"/>
                                 <field name="check_in" options="{'rounding': 0}" readonly="not can_edit"/>
                                 <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not can_edit"/>
+                                <field name="resource_calendar_id" groups="base.group_no_one"/>
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
@@ -289,6 +290,8 @@
                     string="Archived Employees"
                     name="archivedemployees"
                     domain="[('employee_id.active', '=', False)]"/>
+                <field name="day_of_date"/>
+                <field name="resource_calendar_id"/>
                 <separator invisible="1"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[('check_in','&gt;=', '-3m')]"/>
                 <group>
