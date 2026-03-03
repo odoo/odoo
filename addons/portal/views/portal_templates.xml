@@ -729,7 +729,7 @@
         </div>
         <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
             <div class="d-flex justify-content-start align-items-start gap-3 mb-4">
-                <img class="rounded object-fit-cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50"/>
+                <img class="rounded object-fit-cover" t-att-src="image_data_uri(user_id.partner_id.avatar_128)" alt="Contact" width="50" height="50"/>
                 <div class="d-flex flex-column justify-content-center">
                     <h5 class="mb-0" t-out="user_id.name"/>
                     <p class="mb-0 text-muted" t-out="user_id.parent_name"/>

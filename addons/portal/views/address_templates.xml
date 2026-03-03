@@ -408,7 +408,7 @@
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center">
                         <input type="file" class="o_file_upload d-none" accept="image/*"/>
-                        <span class="o_profile_picture d-flex justify-content-center w-75 mb-3" t-att-data-user-id="request.env.user.id" t-field="request.env.user.avatar_512" t-options="{'widget': 'image'}"/>
+                        <span class="o_profile_picture d-flex justify-content-center w-75 mb-3 ratio ratio-1x1" t-att-data-user-id="request.env.user.id" t-field="request.env.user.avatar_512" t-options="{'widget': 'image', 'class': 'object-fit-cover'}"/>
                     </div>
                     <div class="d-flex justify-content-center gap-2">
                         <button class="btn btn-primary o_portal_profile_pic_edit oe_unremovable" aria-label="Edit">
