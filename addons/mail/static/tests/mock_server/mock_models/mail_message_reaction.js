@@ -1,5 +1,4 @@
 import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
-import { groupBy } from "@web/core/utils/arrays";
 import { mailDataHelpers } from "../mail_mock_server";
 
 export class MailMessageReaction extends models.ServerModel {
@@ -11,7 +10,7 @@ export class MailMessageReaction extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const reactionGroups = groupBy(this, (r) => [r.message_id, r.content]);
+        const reactionGroups = Object.groupBy(this, (r) => `${r.message_id},${r.content}`);
         for (const groupId in reactionGroups) {
             const reactionGroup = reactionGroups[groupId];
             const { message_id, content } = reactionGroups[groupId][0];

@@ -95,35 +95,6 @@ export function isIterable(value) {
 }
 
 /**
- * Returns an object holding different groups defined by a given criterion
- * or a default one. Each group is a subset of the original given list.
- * The given criterion can either be:
- * - a string: a property name on the list elements which value will be the
- * group name,
- * - a function: a handler that will return the group name from a given
- * element.
- *
- * @template T
- * @template {string | number | symbol} K
- * @param {Iterable<T>} iterable
- * @param {Criterion<T, K>} [criterion]
- * @returns {Record<K, T[]>}
- */
-export function groupBy(iterable, criterion) {
-    const extract = _getExtractorFrom(criterion);
-    /** @type {Partial<Record<K, T[]>>} */
-    const groups = {};
-    for (const element of iterable) {
-        const group = String(extract(element));
-        if (!(group in groups)) {
-            groups[group] = [];
-        }
-        groups[group].push(element);
-    }
-    return groups;
-}
-
-/**
  * Return a shallow copy of a given array sorted by a given criterion or a default one.
  * The given criterion can either be:
  * - a string: a property name on the array elements returning the sortable primitive

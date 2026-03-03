@@ -15,7 +15,6 @@ import {
 import { Domain } from "@web/core/domain";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { groupBy } from "@web/core/utils/arrays";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 const mockRpcRegistry = registry.category("mail.mock_rpc");
@@ -1397,7 +1396,10 @@ export class StoreMany extends StoreRelation {
         const res = [];
 
         if (this.records._name === "mail.message.reaction") {
-            const reactionGroups = groupBy(this.records, (r) => [r.message_id, r.content]);
+            const reactionGroups = Object.groupBy(
+                this.records,
+                (r) => `${r.message_id},${r.content}`
+            );
             for (const groupId in reactionGroups) {
                 const { message_id, content } = reactionGroups[groupId][0];
                 res.push({ message: message_id, content: content });

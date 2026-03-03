@@ -8,7 +8,7 @@ import { rpcBus } from "@web/core/network/rpc";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 import { user } from "@web/core/user";
-import { groupBy, sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
 import { router } from "@web/core/browser/router";
@@ -1243,7 +1243,10 @@ export class SearchModel extends EventBus {
             fieldName,
             domain
         );
-        const result = groupBy(Object.values(definitions), (definition) => definition.record_id);
+        const result = Object.groupBy(
+            Object.values(definitions),
+            (definition) => definition.record_id
+        );
         return Object.entries(result).map(([recordId, definitions]) => ({
             definitionRecordId: parseInt(recordId),
             definitionRecordName: definitions[0]?.record_name,

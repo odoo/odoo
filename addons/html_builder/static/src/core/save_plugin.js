@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
@@ -68,7 +67,7 @@ export class SavePlugin extends Plugin {
     }
 
     groupElements(toGroupEls) {
-        return groupBy(toGroupEls, (toGroupEl) => {
+        return Object.groupBy(toGroupEls, (toGroupEl) => {
             const model = toGroupEl.dataset.oeModel;
             const recordId = toGroupEl.dataset.oeId;
             const field = toGroupEl.dataset.oeField;

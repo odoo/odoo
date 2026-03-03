@@ -2,7 +2,7 @@ import { useEnvDebugContext } from "./debug_context";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { groupBy, sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/arrays";
 
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -31,7 +31,7 @@ export class DebugMenuBasic extends Component {
 
     async loadGroupedItems() {
         const items = await this.debugContext.getItems(this.env);
-        const sections = groupBy(items, (item) => item.section || "");
+        const sections = Object.groupBy(items, (item) => item.section || "");
         this.sectionEntries = sortBy(
             Object.entries(sections),
             ([section]) => debugSectionRegistry.get(section, { sequence: 50 }).sequence

@@ -5,7 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { cookie } from "@web/core/browser/cookie";
 import { getColor } from "@web/core/colors/colors";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
-import { groupBy } from "@web/core/utils/arrays";
 
 const colorScheme = cookie.get("color_scheme");
 
@@ -42,10 +41,16 @@ export class HrHolidaysGraphRenderer extends GraphRenderer {
 
     _computeBalanceDatasets(data) {
         this.balance_label = _t('Balance')
-        const datasetsByLabel = groupBy(data.datasets, 
-            (dataset) => dataset.label.split(this.delimiter)
-            .map(labelPart => labelPart === this.model.allocation_label || labelPart === this.model.timeoff_label ? this.balance_label : labelPart)
-            .join(this.delimiter)
+        const datasetsByLabel = Object.groupBy(data.datasets, (dataset) =>
+            dataset.label
+                .split(this.delimiter)
+                .map((labelPart) =>
+                    labelPart === this.model.allocation_label ||
+                    labelPart === this.model.timeoff_label
+                        ? this.balance_label
+                        : labelPart
+                )
+                .join(this.delimiter)
         );
         this.datasets_offset = data.datasets.length;
         this.datasets_length = this.datasets_offset + Object.keys(datasetsByLabel).length;

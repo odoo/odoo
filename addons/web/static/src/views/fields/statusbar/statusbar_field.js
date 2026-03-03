@@ -6,7 +6,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { groupBy } from "@web/core/utils/arrays";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
@@ -322,7 +321,7 @@ export class StatusBarField extends Component {
     getSortedItems() {
         const before = [];
         const after = [];
-        const { true: inline = [], false: folded = [] } = groupBy(
+        const { true: inline = [], false: folded = [] } = Object.groupBy(
             this.getAllItems(),
             (item) => item.isSelected || !item.isFolded
         );

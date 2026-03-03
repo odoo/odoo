@@ -7,6 +7,6 @@ if (!Array.prototype.at) {
                 return this[index];
             }
             return this[this.length + index];
-        }
+        },
     });
 }

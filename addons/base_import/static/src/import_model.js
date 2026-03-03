@@ -2,7 +2,7 @@ import { useState } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { groupBy, sortBy } from "@web/core/utils/arrays";
+import { sortBy } from "@web/core/utils/arrays";
 import { checkFileSize, DEFAULT_MAX_FILE_SIZE } from "@web/core/utils/files";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -545,7 +545,7 @@ export class BaseImportModel {
 
     _groupErrorsByField(messages) {
         const groupedErrors = {};
-        const errorsByMessage = groupBy(this._sortErrors(messages), (f) => f.message || "0");
+        const errorsByMessage = Object.groupBy(this._sortErrors(messages), (f) => f.message || "0");
         for (const [message, errors] of Object.entries(errorsByMessage)) {
             if (!message.record) {
                 const foundError = errors.find((e) => e.record === undefined);

@@ -11,7 +11,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { groupBy, intersection } from "@web/core/utils/arrays";
+import { intersection } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { formatFloat } from "@web/core/utils/numbers";
@@ -544,7 +544,7 @@ export class CalendarModel extends Model {
     computeAggregatedValues(fieldName, data = this.data) {
         const records = Object.values(data.records);
         const fieldType = this.meta.fields[fieldName].type;
-        const groups = groupBy(records, ({ rawRecord }) => {
+        const groups = Object.groupBy(records, ({ rawRecord }) => {
             const rawValue = rawRecord[fieldName];
             // FIXME: many2many not supported, but not supported for filters either
             return fieldType === "many2one" ? rawValue?.[0] || false : rawValue;

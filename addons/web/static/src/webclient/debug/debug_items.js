@@ -5,7 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { groupBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
@@ -80,7 +79,9 @@ class ClocReport extends Component {
 
     groupRecords(_records) {
         const groups = [];
-        for (const [groupName, records] of Object.entries(groupBy(_records, "module"))) {
+        for (const [groupName, records] of Object.entries(
+            Object.groupBy(_records, (r) => r.module)
+        )) {
             const isUserCusto = groupName === "odoo/studio";
             const group = {
                 name: groupName,

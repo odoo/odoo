@@ -1,7 +1,6 @@
 import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
 import { registry } from "@web/core/registry";
 
-import { groupBy } from "@web/core/utils/arrays";
 
 export class Events extends DynamicSnippet {
     // While the selector has 'upcoming_snippet' in its name, it now has a filter
@@ -15,7 +14,10 @@ export class Events extends DynamicSnippet {
         let searchDomain = super.getSearchDomain(...arguments);
         const filterByTagIds = this.el.dataset.filterByTagIds;
         if (filterByTagIds) {
-            let tagGroupedByCategory = groupBy(JSON.parse(filterByTagIds), "category_id");
+            const tagGroupedByCategory = Object.groupBy(
+                JSON.parse(filterByTagIds),
+                (tag) => tag.category_id
+            );
             for (const category in tagGroupedByCategory) {
                 searchDomain = searchDomain.concat(
                     [["tag_ids", "in", tagGroupedByCategory[category].map(e => e.id)]]);

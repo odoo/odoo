@@ -3,7 +3,7 @@ import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
-import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
+import { sortBy, unique } from "@web/core/utils/arrays";
 
 const { DateTime } = luxon;
 
@@ -164,8 +164,14 @@ export class MailActivity extends models.ServerModel {
             attachmentsById = {};
         }
         // 3. Group activities per records and activity type
-        const groupedCompleted = groupBy(allCompleted, (a) => [a.res_id, a.activity_type_id]);
-        const groupedOngoing = groupBy(allOngoing, (a) => [a.res_id, a.activity_type_id]);
+        const groupedCompleted = Object.groupBy(
+            allCompleted,
+            (a) => `${a.res_id},${a.activity_type_id}`
+        );
+        const groupedOngoing = Object.groupBy(
+            allOngoing,
+            (a) => `${a.res_id},${a.activity_type_id}`
+        );
         // 4. Format data
         const resIdToDeadline = {};
         const resIdToDateDone = {};
@@ -227,7 +233,7 @@ export class MailActivity extends models.ServerModel {
                 count_by_state: {
                     ...Object.fromEntries(
                         Object.entries(
-                            groupBy(ongoing, (a) =>
+                            Object.groupBy(ongoing, (a) =>
                                 this._compute_state_from_date(deserializeDate(a.date_deadline))
                             )
                         ).map(([state, activities]) => [state, activities.length])

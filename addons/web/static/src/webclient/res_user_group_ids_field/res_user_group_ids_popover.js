@@ -1,6 +1,5 @@
 import { useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
-import { groupBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 
@@ -33,13 +32,15 @@ export class ResUserGroupIdsPopover extends Component {
         // split joint/joint extra/exclusive implies (at most one group by privilege, the one with
         // higher level, and omit groups of same privilege as the current group)
         const implyGroups = this.group.implyIds.map((gid) => this.groups[gid]);
-        const implyGroupsByPrivilege = groupBy(implyGroups, (g) => g.privilege_id);
+        const implyGroupsByPrivilege = Object.groupBy(implyGroups, (g) => g.privilege_id);
         const keysToOmit = this.privilege ? ["false", String(this.privilege.id)] : ["false"];
         const groupsFromOtherPrivileges = omit(implyGroupsByPrivilege, ...keysToOmit);
-        const higherLevelGroups = Object.values(groupsFromOtherPrivileges).map((groups) => groups[groups.length-1]);
+        const higherLevelGroups = Object.values(groupsFromOtherPrivileges).map(
+            (groups) => groups[groups.length - 1]
+        );
         const groupsWithoutPrivilege = implyGroupsByPrivilege[false] || [];
         const implyGroupsToDisplay = groupsWithoutPrivilege.concat(higherLevelGroups);
-        const { exclusive, joint, extra } = groupBy(implyGroupsToDisplay, (g) => {
+        const { exclusive, joint, extra } = Object.groupBy(implyGroupsToDisplay, (g) => {
             if (g.impliedByIds.length > 1) {
                 return g.privilege_id ? "joint" : "extra";
             }

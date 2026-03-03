@@ -3,7 +3,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     cartesian,
     ensureArray,
-    groupBy,
     intersection,
     shallowEqual,
     slidingWindow,
@@ -14,49 +13,6 @@ import {
 } from "@web/core/utils/arrays";
 
 describe.current.tags("headless");
-
-describe("groupby", () => {
-    test("groupBy parameter validations", () => {
-        // Safari: TypeError: undefined is not a function
-        // Other navigator: array is not iterable
-        expect(() => groupBy({})).toThrow(/TypeError: \w+ is not iterable/);
-        expect(() => groupBy([], true)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'boolean'/
-        );
-        expect(() => groupBy([], 3)).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'number'/
-        );
-        expect(() => groupBy([], {})).toThrow(
-            /Expected criterion of type 'string' or 'function' and got 'object'/
-        );
-    });
-
-    test("groupBy (no criterion)", () => {
-        // criterion = default
-        expect(groupBy(["a", "b", 1, true])).toEqual({
-            1: [1],
-            a: ["a"],
-            b: ["b"],
-            true: [true],
-        });
-    });
-
-    test("groupBy by property", () => {
-        expect(groupBy([{ x: "a" }, { x: "a" }, { x: "b" }], "x")).toEqual({
-            a: [{ x: "a" }, { x: "a" }],
-            b: [{ x: "b" }],
-        });
-    });
-
-    test("groupBy", () => {
-        expect(groupBy(["a", "b", 1, true], (x) => `el${x}`)).toEqual({
-            ela: ["a"],
-            elb: ["b"],
-            el1: [1],
-            eltrue: [true],
-        });
-    });
-});
 
 describe("sortby", () => {
     test("sortBy parameter validation", () => {

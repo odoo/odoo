@@ -151,6 +151,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/polyfills/promise.js',
             'web/static/src/module_loader.js',
             'web/static/src/polyfills/set.js',
+            'web/static/src/polyfills/map.js',
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
             'web/static/src/core/utils/ui.js',

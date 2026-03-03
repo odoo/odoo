@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { groupBy } from "@web/core/utils/arrays";
 import { _t } from "../../core/l10n/translation";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { useLayoutEffect } from "@web/owl2/utils";
@@ -57,7 +56,7 @@ class OfflineSystray extends Component {
                 });
             }
         }
-        const sections = Object.entries(groupBy(items, (item) => item.actionName || ""));
+        const sections = Object.entries(Object.groupBy(items, (item) => item.actionName || ""));
         sections.forEach(([_name, items]) => {
             items.sort((itemA, itemB) => itemA.timeStamp - itemB.timeStamp);
         });
