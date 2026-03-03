@@ -7,7 +7,9 @@
                 <div class="col-12 col-sm-3 mb-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
+                            <div class="ratio ratio-1x1 w-100 mb-3">
+                                <img class="o_wforum_avatar_img object-fit-cover" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
+                            </div>
                             <div class="d-flex justify-content-center gap-1">
                                 <FileUploader onUploaded.bind="this.onUploadProfileImg" acceptedFileExtensions="'image/*'">
                                     <t t-set-slot="toggler">
