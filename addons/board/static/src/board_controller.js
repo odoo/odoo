@@ -117,7 +117,9 @@ export class BoardController extends Component {
 
     saveBoard() {
         const templateFn = renderToString.app.getTemplate("board.arch");
-        const bdom = templateFn(this.board, {});
+        const ctx = Object.create(this.board);
+        ctx.this = this.board;
+        const bdom = templateFn(ctx, {});
         const root = document.createElement("rendertostring");
         blockDom.mount(bdom, root);
         const result = xmlSerializer.serializeToString(root);
