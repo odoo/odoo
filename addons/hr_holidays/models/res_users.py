@@ -76,4 +76,4 @@ class ResUsers(models.Model):
     def _store_main_user_fields(self, res: Store.FieldList):
         super()._store_main_user_fields(res)
         if res.is_for_internal_users():
-            res.many("employee_ids", ["leave_date_to"])
+            res.many("employee_ids", ["active", "company_id", "leave_date_to", "user_id"])
