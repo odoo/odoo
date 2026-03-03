@@ -626,6 +626,9 @@ class IrAttachment(models.Model):
         if 0 < len(res_model_names or ()) <= MAX_COMODELS_FOR_DOMAIN:
             env = self.with_context(active_test=False).env
             check_res_fields = not self.env.is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
+            inverse_field = self.env.context.get('search_from_field')
+            if not self._fields['res_id'] in self.env.registry.field_inverses.get(inverse_field, ()):
+                inverse_field = None
             for res_model_name in res_model_names:
                 comodel = env.get(res_model_name)
                 if comodel is None:
@@ -637,6 +640,9 @@ class IrAttachment(models.Model):
                 comodel_domain = Domain('id', 'in', comodel_res_ids) if comodel_res_ids else Domain.TRUE
                 if operation != 'read':
                     comodel_domain &= comodel._access_domain(operation).optimize_full(comodel.sudo())
+                elif inverse_field and inverse_field.model_name == res_model_name:
+                    # reading from an inverse, access rights already checked
+                    comodel = comodel.sudo()
                 query = comodel._search(comodel_domain)
                 if query.is_empty():
                     continue
