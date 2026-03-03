@@ -1391,6 +1391,23 @@ tests = [
 """,
     },
     {
+        "name": "xml formatting error",
+        "content": """
+<templates>
+    <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
+        <CardLayout fromTrialMode="this.props.fromTrialMode" companyImageUrl="this.companyImageUrl" kioskReturn.bind="kioskReturn" activeDisplay = "this.state.active_display"/>
+    </t>
+</templates>
+""",
+        "expected": """
+<templates>
+    <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
+        <CardLayout fromTrialMode="this.props.fromTrialMode" companyImageUrl="this.companyImageUrl" kioskReturn.bind="kioskReturn" activeDisplay = "this.state.active_display"/>
+    </t>
+</templates>
+""",
+    },
+    {
         "name": "t foreach, with variables",
         "content": """
 <t t-foreach="items" t-as="item" t-key="item.id">
