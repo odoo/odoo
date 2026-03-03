@@ -36,6 +36,7 @@ only the country code will be validated.
     """,
     'depends': ['account'],
     'data': [
+        'data/ir_cron.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
     ],
