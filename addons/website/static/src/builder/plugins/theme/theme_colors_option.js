@@ -1,12 +1,15 @@
-import { onMounted } from "@odoo/owl";
+import { onMounted, onWillUnmount, signal } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
+import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
     static dependencies = ["themeTab"];
+    isThemeColorsPreviewOpen = signal(false);
+
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
@@ -15,11 +18,13 @@ export class ThemeColorsOption extends BaseOptionComponent {
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
+        this.closeThemeColorsPreviewDialog = null;
         onMounted(() => {
             this.iframeDocument = document.querySelector("iframe").contentWindow.document;
             this.state.presets = this.getPresets();
             this.colorPresetToShow = null;
         });
+        onWillUnmount(() => this.closeThemeColorsPreviewDialog?.());
     }
 
     getPalettes() {
@@ -85,5 +90,29 @@ export class ThemeColorsOption extends BaseOptionComponent {
             );
         }
         return getCSSVariableValue(color, this.iframeStyle);
+    }
+
+    toggleThemeColorsPreview() {
+        if (this.closeThemeColorsPreviewDialog) {
+            this.closeThemeColorsPreviewDialog();
+            return;
+        }
+
+        this.closeThemeColorsPreviewDialog = this.services.dialog.add(
+            ThemeColorsPreviewDialog,
+            {
+                onIframeLoad: (previewDocument) => {
+                    this.config.extraPreviewDocument = previewDocument;
+                },
+            },
+            {
+                onClose: () => {
+                    this.closeThemeColorsPreviewDialog = null;
+                    this.config.extraPreviewDocument = null;
+                    this.isThemeColorsPreviewOpen.set(false);
+                },
+            }
+        );
+        this.isThemeColorsPreviewOpen.set(true);
     }
 }
