@@ -58,19 +58,20 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         # Old helper not used by default (see _export_invoice override in account.edi.xml.ubl_bis3)
         # If you change this method, please change the corresponding new helper (at the end of this file).
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+        tax_scheme_id = None
 
-        if not _has_vat(partner.vat):
-            if (
-                role == 'supplier'
-                and partner.company_registry
-            ):
-                # Use company_registry (Company ID) as the VAT replacement
-                for vals in vals_list:
-                    tax_scheme_id = 'VAT' if partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'
-                    vals.update({'company_id': partner.company_registry, 'tax_scheme_vals': {'id': tax_scheme_id}})
-            elif role == 'customer':
-                for vals in vals_list:
-                    vals.update({'company_id': DEFAULT_VAT, 'tax_scheme_vals': {'id': 'NOT_EU_VAT'}})
+        # Use company_registry (CIF) as the VAT replacement
+        company_id = partner.vat if _has_vat(partner.vat) else partner.company_registry
+        if company_id:
+            tax_scheme_id = 'VAT' if company_id[:2].isalpha() else 'CIF'
+        elif role == 'customer':
+            # For customers with no VAT nor CIF, use the default RO VAT
+            company_id = DEFAULT_VAT
+            tax_scheme_id = 'DEFAULT_RO_VAT'
+
+        if company_id and tax_scheme_id:
+            for vals in vals_list:
+                vals.update({'company_id': company_id, 'tax_scheme_vals': {'id': tax_scheme_id}})
 
         return vals_list
 
@@ -90,7 +91,7 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             for legal_entity_vals in vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_legal_entity_vals']:
                 partner = legal_entity_vals['commercial_partner']
                 if not _has_vat(partner.vat):
-                    legal_entity_vals['company_id'] = partner.company_registry if role == 'supplier' else DEFAULT_VAT
+                    legal_entity_vals['company_id'] = partner.company_registry if role == 'supplier' else partner.company_registry or DEFAULT_VAT
 
         return vals
 
@@ -172,26 +173,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         return node
 
-    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
-        partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-        company_id = None
-
-        if not _has_vat(commercial_partner.vat):
-            if commercial_partner.company_registry:
-                company_id = commercial_partner.company_registry
-        else:
-            company_id = commercial_partner.vat
-
-        vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
-            'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
-            },
-        }] if company_id else []
-
     def _ubl_add_accounting_supplier_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_accounting_supplier_party_legal_entity_nodes(vals)
@@ -210,25 +191,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             else:
                 vals['party_node']['cac:PartyLegalEntity'] = []
 
-    def _ubl_add_accounting_customer_party_tax_scheme_nodes(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        super()._ubl_add_accounting_customer_party_tax_scheme_nodes(vals)
-        partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-        company_id = None
-
-        if not _has_vat(commercial_partner.vat):
-            company_id = DEFAULT_VAT
-        else:
-            company_id = commercial_partner.vat
-
-        vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
-            'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
-            },
-        }] if company_id else []
-
     def _ubl_add_accounting_customer_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_accounting_customer_party_legal_entity_nodes(vals)
@@ -239,10 +201,22 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
-                    '_text': DEFAULT_VAT,
+                    '_text': commercial_partner.company_registry or DEFAULT_VAT,
                     'schemeID': None,
                 },
             }]
+
+    def _ubl_add_accounting_customer_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_accounting_customer_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        if not nodes:
+            nodes.append({
+                'cbc:CompanyID': {'_text': DEFAULT_VAT},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'DEFAULT_RO_VAT'},
+                },
+            })
 
     def _export_invoice_constraints_new(self, invoice, vals):
         # OVERRIDE 'account.edi.xml.ubl_bis3': don't apply Peppol rules
