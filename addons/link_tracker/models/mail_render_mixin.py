@@ -49,6 +49,7 @@ class MailRenderMixin(models.AbstractModel):
         if not link_nodes:
             return html
 
+        link_nodes, urls_and_labels = self._filter_urls_and_labels(link_nodes, urls_and_labels)
         links_trackers = self.env['link.tracker'].search_or_create([
             dict(link_tracker_vals, **url_and_label) for url_and_label in urls_and_labels
         ])
@@ -60,6 +61,9 @@ class MailRenderMixin(models.AbstractModel):
             new_html = markupsafe.Markup(new_html)
 
         return new_html
+
+    def _filter_urls_and_labels(self, link_nodes, urls_and_labels):
+        return link_nodes, urls_and_labels
 
     @api.model
     def _shorten_links_text(self, content, link_tracker_vals, blacklist=None, base_url=None):
