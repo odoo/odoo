@@ -432,6 +432,50 @@ class TestMultiCompany(TransactionCase):
         with self.assertRaises(UserError):
             move._action_confirm()
 
+    def test_intercompany_move(self):
+        '''
+        Test that a move from a company A with a dest move from a company B can be validated
+        '''
+        product = self.env['product.product'].create({
+            'name': 'p1',
+            'is_storable': True,
+        })
+        transit_location = self.env['stock.location'].create({
+            'name': 'Intercompany Transit',
+            'usage': 'transit',
+            'company_id': False,
+        })
+
+        move_dest = self.env['stock.move'].with_company(self.company_b).create({
+            'company_id': self.company_b.id,
+            'location_id': transit_location.id,
+            'location_dest_id': self.stock_location_b.id,
+            'name': 'move for company b',
+            'picked': True,
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'quantity': 10,
+        })
+
+        move = self.env['stock.move'].with_company(self.company_a).create({
+            'company_id': self.company_a.id,
+            'location_id': self.stock_location_a.id,
+            'location_dest_id': transit_location.id,
+            'name': 'move for company a',
+            'move_dest_ids': [move_dest.id],
+            'picked': True,
+            'product_id': product.id,
+            'product_uom_qty': 10,
+            'quantity': 10,
+        })
+
+        move_dest.move_line_ids.invalidate_recordset()
+        move_dest.invalidate_recordset()
+        move.with_user(self.user_a)._action_done()
+
+        self.assertEqual(move.state, 'done')
+        self.assertEqual(move_dest.state, 'assigned')
+
     def test_intercom_lot_push(self):
         """ Create a push rule to transfer products received in inter company
         transit location to company b. Move a lot product from company a to the
