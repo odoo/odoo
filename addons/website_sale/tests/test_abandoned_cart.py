@@ -8,20 +8,22 @@ from dateutil.relativedelta import relativedelta
 from odoo.tests import RecordCapturer, tagged
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
-from odoo.addons.mail.models.mail_template import MailTemplate
 
 
 class TestWebsiteSaleCartAbandonedCommon(TransactionCaseWithUserPortal):
     def send_mail_patched(self, sale_order_id):
         email_got_sent = False
 
-        def check_send_mail_called(this, res_id, email_values, *_args, **_kwargs):  # noqa: ARG001
+        def check_send_mail_called(this, res_ids, *_args, **_kwargs):  # noqa: ARG001
             nonlocal email_got_sent
-            if res_id == sale_order_id:
+            if sale_order_id in res_ids:
                 email_got_sent = True
 
-        with patch.object(MailTemplate, "send_mail", check_send_mail_called):
-            self.env["website"]._send_abandoned_cart_email()
+        with (
+            patch.object(self.env.registry["mail.template"], "send_mail_batch", check_send_mail_called),
+            patch.object(self.env.registry["ir.cron"], "_commit_progress", return_value=float("inf")),
+        ):
+            self.env["website"]._send_abandoned_cart_followup()
         return email_got_sent
 
 
@@ -151,7 +153,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
     def test_website_sale_abandoned_cart_email(self):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""
         website = self.env.ref('base.default_website')
-        website.send_abandoned_cart_email = True
+        website.send_abandoned_cart_followup = True
         website.write({
             "send_abandoned_cart_email_activation_time": (
                 datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
@@ -172,8 +174,11 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "order_line": order_line,
         })
         self.assertTrue(abandoned_sale_order.is_abandoned_cart)
-        with RecordCapturer(self.env["mail.mail"], []) as captured_mails:
-            self.env["website"]._send_abandoned_cart_email()
+        with (
+            RecordCapturer(self.env["mail.mail"], []) as captured_mails,
+            patch.object(self.env.registry["ir.cron"], "_commit_progress", return_value=float("inf")),
+        ):
+            self.env["website"]._send_abandoned_cart_followup()
             # Currently the class init level sales orders might be created in the time window
             # of the abandoned delay configured on the website, thus interfering here.
             # Without modifying the whole legacy test, we filter the captured records based on

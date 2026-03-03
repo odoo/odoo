@@ -210,8 +210,8 @@
                 <field name="name"/>
                 <filter string="Creation Date" name="creation_date" date="create_date"/>
                 <separator/>
-                <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
-                <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+                <filter string="Follow-up to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
+                <filter string="Follow-up Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
                 <group>
                     <filter string="Order Date" name="order_date" context="{'group_by':'date_order'}"/>
                 </group>

@@ -17,7 +17,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(
     def test_website_sale_stock_abandoned_cart_email(self):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""
         website = self.env.ref('base.default_website')
-        website.send_abandoned_cart_email = True
+        website.send_abandoned_cart_followup = True
         website.write({
             "send_abandoned_cart_email_activation_time": (
                 datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)

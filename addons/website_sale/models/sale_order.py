@@ -839,12 +839,17 @@ class SaleOrder(models.Model):
         Similar method to action_recovery_email_send, made to be called in automation rules.
         Contrary to the former, it will use the website-specific template for each order."""
         sent_orders = self.env["sale.order"]
-        for order in self:
-            template = order._get_cart_recovery_template()
+        for template, orders in (
+            self
+            .filtered("partner_id.email")
+            .grouped(lambda order: order._get_cart_recovery_template())
+            .items()
+        ):
             if template:
-                order._portal_ensure_token()
-                template.send_mail(order.id)
-                sent_orders |= order
+                for order in orders:
+                    order._portal_ensure_token()
+                template.send_mail_batch(orders.ids)
+                sent_orders += orders
         sent_orders.write({"cart_recovery_email_sent": True})
 
     def _message_mail_after_hook(self, mails):
@@ -930,8 +935,7 @@ class SaleOrder(models.Model):
 
         return self.filtered(
             lambda abandoned_sale_order: (
-                abandoned_sale_order.partner_id.email
-                and not any(
+                not any(
                     transaction.sudo().state == "error"
                     for transaction in abandoned_sale_order.transaction_ids
                 )
