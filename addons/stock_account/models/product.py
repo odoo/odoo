@@ -203,7 +203,9 @@ class ProductProduct(models.Model):
             if cost_method == 'standard':
                 std_prices, total_values = products._run_standard_batch(at_date=at_date)
             elif cost_method == 'average':
-                std_prices, total_values = products._run_average_batch(at_date=at_date, force_recompute=True)
+                # Force recompute only for historical valuation or automated valuation.
+                force = bool(at_date) or ('real_time' in set(products.mapped('categ_id.property_valuation')))
+                std_prices, total_values = products._run_average_batch(at_date=at_date, force_recompute=force)
             else:
                 std_prices, total_values = products._run_fifo_batch(at_date=at_date)
 
