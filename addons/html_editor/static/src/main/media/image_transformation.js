@@ -227,7 +227,6 @@ export class ImageTransformation extends Component {
         if (this.transfo.active) {
             return;
         }
-        this.isCurrentlyTransforming = true;
         let type;
         const target = ev.target.closest("div");
 
@@ -251,6 +250,11 @@ export class ImageTransformation extends Component {
             type = "mr";
         }
 
+        // No transformation handle was clicked.
+        if (!type) {
+            return;
+        }
+        this.isCurrentlyTransforming = true;
         const { pageX, pageY } = this.normalizeCoordinates(ev);
         this.transfo.active = {
             type: type,
