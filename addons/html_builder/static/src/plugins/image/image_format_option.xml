@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageFormat">
-    <BuilderRow label.translate="Format" level="this.props.level">
+    <BuilderRow label.translate="Format" level="this.props.level" t-if="this.state.showFormat">
         <BuilderSelect>
             <t t-foreach="this.state.formats" t-as="format" t-key="format.id">
                 <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">

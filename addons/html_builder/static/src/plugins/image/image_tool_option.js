@@ -7,6 +7,8 @@ import { ImageTransformOption } from "./image_transform_option";
 import { MediaSizeOption } from "./media_size_option";
 import { dynamicSVGSelector } from "../utils";
 import { registry } from "@web/core/registry";
+import { getMimetypeBeforeShape } from "@html_builder/utils/image";
+import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 
 export class ImageToolOption extends BaseOptionComponent {
     static id = "image_tool_option";
@@ -20,12 +22,17 @@ export class ImageToolOption extends BaseOptionComponent {
     };
     setup() {
         super.setup();
-        this.state = useDomState((editingElement) => ({
-            isImageAnimated: editingElement.classList.contains("o_animate"),
-            isGridMode: editingElement.closest(".o_grid_mode, .o_grid"),
-            isSocialMediaImg: editingElement.classList.contains("social_media_img"),
-            isDynamicSVG: editingElement.matches(dynamicSVGSelector),
-        }));
+        this.state = useDomState(async (editingElement) => {
+            const mimetype = await getMimetypeBeforeShape(editingElement);
+            const showCropTool = await isImageSupportedForProcessing(editingElement, mimetype);
+            return {
+                isImageAnimated: editingElement.classList.contains("o_animate"),
+                isGridMode: editingElement.closest(".o_grid_mode, .o_grid"),
+                isSocialMediaImg: editingElement.classList.contains("social_media_img"),
+                isDynamicSVG: editingElement.matches(dynamicSVGSelector),
+                showCropTool,
+            };
+        });
     }
 }
 
