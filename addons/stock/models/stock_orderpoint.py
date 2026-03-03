@@ -562,9 +562,12 @@ class StockWarehouseOrderpoint(models.Model):
             if use_new_cursor:
                 assert isinstance(self._cr, BaseCursor)
                 cr = registry(self._cr.dbname).cursor()
-                self = self.with_env(self.env(cr=cr))
+                self = self.with_env(self.env(cr=cr, context=self.env.context))  # noqa: PLW0642
             try:
                 orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch_ids)
+                if self.env.context.get('recompute_qty_to_order', False):
+                    # Force the recomputation of qty_to_order as it depends on Datetime.now()
+                    self.env.add_to_compute(self._fields['qty_to_order'], orderpoints_batch)
                 all_orderpoints_exceptions = []
                 while orderpoints_batch:
                     procurements = []
