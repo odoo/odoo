@@ -327,7 +327,7 @@ export class HtmlField extends Component {
             }
             const lastStep = this.wysiwyg.odooEditor._historySteps.at(-1);
             this.isDirty = true;
-            if (lastStep.isReset) {
+            if (lastStep.isSavePoint) {
                 this.wysiwyg.odooEditor.lastSavePoint = lastStep.id;
                 this.isDirty = false;
             } else if (

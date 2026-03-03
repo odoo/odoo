@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from lxml import etree
 from unittest import SkipTest
 from unittest.mock import patch
@@ -961,3 +962,61 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         partner_bank.active = True
         self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank)
+
+    def test_payment_terms_immediate_in_cii_xml(self):
+        self.partner_a.ubl_cii_format = 'facturx'
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_a,
+            invoice_date="2025-12-01",
+            post=True,
+        )
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        description = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:Description', self.namespaces)
+        due_date = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString',
+                                 self.namespaces)
+        self.assertEqual(description.text, 'Immediate Payment')
+        self.assertEqual(due_date.text, '20251201')
+
+    def test_payment_terms_early_payment_discount_in_cii_xml(self):
+        pay_terms = self.env['account.payment.term'].create({
+            'name': '3% Before 15 Days',
+            'note': 'Payment terms: 3% Before 15 Days',
+            'early_discount': True,
+            'discount_days': 15,
+            'discount_percentage': 3.0,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'value_amount': 100.0,
+                'nb_days': 30,
+            })],
+        })
+        partner = self.partner_a
+        partner.ubl_cii_format = 'facturx'
+        partner.property_payment_term_id = pay_terms.id
+        partner.property_supplier_payment_term_id = pay_terms.id
+
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_a,
+            invoice_date="2025-12-01",
+            post=True,
+        )
+
+        xml_tree = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        description = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:Description', self.namespaces)
+        due_date = xml_tree.find('.//ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString',
+                                 self.namespaces)
+        days = xml_tree.find(
+            './/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:BasisPeriodMeasure',
+            self.namespaces)
+        percent = xml_tree.find(
+            './/ram:SpecifiedTradePaymentTerms/ram:ApplicableTradePaymentDiscountTerms/ram:CalculationPercent',
+            self.namespaces)
+
+        self.assertEqual(description.text, '3% Before 15 Days')
+        self.assertEqual(due_date.text, '20251231')
+        self.assertEqual(days.text, '15')
+        self.assertEqual(percent.text, '3.0')

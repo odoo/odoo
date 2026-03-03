@@ -1175,8 +1175,8 @@ export class Wysiwyg extends Component {
      * @param {String} value
      * @returns {String}
      */
-    setValue(value) {
-        this.odooEditor.resetContent(value);
+    setValue(value, isSavePoint = true) {
+        this.odooEditor.resetContent(value, isSavePoint);
     }
     /**
      * Undo one step of change in the editor.
