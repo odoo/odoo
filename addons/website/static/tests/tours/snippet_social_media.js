@@ -4,7 +4,6 @@ import {
     clickOnSnippet,
     insertSnippet,
     registerWebsitePreviewTour,
-    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 // TODO: Remove following steps once fix of task-3212519 is done.
@@ -61,7 +60,7 @@ const replaceIconByImage = function (url) {
 
 const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon = false) {
     const replaceIconByImageSteps = replaceIcon
-        ? [...replaceIconByImage("https://www.example.com"), ...unfoldOptionsGroup("Social Media")]
+        ? [...replaceIconByImage("https://www.example.com")]
         : [];
     return [
         {
@@ -227,7 +226,6 @@ registerWebsitePreviewTour(
         ...addNewSocialNetwork(10, 10, "https://google.com", true),
         // Create a social network after replacing the first icon by an image.
         ...replaceIconByImage("/website/social/twitter"),
-        ...unfoldOptionsGroup("Social Media"),
         ...addNewSocialNetwork(11, 11, "https://facebook.com"),
         {
             content: "Check if the result is correct after adding images",
