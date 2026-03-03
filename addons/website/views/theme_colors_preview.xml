@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="ThemeColorsPreview" inherit_id="web.layout" primary="True">
+    <xpath expr="//head/link[last()]" position="after">
+        <t t-call-assets="web.assets_frontend" t-js="false"/>
+        <t t-call-assets="website.assets_wysiwyg" t-js="false"/>
+        <t t-call-assets="website.assets_theme_colors_preview"/>
+    </xpath>
+    <xpath expr="//body" position="inside">
+        <section class="o_colored_level d-flex align-items-center min-vh-100">
+            <div class="container pb-5">
+                <div class="row g-3">
+                    <t t-foreach="range(1, 6)" t-as="preset_id">
+                        <div class="col-lg-4">
+                            <small>
+                                <span class="badge mb-2" style="--badge-border-color: #cccccc; --badge-bg: white; --badge-color: black;">
+                                    Preset #<t t-out="preset_id"/>
+                                </span>
+                            </small>
+                            <div t-attf-class="o_colored_level o_cc o_cc#{preset_id} shadow-sm border p-4 pb-2 rounded-1">
+                                <h4>Title</h4>
+                                <p>Nihil hic munitissimus <a href="#">habendi</a> senatus locus, nihil horum.</p>
+                                <p class="mb-0">
+                                    <a class="btn btn-primary mb-2" href="#">Primary</a>
+                                    <a class="btn btn-secondary mb-2" href="#">Secondary</a>
+                                </p>
+                                <p class="mb-0">
+                                    <a class="btn btn-outline-primary mb-2" href="#">Primary</a>
+                                    <a class="btn btn-outline-secondary mb-2" href="#">Secondary</a>
+                                </p>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="col-lg-4 d-flex flex-column">
+                        <small>
+                            <span class="badge mb-2" style="--badge-border-color: #cccccc; --badge-bg: white; --badge-color: black;">
+                                UI elements
+                            </span>
+                        </small>
+                        <div class="shadow-sm border p-4 pb-2 rounded-1 d-flex flex-column align-items-center h-100">
+                            <div class="d-flex w-100 gap-2 mb-3 justify-content-center align-items-center">
+                                <a class="btn btn-light fa fa-home h-100 align-content-center" href="#"/>
+                                <div class="input-group">
+                                    <input type="search" name="search" class="form-control border-0 bg-light" placeholder="Search..."/>
+                                    <button type="submit" aria-label="Search" title="Search" class="btn btn-light">
+                                        <i class="oi oi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control mb-3" placeholder="Text Input"/>
+                            <div class="d-flex w-100">
+                                <div style="flex: 1;">
+                                    <div class="d-flex gap-1">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"/>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"/>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="demo_radio"/>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-1">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" checked=""/>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" checked=""/>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="demo_radio" checked=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 justify-content-end align-self-start" style="flex: 1;">
+                                    <span class="badge text-bg-success">Success</span>
+                                    <span class="badge text-bg-info">Info</span>
+                                    <span class="badge text-bg-warning">Warning</span>
+                                    <span class="badge text-bg-danger">Danger</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

@@ -35,6 +35,10 @@ class WebsiteBackend(http.Controller):
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
+    @http.route('/website/theme_colors_preview', type="http", auth='user', website=True, readonly=True)
+    def get_theme_colors_preview(self):
+        return request.render('website.ThemeColorsPreview')
+
     @http.route('/website/track_installing_modules', type='jsonrpc', auth='user', readonly=True)
     def website_track_installing_modules(self, selected_features, total_features=None):
         """

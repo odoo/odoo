@@ -17,7 +17,7 @@ export class OperationPlugin extends Plugin {
 
     setup() {
         this._hasTimedOut = false;
-        this.operation = new Operation(this.document);
+        this.operation = new Operation(this.document, this.config);
 
         // Revert any potential preview as soon as the user does anything, to
         // avoid losing what the user will have done when they ends the preview.

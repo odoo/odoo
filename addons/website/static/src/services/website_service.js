@@ -53,6 +53,7 @@ export const websiteService = {
             isPublicRootReady: false,
             snippetsLoaded: false,
             isMobile: false,
+            showThemeColorsPreview: false,
         });
         const bus = new EventBus();
 

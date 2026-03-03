@@ -53,6 +53,7 @@ export class Builder extends Component {
         overlayRef: { type: Function },
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
+        mobileBtnDisabled: { type: Boolean, optional: true },
         Plugins: { type: Array, optional: true },
         // This fragment of config will be passed to the Editor and be
         // available to the plugins in `config`
@@ -70,6 +71,7 @@ export class Builder extends Component {
         themeTabDisplayName: _t("Theme"),
         initialTab: "blocks",
         onlyCustomizeTab: false,
+        mobileBtnDisabled: false,
     };
 
     setup() {

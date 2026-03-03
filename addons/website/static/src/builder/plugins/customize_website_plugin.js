@@ -227,12 +227,15 @@ export class CustomizeWebsitePlugin extends Plugin {
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
         const bundles = await rpc("/website/theme_customize_bundle_reload");
+        const documents = [this.document, this.config.getThemeColorsPreviewDocument()].filter(
+            Boolean
+        );
         const allLinksIframeEls = [];
         const proms = [];
         const createLinksProms = (bundleURLs, insertionEl) => {
             const newLinkEls = [];
             for (const url of bundleURLs) {
-                const linkEl = this.document.createElement("link");
+                const linkEl = insertionEl.ownerDocument.createElement("link");
                 linkEl.setAttribute("type", "text/css");
                 linkEl.setAttribute("rel", "stylesheet");
                 linkEl.setAttribute("href", `${url}#t=${new Date().getTime()}`); // Ensures that the css will be reloaded.
@@ -248,12 +251,14 @@ export class CustomizeWebsitePlugin extends Plugin {
                 insertionEl.insertAdjacentElement("afterend", el);
             }
         };
-        for (const [bundleName, bundleURLs] of Object.entries(bundles)) {
-            const selector = `link[href*="${bundleName}"]`;
-            const linksIframeEls = this.document.querySelectorAll(selector);
-            if (linksIframeEls.length) {
-                allLinksIframeEls.push(...linksIframeEls);
-                createLinksProms(bundleURLs, linksIframeEls[linksIframeEls.length - 1]);
+        for (const document of documents) {
+            for (const [bundleName, bundleURLs] of Object.entries(bundles)) {
+                const selector = `link[href*="${bundleName}"]`;
+                const linksIframeEls = document.querySelectorAll(selector);
+                if (linksIframeEls.length) {
+                    allLinksIframeEls.push(...linksIframeEls);
+                    createLinksProms(bundleURLs, linksIframeEls[linksIframeEls.length - 1]);
+                }
             }
         }
         await Promise.all(proms).then(() => {
