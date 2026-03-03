@@ -215,6 +215,17 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
 
+        wrong_tax = self.env["account.tax"].create({
+            'name': 'Tax incorrectly predicted based on product and account',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 21.0,
+        })
+
+        with patch.object(type(self.env['account.move.line']), '_predict_taxes', return_value=wrong_tax.ids):
+            bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+            self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
+
     def test_peppol_eas_endpoint_compute(self):
         partner = self.partner_a
         partner.vat = 'DE123456788'
