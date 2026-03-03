@@ -527,7 +527,7 @@ class Many2one(_Relational):
             return sql
 
         if isinstance(value, Domain):
-            value = comodel._search(value, active_test=False, bypass_access=bypass_access)
+            value = comodel._search(value, active_test=False, bypass_access=bypass_access, search_from_field=self)
         if isinstance(value, Query):
             subselect = value.subselect()
         elif isinstance(value, SQL):
@@ -556,7 +556,7 @@ class Many2one(_Relational):
         if self.compute_sudo or self.delegate or model.env.su:
             coquery = None
         else:
-            coquery = comodel.with_context(_generating_sql_for_fields=True)._search(Domain.TRUE, active_test=False)
+            coquery = comodel.with_context(_generating_sql_for_fields=True)._search(Domain.TRUE, active_test=False, search_from_field=self)
             if not coquery.where_clause:
                 coquery = None
         if coquery is None:
@@ -870,7 +870,7 @@ class _RelationalMulti(_Relational):
                     # this is usually the case for one2many
                     if inverse_field.column_type and inverse_field not in comodel.env.registry.not_null_fields:
                         domain &= Domain(inverse_field.name, '!=', False)
-                query = comodel._search(domain, bypass_access=bypass_access)
+                query = comodel._search(domain, bypass_access=bypass_access, search_from_field=self)
             assert isinstance(query, Query)
         elif isinstance(value, Query):
             domain = field_domain.optimize_full(comodel)
@@ -879,7 +879,7 @@ class _RelationalMulti(_Relational):
                 value.add_where(domain._to_sql(value.table._with_model(comodel)))
             query = value
         elif isinstance(value, SQL):
-            query = comodel._search(field_domain & Domain('id', 'any!', value), active_test=False, bypass_access=True)
+            query = comodel._search(field_domain & Domain('id', 'any!', value), active_test=False, bypass_access=True, search_from_field=self)
         else:
             assert False, f"Unimplemented condition on {self} for {type(value)}"
 
@@ -1187,7 +1187,7 @@ class One2many(_RelationalMulti):
         model = table._model
         comodel = model.env[self.comodel_name].with_context(**self.context)
         codomain = self.get_comodel_domain(model)
-        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access, search_from_field=self)
 
         coalias = table._make_alias(self.name, comodel)
         condition = SQL(
@@ -1721,7 +1721,7 @@ class Many2many(_RelationalMulti):
         comodel = model.env[self.comodel_name].with_context(**self.context)
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
         codomain = self.get_comodel_domain(model)
-        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access, search_from_field=self)
 
         rel_alias = table._make_alias(f'{self.name}__rel')
         condition = SQL(
