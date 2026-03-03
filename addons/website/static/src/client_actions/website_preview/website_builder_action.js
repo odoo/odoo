@@ -20,6 +20,7 @@ import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { Dialog } from "@web/core/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { LazyComponent } from "@web/core/lazy_component";
@@ -41,6 +42,20 @@ import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
 const websiteSystrayRegistry = registry.category("website_systray");
+
+class ThemeColorsPreviewDialog extends Component {
+    static template = "website.ThemeColorsPreviewDialog";
+    static components = { Dialog };
+    props = useProps({
+        close: t.function(),
+        iframeSrc: t.string(),
+        onIframeLoad: t.function().optional(),
+    });
+
+    onIframeLoad(ev) {
+        this.props.onIframeLoad?.(ev.target.contentDocument);
+    }
+}
 
 export class WebsiteBuilderClientAction extends Component {
     static template = "website.WebsiteBuilderClientAction";
@@ -83,6 +98,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.iframeFallbackUrl = "/website/iframefallback";
         this.iframefallback = signal.ref();
         this.newInstalledModule = router.current.module_installed;
+        this.themeColorsPreviewUrl = "/website/theme_colors_preview";
+        this.themeColorsPreviewDialogClose = null;
+        this.themeColorsPreviewDocument = null;
 
         this.websiteContent = signal.ref();
         this.builderSidebarRef = signal.ref();
@@ -107,18 +125,25 @@ export class WebsiteBuilderClientAction extends Component {
             () => (this.state.is404 = this.websiteService.is404)
         );
 
-        let disposeToggleMobileEffect = () => {};
+        let disposeWebsiteContextEffect = () => {};
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the
             // page style synchronously.
-            disposeToggleMobileEffect = immediateEffect(() => {
-                this.websiteContext.isMobile; // consume signal
+            disposeWebsiteContextEffect = immediateEffect(() => {
+                const isMobile = this.websiteContext.isMobile;
+                const showThemeColorsPreview = this.websiteContext.showThemeColorsPreview;
                 if (!scope.isDestroyed()) {
-                    this.toggleIsMobile(this.websiteContext.isMobile);
+                    this.toggleIsMobile(isMobile);
+                    if (showThemeColorsPreview) {
+                        this.openThemeColorsPreviewDialog();
+                    } else {
+                        this.closeThemeColorsPreviewDialog();
+                        this.themeColorsPreviewDocument = null;
+                    }
                 }
             });
         });
-        onWillDestroy(disposeToggleMobileEffect);
+        onWillDestroy(disposeWebsiteContextEffect);
 
         this.overlayRef = signal.ref();
         useSubEnv({
@@ -177,6 +202,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
+            this.closeThemeColorsPreviewDialog();
             websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
@@ -246,11 +272,19 @@ export class WebsiteBuilderClientAction extends Component {
             overlayRef: this.overlayRef,
             iframeLoaded: iframeLoaded,
             isMobile: this.websiteContext.isMobile,
+            mobileBtnDisabled: this.websiteContext.showThemeColorsPreview,
             initialTab: this.reloadContext?.initialTab,
             onlyCustomizeTab: this.translation,
             newInstalledModule: this.newInstalledModule,
             config: {
                 reloadContext: this.reloadContext,
+                getThemeColorsPreviewDocument: () => this.themeColorsPreviewDocument,
+                getOperationLoadingDocument: () => {
+                    if (!this.websiteContext.showThemeColorsPreview) {
+                        return undefined;
+                    }
+                    return this.themeColorsPreviewDocument;
+                },
                 builderSidebar: {
                     withHiddenSidebar: async (cb) => {
                         try {
@@ -725,6 +759,46 @@ export class WebsiteBuilderClientAction extends Component {
         // Adding the mobile class directly, to not wait for the component
         // re-rendering.
         this.websiteService.context.isMobile = !this.websiteService.context.isMobile;
+    }
+
+    closeThemeColorsPreview() {
+        this.websiteService.bus.trigger("CLOSE-THEME-COLORS-PREVIEW");
+    }
+
+    openThemeColorsPreviewDialog() {
+        if (this.themeColorsPreviewDialogClose) {
+            return;
+        }
+        this.themeColorsPreviewDialogClose = this.dialog.add(
+            ThemeColorsPreviewDialog,
+            {
+                iframeSrc: this.themeColorsPreviewUrl,
+                onIframeLoad: (document) => {
+                    this.themeColorsPreviewDocument = document;
+                },
+            },
+            {
+                onClose: () => {
+                    this.themeColorsPreviewDialogClose = null;
+                    this.themeColorsPreviewDocument = null;
+                    if (this.websiteContext.showThemeColorsPreview) {
+                        this.closeThemeColorsPreview();
+                        if (this.websiteContext.showThemeColorsPreview) {
+                            this.websiteContext.showThemeColorsPreview = false;
+                        }
+                    }
+                },
+            }
+        );
+    }
+
+    closeThemeColorsPreviewDialog() {
+        if (!this.themeColorsPreviewDialogClose) {
+            return;
+        }
+        const closeDialog = this.themeColorsPreviewDialogClose;
+        this.themeColorsPreviewDialogClose = null;
+        closeDialog();
     }
 
     toggleIsMobile(isMobile) {

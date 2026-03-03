@@ -1,25 +1,32 @@
-import { onMounted } from "@odoo/owl";
+import { onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
+import { useBus } from "@web/core/utils/hooks";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
     static dependencies = ["themeTab"];
     setup() {
         super.setup();
+        this.isMobileBeforeThemeColorsPreview = null;
         this.palettes = this.getPalettes();
         this.colorPresetToShow = this.env.colorPresetToShow;
         this.grays = this.dependencies.themeTab.getGrays();
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
+        this.websiteContext = proxy(this.services.website.context);
+        useBus(this.services.website.bus, "CLOSE-THEME-COLORS-PREVIEW", () =>
+            this.closeThemeColorsPreview()
+        );
         onMounted(() => {
             this.iframeDocument = document.querySelector("iframe").contentWindow.document;
             this.state.presets = this.getPresets();
             this.colorPresetToShow = null;
         });
+        onWillUnmount(() => this.closeThemeColorsPreview());
     }
 
     getPalettes() {
@@ -85,5 +92,32 @@ export class ThemeColorsOption extends BaseOptionComponent {
             );
         }
         return getCSSVariableValue(color, this.iframeStyle);
+    }
+
+    get showThemeColorsPreview() {
+        return this.websiteContext.showThemeColorsPreview;
+    }
+
+    openThemeColorsPreview() {
+        const { context } = this.services.website;
+        if (context.showThemeColorsPreview) {
+            this.closeThemeColorsPreview();
+            return;
+        }
+        this.isMobileBeforeThemeColorsPreview = context.isMobile;
+        context.showThemeColorsPreview = true;
+        context.isMobile = false;
+    }
+
+    closeThemeColorsPreview() {
+        const { context } = this.services.website;
+        if (!context.showThemeColorsPreview) {
+            return;
+        }
+        context.showThemeColorsPreview = false;
+        if (this.isMobileBeforeThemeColorsPreview !== null) {
+            context.isMobile = this.isMobileBeforeThemeColorsPreview;
+            this.isMobileBeforeThemeColorsPreview = null;
+        }
     }
 }

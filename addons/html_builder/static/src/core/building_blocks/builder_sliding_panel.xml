@@ -18,11 +18,12 @@
     >
         <div class="hb-sliding-panel-content d-flex flex-column" t-att-class="this.props.fullHeight ? 'h-100' : 'pb-3'">
             <div class="hb-sliding-panel-header">
-                <div class="hb-sliding-panel-label d-flex align-items-center p-2">
+                <div class="hb-sliding-panel-label d-flex align-items-stretch p-2">
                     <button class="btn p-1" t-on-click="this.hideSlidingPanel" aria-label="close" tabindex="0" >
                         <i class="oi me-1" data-icon="chevron_backward" role="presentation"/>
                         <t t-out="this.state.optionContainerName + ' / ' + this.props.label"/>
                     </button>
+                    <t t-call-slot="topOptions"/>
                 </div>
             </div>
             <t t-if="this.state.contentRendered" t-call-slot="content" close="this.hideSlidingPanel.bind(this)"/>
