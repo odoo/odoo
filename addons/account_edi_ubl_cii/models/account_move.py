@@ -117,11 +117,11 @@ class AccountMove(models.Model):
             raise UserError(error_message)
 
         file_data = self.ubl_cii_xml_id._unwrap_edi_attachments()[0]
-        ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
-        if ubl_cii_xml_builder is None:
-            raise UserError(self.env._("Cannot decode the origin file, try by importing it again"))
+        decoder = self._get_edi_decoder(file_data)
+        if decoder is None:
+            raise UserError(self.env._("Cannot decode origin file, try by importing it again"))
         self.invoice_line_ids = [Command.clear()]
-        if ubl_cii_xml_builder.with_context(ungroup_lines=True)._import_invoice_ubl_cii(self, file_data):
+        if decoder(self, file_data):
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data['attachment'].name))
         else:
             raise UserError(error_message)
@@ -132,7 +132,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         if not self.is_invoice(include_receipts=True):
-            raise UserError(_("You can only group lines of an invoice"))
+            raise UserError(self.env._("You can only group lines of an invoice"))
 
         line_vals = self._get_line_vals_group_by_tax(self.partner_id)
         self.invoice_line_ids = [Command.clear()]
@@ -164,6 +164,7 @@ class AccountMove(models.Model):
             grouping_function=grouping_function,
             aggregate_function=aggregate_function,
         )
+        AccountTax._fix_base_lines_tax_details_on_manual_tax_amounts(base_lines, self.company_id)
 
         to_create = []
         for base_line in base_lines:
@@ -173,6 +174,7 @@ class AccountMove(models.Model):
                 'name': " - ".join([partner.name or self.env._("Unknown partner"), account.code, " / ".join(taxes.mapped('name')) or self.env._("Untaxed")]),
                 'quantity': base_line['quantity'],
                 'price_unit': base_line['price_unit'],
+                'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
                 **base_line['_grouping_key'],
             }))
         return to_create
@@ -191,7 +193,7 @@ class AccountMove(models.Model):
         :return: True if lines look like they're grouped, False otherwise
         """
         self.ensure_one()
-        partner_name = re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*'
+        partner_name = re.escape(self.partner_id.name or self.env._("Unknown partner")) + r' - \d+ - .*'
         return any(
             re.match(partner_name, line.name)
             for line in self.line_ids.filtered(lambda line: line.name and line.display_type == 'product')
@@ -206,8 +208,7 @@ class AccountMove(models.Model):
             return
 
         if (
-            self.env.context.get('ungroup_lines')
-            or not invoice.partner_id
+            not invoice.partner_id
             or not invoice.ubl_cii_xml_id
         ):
             return
