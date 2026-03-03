@@ -255,9 +255,6 @@
                         <field name="mobile_phone" widget="phone" placeholder="Work Mobile"/>
                     </div>
                 </xpath>
-                <xpath expr="//group[@name='other_preferences']" position="inside">
-                    <field name="pin" string="Attendance PIN" invisible="not employee_id"/>
-                </xpath>
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
                     <field name="work_location_id" string="Main Work Location" invisible="not employee_id or share"/>
                     <field name="monday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
