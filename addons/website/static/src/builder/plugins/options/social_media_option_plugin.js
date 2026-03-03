@@ -172,7 +172,7 @@ class SocialMediaOptionPlugin extends Plugin {
             ".s_social_media .s_social_media_title",
         ],
         auto_unfold_container_providers: {
-            selector: ".s_social_media > a > i",
+            selector: ".s_social_media > a > *",
             target: ".s_social_media",
         },
     };
