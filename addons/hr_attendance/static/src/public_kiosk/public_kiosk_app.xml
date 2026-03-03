@@ -7,14 +7,14 @@
 
 <t t-name="hr_attendance.BarcodeScanner" t-inherit="barcodes.BarcodeScanner" t-inherit-mode="primary">
     <xpath expr="//div[hasclass('o_barcode_mobile_container')]" position="replace">
-        <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !isDisplayStandalone}">
-            <button t-if="isBarcodeScannerSupported" t-on-click="openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !isDisplayStandalone}">
+        <div class="o_hr_attendance_kiosk d-flex justify-content-around" t-att-class="{'position-relative' : !this.isDisplayStandalone}">
+            <button t-if="this.isBarcodeScannerSupported" t-on-click="this.openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3" t-att-class="{'position-absolute' : !this.isDisplayStandalone}">
                 <i class="fa fa-3x fa-barcode mb-3"/>
                 <span class="d-block">Scan your badge</span>
             </button>
-            <a t-if="!isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative"
-            t-att-style="props.fromTrialMode ? 'left: 25%;' : 'left: 115%;'"
-            t-att-href="installURL" target="_blank">Install</a>
+            <a t-if="!this.isDisplayStandalone" class="o_hr_attendance_install_btn btn btn-secondary d-flex align-items-center justify-content-center fw-bolder position-relative"
+            t-att-style="this.props.fromTrialMode ? 'left: 25%;' : 'left: 115%;'"
+            t-att-href="this.installURL" target="_blank">Install</a>
         </div>
     </xpath>
 </t>
