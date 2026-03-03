@@ -81,7 +81,7 @@ class StockWarehouse(models.Model):
     def _compute_buy_to_resupply(self):
         for warehouse in self:
             buy_route = warehouse.buy_pull_id.route_id
-            warehouse.buy_to_resupply = warehouse.id in buy_route.warehouse_ids.ids
+            warehouse.buy_to_resupply = warehouse.id in buy_route.warehouse_ids.ids or (buy_route.warehouse_selectable and not buy_route.warehouse_ids)
 
     def _inverse_buy_to_resupply(self):
         for warehouse in self:

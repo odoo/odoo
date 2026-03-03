@@ -75,5 +75,7 @@ class TestRoutes(TransactionCase):
         wh.buy_to_resupply = False
         # Invalidate recordset to avoid cached `buy_to_resupply`
         wh.invalidate_recordset(["buy_to_resupply"])
+        # Creating a new warehouse because if buy_route.warehouse_ids is empty and warehouse_selectable = True, it applies to all warehouses
+        self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2'})
         self.assertFalse(wh.buy_to_resupply)
         self.assertNotIn(wh, buy_route.warehouse_ids)

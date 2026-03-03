@@ -596,3 +596,19 @@ class StockRoute(models.Model):
 
     def _is_valid_resupply_route_for_product(self, product):
         return False
+
+    def _get_routes_with_no_warehouse(self):
+        rule_actions = self._get_non_push_pull_rule_actions()
+        route_domain = [
+            ('warehouse_selectable', '=', True),
+            ('rule_ids.action', 'in', rule_actions),
+            ('company_id', 'in', [False, self.env.company.id]),
+            '|',
+                ('warehouse_ids', '=', False),
+                ('warehouse_ids', 'not in', self.env['stock.warehouse']._search([
+                    ('company_id', '=', self.env.company.id)]))
+        ]
+        return self.env['stock.route'].search(route_domain)
+
+    def _get_non_push_pull_rule_actions(self):
+        return []

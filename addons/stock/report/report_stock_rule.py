@@ -80,7 +80,8 @@ class ReportStockReport_Stock_Rule(models.AbstractModel):
         """
         product = self.env['product.product'].browse(data['product_id'])
         warehouse_ids = self.env['stock.warehouse'].browse(data['warehouse_ids'])
-        return product.route_ids | product.categ_id.total_route_ids | warehouse_ids.mapped('route_ids')
+        routes_with_no_warehouse = self.env['stock.route']._get_routes_with_no_warehouse()
+        return product.route_ids | product.categ_id.total_route_ids | routes_with_no_warehouse | warehouse_ids.mapped('route_ids')
 
     @api.model
     def _get_rule_loc(self, rule, product):

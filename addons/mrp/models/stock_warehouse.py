@@ -45,7 +45,8 @@ class StockWarehouse(models.Model):
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
-            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids
+            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids or \
+                                                (manufacture_route.warehouse_selectable and not manufacture_route.warehouse_ids)
 
     def _inverse_manufacture_to_resupply(self):
         for warehouse in self:

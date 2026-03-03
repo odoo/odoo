@@ -415,3 +415,8 @@ class StockRoute(models.Model):
         if any(rule.action == 'buy' for rule in self.rule_ids):
             return bool(product.seller_ids)
         return super()._is_valid_resupply_route_for_product(product)
+
+    def _get_non_push_pull_rule_actions(self):
+        rule_actions = super()._get_non_push_pull_rule_actions()
+        rule_actions.append('buy')
+        return rule_actions

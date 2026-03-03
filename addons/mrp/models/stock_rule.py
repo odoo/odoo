@@ -255,3 +255,8 @@ class StockRoute(models.Model):
         if any(rule.action == 'manufacture' for rule in self.rule_ids):
             return any(bom.type == 'normal' for bom in product.bom_ids)
         return super()._is_valid_resupply_route_for_product(product)
+
+    def _get_non_push_pull_rule_actions(self):
+        rule_actions = super()._get_non_push_pull_rule_actions()
+        rule_actions.append('manufacture')
+        return rule_actions
