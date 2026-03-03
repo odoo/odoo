@@ -338,7 +338,7 @@ export class Record {
         if (!collection) {
             return false;
         }
-        return collection.some((record) => toRaw(record)._raw.eq(this));
+        return collection.some((record) => record && toRaw(record)._raw.eq(this));
     }
 
     /** @param {Record[]|RecordList} collection */

@@ -139,7 +139,7 @@ export class StoreInternal extends RecordInternal {
             recordListFullProxy._store.recordByLocalId.get(localId)
         );
         recordsFullProxy.sort(func);
-        const data = recordsFullProxy.map((recordFullProxy) => toRaw(recordFullProxy)._raw.localId);
+        const data = recordsFullProxy.map((recordFullProxy) => recordFullProxy && toRaw(recordFullProxy)._raw.localId);
         const hasChanged = recordList.data.some((localId, i) => localId !== data[i]);
         if (hasChanged) {
             recordListFullProxy.data = data;

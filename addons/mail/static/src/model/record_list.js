@@ -132,7 +132,7 @@ export class RecordListInternal {
             const vals = [...collection];
             const oldRecords = recordList._proxyInternal.slice
                 .call(recordList._proxy)
-                .map((recordProxy) => toRaw(recordProxy)._raw);
+                .map((recordProxy) => recordProxy && toRaw(recordProxy)._raw);
             const newRecords = vals.map((val) =>
                 self.insert(recordList, val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
@@ -143,7 +143,7 @@ export class RecordListInternal {
             );
             const inverse = getInverse(recordList);
             for (const oldRecord of oldRecords) {
-                if (oldRecord.notIn(newRecords)) {
+                if (oldRecord && oldRecord.notIn(newRecords)) {
                     oldRecord._.uses.delete(recordList);
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     if (inverse) {
