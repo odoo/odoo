@@ -53,15 +53,15 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_start" optional="show" widget="remaining_days"/>
-                    <field name="date_finished" optional="hide" widget="remaining_days"/>
+                    <field name="date_start" optional="show" widget="remaining_days" string="Scheduled Start"/>
+                    <field name="date_finished" optional="hide" widget="remaining_days" string="Scheduled End"/>
                     <field name="date_deadline" widget="mrp_remaining_days_unformatted" invisible="state in ['done', 'cancel']" optional="hide"
                         decoration-danger="is_delayed"
                         decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_ids" optional="hide" widget="many2many_tags"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
-                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
@@ -376,7 +376,7 @@
                             </div>
                         </group>
                         <group name="group_extra_info">
-                            <label name="scheduled_date" for="date_start" string="Scheduled Date" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
+                            <label name="scheduled_date" for="date_start" string="Scheduled Start" invisible="state in ['progress', 'to_close', 'done', 'cancel']"/>
                             <label name="start_date" for="date_start" string="Start Date" invisible="state not in ['progress', 'to_close', 'done', 'cancel']"/>
                             <div class="o_row" name="date_start">
                                 <field name="date_start"
@@ -385,7 +385,7 @@
                                     decoration-danger="state not in ('done', 'cancel') and date_deadline and date_deadline &lt; date_finished"
                                     help="Date at which you plan to start.
                                           Red if the scheduled end is forecasted after the production order deadline.
-                                          Orange if the scheduled date is in the past."/>
+                                          Orange if the scheduled start is in the past."/>
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
