@@ -1103,8 +1103,10 @@ class Base(models.AbstractModel):
         # process names in order
         while todo:
             # apply field-specific onchange methods
+            visited_onchanges = set()
             for field_name in todo:
-                record._apply_onchange_methods(field_name, result)
+                record._apply_onchange_methods(field_name, result, visited_onchanges)
+                visited_onchanges.update(self._onchange_methods.get(field_name, ()))
                 done.add(field_name)
 
             if not env.context.get('recursive_onchanges', True):
