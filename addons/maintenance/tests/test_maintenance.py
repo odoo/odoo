@@ -6,6 +6,7 @@ import time
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 from odoo import fields
+from datetime import timedelta
 
 
 class TestEquipmentCommon(TransactionCase):
@@ -64,7 +65,7 @@ class TestEquipment(TestEquipmentCommon):
         # Create new maintenance request
         maintenance_request_01 = self.maintenance_request.with_user(self.user).create({
             'name': 'Resolution is bad',
-            'user_id': self.user.id,
+            'user_ids': [self.user.id],
             'owner_user_id': self.user.id,
             'equipment_id': equipment_01.id,
             'color': 7,

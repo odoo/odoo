@@ -283,7 +283,7 @@ class MaintenanceRequest(models.Model):
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
                                    ondelete='restrict', index=True, check_company=True,
                                    group_expand='_read_group_equipment_id')
-    user_id = fields.Many2one('res.users', string='Technician', compute='_compute_user_id', store=True, readonly=False, tracking=True)
+    user_ids = fields.Many2many('res.users', string='Technicians', compute='_compute_user_ids', store=True, readonly=False, tracking=True)
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage_id', store=True, readonly=False, group_expand='_read_group_stage_ids', copy=False,
                                domain="['|', ('maintenance_team_ids', '=', False), ('maintenance_team_ids', 'in', [maintenance_team_id])]")
@@ -366,12 +366,16 @@ class MaintenanceRequest(models.Model):
                 request.maintenance_team_id = False
 
     @api.depends('company_id', 'equipment_id')
-    def _compute_user_id(self):
+    def _compute_user_ids(self):
         for request in self:
+            users = request.user_ids
             if request.equipment_id:
-                request.user_id = request.equipment_id.technician_user_id or request.equipment_id.category_id.technician_user_id
-            if request.user_id and request.company_id.id not in request.user_id.company_ids.ids:
-                request.user_id = False
+                technician = request.equipment_id.technician_user_id or request.equipment_id.category_id.technician_user_id
+                if technician and technician not in users:
+                    users |= technician
+            if request.company_id:
+                users = users.filtered(lambda u: request.company_id.id in u.company_ids.ids)
+            request.user_ids = users
 
     @api.depends('maintenance_team_id')
     def _compute_stage_id(self):
@@ -426,7 +430,7 @@ class MaintenanceRequest(models.Model):
         # context: no_log, because subtype already handle this
         maintenance_requests = super().create(vals_list)
         for request in maintenance_requests:
-            if request.owner_user_id or request.user_id:
+            if request.owner_user_id or request.user_ids:
                 request._add_followers()
             if request.equipment_id and not request.maintenance_team_id:
                 request.maintenance_team_id = request.maintenance_team_id
@@ -458,15 +462,27 @@ class MaintenanceRequest(models.Model):
             self.close_date = fields.Date.today()
         elif 'state' in vals:
             self.filtered('close_date').close_date = False
+
+        req_to_existing_users = {}
+        if vals.get('owner_user_id') or vals.get('user_ids'):
+            req_to_existing_users = {request.id: (request.owner_user_id.partner_id.ids + request.user_ids.partner_id.ids) for request in self}
+
         res = super(MaintenanceRequest, self).write(vals)
-        if vals.get('owner_user_id') or vals.get('user_id'):
-            self._add_followers()
+
+        if req_to_existing_users:
+            self._add_new_followers(req_to_existing_users)
         return res
 
     def _add_followers(self):
         for request in self:
-            partner_ids = (request.owner_user_id.partner_id + request.user_id.partner_id).ids
+            partner_ids = (request.owner_user_id.partner_id + request.user_ids.partner_id).ids
             request.message_subscribe(partner_ids=partner_ids)
+
+    def _add_new_followers(self, req_to_existing_users):
+        for request in self:
+            new_partner_ids = set((request.owner_user_id.partner_id | request.user_ids.partner_id).ids) - set(req_to_existing_users[request.id])
+            if new_partner_ids:
+                request.message_subscribe(partner_ids=list(new_partner_ids))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
