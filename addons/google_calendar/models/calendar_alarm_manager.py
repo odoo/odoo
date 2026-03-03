@@ -10,4 +10,6 @@ class AlarmManager(models.AbstractModel):
     @api.model
     def _get_notify_alert_extra_conditions(self):
         base = super()._get_notify_alert_extra_conditions()
-        return SQL("%s AND event.google_id IS NULL", base)
+        if self.env.context.get('alarm_type') == 'email':
+            return SQL("%s AND event.google_id IS NULL", base)
+        return base
