@@ -761,7 +761,7 @@ class TemplateCompiler:
                 stack.pop()
 
             # Arrow detection
-            if next_tok and next_tok.type == "OPERATOR" and next_tok.value == "=\u2007>":
+            if next_tok and next_tok.type == "OPERATOR" and (next_tok.value == "=\u2007>" or next_tok.value == "=>"):
                 if tok.type == "RIGHT_PAREN":
                     # (a, b) => ...
                     j = i - 1
@@ -1281,6 +1281,21 @@ tests = [
         "name": "event handler with ev, variation",
         "content": '<div t-on-pointerdown="ev => this.onOptionPointerDown(option, ev)"/>',
         "expected": '<div t-on-pointerdown="ev => this.onOptionPointerDown(this.option, ev)"/>',
+    },
+    {
+        "name": "event handler with ev, variation 2",
+        "content": """
+<t t-inherit="resource_mail.Many2OneAvatarResourceField" t-inherit-mode="extension">
+    <xpath expr="//span[hasclass('o_material_resource')]" position="attributes">
+        <attribute name="t-on-click.stop">(ev) => this.openMaterialPopover(ev.currentTarget)</attribute>
+    </xpath>
+</t>""",
+        "expected": """
+<t t-inherit="resource_mail.Many2OneAvatarResourceField" t-inherit-mode="extension">
+    <xpath expr="//span[hasclass('o_material_resource')]" position="attributes">
+        <attribute name="t-on-click.stop">(ev) => this.openMaterialPopover(ev.currentTarget)</attribute>
+    </xpath>
+</t>""",
     },
     {
         "name": "t-att-title",
