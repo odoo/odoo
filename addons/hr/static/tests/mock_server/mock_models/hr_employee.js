@@ -3,7 +3,10 @@ import { fields, models } from "@web/../tests/web_test_helpers";
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
 
+    active = fields.Boolean({ related: false });
+    company_id = fields.Many2one({ relation: "res.company" });
     department_id = fields.Many2one({ relation: "hr.department" });
+    user_id = fields.Many2one({ relation: "res.users" });
     work_email = fields.Char();
     work_phone = fields.Char();
     work_location_type = fields.Char();

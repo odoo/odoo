@@ -11,6 +11,7 @@ export class HrEmployeePublic extends models.ServerModel {
 
     _get_store_avatar_card_fields() {
         return [
+            "active",
             "company_id",
             mailDataHelpers.Store.one("department_id", ["name"]),
             "hr_icon_display",

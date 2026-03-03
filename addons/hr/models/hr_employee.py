@@ -2167,11 +2167,23 @@ class HrEmployee(models.Model):
             ),
         )
         res.one("work_location_id", ["location_type", "name"])
-        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
+        res.extend([
+            "active",
+            "company_id",
+            "hr_icon_display",
+            "job_title",
+            "name",
+            "show_hr_icon_display",
+        ])
         res.extend(["work_email", "work_phone"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("work_location_type")
+        res.extend([
+            "active",
+            "company_id",
+            "user_id",
+            "work_location_type",
+        ])
 
     @api.depends('bank_account_ids')
     def _compute_primary_bank_account_id(self):
