@@ -1,11 +1,29 @@
-import { App } from "@odoo/owl";
+import { App, Component, xml } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
+import { useService } from "@web/core/utils/hooks";
+// overlay inside shadow so that the styles are dicted by the shadow dom
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
+import { useSubEnv } from "@web/owl2/utils";
 
 const DEFAULT_ID = Symbol("default");
+
+export class PipContainer extends Component {
+    static template = xml`
+        <t t-component="props.component" t-props="props.componentProps"/>
+        <OverlayContainer id="props.overlayContainerId" overlays="overlayService.overlays"/>
+    `;
+    static components = { OverlayContainer };
+    static props = ["component", "componentProps", "overlayContainerId?"];
+
+    setup() {
+        this.overlayService = useService("overlay");
+        useSubEnv({ overlayContainerId: this.props.overlayContainerId });
+    }
+}
 
 export const mailPopoutService = {
     /**
@@ -112,7 +130,7 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             await reset(id, { useAlternativeAssets });
-            popout.app = new App(component, {
+            popout.app = new App(PipContainer, {
                 name: "Popout",
                 env: Object.assign({}, env, {
                     /**
@@ -121,7 +139,11 @@ export const mailPopoutService = {
                      */
                     pipWindow: externalWindow,
                 }),
-                props,
+                props: {
+                    overlayContainerId: id,
+                    component,
+                    componentProps: props,
+                },
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,

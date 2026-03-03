@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
-        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="props.className">
+        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="attClassObjectToString(attClass)">
             <mask t-att-id="uniqueId" width="32" height="32">
                 <rect x="0" y="0" height="32" width="32" fill="white"/>
                 <t t-if="showTopRightIcon">
-                    <rect t-if="props.rtcSession" class="o-mail-DiscussAvatar-rtcSessionTopRightMask" color="black" x="23" y="-3" width="12" height="12" rx="8" ry="8"/>
+                    <t name="top-right-mask"/>
                 </t>
                 <t t-if="showBottomRightIcon">
-                    <rect t-if="isTyping" color="black" x="15" y="19" width="24" height="15" rx="8" ry="8"/>
-                    <rect t-elif="props.rtcSession" color="black" x="21" y="21" width="12" height="12" rx="8" ry="8"/>
+                    <rect t-if="props.rtcSession" color="black" x="21" y="21" width="12" height="12" rx="8" ry="8"/>
+                    <rect t-elif="isTyping" color="black" x="15" y="19" width="24" height="15" rx="8" ry="8"/>
                     <rect t-else="" color="black" x="19" y="19" width="16" height="16" rx="8" ry="8"/>
                 </t>
             </mask>
@@ -28,15 +28,9 @@
                     </svg>
                 </t>
             </g>
-            <!-- <g t-if="showTopRightIcon">
-                <t t-if="props.rtcSession">
-                    <svg width="15" height="15" viewBox="-5 -6 30 30">
-                        <foreignObject x="0" y="0" width="15" height="15">
-                            <t t-call="mail.DiscussAvatar.topRightIcon"/>
-                        </foreignObject>
-                    </svg>
-                </t>
-            </g> -->
+            <g t-if="showTopRightIcon">
+                <t name="top-right-content"/>
+            </g>
             <g t-if="showBottomRightIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20)'">
                 <svg t-if="props.rtcSession" width="15" height="15" viewBox="-6 -7 30 30">
                     <foreignObject x="0" y="0" width="15" height="15">
@@ -60,6 +54,10 @@
 
     <t t-name="mail.DiscussAvatar.topLeftIcon">
         <i t-if="props.rtcSession" class="fa fa-hand-paper-o d-flex" title="raising hand" aria-label="raising hand"/>
+    </t>
+
+    <t t-name="mail.DiscussAvatar.topRightIcon">
+        <t name="root"/>
     </t>
 
     <t t-name="mail.DiscussAvatar.bottomRightIcon">

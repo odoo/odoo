@@ -50,7 +50,7 @@ class OverlayItem extends Component {
 export class OverlayContainer extends Component {
     static template = "web.OverlayContainer";
     static components = { ErrorHandler, OverlayItem };
-    static props = { overlays: Object };
+    static props = { overlays: Object, id: { optional: true } };
 
     setup() {
         this.root = useRef("root");
@@ -68,7 +68,13 @@ export class OverlayContainer extends Component {
     }
 
     isVisible(overlay) {
-        return overlay.rootId === this.state.rootEl?.getRootNode()?.host?.id;
+        if (
+            overlay.rootId !== this.state.rootEl?.getRootNode()?.host?.id ||
+            (overlay.overlayContainerId && overlay.overlayContainerId !== this.id)
+        ) {
+            return false;
+        }
+        return true;
     }
 
     handleError(overlay, error) {

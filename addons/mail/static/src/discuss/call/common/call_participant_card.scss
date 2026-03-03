@@ -34,6 +34,22 @@
             max-width: #{"min(70%, 70px)"};
         }
     }
+
+    &:not(:has(.o-mail-DiscussAvatar.o-rtcSessionContextMenuOpen)) {
+        .o-mail-DiscussAvatar-topRightMaskRtcSession, .o-mail-DiscussAvatar-topRightContentRtcSession {
+            display: none;
+        }
+    }
+
+    &:not([data-is-context-menu-available]):not(.o-isMobileOS):not(:hover) .o-discuss-CallParticipantCard-contextButton {
+        background-color: transparent;
+    }
+
+    &[data-is-context-menu-available]:not(.o-isMobileOS):hover {
+        .o-mail-DiscussAvatar-topRightMaskRtcSession, .o-mail-DiscussAvatar-topRightContentRtcSession {
+            display: inline;
+        }
+    }
 }
 
 .o-discuss-CallParticipantCard-avatar:not(.o-minimized) {

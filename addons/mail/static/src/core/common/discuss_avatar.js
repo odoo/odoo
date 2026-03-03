@@ -1,5 +1,6 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { Component } from "@odoo/owl";
 
@@ -24,6 +25,13 @@ export class DiscussAvatar extends Component {
     setup() {
         super.setup();
         this.uniqueId = `mail.DiscussAvatar.${nextId++}`;
+        this.attClassObjectToString = attClassObjectToString;
+    }
+
+    get attClass() {
+        return {
+            [`o-mail-DiscussAvatar ${this.props.className}`]: true,
+        };
     }
 
     get channel() {

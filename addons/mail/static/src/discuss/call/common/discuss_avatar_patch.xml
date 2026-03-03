@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussAvatar" t-inherit-mode="extension">
+        <xpath expr="//*[@name='top-right-mask']" position="replace">
+            <rect t-if="props.rtcSession" class="o-mail-DiscussAvatar-topRightMaskRtcSession" color="black" x="23" y="-1" width="10" height="10" rx="8" ry="8"/>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//*[@name='top-right-content']" position="replace">
+            <svg t-if="props.rtcSession" width="12" height="12" viewBox="0 0 30 30" transform="translate(22, -2)">
+                <foreignObject x="0" y="0" width="100%" height="100%">
+                    <t t-call="mail.DiscussAvatar.topRightIcon"/>
+                </foreignObject>
+            </svg>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+    <t t-inherit="mail.DiscussAvatar.topRightIcon" t-inherit-mode="extension">
+        <xpath expr="//*[@name='root']" position="replace">
+            <Dropdown t-if="props.rtcSession" state="rtcSessionContextMenuDropdownState" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
+                <button class="o-discuss-CallParticipantCard-contextButton o-mail-DiscussAvatar-topRightContentRtcSession btn btn-secondary btn-sm rounded-circle border-0 smaller px-2 py-1" title="Participant options">
+                    <i class="oi oi-chevron-down fa-fw o-xxsmaller"/>
+                </button>
+                <t t-set-slot="content">
+                    <CallContextMenu rtcSession="props.rtcSession"/>
+                </t>
+            </Dropdown>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

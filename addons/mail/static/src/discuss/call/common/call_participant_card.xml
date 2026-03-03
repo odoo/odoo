@@ -11,6 +11,7 @@
                 'o-small': props.inset and (ui.isSmall or props.minimized),
                 'o-active': isActiveRtcSession and !props.inset and props.compact,
                 'p-1 rounded-1': !isActiveRtcSession,
+                'o-isMobileOS': isMobileOS,
             }"
             t-att-aria-label="name"
             t-att-data-is-context-menu-available="isContextMenuAvailable"
@@ -66,9 +67,9 @@
                 <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
                     <span class="o-fw-600 p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
-                <CallDropdown t-if="isContextMenuAvailable and ((!isMobileOS and rootHover.isHover) or (isMobileOS and !props.minimized))" class="'position-absolute top-0 end-0'" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
-                    <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 smaller p-1" title="Participant options">
-                        <i class="fa fa-chevron-down fa-fw"/>
+                <CallDropdown t-if="!props.minimized and isContextMenuAvailable and (isMobileOS or rootHover.isHover)" class="'position-absolute top-0 end-0'" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
+                    <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 smaller px-2 py-1" title="Participant options">
+                        <i class="oi oi-chevron-down fa-fw o-xxsmaller"/>
                     </button>
                     <t t-set-slot="content">
                         <CallContextMenu rtcSession="rtcSession"/>
