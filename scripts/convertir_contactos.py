@@ -1,9 +1,3 @@
-"""
-Lista de empresas válidas proporcionada por el usuario. Solo estos nombres serán aceptados como empresa.
-"""
-
-# Crear un mapeo empresa + CIF (o UUID) para permitir duplicados y vincular correctamente
-
 PAISES_VALIDOS = {
     "españa": "España",
     "espana": "España",
@@ -75,8 +69,6 @@ def odoo_import_id(uuid):
     return f"__import__.legacy_account_{uuid.replace('-', '_').lower()}"
 
 
-
-# 1. Leer accounts.csv y crear mapeos: UUID -> Odoo ID, nombre -> Odoo ID, Odoo ID -> nombre
 uuid_to_odooid = {}
 name_to_odooid = {}
 odooid_to_name = {}
@@ -101,7 +93,6 @@ with open(INPUT_FILE, newline='', encoding='utf-8') as infile, \
     reader = csv.DictReader(infile)
     print("Columnas detectadas en el CSV:", reader.fieldnames)
 
-    # Formato compatible con res.partner Odoo
     fieldnames = [
         "id", "active", "parent_id", "email", "name", "phone", "street", "zip",
         "company_name", "first_name", "mobile", "jobtitle", "city", "country_id/id", "state_id/id"
@@ -111,6 +102,7 @@ with open(INPUT_FILE, newline='', encoding='utf-8') as infile, \
 
     empresas_creadas = set()
     used_ids = set()
+    
 
     for row in reader:
         nombre = row.get("firstname", "")
@@ -125,9 +117,9 @@ with open(INPUT_FILE, newline='', encoding='utf-8') as infile, \
         empresa = normaliza_nombre_empresa(empresa)
         cuenta_uuid = row.get("contel_cuenta") or row.get("parentaccountid")
         parent_id = ""
-        # company_name siempre es el nombre limpio
+
         company_name = empresa
-        # parent_id solo si hay match
+
         if cuenta_uuid and cuenta_uuid.strip() in uuid_to_odooid:
             candidate_id = uuid_to_odooid[cuenta_uuid.strip()]
             if candidate_id.startswith("__import__.legacy_account_") and len(candidate_id) > 30:
@@ -136,7 +128,7 @@ with open(INPUT_FILE, newline='', encoding='utf-8') as infile, \
             candidate_id = name_to_odooid[empresa]
             if candidate_id.startswith("__import__.legacy_account_") and len(candidate_id) > 30:
                 parent_id = candidate_id
-        # company_name siempre se rellena, aunque no haya match
+
         email = row.get("emailaddress1", "") or row.get("email", "")
         telefono = row.get("telephone1", "") or row.get("phone", "")
         movil = row.get("mobilephone", "") or row.get("mobile", "")
