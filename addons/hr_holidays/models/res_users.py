@@ -46,5 +46,6 @@ class ResUsers(models.Model):
 
     def _store_main_user_fields(self, res: Store.FieldList):
         super()._store_main_user_fields(res)
-        res.many("employee_ids", ["leave_date_to"], internal=True)
-        res.many("all_employee_ids", ["leave_date_to"], internal=True)
+        employee_fields = ["active", "company_id", "leave_date_to", "user_id"]
+        res.many("employee_ids", employee_fields, internal=True)
+        res.many("all_employee_ids", employee_fields, internal=True)

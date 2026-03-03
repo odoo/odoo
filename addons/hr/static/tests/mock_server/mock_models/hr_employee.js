@@ -5,6 +5,7 @@ import { fields, models } from "@web/../tests/web_test_helpers";
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
 
+    active = fields.Boolean({ related: false });
     department_id = fields.Many2one({ relation: "hr.department" });
     name = fields.Char();
     user_id = fields.Many2one({ relation: "res.users" });
@@ -17,6 +18,7 @@ export class HrEmployee extends models.ServerModel {
 
     _get_store_avatar_card_fields({ add_user = true, ...args } = {}) {
         const res = [
+            "active",
             "company_id",
             mailDataHelpers.Store.one("department_id", ["name"]),
             "hr_icon_display",
