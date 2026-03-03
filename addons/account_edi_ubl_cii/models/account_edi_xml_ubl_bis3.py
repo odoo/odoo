@@ -302,15 +302,15 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyIdentification']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-
-        if commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+        country_code = commercial_partner.country_code
+        if country_code == 'BE' and commercial_partner.company_registry:
             nodes.append({
                 'cbc:ID': {
                     '_text': be_vat.compact(commercial_partner.company_registry),
                     'schemeID': '0208',
                 },
             })
-        elif commercial_partner.ref:
+        elif commercial_partner.ref and country_code != 'DK':  # DK-R-013
             nodes.append({
                 'cbc:ID': {
                     '_text': commercial_partner.ref,
