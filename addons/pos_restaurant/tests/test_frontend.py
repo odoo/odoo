@@ -964,3 +964,31 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(present_order.state, 'cancel')
         self.assertEqual(future_order.state, 'draft')
         self.assertEqual(future_order.session_id.id, False)
+
+    def test_floating_order_name_change_partner(self):
+        # Create partners
+        self.env['res.partner'].create([
+            {'name': 'Abigael', 'street': '123 Fake St'},
+            {'name': 'Deco Addict', 'street': '456 Real St'},
+        ])
+
+        # Create presets
+        self.preset_eat_in = self.env['pos.preset'].create({
+            'name': 'Eat in',
+        })
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_eat_in.id,
+            'available_preset_ids': [(6, 0, [
+                self.preset_eat_in.id,
+                self.preset_delivery.id,
+            ])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_floating_order_name_change_partner', login="pos_user")
