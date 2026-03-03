@@ -1798,8 +1798,10 @@ We can redirect you to the public employee list."""
 
     def _get_store_avatar_card_fields(self, target):
         employee_fields = [
+            "active",
             "company_id",
             Store.One("department_id", ["name"]),
+            "user_id",
             "work_email",
             Store.One("work_location_id", ["location_type", "name"]),
             "work_phone",
