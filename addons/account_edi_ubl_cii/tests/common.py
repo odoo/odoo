@@ -6,7 +6,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=None)
+        super().setUpClass(chart_template_ref)
         cls.partner_be = cls._create_partner_be()
         cls.partner_lu_dig = cls._create_partner_lu_dig()
         cls.partner_au = cls._create_partner_au()
