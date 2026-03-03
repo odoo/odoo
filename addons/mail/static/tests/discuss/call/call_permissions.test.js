@@ -26,7 +26,7 @@ test("Starting a video call asks for permissions", async () => {
     await contains(".modal[role='dialog']", { count: 1 });
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use Camera')");
-    await contains(".o-discuss-CallActionList button[title='Stop camera']");
+    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
 });
 
 test("Turning on the microphone asks for permissions", async () => {
@@ -60,7 +60,7 @@ test("Turning on the camera asks for permissions", async () => {
     await contains(".modal[role='dialog']", { count: 1 });
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use Camera')");
-    await contains(".o-discuss-CallActionList button[title='Stop camera']");
+    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
 });
 
 test("Turn on both microphone and camera from permission dialog", async () => {
@@ -78,7 +78,7 @@ test("Turn on both microphone and camera from permission dialog", async () => {
     rtc.microphonePermission = "granted";
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use microphone and camera')");
-    await contains(".o-discuss-CallActionList button[title='Stop camera']");
+    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
     await contains(".o-discuss-CallActionList button[title='Mute']");
 });
 

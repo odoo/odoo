@@ -153,7 +153,7 @@ export class CallPreview extends Component {
         const cameraOnActionUpdated = {
             ...cameraOnAction,
             isActive: () => this.state.videoStream,
-            name: ({ action }) => (action.isActive ? _t("Stop camera") : _t("Turn camera on")),
+            name: ({ action }) => (action.isActive ? _t("Turn camera off") : _t("Turn camera on")),
             onSelected: () => this.toggleCamera(),
             tags: (...args) => {
                 const tags = cameraOnAction.tags?.(...args) ?? [];

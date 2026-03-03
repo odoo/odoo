@@ -288,7 +288,7 @@ test("can share user camera", async () => {
     await click("[title='Start Call']");
     await click("[title='Turn camera on']");
     await contains("video");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await contains("video", { count: 0 });
 });
 
@@ -315,11 +315,11 @@ test("Camera video stream stays in focus when on/off", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click("[title='Turn camera on']");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await click("[title='Turn camera on']");
     await contains("video[type='camera']:not(.o-inset)");
     // test screen sharing then camera on to check camera aside
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await click("[title='Share Screen']");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click("[title='Turn camera on']");
@@ -618,7 +618,7 @@ test("Systray icon keeps track of earlier actions", async () => {
     await click("[title='Unmute']");
     // stack: ["video", "share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-video-camera");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     // stack: ["share-screen"]
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
 });
@@ -809,7 +809,7 @@ test("show call participants after stopping camera share", async () => {
     await click("[title='Start Call']");
     await click("[title='Turn camera on']");
     await contains("video");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
     await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
@@ -1064,9 +1064,9 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await openDiscuss(channelId);
     await click("button[title='New Meeting']");
     await contains(".o-mail-Meeting");
-    await contains("button[title='Stop camera']");
-    await contains("button[title='Stop camera'].o-tag-DANGER");
-    await contains("button[title='Stop camera'].o-tag-WARNING_BADGE");
+    await contains("button[title='Turn camera off']");
+    await contains("button[title='Turn camera off'].o-tag-DANGER");
+    await contains("button[title='Turn camera off'].o-tag-WARNING_BADGE");
     await rtc.exitFullscreen();
     await click(".o-mail-DiscussSidebarChannel:text('General')");
     await click("[title='Join Call']");
@@ -1172,14 +1172,14 @@ test("all streams are properly closed when requesting new ones and tuning the fe
     await contains(".o-discuss-CallParticipantCard video");
     const cameraStream1 = streams.at(-1);
     expect(cameraStream1.getTracks()[0].readyState).toBe("live");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await contains(".o-discuss-CallParticipantCard video", { count: 0 });
     await click("[title='Turn camera on']");
     await contains(".o-discuss-CallParticipantCard video");
     const cameraStream2 = streams.at(-1);
     expect(cameraStream1.getTracks()[0].readyState).toBe("ended");
     expect(cameraStream2.getTracks()[0].readyState).toBe("live");
-    await click("[title='Stop camera']");
+    await click("[title='Turn camera off']");
     await contains(".o-discuss-CallParticipantCard video", { count: 0 });
     await click("[title='Share Screen']");
     await contains(".o-discuss-CallParticipantCard video");

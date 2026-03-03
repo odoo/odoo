@@ -350,7 +350,13 @@ a.o-discuss-mention {
 }
 
 .o-discuss-inCallIconColor {
+    @include o-mail-call-bordered(.35);
     color: $o-action;
+
+    &.o-muted {
+        border-color: $gray-400 !important;
+        color: $gray-700;
+    }
 }
 
 .o-mail-DiscussSystray {
