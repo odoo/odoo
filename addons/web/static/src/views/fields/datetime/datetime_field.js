@@ -14,7 +14,12 @@ const { DateTime } = luxon;
 
 function getFormattedPlaceholder(value, type, options) {
     if (value instanceof luxon.DateTime) {
-        return type === "date" ? formatDate(value, options) : formatDateTime(value, options);
+        const params = {
+            showSeconds: exprToBoolean(options.show_seconds ?? false),
+            showTime: exprToBoolean(options.show_time ?? true),
+            numeric: exprToBoolean(options.numeric ?? false),
+        };
+        return type === "date" ? formatDate(value, params) : formatDateTime(value, params);
     }
     return value || "";
 }
@@ -27,6 +32,7 @@ function getFormattedPlaceholder(value, type, options) {
  *  maxDate?: string;
  *  minDate?: string;
  *  placeholder?: string;
+ *  endPlaceholder: string;
  *  required?: boolean;
  *  rounding?: number;
  *  startDateField?: string;
@@ -50,6 +56,7 @@ export class DateTimeField extends Component {
         minDate: { type: String, optional: true },
         alwaysRange: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
+        endPlaceholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
@@ -418,7 +425,7 @@ export const dateField = {
         maxDate: options.max_date,
         minDate: options.min_date,
         alwaysRange: exprToBoolean(options.always_range),
-        placeholder: getFormattedPlaceholder(placeholder, type, { numeric: options.numeric }),
+        placeholder: getFormattedPlaceholder(placeholder, type, options),
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
@@ -492,22 +499,12 @@ export const dateTimeField = {
             availableTypes: ["datetime", "char"],
         },
     ],
-    extractProps: ({ attrs, options, placeholder, type }, dynamicInfo) => {
-        const showSeconds = exprToBoolean(options.show_seconds ?? false);
-        const showTime = exprToBoolean(options.show_time ?? true);
-        const numeric = exprToBoolean(options.numeric ?? false);
-        return {
-            ...dateField.extractProps({ attrs, options, placeholder, type }, dynamicInfo),
-            placeholder: getFormattedPlaceholder(placeholder, type, {
-                numeric,
-                showSeconds,
-                showTime,
-            }),
-            numeric,
-            showSeconds,
-            showTime,
-        };
-    },
+    extractProps: ({ attrs, options, placeholder, type }, dynamicInfo) => ({
+        ...dateField.extractProps({ attrs, options, placeholder, type }, dynamicInfo),
+        numeric: exprToBoolean(options.numeric ?? false),
+        showSeconds: exprToBoolean(options.show_seconds ?? false),
+        showTime: exprToBoolean(options.show_time ?? true),
+    }),
     supportedTypes: ["datetime"],
     listViewWidth: ({ options }) => {
         if (!exprToBoolean(options.show_time ?? true)) {
@@ -558,6 +555,13 @@ export const dateRangeField = {
                 : dateField.listViewWidth({ options });
         return 2 * width + 30; // 30px for the arrow and the gaps
     },
+    extractProps: ({ attrs, options, placeholder, type }, dynamicInfo) => ({
+        ...dateTimeField.extractProps({ attrs, options, placeholder, type }, dynamicInfo),
+        endPlaceholder:
+            attrs["endPlaceholder"] ||
+            attrs["endPlaceholder.translate"] ||
+            getFormattedPlaceholder(placeholder, type, options),
+    }),
     isValid: (record, fieldname, fieldInfo) => {
         if (fieldInfo.widget === "daterange") {
             if (
