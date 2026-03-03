@@ -152,6 +152,7 @@ export class BuilderOptionsPlugin extends Plugin {
                     i++
                 ) {
                     this.lastContainers[i].folded &&= this.config.initialFolded[i];
+                    this.lastContainers[i].foldedIntent &&= this.config.initialFolded[i];
                 }
             }
         },
@@ -381,17 +382,18 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const previousElementToIdAndStateMap = new Map(
-            this.lastContainers.map((c) => [c.element, { id: c.id, folded: c.folded }])
+            this.lastContainers.map((c) => [
+                c.element,
+                { id: c.id, folded: c.folded, foldedIntent: c.foldedIntent },
+            ])
         );
-        const keepUnfolded = this.lastContainers.some((c) => c.element === element);
         let containers = reactive(
             [...elementToOptions]
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({
                     id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
-                    folded: keepUnfolded
-                        ? previousElementToIdAndStateMap.get(element)?.folded ?? true
-                        : true,
+                    folded: previousElementToIdAndStateMap.get(element)?.foldedIntent ?? true,
+                    foldedIntent: previousElementToIdAndStateMap.get(element)?.foldedIntent,
                     element,
                     options: Options,
                     optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
@@ -426,7 +428,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 if (lastContainerWithOptions.element.matches(selector)) {
                     const ancestorContainer = containers.findLast((c) => c.element.matches(target));
                     if (ancestorContainer) {
-                        ancestorContainer.folded = false;
+                        ancestorContainer.folded = ancestorContainer.foldedIntent ?? false;
                     }
                 }
             }
@@ -499,6 +501,18 @@ export class BuilderOptionsPlugin extends Plugin {
     setNextTarget(targetEl) {
         if (this.dependencies.history.getIsPreviewing()) {
             return;
+        }
+        // In the case an option changes the target, keep its group unfolded.
+        // We don't know which one it is, so we keep all the opened ones.
+        // Only the last group may be "temporarily" unfolded, or one opened
+        // with `auto_unfold_container_providers`. In case an option call
+        // `setNextTarget`, it will always either be an option in the last
+        // group, or the last group will disappear in favor of the one with
+        // the new target.
+        for (const container of this.lastContainers) {
+            if (!container.folded) {
+                container.foldedIntent = false;
+            }
         }
         // Store the next target to activate in the current step.
         this.dependencies.history.setStepExtra("nextTarget", targetEl);
