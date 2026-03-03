@@ -194,8 +194,8 @@ class HrAttendance(models.Model):
         """
         self.ensure_one()
         tz = ZoneInfo(self.employee_id._get_tz(self.check_in))
-        start_dt_tz = max(self.check_in, start_dt).astimezone(tz)
-        end_dt_tz = min(self.check_out, end_dt).astimezone(tz)
+        start_dt_tz = max(self.check_in, start_dt).replace(tzinfo=UTC).astimezone(tz)
+        end_dt_tz = min(self.check_out, end_dt).replace(tzinfo=UTC).astimezone(tz)
 
         if end_dt_tz < start_dt_tz:
             return 0.0
@@ -277,11 +277,19 @@ class HrAttendance(models.Model):
     def _get_overtimes_to_update_domain(self):
         if not self:
             return Domain.FALSE
-        domain_list = [Domain.AND([
-            Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(weekday=SU(1))),
-            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(weekday=MO(-1))),
-        ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
+        domain_list = []
+        for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items():
+            tz = ZoneInfo(employee._get_tz())
+            local_check_in = min(attendances.mapped('check_in')).replace(tzinfo=UTC).astimezone(tz)
+            local_check_out = max(attendances.mapped('check_out')).replace(tzinfo=UTC).astimezone(tz)
+            date_from = local_check_in.date() + relativedelta(weekday=MO(-1))
+            date_to = local_check_out.date() + relativedelta(weekday=SU)
+
+            domain_list.append(Domain.AND([
+                Domain('employee_id', '=', employee.id),
+                Domain('date', '<=', date_to),
+                Domain('date', '>=', date_from),
+            ]))
         if not domain_list:
             return Domain.FALSE
         return Domain.OR(domain_list) if len(domain_list) > 1 else domain_list[0]
