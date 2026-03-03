@@ -910,6 +910,16 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.procurement_group_id.mrp_production_ids[-1].action_cancel()
         self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
 
+    def test_zero_batch_size_on_split(self):
+        mo = self.generate_mo()[0]
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.max_batch_size = 0
+
+        self.assertFalse(wizard.max_batch_size)
+        self.assertFalse(wizard.valid_details)
+        self.assertEqual(wizard.production_id, mo)
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
