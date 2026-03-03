@@ -21,3 +21,9 @@ class MailRenderMixin(models.AbstractModel):
                     blacklist=['/unsubscribe_from_list', '/view', '/cards']
                 )
         return rendered
+
+    @api.model
+    def _should_track_node(self, node):
+        if node.attrib.has_key('data-no-tracking'):
+            return False
+        return super()._should_track_node(node)

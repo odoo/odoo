@@ -505,9 +505,13 @@ export class LinkPlugin extends Plugin {
         );
     }
 
+    hasValidValue(attr, value) {
+        return Boolean(value);
+    }
+
     applyAttributes(el, attributes = {}) {
         for (const [attr, value] of Object.entries(attributes)) {
-            if (value) {
+            if (this.hasValidValue(attr, value)) {
                 el.setAttribute(attr, value);
             } else {
                 el.removeAttribute(attr);

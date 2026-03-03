@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MailingLinkPopover"
+       t-inherit="html_editor.linkPopover"
+       t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_advance_options_grid')]" position="inside">
+            <div t-if="shouldDisplayNoTrackingOption()" class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                <span t-att-title="state.noTracking.description" t-out="state.noTracking.label"/>
+                <CheckBox
+                    value="state.noTracking.isChecked"
+                    onChange.bind="toggleDisableLinkTracking"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

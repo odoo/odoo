@@ -185,6 +185,7 @@
             ('include', 'mass_mailing.assets_builder'),
             'mass_mailing/static/tests/mass_mailing_favourite_filter.test.js',
             'mass_mailing/static/tests/mass_mailing_html_field.test.js',
+            'mass_mailing/static/tests/mass_mailing_link_plugin.test.js',
         ],
     },
     'author': 'Odoo S.A.',
