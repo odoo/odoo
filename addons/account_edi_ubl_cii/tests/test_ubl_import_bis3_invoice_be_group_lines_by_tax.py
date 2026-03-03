@@ -71,3 +71,18 @@ class TestUblImportBis3InvoiceBEGroupLinesByTax(TestUblImportBis3InvoiceBE):
         )
         self.assertRecordValues(invoice2.invoice_line_ids, expected_grouped_lines)
         self.assertRecordValues(invoice2, expected_total_amounts)
+
+    def test_import_invoice_group_lines_correct_tax_amount(self):
+        self.percent_tax(21.0, type_tax_use='purchase')  # Create 21 % tax to make sure the import will find it
+
+        # This invoice tax amount computation by odoo is 9.07 while in the XML, the amount is 9.06
+        # The _correct_invoice_tax_amount method will update the tax amount to match the XML data
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_group_lines_correct_tax_amount',
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        # Check that we don't go back to 9.07 after grouping lines
+        self.assertEqual(invoice.amount_tax, 9.06)
+        invoice.action_group_ungroup_lines_by_tax()
+        self.assertEqual(invoice.amount_tax, 9.06)

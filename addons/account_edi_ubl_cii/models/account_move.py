@@ -2,6 +2,7 @@ import binascii
 import re
 
 from base64 import b64decode
+from collections import defaultdict
 from contextlib import suppress
 from lxml import etree
 
@@ -91,11 +92,11 @@ class AccountMove(models.Model):
             raise UserError(error_message)
 
         file_data = self.ubl_cii_xml_id._unwrap_edi_attachments()[0]
-        ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
-        if ubl_cii_xml_builder is None:
-            raise UserError(self.env._("Cannot decode the origin file, try by importing it again"))
+        decoder = self._get_edi_decoder(file_data)
+        if decoder is None:
+            raise UserError(self.env._("Cannot decode origin file, try by importing it again"))
         self.invoice_line_ids = [Command.clear()]
-        if ubl_cii_xml_builder.with_context(ungroup_lines=True)._import_invoice_ubl_cii(self, file_data):
+        if decoder(self, file_data):
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data['attachment'].name))
         else:
             raise UserError(error_message)
@@ -106,12 +107,51 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         if not self.is_invoice(include_receipts=True):
-            raise UserError(_("You can only group lines of an invoice"))
+            raise UserError(self.env._("You can only group lines of an invoice"))
+
+        tax_lines = [
+            self._prepare_tax_line_for_taxes_computation(tax_line)
+            for tax_line in self.line_ids.filtered('tax_line_id')
+        ]
+        tax_amounts = defaultdict(lambda: {
+            'tax_amount_currency': 0.0,
+            'tax_amount': 0.0,
+        })
+        for tax_line in tax_lines:
+            tax_key = self.env['account.tax']._prepare_tax_line_repartition_grouping_key(tax_line)
+            tax_amounts[frozendict(tax_key)]['tax_amount_currency'] += tax_line['amount_currency']
+            tax_amounts[frozendict(tax_key)]['tax_amount'] += tax_line['balance']
+
+        currency = self.currency_id
+        old_tax_amount = currency.round(sum(tax_amount['tax_amount_currency'] for tax_amount in tax_amounts.values()))
 
         line_vals = self._get_line_vals_group_by_tax(self.partner_id)
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids = line_vals
         self._message_log(body=self.env._("Grouped lines by tax"))
+
+        # Correct Tax Amount if a difference of 0.01 or less is detected
+        new_tax_amount = currency.round(sum(tax_line.amount_currency for tax_line in self.line_ids.filtered('tax_line_id')))
+        difference = currency.round(new_tax_amount - old_tax_amount)
+        if currency.is_zero(difference) or currency.compare_amounts(abs(difference), 0.01) > 0:
+            return
+
+        new_tax_lines = [
+            self._prepare_tax_line_for_taxes_computation(tax_line)
+            for tax_line in self.line_ids.filtered('tax_line_id')
+        ]
+
+        line_commands = []
+        for tax_line in new_tax_lines:
+            tax_key = frozendict(self.env['account.tax']._prepare_tax_line_repartition_grouping_key(tax_line))
+            expected_amounts = tax_amounts[tax_key]
+            line_commands.append(Command.update(tax_line['record'].id, {
+                'amount_currency': expected_amounts['tax_amount_currency'],
+                'balance': expected_amounts['tax_amount'],
+            }))
+
+        if line_commands:
+            self.line_ids = line_commands
 
     def _get_line_vals_group_by_tax(self, partner):
         """
@@ -165,7 +205,7 @@ class AccountMove(models.Model):
         :return: True if lines look like they're grouped, False otherwise
         """
         self.ensure_one()
-        partner_name = re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*'
+        partner_name = re.escape(self.partner_id.name or self.env._("Unknown partner")) + r' - \d+ - .*'
         return any(
             re.match(partner_name, line.name)
             for line in self.line_ids.filtered(lambda line: line.name and line.display_type == 'product')
@@ -180,8 +220,7 @@ class AccountMove(models.Model):
             return
 
         if (
-            self.env.context.get('ungroup_lines')
-            or not invoice.partner_id
+            not invoice.partner_id
             or not invoice.ubl_cii_xml_id
         ):
             return
