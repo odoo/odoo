@@ -198,6 +198,19 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
 
     @freeze_time('2017-01-01')
+    def test_oioubl_export_with_partner_child(self):
+        """ This test verifies that when creating a OIOUBL file for a individual partner,
+            linked to a company partner, that we use the GLN from the company partner.
+        """
+        individual_partner = self.env['res.partner'].create({
+                'name': 'Jean-Michel',
+                'parent_id': self.partner_b.id,
+        })
+        invoice = self.create_post_and_send_invoice(partner=individual_partner)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_child_partner.xml")
+
+    @freeze_time('2017-01-01')
     def test_oioubl_export_import_with_discount(self):
         """ Tests that the discount on a line is well exported, then taken into account when imported """
         line_vals = {
