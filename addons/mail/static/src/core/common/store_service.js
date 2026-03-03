@@ -7,7 +7,6 @@ import {
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -58,7 +57,6 @@ export class Store extends BaseStore {
             return this.store.env.services.ui.isSmall || isMobileOS();
         },
     });
-    users = {};
     /** @type {number} */
     internalUserGroupId;
     mt_comment = fields.One("mail.message.subtype");
@@ -428,7 +426,26 @@ export class Store extends BaseStore {
      * @param {number} param0.partnerId
      */
     async getChat({ userId, partnerId }) {
-        const partner = await this.getPartner({ userId, partnerId });
+        let partner;
+        if (userId) {
+            const user = await this["res.users"].getOrFetch(userId, ["partner_id"]);
+            if (!user?.partner_id) {
+                this.env.services.notification.add(_t("You can only chat with existing users."), {
+                    type: "warning",
+                });
+                return;
+            }
+            partner = user.partner_id;
+        } else if (partnerId) {
+            partner = await this["res.partner"].getOrFetch(partnerId, ["main_user_id"]);
+            if (!partner?.main_user_id) {
+                this.env.services.notification.add(
+                    _t("You can only chat with partners that have a dedicated user."),
+                    { type: "info" }
+                );
+                return;
+            }
+        }
         if (!partner) {
             return;
         }
@@ -584,62 +601,6 @@ export class Store extends BaseStore {
             temporaryIdOffset = 0.01;
         }
         return lastMessageId + temporaryIdOffset;
-    }
-
-    /**
-     * Search and fetch for a partner with a given user or partner id.
-     * @param {Object} param0
-     * @param {number} param0.userId
-     * @param {number} param0.partnerId
-     * @returns {Promise<import("models").ResPartner>}
-     */
-    async getPartner({ userId, partnerId }) {
-        if (userId) {
-            let user = this.users[userId];
-            if (!user) {
-                this.users[userId] = { id: userId };
-                user = this.users[userId];
-            }
-            if (!user.partner_id) {
-                const [userData] = await this.env.services.orm.silent.read(
-                    "res.users",
-                    [user.id],
-                    ["partner_id"],
-                    { context: { active_test: false } }
-                );
-                if (userData) {
-                    user.partner_id = userData.partner_id[0];
-                }
-            }
-            if (!user.partner_id) {
-                this.env.services.notification.add(_t("You can only chat with existing users."), {
-                    type: "warning",
-                });
-                return;
-            }
-            partnerId = user.partner_id;
-        }
-        if (partnerId) {
-            const partner = this["res.partner"].insert({ id: partnerId });
-            if (!partner.main_user_id) {
-                const [userId] = await this.env.services.orm.silent.search(
-                    "res.users",
-                    [["partner_id", "=", partnerId]],
-                    { context: { active_test: false } }
-                );
-                if (!userId) {
-                    this.env.services.notification.add(
-                        _t("You can only chat with partners that have a dedicated user."),
-                        { type: "info" }
-                    );
-                    return;
-                }
-                if (!partner.main_user_id) {
-                    partner.main_user_id = userId;
-                }
-            }
-            return partner;
-        }
     }
 
     async joinChat(id, forceOpen = false) {

@@ -216,4 +216,8 @@ export class ResUsers extends webModels.ResUsers {
             ),
         ];
     }
+
+    get _to_store_defaults() {
+        return [mailDataHelpers.Store.one("partner_id")];
+    }
 }

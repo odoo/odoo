@@ -1,12 +1,14 @@
 import {
     click,
     contains,
+    listenStoreFetch,
     openFormView,
     registerArchs,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -28,11 +30,7 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
         `,
     });
     onRpc("mail.test.properties", "has_access", () => true);
-    onRpc("res.users", "read", () => {
-        expect.step("read res.users");
-        return [{ id: userId, partner_id: [partnerId, "Partner Test"] }];
-    });
-    onRpc("res.users", "search_read", () => [{ id: userId, name: "User Test" }]);
+    listenStoreFetch("res.users");
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Test" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -53,11 +51,11 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
     });
 
     await openFormView("mail.test.properties", childId);
-    await expect.waitForSteps([]);
+    await waitStoreFetch();
     await click(
         propertyType === "many2one" ? ".o_field_property_many2one_value img" : ".o_m2m_avatar"
     );
-    await expect.waitForSteps(["read res.users"]);
+    await waitStoreFetch("res.users");
     await contains(".o-mail-ChatWindow", { text: "Partner Test" });
 }
 

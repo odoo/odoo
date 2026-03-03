@@ -1004,6 +1004,14 @@ function _process_request_for_all(store, name, params, context = {}) {
             store.add(channel, makeKwArgs({ delete: true }));
         }
     }
+    if (name === "res.partner") {
+        const [partnerId] = ResPartner.search([["id", "=", params["id"]]]);
+        store.add(ResPartner.browse(partnerId));
+    }
+    if (name === "res.users") {
+        const [userId] = ResUsers.search([["id", "=", params["id"]]]);
+        store.add(ResUsers.browse(userId));
+    }
     if (name === "/discuss/channel/messages") {
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];

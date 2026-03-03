@@ -88,6 +88,12 @@ class WebclientController(ThreadController):
                     fields_params={"request_list": params["request_list"]},
                     as_thread=True,
                 )
+        if name == "res.partner":
+            partner = request.env["res.partner"].search_fetch([("id", "=", params["id"])])
+            store.add(partner, "_store_partner_fields")
+        if name == "res.users":
+            user = request.env["res.users"].search_fetch([("id", "=", params["id"])])
+            store.add(user, "_store_user_fields")
         if name == "/mail/poll_option/votes":
             option_id = params.get("poll_option_id")
             # sudo - mail.poll.option: validated by "_get_thread_with_access" afterwards.

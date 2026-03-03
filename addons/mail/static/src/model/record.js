@@ -49,6 +49,25 @@ export class Record {
         const Model = toRaw(this);
         return this.records[Model.localId(data)];
     }
+    /**
+     * Gets a record by id, fetching it from the server if it doesn't exist in the store or if some
+     * of the specified fields are missing.
+     * Only works for models that are explicitly supported in /mail/data controller.
+     *
+     * @param {number} id
+     * @param {string[]} field_names
+     */
+    static async getOrFetch(id, field_names = []) {
+        let record = this.get(id);
+        if (!record || field_names.some((fieldName) => record[fieldName] === undefined)) {
+            await this.store.fetchStoreData(this.getName(), { id, field_names });
+            record = this.get(id);
+            if (!record?.exists()) {
+                return;
+            }
+        }
+        return record;
+    }
     static getName() {
         return this._name || this.name;
     }
