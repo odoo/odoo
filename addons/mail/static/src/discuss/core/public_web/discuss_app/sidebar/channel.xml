@@ -15,7 +15,7 @@
                     </t>
                 </Dropdown>
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
-                <ul t-if="this.subChannels.length > 0" class="o-mail-DiscussSidebarChannel-subChannelList list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column">
+                <ul t-if="this.subChannels.length > 0" class="o-mail-DiscussSidebarChannel-subChannelList list-unstyled position-relative flex-grow-1 my-0 d-flex flex-column" t-att-class="{ 'o-pt-0_5': this.store.discuss.isSidebarCompact }">
                     <t t-foreach="this.subChannels" t-as="sub" t-key="sub.localId">
                         <DiscussSidebarSubchannel t-if="this.showChannel(sub)" channel="sub" isFirst="sub_first or !this.channel.discussAppCategory.is_open"/>
                     </t>
@@ -25,12 +25,12 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel.main">
-        <button class="o-mail-DiscussSidebarChannel btn o-mail-DiscussSidebar-item d-flex align-items-center cursor-pointer o-py-0_5 mb-0 position-relative rounded-2 gap-1 border-0"
+        <button class="o-mail-DiscussSidebarChannel btn o-mail-DiscussSidebar-item d-flex align-items-center cursor-pointer o-py-0_5 mb-0 position-relative rounded-3 gap-1 border-0"
             t-att-class="this.attClass"
             t-on-click="(ev) => this.openChannel(ev, this.channel)"
             t-custom-ref="root"
         >
-            <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': this.store.discuss.isSidebarCompact, 'overflow-hidden': !this.store.discuss.isSidebarCompact }" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName">
+            <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-3 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': this.store.discuss.isSidebarCompact, 'overflow-hidden': !this.store.discuss.isSidebarCompact }" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName">
                 <div class="position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" name="threadAvatar" t-att-class="{ 'ms-2': !this.store.discuss.isSidebarCompact }">
                     <DiscussAvatar record="this.channel" size="26"/>
                 </div>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div t-if="this.indicators.length" class="position-absolute rounded-circle p-0 o-xsmaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
+            <div t-if="this.indicators.length" class="position-absolute rounded-circle p-0 o-xsmaller o-mail-DiscussSidebarChannel-indicator lh-1 bg-inherit" t-att-class="{ 'o-compact': this.store.discuss.isSidebarCompact }" name="indicator">
                 <t t-component="this.indicators[0]" t-props="{ channel: this.channel }"/>
             </div>
             <t t-if="this.channel.self_member_id?.message_unread_counter > 0 and !this.channel.self_member_id?.mute_until_dt and this.channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
