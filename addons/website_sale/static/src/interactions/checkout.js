@@ -5,6 +5,8 @@ import { rpc } from '@web/core/network/rpc';
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
+import { setElementContent } from '@web/core/utils/html';
+import { markup } from '@odoo/owl';
 
 export class Checkout extends Interaction {
     static selector = '#shop_checkout';
@@ -381,10 +383,10 @@ export class Checkout extends Interaction {
             amountDelivery.querySelector('span[name="o_message_no_dm_set"]')?.classList.add('d-none');
             amountDelivery.classList.remove('d-none');
         }
-
         amountDelivery.innerHTML = result.amount_delivery;
-        amountUntaxed.innerHTML = result.amount_untaxed;
-
+        if (amountUntaxed) {
+            setElementContent(amountUntaxed, markup(result.amount_untaxed));
+        }
         amountTax.outerHTML = result.amount_tax_lines;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
     }

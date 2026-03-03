@@ -44,10 +44,6 @@ registry
                 content: "Verify the combo product's price (tax included)",
                 trigger: 'h6[name=website_sale_cart_line_price]:contains(106.95)',
             },
-            {
-                content: "Verify the order's total price",
-                trigger: 'tr[name="o_order_total_untaxed"]:contains(93.00)',
-            },
             // Assert that the combo quantity can be updated in the cart.
             {
                 content: "Edit the combo quantity",

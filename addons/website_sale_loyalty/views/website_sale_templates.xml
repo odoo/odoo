@@ -12,7 +12,7 @@
         inherit_id="website_sale.total"
         name="Loyalty, coupon, gift card"
     >
-        <xpath expr="//div[contains(@t-attf-class, 'o_cart_total')]//table/tr[last()]" position="after">
+        <table name="cart_total_table" position="inside">
             <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
                 <td colspan="3" class="text-center text-xl-end border-0 p-0">
                     <span class=''>
@@ -153,7 +153,7 @@
                     </span>
                 </td>
             </tr>
-        </xpath>
+        </table>
     </template>
 
     <template id="website_sale_loyalty.layout" inherit_id="website.layout">
