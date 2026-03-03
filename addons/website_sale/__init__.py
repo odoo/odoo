@@ -34,6 +34,12 @@ def _post_init_hook(env):  # noqa: RUF067
         )
     )
 
+    recovery_template = env.ref(
+        "website_sale.mail_template_sale_cart_recovery", raise_if_not_found=False
+    )
+    if recovery_template:
+        existing_websites.cart_recovery_mail_template_id = recovery_template
+
 
 def uninstall_hook(env):
     ''' Need to reenable the `product` pricelist multi-company rule that were
