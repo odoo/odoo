@@ -859,6 +859,25 @@ export class Rtc extends Record {
     }
 
     /**
+     * @param {"microphone" | "camera"} kind
+     * @param {Object} [configuration]
+     */
+    showPermissionDialogOrUnavailableWarning(kind, configuration) {
+        const [permission, permissionValue] =
+            kind === "videoinput"
+                ? [this.cameraPermission, "camera"]
+                : [this.microphonePermission, "microphone"];
+        if (permission === "denied") {
+            // Bypass the permission dialog in this case: we still need to do
+            // the potential thing that was supposed to be done once it closes.
+            configuration?.options?.onClose?.();
+            this.showMediaUnavailableWarning({ [permissionValue]: true });
+        } else {
+            this.showMediaPermissionDialog(permissionValue, configuration);
+        }
+    }
+
+    /**
      * @param {"microphone" | "camera"} media
      * @param {Object} options
      */
