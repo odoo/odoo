@@ -2,18 +2,18 @@
 <templates>
 
     <t t-name="resource_mail.KanbanMany2OneAvatarResourceField">
-        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
-        <t t-set="value" t-value="props.record.data[props.name]"/>
-        <KanbanMany2One t-props="m2oProps">
+        <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
+        <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
+        <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
-                <t t-if="props.record.data.resource_type === 'material'">
+                <t t-if="this.props.record.data.resource_type === 'material'">
                     <span class="o_avatar o_m2o_avatar">
                         <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value.display_name">
                             <i class="fa fa-wrench"/>
                         </span>
                     </span>
                 </t>
-                <t t-elif="props.record.data.resource_type === 'user'">
+                <t t-elif="this.props.record.data.resource_type === 'user'">
                     <AvatarResource cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id"/>
                 </t>
             </t>
