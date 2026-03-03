@@ -90,8 +90,8 @@ export class DeviceSelect extends Component {
     }
 
     showPermissionDialog(kind) {
-        this.store.rtc.showPermissionDialogOrUnavailableWarning(
-            kind,
+        this.store.rtc.showMediaPermissionDialog(
+            kind === "videoinput" ? "camera" : "microphone",
             this.props.permissionDialogConfiguration
         );
     }

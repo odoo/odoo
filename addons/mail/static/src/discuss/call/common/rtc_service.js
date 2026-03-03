@@ -859,29 +859,18 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {"microphone" | "camera"} kind
+     * @param {"microphone" | "camera"} media
      * @param {Object} [configuration]
      */
-    showPermissionDialogOrUnavailableWarning(kind, configuration) {
-        const [permission, permissionValue] =
-            kind === "videoinput"
-                ? [this.cameraPermission, "camera"]
-                : [this.microphonePermission, "microphone"];
+    showMediaPermissionDialog(media, { props = {}, options = {} } = {}) {
+        const permission = media === "camera" ? this.cameraPermission : this.microphonePermission;
         if (permission === "denied") {
             // Bypass the permission dialog in this case: we still need to do
             // the potential thing that was supposed to be done once it closes.
-            configuration?.options?.onClose?.();
-            this.showMediaUnavailableWarning({ [permissionValue]: true });
-        } else {
-            this.showMediaPermissionDialog(permissionValue, configuration);
+            options.onClose?.();
+            this.showMediaUnavailableWarning({ [media]: true });
+            return;
         }
-    }
-
-    /**
-     * @param {"microphone" | "camera"} media
-     * @param {Object} options
-     */
-    showMediaPermissionDialog(media, { props = {}, options = {} } = {}) {
         this.closeCallPermissionDialog = this.dialog.add(
             CallPermissionDialog,
             {
