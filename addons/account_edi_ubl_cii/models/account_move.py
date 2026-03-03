@@ -120,8 +120,6 @@ class AccountMove(models.Model):
         """
         Perform checks to evaluate if a move is eligible to grouping/ungrouping
         """
-        if not self.is_purchase_document(include_receipts=True):
-            raise UserError(_("You can only (un)group lines of a incoming invoice (vendor bill)"))
         if self.state != 'draft':
             raise UserError(_("You can only (un)group lines of a draft invoice"))
         # TO REMOVE IN 18.0+ as purchase_edi_ubl_bis module is created
