@@ -924,7 +924,7 @@ class AccountJournal(models.Model):
             self.env['account.account']._check_company_domain(company),
             limit=1,
         )
-        digits = len(random_account.code) if random_account else 6
+        digits = len(random_account.code or '') if random_account else 6
 
         if journal_type in ('bank', 'credit'):
             account_prefix = company.bank_account_code_prefix or ''

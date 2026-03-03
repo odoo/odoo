@@ -9,6 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('us')
     def _get_us_template_data(self):
         return {
+            'code_digits': '0',
             'property_account_receivable_id': 'account_account_us_receivable',
             'property_account_payable_id': 'account_account_us_payable',
         }
@@ -75,9 +76,6 @@ class AccountChartTemplate(models.AbstractModel):
             self.env.company.id: {
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.us',
-                'bank_account_code_prefix': '1014',
-                'cash_account_code_prefix': '1015',
-                'transfer_account_code_prefix': '1017',
                 'account_default_pos_receivable_account_id': 'account_account_us_pos_receivable',
                 'income_currency_exchange_account_id': 'account_account_us_income_currency_exchange',
                 'expense_currency_exchange_account_id': 'account_account_us_expense_currency_exchange',
