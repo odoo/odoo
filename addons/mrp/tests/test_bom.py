@@ -2289,12 +2289,25 @@ class TestBoM(TestMrpCommon):
     def test_update_operations(self):
         """Update the operations in BoM which reflects the changes in Manufacturing Order"""
 
+        # consume the first component in the operation
+        self.bom_2.bom_line_ids[0].operation_id = self.bom_2.operation_ids.id
         mo_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         mo_form.product_id = self.product_7_1
         mo_form.product_qty = 1.0
         mo_form.bom_id = self.bom_2
         mo = mo_form.save()
         mo.action_confirm()
+
+        move_consumed_in_op = mo.move_raw_ids.filtered(lambda m: m.bom_line_id == self.bom_2.bom_line_ids[0])
+        self.assertTrue(move_consumed_in_op.manual_consumption)
+        self.bom_2.write({
+            'bom_line_ids': [
+                Command.update(self.bom_2.bom_line_ids[0].id, {'operation_id': self.env['mrp.routing.workcenter'].id}),
+            ]
+        })
+        self.assertTrue(mo.is_outdated_bom)
+        mo.action_update_bom()
+        self.assertFalse(move_consumed_in_op.manual_consumption)
 
         self.bom_2.operation_ids.write({
             'name': 'Painting',

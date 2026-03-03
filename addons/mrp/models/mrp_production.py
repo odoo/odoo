@@ -2670,6 +2670,7 @@ class MrpProduction(models.Model):
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
                     move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
+                move_raw.manual_consumption = move_raw._determine_is_manual_consumption(bom_line)
             elif not bom_line:
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.
