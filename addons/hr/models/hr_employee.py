@@ -2041,7 +2041,7 @@ class HrEmployee(models.Model):
         :param date stop: the stop of the period
         :param boolean check_contract: true means that we restrict valid versions only to contract periods
         """
-        return self.sudo()._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
+        return self._get_version_periods(start, stop, 'resource_calendar_id', check_contract)
 
     @api.model
     def _get_all_versions_with_contract_overlap_with_period(self, date_from, date_to):

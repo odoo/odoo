@@ -11,7 +11,7 @@ from odoo.tools import float_round
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
-    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
+    employee_overtime = fields.Float(related='employee_id.deductible_overtime', groups='base.group_user')
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
 
     @api.depends('work_entry_type_id')
@@ -33,17 +33,10 @@ class HrLeave(models.Model):
         self._check_overtime_deductible(self)
         return res
 
-    @api.depends('number_of_hours', 'employee_id', 'work_entry_type_id')
-    def _compute_employee_overtime(self):
-        diff_by_employee = self.employee_id._get_deductible_employee_overtime()
-        for leave in self:
-            leave.employee_overtime = diff_by_employee[leave.employee_id]
-
     def _check_overtime_deductible(self, leaves):
         # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
-        hours = leaves.employee_id._get_deductible_employee_overtime()
         for leave in leaves.filtered('overtime_deductible'):
-            if hours[leave.employee_id] < 0:
+            if leave.employee_overtime < 0:
                 if leave.employee_id.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))

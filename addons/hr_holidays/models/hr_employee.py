@@ -145,7 +145,7 @@ class HrEmployee(models.Model):
         # get periods from calendar
         for lookahead_day in lookahead_days:
             for company, company_employees in remaining.grouped('company_id').items():
-                periods = company_employees._get_calendar_periods(min_dt.date(), min_dt.date() + timedelta(days=lookahead_day))
+                periods = company_employees.sudo()._get_calendar_periods(min_dt.date(), min_dt.date() + timedelta(days=lookahead_day))
                 calendar_employee = defaultdict(OrderedSet)
                 max_end = None
                 for employee, intervals in periods.items():

@@ -16,7 +16,6 @@ class HrEmployeePublic(models.Model):
     hours_last_month_overtime = fields.Float(related='employee_id.hours_last_month_overtime')
     last_attendance_id = fields.Many2one(related='employee_id.last_attendance_id', readonly=True,
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer")
-    total_overtime = fields.Float(related='employee_id.total_overtime', readonly=True)
     attendance_manager_id = fields.Many2one(related='employee_id.attendance_manager_id',
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer")
     last_check_in = fields.Datetime(related='employee_id.last_check_in',

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, fields, models
 
 
 class HrAttendanceOvertimeLine(models.Model):
@@ -11,7 +11,7 @@ class HrAttendanceOvertimeLine(models.Model):
     attendance_id = fields.Many2one('hr.attendance', string='Attendance', index=True, ondelete='cascade', required=True)
     employee_id = fields.Many2one(related='attendance_id.employee_id', string='Employee', store=True, readonly=True, index='btree_not_null')
 
-    date = fields.Date(string='Day', index=True, required=True)
+    date = fields.Date(string='Day', index=True, required=True, default=lambda self: self.attendance_id.date)
     status = fields.Selection([
             ('to_approve', "To Approve"),
             ('approved', "Approved"),
@@ -20,7 +20,7 @@ class HrAttendanceOvertimeLine(models.Model):
         required=True, default='to_approve',
     )
     duration = fields.Float(string='Extra Hours', default=0.0, required=True)
-    manual_duration = fields.Float(  # TODO -> real_duration for easier upgrade
+    manual_duration = fields.Float(
         string='Extra Hours (encoded)',
         compute='_compute_manual_duration',
         store=True, readonly=False,
@@ -47,9 +47,19 @@ class HrAttendanceOvertimeLine(models.Model):
                 has_manager_right or
                 (
                     has_officer_right
-                    and overtime.employee_id.attendance_manager_id == self.env.user
+                    and overtime.attendance_id.employee_id.attendance_manager_id == self.env.user
                 )
             )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        attendances = self.env['hr.attendance'].browse([vals['attendance_id'] for vals in vals_list if 'status' not in vals])
+        for vals in vals_list:
+            if 'status' not in vals:
+                attendance = attendances.browse(vals['attendance_id'])
+                if attendance.employee_id.company_id.attendance_overtime_validation == 'no_validation':
+                    vals['status'] = 'approved'
+        return super().create(vals_list)
 
     @api.model_create_multi
     def create(self, vals_list):

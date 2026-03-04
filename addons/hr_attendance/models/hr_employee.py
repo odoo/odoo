@@ -51,9 +51,6 @@ class HrEmployee(models.Model):
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
-    overtime_ids = fields.One2many(
-        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
-    total_overtime = fields.Float(compute='_compute_total_overtime')
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
@@ -112,20 +109,9 @@ class HrEmployee(models.Model):
             })
         return res
 
-    @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
-    def _compute_total_overtime(self):
-        mapped_validated_overtimes = dict(
-            self.env['hr.attendance.overtime.line']._read_group(
-            domain=[
-                ('status', '=', 'approved'),
-                ('employee_id', 'in', self.ids),
-            ],
-            groupby=['employee_id'],
-            aggregates=['manual_duration:sum']
-        ))
-
-        for employee in self:
-            employee.total_overtime = mapped_validated_overtimes.get(employee, 0)
+    def _get_total_overtime(self):
+        self.ensure_one()
+        return sum(self.attendance_ids.mapped('validated_overtime_hours'))
 
     def _compute_hours_last_month(self):
         """
@@ -152,12 +138,6 @@ class HrEmployee(models.Model):
                     overtime_hours += att.validated_overtime_hours or 0
                 employee.hours_last_month = round(hours, 2)
                 employee.hours_last_month_display = "%g" % employee.hours_last_month
-                # overtime_adjustments = sum(
-                #     ot.duration or 0
-                #     for ot in employee.overtime_ids.filtered(
-                #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
-                #     )
-                # )
                 employee.hours_last_month_overtime = round(overtime_hours, 2)
 
     def _compute_hours_today(self):
@@ -361,10 +341,11 @@ class HrEmployee(models.Model):
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         public_leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         attendance_intervals_by_employee = defaultdict(Intervals)
+        version_periods_by_employee = self.sudo()._get_version_periods(start.date(), stop.date())
 
         for employee, intervals in version_periods_by_employee.items():
             for (_start, _stop, version) in intervals:
-                employees_by_calendar[version.resource_calendar_id] |= employee
+                employees_by_calendar[version.resource_calendar_id.sudo(False)] |= employee.sudo(False)
 
         for cal, employees in employees_by_calendar.items():
             if not cal:  # employees are flex or fully flex
@@ -418,14 +399,18 @@ class HrEmployee(models.Model):
             'fully_flexible': defaultdict(Intervals),
             'public_leave': defaultdict(Intervals),
         }
-        for employee, intervals in version_periods_by_employee.items():
+        for employee_sudo, intervals in version_periods_by_employee.items():
+            employee = employee_sudo.sudo(False)
             employee_attendances = attendance_intervals_by_employee[employee]
             for (p_start, p_stop, version) in intervals:
-                interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
+                interval = Intervals([(
+                    datetime.datetime.combine(p_start, datetime.time.min),
+                    datetime.datetime.combine(p_stop, datetime.time.max),
+                    self.env['resource.calendar'])])
                 if version.is_fully_flexible:
                     full_schedule_by_employee['fully_flexible'][employee] |= interval
                     continue
-                calendar = version.resource_calendar_id
+                calendar = version.resource_calendar_id.sudo(False)
                 employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 employee_public_leaves = public_leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 full_schedule_by_employee['public_leave'][employee] |= employee_public_leaves & interval
