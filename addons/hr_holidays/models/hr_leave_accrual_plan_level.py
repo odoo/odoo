@@ -117,7 +117,7 @@ class HrLeaveAccrualLevel(models.Model):
         [('lost', 'Lost (Reset)'),
          ('all', 'Carried over')],
         compute="_compute_action_with_unused_accruals",
-        store=True,
+        store=True, readonly=False,
         export_string_translation=False,
         default='lost', required=True,
         help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
