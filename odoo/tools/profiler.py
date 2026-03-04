@@ -273,15 +273,16 @@ class MemoryCollector(_BasePeriodicCollector):
 
     def start(self):
         _lock.acquire()
-        tracemalloc.start()
+        tracemalloc.start(20)
         super().start()
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
         self._entries.append({
             'start': real_time(),
-            'memory': tracemalloc.take_snapshot(),
+            'memory': tracemalloc.take_snapshot().statistics('traceback'),
         })
+        tracemalloc.clear_traces()
 
     def stop(self):
         super().stop()
@@ -291,7 +292,7 @@ class MemoryCollector(_BasePeriodicCollector):
     def post_process(self):
         for i, entry in enumerate(self._entries):
             if entry.get("memory", False):
-                entry_statistics = entry["memory"].statistics('traceback')
+                entry_statistics = entry["memory"]
                 modified_entry_statistics = [{'traceback': list(statistic.traceback._frames),
                                             'size': statistic.size} for statistic in entry_statistics]
                 self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
