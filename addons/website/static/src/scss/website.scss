@@ -625,6 +625,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
     @include media-breakpoint-up(lg) {
         @include accordion-style-vertical-menu;
     }
+    .o_header_sidebar > nav:not(.o_header_mobile) {
+        overflow-y: auto;
+    }
 }
 
 $-header-nav-link-height: $nav-link-height;
@@ -1973,6 +1976,10 @@ header {
                 }
             }
         }
+    }
+    #wrapwrap > header .s_headline {
+        // Hide header disclaimer since it is not compatible with sidebar layout
+        display: none;
     }
 } @else if o-website-value('header-template') == 'stretch' {
     #wrapwrap > header input::placeholder {

@@ -155,7 +155,7 @@
                 </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Show Disclaimer">
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Show Disclaimer">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
         </BuilderRow>
     </t>
