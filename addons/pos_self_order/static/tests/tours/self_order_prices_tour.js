@@ -1,6 +1,7 @@
 /* global posmodel */
 
 import { registry } from "@web/core/registry";
+import { floatIsZero } from "@web/core/utils/numbers";
 import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
@@ -16,14 +17,14 @@ const comparePricesWithBackend = {
         const orderTotalAfterSync = order.displayPrice;
         const allUnitPricesAfterSync = order.lines.map((l) => l.price_unit);
 
-        if (orderTotal !== orderTotalAfterSync) {
+        if (!floatIsZero(orderTotal - orderTotalAfterSync, 2)) {
             throw new Error(
                 `The total price changed after sync: before=${orderTotal}, after=${orderTotalAfterSync}`
             );
         }
 
         for (let i = 0; i < allUnitPrices.length; i++) {
-            if (allUnitPrices[i] !== allUnitPricesAfterSync[i]) {
+            if (!floatIsZero(allUnitPrices[i] - allUnitPricesAfterSync[i], 2)) {
                 throw new Error(
                     `The unit price of line ${i} changed after sync: before=${allUnitPrices[i]}, after=${allUnitPricesAfterSync[i]}`
                 );
@@ -316,6 +317,27 @@ registry.category("web_tour.tours").add("test_pricelist_price_between_frontend_a
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-Takeout"),
         ...commonStepWithSpecificPrice,
+        comparePricesWithBackend,
+    ],
+});
+
+registry.category("web_tour.tours").add("test_fiscal_position_between_frontend_and_backend", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Take out"),
+        ...commonStepWithSpecificPrice,
+        {
+            content: "Check that the fiscal position is applied",
+            trigger: "body",
+            run: async () => {
+                const order = posmodel.currentOrder;
+                if (order.fiscal_position_id?.name !== "Take out") {
+                    throw new Error(
+                        `The fiscal position should not be "Take out", but it is ${order.fiscal_position_id?.name}`
+                    );
+                }
+            },
+        },
         comparePricesWithBackend,
     ],
 });
