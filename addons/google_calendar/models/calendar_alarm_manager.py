@@ -8,6 +8,8 @@ class AlarmManager(models.AbstractModel):
     _inherit = 'calendar.alarm_manager'
 
     @api.model
-    def _get_notify_alert_extra_conditions(self):
-        base = super()._get_notify_alert_extra_conditions()
-        return SQL("%s AND event.google_id IS NULL", base)
+    def _get_notify_alert_extra_conditions(self, alarm_type=None):
+        base = super()._get_notify_alert_extra_conditions(alarm_type)
+        if alarm_type == 'email':
+            return SQL("%s AND event.google_id IS NULL", base)
+        return base

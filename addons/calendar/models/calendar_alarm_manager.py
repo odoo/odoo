@@ -135,7 +135,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         return result
 
     @api.model
-    def _get_notify_alert_extra_conditions(self):
+    def _get_notify_alert_extra_conditions(self, alarm_type=None):
         """
         To be overriden on inherited modules
         adding extra conditions to extract only the unsynced events
@@ -153,7 +153,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.Date.today() - timedelta(weeks=1)
-        extra_conditions = self._get_notify_alert_extra_conditions()
+        extra_conditions = self._get_notify_alert_extra_conditions(alarm_type)
         now = fields.Datetime.now()
         self.env.cr.execute(SQL("""
             SELECT alarm.id, event.id
