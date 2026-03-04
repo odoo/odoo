@@ -3977,8 +3977,7 @@ class AccountTax(models.Model):
         def dispatch_exclude_function(base_line, tax_data):
             return not tax_data['tax']._can_be_discounted() or (exclude_function and exclude_function(base_line, tax_data))
 
-        new_base_lines = self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
-        return new_base_lines + self._turn_removed_taxes_into_new_base_lines(new_base_lines, company)
+        return self._dispatch_taxes_into_new_base_lines(base_lines, company, dispatch_exclude_function)
 
     @api.model
     def _prepare_down_payment_lines(
