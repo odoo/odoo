@@ -27,7 +27,7 @@
                         <a href="#" class="text-decoration-underline link-underline link-underline-opacity-0 link-underline-opacity-100-hover" t-on-click="onClickNumberOfVotes" t-out="props.poll.voteCountText(props.poll.numberOfVotes)"/>
                         &#8729;
                         <t t-if="props.poll.end_message_id">Poll closed</t>
-                        <t t-else="" t-out="state.remainingTimeText"/>
+                        <span t-else="" t-att-title="remainingTimeTextTitle" t-out="state.remainingTimeText"/>
                     </div>
                     <span class="flex-grow-1"/>
                     <t t-if="!props.poll.end_message_id">
