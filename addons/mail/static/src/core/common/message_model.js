@@ -84,7 +84,7 @@ export class Message extends Record {
     /** attachments not already clearly visible in the body, unlike inlined images */
     extra_body_attachment_ids = fields.Attr("ir.attachment", {
         compute() {
-            const parsedBody = new DOMParser().parseFromString(this.body, "text/html");
+            const parsedBody = createDocumentFragmentFromContent(this.body);
             const inlinedImageAttachmentIds = [
                 ...parsedBody.querySelectorAll("img[data-attachment-id]"),
             ].map((img) => parseInt(img.dataset.attachmentId));
