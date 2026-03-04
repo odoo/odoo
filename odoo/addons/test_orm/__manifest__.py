@@ -2,7 +2,7 @@
     'name': 'Test ORM',
     'category': 'Hidden/Tests',
     'description': """A module to test the ORM.""",
-    'depends': ['base'],
+    'depends': ['base', 'base_bank'],
     'data': [
         'data/test_access_rights_data.xml',
         'data/test_action_bindings.xml',
