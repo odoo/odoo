@@ -241,7 +241,7 @@ class Partner(models.Model):
             if "country" in fields:
                 c = partner.country_id
                 data["country"] = {"code": c.code, "id": c.id, "name": c.name} if c else False
-            if "display_name" in fields:
+            if "display_name" in fields or ("name" in fields and not data.get("name")):
                 data["displayName"] = partner.display_name
             if 'user' in fields:
                 main_user = main_user_by_partner and main_user_by_partner.get(partner)
