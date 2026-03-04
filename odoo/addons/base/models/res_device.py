@@ -203,29 +203,38 @@ class ResDevice(models.Model):
 
     @property
     def _query(self):
+        # Deduplicate logs to keep only the most recent one for each device.
+        # - `first_activity` is propagated, so it will be correct with the most
+        #   recent log.
+        # - `id` is not aggregated, this allows the ORM to use relational fields
+        #   with this model and use the index of `id`.
         return """
             SELECT
-                MAX(L.id) as id,
-                L.session_identifier as session_identifier,
-                L.user_id as user_id,
-                L.ip_address as ip_address,
-                L.user_agent as user_agent,
-                L.country as country,
-                L.city as city,
-                MIN(L.first_activity) as first_activity,
-                MAX(L.last_activity) as last_activity,
-                bool_and(L.revoked) as revoked
-            FROM
-                res_device_log L
+                L1.id,
+                L1.session_identifier,
+                L1.user_id,
+                L1.ip_address,
+                L1.user_agent,
+                L1.country,
+                L1.city,
+                L1.first_activity,
+                L1.last_activity,
+                L1.revoked
+            FROM res_device_log L1
             WHERE
-                L.revoked IS NOT TRUE
-            GROUP BY
-                session_identifier,
-                user_id,
-                ip_address,
-                user_agent,
-                country,
-                city
+                L1.revoked IS NOT TRUE
+                AND NOT ( EXISTS (
+                    SELECT 1
+                    FROM
+                        res_device_log L2
+                    WHERE
+                        L2.user_id = L1.user_id
+                        AND L2.session_identifier = L1.session_identifier
+                        AND L2.ip_address = L1.ip_address
+                        AND L2.user_agent = L1.user_agent
+                        AND L2.id > L1.id
+                        AND L2.revoked IS NOT TRUE
+                ))
         """
 
     def init(self):
@@ -245,6 +254,7 @@ class ResSession(models.Model):
     user_agent = fields.Char('User Agent', compute='_compute_session_info', readonly=True)
     country = fields.Char('Country', compute='_compute_session_info', readonly=True)
     city = fields.Char('City', compute='_compute_session_info', readonly=True)
+    first_activity = fields.Datetime('First Activity', compute='_compute_session_info', readonly=True)
 
     is_current = fields.Boolean('Current', compute='_compute_is_current', readonly=True)
 
@@ -279,6 +289,7 @@ class ResSession(models.Model):
             session.user_agent = current_device_id.user_agent
             session.country = current_device_id.country
             session.city = current_device_id.city
+            session.first_activity = min(device_ids.mapped('first_activity'))
 
     def _compute_display_name(self):
         for session in self:
@@ -291,19 +302,34 @@ class ResSession(models.Model):
 
     @property
     def _query(self):
+        # A `res.session` record is represented with the most recent device for
+        # a given `session_identifier`.
+        # - The max of `last_activity` will be always the `last_activity` of the
+        #   most recent device, but the min of `first_activity` must be retrieve
+        #   from all devices in the session.
+        # - `id` is not aggregated, we can use the `id` of the underlying table
+        #   as an index (`res.device` --> `res.device.log`).
+        # - The aggregated fields will be computed (this is because the most
+        #   recent log may not correspond to the current device, the latter to
+        #   be used for a good user experience).
         return """
             SELECT
-                MAX(D.id) as id,
-                D.session_identifier as session_identifier,
-                D.user_id as user_id,
-                MIN(D.first_activity) as first_activity,
-                MAX(D.last_activity) as last_activity,
-                bool_and(D.revoked) as revoked
-            FROM
-                res_device D
-            GROUP BY
-                session_identifier,
-                user_id
+                D1.id,
+                D1.session_identifier,
+                D1.user_id,
+                D1.last_activity,
+                D1.revoked
+            FROM res_device D1
+            WHERE
+                NOT ( EXISTS (
+                    SELECT 1
+                    FROM
+                        res_device D2
+                    WHERE
+                        D2.user_id = D1.user_id
+                        AND D2.session_identifier = D1.session_identifier
+                        AND D2.id > D1.id
+                ))
         """
 
     @check_identity
