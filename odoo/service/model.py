@@ -151,6 +151,7 @@ def execute_cr(cr, uid, obj, method, args, kw):
         _0 = l._value
     if result is None:
         _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
+        result = False
     return result
 
 
