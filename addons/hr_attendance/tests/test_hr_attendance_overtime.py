@@ -1531,3 +1531,26 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertIn(own_reader_employee, admin_lines.employee_id)
         self.assertIn(officer_employee, admin_lines.employee_id)
         self.assertIn(self.other_employee, admin_lines.employee_id)
+
+    def test_attendance_expected_hours_compute(self):
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 7, 0),
+            'check_out': datetime(2023, 1, 4, 18, 0)
+        })
+        self.assertEqual(att.expected_hours, 8)
+        att.check_out = datetime(2023, 1, 4, 8, 0)
+        self.assertEqual(att.expected_hours, 1)  # This is because absence management is off
+
+        self.employee.ruleset_id.company_id.absence_management = True
+        att.check_out = datetime(2023, 1, 4, 9, 0)
+        self.assertEqual(att.expected_hours, 8)
+
+        self.assertEqual(att.overtime_hours, -6)
+        self.assertEqual(att.validated_overtime_hours, -6)
+        self.assertEqual(att.expected_hours, 8)
+
+        att.linked_overtime_ids.manual_duration = 10
+        self.assertEqual(att.overtime_hours, -6)
+        self.assertEqual(att.validated_overtime_hours, 10)
+        self.assertEqual(att.expected_hours, 8)

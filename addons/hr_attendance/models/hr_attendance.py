@@ -77,7 +77,7 @@ class HrAttendance(models.Model):
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
                                 default='manual')
-    expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    expected_hours = fields.Float(string="Theoretical Hours", compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
     linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
 
@@ -117,7 +117,7 @@ class HrAttendance(models.Model):
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_overtime_hours(self):
         for attendance in self:
-            attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('manual_duration'))
+            attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('duration'))
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_validated_overtime_hours(self):
@@ -354,6 +354,7 @@ class HrAttendance(models.Model):
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
+        self.env.add_to_compute(self._fields['expected_hours'], all_attendances)
         self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
         self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
 
