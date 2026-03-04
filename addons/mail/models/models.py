@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
 
 import logging
-import typing
 
 from collections import defaultdict
 from datetime import datetime
@@ -14,9 +12,6 @@ from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.fields import Domain
 from odoo.tools import parse_contact_from_email, OrderedSet
 from odoo.tools.mail import email_normalize, email_split_and_format
-
-if typing.TYPE_CHECKING:
-    from odoo.api import ValuesType
 
 _logger = logging.getLogger(__name__)
 
@@ -242,116 +237,6 @@ class Base(models.AbstractModel):
             "object.user_id.name",
             "object.user_id.signature",
         )
-
-    # ------------------------------------------------------------
-    # GENERIC TRACKING MAIL FEATURES
-    # ------------------------------------------------------------
-
-    def _mail_track(
-            self, tracked_fields_get: dict[str, ValuesType], initial_values: ValuesType
-        ) -> tuple[set[str], list[ValuesType]]:
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a valid command to create tracking values.
-        The method accepts a single record or an empty one (where all field
-        values will be falsy).
-
-        :param dict[str, ValuesType] tracked_fields_get: fields_get of updated
-            fields on which tracking is checked and performed;
-        :param ValuesType initial_values: dict of initial values for each updated
-            fields;
-
-        :return: a tuple (changes, tracking_value_ids) where
-          changes: set of updated column names; contains onchange tracked fields
-          that changed;
-          tracking_values: a values to create ``mail.tracking.value`` records;
-        """
-        if len(self) > 1:
-            raise ValueError(f"Expected empty or single record: {self}")
-        updated = set()
-        tracking_values = []
-
-        fields_track_info = self._mail_track_order_fields(tracked_fields_get)
-        for col_name, _sequence in fields_track_info:
-            if col_name not in initial_values:
-                continue
-            initial_value = initial_values[col_name]
-            new_value = self._track_convert_value(col_name, self[col_name])
-            if new_value == initial_value or (not new_value and not initial_value):  # because browse null != False
-                continue
-
-            if self._fields[col_name].type == "properties":
-                definition_record_field = self._fields[col_name].definition_record
-                if self[definition_record_field] == initial_values[definition_record_field]:
-                    # track the change only if the parent changed
-                    continue
-
-                updated.add(col_name)
-                tracking_values.extend(
-                    self._create_mail_tracking_values_property(property_, col_name, tracked_fields_get[col_name])
-                    # Show the properties in the same order as in the definition
-                    for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html', 'signature') and property_.get('value')
-                )
-                continue
-
-            updated.add(col_name)
-            tracking_values.append(self._create_mail_tracking_values(
-                initial_value, new_value,
-                col_name, tracked_fields_get[col_name],
-            ))
-
-        return updated, tracking_values
-
-    def _mail_track_order_fields(
-            self,
-            tracked_fields_get: dict[str, ValuesType]
-        ) -> list[tuple[str, int]]:
-        """ Order tracking, based on sequence found on field definition. When
-        having several identical sequences, properties are added after,
-        and then field name is used. """
-        fields_track_info = [
-            (col_name, self._mail_track_get_field_sequence(col_name))
-            for col_name in tracked_fields_get
-        ]
-        # sorting: sequence ASC, name ASC (higher sequence -> displayed last, then
-        # order by name). Model order being id DESC (aka: first insert -> last
-        # displayed) insert should be done by descending sequence then descending
-        # name.
-        fields_track_info.sort(key=lambda item: (
-            item[1],
-            tracked_fields_get[item[0]]['type'] != 'properties',
-            item[0],
-        ), reverse=True)
-        return fields_track_info
-
-    def _track_convert_value(self, fname: str, value: typing.Any) -> typing.Any:
-        # get the properties definition with the value
-        # (not just the dict with the value)
-        if len(self) > 1:
-            raise ValueError(f"Expected empty or single record: {self}")
-        if (field := self._fields[fname]).type == 'properties':
-            return field.convert_to_read(value, self)
-        return value
-
-    def _mail_track_get_field_sequence(self, fname: str) -> int:
-        """ Find tracking sequence of a given field, given their name. Current
-        parameter 'tracking' should be an integer, but attributes with True
-        are still supported; old naming 'track_sequence' also. """
-        if fname not in self._fields:
-            return 100
-
-        def get_field_sequence(fname):
-            return getattr(
-                self._fields[fname], 'tracking',
-                getattr(self._fields[fname], 'track_sequence', True)
-            )
-
-        sequence = get_field_sequence(fname)
-        if self._fields[fname].type == 'properties' and sequence is True:
-            # default properties sequence is after the definition record
-            parent_sequence = get_field_sequence(self._fields[fname].definition_record)
-            return 100 if parent_sequence is True else parent_sequence
-        return 100 if sequence is True else sequence
 
     # ------------------------------------------------------------
     # RECIPIENTS MAIL FEATURES
