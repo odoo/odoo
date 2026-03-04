@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_employee_form_inherit_address" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.address</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='private_city']" position="attributes">
+                    <attribute name="invisible">private_country_enforce_cities</attribute>
+                </xpath>
+                <xpath expr="//field[@name='private_city']" position="after">
+                    <field name="private_city_id" 
+                        placeholder="City" 
+                        class="o_address_city"
+                        invisible="not private_country_enforce_cities"
+                        options='{"no_open": True, "no_create": True}'
+                        domain="[('country_id', '=?', private_country_id), ('state_id', '=?', private_state_id)]"
+                        context="{'show_state': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
