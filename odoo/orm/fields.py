@@ -820,6 +820,11 @@ class Field[T]:
         return ('jsonb', 'jsonb') if self.company_dependent or self.translate else self._column_type
 
     @property
+    def sql_column_type(self):
+        assert self._column_type
+        return SQL(self._column_type[1])
+
+    @property
     def base_field(self) -> Self:
         """ Return the base field of an inherited field, or ``self``. """
         return self.inherited_field.base_field if self.inherited_field else self
@@ -1281,15 +1286,15 @@ class Field[T]:
                 column=sql_field,
                 company_id=str(model.env.company.id),
                 fallback=fallback,
-                column_type=SQL(self._column_type[1]),
+                column_type=self.sql_column_type,
             )
             if self.type in ('boolean', 'integer', 'float', 'monetary'):
-                return SQL('(%s)::%s', sql_field, SQL(self._column_type[1]))
+                return SQL('(%s)::%s', sql_field, self.sql_column_type)
             # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
             # the result of current sql_field might be 'null'::jsonb
             # ('null'::jsonb)::text == 'null'
             # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, SQL(self._column_type[1]))
+            return SQL('(%s->>0)::%s', sql_field, self.sql_column_type)
 
         return sql_field
 
