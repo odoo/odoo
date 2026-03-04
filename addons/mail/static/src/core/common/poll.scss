@@ -21,6 +21,7 @@ $poll-color-map: (
 
 @mixin o-mail-poll() {
     .o-mail-Poll {
+        background-color: var(--mail-Poll-bgColor, $o-view-background-color);
         @include o-poll-bg("secondary");
 
         &.o-ongoing .o-mail-PollOption.o-selected,
