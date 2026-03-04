@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         res = super()._prepare_invoice()
-        if self.company_id.country_id.code == 'TW' and self.company_id._is_ecpay_enabled():
+        if self.company_id.account_fiscal_country_id.code == 'TW' and self.company_id._is_ecpay_enabled():
             res.update(
                 {
                     "l10n_tw_edi_is_print": self.l10n_tw_edi_is_print,
