@@ -3951,6 +3951,27 @@
         />
     </record>
 
+    <record id="payment_method_wero" model="payment.method">
+        <field name="name">Wero</field>
+        <field name="code">wero</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                ref('base.be'),
+                ref('base.de'),
+                ref('base.fr'),
+            ])]"
+        />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
     <record id="payment_method_zalopay" model="payment.method">
         <field name="name">Zalopay</field>
         <field name="code">zalopay</field>
@@ -4451,6 +4472,15 @@
         />
     </record>
 
+    <record id="payment_method_wero_brand" model="payment.method">
+        <field name="name">WERO</field>
+        <field name="code">wero</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_ideal')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
+    </record>
+
     <record id="payment_method_woori" model="payment.method">
         <field name="name">Woori Bank</field>
         <field name="code">woori</field>
@@ -4466,15 +4496,6 @@
         <field name="supported_currency_ids"
                eval="[Command.set([ref('base.VND')])]"
         />
-    </record>
-
-    <record id="payment_method_wero" model="payment.method">
-        <field name="name">WERO</field>
-        <field name="code">wero</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_ideal')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
     </record>
 
 </odoo>

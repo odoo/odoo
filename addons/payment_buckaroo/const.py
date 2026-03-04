@@ -40,6 +40,7 @@ PAYMENT_METHODS_MAPPING = {
     "wechat_pay": "WeChatPay",
     "klarna": "klarna",
     "afterpay_riverty": "afterpay",
+    "wero": "Wero",
 }
 
 # Mapping of transaction states to Buckaroo status codes.

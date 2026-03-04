@@ -38,6 +38,7 @@ PAYMENT_METHODS_MAPPING = {
     "upi": 56,
     "visa": 1,
     "wechat_pay": 5404,
+    "wero": 900,
 }
 
 # The payment methods that involve a redirection to 3rd parties by Worldline.
@@ -55,6 +56,7 @@ REDIRECT_PAYMENT_METHODS = {
     "post_finance_pay",
     "twint",
     "wechat_pay",
+    "wero",
 }
 
 # Mapping of transaction states to Worldline's payment statuses.
