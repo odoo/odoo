@@ -1,15 +1,14 @@
 import { env } from "@/lib/env";
+import { getGovSuiteBySlug } from "@/lib/gov-suite";
 import { OdooClient } from "@/lib/odoo-client";
 
-type ProcessoRecord = {
+type GenericRecord = {
   id: number;
   display_name?: string;
+  name?: string;
+  state?: string;
   create_date?: string;
   write_date?: string;
-};
-
-type DocumentoRecord = ProcessoRecord & {
-  name?: string;
 };
 
 let client: OdooClient | null = null;
@@ -27,6 +26,21 @@ function getClient() {
   return client;
 }
 
+function resolveModel(suiteSlug: string): string | null {
+  const suite = getGovSuiteBySlug(suiteSlug);
+  return suite?.model ?? null;
+}
+
+function mapRow(row: GenericRecord) {
+  return {
+    id: row.id,
+    nome: row.display_name ?? row.name ?? `Registro #${row.id}`,
+    estado: row.state ?? "-",
+    criadoEm: row.create_date ?? "-",
+    atualizadoEm: row.write_date ?? "-"
+  };
+}
+
 export async function fetchDashboard() {
   const odoo = getClient();
   const totalProcessos = await odoo.callKw<number>({
@@ -35,52 +49,37 @@ export async function fetchDashboard() {
     args: [[]]
   });
 
-  const latest = await odoo.callKw<ProcessoRecord[]>({
+  const latest = await odoo.callKw<GenericRecord[]>({
     model: env.odooProcessModel,
     method: "search_read",
-    args: [[], ["display_name", "create_date", "write_date"]],
+    args: [[], ["display_name", "state", "create_date", "write_date"]],
     kwargs: { limit: 5, order: "id desc" }
   });
 
-  let byState: Array<{ state: string; state_count: number }> = [];
-  try {
-    byState = await odoo.callKw<Array<{ state: string; state_count: number }>>({
-      model: env.odooProcessModel,
-      method: "read_group",
-      args: [[], ["state"], ["state"]],
-      kwargs: { lazy: false }
-    });
-  } catch {
-    byState = [];
-  }
-
   return {
     totalProcessos,
-    latest: latest.map((row) => ({
-      id: row.id,
-      nome: row.display_name ?? `Registro #${row.id}`,
-      atualizadoEm: row.write_date ?? row.create_date ?? "-"
-    })),
-    byState: byState.map((row) => ({
-      state: row.state || "sem_estado",
-      total: row.state_count
-    }))
+    latest: latest.map(mapRow)
   };
 }
 
-export async function fetchProcessos(page: number, pageSize: number) {
+export async function fetchGovList(suiteSlug: string, page: number, pageSize: number) {
+  const model = resolveModel(suiteSlug);
+  if (!model) {
+    return null;
+  }
+
   const odoo = getClient();
   const offset = (page - 1) * pageSize;
   const total = await odoo.callKw<number>({
-    model: env.odooProcessModel,
+    model,
     method: "search_count",
     args: [[]]
   });
 
-  const rows = await odoo.callKw<ProcessoRecord[]>({
-    model: env.odooProcessModel,
+  const rows = await odoo.callKw<GenericRecord[]>({
+    model,
     method: "search_read",
-    args: [[], ["display_name", "create_date", "write_date"]],
+    args: [[], ["display_name", "name", "state", "create_date", "write_date"]],
     kwargs: { offset, limit: pageSize, order: "id desc" }
   });
 
@@ -89,32 +88,29 @@ export async function fetchProcessos(page: number, pageSize: number) {
     pageSize,
     total,
     totalPages: Math.max(1, Math.ceil(total / pageSize)),
-    items: rows.map((row) => ({
-      id: row.id,
-      nome: row.display_name ?? `Registro #${row.id}`,
-      criadoEm: row.create_date ?? "-",
-      atualizadoEm: row.write_date ?? "-"
-    }))
+    items: rows.map(mapRow)
   };
 }
 
-export async function fetchDocumentoDfd(id: number) {
+export async function fetchGovRecord(suiteSlug: string, id: number) {
+  const model = resolveModel(suiteSlug);
+  if (!model) {
+    return null;
+  }
+
   const odoo = getClient();
-  const rows = await odoo.callKw<DocumentoRecord[]>({
-    model: env.odooDocumentModel,
+  const rows = await odoo.callKw<GenericRecord[]>({
+    model,
     method: "read",
-    args: [[id], ["display_name", "create_date", "write_date", "name"]]
+    args: [[id], ["display_name", "name", "state", "create_date", "write_date"]]
   });
-  const record = rows[0];
-  if (!record) {
+  const row = rows[0];
+  if (!row) {
     return null;
   }
 
   return {
-    id: record.id,
-    titulo: record.display_name ?? record.name ?? `Documento #${id}`,
-    criadoEm: record.create_date ?? "-",
-    atualizadoEm: record.write_date ?? "-",
-    resumo: "Documento carregado via API do Odoo. Abas abaixo sao de demonstracao."
+    ...mapRow(row),
+    resumo: "Detalhe dummy para aceleracao do frontend. Campos reais podem ser mapeados por modulo."
   };
 }

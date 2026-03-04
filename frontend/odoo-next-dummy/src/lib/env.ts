@@ -21,5 +21,9 @@ export const env = {
   odooPassword: required("ODOO_PASSWORD"),
   odooTimeoutMs: toInt(process.env.ODOO_TIMEOUT_MS, 15000),
   odooProcessModel: process.env.ODOO_PROCESS_MODEL ?? "gov.processo",
-  odooDocumentModel: process.env.ODOO_DOCUMENT_MODEL ?? "gov.documento.dfd"
+  odooDocumentModel: process.env.ODOO_DOCUMENT_MODEL ?? "gov.documento.dfd",
+  odooDotacaoModel: process.env.ODOO_DOTACAO_MODEL ?? "gov.dotacao",
+  odooExecucaoModel: process.env.ODOO_EXECUCAO_MODEL ?? "gov.execucao",
+  odooAiTemplateModel: process.env.ODOO_AI_TEMPLATE_MODEL ?? "gov.ai.template",
+  odooAiMemoryModel: process.env.ODOO_AI_MEMORY_MODEL ?? "gov.ai.memory"
 };
