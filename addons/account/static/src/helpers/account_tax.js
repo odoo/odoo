@@ -2522,14 +2522,10 @@ export const accountTaxHelpers = {
                 (exclude_function && exclude_function(base_line, tax_data))
             );
         }
-
-        const new_base_lines = this.dispatch_taxes_into_new_base_lines(
+        return this.dispatch_taxes_into_new_base_lines(
             base_lines,
             company,
             dispatch_exclude_function.bind(this)
-        );
-        return new_base_lines.concat(
-            this.turn_removed_taxes_into_new_base_lines(new_base_lines, company)
         );
     },
 
