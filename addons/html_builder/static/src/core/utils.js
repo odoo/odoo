@@ -6,6 +6,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     reactive,
+    status,
     toRaw,
     useComponent,
     useEffect,
@@ -27,21 +28,29 @@ function isConnectedElement(el) {
 }
 
 export function useDomState(getState, { checkEditingElement = true } = {}) {
+    const component = useComponent();
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
     const handler = async (ev) => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
-            const newStatePromise = getState(editingElement);
-            if (ev) {
-                ev.detail.getStatePromises.push(newStatePromise);
-                const newState = await newStatePromise;
-                const shouldApply = await ev.detail.updatePromise;
-                if (shouldApply) {
-                    Object.assign(state, newState);
+            try {
+                const newStatePromise = getState(editingElement);
+                if (ev) {
+                    ev.detail.getStatePromises.push(newStatePromise);
+                    const newState = await newStatePromise;
+                    const shouldApply = await ev.detail.updatePromise;
+                    if (shouldApply) {
+                        Object.assign(state, newState);
+                    }
+                } else {
+                    Object.assign(state, await newStatePromise);
                 }
-            } else {
-                Object.assign(state, await newStatePromise);
+            } catch (e) {
+                if (!isValid(editingElement) || status(component) === "destroyed") {
+                    return;
+                }
+                throw e;
             }
         }
     };

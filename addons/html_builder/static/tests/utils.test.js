@@ -6,7 +6,7 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, delay } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, delay, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -188,4 +188,33 @@ test("UI is blocked when doing the reloadable operation", async () => {
     expect(".o_blockUI").toHaveCount(1);
     await waitSidebarUpdated();
     expect(".o_blockUI").toHaveCount(0);
+});
+
+test("System should not crash if an asynchronous useDomState is working with removed editing element", async () => {
+    let useDomStateStarted;
+    let editingElRemoved;
+    class TestOptionComponent extends BaseOptionComponent {
+        static template = xml`<BuilderButton t-if="state.showOption" classAction="'y'">Click</BuilderButton>`;
+        static selector = "div.test";
+        setup() {
+            super.setup();
+            this.state = useDomState(async (el) => {
+                if (useDomStateStarted) {
+                    useDomStateStarted.resolve();
+                }
+                await editingElRemoved?.promise;
+                return { showOption: !!el.parentElement.ownerDocument.defaultView };
+            });
+        }
+    }
+    addBuilderOption(TestOptionComponent);
+    const { waitSidebarUpdated } = await setupHTMLBuilder(`<div class="test">a</div>`);
+    await contains(":iframe .test").click();
+    await waitSidebarUpdated();
+    useDomStateStarted = Promise.withResolvers();
+    editingElRemoved = Promise.withResolvers();
+    await contains("[data-class-action='y']").click();
+    await useDomStateStarted.promise;
+    queryOne(":iframe .test").remove();
+    editingElRemoved.resolve();
 });
