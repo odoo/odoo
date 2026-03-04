@@ -150,28 +150,30 @@ ul.o_checklist {
         position: relative;
 
         &:not(.oe-nested)::before {
-            content: '';
+            content: '✓';
+            color: transparent;
+            border: 1px solid black;
             position: absolute;
-            left: - $o-checklist-margin-left;
-            display: block;
-            height: $o-checklist-before-size;
-            width: $o-checklist-before-size;
-            top: 4px;
-            border: 1px solid;
+            aspect-ratio: 1 / 1;
+            min-height: $o-checklist-before-size;
+            min-width: $o-checklist-before-size;
+            top: 50%;
+            transform: translate(- 100%, - 50%) translateX(- 10px);
             text-align: center;
+            display: block;
             cursor: pointer;
         }
         &.o_checked {
             text-decoration: line-through;
             opacity: 0.5;
             &::before {
-                content: "✓";
+                color: inherit;
                 display: flex;
-                font-size: $o-checklist-before-size;
                 align-items: center;
                 justify-content: center;
-                padding-left: 1px #{"/*rtl:ignore*/"};
-                padding-top: 1px;
+            }
+            &::after {
+                text-decoration: line-through;
             }
         }
     }

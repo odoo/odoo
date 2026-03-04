@@ -1,6 +1,6 @@
 import {
     BasicEditor,
-    click,
+    clickCheckbox,
     deleteBackward,
     deleteForward,
     insertLineBreak,
@@ -1712,7 +1712,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left + 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1732,7 +1732,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1752,7 +1752,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1772,7 +1772,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1792,7 +1792,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1818,7 +1818,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[2];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                 <ul class="o_checklist">
@@ -1850,7 +1850,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[2];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                 <ul class="o_checklist">
@@ -1887,7 +1887,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[3];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1929,7 +1929,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[3];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -1978,7 +1978,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -2030,7 +2030,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[0];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -2075,7 +2075,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[1];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">
@@ -2117,7 +2117,7 @@ describe('List', () => {
                         '.o_checklist > li:not([class^="oe-nested"])',
                     );
                     const li = lis[1];
-                    await click(li, { clientX: li.getBoundingClientRect().left - 10 });
+                    await clickCheckbox(li);
                 },
                 contentAfter: unformat(`
                     <ul class="o_checklist">

@@ -170,36 +170,22 @@ export class MoveNodePlugin extends Plugin {
             const style = getComputedStyle(element);
             const marginTop = parseInt(style.marginTop, 10) || 0;
             const marginBottom = parseInt(style.marginBottom, 10) || 0;
-            let hookBox;
+
+            const hookBox_x = elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH;
+            const hookBox_y = elementRect.y - containerRect.top - marginTop;
+            let hookBox_width = WIDGET_CONTAINER_WIDTH;
+            let hookBox_height = elementRect.height + marginTop + marginBottom;
+
             if (element.tagName === "HR") {
-                hookBox = new DOMRect(
-                    elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
-                    elementRect.y - containerRect.top - marginTop,
-                    elementRect.width + WIDGET_CONTAINER_WIDTH,
-                    elementRect.height + marginTop + marginBottom
-                );
-            } else if (element.tagName === "LI") {
-                // For <li>, move hookBox to the left to avoid blocking
-                // checkboxes — needed for proper list item interaction.
-                hookBox = new DOMRect(
-                    elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH - WIDGET_MOVE_SIZE,
-                    elementRect.y - containerRect.top - marginTop,
-                    WIDGET_CONTAINER_WIDTH,
-                    elementRect.height + marginTop + marginBottom
-                );
-            } else {
-                hookBox = new DOMRect(
-                    elementRect.x - containerRect.left - WIDGET_CONTAINER_WIDTH,
-                    elementRect.y - containerRect.top - marginTop,
-                    WIDGET_CONTAINER_WIDTH,
-                    elementRect.height + marginTop + marginBottom
-                );
+                hookBox_width = elementRect.width + WIDGET_CONTAINER_WIDTH;
+            } else if (element.tagName === "LI" && element.parentElement.matches(".o_checklist")) {
+                hookBox_height = WIDGET_MOVE_SIZE + marginTop + marginBottom;
             }
 
-            hookElement.style.left = `${hookBox.x}px`;
-            hookElement.style.top = `${hookBox.y}px`;
-            hookElement.style.width = `${hookBox.width}px`;
-            hookElement.style.height = `${hookBox.height}px`;
+            hookElement.style.left = `${hookBox_x}px`;
+            hookElement.style.top = `${hookBox_y}px`;
+            hookElement.style.width = `${hookBox_width}px`;
+            hookElement.style.height = `${hookBox_height}px`;
             hookElement.style.display = `block`;
         }
     }
