@@ -163,23 +163,33 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 }),
             ]
             self.flush_tracking()
-        for msg, check_values in zip(self._new_msgs, [
+        # be independent of message creation ordering
+        for msg, check_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             # update 1
             {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n100.0 ⇨ 300.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [('balance', 'monetary', 100, (300, self.env.ref('base.USD')))],
             },
             # update 2
             {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[1].id} updated\n-100.0 ⇨ -200.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> updated</p>',
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [('balance', 'monetary', -100, (-200, self.env.ref('base.USD')))],
             },
             # new line
             {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[2].id} created\n ⇨ 400000 Product Sales (Account)\n0.0 ⇨ -100.0 (Balance)',
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> created</p>',
+                'model': 'account.move',
+                'res_id': move.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [
                     ('balance', 'monetary', 0, (-100, self.env.ref('base.USD'))),
                     ('account_id', 'many2one', False, self.company_data['default_account_revenue']),
@@ -197,7 +207,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             move.line_ids[0].tax_ids = self.env.company.account_purchase_tax_id
             self.flush_tracking()
         suspense_account = self.env.company.account_journal_suspense_account_id
-        for msg, check_values in zip(self._new_msgs, [
+        # be independent of message creation ordering
+        for msg, check_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             # update 1
             {
                 'account_audit_log_preview': f'Journal Item #{move.line_ids[0].id} updated\n ⇨ 15% (Taxes)',
@@ -276,7 +287,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         with self.mock_mail_gateway(), self.mock_mail_app():
             move.with_context(dynamic_unlink=True).line_ids.unlink()
             self.flush_tracking()
-        for msg, check_values in zip(self._new_msgs, exp_results, strict=True):
+        # be independent of message creation ordering
+        for msg, check_values in zip(self._new_msgs.sorted(lambda m: m.body), exp_results, strict=True):
             self.assertMessageFields(
                 msg, {
                     'message_type': 'notification',
