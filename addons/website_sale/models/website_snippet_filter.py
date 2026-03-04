@@ -172,7 +172,7 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get('dynamic_filter')
-        handler = getattr(self, '_get_products_%s' % mode, self._get_products_latest_sold)
+        handler = getattr(self.sudo(False), '_get_products_%s' % mode, self.sudo(False)._get_products_latest_sold)
         website = self.env['website'].get_current_website()
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')
@@ -201,7 +201,7 @@ class WebsiteSnippetFilter(models.Model):
             if self.env.context.get('hide_variants'):
                 sold_products = sold_products.product_tmpl_id.product_variant_id
             if sold_products:
-                products = sold_products.filtered_domain(domain)[:limit]
+                products = sold_products.sudo(False).filtered_domain(domain)[:limit]
         return products.with_context(display_default_code=False)
 
     def _get_products_latest_viewed(self, website, limit, domain, **kwargs):
