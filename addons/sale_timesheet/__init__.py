@@ -21,3 +21,10 @@ def _sale_timesheet_post_init(env):
     for product in products:
         product.service_type = 'timesheet'
         product._compute_service_policy()
+
+    lines = env['account.analytic.line'].search(['&', '|',
+        ('billable_type', '=', '12_other_costs'),
+        ('billable_type', '=', '11_other_revenues'),
+        ('project_id', '!=', False),
+    ])
+    lines._compute_project_billable_type()

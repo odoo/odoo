@@ -20,6 +20,12 @@
         <field name="model">account.analytic.line</field>
         <field name="inherit_id" ref="account.view_account_analytic_line_tree_inherit_account"/>
         <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position='attributes'>
+                <attribute name="action">action_open_account_analytic_line_origine</attribute>
+                <attribute name="type">object</attribute>
+            </xpath>
+        </field>
     </record>
 
     <record id="action_analytic_reporting_inherit_sale_project" model="ir.actions.act_window">
@@ -30,8 +36,7 @@
         <field name="view_id" ref="view_account_analytic_line_inherit_sale_project_pivot"/>
         <field name="view_mode">pivot,list,kanban,graph,grid</field>
         <field name="context">{
-            'search_default_fiscal_date': 1,
-            'group_by': 'account_id'
+            'search_default_month': 'custom_last_365_days',
         }</field>
     </record>
 

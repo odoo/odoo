@@ -43,38 +43,50 @@
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-check">
                             <div class="o_field_widget o_stat_info">
-                                <field name="label_tasks" readonly="1"/>
+                                <field class="o_stat_text" name="label_tasks" readonly="1"/>
                                 <span class="o_stat_value">
-                                    <field name="closed_task_count"/> / <field name="task_count"/>
-                                    (<field name="task_completion_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
+                                    <field name="closed_task_count"/><span class="o_field_widget"> / </span><field name="task_count"/> 
+                                    <span class="o_field_widget ps-1" invisible="closed_task_count == 0">(</span>
+                                    <field name="task_completion_percentage" invisible="closed_task_count == 0" widget="percentage" options="{'digits': [1, 0]}"/>
+                                    <span class="o_field_widget" invisible="closed_task_count == 0"> ) </span>
                                 </span>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="action_get_list_view" type="object" groups="project.group_project_milestone" invisible="not allow_milestones or milestone_count &lt;= 0 or is_template">
-                            <i class="fa o_button_icon fa-check text-success" invisible="next_milestone_status == 'off_track'" title="On Track"/>
-                            <i class="fa o_button_icon fa-check text-danger" invisible="next_milestone_status == 'on_track'" title="Off Track"/>
+                            <i class="fa o_button_icon fa-check" invisible="next_milestone_status == False or next_milestone_status != 'on_track'" title="On Track"/>
+                            <i class="fa o_button_icon fa-check text-success" invisible="next_milestone_status != 'next_track'" title="On Track"/>
+                            <i class="fa o_button_icon fa-check text-danger" invisible="next_milestone_status != 'off_track'" title="Off Track"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Milestones</span>
                                 <span class="o_stat_value">
-                                    <field name="milestone_count_reached"/> / <field name="milestone_count"/>
-                                    (<field name="milestone_progress" options="{'digits': [1, 0]}"/>%)
+                                    <field name="milestone_count_reached"/><span class="o_field_widget"> / </span><field name="milestone_count"/>  
+                                       <span class="o_field_widget ps-1">(</span>
+                                       <field name="milestone_progress" options="{'digits': [1, 0]}"/>
+                                       <span class="o_field_widget">%)</span>
                                 </span>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user" context="{'active_id': id}" invisible="is_template">
-                            <field name="last_update_status" class="o_stat_info" readonly="1" widget="status_with_color" status_label="Status"/>
+                            <field name="last_update_status" class="o_stat_info ps-1" readonly="1" status_label="Status" widget="status_with_color" hide_value="1" hide_icon=""/>
+                            <span class="o_field_widget ps-1">(</span>
+                            <field name="last_update_status" class="o_stat_info" readonly="1" widget="status_with_color" hide_value="" hide_icon="1"/>
+                            <span class="o_field_widget ps-2">)</span>
                         </button>
                         <button class="oe_stat_button" type="object" name="action_project_task_burndown_chart_report"
-                            icon="fa-area-chart" string="Burndown Chart" groups="project.group_project_user"/>
+                            icon="fa-area-chart" groups="project.group_project_user">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Burndown<br/> Chart</span>
+                            </div>
+                        </button>
                         <button name="action_view_all_rating" type="object" class="oe_stat_button" icon="" invisible="rating_count == 0">
                             <i class="fa fa-fw o_button_icon fa-smile-o text-success" invisible="rating_avg &lt; 3.66" title="Happy"/>
                             <i class="fa fa-fw o_button_icon fa-meh-o text-warning" invisible="rating_avg &lt; 2.33 or rating_avg &gt;= 3.66" title="Neutral"/>
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" invisible="rating_avg &gt;= 2.33" title="Unhappy"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
-                                    <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]"/> / 5
+                                    <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]"/><span class="o_field_widget"> / 5 </span>
                                 </span>
-                                <span class="o_stat_text">Average Rating</span>
+                                <span class="o_stat_text">Rating</span>
                             </div>
                         </button>
                     </div>
