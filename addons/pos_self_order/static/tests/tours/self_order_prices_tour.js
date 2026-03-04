@@ -320,3 +320,24 @@ registry.category("web_tour.tours").add("test_pricelist_price_between_frontend_a
         comparePricesWithBackend,
     ],
 });
+
+registry.category("web_tour.tours").add("test_fiscal_position_between_frontend_and_backend", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Take out"),
+        ...commonStepWithSpecificPrice,
+        {
+            content: "Check that the fiscal position is applied",
+            trigger: "body",
+            run: async () => {
+                const order = posmodel.currentOrder;
+                if (order.fiscal_position_id?.name !== "Take out") {
+                    throw new Error(
+                        `The fiscal position should not be "Take out", but it is ${order.fiscal_position_id?.name}`
+                    );
+                }
+            },
+        },
+        comparePricesWithBackend,
+    ],
+});
