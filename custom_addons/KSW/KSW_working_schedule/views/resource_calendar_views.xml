@@ -1,0 +1,53 @@
+<odoo>
+    <!-- Adding temp flag in working schedule -->
+    <record id="adding_temp_flag_to_resource_calendar_form" model="ir.ui.view">
+        <field name="name">resource.calendar.view.form.inherit.temp_flag</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="after">
+                <field name="is_temp_schedule"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Override the calendar form: replace attendances with groups -->
+    <!--    <record id="view_resource_calendar_form_inherit" model="ir.ui.view">-->
+    <!--    <field name="name">resource.calendar.form.inherit.ksw</field>-->
+    <!--    <field name="model">resource.calendar</field>-->
+    <!--    <field name="inherit_id" ref="resource.resource_calendar_form"/>-->
+    <!--    <field name="arch" type="xml">-->
+    <!--        <xpath expr="//notebook" position="replace">-->
+    <!--            <separator string="Calendar Groups"/>-->
+    <!--            <field name="calendar_group_ids">-->
+    <!--                <list>-->
+    <!--                    <field name="name"/>-->
+    <!--                </list>-->
+    <!--                <form>-->
+    <!--                    <sheet>-->
+    <!--                        <group>-->
+    <!--                            <field name="name"/>-->
+    <!--                            <field name="attendance_ids"/>-->
+    <!--                            <field name="calendar_id" invisible="1"/>-->
+    <!--                        </group>-->
+    <!--                    </sheet>-->
+    <!--                </form>-->
+    <!--            </field>-->
+    <!--        </xpath>-->
+    <!--    </field>-->
+    <!--</record>-->
+
+    <record id="view_resource_calendar_form_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.form.inherit.ksw</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="replace">
+                <separator string="Calendar Groups"/>
+                <field name="calendar_group_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

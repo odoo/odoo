@@ -1,0 +1,14 @@
+<odoo>
+     <record id="adding_working_schedule_to_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.resource.calendar</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']"
+                   position="after">
+                <field name="main_calendar_id"/>
+                <field name="temp_calendar_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

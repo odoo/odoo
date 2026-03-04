@@ -30,7 +30,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
-    'depends': ['base_setup', 'hr_attendance'],
+    'depends': ['base_setup', 'hr_attendance',],
     'data': [
         'security/ir.model.access.csv',
         'security/biometric_device_details_security.xml',

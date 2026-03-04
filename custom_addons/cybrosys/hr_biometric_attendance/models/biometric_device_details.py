@@ -555,6 +555,24 @@ class BiometricDeviceDetails(models.Model):
             },
         }
 
+    # todo
+    # def _check_employee_schedule(self, employee):
+    #     """Check the schedule assigned for the employee"""
+    #     calendar = (employee.calendar_id)
+    #     if not calendar:
+    #         return None
+    #     schedules = self.env['resource.calendar.attendance'].search([
+    #         ('calendar_id', '=', calendar.id),
+    #         ('day_period', '!=', 'lunch'),
+    #     ])
+    #     print(schedules.mapped('hour_from'))
+    #     return schedules
+
+
+    # todo
+    def _grace_period_check(self, punch_time):
+        return
+
     def action_download_all_attendance(self):
         """Download all attendance logs (manual trigger)"""
         _logger.info("=== STARTING FULL ATTENDANCE DOWNLOAD ===")
@@ -562,6 +580,8 @@ class BiometricDeviceDetails(models.Model):
             incremental=False, force=True)
         _logger.info("=== COMPLETED FULL ATTENDANCE DOWNLOAD ===")
         return result
+        # employee = self.env['hr.employee'].browse(6)
+        # self._check_employee_schedule(employee)
 
     def action_download_incremental_attendance(self):
         """Download only new attendance logs since last download"""

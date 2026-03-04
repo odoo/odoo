@@ -32,6 +32,7 @@ class HrEmployee(models.Model):
              'biometric device for attendance to be linked.',
         copy=False,
     )
+
     device_id = fields.Many2one(
         'biometric.device.details',
         string='Biometric Device',
@@ -39,3 +40,6 @@ class HrEmployee(models.Model):
         readonly=True,
         help='The biometric device this employee is registered on',
     )
+
+
+
