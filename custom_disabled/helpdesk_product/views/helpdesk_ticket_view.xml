@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<odoo>
+    <!-- VIEW FORM TICKET -->
+    <record id="ticket_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='channel_id']" position="after">
+                <field name="product_id" domain="[('ticket_active', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TREE TICKET HELPDESK -->
+    <record id="ticket_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.list</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_tree" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="product_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <!-- SEARCH TICKET HELPDESK -->
+    <record id="helpdesk_ticket_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.helpdesk_ticket_view_search" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="product_id" />
+            </field>
+            <search>
+                <filter
+                    string="Product Related"
+                    name="product_filter"
+                    domain="[('product_id', '!=', False )]"
+                />
+                <filter
+                    string="Product"
+                    name="by_product"
+                    domain="[]"
+                    context="{'group_by':'product_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- PRODUCT MENU -->
+    <menuitem
+        action="product_template_action_helpdesk"
+        id="action_menu_view_products"
+        parent="helpdesk_mgmt.helpdesk_ticket_main_menu"
+        name="Products"
+        sequence="12"
+    />
+</odoo>
