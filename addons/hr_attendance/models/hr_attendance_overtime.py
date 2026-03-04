@@ -95,14 +95,24 @@ class HrAttendanceOvertimeLine(models.Model):
         ])
 
     def write(self, vals):
-        if any(key in vals for key in ['status', 'manual_duration']):
+        if any(key in vals for key in ['status', 'manual_duration', 'duration']):
             attendances = self._linked_attendances()
-            self.env.add_to_compute(
-                 attendances._fields['overtime_status'],
-                 attendances
-            )
-            self.env.add_to_compute(
-                 attendances._fields['validated_overtime_hours'],
-                 attendances
-            )
+            if any(key in vals for key in ['status', 'manual_duration']):
+                self.env.add_to_compute(
+                    attendances._fields['overtime_status'],
+                    attendances
+                )
+                self.env.add_to_compute(
+                    attendances._fields['validated_overtime_hours'],
+                    attendances
+                )
+            if 'duration' in vals:
+                self.env.add_to_compute(
+                    attendances._fields['overtime_hours'],
+                    attendances
+                )
+                self.env.add_to_compute(
+                    attendances._fields['expected_hours'],
+                    attendances
+                )
         return super().write(vals)
