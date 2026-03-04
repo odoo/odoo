@@ -174,6 +174,9 @@ test("roundDecimals", () => {
     expect(roundDecimals(-357.4555, 3)).toBe(-357.456);
     expect(roundDecimals(457.4554, 3)).toBe(457.455);
     expect(roundDecimals(-457.4554, 3)).toBe(-457.455);
+    // Value >= 566 gives an epsilon >= 0.5
+    expect(roundDecimals(566, 12)).toBe(566.000000000000);
+    expect(roundDecimals(700.0, 12)).toBe(700.000000000000);
 });
 
 test("floatIsZero", () => {

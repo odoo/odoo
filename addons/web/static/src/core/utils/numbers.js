@@ -63,7 +63,7 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
     const normalizedValue = normalize(value);
     const sign = Math.sign(normalizedValue);
     const epsilonMagnitude = Math.log2(Math.abs(normalizedValue));
-    const epsilon = Math.pow(2, epsilonMagnitude - 50);
+    const epsilon = Math.pow(2, Math.min(epsilonMagnitude, 48) - 50);
     let roundedValue;
 
     switch (method) {
