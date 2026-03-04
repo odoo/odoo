@@ -109,9 +109,6 @@ class ResConfigSettings(models.TransientModel):
 
     # === ACTION METHODS === #
 
-    def action_view_delivery_provider_modules(self):
-        return self.env["delivery.carrier"].install_more_provider()
-
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):
         return {

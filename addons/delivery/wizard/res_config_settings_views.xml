@@ -9,11 +9,19 @@
             <setting id="delivery" position="inside">
                 <div class="content-group">
                     <div class="mt8" invisible="not module_delivery">
-                        <button name="%(delivery.action_delivery_carrier_form)d"
-                                type="action"
-                                class="btn-link"
-                                icon="oi-arrow-right"
-                                string="Delivery Methods"/>
+                        <button
+                            name="%(delivery.action_delivery_carrier_form)d"
+                            type="action"
+                            class="btn btn-primary"
+                            string="Configure Methods"
+                        />
+                        <button
+                            string="Find a Delivery Provider"
+                            type="object"
+                            name="action_install_more_provider"
+                            class="btn btn-link"
+                            icon="oi-arrow-right"
+                        />
                     </div>
                  </div>
             </setting>

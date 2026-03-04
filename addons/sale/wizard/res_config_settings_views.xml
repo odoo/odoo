@@ -29,9 +29,6 @@
                                 </div>
                             </div>
                         </setting>
-                        <setting id="email_template" title="Sending an email is useful if you need to share specific information or content about a product (instructions, rules, links, media, etc.). Create and set the email template from the product detail form (in Accounting tab)." string="Deliver Content by Email" help="Send a product-specific email once the invoice is validated">
-                            <field name="module_product_email_template"/>
-                        </setting>
                     </block>
                     <block title="Pricing" id="pricing_setting_container">
                       <setting id="discount_sale_order_lines" title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration)." help="Grant discounts on sales order lines">
@@ -158,64 +155,13 @@
                         </setting>
                     </block>
                     <block title="Shipping" name="sale_shipping_setting_container">
-                        <setting id="delivery" help="Compute shipping costs on orders">
+                        <setting
+                            string="Configure Delivery Methods"
+                            id="delivery"
+                            help="Configure delivery methods or work with delivery providers using existing integrations."
+                            documentation="/applications/inventory_and_mrp/inventory/shipping_receiving/setup_configuration.html"
+                        >
                             <field name="module_delivery"/>
-                        </setting>
-                        <setting id="ups">
-                            <div class="o_form_label">UPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with UPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_dhl">
-                            <div class="o_form_label">DHL Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with DHL<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_fedex">
-                            <div class="o_form_label">FedEx Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with FedEx<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_usps">
-                            <div class="o_form_label">USPS Connector</div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
-                                <div class="text-muted">
-                                    Compute shipping costs and ship with USPS<br/>
-                                    <strong>(please go to Home>Apps to install)</strong>
-                                </div>
-                        </setting>
-                        <setting id="shipping_costs_bpost" help="Compute shipping costs and ship with bpost"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_bpost" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_easypost" help="Compute shipping costs and ship with Easypost"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_easypost" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_sendcloud" help="Compute shipping costs and ship with Sendcloud"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_shiprocket" help="Compute shipping costs and ship with Shiprocket"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_starshipit" help="Compute shipping costs and ship with Starshipit"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_starshipit" widget="upgrade_boolean"/>
-                        </setting>
-                        <setting id="shipping_costs_envia" help="Compute shipping costs and ship with Envia.com"
-                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
-                            <field name="module_delivery_envia" widget="upgrade_boolean"/>
                         </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_setting_container">
