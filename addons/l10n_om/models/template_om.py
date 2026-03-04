@@ -8,14 +8,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('om')
     def _get_om_template_data(self):
         return {
-            'property_account_receivable_id': 'om_account_100201',
-            'property_account_payable_id': 'om_account_200101',
-            'property_account_expense_categ_id': 'om_account_500101',
-            'property_account_income_categ_id': 'om_account_400101',
-            'property_account_expense_id': 'om_account_500101',
-            'property_account_income_id': 'om_account_400101',
-            'property_stock_valuation_account_id': 'om_account_100502',
-            'property_stock_account_production_cost_id': 'om_account_100505',
             'code_digits': '6',
         }
 
@@ -39,7 +31,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'om_account_200401',
                 'income_account_id': 'om_account_400101',
                 'expense_account_id': 'om_account_500101',
+                'receivable_account_id': 'om_account_100201',
+                'payable_account_id': 'om_account_200101',
                 'account_stock_valuation_id': 'om_account_100502',
+                'stock_account_production_cost_id': 'om_account_100505',
             },
         }
 

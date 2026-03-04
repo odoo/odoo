@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_mz_template_data(self):
         return {
             'code_digits': '7',
-            'property_account_receivable_id': 'l10n_mz_account_411',
-            'property_account_payable_id': 'l10n_mz_account_421',
         }
 
     @template('mz', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_purch_16_inventories',
                 'expense_account_id': 'l10n_mz_account_61161',
                 'income_account_id': 'l10n_mz_account_711',
+                'receivable_account_id': 'l10n_mz_account_411',
+                'payable_account_id': 'l10n_mz_account_421',
             },
         }

@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('lv')
     def _get_lv_template_data(self):
         return {
-            'property_account_receivable_id': 'a2310',
-            'property_account_payable_id': 'a5310',
             'code_digits': '4',
         }
 
@@ -35,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_G_21_LV',
                 'expense_account_id': 'a7550',
                 'income_account_id': 'a6110',
+                'receivable_account_id': 'a2310',
+                'payable_account_id': 'a5310',
             },
         }

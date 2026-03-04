@@ -10,9 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_at_template_data(self):
         return {
             'visible': True,
-            'property_account_receivable_id': 'chart_at_template_2000',
-            'property_account_payable_id': 'chart_at_template_3300',
-            'property_stock_valuation_account_id': 'chart_at_template_1600',
             'code_digits': '4',
         }
 
@@ -35,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'account_tax_template_purchase_20_code060',
                 'income_account_id': 'chart_at_template_4000',
                 'expense_account_id': 'chart_at_template_5010',
+                'receivable_account_id': 'chart_at_template_2000',
+                'payable_account_id': 'chart_at_template_3300',
                 'account_stock_valuation_id': 'chart_at_template_1600',
             },
         }

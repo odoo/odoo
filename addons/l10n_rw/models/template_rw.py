@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_rw_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'rw_190',
-            'property_account_payable_id': 'rw_311',
         }
 
     @template('rw', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_RW_18',
                 'expense_account_id': 'rw_510',
                 'income_account_id': 'rw_400',
+                'receivable_account_id': 'rw_190',
+                'payable_account_id': 'rw_311',
             },
         }

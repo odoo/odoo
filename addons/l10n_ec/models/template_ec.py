@@ -9,9 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ec')
     def _get_ec_template_data(self):
         return {
-            'property_account_receivable_id': 'ec1102050101',
-            'property_account_payable_id': 'ec210301',
-            'property_stock_valuation_account_id': 'ec110306',
             'code_digits': '4',
         }
 
@@ -43,6 +40,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
                 'expense_account_id': 'ec110307',
                 'income_account_id': 'ec410101',
+                'receivable_account_id': 'ec1102050101',
+                'payable_account_id': 'ec210301',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'ec110306',
             },

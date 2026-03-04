@@ -10,10 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_nz_template_data(self):
         return {
             'code_digits': '5',
-            'property_account_receivable_id': 'nz_11200',
-            'property_account_payable_id': 'nz_21200',
-            'property_stock_valuation_account_id': 'nz_11330',
-            'property_stock_account_production_cost_id': 'nz_11350',
         }
 
     @template('nz', 'res.company')
@@ -36,5 +32,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'fiscalyear_last_day': 31,
                 'expense_account_id': 'nz_51110',
                 'income_account_id': 'nz_41110',
+                'receivable_account_id': 'nz_11200',
+                'payable_account_id': 'nz_21200',
+                'account_stock_valuation_id': 'nz_11330',
+                'stock_account_production_cost_id': 'nz_11350',
             },
         }

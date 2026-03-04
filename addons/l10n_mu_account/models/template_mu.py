@@ -9,13 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('mu')
     def _get_mu_template_data(self):
         return {
-            'property_account_receivable_id': 'mu_receivable',
-            'property_account_payable_id': 'mu_payable',
-            'property_stock_valuation_account_id': 'mu_stock_valuation',
-            'property_advance_tax_payment_account_id': 'mu_tax_paid',
-            'property_tax_payable_account_id': 'mu_tax_payable',
-            'property_tax_receivable_account_id': 'mu_tax_receivable',
-            'use_anglo_saxon': False,
             'code_digits': '6',
         }
 
@@ -38,6 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'mu_tax_purchase_15',
                 'expense_account_id': 'mu_expense',
                 'income_account_id': 'mu_income',
+                'receivable_account_id': 'mu_receivable',
+                'payable_account_id': 'mu_payable',
                 'account_stock_valuation_id': 'mu_stock_valuation',
             },
         }

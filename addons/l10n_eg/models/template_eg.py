@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_eg_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'egy_account_102011',
-            'property_account_payable_id': 'egy_account_201002',
             }
 
     @template('eg', 'res.company')
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'eg_standard_purchase_14',
                 'expense_account_id': 'egy_account_400028',
                 'income_account_id': 'egy_account_500001',
+                'receivable_account_id': 'egy_account_102011',
+                'payable_account_id': 'egy_account_201002',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'egy_account_132100',
             },

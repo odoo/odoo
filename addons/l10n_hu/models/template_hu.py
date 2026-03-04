@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('hu')
     def _get_hu_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_hu_311',
-            'property_account_payable_id': 'l10n_hu_454',
             'code_digits': '6',
         }
 
@@ -28,6 +26,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'V27',
                 'expense_account_id': 'l10n_hu_811',
                 'income_account_id': 'l10n_hu_911',
+                'receivable_account_id': 'l10n_hu_311',
+                'payable_account_id': 'l10n_hu_454',
                 'account_stock_valuation_id': 'l10n_hu_211',
             },
         }

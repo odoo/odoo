@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('kz')
     def _get_kz_template_data(self):
         return {
-            'property_account_receivable_id': 'kz1210',
-            'property_account_payable_id': 'kz3310',
             'code_digits': '4',
         }
 
@@ -32,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_kz_tax_vat_12_purchase',
                 'income_account_id': 'kz6010',
                 'expense_account_id': 'kz7010',
+                'receivable_account_id': 'kz1210',
+                'payable_account_id': 'kz3310',
             },
         }
 

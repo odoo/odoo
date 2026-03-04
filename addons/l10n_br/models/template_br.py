@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_br_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'account_template_101010401',
-            'property_account_payable_id': 'account_template_201010301',
         }
 
     @template('br', 'res.company')
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax_template_in_icms_interno17',
                 'expense_account_id': 'account_template_30101030101',
                 'income_account_id': 'account_template_30101010105',
+                'receivable_account_id': 'account_template_101010401',
+                'payable_account_id': 'account_template_201010301',
                 'account_stock_valuation_id': 'account_template_101030401',
             },
         }

@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ch_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'ch_coa_1100',
-            'property_account_payable_id': 'ch_coa_2000',
         }
 
     @template('ch', 'res.company')
@@ -35,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'paperformat_id': 'l10n_din5008.paperformat_euro_din',
                 'expense_account_id': 'ch_coa_4200',
                 'income_account_id': 'ch_coa_3200',
+                'receivable_account_id': 'ch_coa_1100',
+                'payable_account_id': 'ch_coa_2000',
                 'account_stock_valuation_id': 'ch_coa_1210',
             },
         }

@@ -8,8 +8,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('syscohada')
     def _get_syscohada_template_data(self):
         return {
-            'property_account_receivable_id': 'pcg_4111',
-            'property_account_payable_id': 'pcg_4011',
             'name': 'SYSCOHADA - Revised',
             'code_digits': '6',
         }
@@ -28,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_7019',
                 'expense_account_id': 'pcg_6011',
                 'income_account_id': 'pcg_7011',
+                'receivable_account_id': 'pcg_4111',
+                'payable_account_id': 'pcg_4011',
             },
         }

@@ -11,9 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': 'RRIF-ov računski plan za poduzetnike',
             'code_digits': '6',
-            'use_storno_accounting': True,
-            'property_account_receivable_id': 'kp_rrif1200',
-            'property_account_payable_id': 'kp_rrif2200',
         }
 
     @template('hr_kuna', 'res.company')
@@ -29,5 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'kp_rrif4754',
                 'expense_account_id': 'kp_rrif4199',
                 'income_account_id': 'kp_rrif7500',
+                'receivable_account_id': 'kp_rrif1200',
+                'payable_account_id': 'kp_rrif2200',
             },
         }

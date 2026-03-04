@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('dk')
     def _get_dk_template_data(self):
         return {
-            'property_account_receivable_id': 'dk_coa_6190',
-            'property_account_payable_id': 'dk_coa_7440',
             'code_digits': '4',
         }
 
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'dk_coa_2720',
                 'expense_account_id': 'dk_coa_1610',
                 'income_account_id': 'dk_coa_1010',
+                'receivable_account_id': 'dk_coa_6190',
+                'payable_account_id': 'dk_coa_7440',
                 'restrictive_audit_trail': True,
             },
         }

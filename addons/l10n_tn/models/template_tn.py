@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('tn')
     def _get_tn_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_tn_4111',
-            'property_account_payable_id': 'l10n_tn_4011',
             'code_digits': '6',
         }
 
@@ -33,6 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_tn_tax_vat_purchase_19_other_local',
                 'expense_account_id': 'l10n_tn_607',
                 'income_account_id': 'l10n_tn_707',
+                'receivable_account_id': 'l10n_tn_4111',
+                'payable_account_id': 'l10n_tn_4011',
                 'account_stock_valuation_id': 'l10n_tn_311',
             },
         }

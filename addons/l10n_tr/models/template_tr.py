@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('tr')
     def _get_tr_template_data(self):
         return {
-            'property_account_receivable_id': 'tr120',
-            'property_account_payable_id': 'tr320',
             'code_digits': '6',
         }
 
@@ -32,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'tr380',
                 'expense_account_id': 'tr150',
                 'income_account_id': 'tr600',
+                'receivable_account_id': 'tr120',
+                'payable_account_id': 'tr320',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'tr150',
             },

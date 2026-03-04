@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_no_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'chart1500',
-            'property_account_payable_id': 'chart2400',
         }
 
     @template('no', 'res.company')
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'tax2',
                 'expense_account_id': 'chart4000',
                 'income_account_id': 'chart3000',
+                'receivable_account_id': 'chart1500',
+                'payable_account_id': 'chart2400',
             },
         }

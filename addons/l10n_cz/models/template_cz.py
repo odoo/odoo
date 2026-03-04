@@ -11,10 +11,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_cz_template_data(self):
         return {
             'code_digits': '6',
-            'use_storno_accounting': True,
-            'property_account_receivable_id': 'chart_cz_311000',
-            'property_account_payable_id': 'chart_cz_321000',
-            'property_stock_valuation_account_id': 'chart_cz_132000',
         }
 
     @template('cz', 'res.company')
@@ -35,6 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_cz_21_receipt_domestic_supplies',
                 'expense_account_id': 'chart_cz_504000',
                 'income_account_id': 'chart_cz_604000',
+                'receivable_account_id': 'chart_cz_311000',
+                'payable_account_id': 'chart_cz_321000',
                 'account_stock_valuation_id': 'chart_cz_131000',
             },
         }

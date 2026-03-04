@@ -9,12 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('ug')
     def _get_ug_template_data(self):
-        return {
-            'name': "Uganda Generic Chart of Accounts",
-            'code_digits': 6,
-            'property_account_receivable_id': '3528',
-            'property_account_payable_id': '4117',
-        }
+        return {}
 
     @template('ug', 'res.company')
     def _get_ug_res_company(self):
@@ -38,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': '411726',
                 'expense_account_id': '2240',
                 'income_account_id': '1420',
+                'receivable_account_id': '3528',
+                'payable_account_id': '4117',
                 'account_stock_valuation_id': '320114',
             }
         }

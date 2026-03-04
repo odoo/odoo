@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_us_template_data(self):
         return {
             'code_digits': '0',
-            'property_account_receivable_id': 'account_account_us_receivable',
-            'property_account_payable_id': 'account_account_us_payable',
         }
 
     @template('us', 'res.company')
@@ -85,6 +83,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'account_account_us_cash_discount_gain',
                 'expense_account_id': 'account_account_us_expense',
                 'income_account_id': 'account_account_us_income',
+                'receivable_account_id': 'account_account_us_receivable',
+                'payable_account_id': 'account_account_us_payable',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
                 'account_stock_valuation_id': 'account_account_us_inventory_valuation',

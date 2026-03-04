@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_mr_template_data(self):
         return {
             'code_digits': '8',
-            'property_account_receivable_id': 'mr_4150',
-            'property_account_payable_id': 'mr_4050',
         }
 
     @template('mr', 'res.company')
@@ -27,6 +25,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_in_60_16',
                 'expense_account_id': 'mr_6000',
                 'income_account_id': 'mr_7000',
+                'receivable_account_id': 'mr_4150',
+                'payable_account_id': 'mr_4050',
             },
         }
 

@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ar_base')
     def _get_ar_base_template_data(self):
         return {
-            'property_account_receivable_id': 'base_deudores_por_ventas',
-            'property_account_payable_id': 'base_proveedores',
             'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
             'sequence': 1,
@@ -39,6 +37,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'base_diferencias_de_cambio',
                 'expense_account_id': 'base_compra_mercaderia',
                 'income_account_id': 'base_venta_de_mercaderia',
+                'receivable_account_id': 'base_deudores_por_ventas',
+                'payable_account_id': 'base_proveedores',
                 'display_invoice_tax_company_currency': False,
                 'account_stock_valuation_id': 'base_mercaderia_reventa',
             },

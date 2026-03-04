@@ -9,10 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('rs')
     def _get_rs_template_data(self):
         return {
-            'property_account_payable_id': 'rs_435',
-            'property_account_receivable_id': 'rs_204',
             'code_digits': '4',
-            'use_storno_accounting': True,
         }
 
     @template('rs', 'res.company')
@@ -32,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'rs_purchase_vat_20',
                 'expense_account_id': 'rs_501',
                 'income_account_id': 'rs_604',
+                'receivable_account_id': 'rs_204',
+                'payable_account_id': 'rs_435',
             },
         }

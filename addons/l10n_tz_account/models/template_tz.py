@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_tz_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'tz_190',
-            'property_account_payable_id': 'tz_311',
         }
 
     @template('tz', 'res.company')
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_TAXABLE_18',
                 'expense_account_id': 'tz_510',
                 'income_account_id': 'tz_400',
+                'receivable_account_id': 'tz_190',
+                'payable_account_id': 'tz_311',
                 'account_stock_valuation_id': 'tz_172',
             },
         }

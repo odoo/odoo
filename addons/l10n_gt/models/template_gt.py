@@ -10,8 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_gt_template_data(self):
         return {
             'code_digits': '9',
-            'property_account_receivable_id': 'cta110201',
-            'property_account_payable_id': 'cta210101',
         }
 
     @template('gt', 'res.company')
@@ -29,6 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'impuestos_plantilla_iva_por_cobrar',
                 'income_account_id': 'cta410101',
                 'expense_account_id': 'cta510101',
+                'receivable_account_id': 'cta110201',
+                'payable_account_id': 'cta210101',
                 'account_stock_valuation_id': 'cta140101',
             },
         }

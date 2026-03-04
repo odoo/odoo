@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ee')
     def _get_ee_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_ee_10200',
-            'property_account_payable_id': 'l10n_ee_2010',
             'code_digits': '6',
         }
 
@@ -34,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_ee_vat_in_24_g',
                 'income_account_id': 'l10n_ee_40000',
                 'expense_account_id': 'l10n_ee_50',
+                'receivable_account_id': 'l10n_ee_10200',
+                'payable_account_id': 'l10n_ee_2010',
                 'l10n_ee_rounding_difference_loss_account_id': 'l10n_ee_6851',
                 'l10n_ee_rounding_difference_profit_account_id': 'l10n_ee_431',
                 'account_stock_valuation_id': 'l10n_ee_1030',

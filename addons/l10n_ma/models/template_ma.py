@@ -10,15 +10,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ma_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'pcg_34211',
-            'property_account_payable_id': 'pcg_44111',
-            'display_invoice_amount_total_words': True,
         }
 
     @template('ma', 'res.company')
     def _get_ma_res_company(self):
         return {
             self.env.company.id: {
+                'display_invoice_amount_total_words': True,
                 'account_fiscal_country_id': 'base.ma',
                 'bank_account_code_prefix': '5141',
                 'cash_account_code_prefix': '51611',
@@ -35,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'vat_in_20_146',
                 'income_account_id': 'pcg_7111',
                 'expense_account_id': 'pcg_6111',
+                'receivable_account_id': 'pcg_34211',
+                'payable_account_id': 'pcg_44111',
                 'tax_exigibility': 'True',
                 'account_stock_valuation_id': 'pcg_31211',
             },

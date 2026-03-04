@@ -8,10 +8,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('bd')
     def _get_bd_template_data(self):
-        return {
-            'property_account_receivable_id': 'l10n_bd_100201',
-            'property_account_payable_id': 'l10n_bd_200101',
-        }
+        return {}
 
     @template('bd', 'res.company')
     def _get_bd_res_company(self):
@@ -33,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'VAT_P_IN_BD_10',
                 'income_account_id': 'l10n_bd_400100',
                 'expense_account_id': 'l10n_bd_500200',
+                'receivable_account_id': 'l10n_bd_100201',
+                'payable_account_id': 'l10n_bd_200101',
                 'account_stock_valuation_id': 'l10n_bd_100502',
             },
         }

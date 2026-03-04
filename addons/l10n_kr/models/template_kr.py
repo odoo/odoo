@@ -10,10 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_kr_template_data(self):
         return {
             'code_digits': '6',
-            'property_account_receivable_id': 'l10n_kr_111301',
-            'property_account_payable_id': 'l10n_kr_212001',
-            'property_stock_valuation_account_id': 'l10n_kr_112101',
-            'property_stock_account_production_cost_id': 'l10n_kr_112704',
         }
 
     @template('kr', 'res.company')
@@ -41,6 +37,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'l10n_kr_620014',
                 'expense_account_id': 'l10n_kr_510001',
                 'income_account_id': 'l10n_kr_410001',
+                'receivable_account_id': 'l10n_kr_111301',
+                'payable_account_id': 'l10n_kr_212001',
+                'account_stock_valuation_id': 'l10n_kr_112101',
+                'stock_account_production_cost_id': 'l10n_kr_112704',
                 'tax_calculation_rounding_method': 'round_per_line',
             },
         }

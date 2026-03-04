@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('sa')
     def _get_sa_template_data(self):
         return {
-            'property_account_receivable_id': 'sa_account_102011',
-            'property_account_payable_id': 'sa_account_201002',
             'code_digits': '6',
         }
 
@@ -29,6 +27,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'sa_purchase_tax_15',
                 'expense_account_id': 'sa_account_400001',
                 'income_account_id': 'sa_account_500001',
+                'receivable_account_id': 'sa_account_102011',
+                'payable_account_id': 'sa_account_201002',
                 'deferred_expense_account_id': 'sa_account_104020',
                 'deferred_revenue_account_id': 'sa_account_201018',
                 'account_cash_basis_base_account_id': 'sa_account_201030',

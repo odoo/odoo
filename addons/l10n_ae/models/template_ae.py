@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ae')
     def _get_ae_template_data(self):
         return {
-            'property_account_receivable_id': 'uae_account_102011',
-            'property_account_payable_id': 'uae_account_201002',
             'code_digits': '6',
         }
 
@@ -40,6 +38,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'uae_purchase_tax_5',
                 'expense_account_id': 'uae_account_400001',
                 'income_account_id': 'uae_account_500001',
+                'receivable_account_id': 'uae_account_102011',
+                'payable_account_id': 'uae_account_201002',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'uae_account_131100',
             },

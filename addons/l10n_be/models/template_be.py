@@ -13,8 +13,6 @@ class AccountChartTemplate(models.AbstractModel):
             'name': _('Base'),
             'visible': False,
             'code_digits': '6',
-            'property_account_receivable_id': 'a400',
-            'property_account_payable_id': 'a440',
         }
 
     @template('be', 'res.company')
@@ -39,6 +37,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'transfer_account_id': 'a58',
                 'expense_account_id': 'a600',
                 'income_account_id': 'a7000',
+                'receivable_account_id': 'a400',
+                'payable_account_id': 'a440',
                 'downpayment_account_id': 'a46',
                 'account_stock_valuation_id': 'a300',
             },

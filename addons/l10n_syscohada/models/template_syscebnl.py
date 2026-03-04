@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('syscebnl')
     def _get_syscebnl_template_data(self):
         return {
-            'property_account_receivable_id': 'syscebnl_409',
-            'property_account_payable_id': 'syscebnl_419',
             'name': 'SYSCEBNL',
             'code_digits': '6',
         }
@@ -31,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'syscebnl_758',
                 'expense_account_id': 'syscebnl_601',
                 'income_account_id': 'syscebnl_7051',
+                'receivable_account_id': 'syscebnl_409',
+                'payable_account_id': 'syscebnl_419',
             },
         }

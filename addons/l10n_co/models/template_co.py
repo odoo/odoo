@@ -9,12 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('co')
     def _get_co_template_data(self):
         return {
-            'property_account_receivable_id': 'co_puc_130500',
-            'property_account_payable_id': 'co_puc_220500',
             'code_digits': '0',
-            'property_account_expense_categ_id': 'co_puc_610000',
-            'property_account_income_categ_id': 'co_puc_417500',
-            'property_stock_valuation_account_id': 'co_puc_140500',
         }
 
     @template('co', 'res.company')
@@ -37,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'co_puc_532000',
                 'expense_account_id': 'co_puc_610000',
                 'income_account_id': 'co_puc_417500',
+                'receivable_account_id': 'co_puc_130500',
+                'payable_account_id': 'co_puc_220500',
                 'account_stock_valuation_id': 'co_puc_140500',
             },
         }

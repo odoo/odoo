@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
             'name': _('Accounting Standards for Business Enterprises'),
             'code_digits': 4,
             'parent': 'cn_common',
-            'property_account_expense_categ_id': 'l10n_cn_large_bis_account_6401',
-            'property_account_income_categ_id': 'l10n_cn_large_bis_account_6001',
         }
 
     @template('cn_large_bis', 'res.company')

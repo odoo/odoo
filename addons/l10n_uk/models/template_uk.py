@@ -9,8 +9,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('uk')
     def _get_uk_template_data(self):
         return {
-            'property_account_receivable_id': '110000',
-            'property_account_payable_id': '210000',
             'code_digits': '6',
             'country': 'gb',
         }
@@ -31,6 +29,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'PT_20_G',
                 'expense_account_id': '500000',
                 'income_account_id': '400000',
+                'receivable_account_id': '110000',
+                'payable_account_id': '210000',
                 'deferred_expense_account_id': '110300',
                 'deferred_revenue_account_id': '210900',
                 'account_stock_valuation_id': '100100',
