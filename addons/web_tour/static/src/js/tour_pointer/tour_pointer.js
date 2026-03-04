@@ -207,17 +207,53 @@ export class TourPointer extends Component {
             set: () => {},
             enumerable: true,
         });
+<<<<<<< 1b2ae9fe40684e216579b721ae8969e16d679a29
         const uiService = useService("ui");
+||||||| 4000ba9d68a268ecadc2762041a61d11f998a584
+        this.state = useState({ triggerBelow: false });
+        const uiService = useService("ui");
+=======
+        this.state = useState({ triggerBelow: false });
+        this.ui = useService("ui");
+>>>>>>> d4d1851e1b8eebd8d2b2f7538b6455c64b4a1dcc
         const onActiveElementChanged = () => {
+<<<<<<< 1b2ae9fe40684e216579b721ae8969e16d679a29
             const activeEl = uiService.activeElement;
             const pointerAnchor = this.trigger;
+||||||| 4000ba9d68a268ecadc2762041a61d11f998a584
+            const activeEl = uiService.activeElement;
+            const pointerAnchor = this.props.pointerState.anchor;
+=======
+            const activeEl = this.ui.activeElement;
+            const pointerAnchor = this.props.pointerState.anchor;
+>>>>>>> d4d1851e1b8eebd8d2b2f7538b6455c64b4a1dcc
             if (pointerAnchor) {
                 this.state.triggerBelow = !activeEl.contains(pointerAnchor);
             }
         };
+<<<<<<< 1b2ae9fe40684e216579b721ae8969e16d679a29
         useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
+||||||| 4000ba9d68a268ecadc2762041a61d11f998a584
+        useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
+    }
+=======
+        useBus(this.ui.bus, "active-element-changed", onActiveElementChanged);
+    }
+>>>>>>> d4d1851e1b8eebd8d2b2f7538b6455c64b4a1dcc
 
+<<<<<<< 1b2ae9fe40684e216579b721ae8969e16d679a29
         this.popover = usePopover(TourPointerPopover, popoverOptions);
+||||||| 4000ba9d68a268ecadc2762041a61d11f998a584
+    get isVisible() {
+        return this.props.pointerState.isVisible && !this.state.triggerBelow;
+=======
+    get isVisible() {
+        return (
+            this.props.pointerState.isVisible &&
+            (this.ui.activeElement.contains(this.props.pointerState.anchor) ||
+                !this.state.triggerBelow)
+        );
+>>>>>>> d4d1851e1b8eebd8d2b2f7538b6455c64b4a1dcc
     }
 
     get content() {
