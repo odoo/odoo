@@ -70,7 +70,10 @@ class ProductProduct(models.Model):
                 context = {'lang': partner.lang}  # Use partner lang to translate mail subject below
                 mail_values = {
                     "subject": _("The product '%(product_name)s' is now available", product_name=product_ctxt.name),
-                    "email_from": (website.company_id.partner_id or self_ctxt.env.user).email_formatted,
+                    "email_from": (
+                        website.company_id.partner_id.email_formatted
+                        or website.salesperson_id.email_formatted
+                    ),
                     "email_to": partner.email_formatted,
                     "body_html": full_mail,
                 }
