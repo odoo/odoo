@@ -43,17 +43,19 @@
                 <div name="nilvera_div"
                      class="o_row o_align_center"
                      invisible="country_code != 'TR' or state == 'draft' or picking_type_code != 'outgoing'">
-                    <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
-                    <button
-                        name="l10n_tr_nilvera_get_dispatch_status"
-                        type="object"
-                        class="o_icon_button text-primary"
-                        invisible="l10n_tr_nilvera_send_status not in ['sent', 'waiting']"
-                        title="Synchronize with Nilvera"
-                        icon="fa-refresh"/>
+                     <div class="d-flex align-items-center gap-2">
+                        <field name="l10n_tr_nilvera_send_status" class="w-auto"/>
+                        <button
+                            name="l10n_tr_nilvera_get_dispatch_status"
+                            type="object"
+                            class="o_icon_button text-primary"
+                            invisible="l10n_tr_nilvera_send_status not in ['sent', 'waiting']"
+                            title="Synchronize with Nilvera"
+                            icon="fa-refresh"/>
+                    </div>
                 </div>
             </field>
-            <xpath expr="//notebook" position="inside">
+            <xpath expr="//notebook/page[@name='operations']" position="after">
                 <page name="l10n_tr_edispatch" string="e-Dispatch" invisible="country_code != 'TR' or picking_type_code == 'internal' or not partner_id">
                     <group>
                         <group name="l10n_tr_delivery_details" string="General Information">
@@ -84,6 +86,24 @@
                 <field name="l10n_tr_nilvera_edispatch_warnings" invisible="1"/>
                 <div class="m-0" name="warnings" invisible="not l10n_tr_nilvera_edispatch_warnings or (state == 'done' and not partner_id)">
                     <field name="l10n_tr_nilvera_edispatch_warnings" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_type_form_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">view.picking.type.form.inherit.l10n.tr.nilvera.edispatch</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-info" role="alert" invisible="country_code != 'TR' or code != 'outgoing' or not l10n_tr_nilvera_gib_sequence_code">
+                    <span>The system detected the E-Dispatch GIB prefix as <b><field name="l10n_tr_nilvera_gib_sequence_code"/></b>.
+                        <br/>The system will send <b><field name="l10n_tr_nilvera_gib_sequence_code"/></b> to Nilvera instead of <b><field readonly="True" name="sequence_code"/></b>.
+                        <br/>Please verify that the prefix is correct.</span>
+                </div>
+                <div class="alert alert-danger" role="alert" invisible="country_code != 'TR' or code != 'outgoing' or l10n_tr_nilvera_gib_sequence_code">
+                        <span>Odoo could not detect a GIB e-Dispatch prefix. Please update the Sequence Prefix.</span>
                 </div>
             </xpath>
         </field>
