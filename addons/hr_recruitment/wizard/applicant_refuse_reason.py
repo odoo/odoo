@@ -170,8 +170,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'email_from': email_from,
             'subject': subject,
             'author_id': self.env.user.partner_id.id,
-            'incoming_email_to': applicant.email_from or applicant.partner_id.email,
             'scheduled_date': self.scheduled_date,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'body_is_html': True,
+            'partner_ids': applicant.partner_id.ids
         }
