@@ -96,13 +96,6 @@ class PaymentTransaction(models.Model):
 
     # === BUSINESS METHODS - PROCESSING === #
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "iyzico":
-            return super()._extract_amount_data(payment_data)
-
-        return {"amount": payment_data.get("price"), "currency_code": payment_data.get("currency")}
-
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
         if self.provider_code != "iyzico":
@@ -145,3 +138,10 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(self.env._("Unknown status code: %s", status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "iyzico":
+            return super()._extract_amount_data(payment_data)
+
+        return {"amount": payment_data.get("price"), "currency_code": payment_data.get("currency")}

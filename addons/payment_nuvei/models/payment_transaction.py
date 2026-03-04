@@ -105,29 +105,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("invoice_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "nuvei":
-            return super()._extract_amount_data(payment_data)
-
-        # When a user declines to pay and leaves the payment page, no information
-        # is sent back to odoo via the endpoint. As such there is no currency or
-        # amount set so we return early. This only occurs in the leaving flow so
-        # no issue should arise leaving early.
-        if not payment_data:
-            return None
-
-        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
-        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
-
-        amount = payment_data.get("totalAmount")
-        currency_code = payment_data.get("currency")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": rounding,
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "nuvei":
@@ -181,3 +158,19 @@ class PaymentTransaction(models.Model):
                     reason=status_description,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "nuvei":
+            return super()._extract_amount_data(payment_data)
+
+        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
+        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
+
+        amount = payment_data.get("totalAmount")
+        currency_code = payment_data.get("currency")
+        return {
+            "amount": float(amount),
+            "currency_code": currency_code,
+            "precision_digits": rounding,
+        }

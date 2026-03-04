@@ -78,16 +78,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("merchant_reference")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "aps":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_utils.to_major_currency_units(
-            float(payment_data.get("amount", 0)), self.currency_id
-        )
-        return {"amount": amount, "currency_code": payment_data.get("currency")}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
         if self.provider_code != "aps":
@@ -123,3 +113,13 @@ class PaymentTransaction(models.Model):
                     reason=status_description,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "aps":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_utils.to_major_currency_units(
+            float(payment_data.get("amount", 0)), self.currency_id
+        )
+        return {"amount": amount, "currency_code": payment_data.get("currency")}

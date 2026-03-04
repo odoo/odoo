@@ -139,15 +139,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("tx_ref") or payment_data.get("txRef")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "flutterwave":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("amount")
-        currency_code = payment_data.get("currency")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "flutterwave":
@@ -192,6 +183,15 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Unknown payment status: %s", payment_status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "flutterwave":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("amount")
+        currency_code = payment_data.get("currency")
+        return {"amount": float(amount), "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

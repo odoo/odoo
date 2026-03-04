@@ -354,18 +354,6 @@ class PaymentTransaction(models.Model):
             converted_amount, is_refund=True, provider_reference=refund_provider_reference
         )
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "razorpay":
-            return super()._extract_amount_data(payment_data)
-
-        # Amount and currency are not sent in the payment data when redirecting to the return route.
-        if "amount" not in payment_data or "currency" not in payment_data:
-            return None
-
-        amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
-        return {"amount": amount, "currency_code": payment_data["currency"]}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "razorpay":
@@ -448,6 +436,14 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Razorpay: " + _("Received data with invalid status: %s", entity_status)
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "razorpay":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
+        return {"amount": amount, "currency_code": payment_data["currency"]}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Razorpay data.

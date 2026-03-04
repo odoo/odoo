@@ -184,22 +184,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("external_reference")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "mercado_pago":
-            return super()._extract_amount_data(payment_data)
-
-        if self.operation in ("online_redirect", "online_direct"):
-            amount = payment_data.get("additional_info", {}).get("items", [{}])[0].get("unit_price")
-        else:  # 'online_token', 'offline'
-            amount = payment_data.get("transaction_amount")
-        currency_code = payment_data.get("currency_id")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "mercado_pago":
@@ -261,6 +245,22 @@ class PaymentTransaction(models.Model):
                 payment_status,
             )
             self._set_error(_("Received data with invalid status: %s.", payment_status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "mercado_pago":
+            return super()._extract_amount_data(payment_data)
+
+        if self.operation in ("online_redirect", "online_direct"):
+            amount = payment_data.get("additional_info", {}).get("items", [{}])[0].get("unit_price")
+        else:  # 'online_token', 'offline'
+            amount = payment_data.get("transaction_amount")
+        currency_code = payment_data.get("currency_id")
+        return {
+            "amount": float(amount),
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on payment data."""

@@ -72,16 +72,6 @@ class PaymentTransaction(models.Model):
 
         return payment_data["orderId"]
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount from the payment data."""
-        if self.provider_code != "toss_payments":
-            return super()._extract_amount_data(payment_data)
-
-        return {
-            "amount": float(payment_data.get("totalAmount")),
-            "currency_code": const.SUPPORTED_CURRENCY,
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "toss_payments":
@@ -105,3 +95,13 @@ class PaymentTransaction(models.Model):
             pass
         else:
             self._set_error(self.env._("Received data with invalid payment status: %s", status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount from the payment data."""
+        if self.provider_code != "toss_payments":
+            return super()._extract_amount_data(payment_data)
+
+        return {
+            "amount": float(payment_data.get("totalAmount")),
+            "currency_code": const.SUPPORTED_CURRENCY,
+        }

@@ -786,13 +786,14 @@ class PaymentTransaction(models.Model):
         tx = self or self._search_by_reference(provider_code, payment_data)
         if tx:
             tx.ensure_one()
-            previous_state = tx.state
-            tx._validate_amount(payment_data)
-            if tx.state == "error" and tx.state != previous_state:
-                return tx
             tx._apply_updates(payment_data)
-            if tx.tokenize and tx.state in {"authorized", "done"}:
-                tx._tokenize(payment_data)
+            if tx.state in {"authorized", "done"}:
+                tx._validate_amount(payment_data)  # Only validate amount data for successful states
+                if tx.state == "error":  # Amount data validation failed
+                    return tx
+
+                if tx.tokenize:
+                    tx._tokenize(payment_data)
         return tx
 
     @api.model
@@ -831,6 +832,24 @@ class PaymentTransaction(models.Model):
         """
         return payment_data.get("reference")
 
+    def _apply_updates(self, payment_data):  # noqa: ARG002
+        """Update the transaction based on the payment data received from the provider.
+
+        The updates typically include the payment's state, the provider reference, and the selected
+        payment method.
+
+        This method should not be called directly; payment data should go through :meth:`_process`.
+
+        This method must be overridden by providers to update the transaction based on the payment
+        data.
+
+        Note: `self.ensure_one()` from :meth:`_process`
+
+        :param dict payment_data: The payment data sent by the provider.
+        :return: None
+        """
+        return
+
     def _validate_amount(self, payment_data):
         """Ensure that the transaction's amount and currency match the ones from the payment data.
 
@@ -855,7 +874,7 @@ class PaymentTransaction(models.Model):
 
         if not amount or not currency_code:
             error_message = _("The amount or currency is missing from the payment data.")
-            self._set_error(error_message)
+            self._set_error(error_message, extra_allowed_states=("done",))
             return
 
         # Negate the amount for refunds, as refunds have a negative amount in Odoo, but all
@@ -873,14 +892,14 @@ class PaymentTransaction(models.Model):
             error_message = _(
                 "The amount from the payment data doesn't match the one from the transaction."
             )
-            self._set_error(error_message)
+            self._set_error(error_message, extra_allowed_states=("done",))
             return
 
         if currency_code != self.currency_id.name:
             error_message = _(
                 "The currency from the payment data doesn't match the one from the transaction."
             )
-            self._set_error(error_message)
+            self._set_error(error_message, extra_allowed_states=("done",))
 
     def _extract_amount_data(self, payment_data):  # noqa: ARG002
         """Extract the amount, currency and rounding precision from the payment data.
@@ -894,24 +913,6 @@ class PaymentTransaction(models.Model):
         :rtype: dict|None
         """
         return {}
-
-    def _apply_updates(self, payment_data):  # noqa: ARG002
-        """Update the transaction based on the payment data received from the provider.
-
-        The updates typically include the payment's state, the provider reference, and the selected
-        payment method.
-
-        This method should not be called directly; payment data should go through :meth:`_process`.
-
-        This method must be overridden by providers to update the transaction based on the payment
-        data.
-
-        Note: `self.ensure_one()` from :meth:`_process`
-
-        :param dict payment_data: The payment data sent by the provider.
-        :return: None
-        """
-        return
 
     def _tokenize(self, payment_data):
         """Create a new token based on the payment data.

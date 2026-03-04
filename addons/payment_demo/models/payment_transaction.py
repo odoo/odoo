@@ -95,12 +95,6 @@ class PaymentTransaction(models.Model):
         payment_data = {"reference": self.reference, "simulated_state": "done"}
         self._process("demo", payment_data)
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to skip the amount validation for demo flows."""
-        if self.provider_code != "demo":
-            return super()._extract_amount_data(payment_data)
-        return None
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "demo":
@@ -134,6 +128,12 @@ class PaymentTransaction(models.Model):
             self._set_canceled()
         else:  # Simulate an error state.
             self._set_error(_("You selected the following demo payment status: %s", state))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to skip the amount validation for demo flows."""
+        if self.provider_code != "demo":
+            return super()._extract_amount_data(payment_data)
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

@@ -151,22 +151,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("Ds_Order")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "redsys":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_utils.to_major_currency_units(
-            float(payment_data.get("Ds_Amount", 0)), self.currency_id
-        )
-        currency = (
-            self
-            .env["res.currency"]
-            .search([("iso_numeric", "=", payment_data.get("Ds_Currency"))], limit=1)
-            .name
-        )
-        return {"amount": amount, "currency_code": currency}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
         if self.provider_code != "redsys":
@@ -196,6 +180,22 @@ class PaymentTransaction(models.Model):
         else:
             _logger.warning("Received invalid payment status (%s).", status_code)
             self._set_error(_("Unknown status code: %s", status_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "redsys":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_utils.to_major_currency_units(
+            float(payment_data.get("Ds_Amount", 0)), self.currency_id
+        )
+        currency = (
+            self
+            .env["res.currency"]
+            .search([("iso_numeric", "=", payment_data.get("Ds_Currency"))], limit=1)
+            .name
+        )
+        return {"amount": amount, "currency_code": currency}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Redsys payment data."""

@@ -305,27 +305,6 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "stripe":
-            return super()._extract_amount_data(payment_data)
-
-        if self.operation == "refund":
-            payment_data = payment_data["refund"]
-        else:  # 'online_direct', 'online_token', 'offline'
-            payment_data = payment_data["payment_intent"]
-        amount = payment_utils.to_major_currency_units(
-            payment_data.get("amount", 0),
-            self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        )
-        currency_code = payment_data.get("currency", "").upper()
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "stripe":
@@ -393,6 +372,27 @@ class PaymentTransaction(models.Model):
                 "Received invalid payment status (%s) for transaction %s.", status, self.reference
             )
             self._set_error(_("Received data with invalid intent status: %s.", status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "stripe":
+            return super()._extract_amount_data(payment_data)
+
+        if self.operation == "refund":
+            payment_data = payment_data["refund"]
+        else:  # 'online_direct', 'online_token', 'offline'
+            payment_data = payment_data["payment_intent"]
+        amount = payment_utils.to_major_currency_units(
+            payment_data.get("amount", 0),
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
+        currency_code = payment_data.get("currency", "").upper()
+        return {
+            "amount": amount,
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Stripe data.

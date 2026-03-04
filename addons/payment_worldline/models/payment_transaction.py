@@ -194,22 +194,6 @@ class PaymentTransaction(models.Model):
         payment_output = payment_result.get("payment", {}).get("paymentOutput", {})
         return payment_output.get("references", {}).get("merchantReference", "")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "worldline":
-            return super()._extract_amount_data(payment_data)
-
-        # In case of failed payment, paymentResult could be given as a separate key
-        payment_result = payment_data.get("paymentResult", payment_data)
-        amount_of_money = (
-            payment_result.get("payment", {}).get("paymentOutput", {}).get("amountOfMoney", {})
-        )
-        amount = payment_utils.to_major_currency_units(
-            amount_of_money.get("amount", 0), self.currency_id
-        )
-        currency_code = amount_of_money.get("currencyCode")
-        return {"amount": amount, "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to process the transaction based on Worldline data.
 
@@ -286,6 +270,22 @@ class PaymentTransaction(models.Model):
                         error_code=error_code,
                     )
                 )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "worldline":
+            return super()._extract_amount_data(payment_data)
+
+        # In case of failed payment, paymentResult could be given as a separate key
+        payment_result = payment_data.get("paymentResult", payment_data)
+        amount_of_money = (
+            payment_result.get("payment", {}).get("paymentOutput", {}).get("amountOfMoney", {})
+        )
+        amount = payment_utils.to_major_currency_units(
+            amount_of_money.get("amount", 0), self.currency_id
+        )
+        currency_code = amount_of_money.get("currencyCode")
+        return {"amount": amount, "currency_code": currency_code}
 
     @staticmethod
     def _worldline_extract_payment_method_data(payment_data):

@@ -122,16 +122,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("merchant_order_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "paymob":
-            return super()._extract_amount_data(payment_data)
-
-        amount_cents = float(payment_data.get("amount_cents"))
-        amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
-        currency_code = payment_data.get("currency")
-        return {"amount": amount, "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "paymob":
@@ -154,3 +144,13 @@ class PaymentTransaction(models.Model):
                     msg=message,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "paymob":
+            return super()._extract_amount_data(payment_data)
+
+        amount_cents = float(payment_data.get("amount_cents"))
+        amount = payment_utils.to_major_currency_units(amount_cents, self.currency_id)
+        currency_code = payment_data.get("currency")
+        return {"amount": amount, "currency_code": currency_code}

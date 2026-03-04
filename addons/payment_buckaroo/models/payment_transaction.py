@@ -51,15 +51,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("brq_invoicenumber")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "buckaroo":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("brq_amount")
-        currency_code = payment_data.get("brq_currency")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "buckaroo":
@@ -107,3 +98,12 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Unknown status code: %s.", status_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "buckaroo":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("brq_amount")
+        currency_code = payment_data.get("brq_currency")
+        return {"amount": float(amount), "currency_code": currency_code}

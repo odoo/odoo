@@ -310,33 +310,6 @@ class PaymentTransaction(models.Model):
             converted_amount, is_refund=is_refund, provider_reference=provider_reference
         )
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "adyen":
-            return super()._extract_amount_data(payment_data)
-
-        # Redirection payments and 3DS challenges don't have the amount or currency in their
-        # payment_data, but processing them results in a pending transaction anyway, neither
-        # does payment refusal response which will result in an error transaction.
-        if (
-            payment_data.get("action", {}).get("type") in ["redirect", "threeDS2"]
-            or payment_data.get("resultCode") in const.RESULT_CODES_MAPPING["refused"]
-        ):
-            return None  # Skip the validation
-
-        amount_data = payment_data.get("amount", {})
-        amount = payment_utils.to_major_currency_units(
-            amount_data.get("value", 0),
-            self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        )
-        currency_code = amount_data.get("currency")
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
-
     def _apply_updates(self, payment_data):
         """Override of payment to update the transaction based on the payment data."""
         if self.provider_code != "adyen":
@@ -439,6 +412,24 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "adyen":
+            return super()._extract_amount_data(payment_data)
+
+        amount_data = payment_data.get("amount", {})
+        amount = payment_utils.to_major_currency_units(
+            amount_data.get("value", 0),
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
+        currency_code = amount_data.get("currency")
+        return {
+            "amount": amount,
+            "currency_code": currency_code,
+            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        }
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

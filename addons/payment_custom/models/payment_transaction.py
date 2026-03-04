@@ -46,12 +46,6 @@ class PaymentTransaction(models.Model):
             communication = self.sale_order_ids[0].reference
         return communication or self.reference
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to skip the amount validation for custom flows."""
-        if self.provider_code != "custom":
-            return super()._extract_amount_data(payment_data)
-        return None
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "custom":
@@ -59,6 +53,12 @@ class PaymentTransaction(models.Model):
 
         _logger.info("Validated custom payment for transaction %s: set as pending.", self.reference)
         self._set_pending()
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to skip the amount validation for custom flows."""
+        if self.provider_code != "custom":
+            return super()._extract_amount_data(payment_data)
+        return None
 
     def _log_received_message(self):
         """Override of `payment` to remove custom providers from the recordset.

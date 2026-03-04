@@ -98,16 +98,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("reference_id")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of payment to extract the amount and currency from the payment data."""
-        if self.provider_code != "paypal":
-            return super()._extract_amount_data(payment_data)
-
-        amount_data = payment_data.get("amount", {})
-        amount = amount_data.get("value")
-        currency_code = amount_data.get("currency_code")
-        return {"amount": float(amount), "currency_code": currency_code}
-
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != "paypal":
@@ -156,3 +146,13 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Received data with invalid payment status: %s", payment_status))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of payment to extract the amount and currency from the payment data."""
+        if self.provider_code != "paypal":
+            return super()._extract_amount_data(payment_data)
+
+        amount_data = payment_data.get("amount", {})
+        amount = amount_data.get("value")
+        currency_code = amount_data.get("currency_code")
+        return {"amount": float(amount), "currency_code": currency_code}

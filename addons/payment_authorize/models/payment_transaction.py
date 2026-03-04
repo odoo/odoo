@@ -163,22 +163,6 @@ class PaymentTransaction(models.Model):
         )
         self._process("authorize", {"response": res_content})
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "authorize":
-            return super()._extract_amount_data(payment_data)
-
-        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
-            payment_data.get("response", {}).get("x_trans_id")
-        )
-        if "err_code" in tx_details:  # Transaction details are missing when an API error occurs.
-            return None  # Skip the validation
-
-        amount = tx_details.get("transaction", {}).get("authAmount")
-        # Authorize supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency is still linked.
-        return {"amount": float(amount), "currency_code": currency.name}
-
     @api.model
     def _extract_reference(self, provider_code, payment_data):
         """Override of `payment` to extract the reference from the payment data.
@@ -251,6 +235,22 @@ class PaymentTransaction(models.Model):
                     error=error_code,
                 )
             )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "authorize":
+            return super()._extract_amount_data(payment_data)
+
+        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
+            payment_data.get("response", {}).get("x_trans_id")
+        )
+        if "err_code" in tx_details:  # Transaction details are missing when an API error occurs.
+            return None  # Skip the validation
+
+        amount = tx_details.get("transaction", {}).get("authAmount")
+        # Authorize supports only one currency per account.
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {"amount": float(amount), "currency_code": currency.name}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to extract the token values from the payment data."""

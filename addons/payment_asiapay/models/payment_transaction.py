@@ -107,16 +107,6 @@ class PaymentTransaction(models.Model):
             return super()._extract_reference(provider_code, payment_data)
         return payment_data.get("Ref")
 
-    def _extract_amount_data(self, payment_data):
-        """Override of `payment` to extract the amount and currency from the payment data."""
-        if self.provider_code != "asiapay":
-            return super()._extract_amount_data(payment_data)
-
-        amount = payment_data.get("Amt")
-        # AsiaPay supports only one currency per account.
-        currency = self.provider_id.available_currency_ids  # The currency is still linked.
-        return {"amount": float(amount), "currency_code": currency.name}
-
     def _apply_updates(self, payment_data):
         """Override of `payment' to update the transaction based on the payment data."""
         if self.provider_code != "asiapay":
@@ -158,3 +148,13 @@ class PaymentTransaction(models.Model):
                 self.reference,
             )
             self._set_error(_("Unknown success code: %s", success_code))
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "asiapay":
+            return super()._extract_amount_data(payment_data)
+
+        amount = payment_data.get("Amt")
+        # AsiaPay supports only one currency per account.
+        currency = self.provider_id.available_currency_ids  # The currency is still linked.
+        return {"amount": float(amount), "currency_code": currency.name}
