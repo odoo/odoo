@@ -2130,4 +2130,44 @@ QUnit.module("SettingsFormView", (hooks) => {
             "the filename field should be empty since we removed the file"
         );
     });
+
+    QUnit.test("search finds settings by sub-field labels in non-selected app", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="CRM Settings">
+                            <setting help="this is foo">
+                                <field name="foo"/>
+                            </setting>
+                        </block>
+                    </app>
+                    <app string="Other" name="other">
+                        <block title="Other Settings">
+                            <setting string="Main Feature" help="enable the main feature">
+                                <field name="bar"/>
+                                <div class="text-muted">Add QR-code link on PDF</div>
+                            </setting>
+                        </block>
+                    </app>
+                </form>
+            `,
+        });
+        assert.strictEqual(
+            target.querySelector(".selected").dataset.key,
+            "crm",
+            "CRM app should be selected"
+        );
+
+        await editSearch(target, "QR-code");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_setting_box .o_form_label")].map((x) => x.textContent),
+            ["Main Feature"],
+            "setting with sub-field label matching 'QR-code' should be found"
+        );
+    });
 });

@@ -12,6 +12,7 @@ export class SearchableSetting extends Setting {
         this.state = useState({
             search: this.env.searchState,
             showAllContainer: this.env.showAllContainer,
+            labelsReady: false,
         });
         this.labels = [];
         this.labels.push(this.labelString, this.props.help);
@@ -23,6 +24,7 @@ export class SearchableSetting extends Setting {
                     this.labels.push(st.getAttribute("searchableText"));
                 });
             }
+            this.state.labelsReady = true;
         });
     }
 
@@ -37,6 +39,9 @@ export class SearchableSetting extends Setting {
             return true;
         }
         if (this.state.showAllContainer.showAllContainer) {
+            return true;
+        }
+        if (!this.state.labelsReady) {
             return true;
         }
         const regexp = new RegExp(escapeRegExp(this.state.search.value), "i");
