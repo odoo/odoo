@@ -151,7 +151,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
             address_values, partner_sudo, address_type, *args, **kwargs
         )
 
-        if address_type == 'billing' and request.website.company_id.country_id.code == 'TW' and request.website.company_id._is_ecpay_enabled():
+        if address_type == 'billing' and request.website.company_id.account_fiscal_country_id.code == 'TW' and request.website.company_id._is_ecpay_enabled():
             phone = address_values.get('phone')
             if phone:
                 formatted_phone = request.env['account.move']._reformat_phone_number(phone)
@@ -169,7 +169,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
     def _handle_extra_form_data(self, extra_form_data, address_values):
         super()._handle_extra_form_data(extra_form_data, address_values)
 
-        if request.website.company_id.country_id.code == 'TW' and request.website.company_id._is_ecpay_enabled():
+        if request.website.company_id.account_fiscal_country_id.code == 'TW' and request.website.company_id._is_ecpay_enabled():
             order = request.website.sale_get_order()
             if address_values.get('company_name'):
                 l10n_tw_edi_is_print = True
