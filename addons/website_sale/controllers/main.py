@@ -13,11 +13,10 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
+from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
 
-from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
@@ -752,19 +751,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ]
         elif type == "video":  # Video case
             video_data = media[0]
-            thumbnail = None
-            if video_data.get("src"):  # Check if a valid video URL is provided
-                try:
-                    thumbnail = BinaryBytes(get_video_thumbnail(video_data["src"]))
-                except Exception:  # noqa: BLE001
-                    thumbnail = None
-            else:
+            url = urlparse(video_data["video_url"])
+            if not url.netloc:
                 raise ValidationError(self.env._("Invalid video URL provided."))
             media_create_data = [
                 Command.create({
                     "name": video_data.get("name", "Odoo Video"),
-                    "video_url": video_data["src"],
-                    "image_1920": thumbnail,
+                    "video_url": video_data["video_url"],
+                    "image_1920": video_data.get("image_1920"),
                 })
             ]
 

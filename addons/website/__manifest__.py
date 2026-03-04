@@ -275,6 +275,9 @@
             'website/static/src/components/user_switch.*',
         ],
         'web.assets_frontend_minimal': [
+            'html_editor/static/src/main/media/video/utils.js',
+            'html_editor/static/src/main/media/video/abstract_third_party_video.js',
+            'html_editor/static/src/main/media/video/providers/*.js',
             'website/static/src/utils/misc.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
@@ -315,6 +318,8 @@
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
             ('include', 'html_editor.assets_link_popover'),
+            'html_editor/static/src/main/media/media_dialog/*.js',
+            'html_editor/static/src/main/media/media_dialog/**/*',
             'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',

@@ -26,7 +26,6 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
 
@@ -426,18 +425,6 @@ class HTML_Editor(Controller):
             'attachment': False,
             'original': False,
         }
-
-    @route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
-    def video_url_data(self, video_url, autoplay=False, loop=False,
-                       hide_controls=False, hide_fullscreen=False,
-                       hide_dm_logo=False, hide_dm_share=False,
-                       start_from=False, **kwargs):
-        return get_video_url_data(
-            video_url, autoplay=autoplay, loop=loop,
-            hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share,
-            start_from=start_from
-        )
 
     @route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):

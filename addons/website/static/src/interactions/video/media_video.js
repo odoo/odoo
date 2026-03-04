@@ -17,7 +17,7 @@ export class MediaVideo extends Interaction {
                 // TODO still oeExpression to remove someday
                 this.services.website_cookies.manageIframeSrc(
                     this.el.querySelector("iframe"),
-                    this.el.dataset.oeExpression || this.el.dataset.src
+                    this.el.dataset.embedUrl || this.el.dataset.src || this.el.dataset.oeExpression
                 );
             },
             "t-on-hide.bs.modal": () => {

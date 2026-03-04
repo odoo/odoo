@@ -1,20 +1,14 @@
 import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { dataURItoBlob, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { pasteHtml, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
 import { createBaseContainer } from "@html_editor/utils/base_container";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import {
-    EMBEDDED_COMPONENT_PLUGINS,
-    MAIN_PLUGINS,
-    NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS,
-} from "@html_editor/plugin_sets";
-import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { nodeSize } from "@html_editor/utils/position";
 import { iconClasses } from "@html_editor/utils/dom_info";
 
@@ -3089,7 +3083,7 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc www.odoo.com xyz");
                 },
-                contentAfter: '<p>abc <a href="http://www.odoo.com">www.odoo.com</a> xyz[]</p>',
+                contentAfter: '<p>abc <a href="https://www.odoo.com">www.odoo.com</a> xyz[]</p>',
             });
         });
 
@@ -3100,8 +3094,8 @@ describe("link", () => {
                     pasteText(editor, "odoo.com\ngoogle.com");
                 },
                 contentAfter:
-                    '<div><a href="http://odoo.com">odoo.com</a></div>' +
-                    '<p><a href="http://google.com">google.com</a>[]</p>',
+                    '<div><a href="https://odoo.com">odoo.com</a></div>' +
+                    '<p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
 
@@ -3415,7 +3409,7 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "www.odoo.com");
                 },
-                contentAfter: '<p><a href="http://www.odoo.com">xyz</a>[]</p>',
+                contentAfter: '<p><a href="https://www.odoo.com">xyz</a>[]</p>',
             });
         });
 
@@ -3425,7 +3419,7 @@ describe("link", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc www.odoo.com xyz");
                 },
-                contentAfter: '<p>abc <a href="http://www.odoo.com">www.odoo.com</a> xyz[]</p>',
+                contentAfter: '<p>abc <a href="https://www.odoo.com">www.odoo.com</a> xyz[]</p>',
             });
         });
 
@@ -3658,254 +3652,6 @@ describe("images", () => {
             undo(editor);
             expect(getContent(el)).toBe("<p>[abc]</p>");
         });
-    });
-});
-
-describe("youtube video", () => {
-    const config = { Plugins: [...MAIN_PLUGINS, ...NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS] };
-    describe("range collapsed", () => {
-        beforeEach(() => {
-            onRpc("/html_editor/video_url/data", async (request) => {
-                const { params } = await request.json();
-                return { embed_url: params.video_url };
-            });
-        });
-
-        test("should paste and transform a youtube URL in a p (1)", async () => {
-            const { el, editor } = await setupEditor("<p>ab[]cd</p>", { config });
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Force powerbox validation on the default first choice
-            await press("Enter");
-            // Wait for the getYoutubeVideoElement promise to resolve.
-            await tick();
-            const expected = `<p>ab</p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe>
-            </div><p>[]cd</p>`;
-            expect(getContent(el)).toBe(expected);
-        });
-
-        test("should paste and transform a youtube URL in a span (1)", async () => {
-            const { el, editor } = await setupEditor('<p>a<span class="a">b[]c</span>d</p>', {
-                config,
-            });
-            pasteText(editor, "https://youtu.be/dQw4w9WgXcQ");
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Force powerbox validation on the default first choice
-            await press("Enter");
-            // Wait for the getYoutubeVideoElement promise to resolve.
-            await tick();
-            const expected = `<p>a<span class="a">b</span></p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe>
-            </div><p><span class="a">[]c</span>d</p>`;
-            expect(getContent(el)).toBe(expected);
-        });
-
-        test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor, plugins } = await setupEditor(
-                '<p>a<a href="http://existing.com">b[]c</a>d</p>',
-                { config }
-            );
-            pasteText(editor, "https://youtu.be/dQw4w9WgXcQ");
-            // Ensure the powerbox is active
-            const powerbox = plugins.get("powerbox");
-            expect(powerbox.overlay.isOpen).not.toBe(true);
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>a<a href="http://existing.com">bhttps://youtu.be/dQw4w9WgXcQ[]c</a>d</p>'
-            );
-        });
-
-        test("should paste a youtube URL as a link in a p (1)", async () => {
-            const url = "https://youtu.be/dQw4w9WgXcQ";
-            const { el, editor } = await setupEditor("<p>[]</p>", { config });
-            pasteText(editor, url);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Pick the second command (Paste as URL)
-            await press("ArrowDown");
-            await press("Enter");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(`<p><a href="${url}">${url}</a>[]</p>`);
-        });
-
-        test("should not revert a history commit when pasting a youtube URL as a link (1)", async () => {
-            const url = "https://youtu.be/dQw4w9WgXcQ";
-            const { el, editor } = await setupEditor("<p>[]</p>", { config });
-            // paste text to have a history commit recorded
-            pasteText(editor, "*should not disappear*");
-            pasteText(editor, url);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Pick the second command (Paste as URL)
-            await press("ArrowDown");
-            await press("Enter");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`
-            );
-        });
-    });
-
-    describe("range not collapsed", () => {
-        beforeEach(() => {
-            onRpc("/html_editor/video_url/data", async (request) => {
-                const { params } = await request.json();
-                return { embed_url: params.video_url };
-            });
-        });
-
-        test("should paste and transform a youtube URL in a p (2)", async () => {
-            const { el, editor } = await setupEditor("<p>ab[xxx]cd</p>", { config });
-            pasteText(editor, "https://youtu.be/dQw4w9WgXcQ");
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Force powerbox validation on the default first choice
-            await press("Enter");
-            // Wait for the getYoutubeVideoElement promise to resolve.
-            await tick();
-            const expected = `<p>ab</p><div data-oe-expression="https://youtu.be/dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://youtu.be/dQw4w9WgXcQ"></iframe>
-            </div><p>[]cd</p>`;
-            expect(getContent(el)).toBe(expected);
-        });
-
-        test("should paste and transform a youtube URL in a span (2)", async () => {
-            const { el, editor } = await setupEditor(
-                '<p>a<span class="a">b[x<a href="http://existing.com">546</a>x]c</span>d</p>',
-                { config }
-            );
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Force powerbox validation on the default first choice
-            await press("Enter");
-            // Wait for the getYoutubeVideoElement promise to resolve.
-            await tick();
-            const expected = `<p>a<span class="a">b</span></p><div data-oe-expression="${videoUrl}" class="media_iframe_video" contenteditable="false">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="${videoUrl}"></iframe>
-            </div><p><span class="a">[]c</span>d</p>`;
-            expect(getContent(el)).toBe(expected);
-        });
-
-        test("should paste and not transform a youtube URL in a existing link", async () => {
-            const { el, editor, plugins } = await setupEditor(
-                '<p>a<a href="http://existing.com">b[qsdqsd]c</a>d</p>',
-                { config }
-            );
-            pasteText(editor, videoUrl);
-            // Ensure the powerbox is active
-            const powerbox = plugins.get("powerbox");
-            expect(powerbox.overlay.isOpen).not.toBe(true);
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>a<a href="http://existing.com">b${videoUrl}[]c</a>d</p>`
-            );
-        });
-
-        test("should paste a youtube URL as a link in a p (2)", async () => {
-            const { el, editor } = await setupEditor("<p>ab[xxx]cd</p>", { config });
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Pick the second command (Paste as URL)
-            await press("ArrowDown");
-            await press("Enter");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
-            );
-        });
-
-        test("should not revert a history commit when pasting a youtube URL as a link (2)", async () => {
-            const { el, editor } = await setupEditor("<p>[]</p>", { config });
-            // paste text (to have a history commit recorded)
-            pasteText(editor, "abxxxcd");
-            // select xxx in "<p>ab[xxx]cd</p>"
-            const p = editor.editable.querySelector("p");
-            const selection = {
-                anchorNode: p.childNodes[0],
-                anchorOffset: 2,
-                focusNode: p.childNodes[0],
-                focusOffset: 5,
-            };
-            setSelection(selection);
-            setSelection(selection);
-
-            // paste url
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Pick the second command (Paste as URL)
-            await press("ArrowDown");
-            await press("Enter");
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
-            );
-        });
-
-        test("should restore selection after pasting video URL followed by UNDO (1)", async () => {
-            const { el, editor } = await setupEditor("<p>[abc]</p>", { config });
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Force powerbox validation on the default first choice
-            await press("Enter");
-            // Undo
-            undo(editor);
-            expect(getContent(el)).toBe("<p>[abc]</p>");
-        });
-
-        test("should restore selection after pasting video URL followed by UNDO (2)", async () => {
-            const { el, editor } = await setupEditor("<p>[abc]</p>", { config });
-            pasteText(editor, videoUrl);
-            await animationFrame();
-            await expectElementCount(".o-we-powerbox", 1);
-            // Pick the second command (Paste as URL)
-            await press("ArrowDown");
-            await press("Enter");
-            // Undo
-            undo(editor);
-            expect(getContent(el)).toBe("<p>[abc]</p>");
-        });
-    });
-});
-
-describe("youtube video with embedded components", () => {
-    beforeEach(() => {
-        onRpc("/html_editor/video_url/data", async (request) => {
-            const { params } = await request.json();
-            return { platform: "youtube", video_id: params.video_url.split("v=")[1] };
-        });
-    });
-    const config = {
-        Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
-        resources: { embedded_components: MAIN_EMBEDDINGS },
-    };
-    test("should embed a video on youtube URL paste", async () => {
-        const { editor } = await setupEditor("<p>[]<br></p>", { config });
-        pasteText(editor, videoUrl);
-        await waitFor(".o-we-powerbox");
-        // Pick first command (Embed video)
-        await press("Enter");
-        await waitFor(`[data-embedded="video"] iframe`);
-        expect(`[data-embedded="video"] iframe`).toHaveCount(1);
-    });
-    test("should paste a youtube URL as a link in a p", async () => {
-        const { el, editor } = await setupEditor("<p>[]<br></p>", { config });
-        pasteText(editor, videoUrl);
-        await waitFor(".o-we-powerbox");
-        // Pick the second command (Paste as URL)
-        await press("ArrowDown");
-        await press("Enter");
-        expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="${videoUrl}">${videoUrl}</a>[]</p>`
-        );
     });
 });
 

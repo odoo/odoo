@@ -920,12 +920,6 @@ test("Embed video by pasting video URL", async () => {
     ];
     const videoId = "qxb74CMR748";
     const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
-
-    onRpc("/html_editor/video_url/data", async () => ({
-        platform: "youtube",
-        video_id: videoId,
-    }));
-
     await mountView({
         type: "form",
         resId: 1,
@@ -943,7 +937,7 @@ test("Embed video by pasting video URL", async () => {
     await animationFrame();
     expect(anchorNode.outerHTML).toBe(`<p>${videoURL}</p>`);
     await expectElementCount(".o-we-powerbox", 1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed YouTube Video", "Paste as URL"]);
 
     // Press Enter to select first option in the powerbox ("Embed Youtube Video").
     await press("Enter");
@@ -958,19 +952,13 @@ test("Embed video by pasting video URL", async () => {
         `<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(
-        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/${videoId}"]`
+        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0"]`
     ).toHaveCount(1);
 });
 
 test("Embedded video shouldn't have the 'media_iframe_video' class", async () => {
-    const videoId = "qxb74CMR748";
+    const videoId = "nbso3NVz3p8";
     const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
-
-    onRpc("/html_editor/video_url/data", async () => ({
-        platform: "youtube",
-        video_id: videoId,
-        embed_url: `https://www.youtube.com/embed/${videoId}`,
-    }));
 
     await mountView({
         type: "form",
@@ -1192,32 +1180,6 @@ test("should display overlay on video hover and handle video replacement and rem
     });
     setSelectionInHtmlField();
 
-    await onRpc("/html_editor/video_url/data", async (request) => {
-        const videoUrl = (await request.json()).params.video_url;
-
-        if (videoUrl === "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0") {
-            return {
-                video_id: "qxb74CMR748",
-                platform: "youtube",
-                embed_url: "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0",
-                params: {
-                    rel: 0,
-                    autoplay: 0,
-                },
-            };
-        } else {
-            return {
-                video_id: "gbE3azm_Io0",
-                platform: "youtube",
-                embed_url: "https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0",
-                params: {
-                    rel: 0,
-                    autoplay: 0,
-                },
-            };
-        }
-    });
-
     // Insert video
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
@@ -1228,7 +1190,7 @@ test("should display overlay on video hover and handle video replacement and rem
     await waitFor("textarea[id='o_video_text']");
 
     const input = queryOne("textarea[id='o_video_text']");
-    input.value = "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0";
+    input.value = "https://www.youtube.com/embed/nbso3NVz3p8?rel=0&autoplay=0";
     manuallyDispatchProgrammaticEvent(input, "input", {
         inputType: "insertText",
     });
@@ -1255,13 +1217,13 @@ test("should display overlay on video hover and handle video replacement and rem
         inputType: "insertText",
     });
     await waitFor(
-        '.o_video_dialog_iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0"]',
+        '.o_video_dialog_iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?enablejsapi=1&rel=0"]',
         { timeout: 1500 }
     );
     await click(queryOne(".modal-footer").firstChild);
 
     await waitFor(
-        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?rel=0&autoplay=0"]`
+        `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/gbE3azm_Io0?enablejsapi=1&rel=0"]`
     );
     const iframeSrcAfter = embeddedVideoEl.dataset.src;
     expect(iframeSrcBefore).not.toBe(iframeSrcAfter);
@@ -1277,15 +1239,8 @@ test("should display overlay on video hover and handle video replacement and rem
 });
 
 test("should preserve vertical video setting when reopening media dialog", async () => {
-    const videoId = "qxb74CMR748";
+    const videoId = "nbso3NVz3p8";
     const videoURL = `https://www.youtube.com/watch?v=${videoId}`;
-
-    onRpc("/html_editor/video_url/data", async () => ({
-        video_id: videoId,
-        platform: "youtube",
-        embed_url: `https://www.youtube.com/embed/${videoId}`,
-        params: {},
-    }));
 
     await mountView({
         type: "form",
@@ -1309,17 +1264,21 @@ test("should preserve vertical video setting when reopening media dialog", async
     await contains(".o_video_dialog_form textarea").edit(videoURL);
 
     // Wait for options to be rendered before interaction
-    await waitFor(".o_video_dialog_form .o_video_dialog_options", { timeout: 1500 });
+    await waitFor(".o_video_dialog_form .o_video_dialog_options");
     await contains(
         ".o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input"
     ).click();
+    await advanceTime(200); // debounce
 
     // Confirm vertical class is applied in the preview area
-    await waitFor(".modal-content .media_iframe_video .media_iframe_video_size_for_vertical", {
-        timeout: 1500,
-    });
+    await waitFor(".modal-content .media_iframe_video .media_iframe_video_size_for_vertical");
     queryOne(".modal-content footer button:contains(Add)").click();
     await animationFrame();
+
+    // In order to test the media dialog, we need to provide a real src for the iframe,
+    // otherwise the media dialog won't recognize the existing video as valid.
+    const iframeToFix = htmlEditor.editable.querySelector("iframe");
+    iframeToFix.src = iframeToFix.dataset.src;
 
     // Hover on VideoBlock shows overlay
     await hover(queryOne("div[data-embedded='video']"));
@@ -1332,51 +1291,10 @@ test("should preserve vertical video setting when reopening media dialog", async
     await click(".o-dropdown-item .fa-exchange");
 
     // Ensure the vertical setting is still active
-    await waitFor(".o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input", {
-        timeout: 1500,
-    });
+    await waitFor(".o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input");
     expect(
         ".o_video_dialog_form .o_video_dialog_options label:contains(Vertical) input"
     ).toBeChecked();
-});
-
-test.tags("desktop");
-test("add Vimeo video link in 'Videos' tab of MediaDialog", async () => {
-    const vimeoVideoLink = "https://vimeo.com/1128489814?fl=wc";
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="txt" widget="html"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-
-    await onRpc("/html_editor/video_url/data", async () => ({
-        video_id: "1128489814",
-        platform: "vimeo",
-        embed_url: vimeoVideoLink,
-    }));
-
-    // Insert Vimeo video link
-    await insertText(htmlEditor, "/video");
-    await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
-
-    await press("Enter");
-    await contains(".modal-body .nav-link:contains('Videos')").click();
-    await waitFor("textarea[id='o_video_text']");
-
-    const input = queryOne("textarea[id='o_video_text']");
-    input.value = vimeoVideoLink;
-    manuallyDispatchProgrammaticEvent(input, "input", {
-        inputType: "insertText",
-    });
-    await waitFor(".o_video_dialog_options", { timeout: 1500 });
-    expect(input).toHaveClass("is-valid");
-    await click(queryOne(".modal-footer").firstChild);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {

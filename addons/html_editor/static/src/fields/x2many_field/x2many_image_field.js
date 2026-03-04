@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ImageField, imageField } from "@web/views/fields/image/image_field";
 import { CustomMediaDialog } from "./custom_media_dialog";
-import { getVideoUrl } from "@html_editor/utils/url";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { saveSingleAttachment } from "@web/core/utils/image_library";
 
 export class X2ManyImageField extends ImageField {
@@ -46,11 +46,19 @@ export class X2ManyImageField extends ImageField {
         });
     }
 
-    async onVideoSave(videoInfo) {
-        const url = getVideoUrl(videoInfo[0].platform, videoInfo[0].videoId, videoInfo[0].params);
+    async onVideoSave(videosInfo) {
+        const videoInfo = videosInfo[0];
+        let thumbnailData = null;
+        if (videoInfo?.thumbnailUrl) {
+            const fetchResult = await fetch(videoInfo.thumbnailUrl);
+            const blob = await fetchResult.blob();
+            thumbnailData = await getDataURLFromFile(blob);
+        }
+
         await this.props.record.update({
-            video_url: url.href,
-            name: videoInfo[0].platform + " - [Video]",
+            name: videoInfo.platform + " - [Video]",
+            video_url: videoInfo.embedUrl,
+            image_1920: thumbnailData ? thumbnailData.split(",")[1] : null,
         });
     }
 
