@@ -16,13 +16,14 @@ patch(OrderPaymentValidation.prototype, {
             }
         }
         for (const line of this.order._get_reward_lines()) {
-            if (line.coupon_id.id < 1) {
+            const lineCouponId = line.couponId;
+            if (lineCouponId < 1) {
                 continue;
             }
-            if (!pointChanges[line.coupon_id.id]) {
-                pointChanges[line.coupon_id.id] = -line.points_cost;
+            if (!pointChanges[lineCouponId]) {
+                pointChanges[lineCouponId] = -line.points_cost;
             } else {
-                pointChanges[line.coupon_id.id] -= line.points_cost;
+                pointChanges[lineCouponId] -= line.points_cost;
             }
         }
         if (!(await this.isOrderValid(isForceValidate))) {
