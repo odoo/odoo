@@ -14,9 +14,7 @@
     </record>
 
     <!--Time Off Type-->
-    <record id="hr_work_entry_type_dv" model="hr.work.entry.type">
-        <field name="name">Parental Leaves</field>
-        <field name="code">Parental Leaves</field>
+    <record id="hr_work_entry.hr_work_entry_type_dv" model="hr.work.entry.type">
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
@@ -25,9 +23,7 @@
         <field name="unit_of_measure">day</field>
     </record>
 
-    <record id="work_entry_type_training" model="hr.work.entry.type">
-        <field name="name">Training Time Off</field>
-        <field name="code">Training Time Off</field>
+    <record id="hr_work_entry.work_entry_type_training" model="hr.work.entry.type">
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
@@ -102,7 +98,7 @@
 
     <record id="hr_holidays_vc" model="hr.leave.allocation">
         <field name="name">Functional Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">7</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_admin"/>
@@ -178,7 +174,7 @@
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
         <field name="name">Parental Leaves</field>
-        <field name="work_entry_type_id" ref="hr_work_entry_type_dv"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.hr_work_entry_type_dv"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
@@ -188,7 +184,7 @@
 
     <record id="hr_holidays_vc_al" model="hr.leave.allocation">
         <field name="name">Soft Skills Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">12</field>
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
@@ -240,7 +236,7 @@
 
     <record id="hr_holidays_vc_mit" model="hr.leave.allocation">
         <field name="name">Compliance Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">7</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -294,7 +290,7 @@
 
     <record id="hr_holidays_vc_qdp" model="hr.leave.allocation">
         <field name="name">Time Management Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
@@ -347,7 +343,7 @@
 
     <record id="hr_holidays_vc_fpi" model="hr.leave.allocation">
         <field name="name">Consulting Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">7</field>
         <field name="employee_id" ref="hr.employee_fpi"/>
         <field name="state">confirm</field>
@@ -369,7 +365,7 @@
 
     <record id="hr_holidays_vc_vad" model="hr.leave.allocation">
         <field name="name">Software Development Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">5</field>
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
@@ -418,7 +414,7 @@
 
     <record id="hr_holidays_vc_kim" model="hr.leave.allocation">
         <field name="name">Onboarding Training</field>
-        <field name="work_entry_type_id" ref="work_entry_type_training"/>
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_training"/>
         <field name="number_of_days">5</field>
         <field name="state">confirm</field>
         <field name="employee_id" ref="hr.employee_jve"/>
