@@ -1,10 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
-import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { registry } from "@web/core/registry";
 
 export class MassMailingIconSnippetOptionPlugin extends Plugin {
     static id = "mass_mailing.iconSnippetOption";
-    static dependencies = ["media"];
+    static dependencies = ["media", "dom"];
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -20,7 +19,7 @@ export class MassMailingIconSnippetOptionPlugin extends Plugin {
                 iconInserted = true;
                 snippetEl.insertAdjacentElement("afterend", selectedIconEl);
                 snippetEl.remove();
-                wrapInlinesInBlocks(selectedIconEl.parentElement);
+                this.dependencies.dom.wrapInlinesInBlocks(selectedIconEl.parentElement);
             },
         });
         return !iconInserted;
