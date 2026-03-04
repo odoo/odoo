@@ -346,10 +346,12 @@ class ProductProduct(models.Model):
         move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids',
                        'picked', 'value', 'product_id']
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
-        oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
 
-        if oldest_manual_value:
-            moves_domain &= Domain([('date', '>=', oldest_manual_value)])
+        # commented these out first just in case it needs to be looked at later
+        # oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
+
+        # if oldest_manual_value:
+        #     moves_domain &= Domain([('date', '>=', oldest_manual_value)])
         moves = self.env['stock.move'].search_fetch(
             moves_domain,
             field_names=move_fields,
