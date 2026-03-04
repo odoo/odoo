@@ -606,3 +606,22 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
 
         self.assertEqual(move.l10n_in_tcs_tds_warning, "It's advisable to collect TCS u/s 206C(1G) Remittance on this transaction.")
+
+    def test_invoice_payments_widget_has_tds_flag(self):
+        '''
+        Test the is_tds is correctly set to True if a TDS entry is created.
+        '''
+        move = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2024-06-05',
+            amounts=[31000],
+            company=self.branch_a,
+            accounts=[self.internet_account],
+            quantities=[1],
+        )
+        self.tds_wizard_entry(move=move, lines=[(self.tax_194c, 31000)])
+        move._compute_payments_widget_reconciled_info()
+        tds_move = move.l10n_in_withhold_move_ids.filtered(lambda m: m.state == 'posted')[:1]
+        lines = (move.invoice_payments_widget or {}).get('content', [])
+        tds_line = next((l for l in lines if l.get('move_id') == tds_move.id), False)
+        self.assertTrue(tds_line.get('is_tds'))

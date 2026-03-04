@@ -21,6 +21,11 @@
         'views/account_tax_views.xml',
         'views/res_config_settings_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_in_withholding/static/src/components/account_payment.xml',
+        ],
+    },
     'post_init_hook': '_l10n_in_withholding_post_init',
     'license': 'LGPL-3',
 }

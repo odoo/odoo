@@ -225,3 +225,18 @@ class AccountMove(models.Model):
                     move.l10n_in_tcs_tds_warning = False
             else:
                 move.l10n_in_tcs_tds_warning = False
+
+    @api.depends('move_type', 'line_ids.amount_residual')
+    def _compute_payments_widget_reconciled_info(self):
+        super()._compute_payments_widget_reconciled_info()
+
+        for move in self:
+            widget = move.invoice_payments_widget
+            if not widget or not isinstance(widget, dict):
+                continue
+
+            for line in widget.get('content', []):
+                mid = line.get('move_id')
+                line['is_tds'] = bool(self.env['account.move'].browse(mid).l10n_in_is_withholding) if mid else False
+
+            move.invoice_payments_widget = widget
