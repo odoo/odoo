@@ -11,7 +11,7 @@ try:
     from cryptography.hazmat.primitives.asymmetric.types import PrivateKeyTypes
     from cryptography.hazmat.primitives.serialization import Encoding, load_pem_private_key
     from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.x509 import Certificate, load_pem_x509_certificate
+    from cryptography.x509 import Certificate, load_pem_x509_certificates
 except ImportError:
     # cryptography 41.0.7 and above is supported
     hashes = None
@@ -20,7 +20,7 @@ except ImportError:
     load_pem_private_key = None
     padding = None
     Certificate = None
-    load_pem_x509_certificate = None
+    load_pem_x509_certificates = None
 
 from odoo import _
 from odoo.addons.base.models.res_company import ResCompany
@@ -77,7 +77,7 @@ class PdfSigner:
 
     def __init__(self, pdf_raw: bytes, company: Optional[ResCompany] = None, signing_time=None) -> None:
         self.pdf_raw = pdf_raw
-        self.signing_time = signing_time
+        self.signing_time = signing_time or datetime.datetime.now(datetime.timezone.utc)
         self.company = company
 
     def sign_pdf(
@@ -108,7 +108,7 @@ class PdfSigner:
         :return: The fully signed PDF bytes, or None if dependencies/keys are missing.
         :rtype: bytes or None
         """
-        if not self.company or not load_pem_x509_certificate:
+        if not self.company or not load_pem_x509_certificates:
             return
 
         incremented_objects = {}
@@ -116,7 +116,7 @@ class PdfSigner:
 
         # 1. Merge Overlay (if provided) or Load Original
         if overlay_items:
-            overlay_pdf = PdfFileReader(overlay_items)
+            overlay_pdf = PdfFileReader(overlay_items, strict=False)
             pdf_reader, incremented_objects = pdf_merger._merge_pdf_pages(overlay_pdf)
         else:
             pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
@@ -124,21 +124,15 @@ class PdfSigner:
         # 2. Prepare the Signature Field Structure
         self._setup_form(pdf_reader, True, field_name, incremented_objects, signer)
 
-        # # 3. Track Root modifications
-        # root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
-        # if isinstance(root_entry, IndirectObject):
-        #     # If Root is indirect, we must explicitly track it for the incremental update
-        #     incremented_objects[root_entry.idnum] = pdf_reader.trailer[TK.ROOT]
-
-        # 4. Write the Incremental Update (with empty signature placeholders)
+        # 3. Write the Incremental Update (with empty signature placeholders)
         pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
         final_output = pdf_merger.get_output_stream_value()
 
-        # 5. Sign the Document (fill the placeholders)
+        # 4. Sign the Document (fill the placeholders)
         signed_pdf_bytes = self._perform_signature(final_output)
         return signed_pdf_bytes
 
-    def _load_key_and_certificate(self) -> tuple[Optional[PrivateKeyTypes], Optional[Certificate]]:
+    def _load_key_and_certificate(self) -> tuple[Optional[PrivateKeyTypes], Optional[Certificate], Optional[list[Certificate]]]:
         """
         Retrieves and deserializes the private key and certificate from the company record.
 
@@ -148,19 +142,25 @@ class PdfSigner:
         """
         if "signing_certificate_id" not in self.company._fields \
             or not self.company.signing_certificate_id.pem_certificate:
-            return None, None
+            return None, None, None
 
         certificate = self.company.signing_certificate_id
         cert_bytes = base64.decodebytes(certificate.pem_certificate)
         private_key_bytes = base64.decodebytes(certificate.private_key_id.content)
-        return load_pem_private_key(private_key_bytes, None), load_pem_x509_certificate(cert_bytes)
+        all_certs = load_pem_x509_certificates(cert_bytes)
+
+        leaf_cert = all_certs[0]
+        cert_chain = all_certs[1:]
+        private_key = load_pem_private_key(private_key_bytes, None)
+
+        return private_key, leaf_cert, cert_chain
 
     def _setup_form(
             self,
             pdf_reader: PdfFileReader,
             visible_signature: bool,
             field_name: str,
-            incremented_objects: dict[int, Any],
+            incremented_objects: dict[tuple[int, int], Any],
             signer: Optional[ResUsers] = None
     ) -> None:
         """
@@ -190,6 +190,7 @@ class PdfSigner:
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
 
         # --- 1. SETUP ACROFORM ---
+        acro_form_originally_exist = False
         if CD.ACRO_FORM not in catalog:
             form = DictionaryObject()
             form.update({
@@ -199,7 +200,9 @@ class PdfSigner:
 
             catalog[NameObject(CD.ACRO_FORM)] = form_ref
         else:
-            form = cast(DictionaryObject, catalog[CD.ACRO_FORM].get_object())
+            acro_form_originally_exist = True
+            form = catalog[CD.ACRO_FORM]
+
             # Update flags: Allow Append Mode (Bit 2) | Signatures Exist (Bit 1) = 3
             if IF.SigFlags not in form:
                 form[NameObject(IF.SigFlags)] = NumberObject(3)
@@ -221,168 +224,13 @@ class PdfSigner:
             NameObject("/P"): page.indirect_reference,
         })
 
-        # # --- 3. CONSTRUCT VISUAL APPEARANCE (Optional) ---
-        # if visible_signature:
-        #     # 3a. Prepare Text Content
-        #     date_str = datetime.datetime.now().strftime("%Y-%m-%d")
-        #     line1 = f"Digitally signed by {signer.name} <{signer.email}>"
-        #     line2 = f"Date: {date_str}"
-        #     # TODO: Sanitize to prevent PDF crashes if needed
-        #
-        #     # 3b. Dynamic Dimension Calculation
-        #     # Heuristic: Average char width ~0.55 * fontSize for Helvetica
-        #     font_size = 10
-        #     padding = 5
-        #     avg_char_width = font_size * 0.55
-        #     max_char_count = max(len(line1), len(line2))
-        #
-        #     calc_width = (max_char_count * avg_char_width) + (padding * 4)  # Extra padding for safety
-        #     calc_height = (font_size * 2) + (padding * 4)  # Height for 2 lines + padding
-        #
-        #     # 3c. Positioning (Top-Right, accounting for margin)
-        #     origin = page.mediabox.upper_right
-        #     margin = 20  # Distance from edge of paper
-        #
-        #     x1 = float(origin[0]) - margin - calc_width
-        #     y1 = float(origin[1]) - margin - calc_height
-        #     x2 = float(origin[0]) - margin
-        #     y2 = float(origin[1]) - margin
-        #     rect = [x1, y1, x2, y2]
-        #
-        #     # 3d. Create Form XObject Stream
-        #     stream = StreamObject()
-        #     stream.update({
-        #         NameObject("/BBox"): ArrayObject([
-        #             FloatObject(0), FloatObject(0),
-        #             FloatObject(calc_width), FloatObject(calc_height)
-        #         ]),
-        #         NameObject("/Resources"): DictionaryObject({
-        #             NameObject("/Font"): DictionaryObject({
-        #                 NameObject("/F1"): DictionaryObject({
-        #                     NameObject("/Type"): NameObject("/Font"),
-        #                     NameObject("/Subtype"): NameObject("/Type1"),
-        #                     NameObject("/BaseFont"): NameObject("/Helvetica")
-        #                 })
-        #             })
-        #         }),
-        #         NameObject("/Type"): NameObject("/XObject"),
-        #         NameObject("/Subtype"): NameObject("/Form")
-        #     })
-        #
-        #     # 3e. Drawing Operations
-        #     leading = font_size + 2
-        #     txt_x = padding
-        #     txt_y = calc_height - padding - (font_size * 0.8)
-        #
-        #     # q = Save State
-        #     # BT = Begin Text
-        #     # /F1 {size} Tf = Set Font
-        #     # {leading} TL = Set Line Spacing
-        #     # {x} {y} Td = Move Cursor
-        #     # (...) Tj = Draw Text
-        #     # T* = New Line
-        #     # ET = End Text
-        #     # Q = Restore State
-        #     pdf_ops = (
-        #         f"q BT "
-        #         f"/F1 {font_size} Tf "
-        #         f"{leading} TL "
-        #         f"{txt_x:.2f} {txt_y:.2f} Td "
-        #         f"({line1}) Tj T* "
-        #         f"({line2}) Tj "
-        #         f"ET Q"
-        #     )
-        #
-        #     stream._data = b_(pdf_ops)
-        #
-        #     # Update Field
-        #     signature_appearance = DictionaryObject()
-        #     signature_appearance.update({
-        #         NameObject("/N"): stream  # Normal appearance
-        #     })
-        #
-        #     signature_field.update({
-        #         NameObject("/Rect"): ArrayObject([FloatObject(x) for x in rect]),
-        #         NameObject("/AP"): signature_appearance,
-        #     })
-        # if visible_signature:
-        #     origin = page.mediabox.upper_right  # retrieves the top-right coordinates of the page
-        #     rect_size = (200, 20)  # dimensions of the box (width, height)
-        #     padding = 5
-        #
-        #     # Box that will contain the signature, defined as [x1, y1, x2, y2]
-        #     # where (x1, y1) is the bottom left coordinates of the box,
-        #     # and (x2, y2) the top-right coordinates.
-        #     rect = [
-        #         origin[0] - rect_size[0] - padding,
-        #         origin[1] - rect_size[1] - padding,
-        #         origin[0] - padding,
-        #         origin[1] - padding
-        #     ]
-        #
-        #     # Here is defined the StreamObject that contains the information about the visible
-        #     # parts of the signature
-        #     #
-        #     # Dictionary contents:
-        #     # /BBox = coordinates of the 'visible' box, relative to the /Rect definition of the signature field
-        #     # /Resources = resources needed to properly render the signature,
-        #     #   /Font = dictionary containing the information about the font used by the signature
-        #     #       /F1 = font resource, used to define a font that will be usable in the signature
-        #     stream = StreamObject()
-        #     stream.update({
-        #         NameObject("/BBox"): ArrayObject([NumberObject(0), NumberObject(0), NumberObject(rect_size[0]), NumberObject(rect_size[1])]),
-        #         NameObject("/Resources"): DictionaryObject({
-        #             NameObject("/Font"): DictionaryObject({
-        #                 NameObject("/F1"): DictionaryObject({
-        #                     NameObject("/Type"): NameObject("/Font"),
-        #                     NameObject("/Subtype"): NameObject("/Type1"),
-        #                     NameObject("/BaseFont"): NameObject("/Helvetica")
-        #                 })
-        #             })
-        #         }),
-        #         NameObject("/Type"): NameObject("/XObject"),
-        #         NameObject("/Subtype"): NameObject("/Form")
-        #     })
-        #
-        #     #
-        #     content = "Digitally signed"
-        #     content = create_string_object(
-        #         f'{content} by {signer.name} <{signer.email}>') if signer is not None else create_string_object(content)
-        #
-        #     # Setting the parameters used to display the text object of the signature
-        #     # More details on this subject can be found in the sections 4.3 and 5.3
-        #     # of the Adobe PDF Reference (v1.7) https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf
-        #     #
-        #     # Parameters:
-        #     # q = saves the the current graphics state on the graphics state stack
-        #     # 0.5 0 0 0.5 0 0 cm = modification of the current transformation matrix. Here used to scale down the text size by 0.5 in x and y
-        #     # BT = begin text object
-        #     # /F1 = reference to the font resource named F1
-        #     # 12 Tf = set the font size to 12
-        #     # 0 TL = defines text leading, the space between lines, here set to 0
-        #     # 0 10 Td = moves the text to the start of the next line, expressed in text space units. Here (x, y) = (0, 10)
-        #     # (text_content) Tj = renders a text string
-        #     # ET = end text object
-        #     # Q = Restore the graphics state by removing the most recently saved state from the stack and making it the current state
-        #     stream._data = f"q 0.5 0 0 0.5 0 0 cm BT /F1 12 Tf 0 TL 0 10 Td ({content}) Tj ET Q".encode()
-        #     signature_appearence = DictionaryObject()
-        #     signature_appearence.update({
-        #         NameObject("/N"): stream
-        #     })
-        #     signature_field.update({
-        #         NameObject("/AP"): signature_appearence,
-        #     })
-        #
-        #     signature_field.update({
-        #         NameObject("/Rect"): ArrayObject([NumberObject(x) for x in rect])
-        #     })
+        # --- 3. CONSTRUCT VISUAL APPEARANCE (Optional) ---
         if visible_signature:
-
             # ------------------------------------------------------------------
             # 1. Text content
             # ------------------------------------------------------------------
             date_str = datetime.datetime.now().strftime("%Y-%m-%d")
-            line1 = f"Digitally signed by {signer.name} <{signer.email}>"
+            line1 = f"Digitally signed by {signer.name} <{signer.email}>"  #TODO: Sanitize to prevent PDF crashes if needed
             line2 = f"Date: {date_str}"
 
             # ------------------------------------------------------------------
@@ -493,24 +341,24 @@ class PdfSigner:
             NameObject("/ByteRange"): byte_range_placeholder,
             NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
             NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
-            NameObject("/M"): create_string_object(datetime.datetime.now(datetime.timezone.utc).strftime("D:%Y%m%d%H%M%S")),
+            NameObject("/M"): create_string_object(self.signing_time.strftime("D:%Y%m%d%H%M%SZ")),
         })
 
         # Register objects with the temporary writer to get references
         signature_field_ref = writer._add_object(signature_field)
         signature_field_value_ref = writer._add_object(signature_field_value)
 
-        # # Link signature value dict to the field dict
+        # Link signature value dict to the field dict
         signature_field.update({
             NameObject("/V"): signature_field_value_ref
         })
 
         # --- 5. REGISTER FIELD IN CATALOG AND PAGE ---
         # Add to /AcroForm /Fields
-        if CD.Fields not in catalog:
+        if CD.Fields not in form:
             fields = ArrayObject()
         else:
-            fields = catalog[CD.Fields].get_object()
+            fields = form[CD.Fields]
         fields.append(signature_field_ref)
         form.update({
             NameObject(CD.Fields): fields
@@ -521,22 +369,28 @@ class PdfSigner:
             page[NameObject(PG.ANNOTS)] = ArrayObject()
         page[NameObject(PG.ANNOTS)].append(signature_field_ref)
 
-
-        incremented_objects[page.indirect_reference.idnum] = page
-        pdf_reader.cache_indirect_object(page.indirect_reference.generation, page.indirect_reference.idnum, page)
+        page_ref_id = page.indirect_reference.idnum
+        page_ref_gen = page.indirect_reference.generation
+        incremented_objects[(page_ref_id, page_ref_gen)] = page
+        pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
 
         root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
         if isinstance(root_entry, IndirectObject):
             # If Root is indirect, we must explicitly track it for the incremental update
-            incremented_objects[root_entry.idnum] = catalog
+            incremented_objects[(root_entry.idnum, root_entry.generation)] = catalog
             pdf_reader.cache_indirect_object(root_entry.generation, root_entry.idnum, catalog)
+
+        acro_ref = catalog.raw_get(CD.ACRO_FORM)
+        if acro_form_originally_exist and isinstance(acro_ref, IndirectObject):
+            incremented_objects[(acro_ref.idnum, acro_ref.generation)] = form
+            pdf_reader.cache_indirect_object(acro_ref.generation, acro_ref.idnum, form)
 
     def _get_cms_object(self, digest: bytes) -> Optional[cms.ContentInfo]:
         """
         Wraps the document hash in a Cryptographic Message Syntax (CMS) structure.
 
         This conforms to **RFC 5652**. It creates a detached signature (ContentInfo)
-        containing the signer's certificate, the signing time, and the signed digest.
+        containing the signer's leaf_cert, the signing time, and the signed digest.
 
         RFC: https://datatracker.ietf.org/doc/html/rfc5652
 
@@ -545,11 +399,22 @@ class PdfSigner:
         :return: A CMS object populated with the signature data.
         :rtype: cms.ContentInfo or None
         """
-        private_key, certificate = self._load_key_and_certificate()
-        if private_key == None or certificate == None:
+        private_key, leaf_cert, cert_chain = self._load_key_and_certificate()
+        if private_key is None or leaf_cert is None:
             return None
+
         cert = x509.Certificate.load(
-            certificate.public_bytes(encoding=Encoding.DER))
+            leaf_cert.public_bytes(encoding=Encoding.DER)
+        )
+        all_certificates = [cert]
+        if cert_chain:
+            for intermediate_cert in cert_chain:
+                all_certificates.append(
+                    x509.Certificate.load(
+                        intermediate_cert.public_bytes(encoding=Encoding.DER)
+                    )
+                )
+
         encap_content_info = {
             'content_type': 'data',
             'content': None
@@ -563,7 +428,7 @@ class PdfSigner:
             }),
             cms.CMSAttribute({
                 'type': 'signing_time',
-                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time or datetime.datetime.now(datetime.timezone.utc))})]
+                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time)})]
             }),
             cms.CMSAttribute({
                 'type': 'cms_algorithm_protection',
@@ -614,7 +479,7 @@ class PdfSigner:
             'version': 'v1',
             'digest_algorithms': [algos.DigestAlgorithm({'algorithm': 'sha256'})],
             'encap_content_info': encap_content_info,
-            'certificates': [cert],
+            'certificates': all_certificates,
             'signer_infos': [signer_info]
         }
 

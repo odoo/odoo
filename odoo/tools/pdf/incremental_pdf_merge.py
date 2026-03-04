@@ -203,9 +203,11 @@ class IncrementalPdfMerge:
         for page_index in range(0, len(pdf_reader.pages)):
             page = pdf_reader.pages[page_index]
             self._merge_page(page, overlay_pdf.pages[page_index])
-            incremented_objects[page.indirect_reference.idnum] = page
+            page_ref_id = page.indirect_reference.idnum
+            page_ref_gen = page.indirect_reference.generation
+            incremented_objects[(page_ref_id, page_ref_gen)] = page
             # Invalidate cache and cache new page reference so it would be seen while sweeping indirect references later on
-            pdf_reader.cache_indirect_object(page.indirect_reference.generation, page.indirect_reference.idnum, page)
+            pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
 
         return pdf_reader, incremented_objects
 
@@ -543,9 +545,12 @@ class IncrementalPdfMerge:
         :type pdf_reader: PdfFileReader
         :param incremented_objects: A dictionary mapping Object IDs to the Page objects
                                     that were explicitly modified during the merge.
-        :type incremented_objects: dict[int, Any]
+        :type incremented_objects: dict[tuple[int, int], Any]
         :return: None
         """
+        if incremented_objects is None or len(incremented_objects) == 0:
+            return
+
         # 1. Trust the trailer first (Standard behavior)
         size = pdf_reader.trailer.get(TK.SIZE)
 
@@ -573,13 +578,14 @@ class IncrementalPdfMerge:
         # 4. Write all objects to the output stream
         new_xref_entries = self._write_objects(incremented_objects)
 
-        # 5. Generate Xref table
-        xref_start, new_size = self._write_xref_table(new_xref_entries)
-
-        # 6. Construct the PDF trailer
-        self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
-
-        # self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+        # 5. construct the end of the PDF
+        if size:
+            # Generate Xref table
+            xref_start, new_size = self._write_xref_table(new_xref_entries)
+            # Construct the PDF trailer
+            self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
+        else: # Compressed Xref Object Streams (PDF 1.5+)
+            self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
 
     def _write_objects(self, incremented_objects):
         """
@@ -591,16 +597,17 @@ class IncrementalPdfMerge:
 
         :param incremented_objects: A dictionary mapping Object IDs (int) to the
                                     PDF objects (e.g., PageObject, DictionaryObject).
-        :type incremented_objects: dict[int, Any]
+        :type incremented_objects: dict[tuple[int, int], Any]
         :return: A dictionary mapping Object IDs to their new byte offsets in the stream.
                  This is used to construct the XRef table.
-        :rtype: dict[int, int]
+        :rtype: dict[tuple[int, int], int]
         """
         output = self.output_stream
+        output.write(b"\n")
         new_xref_entries = {}
-        for obj_id, obj_data in sorted(incremented_objects.items()):
-            new_xref_entries[obj_id] = output.tell()
-            output.write(b_(str(obj_id)) + b" 0 obj\n")
+        for (obj_id, obj_gen), obj_data in sorted(incremented_objects.items()):
+            new_xref_entries[(obj_id, obj_gen)] = output.tell()
+            output.write(b_(str(obj_id)) + b" " + b_(str(obj_gen)) + b" obj\n")
             obj_data.write_to_stream(output, None)
             output.write(b"\nendobj\n")
 
@@ -609,26 +616,28 @@ class IncrementalPdfMerge:
     def _write_xref_stream(self, pdf_reader, new_xref_entries, original_startxref):
         """
         Writes a fully compliant XRef Stream that indexes itself to satisfy
-        PDF checkers like QPDF.
         """
         output = self.output_stream
 
         # 1. Capture the start offset of this new object immediately
-        # We need this to add the object to its own index.
         xref_start_offset = output.tell()
 
+        # Object 0 (Sentinel Entry)
+        if (0, 65535) not in new_xref_entries:
+            new_xref_entries[(0, 65535)] = 0
+
         # 2. Determine the new Object ID
-        # Get original size from trailer; max with any new updates
         original_size = int(pdf_reader.trailer.get("/Size", 0))
-        max_updated_id = max(new_xref_entries.keys()) if new_xref_entries else 0
+        # FIX: Extract just the Object ID (index 0) from the tuples to find the max
+        max_updated_id = max([k[0] for k in new_xref_entries.keys()])
 
         # Calculate the ID for this XRef stream (next available ID)
         current_highest_id = max(original_size - 1, max_updated_id)
         xref_stream_obj_id = current_highest_id + 1
 
-        # 3. [CRITICAL FIX] Add the XRef Stream itself to the index
-        # This ensures 'Size' matches the highest object ID found in the map.
-        new_xref_entries[xref_stream_obj_id] = xref_start_offset
+        # 3. [CRITICAL FIX] Add the XRef Stream itself to the index using the Tuple key!
+        # XRef streams always have a generation of 0
+        new_xref_entries[(xref_stream_obj_id, 0)] = xref_start_offset
 
         # 4. Prepare the Stream Data (Hex Encoded)
         sorted_ids = sorted(new_xref_entries.keys())
@@ -638,31 +647,39 @@ class IncrementalPdfMerge:
         i = 0
         while i < len(sorted_ids):
             start_j = i
-            # Find contiguous chunks
-            while i + 1 < len(sorted_ids) and sorted_ids[i + 1] == sorted_ids[i] + 1:
+            # FIX: Check contiguous chunks using the Object ID (index 0)
+            while i + 1 < len(sorted_ids) and sorted_ids[i + 1][0] == sorted_ids[i][0] + 1:
                 i += 1
+
             chunk_ids = sorted_ids[start_j: i + 1]
 
-            # Add to /Index array: [First Object ID, Count]
-            index_array.append(chunk_ids[0])
+            # FIX: Add to /Index array: [First Object ID, Count]
+            # Must extract the ID integer from the first tuple
+            index_array.append(chunk_ids[0][0])
             index_array.append(len(chunk_ids))
 
             # Generate Hex Data for this chunk
-            for oid in chunk_ids:
+            for oid_tuple in chunk_ids:
+                oid, ogen = oid_tuple  # Unpack the tuple
+
                 if oid == 0:
-                    # Free Object: Type 0, Gen 65535
+                    # Free Object: Type 0, Gen 65535 (FFFF)
                     stream_data_hex.append("0000000000FFFF")
                 else:
-                    # Normal Object: Type 1, Offset (Hex), Gen 0
-                    offset = new_xref_entries[oid]
-                    # Format offset as 8-char Hex (4 bytes)
-                    stream_data_hex.append(f"01{offset:08X}0000")
+                    # Normal Object: Type 1, Offset (Hex), Gen (Hex)
+                    offset = new_xref_entries[oid_tuple]
+
+                    # FIX: Dynamically inject the generation (ogen) instead of hardcoding 0000!
+                    # 01 = Type 1 (1 byte / 2 hex chars)
+                    # {offset:08X} = Offset (4 bytes / 8 hex chars)
+                    # {ogen:04X} = Generation (2 bytes / 4 hex chars)
+                    stream_data_hex.append(f"01{offset:08X}{ogen:04X}")
             i += 1
 
-        # Join data and add the EOD marker
+        # Join data and add the EOD marker for ASCIIHexDecode
         stream_content_str = "".join(stream_data_hex) + ">"
 
-        # 5. [CRITICAL FIX] Calculate exact stream length
+        # 5. Calculate exact stream length
         stream_length = len(stream_content_str)
 
         # 6. Construct the Stream Dictionary
@@ -670,20 +687,24 @@ class IncrementalPdfMerge:
         xref_dict.update({
             NameObject("/Type"): NameObject("/XRef"),
             NameObject("/Size"): NumberObject(xref_stream_obj_id + 1),
+
+            # /W defines the byte sizes of the 3 fields in the hex string:
+            # [1 byte for Type, 4 bytes for Offset, 2 bytes for Generation]
             NameObject("/W"): ArrayObject([NumberObject(1), NumberObject(4), NumberObject(2)]),
+
             NameObject("/Root"): pdf_reader.trailer.raw_get("/Root"),
             NameObject("/Info"): pdf_reader.trailer.raw_get("/Info"),
             NameObject("/Prev"): NumberObject(original_startxref),
             NameObject("/Filter"): NameObject("/ASCIIHexDecode"),
             NameObject("/Index"): ArrayObject([NumberObject(x) for x in index_array]),
-            NameObject("/Length"): NumberObject(stream_length)  # Fixes 'lacks /Length' warning
+            NameObject("/Length"): NumberObject(stream_length)
         })
 
         # Copy ID/Encrypt if present
-        if hasattr(pdf_reader, "_ID"):
-            xref_dict[NameObject("/ID")] = pdf_reader._ID
-        if hasattr(pdf_reader, "_encrypt"):
-            xref_dict[NameObject("/ENCRYPT")] = pdf_reader._encrypt
+        if hasattr(pdf_reader.trailer, "/ID"):
+            xref_dict[NameObject("/ID")] = pdf_reader.trailer.raw_get("/ID")
+        if hasattr(pdf_reader.trailer, "/Encrypt"):
+            xref_dict[NameObject("/Encrypt")] = pdf_reader.trailer.raw_get("/Encrypt")
 
         # 7. Write everything to the file
         # Header
@@ -698,7 +719,7 @@ class IncrementalPdfMerge:
         output.write(b"\nendstream\nendobj\n")
 
         # Trailer / EOF
-        output.write(b_(f"\nstartxref\n{xref_start_offset}\n%%EOF\n"))
+        output.write(b_(f"startxref\n{xref_start_offset}\n%%EOF\n"))
 
     def _write_xref_table(self, new_xref_entries):
         """
@@ -733,28 +754,32 @@ class IncrementalPdfMerge:
         # - Offset 0000000000: Points to the next free object index (0 if none).
         # - Generation 65535: Max integer ensures Object 0 is never reused/allocated.
         # - Type 'f': Marks this entry as 'Free'.
-        if 0 not in new_xref_entries:
-            new_xref_entries[0] = 0
+        if (0, 65535) not in new_xref_entries:
+            new_xref_entries[(0, 65535)] = 0
 
         sorted_ids = sorted(new_xref_entries.keys())
         i = 0
         while i < len(sorted_ids):
             start_j = i
-            while i + 1 < len(sorted_ids) and sorted_ids[i + 1] == sorted_ids[i] + 1:
+            while i + 1 < len(sorted_ids) and sorted_ids[i + 1][0] == sorted_ids[i][0] + 1:
                 i += 1
 
             chunk_ids = sorted_ids[start_j: i + 1]
-            output.write(b_(f"{chunk_ids[0]} {len(chunk_ids)}\n"))
-            for oid in chunk_ids:
+            start_id = chunk_ids[0][0]
+            output.write(b_(f"{start_id} {len(chunk_ids)}\n"))
+            for obj_tuple in chunk_ids:
+                oid, ogen = obj_tuple
                 if oid == 0:
                     output.write(b_(f"{0:0>10} {65535:0>5} f \n"))
                 else:
-                    offset = new_xref_entries[oid]
-                    output.write(b_(f"{offset:0>10} {0:0>5} n \n"))
+                    offset = new_xref_entries[obj_tuple]
+                    output.write(b_(f"{offset:0>10} {ogen:0>5} n \n"))
 
             i += 1
 
-        return xref_start, max(sorted_ids) + 1
+        max_id = sorted_ids[-1][0]
+
+        return xref_start, max_id + 1
 
     def _write_trailer(self, pdf_reader, original_startxref, xref_start, size):
         """
@@ -790,14 +815,15 @@ class IncrementalPdfMerge:
             {
                 NameObject(TK.SIZE): NumberObject(size),
                 NameObject(TK.ROOT): pdf_reader.trailer.raw_get(TK.ROOT),
-                NameObject(TK.INFO): pdf_reader.trailer.raw_get(TK.INFO),
                 NameObject(TK.PREV): NumberObject(original_startxref)
             }
         )
-        if hasattr(pdf_reader, "_ID"):
-            trailer[NameObject(TK.ID)] = pdf_reader._ID
-        if hasattr(pdf_reader, "_encrypt"):
-            trailer[NameObject(TK.ENCRYPT)] = pdf_reader._encrypt
+        if TK.INFO in pdf_reader.trailer:
+            trailer[NameObject(TK.INFO)] = pdf_reader.trailer.raw_get(TK.INFO)
+        if "/ID" in pdf_reader.trailer:
+            trailer[NameObject(TK.ID)] = pdf_reader.trailer.raw_get("/ID")
+        # if hasattr(pdf_reader, "_encrypt"):
+        #     trailer[NameObject(TK.ENCRYPT)] = pdf_reader._encrypt
         trailer.write_to_stream(output, None)
         output.write(b_(f"\nstartxref\n{xref_start}\n%%EOF\n"))  # EOF
 
@@ -831,7 +857,7 @@ class IncrementalPdfMerge:
         if idx == -1: return 0
         return int(data[idx:].splitlines()[1].strip())
 
-    def _sweep_indirect_references(self, pdf_reader: PdfFileReader, root, next_id) -> dict[int, Any]:
+    def _sweep_indirect_references(self, pdf_reader: PdfFileReader, root, next_id) -> dict[tuple[int, int], Any]:
         """
         Recursively traverses the PDF object graph to identify new objects and update
         references.
@@ -855,7 +881,8 @@ class IncrementalPdfMerge:
         :type root: DictionaryObject or ArrayObject
         :param next_id: The first available Object ID to use for new objects.
         :type next_id: int
-        :return: None
+        :return: Newly added objects dict to be incremented at the end of the pdf
+        :rtype: dict[tuple[int, int], Any]
         """
         incremented_objects = {}
         writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
@@ -907,7 +934,7 @@ class IncrementalPdfMerge:
                 if isinstance(data, StreamObject):
                     # a dictionary value is a stream.  streams must be indirect
                     # objects, so we need to change this value.
-                    incremented_objects[next_id] = data
+                    incremented_objects[(next_id, 0)] = data
                     data_hash = data.hash_value()
                     idnum_hash[data_hash] = IndirectObject(next_id, 0, writer)
                     self._pdf_writer_append_obj(writer, data, next_id)
@@ -944,7 +971,7 @@ class IncrementalPdfMerge:
             writer: PdfFileWriter,
             data: IndirectObject,
             idnum_hash: dict[bytes, Any],
-            incremented_objects: dict[int, Any],
+            incremented_objects: dict[tuple[int, int], Any],
             next_id: int
     ) -> IndirectObject:
         """
@@ -995,7 +1022,7 @@ class IncrementalPdfMerge:
             idnum_hash[hash_value] = IndirectObject(data.idnum, 0, pdf_reader)
         # This is new incremented object in this pdf
         else:
-            incremented_objects[next_id] = real_obj
+            incremented_objects[(next_id, 0)] = real_obj
             idnum_hash[hash_value] = IndirectObject(next_id, 0, writer)
             self._pdf_writer_append_obj(writer, real_obj, next_id)
             next_id += 1
