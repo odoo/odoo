@@ -466,3 +466,29 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(applicant.partner_id.email, 'applicant_diff@example.com', "Email should have been updated on the partner.")
         applicant.partner_phone = '987654321'
         self.assertEqual(applicant.partner_id.phone, '987654321', "Phone should have been updated on the partner.")
+
+    def test_send_mail_when_refuse_applicant(self):
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'subject': 'Application refused: {{ object.partner_name }}',
+        })
+
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{
+            'name': 'Not good',
+            'template_id': mail_template.id,
+        }])
+
+        app_1 = self.env['hr.applicant'].create({
+            'partner_name': 'Mario',
+            'email_from': 'super@mario.bros',
+        })
+
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'send_mail': True,
+            'applicant_ids': [(6, 0, [app_1.id])],
+        })
+        applicant_get_refuse_reason._prepare_send_refusal_mails()
+        mail = self.env['mail.mail'].search([('subject', '=', 'Application refused: Mario')], limit=1)
+        self.assertEqual(mail.partner_ids, app_1.partner_id)
