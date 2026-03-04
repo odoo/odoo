@@ -459,3 +459,40 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                 )
                 self.assertEqual(response.status_code, 200)
                 self.assertNotIn('cids', response.request._cookies)
+
+    def test_mail_message_post_other_company_with_cids(self):
+        """
+        Ensure that a user can post a message on a thread belonging to another
+        company when:
+
+        - The user has access to both companies via `company_ids`.
+        - The active company context only includes the other company.
+        - The target record belongs to a different company than the active one.
+
+        This reproduces the scenario where a user receives a notification from a
+        record in Company A while being active in Company B, and attempts to reply
+        from the inbox.
+        """
+        self.user_employee_c2.write({'company_ids': [(6, 0, [self.user_employee.company_id.id, self.company_2.id])]})
+        record_c1 = self.env["mail.test.multi.company"].sudo().create({
+            "name": "Thread in C1",
+            "company_id": self.user_employee.company_id.id,  # company 1
+        })
+        self.authenticate('employee_c2', 'employee_c2')
+        self.opener.cookies.set('cids', str(self.company_2.id))
+        payload = {
+            "thread_model": record_c1._name,
+            "thread_id": record_c1.id,
+            "post_data": {
+                "body": "<p>Reply from inbox</p>",
+                "message_type": "comment",
+                "subtype_xmlid": "mail.mt_comment",
+            },
+            "context": {
+                "allowed_company_ids": self.company_2.ids,
+            }
+        }
+        result = self.make_jsonrpc_request("/mail/message/post", payload)
+        message_data = result["store_data"]["mail.message"][0]
+        self.assertEqual(message_data["body"], ["markup", "<p>Reply from inbox</p>"])
+        self.assertTrue(record_c1.message_ids.filtered(lambda m: m.id == message_data["id"]))
