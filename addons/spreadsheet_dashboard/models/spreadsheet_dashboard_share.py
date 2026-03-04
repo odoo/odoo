@@ -1,9 +1,8 @@
-import base64
 import uuid
 from werkzeug.exceptions import Forbidden
 
 from odoo import models, fields, api, _
-from odoo.tools import consteq
+from odoo.tools import BinaryBytes, consteq
 
 
 class SpreadsheetDashboardShare(models.Model):
@@ -29,7 +28,7 @@ class SpreadsheetDashboardShare(models.Model):
                 vals["excel_files"]
             )
             del vals["excel_files"]
-            vals["excel_export"] = base64.b64encode(excel_zip)
+            vals["excel_export"] = BinaryBytes(excel_zip)
         return self.create(vals).full_url
 
     def _check_token(self, access_token):

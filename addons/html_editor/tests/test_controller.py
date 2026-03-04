@@ -105,7 +105,7 @@ class TestController(HttpCase):
             headers={'Content-Type': 'application/json'},
             data=json_safe.dumps({'params': {
                 'name': 'test.gif',
-                'data': GIF_B64.decode(),
+                'data': GIF_B64,
                 'is_image': True,
             }})
         )

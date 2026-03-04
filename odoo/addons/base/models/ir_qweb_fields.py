@@ -1,23 +1,18 @@
-# -*- coding: utf-8 -*-
-import base64
-import binascii
 from datetime import time
 import logging
 import math
 import re
-from io import BytesIO
 
-import babel
 import babel.dates
 from markupsafe import Markup, escape, escape_silent
 from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
-from odoo.tools import posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
+from odoo.tools import BinaryBytes, BinaryValue, posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
+from odoo.tools.image import binary_to_image, image_data_uri
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -154,8 +149,10 @@ class IrQwebField(models.AbstractModel):
         """
         if value is None or value is False:
             return ''
+        if isinstance(value, (bytes, BinaryValue)):
+            value = value.decode()
 
-        return escape(value.decode() if isinstance(value, bytes) else value)
+        return escape(value)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -450,18 +447,17 @@ class IrQwebFieldImage(models.AbstractModel):
     _inherit = ['ir.qweb.field']
 
     @api.model
-    def _get_src_data_b64(self, value, options):
-        try:
-            img_b64 = base64.b64decode(value)
-        except binascii.Error:
-            raise ValueError("Invalid image content") from None
-
-        mimetype = guess_mimetype(img_b64, '') if img_b64 else None
+    def _get_src_data_b64(self, value, options) -> str:
+        if not isinstance(value, BinaryValue):
+            value = BinaryBytes(value)
+        if not value:
+            return ""
+        mimetype = value.mimetype
         if mimetype == 'image/webp':
             return self.env["ir.qweb"]._get_converted_image_data_uri(value)
         elif mimetype != "image/svg+xml":
             try:
-                image = Image.open(BytesIO(img_b64))
+                image = binary_to_image(value)
                 image.verify()
                 mimetype = Image.MIME[image.format]
             except OSError as exc:
@@ -469,7 +465,7 @@ class IrQwebFieldImage(models.AbstractModel):
             except Exception as exc:  # noqa: BLE001
                 raise ValueError("Invalid image content") from exc
 
-        return "data:%s;base64,%s" % (mimetype, value.decode('ascii'))
+        return image_data_uri(value)
 
     @api.model
     def value_to_html(self, value, options):
@@ -815,7 +811,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
                 img_element.set(k[4:], v)
         if not img_element.get('alt'):
             img_element.set('alt', _('Barcode %s', value))
-        img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
+        img_element.set('src', image_data_uri(barcode))
         return Markup(html.tostring(img_element, encoding='unicode'))
 
 

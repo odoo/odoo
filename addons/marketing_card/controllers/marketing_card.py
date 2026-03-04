@@ -1,4 +1,3 @@
-import base64
 from urllib.parse import quote
 
 from werkzeug.exceptions import BadRequest
@@ -56,7 +55,7 @@ class MarketingCardController(Controller):
         if not card.image:
             raise request.not_found()
 
-        image_bytes = base64.b64decode(card.image)
+        image_bytes = card.image.content
         return request.make_response(image_bytes, [
             ('Content-Type', ' image/jpeg'),
             ('Content-Length', len(image_bytes)),

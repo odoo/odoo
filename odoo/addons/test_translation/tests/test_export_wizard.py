@@ -1,4 +1,3 @@
-import base64
 from odoo.tests import common, tagged
 
 
@@ -19,7 +18,7 @@ class TestTranslationFlow(common.TransactionCase):
             if not export.data:
                 # export.data = False => no terms to translate
                 continue
-            pot_file = base64.b64decode(export.data)
+            pot_file = export.data.content
             common.save_test_file(
                 module.name, pot_file, prefix="i18n_", extension="pot",
                 document_type="Source Terms for %s" % module.name,

@@ -713,7 +713,7 @@ class MailMessage(models.Model):
                         try:
                             attachment = Attachments.create({
                                 'name': name,
-                                'datas': match.group(2),
+                                'raw': match.group(2),
                                 'res_model': values.get('model'),
                                 'res_id': values.get('res_id'),
                             })

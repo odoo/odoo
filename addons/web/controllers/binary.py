@@ -6,9 +6,10 @@ import logging
 import os
 import unicodedata
 from contextlib import nullcontext
+from http import HTTPStatus
 
 import odoo
-from odoo import SUPERUSER_ID, _, api
+from odoo import _, api, http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
@@ -99,7 +100,7 @@ class Binary(Controller):
                 ('url', '=like', url),
                 ('res_model', '=', 'ir.ui.view'),
                 ('res_id', '=', 0),
-                ('create_uid', '=', SUPERUSER_ID),
+                ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)
         if not attachment:
@@ -209,6 +210,16 @@ class Binary(Controller):
 
         return stream.get_response(**send_file_kwargs)
 
+    # the upload size limit is the ICP web.max_file_upload_size (128MiB by default)
+    @http.route('/web/upload', type='http', auth='user', csrf=False)
+    def upload(self, file, **attachment_vals):
+        attachment_vals.setdefault('name', file.filename)
+        attachment_vals.setdefault('mimetype', file.content_type)
+        if public := attachment_vals.get('public', '0'):
+            attachment_vals['public'] = str2bool(public)
+        attach = self.env['ir.attachment']._from_file(file, **attachment_vals)
+        return request.redirect(f'/web/content/{attach.id}', code=HTTPStatus.CREATED)
+
     @route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
         files = request.httprequest.files.getlist('ufile')
@@ -262,7 +273,7 @@ class Binary(Controller):
             response = Stream.from_path(file_path('web/static/img/logo.png')).get_response()
         else:
             try:
-                attachment = request.env(user=request.session.uid or odoo.api.SUPERUSER_ID, su=True)['ir.attachment']
+                attachment = request.env(user=request.session.uid or api.SUPERUSER_ID, su=True)['ir.attachment']
                 if company_id := (kw or {}).get('company'):
                     company_ids = [int(company_id)]
                 else:

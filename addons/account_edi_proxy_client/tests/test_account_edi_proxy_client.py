@@ -7,6 +7,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 
 from odoo.fields import Selection
 from odoo.tests import tagged
+from odoo.tools import BinaryBytes
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -24,20 +25,18 @@ class TestAccountEdiProxyUser(AccountTestInvoicingCommon):
             cls.company,
             name='test_private_key',
         )
-        private_content = base64.b64decode(cls.private_key_id.content)
+        private_content = cls.private_key_id.content.content
         cls.private_key = serialization.load_pem_private_key(private_content, None)
 
         cls.public_key = cls.private_key.public_key()
-        public_content = base64.b64encode(
-            cls.public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo,
-            ),
+        public_content = cls.public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
         cls.public_key_id = cls.env['certificate.key'].create({
             'name': 'test_public_key',
             'public': True,
-            'content': public_content,
+            'content': BinaryBytes(public_content),
         })
 
         # Overcome the abstract selection field `proxy_type` that has no selection

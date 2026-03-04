@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import json
 import os
 
@@ -15,7 +14,7 @@ from unittest.mock import patch
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
 from odoo.exceptions import UserError
-from odoo.tools import file_open, file_open_temporary_directory, mute_logger
+from odoo.tools import BinaryBytes, file_open, file_open_temporary_directory, mute_logger
 from odoo.tools.translate import TranslationModuleReader
 
 
@@ -115,7 +114,7 @@ class TestImportModule(odoo.tests.TransactionCase):
             if path.split('/')[1] == 'static':
                 static_attachment = self.env['ir.attachment'].search([('url', '=', '/%s' % path)])
                 self.assertEqual(static_attachment.name, os.path.basename(path))
-                self.assertEqual(static_attachment.datas, base64.b64encode(data))
+                self.assertEqual(static_attachment.raw.content, data)
 
         self.assertEqual(
             self.env['ir.http']._get_translations_for_webclient(['bar'], 'fr_FR')[0]['bar'],
@@ -309,7 +308,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         attachment = self.env['ir.attachment'].search([('url', '=', path)])
         self.assertEqual(attachment.name, 'test.js')
         self.assertEqual(attachment.type, 'binary')
-        self.assertEqual(attachment.raw, b"console.log('AAA');")
+        self.assertEqual(attachment.raw.content, b"console.log('AAA');")
 
         asset = self.env['ir.asset'].search([('name', '=', f'test_module.{bundle}.{path}')])
         self.assertEqual(asset.path, path)
@@ -366,7 +365,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         attachment = self.env['ir.attachment'].search([('url', '=', f'/{path}')])
         self.assertEqual(attachment.name, 'test.js')
         self.assertEqual(attachment.type, 'binary')
-        self.assertEqual(attachment.raw, b"console.log('AAA');")
+        self.assertEqual(attachment.raw.content, b"console.log('AAA');")
 
         asset = self.env['ir.asset'].search([('name', '=', f'test_module.{bundle}./{path}')])
         self.assertEqual(asset.path, f'/{path}')
@@ -393,7 +392,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         attachment = self.env['ir.attachment'].search([('url', '=', f'/{path}')])
         self.assertEqual(attachment.name, 'test.js')
         self.assertEqual(attachment.type, 'binary')
-        self.assertEqual(attachment.raw, b"console.log('BBB');")
+        self.assertEqual(attachment.raw.content, b"console.log('BBB');")
 
         asset = self.env['ir.asset'].search([('name', '=', f'test_module.{bundle}./{path}')])
         self.assertEqual(asset.path, f'/{path}')
@@ -480,7 +479,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         # Assert icon of module foo, which must be the icon provided in the zip
         self.assertEqual(self.url_open('/' + foo_icon_path).content, foo_icon_data)
         # Assert icon of module bar, which must be the icon of the base module as none was provided
-        self.assertEqual(self.env.ref('base.module_bar').icon_image, self.env.ref('base.module_base').icon_image)
+        self.assertEqual(self.env.ref('base.module_bar').icon_image.content, self.env.ref('base.module_base').icon_image.content)
 
     def test_import_module_field_file(self):
         files = [
@@ -499,7 +498,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         ]
         self.import_zipfile(files)
         logo_path, logo_data = files[2]
-        self.assertEqual(base64.b64decode(self.env.ref('foo.logo').datas), logo_data)
+        self.assertEqual(self.env.ref('foo.logo').raw.content, logo_data)
         self.assertEqual(self.url_open('/' + logo_path).content, logo_data)
 
     def test_import_module_assets_http(self):
@@ -528,7 +527,7 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
                 zipf.writestr(path, data)
         modules_dependencies, _not_found = self.env['ir.module.module']._get_missing_dependencies(archive.getvalue())
         import_module = self.env['base.import.module'].create({
-                'module_file': base64.b64encode(archive.getvalue()),
+                'module_file': BinaryBytes(archive.getvalue()),
                 'state': 'init',
                 'modules_dependencies': modules_dependencies,
             })

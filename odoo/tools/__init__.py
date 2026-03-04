@@ -3,7 +3,9 @@
 
 from . import constants
 from . import urls
+from . import zipstream
 from .parse_version import parse_version
+from .binary import BinaryBytes, BinaryValue
 from .cache import ormcache
 from .config import config
 from .float_utils import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import io
 import json
 
@@ -115,8 +114,7 @@ class IrActionsReport(models.Model):
 
         # Avoid useless update of the pdf when no form field and just add the pdf
         prefix = prefix if document.form_field_ids else None
-        decoded_document = base64.b64decode(document.datas)
-        self._add_pages_to_writer(writer, decoded_document, prefix)
+        self._add_pages_to_writer(writer, document.raw, prefix)
 
     @api.model
     def _get_value_from_path(self, form_field, order, order_line=None):
