@@ -64,7 +64,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
             'pos_categ_ids': [(6, 0, [self.combo_category.id])],
         })
 
-        price_extra_product = self.env['product.product'].create({
+        self.price_extra_product = self.env['product.product'].create({
             'name': 'Product with attributes',
             'is_storable': True,
             'available_in_pos': True,
@@ -98,12 +98,12 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
             'attribute_id': no_price_extra.id,
         }])
         self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': price_extra_product.product_tmpl_id.id,
+            'product_tmpl_id': self.price_extra_product.product_tmpl_id.id,
             'attribute_id': price_extra.id,
             'value_ids': [(6, 0, price_extra_values.ids)],
         })
         self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': price_extra_product.product_tmpl_id.id,
+            'product_tmpl_id': self.price_extra_product.product_tmpl_id.id,
             'attribute_id': no_price_extra.id,
             'value_ids': [(6, 0, no_price_extra_values.ids)],
         })
@@ -260,3 +260,41 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, '')
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, 'test_pricelist_price_between_frontend_and_backend')
+
+    def test_fiscal_position_between_frontend_and_backend(self):
+        self.pos_config.write({
+            'available_preset_ids': [Command.set(self.original_presets.ids)],
+            'default_preset_id': self.original_presets[0].id,
+        })
+        self.tax_21.price_include_override = 'tax_included'
+        self.tax_6.price_include_override = 'tax_included'
+
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'Take out',
+        })
+        self.tax_6.copy({
+            'name': f"{self.tax_6.name} Take out",
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(self.tax_21.ids)],
+        })
+        self.pos_config.write({
+            'tax_regime_selection': True,
+            'default_fiscal_position_id': fp.id,
+            'fiscal_position_ids': [Command.set(fp.ids)],
+        })
+
+        self.original_presets[0].write({
+            'pricelist_id': [Command.clear()],
+            'fiscal_position_id': fp.id,
+            'name': 'Take out',
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
+
+        self.tax_21.price_include_override = 'tax_excluded'
+        self.tax_6.price_include_override = 'tax_excluded'
+
+        self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
