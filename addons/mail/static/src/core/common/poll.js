@@ -3,6 +3,8 @@ import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
+const { DateTime } = luxon;
+
 /**
  * @typedef {Object} Props
  * @property {import("models").MailPollModel} poll
@@ -45,6 +47,12 @@ export class Poll extends Component {
             },
             () => [this.props.poll.poll_end_dt]
         );
+    }
+
+    get remainingTimeTextTitle() {
+        return _t("Poll ends on %(date)s", {
+            date: this.props.poll.poll_end_dt.toLocaleString(DateTime.DATETIME_MED),
+        });
     }
 
     showResults() {
