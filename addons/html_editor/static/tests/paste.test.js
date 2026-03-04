@@ -1,12 +1,23 @@
 import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent as dispatch,
+    press,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { dataURItoBlob, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
-import { pasteHtml, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import {
+    insertText,
+    pasteHtml,
+    pasteOdooEditorHtml,
+    pasteText,
+    undo,
+} from "./_helpers/user_actions";
 import { createBaseContainer } from "@html_editor/utils/base_container";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { nodeSize } from "@html_editor/utils/position";
@@ -3546,6 +3557,17 @@ describe("images", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>*should not disappear*<a href="${imgUrl}">${imgUrl}</a>[]</p>`
             );
+        });
+        test("should close powerbox after an undo when image pasting", async () => {
+            const { el, editor } = await setupEditor("<p>a[]b</p>");
+            await insertText(editor, "x");
+            expect(getContent(el)).toBe(`<p>ax[]b</p>`);
+            pasteText(editor, imgUrl);
+            await animationFrame();
+            await expectElementCount(".o-we-powerbox", 1);
+            undo(editor);
+            await waitForNone(".o-we-powerbox");
+            expect(getContent(el)).toBe(`<p>ax[]b</p>`);
         });
     });
 
