@@ -456,7 +456,7 @@
     }
 
     
-    .o_form_sheet .o_field_widget:not(.o_input_box_overlay_start, .o_input_box_overlay_end, .o_field_event_state_selection, .o_field_state_selection, .o_field_boolean_favorite, .o_field_priority, .o_field_contact_image, .oe_avatar), .o_input_box:not(.o_input_box .o_input_box) {
+    .o_form_sheet .o_field_widget:not(.o_input_box_overlay_start, .o_input_box_overlay_end, .o_field_widget .o_field_widget, .o_field_event_state_selection, .o_field_state_selection, .o_field_boolean_favorite, .o_field_priority, .o_field_contact_image, .oe_avatar), .o_input_box:not(.o_input_box .o_input_box) {
         width: 100%;
     }
 
@@ -1184,21 +1184,21 @@
 
 // General InputBox rules
 .o_form_view {
-        .o_field_widget:not(.o_list_view .o_field_widget):not(.o_field_one2many):not(.o_input_box_overlay_start, .o_input_box_overlay_end), .o_input_box:has(.o_field_widget) {
-            &:has(.o_input, textarea, select, [contenteditable]) {
-                position: relative;
+    .o_field_widget:not(.o_list_view .o_field_widget):not(.o_field_one2many):not(.o_input_box_overlay_start, .o_input_box_overlay_end), .o_input_box:has(.o_field_widget) {
+        &:has(.o_input, textarea, select, [contenteditable]) {
+            position: relative;
 
-                .o_input_dropdown {
-                    position: static;
-                }
+            .o_input_dropdown {
+                position: static;
             }
         }
-        .o_input_box:has(.o_field_widget):not(.o_input_box .o_input_box):not(.o_field_widget .o_input_box) {
-            margin-bottom: var(--fieldWidget-margin-bottom);
-        }
-        .o_input_box .o_field_widget {
-            --fieldWidget-margin-bottom: 0;
-        }
+    }
+    .o_input_box:has(.o_field_widget):not(.o_input_box .o_input_box):not(.o_field_widget .o_input_box) {
+        margin-bottom: var(--fieldWidget-margin-bottom);
+    }
+    .o_input_box .o_field_widget {
+        --fieldWidget-margin-bottom: 0;
+    }
 }
 
 // TOUCH ONLY INPUTBOX RULES
@@ -1218,7 +1218,11 @@
         outline: var(--fieldWidget-outline-width) solid var(--border-color);
     }
 
-    .o_field_widget:not(.o_field_widget .o_field_widget):not(.o_list_view .o_field_widget):not(.o_field_one2many):not(.o_field_domain):not(.o_form_label .o_field_widget), .o_input_box:has(.o_field_widget) {
+    .o_field_widget:not(.o_field_widget .o_field_widget):not(.o_field_one2many):not(.o_field_domain):not(.o_form_label .o_field_widget), .o_input_box:has(.o_field_widget) {
+        &.o_input_box, .o_input_box {
+            --inputbox-overlay-padding-x: var(--inputbox-spacing-unit);
+            --inputbox-overlay-padding-y: calc(var(--border-width) + 2.25 * var(--inputbox-spacing-unit) - var(--inputbox-overlay-size) / 2);
+        }
         &:not(.o_input_box *) {
             &:has(.o_input, textarea, select, [contenteditable], .o_colorlist), &:is(.o_cell > .o_readonly_modifier, .o_cell .o_input_box:has(.o_readonly_modifier)):not(:has(input)) {
                 outline: var(--fieldWidget-outline-width) solid var(--o-input-border-color);
@@ -1313,9 +1317,6 @@ body:not(.o_touch_device) .o_form_view {
         .o_field_char.o_readonly_modifier {
             margin-bottom: 0;
         }
-    }
-    .o_form_label {
-        font-size: var(--fieldWidget-label-height);
     }
     .o_label_active {
         color: $o-action;

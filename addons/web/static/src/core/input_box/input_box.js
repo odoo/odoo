@@ -29,7 +29,7 @@ function _positionInputBoxOverlay(target) {
         startOverlays[i].style["inset-inline-start"] = `calc((1.5 * var(--inputbox-overlay-padding-x)) ${offset})`;
         startPadding += startOverlays[i].clientWidth + gap;
     };
-    closestInputBox.style.setProperty("--inputbox-overlay-padding-prefix", startPadding + "px");
+    closestInputBox.style.setProperty("--inputbox-overlay-start-size", startPadding + "px");
     for (let i = endOverlays.length; i > 0; i--) {
         const overlay = endOverlays[i - 1];
         if (_hasTouch && overlay.classList.contains("btn-link")) {
@@ -40,7 +40,7 @@ function _positionInputBoxOverlay(target) {
         overlay.style["inset-inline-end"] = `calc(var(--inputbox-overlay-padding-x) ${offset})`;
         endPadding += overlay.clientWidth + gap;
     }
-    closestInputBox.style.setProperty("--inputbox-overlay-padding-suffix", endPadding + "px");
+    closestInputBox.style.setProperty("--inputbox-overlay-end-size", endPadding + "px");
     const inlineEl = closestInputBox.querySelector(".o_input_box_overlay_inline");
     if (inlineEl) {
         const inputEl = closestInputBox.querySelector(

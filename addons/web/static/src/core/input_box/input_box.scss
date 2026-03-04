@@ -8,26 +8,21 @@
     --inputbox-overlay-padding-x: 0px;
     --inputbox-overlay-padding-y: 0px;
     --inputbox-overlay-padding-toggler: 0px;
-    --inputbox-overlay-padding-prefix: 0px;
-    --inputbox-overlay-padding-suffix: 0px;
+    --inputbox-overlay-start-size: 0px;
+    --inputbox-overlay-end-size: 0px;
     // STORE THE COMPUTED VALUE IN REUSABLE VARIABLES
-    --inputbox-inner-padding-start: calc((1.5 * var(--inputbox-overlay-padding-x)) + var(--inputbox-overlay-padding-prefix));
-    --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-padding-suffix) + var(--inputbox-overlay-padding-toggler));
-
-    &:is(.o_touch_device .o_input_box) {
-        --inputbox-overlay-padding-x: var(--inputbox-spacing-unit);
-        --inputbox-overlay-padding-y: calc(var(--border-width) + 2.25 * var(--inputbox-spacing-unit) - var(--inputbox-overlay-size) / 2);
-    }
+    --inputbox-inner-padding-start: calc((1.5 * var(--inputbox-overlay-padding-x)) + var(--inputbox-overlay-start-size));
+    --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-end-size) + var(--inputbox-overlay-padding-toggler));
 
     &:has(.o_dropdown_button) {
         --inputbox-overlay-padding-toggler: calc(var(--inputbox-overlay-padding-x) + (2 * var(--inputbox-spacing-unit)));
 
         .o_dropdown_button {
-            inset-inline-end: var(--inputbox-overlay-padding-suffix) !important;
+            inset-inline-end: var(--inputbox-overlay-end-size) !important;
         }
     }
 
-    .o_input:not(.o_input .o_input) {
+    .o_input:not(.o_input .o_input), &:not(:has(.o_input)) {
         padding-inline-start: var(--inputbox-inner-padding-start) !important;
         padding-inline-end: var(--inputbox-inner-padding-end) !important;
     }
