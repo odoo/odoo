@@ -110,6 +110,9 @@
                <td/>
             </t>
         </xpath>
+        <td name="td_section_group_name" position="attributes">
+            <attribute name="t-att-colspan">2 if doc.company_id.has_position_column else 1</attribute>
+        </td>
         <xpath expr="//table/tbody" position="before">
             <t t-if="doc.company_id.has_position_column">
                 <t t-set="line_number" t-value="1"/>
