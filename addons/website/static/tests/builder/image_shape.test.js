@@ -3,7 +3,7 @@ import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/ho
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { onRpcImg, testImg, testSvgImg } from "./image_test_helpers";
+import { onRpcImg, testImg, testSvgImg, testSvgImgSrc } from "./image_test_helpers";
 import { dummyCORSSrc, setupCORSProtectedImg } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
@@ -845,4 +845,37 @@ test("Check that the stretch option does not appear when applying a shape on a s
     // The stretch option should not be visible as it works with a canvas
     // transformation that is not compatible with a svg.
     expect("[data-action-id='toggleImageShapeRatio']").not.toHaveCount();
+});
+
+test("Replacing a shaped image by an svg should also apply the shape on the svg", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/svg+xml",
+            image_src: testSvgImgSrc,
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<div class="test-options-target">
+            ${testImg}
+        </div>`
+    );
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await selectImageShape("html_builder/geometric/geo_shuriken");
+    await waitSidebarUpdated();
+
+    await contains("[data-action-id=replaceMedia]").click();
+    await contains(".o_we_existing_attachments .o_button_area").click();
+    await waitSidebarUpdated();
+    const imgEl = queryFirst(":iframe .test-options-target img");
+    expect(imgEl.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
+    expect(`:iframe .test-options-target img`).toHaveAttribute(
+        "data-shape",
+        "html_builder/geometric/geo_shuriken"
+    );
 });
