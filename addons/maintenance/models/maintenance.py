@@ -74,7 +74,7 @@ class MaintenanceMixin(models.AbstractModel):
         default=lambda self: self.env.company)
     effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="This date will be used to compute the Mean Time Between Failure.")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team', compute='_compute_maintenance_team_id', store=True, readonly=False, check_company=True, index='btree_not_null')
-    technician_user_id = fields.Many2one('res.users', string='Technician', tracking=True)
+    technician_user_id = fields.Many2one('res.users', string='Technician')
     maintenance_ids = fields.One2many('maintenance.request')  # needs to be extended in order to specify inverse_name !
     maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance Count", store=True)
     maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
@@ -150,6 +150,8 @@ class MaintenanceEquipment(models.Model):
     equipment_properties = fields.Properties('Properties', definition='category_id.equipment_properties_definition', copy=True)
     equipment_assign_to = fields.Selection(selection=[('other', 'Other')], string='Used By')
     is_assigned = fields.Boolean(compute='_compute_is_assigned', search='_search_is_assigned')
+    # maintenance.mixin override
+    technician_user_id = fields.Many2one(tracking=True)
 
     def _get_owner_methods_by_equipment_assign_to(self):
         return {
