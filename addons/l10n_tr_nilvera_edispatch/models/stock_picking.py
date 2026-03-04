@@ -355,14 +355,14 @@ class StockPicking(models.Model):
         self.message_post(body=_("The dispatch has been successfully sent to Nilvera."))
 
     def _l10n_tr_nilvera_post_series(self, client):
-        if not self.picking_type_id.sequence_code:
+        if not self.picking_type_id.l10n_tr_nilvera_gib_sequence_code:
             return
 
         client.request(
             "POST",
             endpoint="/edespatch/Series",
             json={
-                'Name': self.picking_type_id.sequence_code.upper(),
+                'Name': self.picking_type_id.l10n_tr_nilvera_gib_sequence_code.upper(),
                 'IsActive': True,
                 'IsDefault': False,
             },
@@ -689,4 +689,4 @@ class StockPicking(models.Model):
         Example: 'OUT2025123456789'
         """
         sequence_number = self.name.removeprefix(self.picking_type_id.sequence_id.prefix or '').removesuffix(self.picking_type_id.sequence_id.suffix or '')
-        return f"{self.picking_type_id.sequence_code.upper()}{self.scheduled_date.year}{sequence_number.zfill(9)}"
+        return f"{self.picking_type_id.l10n_tr_nilvera_gib_sequence_code.upper()}{self.scheduled_date.year}{sequence_number.zfill(9)}"

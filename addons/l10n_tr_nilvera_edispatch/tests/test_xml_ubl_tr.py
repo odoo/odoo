@@ -18,6 +18,7 @@ class TestEdispatchUBLTr(TestUBLTRCommon):
             'code': 'TRW',
             'sequence': 5,
         })
+        cls.warehouse_1.out_type_id.sequence_code = "WH/NIL/"
 
     def test_xml_invoice_with_edispatches(self):
         with freeze_time('2025-03-05'):
