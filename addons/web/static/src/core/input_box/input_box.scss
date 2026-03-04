@@ -14,11 +14,6 @@
     --inputbox-inner-padding-start: calc((1.5 * var(--inputbox-overlay-padding-x)) + var(--inputbox-overlay-padding-prefix));
     --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-padding-suffix)) + var(--inputbox-overlay-padding-toggler);
 
-    &:is(.o_touch_device .o_input_box) {
-        --inputbox-overlay-padding-x: var(--inputbox-spacing-unit);
-        --inputbox-overlay-padding-y: calc(var(--border-width) + 2.25 * var(--inputbox-spacing-unit) - var(--inputbox-overlay-size) / 2);
-    }
-
     &:has(.o_dropdown_button) {
         --inputbox-overlay-padding-toggler: calc(var(--inputbox-overlay-padding-x) + (2 * var(--inputbox-spacing-unit)));
 
