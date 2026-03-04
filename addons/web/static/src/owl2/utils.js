@@ -172,19 +172,77 @@ export function useChildSubEnv(extension) {
     return owl.useChildSubEnv(extension);
 }
 
+class VPortal extends owl.blockDom.text("").constructor {
+    /**
+     * @param {any} selector
+     * @param {any} content
+     */
+    constructor(selector, content) {
+        super("");
+        this.content = content;
+        this.selector = selector;
+        this.target = null;
+    }
+
+    /**
+     * @param {any} parent
+     * @param {any} anchor
+     */
+    mount(parent, anchor) {
+        super.mount(parent, anchor);
+        this.target = document.querySelector(this.selector);
+        if (this.target) {
+            this.content.mount(this.target, null);
+        } else {
+            this.content.mount(parent, anchor);
+        }
+    }
+
+    beforeRemove() {
+        this.content.beforeRemove();
+    }
+
+    remove() {
+        if (this.content) {
+            super.remove();
+            this.content.remove();
+            this.content = null;
+        }
+    }
+
+    /**
+     * @param {any} other
+     */
+    patch(other) {
+        super.patch(other);
+        if (this.content) {
+            this.content.patch(other.content, true);
+        } else {
+            this.content = other.content;
+            this.content.mount(this.target, null);
+        }
+    }
+}
+
 class Portal extends owl.Component {
     static template = owl.xml`<t t-slot="default"/>`;
+    static props = { selector: String, slots: true };
 
     setup() {
         const node = this.__owl__;
+        const renderContent = node.renderFn;
+        node.renderFn = (/** @type {any[]} */ ...args) =>
+            new VPortal(node.props.selector, renderContent(...args));
 
         owl.onMounted(() => {
             const portal = node.bdom;
-            const target = document.querySelector(this.props.target);
-            if (target) {
-                portal.moveBeforeDOMNode(target.firstChild, target);
-            } else {
-                throw new Error("invalid portal target");
+            if (!portal.target) {
+                const target = document.querySelector(node.props.selector);
+                if (target) {
+                    portal.content.moveBeforeDOMNode(target.firstChild, target);
+                } else {
+                    throw new Error("invalid portal target");
+                }
             }
         });
 
@@ -223,7 +281,8 @@ const customDirectives = {
         if (node.nodeName.toLowerCase() !== "t") {
             throw new Error("t-custom-portal should be on a 't' element");
         }
-        node.setAttribute("t-portal", value);
+        node.setAttribute("t-component", "__globals__.Portal");
+        node.setAttribute("selector", value);
     },
 };
 
