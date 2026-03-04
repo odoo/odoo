@@ -22,6 +22,7 @@ Activates:
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
