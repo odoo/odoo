@@ -41,7 +41,9 @@ class PaymentToken(models.Model):
     @api.depends('payment_details', 'create_date')
     def _compute_display_name(self):
         for token in self:
-            token.display_name = token._build_display_name()
+            # Need to compute it as sudo, in case some provider's override need info.
+            # that are restricted to normal user (for ex. any payment.provider field)
+            token.display_name = token.sudo()._build_display_name()
 
     # === CRUD METHODS === #
 
