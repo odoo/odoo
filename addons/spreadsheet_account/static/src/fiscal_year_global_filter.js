@@ -8,7 +8,8 @@ globalFilterDateRegistry
         canOnlyBeDefault: true,
         getDefaultValue: (now) => ({ type: "fiscal_year", offset: 0 }),
         category: "fiscal_year",
-        shouldBeHidden: (getters) => isFiscalYearSameAsStandardYear(getters),
+        shouldBeHidden: (getters) =>
+            !isFiscalYearAvailable(getters) || isFiscalYearSameAsStandardYear(getters),
     })
     .add("fiscal_year", {
         sequence: 156,
@@ -30,8 +31,15 @@ globalFilterDateRegistry
         isFixedPeriod: true,
         getCurrentFixedPeriod: (now) => ({ type: "fiscal_year", offset: 0 }),
         category: "fiscal_year",
-        shouldBeHidden: (getters) => isFiscalYearSameAsStandardYear(getters),
+        shouldBeHidden: (getters) =>
+            !isFiscalYearAvailable(getters) || isFiscalYearSameAsStandardYear(getters),
     });
+
+function isFiscalYearAvailable(getters) {
+    const fiscalYearStart = getters.getCurrentFiscalYearStart();
+    const fiscalYearEnd = getters.getCurrentFiscalYearEnd();
+    return fiscalYearStart && fiscalYearEnd;
+}
 
 function getFiscalYearFromTo(offset, getters) {
     const currentFiscalYearStart = getters.getCurrentFiscalYearStart();
