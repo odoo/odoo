@@ -11,6 +11,7 @@ from . import test_express_checkout_flows
 from . import test_fuzzy
 from . import test_main_controller
 from . import test_product_public_category
+from . import test_sale_order_line
 from . import test_sale_order
 from . import test_sale_process
 from . import test_sitemap

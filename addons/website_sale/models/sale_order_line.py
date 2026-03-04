@@ -23,7 +23,19 @@ class SaleOrderLine(models.Model):
     #=== BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
-        return reversed(self.name.splitlines()[1:])
+        lang = self.order_id._get_lang()
+        sale_desc = self.product_id.with_context(lang=lang).description_sale
+
+        pattern = f'\n{sale_desc}' if sale_desc else None
+
+        if not pattern or pattern not in self.name:
+            return reversed(self.name.splitlines()[1:])
+
+        before, after = self.name.split(pattern, 1)
+
+        return (list(reversed(after[1:].splitlines())) +
+                sale_desc.splitlines() +
+                list(reversed(before.splitlines()[1:])))
 
     def _get_combination_name(self):
         return self.product_id.product_template_attribute_value_ids._get_combination_name()
