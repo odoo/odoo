@@ -32,14 +32,13 @@
                         src="getImageUrl(attachment)"
                         paused="attachment.gifPaused"
                         alt="attachment.name"
-                        class="
-                            'o-mail-AttachmentImage img img-fluid w-100 rounded-3'
-                            + (env.inMessage ? ' o-inMessage' : '')
-                            + (env.inChatter ? ' o-inChatter' : '')
-                            + (!env.inChatter and env.inMessage ? ' object-fit-contain' : '')
-                            + (!env.inChatter and !env.inMessage ? '  object-fit-cover' : '')
-                            + (env.inChatter ? ' object-fit-scale' : '')
-                        "
+                        class="attClassObjectToString({
+                            'o-mail-AttachmentImage img img-fluid w-100 rounded-3': true,
+                            'o-inMessage': env.inMessage,
+                            'o-inChatter object-fit-scale': env.inChatter,
+                            'object-fit-contain': !env.inChatter and env.inMessage,
+                            'object-fit-cover': !env.inChatter and !env.inMessage,
+                        })"
                     />
                     <img
                         t-elif="attachment.isImage"
@@ -47,10 +46,9 @@
                         t-att-class="{
                             'o-inComposer': env.inComposer,
                             'o-inMessage': env.inMessage,
-                            'o-inChatter': env.inChatter,
+                            'o-inChatter object-fit-scale': env.inChatter,
                             'object-fit-contain': !env.inChatter and env.inMessage,
                             'object-fit-cover': !env.inChatter and !env.inMessage,
-                            'object-fit-scale': env.inChatter,
                         }"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"

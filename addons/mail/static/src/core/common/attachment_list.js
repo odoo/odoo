@@ -14,6 +14,8 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useRef } from "@web/owl2/utils";
 
+import { attClassObjectToString } from "@mail/utils/common/format";
+
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
     static props = ["actions"];
@@ -36,6 +38,9 @@ export class AttachmentList extends Component {
     static components = { Actions, Gif };
     static props = ["attachments", "unlinkAttachment", "messageSearch?"];
     static template = "mail.AttachmentList";
+
+    // make this available for class evaluation in the template
+    attClassObjectToString = attClassObjectToString;
 
     setup() {
         super.setup();
