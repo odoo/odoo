@@ -48,7 +48,7 @@ class IrModuleModule(models.Model):
                     for _name, mdl in getmembers(python_module, template_module):
                         for _name, cls in getmembers(mdl, template_class):
                             for _name, fct in getmembers(cls, template_function):
-                                if (template_values := fct(self.env['account.chart.template'])):
+                                if (template_values := fct(self.env['account.chart.template'])) is not None:
                                     code = fct._l10n_template[0]
                                     country = template_values.get('country', '')
                                     country_code = country or code.split('_')[0] if country is not None else None
