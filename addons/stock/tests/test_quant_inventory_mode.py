@@ -339,5 +339,9 @@ class TestEditableQuant(TransactionCase):
         quant.with_context(inventory_report_mode=True).action_set_inventory_quantity_zero()
         self.assertEqual(quant.inventory_quantity, 0)
         self.assertEqual(quant.user_id.id, False)
+        self.assertEqual(quant.quantity, 0)
+        self.assertEqual(quant.reserved_quantity, 0)
+        # flush ORM state before raw SQL in _unlink_zero_quants
+        quant.flush_recordset()
         quant._unlink_zero_quants()
         self.assertFalse(quant.exists(), "After unlinking zero quants, the quant should be deleted")
