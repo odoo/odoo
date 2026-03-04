@@ -412,7 +412,8 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         leave.action_approve()
 
         work_entries_vals = self.jules_emp.version_ids.generate_work_entries(date(2015, 11, 10), date(2015, 11, 21))
-        work_entries_vals = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == self.env.ref('hr_work_entry.generic_work_entry_type_attendance')]
+        work_entry_type_attendance_id = self.env['hr.work.entry.type'].search([('code', '=', 'WORK100'), ('country_id', '=', self.env.company.country_id.id)])
+        work_entries_vals = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == work_entry_type_attendance_id]
         sum_hours = sum(vals['duration'] for vals in work_entries_vals)
         self.assertEqual(sum_hours, 59, 'It should count 59 attendance hours')  # 24h first contract + 35h second contract
 
@@ -441,7 +442,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         work_entries_vals = self.jules_emp.version_ids._generate_work_entries(start, end_generate)
         work_entries_vals = [vals for vals in work_entries_vals if vals['version_id'] == self.contract_cdi]
 
-        work_entry_type_attendance_id = self.env.ref('hr_work_entry.generic_work_entry_type_attendance')
+        work_entry_type_attendance_id = self.env['hr.work.entry.type'].search([('code', '=', 'WORK100'), ('country_id', '=', self.env.company.country_id.id)])
         work = [vals for vals in work_entries_vals if vals['work_entry_type_id'] == work_entry_type_attendance_id]
         leave = [vals for vals in work_entries_vals if vals['work_entry_type_id'] != work_entry_type_attendance_id]
         self.assertEqual(sum(vals['duration'] for vals in work), 49, "It should be 49 hours of work this month for this contract")
