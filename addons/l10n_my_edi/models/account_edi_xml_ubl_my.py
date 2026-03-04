@@ -169,9 +169,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # For Myinvois, prepaid amount is defined as a separate node.
         super()._add_invoice_payment_terms_nodes(document_node, vals)
         invoice = vals['invoice']
+        # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
+        paid_amount = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else invoice.amount_total - invoice.amount_residual
         document_node['cac:PrepaidPayment'] = {
             'cbc:PaidAmount': {
-                '_text': self.format_float(invoice.amount_total - invoice.amount_residual, vals['currency_dp']),
+                '_text': self.format_float(paid_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             }
         }
@@ -183,6 +185,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
         if monetary_total_tag in document_node:
             document_node[monetary_total_tag].pop('cbc:PrepaidAmount', None)
+
+        # For credit, debit, refund notes, and their self-billed variants, the PayableAmount reflects the full
+        # refund/adjustment amount without being reduced by the prepayment, as per MyInvois specifications.
+        if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14'):
+            document_node[monetary_total_tag]['cbc:PayableAmount'] = {
+                '_text': self.format_float(vals['invoice'].amount_total, vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            }
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # PaymentMeans is optional, and since we can't have the correct one at the time of generating, we don't add it.
