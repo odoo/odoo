@@ -708,8 +708,9 @@ patch(PosStore.prototype, {
             Object.assign(
                 this.couponByLineUuidCache,
                 order.lines.reduce((agg, line) => {
-                    if (line.coupon_id && line.coupon_id.id < 0) {
-                        return { ...agg, [line.uuid]: line.coupon_id.id };
+                    const lineCouponId = line.couponId;
+                    if (lineCouponId && lineCouponId < 0) {
+                        return { ...agg, [line.uuid]: lineCouponId };
                     } else {
                         return agg;
                     }
@@ -779,7 +780,7 @@ patch(PosStore.prototype, {
         }, {});
         for (const line of rewardLines) {
             const reward = line.reward_id;
-            const couponId = line.coupon_id.id;
+            const couponId = line.couponId;
             if (!couponData[couponId]) {
                 couponData[couponId] = {
                     points: 0,
@@ -849,7 +850,7 @@ patch(PosStore.prototype, {
 
                         // Before deleting the old coupon, update the order lines that use it.
                         for (const line of order.lines) {
-                            if (line.coupon_id?.id == couponUpdate.old_id) {
+                            if (line.couponId == couponUpdate.old_id) {
                                 line.coupon_id = coupon;
                             }
                         }
