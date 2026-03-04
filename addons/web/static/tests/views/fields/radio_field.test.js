@@ -184,6 +184,7 @@ test("two radio field with same selection", async () => {
     expect("[name='color_2'] input.o_radio_input[data-value=red]").toBeChecked();
 });
 
+test.tags("desktop");
 test("radio field has o_horizontal or o_vertical class", async () => {
     Partner._fields.color2 = Partner._fields.color;
 

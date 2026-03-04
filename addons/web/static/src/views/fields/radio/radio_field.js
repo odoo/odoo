@@ -5,6 +5,7 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 let nextId = 0;
 export class RadioField extends Component {
@@ -21,6 +22,7 @@ export class RadioField extends Component {
 
     setup() {
         this.id = `radio_field_${nextId++}`;
+        this.hasTouch = hasTouch();
         this.type = this.props.record.fields[this.props.name].type;
         if (this.type === "many2one") {
             this.specialData = useSpecialData(async (orm, props) => {
