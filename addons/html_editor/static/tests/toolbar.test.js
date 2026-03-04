@@ -48,7 +48,7 @@ import { insertText } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
+import { DMO_WAS_HERE, ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { Editor } from "@html_editor/editor";
 
@@ -1671,7 +1671,7 @@ describe("toolbar open and close on user interaction", () => {
             await firstClick(p);
             await secondClick(p);
             expect(getContent(el)).toBe("<p>[test] text</p>");
-            await advanceTime(100);
+            await advanceTime(DMO_WAS_HERE);
             // Toolbar is not open yet, waiting for a possible third click
             await expectElementCount(".o-we-toolbar", 0);
 
