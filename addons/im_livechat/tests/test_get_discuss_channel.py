@@ -93,7 +93,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "leave_date_to": False, "share": False},
+                {
+                    "id": self.user_root.id,
+                    "leave_date_to": False,
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
             ),
         )
         # ensure visitor info are correct with real user
@@ -163,11 +168,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "leave_date_to": False, "share": False},
+                {
+                    "id": self.user_root.id,
+                    "leave_date_to": False,
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": test_user.id,
                     "is_admin": False,
                     "notification_type": "email",
+                    "partner_id": test_user.partner_id.id,
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
                 },
@@ -278,11 +289,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "leave_date_to": False, "share": False},
+                {
+                    "id": self.user_root.id,
+                    "leave_date_to": False,
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": operator.id,
                     "is_admin": False,
                     "notification_type": "email",
+                    "partner_id": operator.partner_id.id,
                     "share": False,
                     "signature": ["markup", str(operator.signature)],
                 },

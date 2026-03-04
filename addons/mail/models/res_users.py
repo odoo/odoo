@@ -346,6 +346,7 @@ class ResUsers(models.Model):
                             [
                                 Store.Attr("is_admin", lambda u: u._is_admin()),
                                 "notification_type",
+                                "partner_id",
                                 "share",
                                 "signature",
                             ],

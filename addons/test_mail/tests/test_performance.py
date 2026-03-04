@@ -1723,7 +1723,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.env.user.id, "share": False},
+                                {
+                                    "id": self.env.user.id,
+                                    "partner_id": self.env.user.partner_id.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
@@ -1838,7 +1842,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.env.user.id, "share": False},
+                                {
+                                    "id": self.env.user.id,
+                                    "partner_id": self.env.user.partner_id.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },

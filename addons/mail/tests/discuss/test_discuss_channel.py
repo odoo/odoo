@@ -147,7 +147,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     },
                                 ),
                                 "res.users": self._filter_users_fields(
-                                    {"id": self.env.user.id, "share": False},
+                                    {
+                                        "id": self.env.user.id,
+                                        "partner_id": self.env.user.partner_id.id,
+                                        "share": False,
+                                    },
                                 ),
                             },
                             "id": channel.id,
@@ -182,7 +186,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "partner_id": self.test_partner.id,
+                                    "leave_date_to": False,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
@@ -229,7 +238,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "leave_date_to": False,
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
