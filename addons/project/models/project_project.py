@@ -209,7 +209,12 @@ class ProjectProject(models.Model):
     def _compute_next_milestone_info(self):
         for project in self:
             if milestone := project.next_milestone_id:
-                project.next_milestone_status = 'off_track' if milestone.is_deadline_exceeded else 'on_track'
+                if milestone.is_deadline_exceeded:
+                    project.next_milestone_status = 'off_track'
+                elif milestone.can_be_marked_as_done:
+                    project.next_milestone_status = 'next_track'
+                else:
+                    project.next_milestone_status = 'on_track'
             else:
                 project.next_milestone_status = False
 
@@ -1024,7 +1029,8 @@ class ProjectProject(models.Model):
     def action_open_project_form(self):
         self.ensure_one()
         return {
-            'type': 'ir.actions.act_window',
+            'tag': "project_top_menu_overview",
+            'type': 'ir.actions.client',
             'name': self.env._('Project Overview'),
             'res_model': 'project.project',
             'view_mode': 'form',

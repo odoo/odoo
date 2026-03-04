@@ -3,9 +3,9 @@
 from odoo import api, fields, models
 
 BILLABLE_TYPES = [
-    ('01_revenues_fixed', 'Revenues Fixed Price'),
-    ('05_revenues_milestones', 'Revenues Milestones'),
-    ('07_revenues_manual', 'Revenues Manual'),
+    ('01_revenues_fixed', 'Revenues (Fixed Price)'),
+    ('05_revenues_milestones', 'Revenues (Milestones)'),
+    ('07_revenues_manual', 'Revenues (Manual)'),
     ('10_service_revenues', 'Service Revenues'),
     ('11_other_revenues', 'Other Revenues'),
     ('12_other_costs', 'Other Costs'),
@@ -40,3 +40,19 @@ class AccountAnalyticLine(models.Model):
                     line.billable_type = invoice_type
             else:
                 line.billable_type = '12_other_costs'
+
+    def action_open_account_analytic_line_origine(self):
+        self.ensure_one()
+        if (self.so_line):
+            return {
+                'res_model': self.so_line,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': self.so_line.id,
+            }
+        return {
+            'res_model': self,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }

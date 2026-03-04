@@ -41,7 +41,7 @@
                         <field name="allow_timesheets"/>
                     </setting>
                 </xpath>
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <xpath expr="//button[@name='project_update_all_action']" position="after">
                     <button name="action_project_timesheets" type="object" class="oe_stat_button" icon="" groups="hr_timesheet.group_hr_timesheet_user" invisible="not allow_timesheets">
                         <i class="fa fa-fw o_button_icon fa-clock-o" title="Timesheets" invisible="stat_success_rate"/>
                         <i class="fa fa-fw o_button_icon fa-clock-o text-success" title="On Due" invisible="not stat_success_rate or stat_success_rate &gt;= 80"/>

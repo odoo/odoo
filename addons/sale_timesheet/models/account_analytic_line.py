@@ -9,12 +9,12 @@ from odoo.tools.misc import unquote
 from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
 
 TIMESHEET_BILLABLE_TYPES = [
-    ('02_billable_fixed', 'Billed at a Fixed price'),
-    ('03_timesheet_revenues', 'Revenues Timesheets'),
-    ('04_billable_time', 'Billed on Timesheets'),
-    ('06_billable_milestones', 'Billed on Milestones'),
-    ('08_billable_manual', 'Billed Manually'),
-    ('09_non_billable', 'Non-Billable'),
+    ('02_billable_fixed', 'Timesheet (Fixed price)'),
+    ('03_timesheet_revenues', 'Revenues (Time & Material)'),
+    ('04_billable_time', 'Timesheets (Time & Materials)'),
+    ('06_billable_milestones', 'Timesheets (Milestones)'),
+    ('08_billable_manual', 'Timesheets (Manual) '),
+    ('09_non_billable', 'Timesheets (Non-Billable)'),
 ]
 
 BILLABLE_TYPES += TIMESHEET_BILLABLE_TYPES

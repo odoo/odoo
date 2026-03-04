@@ -119,6 +119,21 @@
         </field>
     </record>
 
+    <record id="hr_timesheet_line_search" model="ir.ui.view">
+        <field name="name">sale_timesheet.account.analytic.margins.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='mine']" position="attributes">
+                <attribute name="string">Mine</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_parent_task']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <!--
         Timesheet from Sales Order
     -->
