@@ -56,4 +56,7 @@ def _configure_stock_account_company_data(env):
             'account_stock_expense_id',
             'account_stock_variation_id',
         },
+        'stock.location': {
+            'valuation_account_id',
+        },
     })
