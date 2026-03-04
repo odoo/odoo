@@ -1,9 +1,9 @@
 import { describe, expect, mockFetch, test } from "@odoo/hoot";
-import { press, waitFor } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { setupEditor } from "../_helpers/editor";
-import { pasteText, undo } from "../_helpers/user_actions";
+import { insertText, pasteText, undo } from "../_helpers/user_actions";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { getContent } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
@@ -154,5 +154,18 @@ describe("generic paste video url behaviors", () => {
         // Undo
         undo(editor);
         expect(getContent(el)).toBe("<p>[abc]</p>");
+    });
+    test("should close powerbox after an undo", async () => {
+        const { el, editor } = await setupEditor("<p>a[]b</p>", {
+            config: NO_EMBEDDED_COMPONENTS_CONFIG,
+        });
+        await insertText(editor, "x");
+        expect(getContent(el)).toBe(`<p>ax[]b</p>`);
+        pasteText(editor, videoUrl);
+        await animationFrame();
+        await expectElementCount(".o-we-powerbox", 1);
+        undo(editor);
+        await waitForNone(".o-we-powerbox");
+        expect(getContent(el)).toBe(`<p>ax[]b</p>`);
     });
 });
