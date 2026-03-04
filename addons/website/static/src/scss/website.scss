@@ -550,6 +550,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
     @include media-breakpoint-up(lg) {
         @include accordion-style-vertical-menu;
     }
+    .o_header_sidebar > nav:not(.o_header_mobile) {
+        overflow-y: auto;
+    }
 }
 
 $-header-nav-link-height: $nav-link-height;
