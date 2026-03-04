@@ -115,12 +115,18 @@ class HrAttendance(models.Model):
 
     @api.depends("check_in", "employee_id")
     def _compute_date(self):
-        for attendance in self:
-            if not attendance.employee_id or not attendance.check_in:  # weird precompute edge cases. Never after creation
-                attendance.date = datetime.today()
-                continue
-            tz = ZoneInfo(attendance.employee_id._get_tz())
-            attendance.date = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+        # Precompute edge cases
+        precomputed_attendances = self.filtered(lambda a: not a.employee_id or not a.check_in)
+        for attendance in precomputed_attendances:
+            attendance.date = datetime.today()
+
+        # It is known that there may be an edge case where check_in.date() gives the wrong version due to a very specific
+        # case where the attendance is created between timezone changes between versions.
+        attendances_by_timezone = (self - precomputed_attendances).grouped(lambda a: a.employee_id._get_tz(a.check_in))
+        for timezone, attendances in attendances_by_timezone.items():
+            tz = ZoneInfo(timezone)
+            for attendance in attendances:
+                attendance.date = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
 
     def _compute_color(self):
         for attendance in self:
@@ -129,7 +135,7 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
+    @api.depends('worked_hours', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
     def _compute_display_name(self):
         for attendance in self:
             wet = attendance.work_entry_type_id
@@ -453,64 +459,56 @@ class HrAttendance(models.Model):
         self._cron_auto_check_out_specific_time()
 
     def _cron_auto_check_out_tolerance(self):
-        def check_in_tz(attendance):
-            """Returns check-in time in calendar's timezone."""
-            return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz(attendance.date)))
-
-        to_verify = self.env['hr.attendance'].search(
+        now = fields.Datetime.now().replace(tzinfo=UTC)
+        attendances_to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
              ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
              ('employee_id.resource_calendar_id.calendar_type', '!=', 'undefined')]
         )
 
-        if not to_verify:
+        if not attendances_to_verify:
             return
 
-        to_verify_min_date = min(to_verify.mapped('check_in')).replace(hour=0, minute=0, second=0)
-        previous_attendances = self.env['hr.attendance'].search([
-                    ('employee_id', 'in', to_verify.mapped('employee_id').ids),
-                    ('check_in', '>', to_verify_min_date),
-                    ('check_out', '!=', False)
-        ])
+        attendances_to_verify_min_date = datetime.combine(min(attendances_to_verify.mapped('date')), time.min)
+        mapped_previous_duration = self.env['hr.attendance']._read_group(
+            domain=[
+                ('check_out', '!=', False),
+                ('date', '>=', attendances_to_verify_min_date),
+                ('employee_id', 'in', attendances_to_verify.employee_id.ids),
+            ],
+            groupby=['employee_id', 'date:day'],
+            aggregates=['worked_hours:sum'],
+        )
+        mapped_previous_duration = defaultdict(float, {(emp, d): att for emp, d, att in mapped_previous_duration})
 
-        mapped_previous_duration = defaultdict(lambda: defaultdict(float))
-        for previous in previous_attendances:
-            mapped_previous_duration[previous.employee_id][check_in_tz(previous).date()] += previous.worked_hours
-
-        all_companies = to_verify.employee_id.company_id
-
-        for company in all_companies:
+        for company, company_attendances in attendances_to_verify.grouped(lambda a: a.employee_id.company_id).items():
             max_tol = company.auto_check_out_tolerance
-            to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
 
-            for att in to_verify_company:
-
-                employee_timezone = ZoneInfo(att.employee_id._get_tz(att.date))
-                check_in_datetime = check_in_tz(att)
-                now_datetime = fields.Datetime.now().astimezone(employee_timezone)
-                current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
-                previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
-
-                check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-                expected_worked_hours = sum_intervals(
-                    att.employee_id._get_expected_attendances(
-                        check_in_day_start,
-                        check_in_day_start + timedelta(days=1),
+            for timezone, attendances in company_attendances.grouped(lambda a: a.employee_id._get_tz(a.date)).items():
+                tz = ZoneInfo(timezone)
+                for attendance in attendances:
+                    day_start = datetime.combine(attendance.date, time.min, tz)
+                    expected_worked_hours = sum_intervals(
+                        attendance.employee_id._get_expected_attendances(
+                            day_start,
+                            day_start + timedelta(days=1),
+                        )
                     )
-                )
+                    previous_attendances_duration = mapped_previous_duration[attendance.employee_id, attendance.date]
 
-                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-                if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
-                    att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
-                        "out_mode": "auto_check_out"
-                    })
-                    att.message_post(
-                        body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
-                    )
+                    hours_left = expected_worked_hours + max_tol - previous_attendances_duration
+                    check_out_time = attendance.check_in.replace(tzinfo=UTC) + relativedelta(hours=hours_left)
+                    if check_out_time <= now:
+                        end_of_day_tz = datetime.combine(attendance.date, time.max, tz)
+                        check_out_time = min(check_out_time, end_of_day_tz).astimezone(UTC).replace(tzinfo=None)
+                        attendance.write({
+                            "check_out": max(check_out_time, attendance.check_in + relativedelta(seconds=1)),
+                            "out_mode": "auto_check_out",
+                        })
+                        attendance.message_post(
+                            body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+                        )
 
     def _cron_absence_detection(self):
         """Create a 1-second technical attendance for each employee who did not check in yesterday.
@@ -520,38 +518,42 @@ class HrAttendance(models.Model):
         to the company's default so condition filters on undertime rules match it.
         Technical attendances that produce no time rule output are discarded afterwards.
         """
-        yesterday = datetime.today().replace(hour=0, minute=0, second=0) - relativedelta(days=1)
+        yesterday = datetime.today().date() - relativedelta(days=1)
         companies = self.env['res.company'].search([('absence_management', '=', True)])
         if not companies:
             return
 
-        checked_in_employees = self.env['hr.attendance'].search([('date', '=', yesterday)]).employee_id
+        checked_in_employees = self.env['hr.attendance'].search([
+            ('date', '=', yesterday),
+            ('employee_id.company_id', 'in', companies.ids),
+        ]).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([
             ('id', 'not in', checked_in_employees.ids),
             ('company_id', 'in', companies.ids),
             ('resource_calendar_id', '!=', False),
-            ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
+            ('current_version_id.contract_date_start', '<=', yesterday),
         ])
 
-        for emp in absent_employees:
-            local_day_start = yesterday.replace(tzinfo=ZoneInfo(emp._get_tz()))
-            check_in_utc = local_day_start.astimezone(UTC)
-            technical_attendances_vals.append({
-                'check_in': check_in_utc.strftime('%Y-%m-%d %H:%M:%S'),
-                'check_out': (check_in_utc + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
+        technical_attendance_datetime = datetime.combine(yesterday, time.min, tzinfo=UTC)
+        for timezone, employees in absent_employees.grouped(lambda emp: emp._get_tz(yesterday)).items():
+            local_day_start = technical_attendance_datetime.astimezone(ZoneInfo(timezone)).replace(tzinfo=None)
+            local_day_end = local_day_start + relativedelta(seconds=1)
+            technical_attendances_vals.extend([{
+                'check_in': local_day_start,
+                'check_out': local_day_end,
                 'work_entry_type_id': emp.company_id.attendance_work_entry_type_id.id,
                 'in_mode': 'technical',
                 'out_mode': 'technical',
                 'employee_id': emp.id,
                 'state': 'validated',
-            })
+            } for emp in employees])
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
         to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
-        for technical_attendance in technical_attendances:
+        for technical_attendance in technical_attendances - to_unlink:
             technical_attendance.message_post(body=body)
 
         to_unlink.unlink()
