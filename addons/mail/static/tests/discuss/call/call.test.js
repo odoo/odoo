@@ -19,6 +19,7 @@ import {
     dropFiles,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { SoundEffects } from "@mail/core/common/sound_effects_service";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -1212,17 +1213,25 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
         partner_id: pyEnv["res.partner"].create({ name: "Batman" }),
     });
     setupChatHub({ opened: [channelId] });
+    patchWithCleanup(SoundEffects.prototype, {
+        play(name) {
+            expect.step(`play - ${name}`);
+        },
+    });
     const env = await start();
     const network = await makeMockRtcNetwork({ env, channelId });
     const mockedRemote = network.makeMockRemote(channelMemberId);
     await click("[title='Join Call']");
     await contains(".o-discuss-CallParticipantCard", { count: 2 });
+    await expect.waitForSteps(["play - call-join"]);
     await mockedRemote.updateConnectionState("connected");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Batman']:has(video)");
     await contains(".o-discuss-CallParticipantCard");
     await mockedRemote.updateUpload("camera", null);
+    await contains(".o-discuss-CallParticipantCard[aria-label='Batman']:not(:has(video))");
     await click(".o-discuss-CallParticipantCard[aria-label='Batman']");
+    await contains(".o-discuss-CallParticipantCard", { count: 2 });
     await click("[title='Fullscreen']");
     await contains(".o-mail-Meeting[data-active]");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
