@@ -39,7 +39,7 @@ from odoo.tools import (
     BinaryBytes,
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, SQL,
-    OrderedSet, ormcache, is_list_of,
+    OrderedSet, is_list_of,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
@@ -133,7 +133,10 @@ class MailThread(models.AbstractModel):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _inherit = 'bus.listener.mixin'
+    _inherit = [
+        'bus.listener.mixin',
+        'mail.track.mixin',  # values tracking basic capabilities
+    ]
     _mail_flat_thread = True  # link orphan messages to the first message
     _mail_thread_customer = False  # subscribe customer when being in post recipients
     _mail_post_access = 'write'  # access required on the document to post on it
@@ -517,15 +520,6 @@ class MailThread(models.AbstractModel):
         doc_name = self.env['ir.model']._get(self._name).name
         return _('%s created', doc_name)
 
-    def _valid_field_parameter(self, field, name):
-        # allow tracking on models inheriting from 'mail.thread'
-        return name == 'tracking' or super()._valid_field_parameter(field, name)
-
-    def _fallback_lang(self):
-        if not self.env.context.get("lang"):
-            return self.with_context(lang=self.env.user.lang)
-        return self
-
     def _check_can_update_message_content(self, messages):
         """" Checks that the current user can update the content of the message.
         Current heuristic is
@@ -540,79 +534,33 @@ class MailThread(models.AbstractModel):
 
     # ------------------------------------------------------
     # TRACKING / LOG
+    # see 'mail_track_mixin' for values tracking itself
     # ------------------------------------------------------
 
     # track data storage / manipulation
     # ------------------------------------------------------
 
-    def _track_disabled(self):
-        return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
+    def _track_execute(
+        self, track_init_values: dict[int, ValuesType],
+        trackings: dict[int, tuple[set[str], list[CommandValue]]]
+    ):
+        # override to generate tracking messages
+        super()._track_execute(track_init_values, trackings)
 
-    def _track_prepare(self, field_names: Iterable[str]) -> dict[int, ValuesType]:
-        """ Prepare the tracking of `fields_iter` for `self` for tracked
-        fields (see `_track_get_fields`). Store initial values for tracked fields
-        in precommit data.
+        # log tracking on records
+        self._track_log(track_init_values, trackings)
 
-        :param Iterable[str] field_names: field names to potentially track, to be
-            checked against model-based tracked fields
-        """
-        tracked_fnames = self._track_get_fields().intersection(field_names)
-        if not self or not tracked_fnames:
-            return
-        self.env.cr.precommit.add(self._track_finalize)
-        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
-            record_values = initial_values.setdefault(record.id, {})
-            if record_values is not None:  # None means tracking was disabled for this record
-                for fname in tracked_fnames:
-                    record_values.setdefault(fname, record._track_convert_value(fname, record[fname]))
-
-        # ease overrides by returning initial values
-        return initial_values
-
-    def _track_discard(self):
-        """ Prevent any tracking of fields on `self`. """
-        if not self or not self._track_get_fields():
-            return
-        self.env.cr.precommit.add(self._track_finalize)
-        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        # disable tracking by setting initial values to None
-        for id_ in self.ids:
-            initial_values[id_] = None
-
-    def _track_finalize(self):
-        """ Generate the tracking messages for the records that have been
-        prepared with `_tracking_prepare`.
-
-        Also cleans precommit data, resetting state and avoiding multiple
-        tracking generation. """
-        initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
-        ids = [id_ for id_, vals in initial_values.items() if vals]
-        if not ids:
-            return
-
-        fnames = self._track_get_fields()
-        # Clean the context to get rid of residual default_* keys that could
-        # cause issues afterward during the mail.message generation. Example:
-        # 'default_parent_id' would refer to the parent_id of the current
-        # record that was used during its creation, but could refer to wrong
-        # parent message id, leading to a traceback or a wrongly referenced
-        # record
-        # sudo: # be sure to compute end values whatever current user ACLs
-        records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
-
-        tracked_fields_get = records_su.fields_get(fnames, attributes=('string', 'type', 'selection', 'currency_field'))
-        trackings = dict()
-        for record_su in records_su:
-            try:
-                trackings[record_su.id] = record_su._mail_track(tracked_fields_get, initial_values[record_su.id])
-            except MissingError:
-                continue
-        records_su._track_log(initial_values, trackings)
-
-        for record_su in records_su:
+        # fire template-based message generation
+        for record_su in self:
             tracked_fields, _tracking_value_ids = trackings.get(record_su.id, (None, None))
-            record_su._message_track_post_template(tracked_fields)
+            record_su._track_post_template(tracked_fields)
+
+    def _track_finalize(self) -> dict[int, ValuesType] | None:
+        # override to cleanup precommit data specific to mailing capabilities
+        res = super()._track_finalize()
+        self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
+        self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
+        return res
 
     def _track_set_log_author(self, author: BaseModel):
         """ Set the author (res.partner) of the tracking message for `self`. """
@@ -627,24 +575,6 @@ class MailThread(models.AbstractModel):
         body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
         for id_ in self.ids:
             body_values[id_] = message
-
-    @ormcache('self.env.uid', 'self.env.su')
-    def _track_get_fields(self) -> set[str]:
-        """ Return the set of tracked fields names for the current model. """
-        model_fields = {
-            name
-            for name, field in self._fields.items()
-            if getattr(field, 'tracking', None)
-        }
-        # track the properties changes ONLY if the parent changed
-        model_fields |= {
-            fname for fname, f in self._fields.items()
-            if f.type == "properties"
-            and f.definition_record in model_fields
-            and getattr(f, "tracking", None) is not False
-        }
-
-        return model_fields and set(self.fields_get(model_fields, attributes=()))
 
     # track posting
     # ------------------------------------------------------
@@ -664,8 +594,8 @@ class MailThread(models.AbstractModel):
             each existing record, changes and generate tracking values
         """
         # find content to log as body
-        bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
-        authors = self.env.cr.precommit.data.pop(f'mail.tracking.author.{self._name}', {})
+        bodies = self.env.cr.precommit.data.get(f'mail.tracking.message.{self._name}', {})
+        authors = self.env.cr.precommit.data.get(f'mail.tracking.author.{self._name}', {})
 
         for record in self:
             changes, tracking_value_ids = trackings.get(record.id, (None, None))

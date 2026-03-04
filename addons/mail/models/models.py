@@ -36,13 +36,6 @@ class Base(models.AbstractModel):
                     mail_store.mark_field_as_written(field.model_name, ids, field.name)
         return super()._flush()
 
-    def _valid_field_parameter(self, field, name):
-        # allow tracking on abstract models; see also 'mail.thread'
-        return (
-            name == 'tracking' and self._abstract
-            or super()._valid_field_parameter(field, name)
-        )
-
     def with_user(self, user):
         """Override to ensure the guest context is removed as the target user in a with_user should
         never be considered as being the guest of the outside env."""

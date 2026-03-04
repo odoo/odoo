@@ -11,6 +11,7 @@ from . import mail_alias_mixin_optional
 from . import mail_alias_mixin
 from . import mail_render_mixin
 from . import mail_composer_mixin
+from . import mail_track_mixin
 from . import mail_thread
 from . import mail_thread_blacklist
 from . import mail_thread_main_attachment
