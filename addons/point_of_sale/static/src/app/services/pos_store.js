@@ -1202,7 +1202,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.attribute_value_ids = [];
             }
             values.attribute_value_ids = values.attribute_value_ids.concat(
-                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
+                values.product_id.product_template_attribute_value_ids.map((attr) => ["link", attr])
             );
         }
     };

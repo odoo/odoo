@@ -289,3 +289,31 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_image_variants_displayed', login="pos_user")
+
+    def test_variants_merge_line_barcode(self):
+        """Tests the price of products with always variant when added to cart"""
+        product_template = self.env['product.template'].create({
+            'name': 'A variant product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id])],
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': self.color_attribute.id,
+            'value_ids': [Command.set([self.color_attribute_blue.id])],
+        })
+        product_S_blue = self.env["product.product"].search([("product_tmpl_id", "=", product_template.id)])[0]
+        self.assertEqual(len(product_S_blue.product_template_variant_value_ids), 1)  # Size S (only size varies)
+        self.assertEqual(len(product_S_blue.product_template_attribute_value_ids), 2)  # Attributes: S, blue
+        product_S_blue.barcode = "TEST123"
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_variants_merge_line_barcode', login="pos_user")
