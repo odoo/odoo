@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -1178,7 +1178,9 @@ export class LinkPlugin extends Plugin {
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
             // Merge adjacent text nodes.
-            selection.anchorNode.parentNode.normalize();
+            const cursor = this.dependencies.selection.preserveSelection();
+            mergeAdjacentTextNodes(selection.anchorNode.parentNode, cursor);
+            cursor.restore();
             selection = this.dependencies.selection.getEditableSelection();
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
