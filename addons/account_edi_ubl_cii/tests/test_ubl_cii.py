@@ -785,6 +785,18 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         """
         Test the group/ungroup lines action on account.move
         """
+
+        def create_bill(file_path):
+            file_path = f"{self.test_module}/tests/test_files/{file_path}"
+            with file_open(file_path, 'rb') as file:
+                xml_attachment = self.env['ir.attachment'].create({
+                    'mimetype': 'application/xml',
+                    'name': 'bis3_bill_group_by_tax.xml',
+                    'raw': file.read(),
+                })
+            return self.import_attachment(xml_attachment)
+
+        # Datas
         self.env.ref('base.EUR').active = True
         tax_16 = self.env["account.tax"].create({
             'name': '16 %',
@@ -799,19 +811,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'amount': 21.0,
         })
 
-        file_path = "bis3_bill_group_by_tax.xml"
-        file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'bis3_bill_group_by_tax.xml',
-                'raw': file.read(),
-            })
-        bill = self.import_attachment(xml_attachment)
-
-        # Should group lines by tax
-        bill.action_group_ungroup_lines_by_tax()
-        self.assertRecordValues(bill.invoice_line_ids, [
+        lines_grouped = [
             {
                 'quantity': 1.0,
                 'price_unit': 600.0,
@@ -826,16 +826,31 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 'price_total': 1573.00,
                 'tax_ids': tax_21.ids,
             },
-        ])
-        self.assertRecordValues(bill, [{
+        ]
+        total_values = [{
             'amount_untaxed': 1900.0,
             'amount_tax': 369,
             'amount_total': 2269.00,
-        }])
+        }]
+
+        # Import bill
+        file_path = "bis3_bill_group_by_tax.xml"
+        bill = create_bill(file_path)
+
+        # Group lines by tax and post
+        bill.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill.invoice_line_ids, lines_grouped)
+        self.assertRecordValues(bill, total_values)
+        bill.action_post()
+
+        # Import the bill a second time, should be grouped as last posted bill from this supplier is grouped
+        bill_2 = create_bill(file_path)
+        self.assertRecordValues(bill_2.invoice_line_ids, lines_grouped)
+        self.assertRecordValues(bill_2, total_values)
 
         # Should ungroup lines from xml
-        bill.action_group_ungroup_lines_by_tax()
-        self.assertRecordValues(bill.invoice_line_ids, [
+        bill_2.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill_2.invoice_line_ids, [
             {
                 'quantity': 1.0,
                 'price_unit': 600.0,
@@ -858,11 +873,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
                 'tax_ids': tax_21.ids,
             },
         ])
-        self.assertRecordValues(bill, [{
-            'amount_untaxed': 1900.0,
-            'amount_tax': 369,
-            'amount_total': 2269.00,
-        }])
+        self.assertRecordValues(bill_2, total_values)
 
     def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
         """Test that fixed taxes are split correctly:
