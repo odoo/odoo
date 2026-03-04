@@ -7,6 +7,7 @@ import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 
 export class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
@@ -210,6 +211,22 @@ export class BaseProductPageAction extends BuilderAction {
                     await this.convertAttachmentToWebp(attachment, extraImageEls[index]);
                 }
             }
+        } else if(type === "video") {
+            attachments = await Promise.all(attachments.map(async attachment => {
+                const thumbnailUrl = await attachment.thumbnailUrl;
+                let thumbnailData = null;
+                if (thumbnailUrl) {
+                    const fetchResult = await fetch(thumbnailUrl);
+                    const blob = await fetchResult.blob();
+                    thumbnailData = await getDataURLFromFile(blob);
+                }
+
+                return {
+                    name: attachment.platform + " - [Video]",
+                    video_url: attachment.embedUrl,
+                    image_1920:  thumbnailData ? thumbnailData.split(",")[1] : null
+                }
+            }));
         }
         await rpc("/shop/product/extra-media", {
             media: attachments,

@@ -92,3 +92,7 @@ export class EmbeddedComponentInteraction extends Interaction {
 registry
     .category("public.interactions")
     .add("html_editor.embedded_component", EmbeddedComponentInteraction);
+
+registry.category("public.interactions.edit").add("html_editor.embedded_component", {
+    Interaction: EmbeddedComponentInteraction,
+});

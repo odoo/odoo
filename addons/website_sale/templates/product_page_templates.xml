@@ -1041,10 +1041,10 @@
             t-out="ribbon.name or ''"
         />
         <div
-            t-if="product_image._name == 'product.image' and product_image.embed_code"
+            t-if="product_image._name == 'product.image' and product_image.video_url"
             t-att-class="image_classes + ' ratio ratio-16x9'"
         >
-            <t t-out="product_image.embed_code"/>
+            <div data-embedded="video" t-attf-data-embedded-props='{"src": "#{product_image.video_url}"}'/>
         </div>
         <div
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
@@ -1175,7 +1175,7 @@
                         t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'object-fit-cover w-100 h-100', 'alt-field': 'name'}"
                     />
                     <i
-                        t-if="product_image._name == 'product.image' and product_image.embed_code"
+                        t-if="product_image._name == 'product.image' and product_image.video_url"
                         class="fa fa-2x fa-play-circle o_product_video_thumb bg-black-50 text-center"
                     />
                 </li>

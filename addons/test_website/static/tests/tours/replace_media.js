@@ -6,7 +6,9 @@ import {
     changeImageShape,
 } from "@website/js/tours/tour_utils";
 
-const VIDEO_URL = "https://www.youtube.com/watch?v=Dpq87YCHmJc";
+const videoId = "Dpq87YCHmJc";
+const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+const embedUrl = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
 
 /**
  * The purpose of this tour is to check the media replacement flow.
@@ -27,11 +29,11 @@ registerWebsitePreviewTour(
                 // TODO if we ever give the possibility to upload its own videos,
                 // this won't be necessary anymore.
                 patch(VideoSelector.prototype, {
-                    async _getVideoURLData(src, options) {
-                        if (src === VIDEO_URL || src === "about:blank") {
-                            return { platform: "youtube", embed_url: "about:blank" };
+                    async updateVideoPreview(videoData) {
+                        if (embedUrl === videoData.embedUrl) {
+                            videoData.embedUrl = "about:blank";
                         }
-                        return super._getVideoURLData(...arguments);
+                        return super.updateVideoPreview(videoData);
                     },
                 });
             },
@@ -124,7 +126,7 @@ registerWebsitePreviewTour(
             content: "enter a video URL",
             trigger: ".o_select_media_dialog #o_video_text",
             // Design your first web page.
-            run: `edit ${VIDEO_URL}`,
+            run: `edit ${videoUrl}`,
         },
         {
             content: "wait for preview to appear",

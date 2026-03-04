@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import binascii
 import logging
 
 from odoo.exceptions import ValidationError
@@ -275,14 +276,20 @@ class TestProductVideoUpload(HttpCase):
             "website_published": True,
         })
         cls.video_data = {
-            "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",  # A placeholder video URL
-            "name": "Test Video",
+            "embed_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ?enablejsapi=1&rel=0",
+            "platform": "YouTube",
         }
+        # 1x1 pixel PNG image, used as a mock thumbnail for video uploads
+        cls.mock_b64_image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/D/PwAHAwL/qGeMxAAAAABJRU5ErkJggg=="
 
     def _upload_video(self):
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{"src": self.video_data["src"], "name": self.video_data["name"]}],
+                [{
+                    "name": self.video_data["platform"] + " - [Video]",
+                    "video_url": self.video_data["embed_url"],
+                    "image_1920": self.mock_b64_image,
+                }],
                 "video",
                 self.product.id,
                 self.product.product_tmpl_id.id,
@@ -297,7 +304,7 @@ class TestProductVideoUpload(HttpCase):
         image_1920 = self.product.product_template_image_ids[0].image_1920
 
         # Check that the video URL and thumbnail are correctly saved
-        self.assertEqual(video_url, self.video_data["src"])
+        self.assertEqual(video_url, self.video_data["embed_url"])
         self.assertIsNotNone(image_1920)  # Ensure a thumbnail was generated
 
         # Verify that the video was added as part of the media
@@ -308,8 +315,23 @@ class TestProductVideoUpload(HttpCase):
         with MockRequest(self.product.env, website=self.website):
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.add_product_media(
-                    [{"src": "", "name": "Invalid Video"}],
+                    [{"video_url": "", "name": "Invalid Video"}],
                     "video",
+                    self.product.id,
+                    self.product.product_tmpl_id.id,
+                )
+
+    def test_video_upload_thumbnail_invalid(self):
+        # Try to upload a video with invalid thumbnailUrl data
+        with MockRequest(self.product.env, website=self.website):
+            with self.assertRaises(binascii.Error):
+                self.WebsiteSaleController.add_product_media(
+                    [{
+                        'name': 'Invalid Video',
+                        'video_url': self.video_data['embed_url'],
+                        'image_1920': 'not-a-valid-image',
+                    }],
+                    'video',
                     self.product.id,
                     self.product.product_tmpl_id.id,
                 )

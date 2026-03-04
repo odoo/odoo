@@ -2,8 +2,8 @@ import { useChildSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { getVideoUrl } from "@html_editor/utils/url";
 import { CustomMediaDialog } from "./custom_media_dialog";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { saveMultipleAttachments } from "@web/core/utils/image_library";
 
 export class X2ManyMediaViewer extends X2ManyField {
@@ -38,11 +38,22 @@ export class X2ManyMediaViewer extends X2ManyField {
         };
     }
 
-    onVideoSave(videoInfo) {
-        const url = getVideoUrl(videoInfo[0].platform, videoInfo[0].videoId, videoInfo[0].params);
-        const videoList = this.props.record.data[this.props.name];
-        videoList.addNewRecord({ position: "bottom" }).then((record) => {
-            record.update({ name: videoInfo[0].platform + " - [Video]", video_url: url.href });
+    async onVideoSave(videosInfo) {
+        const videoInfo = videosInfo[0];
+        let thumbnailData = null;
+        if (videoInfo?.thumbnailUrl) {
+            const fetchResult = await fetch(videoInfo.thumbnailUrl);
+            const blob = await fetchResult.blob();
+            thumbnailData = await getDataURLFromFile(blob);
+        }
+
+        const productImageRecords = this.props.record.data[this.props.name];
+        productImageRecords.addNewRecord({ position: "bottom" }).then(async (record) => {
+            record.update({
+                name: videoInfo.platform + " - [Video]",
+                video_url: videoInfo.embedUrl,
+                image_1920: thumbnailData ? thumbnailData.split(",")[1] : null,
+            });
         });
     }
 
@@ -63,6 +74,7 @@ export class X2ManyMediaViewer extends X2ManyField {
 export const x2ManyMediaViewer = {
     ...x2ManyField,
     component: X2ManyMediaViewer,
+    relatedFields: () => [{ name: "name" }, { name: "image_1920" }, { name: "video_url" }],
     extractProps: (
         { attrs, relatedFields, viewMode, views, widget, options, string },
         dynamicInfo
