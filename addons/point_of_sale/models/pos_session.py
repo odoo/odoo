@@ -374,14 +374,15 @@ class PosSession(models.Model):
         return True
 
     def get_session_orders(self):
-        return self.order_ids.filtered(lambda o:
-            not (o.preset_time and o.preset_time.date() > fields.Date.today())
-        )
+        return self.env['pos.order'].search([
+            ('session_id', '=', self.id),
+            '|', ('preset_time', '=', False), ('preset_time', '<=', fields.Datetime.now())
+        ])
 
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
-            if any(order.state == 'draft' for order in self.get_session_orders()):
+            if any(order.state == 'draft' for order in session.get_session_orders()):
                 raise UserError(_("You cannot close the POS while there are still draft orders for the day."))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -420,7 +421,7 @@ class PosSession(models.Model):
         if self.env.user.has_group('point_of_sale.group_pos_user'):
             record = record.sudo()
         data = {}
-        if self.get_session_orders().filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
+        if record.get_session_orders().filtered(lambda o: o.state != 'cancel') or record.statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
@@ -553,7 +554,11 @@ class PosSession(models.Model):
             check_closing_session['open_order_ids'] = open_order_ids
             return check_closing_session
 
-        future_orders = self.order_ids.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
+        future_orders = self.env['pos.order'].search([
+            ('session_id', '=', self.id),
+            ('state', '=', 'draft'),
+            ('preset_time', '>', fields.Datetime.now())
+        ])
         future_orders.session_id = False
 
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)

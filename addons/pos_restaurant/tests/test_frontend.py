@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo import Command
+from odoo import Command, fields
 import json
 from datetime import datetime, timedelta
 
@@ -675,6 +675,39 @@ class TestFrontend(TestFrontendCommon):
             'resource_calendar_id': resource_calendar
         })
         self.start_pos_tour('test_cancel_future_order')
+
+    def test_close_with_planned_order_later_today(self):
+        """
+        This test ensures that an order planned for later today is not cancelled when the PoS session is closed,
+        and that the session can be closed successfully.
+        """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        session = self.main_pos_config.current_session_id
+        product = self.env['product.product'].search([('available_in_pos', '=', True)], limit=1)
+
+        planned_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10.0,
+                'qty': 1.0,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 10.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'preset_time': fields.Datetime.now() + timedelta(hours=4),
+        })
+
+        session.close_session_from_ui()
+
+        self.assertEqual(session.state, 'closed')
+        self.assertEqual(planned_order.state, 'draft')
+        self.assertFalse(planned_order.session_id)
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({
