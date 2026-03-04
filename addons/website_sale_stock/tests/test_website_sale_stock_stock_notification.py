@@ -33,6 +33,8 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
 
         self._add_product_qty_to_wh(self.macbook.id, 10.0, self.warehouse.lot_stock_id.id)
 
+        website = self.env['website'].get_current_website()
+        website.company_id.partner_id.email = "test@test.com"
         with self.setup_cron_env() as env:
             env["product.product"]._send_availability_email()
 

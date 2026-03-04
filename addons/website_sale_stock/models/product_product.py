@@ -88,7 +88,7 @@ class ProductProduct(models.Model):
                     ),
                     "email_from": (
                         website.company_id.partner_id.email_formatted
-                        or self_ctxt.env.user.email_formatted
+                        or website.salesperson_id.email_formatted
                     ),
                     "email_to": partner.email_formatted,
                     "body_html": full_mail,
