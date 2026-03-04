@@ -367,10 +367,10 @@ class PosSession(models.Model):
         return {'config_id': config_id}
 
     def get_session_orders(self):
-        today = fields.Date.context_today(self)
-        return self.order_ids.filtered(lambda o:
-            not (o.preset_time and fields.Datetime.context_timestamp(self, o.preset_time).date() > today),
-        )
+        return self.env['pos.order'].search([
+            ('session_id', '=', self.id),
+            '|', ('preset_time', '=', False), ('preset_time', '<=', fields.Datetime.now())
+        ])
 
     def get_order_count_by_preset(self):
         orders = self.order_ids.filtered(lambda o: o.state != 'cancel' and o.preset_id and o.preset_time and o.preset_time > fields.Datetime.now())
