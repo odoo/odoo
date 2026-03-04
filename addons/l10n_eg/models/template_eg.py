@@ -35,6 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'receivable_account_id': 'egy_account_102011',
                 'payable_account_id': 'egy_account_201002',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_cash_basis_base_account_id': 'egy_account_201029',
                 'account_stock_valuation_id': 'egy_account_132100',
             },
         }
