@@ -686,7 +686,7 @@ class MailTemplate(models.Model):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
-        :param int res_id: id of the record to render the template
+        :param int res_id: id of the record to render the template (may be ``False`` if no record)
         :param bool force_send: send email immediately; otherwise use the mail
             queue (recommended);
         :param dict email_values: update generated mail with those values to further
@@ -715,7 +715,7 @@ class MailTemplate(models.Model):
         """
         # Grant access to send_mail only if access to related document
         self.ensure_one()
-        self._send_check_access(res_ids)
+        self._send_check_access([res_id for res_id in res_ids if res_id])
         sending_email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
 
         mails_sudo = self.env['mail.mail'].sudo()
@@ -745,7 +745,8 @@ class MailTemplate(models.Model):
             values_list = [res_ids_values[res_id] for res_id in res_ids_chunk]
 
             # get record in batch to use the prefetch
-            records = RecordModel.browse(res_ids_chunk)
+            prefetch_ids = [res_id for res_id in res_ids_chunk if res_id]  # avoid browsing False
+            records = RecordModel.browse(prefetch_ids)
             attachments_list = []
 
             # lang and company is used for rendering layout
@@ -755,7 +756,9 @@ class MailTemplate(models.Model):
                     res_ids_langs = self._render_lang(res_ids_chunk)
                 res_ids_companies = records._mail_get_companies(default=self.env.company)
 
-            for record in records:
+            for res_id in res_ids_chunk:
+                # special case: use empty record when res_id is False
+                record = RecordModel.browse(res_id).with_prefetch(prefetch_ids)
                 values = res_ids_values[record.id]
                 values['recipient_ids'] = [(4, pid) for pid in (values.get('partner_ids') or [])]
                 values['attachment_ids'] = [(4, aid) for aid in (values.get('attachment_ids') or [])]
