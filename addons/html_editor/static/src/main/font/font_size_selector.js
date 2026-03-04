@@ -39,8 +39,8 @@ export class FontSizeSelector extends Component {
             const initFontSizeInput = () => {
                 const iframeDoc = iframeEl.contentWindow.document;
 
-                // Skip if already initialized.
-                if (this.fontSizeInput || !iframeDoc.body) {
+                // Skip if already/still initialized.
+                if (this.fontSizeInput?.closest("body") === iframeDoc.body || !iframeDoc.body) {
                     return;
                 }
 
@@ -85,17 +85,9 @@ export class FontSizeSelector extends Component {
             };
             if (iframeEl.contentDocument.readyState === "complete") {
                 initFontSizeInput();
-            } else {
-                // in firefox, iframe is not immediately available. we need to wait
-                // for it to be ready before mounting.
-                iframeEl.addEventListener(
-                    "load",
-                    () => {
-                        initFontSizeInput();
-                    },
-                    { once: true }
-                );
             }
+            // If iframe is moved around in DOM, it restarts from scratch and needs to be repopulated.
+            iframeEl.addEventListener("load", initFontSizeInput);
         });
         useEffect(
             () => {
