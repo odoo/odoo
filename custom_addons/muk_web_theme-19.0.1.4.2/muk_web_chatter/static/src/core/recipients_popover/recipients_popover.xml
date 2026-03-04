@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="muk_web_chatter.RecipientsListPopover">
+        <div class="p-2" style="max-height: 280px; overflow: auto;">
+            <t t-foreach="props.recipients" t-as="r" t-key="r.id">
+                <div class="text-nowrap">
+                    <t t-esc="r.partner_id.email || r.partner_id.name"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "FiraSansNerd";
+    src: url("/my_theme_deeper/static/src/fonts/FiraSansNerd-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "FiraSansNerd";
+    src: url("/my_theme_deeper/static/src/fonts/FiraSansNerd-Bold.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+$o-font-family: "FiraSansNerd", "Fira Sans", sans-serif;
+$o-font-family-sans-serif: o-add-unicode-support-font(("FiraSansNerd", "Fira Sans", sans-serif));
+$o-headings-font-family: o-add-unicode-support-font(("FiraSansNerd", "Fira Sans", sans-serif));
+
+// Ensure backend containers pick up the new family.
+.o_web_client,
+.o_main_navbar,
+.o_action_manager {
+    font-family: $o-font-family-sans-serif;
+}

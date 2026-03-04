@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_pager')]" position="before">
+            <div
+                t-if="this.autoLoadState and this.checkRefreshAvailability() and !env.isSmall"
+                class="o_cp_refresh d-inline-flex align-items-center gap-1 align-self-center"
+            >
+                <span
+                    t-if="this.autoLoadState.active and this.autoLoadState.counter &gt; 0"
+                    class="small text-muted"
+                >
+                    <t t-out="this.autoLoadState.counter"/>s
+                </span>
+                <button
+                    class="btn btn-link p-0 d-inline-flex align-items-center justify-content-center"
+                    type="button"
+                    t-att-title="this.autoLoadState.active ? 'Auto Refresh Active (Double-Click to Disable)' : 'Refresh (Double-Click for Auto Refresh)'"
+                    t-on-click.stop="this.onClickRefresh"
+                    t-on-dblclick.stop="this.onDblClickRefresh"
+                >
+                    <i
+                        class="fa fa-refresh fa-fw"
+                        t-att-class="this.autoLoadState.active ? 'text-info' : 'text-muted'"
+                    />
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

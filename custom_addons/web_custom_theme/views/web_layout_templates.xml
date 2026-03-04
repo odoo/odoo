@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="webclient_bootstrap_colors" inherit_id="web.webclient_bootstrap">
+        <xpath expr="//t[@t-set='head_web']" position="inside">
+            <t t-set="company" t-value="request.env.user.company_id"/>
+            <style type="text/css">
+                :root {
+                    --o-brand-primary: <t t-esc="company.theme_color_brand_primary or '#70AA87'"/>;
+                    --o-brand-secondary: <t t-esc="company.theme_color_brand_secondary or '#9FB38F'"/>;
+                    --o-webclient-background-color: <t t-esc="company.theme_color_webclient_bg or '#C5BD99'"/>;
+                    --o-main-text-color: <t t-esc="company.theme_color_main_text or '#1C0F0E'"/>;
+                    --o-danger: <t t-esc="company.theme_color_danger or '#DB5643'"/>;
+                    --kore-font-family: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
+                }
+                body, .o_web_client {
+                    font-family: var(--kore-font-family);
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

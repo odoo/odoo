@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_gov_conciliacao_importacao" model="ir.sequence">
+        <field name="name">Importacao Conciliacao GRP</field>
+        <field name="code">gov.conciliacao.importacao</field>
+        <field name="prefix">IMP-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_gov_conciliacao_pendencia" model="ir.sequence">
+        <field name="name">Pendencia Conciliacao GRP</field>
+        <field name="code">gov.conciliacao.pendencia</field>
+        <field name="prefix">PEND-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

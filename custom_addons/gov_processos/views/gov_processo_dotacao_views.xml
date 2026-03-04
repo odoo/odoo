@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_dotacao_list" model="ir.ui.view">
+        <field name="name">gov.processo.dotacao.list</field>
+        <field name="model">gov.processo.dotacao</field>
+        <field name="arch" type="xml">
+            <list string="Indicações Orçamentárias">
+                <field name="exercicio"/>
+                <field name="programa"/>
+                <field name="acao"/>
+                <field name="natureza_despesa" optional="show"/>
+                <field name="fonte_recurso" optional="show"/>
+                <field name="valor_estimado" widget="monetary"/>
+                <field name="saldo_disponivel" widget="monetary" readonly="1" optional="show"/>
+                <field name="alerta_saldo" widget="boolean" string="⚠️ Saldo" readonly="1"/>
+                <field name="reservado" widget="boolean_toggle" readonly="1"/>
+                <field name="observacao" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_dotacao_form" model="ir.ui.view">
+        <field name="name">gov.processo.dotacao.form</field>
+        <field name="model">gov.processo.dotacao</field>
+        <field name="arch" type="xml">
+            <form string="Indicação Orçamentária">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        A indicação de dotação não reserva saldo. O saldo só será comprometido na emissão do empenho (NE).
+                    </div>
+                    <group string="Classificação Orçamentária">
+                        <field name="programa" placeholder="Ex: 0042"/>
+                        <field name="acao" placeholder="Ex: 2025"/>
+                        <field name="natureza_despesa" placeholder="Ex: 3.3.90.39"/>
+                        <field name="fonte_recurso" placeholder="Ex: 100"/>
+                        <field name="exercicio"/>
+                    </group>
+                    <group string="Valor e Disponibilidade">
+                        <field name="valor_estimado" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field
+                            name="saldo_disponivel"
+                            widget="monetary"
+                            readonly="1"
+                            string="Saldo Disponível (gov_budget)"
+                        />
+                        <field name="alerta_saldo" invisible="1"/>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="not alerta_saldo">
+                        ⚠️ Saldo disponível insuficiente para o valor estimado. Verifique com o setor orçamentário antes de prosseguir.
+                    </div>
+                    <group string="Observação">
+                        <field
+                            name="observacao"
+                            nolabel="1"
+                            placeholder="Observações sobre a indicação orçamentária..."
+                            colspan="2"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_processo_dotacao" model="ir.actions.act_window">
+        <field name="name">Dotações</field>
+        <field name="res_model">gov.processo.dotacao</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

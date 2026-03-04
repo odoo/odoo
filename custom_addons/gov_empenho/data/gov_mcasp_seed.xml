@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Grupo 3/4: despesas -->
+    <record id="account_3_1_90_01" model="account.account">
+        <field name="code">3.1.90.01.00</field>
+        <field name="name">Despesas com Pessoal e Encargos - Ativo Civil</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_30" model="account.account">
+        <field name="code">3.3.90.30.00</field>
+        <field name="name">Material de Consumo</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_33" model="account.account">
+        <field name="code">3.3.90.33.00</field>
+        <field name="name">Passagens e Despesas com Locomocao</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_36" model="account.account">
+        <field name="code">3.3.90.36.00</field>
+        <field name="name">Outros Servicos de Terceiros - Pessoa Fisica</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_39" model="account.account">
+        <field name="code">3.3.90.39.00</field>
+        <field name="name">Outros Servicos de Terceiros - Pessoa Juridica</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_47" model="account.account">
+        <field name="code">3.3.90.47.00</field>
+        <field name="name">Obrigacoes Tributarias e Contributivas</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_3_3_90_92" model="account.account">
+        <field name="code">3.3.90.92.00</field>
+        <field name="name">Despesas de Exercicios Anteriores - Custeio</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_4_4_90_52" model="account.account">
+        <field name="code">4.4.90.52.00</field>
+        <field name="name">Equipamentos e Material Permanente</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_4_4_90_61" model="account.account">
+        <field name="code">4.4.90.61.00</field>
+        <field name="name">Aquisicao de Imoveis</field>
+        <field name="account_type">expense</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <!-- Grupo 2: passivo -->
+    <record id="account_2_1_1_2_01" model="account.account">
+        <field name="code">2.1.1.2.01</field>
+        <field name="name">Fornecedores a Pagar - Empenhos Emitidos</field>
+        <field name="account_type">liability_current</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record id="account_2_1_1_2_02" model="account.account">
+        <field name="code">2.1.1.2.02</field>
+        <field name="name">Fornecedores a Pagar - Liquidacoes a Pagar</field>
+        <field name="account_type">liability_current</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <record id="account_2_1_1_2_03" model="account.account">
+        <field name="code">2.1.1.2.03</field>
+        <field name="name">Retencoes na Fonte a Recolher</field>
+        <field name="account_type">liability_current</field>
+        <field name="reconcile" eval="True"/>
+    </record>
+
+    <!-- Grupo 1: ativo -->
+    <record id="account_1_1_1_1_01" model="account.account">
+        <field name="code">1.1.1.1.01</field>
+        <field name="name">Caixa - Recursos Ordinarios</field>
+        <field name="account_type">asset_cash</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_1_1_1_2_01" model="account.account">
+        <field name="code">1.1.1.2.01</field>
+        <field name="name">Conta Movimento - Banco Oficial</field>
+        <field name="account_type">asset_cash</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_1_1_1_2_02" model="account.account">
+        <field name="code">1.1.1.2.02</field>
+        <field name="name">Conta Movimento - Recursos Vinculados</field>
+        <field name="account_type">asset_cash</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <!-- Classe 5/6: controle orcamentario -->
+    <record id="account_5_2_1_1_01" model="account.account">
+        <field name="code">5.2.1.1.01</field>
+        <field name="name">Dotacao Inicial</field>
+        <field name="account_type">off_balance</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_6_2_1_1_01" model="account.account">
+        <field name="code">6.2.1.1.01</field>
+        <field name="name">Credito Disponivel</field>
+        <field name="account_type">off_balance</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_6_2_1_1_02" model="account.account">
+        <field name="code">6.2.1.1.02</field>
+        <field name="name">Credito Empenhado a Liquidar</field>
+        <field name="account_type">off_balance</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+    <record id="account_6_2_1_1_03" model="account.account">
+        <field name="code">6.2.1.1.03</field>
+        <field name="name">Credito Empenhado em Liquidacao</field>
+        <field name="account_type">off_balance</field>
+        <field name="reconcile" eval="False"/>
+    </record>
+
+</odoo>

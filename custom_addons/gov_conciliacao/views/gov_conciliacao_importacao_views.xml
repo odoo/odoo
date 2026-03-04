@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_conc_imp_list" model="ir.ui.view">
+        <field name="name">gov.conciliacao.importacao.list</field>
+        <field name="model">gov.conciliacao.importacao</field>
+        <field name="arch" type="xml">
+            <list
+                string="Importacoes de Extrato"
+                decoration-success="state == 'conciliado'"
+                decoration-warning="state == 'processado'"
+                decoration-muted="state == 'cancelado'"
+            >
+                <field name="name"/>
+                <field name="ug_id"/>
+                <field name="banco"/>
+                <field name="formato"/>
+                <field name="data_importacao"/>
+                <field name="total_linhas"/>
+                <field name="total_aceitos"/>
+                <field name="total_rejeitados"/>
+                <field name="pendencia_count" string="Total de Pendencias"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_conc_imp_form" model="ir.ui.view">
+        <field name="name">gov.conciliacao.importacao.form</field>
+        <field name="model">gov.conciliacao.importacao</field>
+        <field name="arch" type="xml">
+            <form string="Importacao de Extrato Bancario">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="rascunho,processado,conciliado"
+                    />
+                    <button
+                        name="action_processar"
+                        string="Processar Arquivo"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'rascunho'"
+                    />
+                    <button
+                        name="action_cancelar"
+                        string="Cancelar"
+                        type="object"
+                        class="btn-danger"
+                        invisible="state in ('conciliado','cancelado')"
+                        groups="gov_base.group_gov_admin"
+                        confirm="Cancelar esta importacao?"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            class="oe_stat_button"
+                            type="object"
+                            name="action_ver_pendencias"
+                            icon="fa-exclamation-triangle"
+                        >
+                            <field name="pendencia_count" widget="statinfo" string="Total de Pendencias"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group string="Configuracao">
+                            <field name="ug_id" readonly="state != 'rascunho'"/>
+                            <field name="banco" readonly="state != 'rascunho'"/>
+                            <field name="formato" readonly="state != 'rascunho'"/>
+                            <field
+                                name="conta_bancaria_id"
+                                options="{'no_create': True}"
+                                readonly="state != 'rascunho'"
+                            />
+                        </group>
+                        <group string="Arquivo">
+                            <field
+                                name="arquivo"
+                                widget="binary"
+                                filename="arquivo_nome"
+                                readonly="state != 'rascunho'"
+                            />
+                            <field name="arquivo_nome" invisible="1"/>
+                            <field name="data_importacao" readonly="1"/>
+                            <field name="operador_id" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Resultado" invisible="state == 'rascunho'">
+                        <group>
+                            <field name="data_extrato_ini" readonly="1"/>
+                            <field name="data_extrato_fim" readonly="1"/>
+                            <field name="saldo_extrato" widget="monetary" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="total_linhas" readonly="1"/>
+                            <field name="total_aceitos" readonly="1"/>
+                            <field name="total_rejeitados" readonly="1"/>
+                            <field name="total_divergentes" readonly="1"/>
+                            <field name="total_nao_identificados" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Log de Processamento" invisible="not log_processamento">
+                            <field
+                                name="log_processamento"
+                                nolabel="1"
+                                readonly="1"
+                                widget="text"
+                                style="font-family:monospace;font-size:0.85em;white-space:pre;min-height:120px;"
+                            />
+                        </page>
+                        <page string="Observacoes">
+                            <field name="observacao" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_conc_pend_list" model="ir.ui.view">
+        <field name="name">gov.conciliacao.pendencia.list</field>
+        <field name="model">gov.conciliacao.pendencia</field>
+        <field name="arch" type="xml">
+            <list
+                string="Pendencias de Conciliacao"
+                decoration-success="state == 'baixada'"
+                decoration-warning="state == 'justificada'"
+                decoration-danger="state == 'aberta'"
+                decoration-muted="state == 'ignorada'"
+            >
+                <field name="name"/>
+                <field name="importacao_id"/>
+                <field name="tipo"/>
+                <field name="data_ocorrencia"/>
+                <field name="numero_doc"/>
+                <field name="valor_banco" widget="monetary"/>
+                <field name="diferenca" widget="monetary"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_conc_pend_form" model="ir.ui.view">
+        <field name="name">gov.conciliacao.pendencia.form</field>
+        <field name="model">gov.conciliacao.pendencia</field>
+        <field name="arch" type="xml">
+            <form string="Pendencia de Conciliacao">
+                <sheet>
+                    <group>
+                        <group string="Identificacao">
+                            <field name="name" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="tipo"/>
+                            <field name="importacao_id" readonly="1"/>
+                        </group>
+                        <group string="Dados Bancarios">
+                            <field name="banco" readonly="1"/>
+                            <field name="segmento" readonly="1"/>
+                            <field name="ocorrencia_banco" readonly="1"/>
+                            <field name="numero_doc" readonly="1"/>
+                            <field name="data_ocorrencia" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Valores">
+                            <field name="valor_banco" widget="monetary" readonly="1"/>
+                            <field name="valor_sistema" widget="monetary" readonly="1"/>
+                            <field name="diferenca" widget="monetary" readonly="1"/>
+                        </group>
+                        <group string="Vinculos">
+                            <field name="op_id" readonly="1"/>
+                            <field name="op_extra_id" readonly="1"/>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Historico">
+                        <field name="historico" nolabel="1" readonly="1"/>
+                    </group>
+                    <group string="Justificativa">
+                        <field name="justificativa"/>
+                        <field name="justificado_por" readonly="1"/>
+                        <field name="data_justificativa" readonly="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_conciliacao_importacao" model="ir.actions.act_window">
+        <field name="name">Importacoes de Extrato</field>
+        <field name="res_model">gov.conciliacao.importacao</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_gov_conciliacao_pendencia" model="ir.actions.act_window">
+        <field name="name">Pendencias de Conciliacao</field>
+        <field name="res_model">gov.conciliacao.pendencia</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

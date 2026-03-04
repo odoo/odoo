@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_pagamento_list" model="ir.ui.view">
+        <field name="name">gov.pagamento.list</field>
+        <field name="model">gov.pagamento</field>
+        <field name="arch" type="xml">
+            <list
+                string="Ordens de Pagamento"
+                decoration-success="state == 'pago'"
+                decoration-warning="state == 'enviado'"
+                decoration-info="state == 'aprovado'"
+                decoration-muted="state == 'cancelado'"
+            >
+                <field name="name"/>
+                <field name="ug_id"/>
+                <field name="pd_name" string="PD"/>
+                <field name="destinatario_id"/>
+                <field name="tipo_pagamento"/>
+                <field name="valor" widget="monetary"/>
+                <field name="data_pagamento"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_pagamento_form" model="ir.ui.view">
+        <field name="name">gov.pagamento.form</field>
+        <field name="model">gov.pagamento</field>
+        <field name="arch" type="xml">
+            <form string="Ordem de Pagamento">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="rascunho,aprovado,enviado,pago"
+                    />
+                    <button
+                        name="action_aprovar"
+                        string="Aprovar"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'rascunho'"
+                        groups="gov_base.group_gov_gestor"
+                    />
+                    <button
+                        name="action_enviar_banco"
+                        string="Enviar ao Banco"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'aprovado'"
+                    />
+                    <button
+                        name="action_confirmar_pagamento"
+                        string="Confirmar Pagamento"
+                        type="object"
+                        class="btn-success"
+                        invisible="state not in ('aprovado','enviado')"
+                    />
+                    <button
+                        name="action_cancelar"
+                        string="Cancelar"
+                        type="object"
+                        class="btn-danger"
+                        invisible="state in ('pago','cancelado')"
+                        groups="gov_base.group_gov_admin"
+                        confirm="Confirma o cancelamento desta OP?"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Identificacao">
+                            <field name="name" readonly="1"/>
+                            <field name="ug_id" readonly="state != 'rascunho'"/>
+                            <field name="exercicio" readonly="state != 'rascunho'"/>
+                        </group>
+                        <group string="PD de Origem">
+                            <field
+                                name="pd_id"
+                                options="{'no_create': True}"
+                                readonly="state != 'rascunho'"
+                            />
+                            <field name="pd_name" readonly="1" string="Numero PD"/>
+                            <field name="pd_valor" readonly="1" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Pagamento">
+                            <field name="tipo_pagamento" readonly="1"/>
+                            <field name="destinatario_id" readonly="1"/>
+                            <field name="valor" widget="monetary" readonly="state != 'rascunho'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="data_pagamento" readonly="state not in ('rascunho','aprovado')"/>
+                        </group>
+                        <group string="Lancamento / CNAB">
+                            <field name="move_op_id" readonly="1" invisible="not move_op_id"/>
+                            <field
+                                name="cnab_file"
+                                widget="binary"
+                                filename="cnab_filename"
+                                readonly="1"
+                                invisible="not cnab_file"
+                            />
+                            <field name="cnab_filename" invisible="1"/>
+                            <field
+                                name="hash_sha256"
+                                readonly="1"
+                                invisible="not hash_sha256"
+                                style="font-family:monospace;font-size:0.85em"
+                            />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Dados Bancarios">
+                            <group>
+                                <group
+                                    string="Transferencia / PIX"
+                                    invisible="tipo_pagamento not in ('transferencia',)"
+                                >
+                                    <field name="banco_codigo"/>
+                                    <field name="agencia_dest"/>
+                                    <field name="conta_dest"/>
+                                    <field name="pix_chave"/>
+                                </group>
+                                <group
+                                    string="DARF / GPS / Guia"
+                                    invisible="tipo_pagamento not in ('darf','gps','guia_iss')"
+                                >
+                                    <field name="darf_codigo"/>
+                                    <field name="codigo_barras"/>
+                                    <field name="competencia"/>
+                                </group>
+                                <group string="Documento">
+                                    <field name="numero_doc"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Observacao">
+                            <field name="observacao" nolabel="1" colspan="2"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_pagamento" model="ir.actions.act_window">
+        <field name="name">Ordens de Pagamento</field>
+        <field name="res_model">gov.pagamento</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_run_list" model="ir.ui.view">
+        <field name="name">gov.ai.run.list</field>
+        <field name="model">gov.ai.run</field>
+        <field name="arch" type="xml">
+            <list string="Logs de Execução">
+                <field name="create_date"/>
+                <field name="company_id"/>
+                <field name="processo_id" optional="show"/>
+                <field name="doc_id"/>
+                <field name="template_id"/>
+                <field name="provider"/>
+                <field name="model_name" optional="show"/>
+                <field name="status" widget="badge"/>
+                <field name="duration_ms" optional="show"/>
+                <field name="created_by" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_ai_run_form" model="ir.ui.view">
+        <field name="name">gov.ai.run.form</field>
+        <field name="model">gov.ai.run</field>
+        <field name="arch" type="xml">
+            <form string="Execução Assistida">
+                <sheet>
+                    <group>
+                        <group string="Contexto">
+                            <field name="name" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="processo_id" readonly="1"/>
+                            <field name="doc_id" readonly="1"/>
+                            <field name="template_id" readonly="1"/>
+                        </group>
+                        <group string="Resultado">
+                            <field name="provider" readonly="1"/>
+                            <field name="model_name" readonly="1"/>
+                            <field name="status" readonly="1"/>
+                            <field name="duration_ms" readonly="1"/>
+                            <field name="created_by" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Prompts">
+                            <field name="prompt_system" readonly="1"/>
+                            <field name="prompt_user" readonly="1"/>
+                        </page>
+                        <page string="Memórias">
+                            <field name="memory_snapshot" readonly="1" nolabel="1"/>
+                        </page>
+                        <page string="Resposta">
+                            <field name="response_text" readonly="1"/>
+                            <field name="raw_response" readonly="1"/>
+                            <field name="error_message" readonly="1" invisible="not error_message"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_run" model="ir.actions.act_window">
+        <field name="name">Logs de Geração</field>
+        <field name="res_model">gov.ai.run</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

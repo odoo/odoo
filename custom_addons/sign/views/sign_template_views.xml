@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sign_template_view_list" model="ir.ui.view">
+        <field name="name">sign.template.list</field>
+        <field name="model">sign.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="attachment_id"/>
+                <field name="signed_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sign_template_view_form" model="ir.ui.view">
+        <field name="name">sign.template.form</field>
+        <field name="model">sign.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="attachment_id"/>
+                        </group>
+                        <group>
+                            <field name="signed_count" readonly="1"/>
+                            <field name="color"/>
+                            <field name="favorited_ids" widget="many2many_tags"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fields">
+                            <field name="sign_item_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="type_id"/>
+                                    <field name="required"/>
+                                    <field name="page"/>
+                                    <field name="posX"/>
+                                    <field name="posY"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="sign_template_view_kanban" model="ir.ui.view">
+        <field name="name">sign.template.kanban</field>
+        <field name="model">sign.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="signed_count"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_card oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted">
+                                Signed: <field name="signed_count"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sign_template_action" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">sign.template</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+</odoo>
+

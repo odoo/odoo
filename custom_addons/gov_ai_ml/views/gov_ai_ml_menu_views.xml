@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_gov_ai_ml_feedback"
+        name="Feedback de IA"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_ai_ml.action_gov_ai_ml_feedback"
+        sequence="60"
+        groups="gov_base.group_gov_admin,gov_base.group_gov_gestor"
+    />
+
+    <menuitem
+        id="menu_gov_ai_ml_vectors"
+        name="Vetores de Memoria"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_ai_ml.action_gov_ai_ml_memory_vector"
+        sequence="70"
+        groups="gov_base.group_gov_admin"
+    />
+</odoo>
+

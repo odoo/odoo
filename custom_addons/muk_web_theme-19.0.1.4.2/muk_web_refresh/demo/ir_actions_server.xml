@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="action_refresh_on_contact_create" model="ir.actions.server">
+        <field name="name">Reload Contact Views (Create)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="base_automation_id" ref="automation_refresh_on_contact_create"/>
+        <field name="state">refresh</field>
+        <field name="usage">base_automation</field>
+        <field name="refresh_view_types">list,kanban</field>
+    </record>
+
+    <record id="action_refresh_on_contact_write" model="ir.actions.server">
+        <field name="name">Reload Contact Views (Update)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="base_automation_id" ref="automation_refresh_on_contact_write"/>
+        <field name="state">refresh</field>
+        <field name="usage">base_automation</field>
+        <field name="refresh_view_types">list,kanban</field>
+    </record>
+
+    <record id="action_refresh_on_contact_delete" model="ir.actions.server">
+        <field name="name">Reload Contact Views (Delete)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="base_automation_id" ref="automation_refresh_on_contact_delete"/>
+        <field name="state">refresh</field>
+        <field name="usage">base_automation</field>
+        <field name="refresh_view_types">list,kanban</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_pd_list" model="ir.ui.view">
+        <field name="name">gov.pd.list</field>
+        <field name="model">gov.pd</field>
+        <field name="arch" type="xml">
+            <list
+                string="Programacoes de Desembolso"
+                decoration-success="state == 'pago'"
+                decoration-warning="state == 'confirmado'"
+                decoration-muted="state == 'cancelado'"
+            >
+                <field name="name"/>
+                <field name="ug_id"/>
+                <field name="exercicio"/>
+                <field name="nl_name" string="NL"/>
+                <field name="tipo_pagamento"/>
+                <field name="destinatario_id"/>
+                <field name="valor" widget="monetary"/>
+                <field name="op_name" string="OP" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_pd_form" model="ir.ui.view">
+        <field name="name">gov.pd.form</field>
+        <field name="model">gov.pd</field>
+        <field name="arch" type="xml">
+            <form string="Programacao de Desembolso">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="rascunho,confirmado,pago,cancelado"
+                    />
+                    <button
+                        name="action_confirmar"
+                        string="Confirmar PD"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'rascunho'"
+                    />
+                    <button
+                        name="action_cancelar"
+                        string="Cancelar"
+                        type="object"
+                        class="btn-danger"
+                        invisible="state not in ('rascunho','confirmado')"
+                        groups="gov_base.group_gov_admin"
+                        confirm="Confirma o cancelamento desta PD?"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            class="oe_stat_button"
+                            name="action_open_op"
+                            type="object"
+                            icon="fa-money"
+                        >
+                            <field name="op_name" widget="statinfo" string="OP"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group string="Identificacao">
+                            <field name="name" readonly="1"/>
+                            <field name="ug_id" readonly="state != 'rascunho'"/>
+                            <field name="exercicio" readonly="state != 'rascunho'"/>
+                            <field
+                                name="is_ajuste"
+                                widget="boolean_toggle"
+                                readonly="state != 'rascunho'"
+                            />
+                        </group>
+                        <group string="Nota de Liquidacao">
+                            <field
+                                name="liquidacao_id"
+                                options="{'no_create': True}"
+                                readonly="state != 'rascunho'"
+                                invisible="is_ajuste"
+                            />
+                            <field name="nl_name" readonly="1" invisible="is_ajuste"/>
+                            <field name="nl_valor" readonly="1" widget="monetary" invisible="is_ajuste"/>
+                            <field
+                                name="saldo_disponivel_nl"
+                                readonly="1"
+                                widget="monetary"
+                                invisible="is_ajuste"
+                            />
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Evento">
+                            <field
+                                name="evento_id"
+                                options="{'no_create': True}"
+                                readonly="state != 'rascunho'"
+                                invisible="is_ajuste"
+                            />
+                            <field name="evento_tipo_codigo" readonly="1" invisible="is_ajuste"/>
+                        </group>
+                        <group string="Pagamento">
+                            <field name="tipo_pagamento" readonly="state != 'rascunho'"/>
+                            <field
+                                name="destinatario_id"
+                                options="{'no_create': False}"
+                                readonly="state != 'rascunho'"
+                            />
+                            <field name="valor" widget="monetary" readonly="state != 'rascunho'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Dados Bancarios / Recolhimento">
+                            <group>
+                                <group string="Transferencia / PIX">
+                                    <field
+                                        name="banco_codigo"
+                                        invisible="tipo_pagamento not in ('transferencia',)"
+                                    />
+                                    <field
+                                        name="agencia"
+                                        invisible="tipo_pagamento not in ('transferencia',)"
+                                    />
+                                    <field
+                                        name="conta_corrente"
+                                        invisible="tipo_pagamento not in ('transferencia',)"
+                                    />
+                                    <field
+                                        name="pix_chave"
+                                        invisible="tipo_pagamento not in ('transferencia',)"
+                                    />
+                                </group>
+                                <group string="DARF / GPS / Guia">
+                                    <field
+                                        name="darf_codigo"
+                                        invisible="tipo_pagamento not in ('darf','gps','guia_iss')"
+                                    />
+                                    <field
+                                        name="competencia"
+                                        invisible="tipo_pagamento not in ('darf','gps','guia_iss')"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Observacao">
+                            <field name="observacao" nolabel="1" colspan="2"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_pd_search" model="ir.ui.view">
+        <field name="name">gov.pd.search</field>
+        <field name="model">gov.pd</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Numero PD"/>
+                <field name="liquidacao_id" string="NL"/>
+                <field name="destinatario_id" string="Destinatario"/>
+                <filter string="Rascunhos" name="f_rascunho" domain="[('state','=','rascunho')]"/>
+                <filter string="Confirmados" name="f_confirmado" domain="[('state','=','confirmado')]"/>
+                <filter string="Pagos" name="f_pago" domain="[('state','=','pago')]"/>
+                <filter string="Ajustes" name="f_ajuste" domain="[('is_ajuste','=',True)]"/>
+                <separator/>
+                <filter name="g_estado" string="Estado" context="{'group_by':'state'}"/>
+                <filter name="g_tipo" string="Tipo Pagamento" context="{'group_by':'tipo_pagamento'}"/>
+                <filter name="g_nl" string="NL" context="{'group_by':'liquidacao_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gov_pd" model="ir.actions.act_window">
+        <field name="name">Programacoes de Desembolso</field>
+        <field name="res_model">gov.pd</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,80 @@
+// Deeper Signals backend palette (applied only in web.assets_backend).
+$o-brand-primary: #470D3B;
+$o-brand-secondary: #7E2F56;
+$o-action: $o-brand-primary;
+$o-webclient-background-color: #FEBD84;
+
+// Semantic aliases requested for the palette.
+$o-text-color: #1C1C1C;
+$o-alert-color: #E48679;
+$o-highlight-color: #C0576F;
+
+// Odoo variable mapping.
+$o-brand-odoo: $o-brand-primary;
+$o-main-text-color: $o-text-color;
+$o-main-headings-color: $o-text-color;
+$o-main-link-color: $o-action;
+$o-danger: $o-alert-color;
+$o-main-favorite-color: $o-highlight-color;
+
+// Improve active states/readability against the new palette.
+$o-component-active-bg: mix($o-highlight-color, #f8f9fa, 24%);
+$o-component-active-border: $o-highlight-color;
+$o-component-active-color: $o-main-text-color;
+
+// Backend surface tone only.
+$o-view-background-color: #FFF8F0;
+
+// Direct backend overrides to guarantee visible palette changes even when
+// upstream component variables are precomputed earlier in the bundle.
+.o_web_client {
+    background-color: $o-webclient-background-color;
+    color: $o-main-text-color;
+}
+
+.o_main_navbar {
+    background-color: $o-brand-primary;
+    border-bottom: 1px solid darken($o-brand-primary, 10%);
+}
+
+.o_main_navbar .o_menu_brand,
+.o_main_navbar .o_nav_entry,
+.o_main_navbar .dropdown-toggle:not(.o-dropdown-toggle-custo),
+.o_main_navbar .o_menu_toggle {
+    color: rgba(#fff, 0.92);
+}
+
+.o_main_navbar .o_menu_brand:hover,
+.o_main_navbar .o_nav_entry:hover,
+.o_main_navbar .dropdown-toggle:hover:not(.o-dropdown-toggle-custo),
+.o_main_navbar .o_menu_toggle:hover {
+    color: #fff;
+    background-color: rgba(#000, 0.08);
+}
+
+.btn-primary {
+    background-color: $o-brand-primary;
+    border-color: $o-brand-primary;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: $o-brand-secondary;
+    border-color: $o-brand-secondary;
+}
+
+.btn-link,
+a:not(.btn):not(.dropdown-item) {
+    color: $o-action;
+}
+
+.text-danger,
+.alert-danger {
+    color: $o-alert-color;
+}
+
+.o_list_renderer .o_selected_row > .o_data_cell,
+.o_list_renderer .o_data_row.o_selected_row > .o_data_cell {
+    background-color: rgba($o-highlight-color, 0.16);
+}

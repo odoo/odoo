@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_account_config_list" model="ir.ui.view">
+        <field name="name">gov.account.config.list</field>
+        <field name="model">gov.account.config</field>
+        <field name="arch" type="xml">
+            <list string="Mapeamentos Contabeis">
+                <field name="natureza_despesa"/>
+                <field name="descricao"/>
+                <field name="account_despesa_id"/>
+                <field name="account_empenho_pagar_id"/>
+                <field name="account_liquidacao_pagar_id" optional="show"/>
+                <field name="ug_id" optional="show"/>
+                <field name="active" widget="boolean"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_account_config_form" model="ir.ui.view">
+        <field name="name">gov.account.config.form</field>
+        <field name="model">gov.account.config</field>
+        <field name="arch" type="xml">
+            <form string="Mapeamento Contabil">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Configure o mapeamento entre a natureza de despesa
+                        orcamentaria e as contas contabeis MCASP.
+                        Deixe <b>UG</b> vazio para criar um mapeamento global.
+                    </div>
+                    <group string="Natureza de Despesa">
+                        <field name="natureza_despesa" placeholder="Ex: 3.3.90.39"/>
+                        <field name="descricao" placeholder="Descricao para referencia"/>
+                        <field
+                            name="ug_id"
+                            options="{'no_create': True}"
+                            help="Vazio = global para todas as UGs"
+                        />
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group string="Contas Contabeis (MCASP)">
+                        <group string="Emissao da NE">
+                            <field
+                                name="account_despesa_id"
+                                options="{'no_create': True}"
+                                help="Debito na emissao da NE (classe 3 ou 4)"
+                            />
+                            <field
+                                name="account_empenho_pagar_id"
+                                options="{'no_create': True}"
+                                help="Credito na emissao da NE (2.1.1.2.01)"
+                            />
+                        </group>
+                        <group string="Liquidacao e Pagamento">
+                            <field
+                                name="account_liquidacao_pagar_id"
+                                options="{'no_create': True}"
+                                help="Credito na NL (2.1.1.2.02). Vazio = usa Empenho a Pagar"
+                            />
+                            <field
+                                name="account_banco_id"
+                                options="{'no_create': True}"
+                                help="Debito na OP. Vazio = conta bancaria padrao da UG"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_account_config_search" model="ir.ui.view">
+        <field name="name">gov.account.config.search</field>
+        <field name="model">gov.account.config</field>
+        <field name="arch" type="xml">
+            <search string="Mapeamentos Contabeis">
+                <field name="natureza_despesa"/>
+                <field name="descricao"/>
+                <filter string="Globais" name="f_global" domain="[('ug_id','=',False)]"/>
+                <filter string="Por UG" name="f_ug" domain="[('ug_id','!=',False)]"/>
+                <filter string="Inativos" name="f_inactive" domain="[('active','=',False)]"/>
+                <separator/>
+                <filter name="g_ug" string="Agrupar por UG" context="{'group_by':'ug_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gov_account_config" model="ir.actions.act_window">
+        <field name="name">Mapeamentos Contabeis</field>
+        <field name="res_model">gov.account.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_global': 1}</field>
+    </record>
+</odoo>

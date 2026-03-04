@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="template_dfd_agu" model="gov.ai.template">
+        <field name="name">DFD AGU - Lei 14.133 (Compras)</field>
+        <field name="doc_type">dfd</field>
+        <field name="process_type">compras_servicos</field>
+        <field name="process_scope">all</field>
+        <field name="fase">0</field>
+        <field name="versao_normativa">Lei 14.133/2021 · IN SEGES/ME 65/2021 · Decreto 10.947/2022</field>
+        <field name="output_format">latex</field>
+        <field name="active">True</field>
+        <field name="guidance_text"><![CDATA[
+Documento de Formalizacao de Demanda (DFD) baseado no modelo AGU.
+Preencha justificativa, objeto, quantidade, valor estimado e vinculo ao planejamento.
+Nao invente dados nao informados.
+        ]]></field>
+        <field name="parameter_spec_json"><![CDATA[
+{
+  "required": [
+    "ug_nome",
+    "ug_cnpj",
+    "exercicio",
+    "processo_numero",
+    "area_requisitante",
+    "objeto",
+    "justificativa"
+  ],
+  "optional": [
+    "responsavel_tecnico",
+    "quantidade",
+    "valor_estimado",
+    "data_necessidade",
+    "vinculo_ppa"
+  ]
+}
+        ]]></field>
+        <field name="option_catalog_json"><![CDATA[
+{
+  "base_legal": [
+    "Lei 14.133/2021",
+    "IN SEGES/ME 65/2021",
+    "Decreto 10.947/2022"
+  ]
+}
+        ]]></field>
+        <field name="prompt_system"><![CDATA[
+Voce e um especialista em contratacoes publicas brasileiras.
+Redija documentos conforme Lei 14.133/2021, IN SEGES/ME 65/2021 e Decreto 10.947/2022.
+Retorne apenas o documento final no formato solicitado.
+        ]]></field>
+        <field name="prompt_user_tpl"><![CDATA[
+Gere o Documento de Formalizacao de Demanda (DFD) com os seguintes dados:
+
+Orgao/UG: {{ug_nome}}
+CNPJ UG: {{ug_cnpj}}
+Exercicio: {{exercicio}}
+Numero do Processo: {{processo_numero}}
+Area Requisitante: {{area_requisitante}}
+Responsavel Tecnico: {{responsavel_tecnico}}
+Objeto da Demanda: {{objeto}}
+Justificativa da Necessidade: {{justificativa}}
+Quantidade/Unidade: {{quantidade}}
+Valor Estimado: {{valor_estimado}}
+Data de Necessidade: {{data_necessidade}}
+Vinculo PPA/LOA: {{vinculo_ppa}}
+        ]]></field>
+        <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=2cm}
+\begin{document}
+\begin{center}
+\Large\textbf{DOCUMENTO DE FORMALIZACAO DE DEMANDA}\\
+\normalsize Processo {{processo_numero}} / {{exercicio}}
+\end{center}
+\vspace{0.4cm}
+\textbf{UG:} {{ug_nome}}\\
+\textbf{CNPJ:} {{ug_cnpj}}\\
+\textbf{Area Requisitante:} {{area_requisitante}}\\
+\textbf{Responsavel Tecnico:} {{responsavel_tecnico}}\\
+\vspace{0.4cm}
+\section*{Objeto}
+{{objeto}}
+\section*{Justificativa}
+{{justificativa}}
+\section*{Parametros}
+\textbf{Quantidade/Unidade:} {{quantidade}}\\
+\textbf{Valor Estimado:} {{valor_estimado}}\\
+\textbf{Data de Necessidade:} {{data_necessidade}}\\
+\textbf{Vinculo PPA/LOA:} {{vinculo_ppa}}\\
+\vspace{1.2cm}
+\noindent\textbf{Assinatura:} {{responsavel_tecnico}}
+\end{document}
+        ]]></field>
+    </record>
+</odoo>

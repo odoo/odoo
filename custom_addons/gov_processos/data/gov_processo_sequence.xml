@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_gov_processo" model="ir.sequence">
+            <field name="name">Processo Administrativo</field>
+            <field name="code">gov.processo</field>
+            <field name="prefix">PROC-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="use_date_range">True</field>
+        </record>
+
+        <!-- Materializa as record rules do gov_base para gov.processo quando o modelo já existe -->
+        <function model="res.company" name="_gov_base_sync_processo_rules"/>
+    </data>
+</odoo>
+

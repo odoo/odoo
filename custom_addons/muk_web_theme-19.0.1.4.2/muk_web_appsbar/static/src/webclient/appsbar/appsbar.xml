@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+	<t t-name="muk_web_appsbar.AppsBar">
+		<div class="mk_apps_sidebar_panel">
+			<div class="mk_apps_sidebar">
+				<ul class="mk_apps_sidebar_menu">
+				    <t t-foreach="this.appMenuService.getAppsMenuItems()" t-as="app" t-key="app.id">
+			            <li t-attf-class="nav-item {{ app.id === this.appMenuService.getCurrentApp()?.id ? 'active' : '' }}">
+			            	<a 
+			            		t-att-href="app.href"
+		            			t-att-data-menu-id="app.id" 
+		            			t-att-data-menu-xmlid="app.xmlid" 
+		            			t-att-data-action-id="app.actionID"
+								t-on-click.prevent="() => this._onAppClick(app)"
+		            			class="nav-link" 
+		            			role="menuitem"
+		            		>
+			                	<img 
+			                		t-if="app.webIconData" 
+			                		class="mk_apps_sidebar_icon" 
+			                		t-att-src="app.webIconData"
+			                	/>
+			                	<img  
+			                		t-else="" 
+			                		class="mk_apps_sidebar_icon" 
+			                		src="/base/static/description/icon.png"
+			                	/>
+						        <span class="mk_apps_sidebar_name">
+						            <t t-out="app.label"/>
+						        </span>
+			            	 </a>
+			            </li>
+			    	</t>
+				</ul>
+				<div t-if="sidebarImageUrl" class="mk_apps_sidebar_logo p-2">
+					<img class="img-fluid mx-auto" t-att-src="sidebarImageUrl" alt="Logo"/>
+				</div>
+			</div>
+		</div>
+	</t>
+	
+</templates>

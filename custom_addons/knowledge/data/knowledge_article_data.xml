@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="knowledge_article_root" model="knowledge.article">
+        <field name="name">Knowledge Base</field>
+        <field name="category">workspace</field>
+        <field name="icon">📚</field>
+        <field name="sequence">1</field>
+        <field name="body">&lt;p&gt;Welcome to your centralized workspace knowledge base.&lt;/p&gt;</field>
+        <field name="owner_partner_id" ref="base.partner_root"/>
+    </record>
+
+    <record id="knowledge_article_welcome" model="knowledge.article">
+        <field name="name">Welcome</field>
+        <field name="parent_id" ref="knowledge.knowledge_article_root"/>
+        <field name="category">workspace</field>
+        <field name="icon">📝</field>
+        <field name="sequence">5</field>
+        <field name="body">&lt;p&gt;Create, organize, and share procedural knowledge here.&lt;/p&gt;</field>
+        <field name="owner_partner_id" ref="base.partner_root"/>
+    </record>
+</odoo>

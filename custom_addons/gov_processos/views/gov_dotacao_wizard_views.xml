@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_dotacao_wizard_form" model="ir.ui.view">
+        <field name="name">gov.dotacao.wizard.form</field>
+        <field name="model">gov.dotacao.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Indicar Dotação Orçamentária">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        A indicação <b>não reserva saldo</b>. O saldo só é comprometido na emissão do Empenho (NE).
+                        Ao confirmar, o processo avança automaticamente para a fase <b>Planejamento Financeiro</b>.
+                    </div>
+
+                    <group string="Processo">
+                        <field name="processo_id" readonly="1"/>
+                    </group>
+
+                    <group string="Classificação Orçamentária">
+                        <group>
+                            <field name="programa" placeholder="Ex: 0042" required="1"/>
+                            <field name="acao" placeholder="Ex: 2025"/>
+                            <field name="exercicio"/>
+                        </group>
+                        <group>
+                            <field name="natureza_despesa" placeholder="Ex: 3.3.90.39"/>
+                            <field name="fonte_recurso" placeholder="Ex: 100 — Recursos Ordinários"/>
+                        </group>
+                    </group>
+
+                    <group string="Valor e Disponibilidade">
+                        <field name="valor_estimado" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="saldo_disponivel" widget="monetary" readonly="1"/>
+                        <field name="alerta_saldo" invisible="1"/>
+                    </group>
+
+                    <div class="alert alert-warning" role="alert" invisible="not alerta_saldo">
+                        ⚠️ Saldo disponível insuficiente para o valor estimado. O processo pode prosseguir, mas verifique com o setor orçamentário antes de emitir o empenho.
+                    </div>
+
+                    <group string="Observação">
+                        <field
+                            name="observacao"
+                            nolabel="1"
+                            colspan="2"
+                            placeholder="Observações sobre a indicação..."
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_confirmar_e_fechar"
+                        string="Confirmar"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_dotacao_wizard" model="ir.actions.act_window">
+        <field name="name">Indicar Dotação</field>
+        <field name="res_model">gov.dotacao.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

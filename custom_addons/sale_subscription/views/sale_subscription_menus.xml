@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="sale_subscription_menu_root"
+        name="Subscriptions"
+        parent="sale.sale_menu_root"
+        sequence="45"
+        groups="sale_subscription.group_sale_subscription_user"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_main"
+        name="Subscriptions"
+        parent="sale_subscription_menu_root"
+        action="sale_subscription.sale_subscription_action"
+        sequence="1"
+        groups="sale_subscription.group_sale_subscription_user"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_products"
+        name="Subscribable Products"
+        parent="sale_subscription_menu_root"
+        action="sale_subscription.product_template_action_subscription"
+        sequence="5"
+        groups="sale_subscription.group_sale_subscription_user"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_configuration"
+        name="Configuration"
+        parent="sale_subscription_menu_root"
+        sequence="90"
+        groups="sale_subscription.group_sale_subscription_manager"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_configuration_stages"
+        name="Stages"
+        parent="sale_subscription_menu_configuration"
+        action="sale_subscription.sale_subscription_stage_action"
+        sequence="10"
+        groups="sale_subscription.group_sale_subscription_manager"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_configuration_templates"
+        name="Templates"
+        parent="sale_subscription_menu_configuration"
+        action="sale_subscription.sale_subscription_template_action"
+        sequence="20"
+        groups="sale_subscription.group_sale_subscription_manager"
+    />
+
+    <menuitem
+        id="sale_subscription_menu_configuration_close_reasons"
+        name="Close Reasons"
+        parent="sale_subscription_menu_configuration"
+        action="sale_subscription.sale_subscription_close_reason_action"
+        sequence="30"
+        groups="sale_subscription.group_sale_subscription_manager"
+    />
+</odoo>
+

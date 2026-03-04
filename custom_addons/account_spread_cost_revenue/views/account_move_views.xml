@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_view_form_spread_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.spread.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="spread_button_box">
+                    <button
+                        type="object"
+                        name="action_open_spreads"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        invisible="spread_count == 0"
+                    >
+                        <field name="spread_count" widget="statinfo" string="Spreads"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+                <button name="action_create_spread" type="object" string="Create Spread"/>
+                <field name="spread_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

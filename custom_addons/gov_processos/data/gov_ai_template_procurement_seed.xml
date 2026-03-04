@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="template_tr_compras_lei_14133" model="gov.ai.template">
+            <field name="name">Termo de Referência Compras Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">tr</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-referencia-compras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU dez/2025 (Aquisições, exceto TIC)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Substitua todos os marcadores [ ... ] por dados do processo.
+2) Em cláusulas com "OU", selecione apenas uma alternativa e remova as demais.
+3) Preserve a estrutura do modelo (seções, ordem e lógica jurídica).
+4) Justifique explicitamente opções sensíveis: subcontratação, garantia, amostra, marca/modelo, parcelamento.
+5) Mantenha coerência entre PCA/ETP/TR (objeto, quantitativos, vigência e estimativa de preços).
+6) Quando houver tabelas, preencha todos os campos obrigatórios e não deixe células críticas em branco.
+7) Redija em linguagem técnico-jurídica objetiva, sem criar fatos não presentes no processo.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string", "description": "Órgão ou entidade contratante"},
+    {"key": "processo_numero", "type": "string", "description": "Número do processo administrativo"},
+    {"key": "objeto", "type": "string", "description": "Objeto da contratação"},
+    {"key": "itens_tabela", "type": "array", "description": "Itens com especificação, CATMAT, unidade, quantidade e valores"},
+    {"key": "fundamentacao_necessidade", "type": "string", "description": "Fundamentação da necessidade da contratação"},
+    {"key": "estimativa_valor_total", "type": "number", "description": "Valor total estimado"},
+    {"key": "criterio_julgamento", "type": "string", "description": "Menor preço, maior desconto ou técnica e preço"},
+    {"key": "adequacao_orcamentaria", "type": "string", "description": "Informações orçamentárias e dotação"}
+  ],
+  "optional": [
+    {"key": "descricao_solucao_como_um_todo", "type": "string"},
+    {"key": "requisitos_sustentabilidade", "type": "string"},
+    {"key": "garantia_tecnica_objeto", "type": "string"},
+    {"key": "cronograma_entrega", "type": "string"},
+    {"key": "matriz_risco_resumo", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "campo_adicional_1", "type": "string", "description": "Campo livre para exigência específica do órgão"},
+    {"key": "campo_adicional_2", "type": "string", "description": "Campo livre para condicionante local/normativa interna"}
+  ],
+  "conditional": [
+    {"key": "amostra_regras", "when": "exigir_amostra=true"},
+    {"key": "subcontratacao_limites", "when": "subcontratacao=parcial"},
+    {"key": "garantia_percentual", "when": "exigir_garantia=true"},
+    {"key": "margem_preferencia", "when": "margem_preferencia_ativa=true"}
+  ],
+  "quality_checks": [
+    "coerencia_com_etp",
+    "coerencia_com_pca",
+    "justificativas_para_excecoes",
+    "consistencia_quantitativos_e_preco"
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "natureza_objeto": ["comum", "especial"],
+  "modalidade_selecao": ["pregao_eletronico", "concorrencia", "contratacao_direta_art74", "contratacao_direta_art75"],
+  "criterio_julgamento": ["menor_preco", "maior_desconto", "tecnica_e_preco"],
+  "vigencia": ["art105_padrao", "art106_107_continuado", "art75_viii_emergencial"],
+  "subcontratacao": ["nao_admitida", "parcial_percentual"],
+  "garantia_contratual": ["nao_exigida", "caucao", "seguro_garantia", "fianca_bancaria", "titulo_capitalizacao"],
+  "sigilo_orcamento": ["aberto", "sigiloso_ate_julgamento"],
+  "reserva_me_epp": ["sem_reserva", "cota_reservada_ate_25", "exclusiva_ate_80k"]
+}
+            ]]></field>
+            <field name="prompt_system"><![CDATA[
+Você é especialista em contratações públicas sob a Lei 14.133/2021.
+Produza TR com rigor técnico, coerência interna e aderência normativa.
+Use exclusivamente os dados fornecidos. Em cláusulas com alternativas ("OU"),
+escolha uma opção coerente com os parâmetros e descarte as demais.
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar Termo de Referência para tipo de processo {{process_type}} com base nos parâmetros:
+{{parameters_json}}
+Escopo segregado: {{process_scope}} (compras/serviços/serviços continuados).
+
+Aplicar orientações:
+{{guidance_text}}
+Respeitar estrutura de parâmetros: required_by_law, optional e additional_fields.
+
+Retornar no formato {{output_format}}.
+            ]]></field>
+            <field name="latex_template"><![CDATA[
+\documentclass[12pt,a4paper]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=2cm}
+\begin{document}
+\section*{TERMO DE REFERÊNCIA}
+\textbf{Órgão/Entidade:} {{orgao_entidade}} \\
+\textbf{Processo:} {{processo_numero}} \\
+\textbf{Objeto:} {{objeto}}
+
+\section*{Condições Gerais da Contratação}
+{{condicoes_gerais}}
+
+\section*{Fundamentação da Necessidade}
+{{fundamentacao_necessidade}}
+
+\section*{Estimativa de Valor}
+{{estimativa_valor_total}}
+
+\section*{Critérios de Seleção}
+{{criterio_julgamento}}
+
+\section*{Adequação Orçamentária}
+{{adequacao_orcamentaria}}
+\end{document}
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_compras_lei_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Compras Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-compras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU de Contrato (dez/2025)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Escolha corretamente o tipo de contratação de origem (licitação ou contratação direta).
+2) Em cláusulas "OU", mantenha uma única alternativa coerente com o caso concreto.
+3) Garanta aderência entre contrato e TR (objeto, quantidades, preço, reajuste, vigência).
+4) Preencha integralmente qualificação das partes, fundamentos e dados da nota de empenho.
+5) Preserve cláusulas de LGPD, sanções, extinção e fiscalização.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"},
+    {"key": "base_legal_origem", "type": "string"}
+  ],
+  "optional": [
+    {"key": "fiscal_titular_nome", "type": "string"},
+    {"key": "fiscal_substituto_nome", "type": "string"},
+    {"key": "rotina_reajuste_detalhada", "type": "string"},
+    {"key": "conta_vinculada_info", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_1", "type": "string", "description": "Cláusula adicional específica do órgão"},
+    {"key": "clausula_adicional_2", "type": "string", "description": "Condição operacional complementar"}
+  ],
+  "conditional": [
+    {"key": "garantia_execucao", "when": "exigir_garantia=true"},
+    {"key": "clausula_prorrogacao", "when": "contrato_continuado=true"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "origem_contratacao": ["pregao_eletronico", "concorrencia", "dispensa", "inexigibilidade"],
+  "vigencia": ["art105_padrao", "arts106_107_prorrogavel", "art75_viii_improrrogavel"],
+  "garantia_execucao": ["nao_exigida", "exigida_percentual"],
+  "forma_pagamento": ["conforme_tr", "medicao_por_etapa"]
+}
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_compras_servicos_14133" model="gov.ai.template">
+            <field name="name">Lista de Verificação Compras e Serviços sem Mão de Obra exclusiva - Lei 14.133 (Set/24)</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">modelo-de-lista-de-verificacao-compras-e-servicos-sem-mao-de-obra-exclusiva-lei-no-14-133-set-24.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Checklist AGU (set/2024) para compras e serviços</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist operacional para instrução do processo:
+- para cada item, registrar "Atende?" e evidência documental (doc/fls/SEI);
+- quando não atender, justificar e indicar plano de saneamento;
+- revisar trilha comum, pesquisa de preços e bloco específico (aquisição/serviço).
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "itens_checklist", "type": "array", "description": "Lista de itens com status, evidência e observações"}
+  ],
+  "optional": [
+    {"key": "numero_sessao", "type": "string"},
+    {"key": "auditor_revisor", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_1", "type": "array", "description": "Checklist adicional definido pela UG"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["verificacao_comum", "pesquisa_precos_orcamento", "compras", "servicos", "servicos_prestacao_continuada"],
+  "acao_corretiva": ["ajustar_tr", "complementar_etp", "refazer_pesquisa_preco", "justificar_dispensa_item"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist operacional em HTML para o processo {{processo_numero}}.
+Tipo de processo: {{process_type}}.
+Escopo segregado: {{process_scope}}.
+Classificar itens em required_by_law, optional e additional_fields.
+Usar estrutura por blocos e retornar tabela de itens com colunas:
+Item | Atende | Evidência no processo | Observação.
+            ]]></field>
+        </record>
+
+        <record id="template_tr_servicos_sem_mao_14133" model="gov.ai.template">
+            <field name="name">Termo de Referência único serviços (com, sem, engenharia) e obras Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">tr</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-referencia-servicos-e-obras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU TR Serviços e Obras (dez/2025)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Substitua todos os marcadores [ ... ] com dados objetivos do processo.
+2) Em trechos com alternativas ("OU"), mantenha somente uma opção coerente com a contratação.
+3) Segregue corretamente o escopo: serviços, serviços especiais/engenharia e obras.
+4) Garanta consistência entre regime de execução, medição, pagamento e fiscalização.
+5) Diferencie contrato de escopo versus continuado ao tratar vigência e estimativa.
+6) Preserve trilha normativa da Lei 14.133/2021 e justificativas para escolhas sensíveis.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string", "description": "Descrição do serviço/obra"},
+    {"key": "escopo_objeto", "type": "string", "description": "servicos, servicos_engenharia ou obras"},
+    {"key": "regime_execucao", "type": "string", "description": "empreitada global, unitária, tarefa, integrada etc."},
+    {"key": "criterio_julgamento", "type": "string"},
+    {"key": "estimativa_valor_total", "type": "number"},
+    {"key": "adequacao_orcamentaria", "type": "string"}
+  ],
+  "optional": [
+    {"key": "instrumento_medicao_resultado", "type": "string"},
+    {"key": "vistoria_regras", "type": "string"},
+    {"key": "perfil_equipe_minima", "type": "string"},
+    {"key": "cronograma_execucao", "type": "string"},
+    {"key": "matriz_risco_resumo", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "campo_adicional_servico_1", "type": "string"},
+    {"key": "campo_adicional_servico_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "regras_dedicacao_exclusiva", "when": "dedicacao_exclusiva=true"},
+    {"key": "requisitos_engenharia", "when": "escopo_objeto in ['servicos_engenharia','obras']"},
+    {"key": "clausula_continuado", "when": "natureza_contrato=continuado"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "escopo_objeto": ["servicos", "servicos_engenharia", "obras"],
+  "modalidade_selecao": ["pregao_eletronico", "concorrencia", "dispensa", "inexigibilidade"],
+  "criterio_julgamento": ["menor_preco", "maior_desconto", "tecnica_e_preco"],
+  "regime_execucao": ["empreitada_preco_global", "empreitada_preco_unitario", "tarefa", "integrada", "semi_integrada"],
+  "natureza_contrato": ["escopo", "continuado"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar Termo de Referência para serviços/obras no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Aplicar segregação interna: {{escopo_objeto}}.
+Classificar entradas em required_by_law, optional e additional_fields.
+Retornar no formato {{output_format}}.
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_servicos_sem_mao_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Serviços Sem Mão de Obra Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-servico-sem-mao-de-obra-exclusiva-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Contrato Serviço sem mão de obra exclusiva (dez/2025)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Qualifique corretamente CONTRATANTE e CONTRATADO, com base legal da contratação.
+2) Harmonize cláusulas de vigência, pagamento e fiscalização com o TR.
+3) Mantenha apenas a alternativa correta em cláusulas com "OU".
+4) Em serviços sem dedicação exclusiva, preserve critérios de medição e glosa por desempenho.
+5) Não introduza cláusulas fora da matriz normativa e documental do processo.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"},
+    {"key": "origem_contratacao", "type": "string"}
+  ],
+  "optional": [
+    {"key": "fiscal_tecnico_nome", "type": "string"},
+    {"key": "fiscal_admin_nome", "type": "string"},
+    {"key": "regra_glosa_desempenho", "type": "string"},
+    {"key": "procedimento_reajuste", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_servico_1", "type": "string"},
+    {"key": "clausula_adicional_servico_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_garantia", "when": "garantia_execucao=true"},
+    {"key": "clausula_prorrogacao", "when": "natureza_contrato=continuado"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "origem_contratacao": ["pregao_eletronico", "concorrencia", "dispensa", "inexigibilidade"],
+  "natureza_contrato": ["escopo", "continuado"],
+  "garantia_execucao": ["nao_exigida", "exigida_percentual"],
+  "forma_pagamento": ["medicao_periodica", "por_entrega", "por_marco"]
+}
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_servicos_sem_mao_14133" model="gov.ai.template">
+            <field name="name">Lista de Verificação Compras e Serviços sem Mão de Obra exclusiva - Lei 14.133 (Set/24)</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">compras_servicos</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">modelo-de-lista-de-verificacao-compras-e-servicos-sem-mao-de-obra-exclusiva-lei-no-14-133-set-24.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Checklist AGU (set/2024) para compras e serviços</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist operacional para SERVIÇOS sem mão de obra exclusiva:
+- registrar conformidade item a item com evidência documental;
+- separar itens comuns, pesquisa de preços e blocos específicos de serviços;
+- marcar não conformidades com plano de saneamento e responsável.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "itens_checklist", "type": "array"}
+  ],
+  "optional": [
+    {"key": "numero_sessao", "type": "string"},
+    {"key": "auditor_revisor", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_servicos_1", "type": "array"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["verificacao_comum", "pesquisa_precos_orcamento", "servicos", "servicos_sem_mao_exclusiva"],
+  "acao_corretiva": ["ajustar_tr", "complementar_etp", "refazer_pesquisa_preco", "justificar_item"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist operacional em HTML para processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Classificar itens em required_by_law, optional e additional_fields.
+Retornar tabela: Item | Atende | Evidência | Observação.
+            ]]></field>
+        </record>
+    </data>
+</odoo>

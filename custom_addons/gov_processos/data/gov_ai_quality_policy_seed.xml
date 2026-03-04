@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="policy_dfd_padrao" model="gov.ai.quality.policy">
+        <field name="name">Política DFD — Padrão AGU</field>
+        <field name="doc_type">dfd</field>
+        <field name="num_passagens">2</field>
+        <field name="passagem_2_instrucao"><![CDATA[
+Revise o DFD verificando:
+1. Área requisitante claramente identificada.
+2. Objeto descrito de forma precisa e mensurável.
+3. Justificativa alinhada à Lei 14.133/2021.
+4. Valor estimado e vínculo ao planejamento.
+Retorne o DFD revisado e completo.
+        ]]></field>
+        <field name="validar_artigos_lei">True</field>
+        <field name="validar_campos_obrigatorios">True</field>
+        <field name="validar_valores_monetarios">True</field>
+        <field name="min_palavras">300</field>
+        <field name="estado_apos_geracao">revisao</field>
+        <field name="exigir_aprovacao_humana">True</field>
+        <field name="notificar_responsavel">True</field>
+    </record>
+
+    <record id="policy_tr_padrao" model="gov.ai.quality.policy">
+        <field name="name">Política TR — Padrão AGU</field>
+        <field name="doc_type">tr</field>
+        <field name="num_passagens">3</field>
+        <field name="passagem_2_instrucao"><![CDATA[
+Revise juridicamente o TR verificando:
+1. Fundamentação legal.
+2. Especificação técnica sem direcionamento indevido.
+3. Critérios de habilitação proporcionais ao objeto.
+4. Obrigações, sanções e prazo de execução.
+Retorne o TR revisado.
+        ]]></field>
+        <field name="passagem_3_instrucao"><![CDATA[
+Ajuste a linguagem para máxima clareza sem perda de rigor técnico-jurídico.
+Retorne o documento final.
+        ]]></field>
+        <field name="validar_artigos_lei">True</field>
+        <field name="validar_campos_obrigatorios">True</field>
+        <field name="validar_valores_monetarios">True</field>
+        <field name="min_palavras">800</field>
+        <field name="estado_apos_geracao">revisao</field>
+        <field name="exigir_aprovacao_humana">True</field>
+        <field name="notificar_responsavel">True</field>
+    </record>
+
+    <record id="policy_despacho_padrao" model="gov.ai.quality.policy">
+        <field name="name">Política Despacho — Rápido</field>
+        <field name="doc_type">despacho</field>
+        <field name="num_passagens">1</field>
+        <field name="validar_artigos_lei">False</field>
+        <field name="validar_campos_obrigatorios">False</field>
+        <field name="validar_valores_monetarios">False</field>
+        <field name="min_palavras">50</field>
+        <field name="estado_apos_geracao">rascunho</field>
+        <field name="exigir_aprovacao_humana">False</field>
+        <field name="notificar_responsavel">False</field>
+    </record>
+</odoo>

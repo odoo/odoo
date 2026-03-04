@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_generate_wizard_form" model="ir.ui.view">
+        <field name="name">gov.ai.generate.wizard.form</field>
+        <field name="model">gov.ai.generate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gerar Documento Assistido">
+                <sheet>
+                    <div invisible="step != 'input'">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Geração Inteligente de Documentos</strong><br/>
+                            Descreva a necessidade em linguagem natural. O sistema traduz em documento
+                            formal conforme Lei 14.133/2021 e modelos AGU.
+                        </div>
+
+                        <group string="Documento">
+                            <field name="doc_id" readonly="1"/>
+                            <field name="step" invisible="1"/>
+                            <field name="doc_type" invisible="1"/>
+                            <field name="processo_id" invisible="1"/>
+                        </group>
+
+                        <group string="Template e Política">
+                            <field
+                                name="template_id"
+                                options="{'no_create': True}"
+                                help="Deixe vazio para seleção automática."
+                            />
+                            <field
+                                name="policy_preview"
+                                widget="text"
+                                readonly="1"
+                                string="Política Ativa"
+                                style="font-family: monospace; font-size: 0.9em;"
+                            />
+                        </group>
+
+                        <group string="Instrução em Linguagem Natural">
+                            <field
+                                name="instrucao_extra"
+                                nolabel="1"
+                                colspan="2"
+                                style="min-height: 120px;"
+                                placeholder="Ex.: Este TR é para contratação de manutenção preventiva de ar-condicionado para 25 equipamentos, prazo 12 meses, incluir requisitos NR-10 e NR-35."
+                            />
+                        </group>
+
+                        <div class="alert alert-warning" role="alert">
+                            A geração pode levar de 15 a 90 segundos conforme número de passagens da política.
+                        </div>
+                    </div>
+
+                    <div invisible="step != 'result'">
+                        <div class="alert alert-success" role="alert">
+                            <h5 class="mb-1">Resultado da Geração</h5>
+                            <strong>
+                                <field name="score_badge" readonly="1" style="font-size: 1.1em;"/>
+                            </strong>
+                            <br/>
+                            <small>
+                                Duração:
+                                <field name="resultado_duracao" readonly="1"/>s
+                            </small>
+                        </div>
+
+                        <div invisible="not resultado_itens" class="alert alert-warning" role="alert">
+                            <strong>Itens para revisão:</strong><br/>
+                            <field
+                                name="resultado_itens"
+                                widget="text"
+                                readonly="1"
+                                nolabel="1"
+                                style="white-space: pre-wrap; color: #664d03;"
+                            />
+                        </div>
+                        <div invisible="resultado_itens" class="alert alert-info" role="alert">
+                            Nenhum problema de conformidade identificado.
+                        </div>
+
+                        <group string="Passagens Executadas">
+                            <field
+                                name="resultado_passagens"
+                                widget="text"
+                                readonly="1"
+                                nolabel="1"
+                                style="font-family: monospace; font-size: 0.85em;"
+                            />
+                        </group>
+
+                        <group string="Preview do Conteúdo Gerado">
+                            <field name="resultado_e_latex" invisible="1"/>
+                            <field name="resultado_estado" readonly="1"/>
+                            <div invisible="not resultado_e_latex" class="alert alert-secondary" role="alert">
+                                Conteúdo em formato <strong>LaTeX</strong>. Aceitar salvará na aba "Fonte LaTeX".
+                            </div>
+                            <div invisible="resultado_e_latex" class="alert alert-secondary" role="alert">
+                                Conteúdo em formato <strong>HTML</strong>. Aceitar salvará na aba "Conteúdo (HTML)".
+                            </div>
+                            <field
+                                name="resultado_conteudo"
+                                widget="ace"
+                                options="{'mode': 'text'}"
+                                readonly="1"
+                                nolabel="1"
+                                style="min-height: 350px; font-family: monospace; font-size: 0.85em;"
+                            />
+                        </group>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button
+                        name="action_gerar"
+                        string="Gerar Documento"
+                        type="object"
+                        class="btn-primary"
+                        invisible="step != 'input'"
+                    />
+                    <button
+                        string="Cancelar"
+                        class="btn-secondary"
+                        special="cancel"
+                        invisible="step != 'input'"
+                    />
+
+                    <button
+                        name="action_aceitar"
+                        string="Aceitar"
+                        type="object"
+                        class="btn-success"
+                        invisible="step != 'result'"
+                    />
+                    <button
+                        name="action_aceitar_e_compilar"
+                        string="Aceitar e Compilar PDF"
+                        type="object"
+                        class="btn-primary"
+                        invisible="step != 'result' or not resultado_e_latex"
+                    />
+                    <button
+                        name="action_rejeitar"
+                        string="Tentar Novamente"
+                        type="object"
+                        class="btn-warning"
+                        invisible="step != 'result'"
+                    />
+                    <button
+                        string="Fechar"
+                        class="btn-secondary"
+                        special="cancel"
+                        invisible="step != 'result'"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

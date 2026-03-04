@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_tramite_wizard_form" model="ir.ui.view">
+        <field name="name">gov.processo.tramite.wizard.form</field>
+        <field name="model">gov.processo.tramite.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tramitar Processo">
+                <group>
+                    <field name="processo_id" readonly="1"/>
+                    <field name="from_ug_id" readonly="1"/>
+                    <field name="to_ug_id"/>
+                    <field name="action"/>
+                    <field name="prazo_dias"/>
+                </group>
+                <group>
+                    <field
+                        name="note"
+                        placeholder="Descreva o despacho ou observação..."
+                        colspan="2"
+                        nolabel="1"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_confirmar"
+                        string="Confirmar Tramitação"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

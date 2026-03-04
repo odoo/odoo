@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_template_view_list" model="ir.ui.view">
+        <field name="name">account.move.template.list</field>
+        <field name="model">account.move.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="line_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_move_template_view_form" model="ir.ui.view">
+        <field name="name">account.move.template.form</field>
+        <field name="model">account.move.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_run_wizard" type="object" string="Run Template" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="journal_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="ref"/>
+                            <field name="active"/>
+                            <field name="line_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="account_id"/>
+                            <field name="partner_id"/>
+                            <field name="move_type"/>
+                            <field name="amount_type"/>
+                            <field name="amount_fixed" optional="show"/>
+                            <field name="amount_percent" optional="show"/>
+                            <field name="amount_expr" optional="show"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_move_template_view_search" model="ir.ui.view">
+        <field name="name">account.move.template.search</field>
+        <field name="model">account.move.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_journal" string="Journal" context="{'group_by': 'journal_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="account_move_template_action" model="ir.actions.act_window">
+        <field name="name">Journal Entry Templates</field>
+        <field name="res_model">account.move.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="account_move_template_view_search"/>
+    </record>
+</odoo>

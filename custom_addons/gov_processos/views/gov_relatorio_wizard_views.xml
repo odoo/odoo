@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_relatorio_wizard_form" model="ir.ui.view">
+        <field name="name">gov.relatorio.wizard.form</field>
+        <field name="model">gov.relatorio.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Relatorio Executivo GRP">
+                <sheet>
+                    <div class="alert alert-success" role="alert" invisible="not gerado">
+                        Relatorio gerado com sucesso.
+                        SHA-256:
+                        <field
+                            name="hash_sha256"
+                            readonly="1"
+                            style="font-family:monospace;font-size:0.85em;"
+                        />
+                    </div>
+
+                    <group string="Identificacao do Relatorio">
+                        <field name="titulo"/>
+                        <field name="ug_id"/>
+                        <field name="exercicio"/>
+                        <field name="data_referencia"/>
+                        <field
+                            name="timbre_id"
+                            options="{'no_create': True}"
+                            help="Vazio = timbre padrao da UG"
+                        />
+                    </group>
+
+                    <notebook>
+                        <page string="Secoes">
+                            <group string="Incluir no Relatorio">
+                                <field name="incluir_kpis" widget="boolean_toggle"/>
+                                <field name="incluir_alertas" widget="boolean_toggle"/>
+                                <field name="incluir_financeiro" widget="boolean_toggle"/>
+                                <field name="incluir_criticos" widget="boolean_toggle"/>
+                                <field name="max_criticos" invisible="not incluir_criticos"/>
+                                <field name="incluir_inercia" widget="boolean_toggle"/>
+                                <field name="incluir_docs_ia" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+
+                        <page string="Assinatura">
+                            <group>
+                                <field name="incluir_assinatura" widget="boolean_toggle"/>
+                                <field name="assinante_nome" invisible="not incluir_assinatura"/>
+                                <field name="assinante_cargo" invisible="not incluir_assinatura"/>
+                            </group>
+                        </page>
+
+                        <page string="Download" invisible="not gerado">
+                            <group string="PDF Gerado">
+                                <field
+                                    name="pdf_file"
+                                    widget="binary"
+                                    filename="pdf_filename"
+                                    readonly="1"
+                                />
+                                <field name="pdf_filename" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_gerar_relatorio"
+                        string="Gerar Relatorio PDF"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Fechar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_relatorio_wizard" model="ir.actions.act_window">
+        <field name="name">Relatorio Executivo</field>
+        <field name="res_model">gov.relatorio.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

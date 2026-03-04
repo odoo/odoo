@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cleanup de menus legados para evitar raiz órfã -->
+    <record id="menu_gov_empenho_root" model="ir.ui.menu">
+        <field name="name">[LEGACY] Empenho Root</field>
+        <field name="parent_id" ref="gov_processos.menu_gov_root"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_gov_empenho_list" model="ir.ui.menu">
+        <field name="name">[LEGACY] Empenho List</field>
+        <field name="parent_id" ref="gov_processos.menu_gov_root"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <menuitem
+        id="menu_gov_empenho_ne"
+        name="Notas de Empenho"
+        parent="gov_processos.menu_gov_root"
+        action="gov_empenho.action_gov_empenho"
+        sequence="30"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_empenho_config"
+        name="Configuração Contábil"
+        parent="gov_processos.menu_gov_config"
+        action="gov_empenho.action_gov_account_config"
+        sequence="30"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <record id="action_gov_dashboard_contabil" model="ir.actions.act_window">
+        <field name="name">Execução Orçamentária</field>
+        <field name="res_model">gov.empenho</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','=','emitido')]</field>
+        <field name="context">{'search_default_f_emitido': 1, 'group_by': 'natureza_despesa'}</field>
+    </record>
+
+    <menuitem
+        id="menu_gov_execucao_orcamentaria"
+        name="Execução Orçamentária"
+        parent="gov_processos.menu_gov_root"
+        action="gov_empenho.action_gov_dashboard_contabil"
+        sequence="3"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+</odoo>

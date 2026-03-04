@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="knowledge_article_view_form_gov_bridge" model="ir.ui.view">
+        <field name="name">knowledge.article.form.gov.bridge</field>
+        <field name="model">knowledge.article</field>
+        <field name="inherit_id" ref="knowledge.knowledge_article_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_open_gov_processos"
+                    type="object"
+                    string="Processos GOV"
+                    class="btn-secondary"
+                    invisible="not processo_ids"
+                />
+                <button
+                    name="action_open_gov_documentos"
+                    type="object"
+                    string="Documentos GOV"
+                    class="btn-secondary"
+                    invisible="not processo_doc_ids"
+                />
+            </xpath>
+
+            <xpath expr="//group[1]/group[1]" position="inside">
+                <field name="processo_ids" widget="many2many_tags"/>
+                <field name="processo_doc_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

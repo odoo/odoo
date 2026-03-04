@@ -1,0 +1,26 @@
+{
+    "name": "GRP - Conciliacao Bancaria",
+    "version": "19.0.1.0.0",
+    "summary": "Importacao de extratos, conciliacao e pendencias bancarias",
+    "author": "GRP",
+    "license": "LGPL-3",
+    "category": "Government",
+    "depends": [
+        "gov_base",
+        "gov_processos",
+        "gov_empenho",
+        "gov_liquidacao",
+        "gov_pagamento",
+        "account",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/gov_conciliacao_sequence.xml",
+        "views/gov_conciliacao_importacao_views.xml",
+        "views/gov_pagamento_views.xml",
+        "views/gov_conciliacao_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+}
+

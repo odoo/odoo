@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_template_list" model="ir.ui.view">
+        <field name="name">gov.ai.template.list</field>
+        <field name="model">gov.ai.template</field>
+        <field name="arch" type="xml">
+            <list string="Modelos de Documento">
+                <field name="name"/>
+                <field name="process_type"/>
+                <field name="process_scope"/>
+                <field name="is_checklist" widget="boolean_toggle"/>
+                <field name="doc_type"/>
+                <field name="fase"/>
+                <field name="output_format"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_ai_template_form" model="ir.ui.view">
+        <field name="name">gov.ai.template.form</field>
+        <field name="model">gov.ai.template</field>
+        <field name="arch" type="xml">
+            <form string="Modelo de Documento">
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name"/>
+                            <field name="process_type"/>
+                            <field name="process_scope"/>
+                            <field name="doc_type"/>
+                            <field name="fase"/>
+                            <field name="is_checklist"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Fonte e Saída">
+                            <field name="source_document"/>
+                            <field name="versao_normativa"/>
+                            <field name="output_format"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Orientações">
+                            <field name="guidance_text" nolabel="1" placeholder="Instruções didáticas de preenchimento..."/>
+                        </page>
+                        <page string="Parâmetros">
+                            <group>
+                                <field name="parameter_spec_json" nolabel="1" placeholder="JSON com parâmetros esperados"/>
+                            </group>
+                            <group>
+                                <field name="option_catalog_json" nolabel="1" placeholder="JSON com opções e alternativas"/>
+                            </group>
+                        </page>
+                        <page string="Prompts">
+                            <field name="prompt_system" nolabel="1"/>
+                            <field name="prompt_user_tpl" nolabel="1"/>
+                        </page>
+                        <page string="Template">
+                            <field name="latex_template" nolabel="1"/>
+                            <field name="latex_source" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_template" model="ir.actions.act_window">
+        <field name="name">Modelos e Checklists</field>
+        <field name="res_model">gov.ai.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

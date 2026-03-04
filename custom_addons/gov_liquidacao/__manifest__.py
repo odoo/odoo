@@ -1,0 +1,22 @@
+{
+    "name": "GRP - Liquidacao",
+    "version": "19.0.2.0.0",
+    "summary": "Nota de Liquidacao integrada ao ciclo NE -> NL -> OP",
+    "author": "GRP",
+    "license": "LGPL-3",
+    "category": "Government",
+    "depends": ["gov_base", "gov_processos", "gov_empenho", "account"],
+    "data": [
+        "security/ir.model.access.csv",
+        "security/gov_liquidacao_rules.xml",
+        "data/gov_liquidacao_sequence.xml",
+        "data/gov_nl_evento_tipo_seed.xml",
+        "views/gov_ateste_wizard.xml",
+        "views/gov_nl_evento_tipo_views.xml",
+        "views/gov_liquidacao_views.xml",
+        "views/gov_liquidacao_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+}
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_template_view_list" model="ir.ui.view">
+        <field name="name">sale.subscription.template.list</field>
+        <field name="model">sale.subscription.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="recurring_rule_type"/>
+                <field name="recurring_interval"/>
+                <field name="journal_id"/>
+                <field name="company_id"/>
+                <field name="subscription_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_subscription_template_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.template.form</field>
+        <field name="model">sale.subscription.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="recurring_rule_type"/>
+                            <field name="recurring_interval"/>
+                        </group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_subscription_template_action" model="ir.actions.act_window">
+        <field name="name">Subscription Templates</field>
+        <field name="res_model">sale.subscription.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_pagamento_list_conciliacao" model="ir.ui.view">
+        <field name="name">gov.pagamento.list.conciliacao</field>
+        <field name="model">gov.pagamento</field>
+        <field name="inherit_id" ref="gov_pagamento.view_gov_pagamento_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pd_name']" position="after">
+                <field name="tipo"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_gov_pagamento_form_conciliacao" model="ir.ui.view">
+        <field name="name">gov.pagamento.form.conciliacao</field>
+        <field name="model">gov.pagamento</field>
+        <field name="inherit_id" ref="gov_pagamento.view_gov_pagamento_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="tipo" readonly="state != 'rascunho'"/>
+            </xpath>
+            <xpath expr="//field[@name='pd_valor']" position="after">
+                <field name="pendencia_id" readonly="1" invisible="not pendencia_id"/>
+            </xpath>
+            <xpath expr="//button[@name='action_enviar_banco']" position="attributes">
+                <attribute name="invisible">state != 'aprovado' or tipo == 'extra'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

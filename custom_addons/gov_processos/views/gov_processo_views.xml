@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_list" model="ir.ui.view">
+        <field name="name">gov.processo.list</field>
+        <field name="model">gov.processo</field>
+        <field name="arch" type="xml">
+            <list string="Processos" decoration-danger="prazo_vencido" decoration-warning="urgencia">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="process_type" optional="show"/>
+                <field name="process_scope" optional="show"/>
+                <field name="ug_id" optional="show"/>
+                <field name="origin_type"/>
+                <field name="state"/>
+                <field name="responsible_id" optional="show"/>
+                <field name="prazo_resposta"/>
+                <field name="prazo_vencido" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_search" model="ir.ui.view">
+        <field name="name">gov.processo.search</field>
+        <field name="model">gov.processo</field>
+        <field name="arch" type="xml">
+            <search string="Processos Administrativos">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="ug_id"/>
+                <field name="process_type"/>
+                <field name="process_scope"/>
+                <field name="state"/>
+                <field name="responsible_id"/>
+
+                <filter name="my_ug" string="Minha UG" domain="[('ug_id', 'in', allowed_company_ids)]"/>
+                <filter name="filter_ativos" string="Ativos" domain="[('state','not in',['encerrado'])]"/>
+                <filter name="filter_urgentes" string="Urgentes" domain="[('urgencia', '=', True), ('state','not in',['encerrado'])]"/>
+                <filter name="retroativos" string="Retroativos" domain="[('retroativo', '=', True)]"/>
+                <filter name="filter_prazos_vencidos" string="Prazos Vencidos" domain="[('prazo_vencido', '=', True)]"/>
+                <filter
+                    name="filter_inertes"
+                    string="Parados >21d"
+                    domain="[('state','in',['instrucao','planejamento','licitacao','contratacao','execucao'])]"
+                />
+
+                <separator/>
+
+                <filter name="group_state" string="Fase" context="{'group_by': 'state'}"/>
+                <filter name="group_origin_type" string="Origem" context="{'group_by': 'origin_type'}"/>
+                <filter name="group_process_type" string="Tipo de Processo" context="{'group_by': 'process_type'}"/>
+                <filter name="group_process_scope" string="Escopo" context="{'group_by': 'process_scope'}"/>
+                <filter name="group_ug" string="UG" context="{'group_by': 'ug_id'}"/>
+                <filter name="group_resp" string="Responsável" context="{'group_by': 'responsible_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_kanban" model="ir.ui.view">
+        <field name="name">gov.processo.kanban</field>
+        <field name="model">gov.processo</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="ug_id"/>
+                <field name="responsible_id"/>
+                <field name="prazo_resposta"/>
+                <field name="prazo_vencido"/>
+                <field name="urgencia"/>
+                <field name="retroativo"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <t t-if="record.urgencia.raw_value">
+                                <span class="badge text-bg-warning mb-1">⚠️ URGÊNCIA</span>
+                            </t>
+                            <t t-if="record.retroativo.raw_value">
+                                <span class="badge text-bg-danger mb-1">⚠️ RETROATIVO</span>
+                            </t>
+
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted small mt-1">
+                                <field name="subject"/>
+                            </div>
+
+                            <div class="mt-2">
+                                <field name="ug_id"/>
+                            </div>
+                            <div class="o_kanban_record_bottom mt-1">
+                                <div class="o_kanban_record_headings">
+                                    <field name="responsible_id" widget="many2one_avatar_user"/>
+                                </div>
+                                <t t-if="record.prazo_resposta.raw_value">
+                                    <span t-attf-class="badge #{record.prazo_vencido.raw_value ? 'text-bg-danger' : 'text-bg-secondary'}">
+                                        <field name="prazo_resposta"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_form" model="ir.ui.view">
+        <field name="name">gov.processo.form</field>
+        <field name="model">gov.processo</field>
+        <field name="arch" type="xml">
+            <form string="Processo Administrativo" class="gov-proc-form">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="demanda,instrucao,planejamento,licitacao,contratacao,execucao,encerrado"
+                    />
+                    <button
+                        name="action_abrir_wizard_avancar_fase"
+                        string="Avançar Fase"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'encerrado'"
+                        groups="gov_base.group_gov_gestor"
+                    />
+                    <button
+                        name="action_abrir_wizard_retroceder_fase"
+                        string="Retroceder Fase"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'demanda'"
+                        groups="gov_base.group_gov_gestor"
+                    />
+                    <button
+                        name="action_emitir_ne"
+                        string="Emitir NE"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state not in ('contratacao','execucao')"
+                        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+                    />
+                </header>
+                <sheet class="gov-proc-form">
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_tramitar" type="object" icon="fa-exchange">
+                            <field name="tramite_count" widget="statinfo" string="Tramitações"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_docs" type="object" icon="fa-file-text-o">
+                            <field name="doc_count" widget="statinfo" string="Documentos"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_indicar_dotacao" type="object" icon="fa-calculator">
+                            <field name="dotacao_count" widget="statinfo" string="Dotações"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_vinculos" type="object" icon="fa-link">
+                            <field name="vinculo_count" widget="statinfo" string="Vínculos"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_versoes" type="object" icon="fa-history">
+                            <field name="versao_total_count" widget="statinfo" string="Versões"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_empenhos" type="object" icon="fa-money">
+                            <field name="empenho_count" widget="statinfo" string="Empenhos"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_modelos_recomendados" type="object" icon="fa-book">
+                            <field name="recommended_template_count" widget="statinfo" string="Modelos"/>
+                        </button>
+                    </div>
+
+                    <div class="o_field_widget mb-3">
+                        <div class="mb-2">
+                            <strong>Progresso de Fases</strong>
+                        </div>
+                        <field name="fase_atual" widget="progressbar" options="{'max_value': 6}"/>
+                        <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                            <span class="badge text-bg-secondary">0 · Demanda</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">1 · Instrução</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">2 · Planejamento</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">3 · Licitação</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">4 · Contratação</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">5 · Execução</span>
+                            <span class="text-muted">→</span>
+                            <span class="badge text-bg-secondary">6 · Encerrado</span>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="name" readonly="1" string="Número"/>
+                            <field name="ug_id"/>
+                            <field name="origin_type"/>
+                            <field name="process_type"/>
+                            <field name="process_scope"/>
+                            <field name="retroativo" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="subject"/>
+                            <field name="responsible_id"/>
+                            <field name="prazo_resposta" invisible="prazo_vencido"/>
+                            <field name="prazo_resposta" class="text-danger fw-bold" invisible="not prazo_vencido"/>
+                            <field name="urgencia" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning mt16 mb16" role="alert" invisible="not urgencia">
+                        <strong>⚠️ PROCESSO DE URGÊNCIA</strong>
+                    </div>
+                    <div class="alert alert-danger mt16 mb16" role="alert" invisible="not retroativo">
+                        <strong>⚠️ PROCESSO RETROATIVO</strong>
+                    </div>
+
+                    <notebook>
+                        <page name="tramitacao" string="Tramitação">
+                            <div class="mb-3">
+                                <button name="action_tramitar" string="Tramitar" type="object" class="btn-primary"/>
+                            </div>
+                            <field name="tramite_ids" widget="one2many_list" mode="list" readonly="1">
+                                <list create="false" edit="false" delete="false">
+                                    <field name="date"/>
+                                    <field name="action"/>
+                                    <field name="from_ug_id"/>
+                                    <field name="to_ug_id"/>
+                                    <field name="user_id"/>
+                                    <field name="duration_hours" string="Tempo (h)" optional="show"/>
+                                    <field name="note"/>
+                                    <field name="prazo_dias" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="planejamento" string="Planejamento Financeiro">
+                            <div class="mb-3 d-flex gap-2 align-items-center">
+                                <button
+                                    string="Indicar Dotação"
+                                    name="action_indicar_dotacao"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state not in ('demanda','instrucao','planejamento')"
+                                />
+                                <span class="badge text-bg-success" invisible="not dotacao_indicada">
+                                    ✅ Dotação indicada
+                                </span>
+                                <span class="badge text-bg-secondary" invisible="dotacao_indicada">
+                                    Sem dotação indicada
+                                </span>
+                            </div>
+
+                            <group string="Resumo">
+                                <field name="valor_total_estimado" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="dotacao_indicada" widget="boolean_toggle" readonly="1"/>
+                            </group>
+
+                            <field name="dotacao_ids" mode="list">
+                                <list editable="bottom">
+                                    <field name="exercicio"/>
+                                    <field name="programa"/>
+                                    <field name="acao"/>
+                                    <field name="natureza_despesa" optional="show"/>
+                                    <field name="fonte_recurso" optional="show"/>
+                                    <field name="valor_estimado" widget="monetary"/>
+                                    <field name="saldo_disponivel" widget="monetary" readonly="1" optional="show"/>
+                                    <field name="alerta_saldo" widget="boolean" string="⚠️ Saldo" readonly="1"/>
+                                    <field name="reservado" widget="boolean_toggle" readonly="1"/>
+                                    <field name="observacao" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="modelos" string="Modelos e Checklists">
+                            <div class="mb-3 d-flex gap-2 align-items-center">
+                                <button
+                                    string="Abrir Biblioteca de Modelos"
+                                    name="action_open_modelos_recomendados"
+                                    type="object"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    string="Novo Checklist Manual"
+                                    name="action_novo_checklist_manual"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <span class="badge text-bg-info">
+                                    Tipo: <field name="process_type" nolabel="1"/>
+                                </span>
+                                <span class="badge text-bg-secondary">
+                                    Escopo: <field name="process_scope" nolabel="1"/>
+                                </span>
+                            </div>
+                            <field name="recommended_template_ids" widget="many2many_tags" readonly="1"/>
+                            <div class="alert alert-info mt-3" role="alert" invisible="recommended_template_ids">
+                                Nenhum modelo padrão cadastrado para este tipo de processo.
+                            </div>
+                        </page>
+                        <page name="dossie" string="Dossiê">
+                            <div class="mb-3 d-flex gap-2 align-items-center">
+                                <button
+                                    name="%(action_gov_processo_doc_new)d"
+                                    string="Novo Documento"
+                                    type="action"
+                                    class="btn-primary"
+                                />
+                                <button
+                                    string="Novo Checklist Manual"
+                                    name="action_novo_checklist_manual"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="doc_ids" widget="one2many_list" mode="list">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="doc_type"/>
+                                    <field name="name"/>
+                                    <field name="version"/>
+                                    <field name="clone_of_id" string="Origem da versão" optional="show"/>
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-success="state == 'assinado'"
+                                        decoration-warning="state == 'revisao'"
+                                        decoration-muted="state == 'rascunho'"
+                                    />
+                                    <field name="ai_generated" optional="show"/>
+                                    <field name="signed_at" optional="show"/>
+                                    <field name="pdf_file" widget="binary" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="vinculos" string="Vínculos">
+                            <div class="mb-3">
+                                <button
+                                    string="Adicionar Vínculo"
+                                    name="action_open_vinculos"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field name="vinculo_ids" mode="list" readonly="0">
+                                <list editable="bottom">
+                                    <field name="model_name" placeholder="ex: gov.empenho" string="Modelo"/>
+                                    <field name="model_label" string="Tipo" readonly="1"/>
+                                    <field name="record_id" placeholder="ID do registro"/>
+                                    <field name="display_name_cached" string="Descrição" readonly="1"/>
+                                    <field name="vinculo_type"/>
+                                    <field name="created_at" readonly="1"/>
+                                    <field name="created_by" readonly="1" optional="show"/>
+                                    <button
+                                        name="action_abrir_registro"
+                                        type="object"
+                                        icon="fa-external-link"
+                                        string="Abrir"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>

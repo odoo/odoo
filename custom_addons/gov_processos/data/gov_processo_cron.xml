@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_gov_alertar_prazos" model="ir.cron">
+        <field name="name">GRP: Alertar prazos de resposta</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_alertar_prazos()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <field name="priority">10</field>
+    </record>
+
+    <record id="cron_gov_alertar_inercia" model="ir.cron">
+        <field name="name">GRP: Alertar processos sem movimentação</field>
+        <field name="model_id" ref="gov_processos.model_gov_processo"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_alertar_inercia()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <field name="priority">20</field>
+    </record>
+</odoo>

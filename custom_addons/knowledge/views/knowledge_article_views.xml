@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="knowledge_article_view_list" model="ir.ui.view">
+        <field name="name">knowledge.article.list</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <list default_order="sequence,id">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="parent_id"/>
+                <field name="favorite_count"/>
+                <field name="last_edition_date"/>
+                <field name="last_edition_uid"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree_panel" model="ir.ui.view">
+        <field name="name">knowledge.article.tree.panel</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <list default_order="sequence,id">
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <form string="Knowledge Article">
+                <header>
+                    <button name="action_toggle_favorite" type="object" string="Toggle Favorite" class="oe_highlight"/>
+                    <button name="action_set_lock" type="object" string="Lock" groups="knowledge.group_knowledge_manager" invisible="is_locked"/>
+                    <button name="action_unset_lock" type="object" string="Unlock" groups="knowledge.group_knowledge_manager" invisible="not is_locked"/>
+                    <button name="action_make_private" type="object" string="Make Private"/>
+                    <button name="action_make_shared" type="object" string="Make Shared"/>
+                    <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Article title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="icon"/>
+                            <field name="category"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                            <field name="cover_image_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="owner_partner_id" readonly="1"/>
+                            <field name="user_has_access" readonly="1"/>
+                            <field name="user_can_write" readonly="1"/>
+                            <field name="is_favorited" readonly="1"/>
+                            <field name="favorite_count" readonly="1"/>
+                            <field name="is_locked" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content">
+                            <field name="body" widget="html" options="{'safe': True, 'codeview': True}"/>
+                        </page>
+                        <page string="Members">
+                            <field name="member_ids" context="{'default_article_id': id}">
+                                <list editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="permission"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Favorites">
+                            <field name="favorite_ids" context="{'default_article_id': id}">
+                                <list editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="sequence" widget="handle"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <search string="Knowledge Articles">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="owner_partner_id"/>
+                <filter name="filter_workspace" string="Workspace" domain="[('category', '=', 'workspace')]"/>
+                <filter name="filter_private" string="Private" domain="[('category', '=', 'private')]"/>
+                <filter name="filter_shared" string="Shared" domain="[('category', '=', 'shared')]"/>
+                <group name="groupby">
+                    <separator/>
+                    <filter name="group_parent" string="Parent" context="{'group_by': 'parent_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
+                    <filter name="group_owner" string="Owner" context="{'group_by': 'owner_partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action" model="ir.actions.act_window">
+        <field name="name">Knowledge Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="knowledge_article_view_list"/>
+        <field name="search_view_id" ref="knowledge_article_view_search"/>
+        <field name="context">{'searchpanel_default_parent_id': False}</field>
+        <field name="help" type="html">
+            <p>Create your first knowledge article.</p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action_home_page" model="ir.actions.server">
+        <field name="name">Knowledge Home</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_home_page()</field>
+    </record>
+
+    <record id="knowledge_article_favorite_action" model="ir.actions.act_window">
+        <field name="name">Favorite Articles</field>
+        <field name="res_model">knowledge.article.favorite</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+    </record>
+</odoo>

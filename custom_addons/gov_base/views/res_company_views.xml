@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_company_form_inherit_gov_base" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.gov.base</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[last()]" position="after">
+                <page string="GRP" name="grp_page">
+                    <group>
+                        <group string="Identificação da UG">
+                            <field name="cnpj_ug"/>
+                            <field name="codigo_ug"/>
+                            <field name="codigo_siafi"/>
+                        </group>
+                        <group string="Exercício">
+                            <field name="exercicio_fiscal"/>
+                        </group>
+                        <group string="Customização do Backend (Temas)">
+                            <field name="theme_color_brand_primary" widget="color"/>
+                            <field name="theme_color_brand_secondary" widget="color"/>
+                            <field name="theme_color_webclient_bg" widget="color"/>
+                            <field name="theme_color_main_text" widget="color"/>
+                            <field name="theme_color_danger" widget="color"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
