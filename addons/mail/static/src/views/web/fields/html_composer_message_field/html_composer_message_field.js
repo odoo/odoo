@@ -40,10 +40,11 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
     getConfig() {
         const config = super.getConfig(...arguments);
-        config.Plugins = config.Plugins.filter((plugin) => plugin.id !== "video").concat([
+        config.Plugins = [
+            ...config.Plugins.filter((plugin) => !["video"].includes(plugin.id)),
             DisableBannerCommandsPlugin,
             MailFullComposerSuggestionPlugin,
-        ]);
+        ];
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
         }
