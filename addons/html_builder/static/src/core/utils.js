@@ -8,7 +8,7 @@ import {
     useSubEnv,
 } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
-import { onMounted, onWillDestroy, onWillStart, onWillUpdateProps, toRaw } from "@odoo/owl";
+import { onMounted, onWillDestroy, onWillStart, onWillUpdateProps, status, toRaw } from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
@@ -29,21 +29,29 @@ function isConnectedElement(el) {
 }
 
 export function useDomState(getState, { checkEditingElement = true } = {}) {
+    const component = useComponent();
     const env = useEnv();
     const isValid = (el) => (!el && !checkEditingElement) || isConnectedElement(el);
     const handler = async (ev) => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
-            const newStatePromise = getState(editingElement);
-            if (ev) {
-                ev.detail.getStatePromises.push(newStatePromise);
-                const newState = await newStatePromise;
-                const shouldApply = await ev.detail.updatePromise;
-                if (shouldApply) {
-                    Object.assign(state, newState);
+            try {
+                const newStatePromise = getState(editingElement);
+                if (ev) {
+                    ev.detail.getStatePromises.push(newStatePromise);
+                    const newState = await newStatePromise;
+                    const shouldApply = await ev.detail.updatePromise;
+                    if (shouldApply) {
+                        Object.assign(state, newState);
+                    }
+                } else {
+                    Object.assign(state, await newStatePromise);
                 }
-            } else {
-                Object.assign(state, await newStatePromise);
+            } catch (e) {
+                if (!isValid(editingElement) || status(component) === "destroyed") {
+                    return;
+                }
+                throw e;
             }
         }
     };
