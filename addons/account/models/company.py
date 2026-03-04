@@ -12,6 +12,7 @@ from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.base.models.res_company import company_default_for
 from odoo.fields import Domain
 
 
@@ -289,16 +290,30 @@ class ResCompany(models.Model):
     income_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Income Account",
+        **company_default_for('income_account_id', 'product.category', 'property_account_income_categ_id'),
         domain=ACCOUNT_DOMAIN,
         help="This account will be used when validating a customer invoice.",
     )
     expense_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Expense Account",
+        **company_default_for('expense_account_id', 'product.category', 'property_account_expense_categ_id'),
         domain=ACCOUNT_DOMAIN,
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon"
              " accounting with perpetual inventory valuation in which case the expense (Cost of"
              " Goods Sold account) is recognized at the customer invoice validation.",
+    )
+    receivable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Receivable Account',
+        **company_default_for('receivable_account_id', 'res.partner', 'property_account_receivable_id'),
+        domain=[('account_type', '=', 'asset_receivable')],
+    )
+    payable_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Payable Account',
+        **company_default_for('payable_account_id', 'res.partner', 'property_account_payable_id'),
+        domain=[('account_type', '=', 'liability_payable')],
     )
     price_difference_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -498,7 +513,6 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
-        companies._set_category_defaults()
         return companies
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
@@ -761,7 +775,6 @@ class ResCompany(models.Model):
 
         companies = super().write(vals)
 
-        self._set_category_defaults()
         # We revoke all active exceptions affecting the changed lock dates and recreate them (with the updated lock dates)
         changed_soft_lock_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in vals]
         for company in self:
@@ -1134,11 +1147,6 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
-
-    def _set_category_defaults(self):
-        for company in self:
-            self.env['ir.default'].set('product.category', 'property_account_expense_categ_id', company.expense_account_id.id, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_account_income_categ_id', company.income_account_id.id, company_id=company.id)
 
     def _check_tax_return_configuration(self):
         """

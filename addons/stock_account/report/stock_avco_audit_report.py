@@ -59,15 +59,13 @@ LEFT JOIN
 LEFT JOIN
     product_category pc ON pt.categ_id = pc.id
 LEFT JOIN
-    res_company company ON sm.company_id = company.id
+    ir_default cost_method_default ON cost_method_default.company_id = sm.company_id
+                                  AND cost_method_default.field_id = (SELECT id FROM ir_model_fields WHERE name = 'property_cost_method' AND model = 'product.category')
 WHERE
     sm.state = 'done'
     AND (sm.is_in = TRUE OR sm.is_out = TRUE)
     -- Ignore moves for standard cost method. Only display the list of cost updates
-    AND (
-        (pt.categ_id IS NOT NULL AND pc.property_cost_method ->> company.id::text IN ('fifo', 'average'))
-        OR (pt.categ_id IS NULL OR (pc.property_cost_method IS NULL OR pc.property_cost_method ->> company.id::text IS NULL) AND company.cost_method IN ('fifo', 'average'))
-    )
+    AND COALESCE(pc.property_cost_method ->> sm.company_id::text, cost_method_default.json_value) IN ('fifo', 'average')
 UNION ALL
 SELECT
     -pv.id,

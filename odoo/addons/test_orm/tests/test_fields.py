@@ -1697,6 +1697,90 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record,
         )
 
+    def test_27_company_dependent_default_check_default(self):
+        # the default value is added on companies existing before the module install as well as after
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        record = self.env['test_orm.company_default_for'].create({})
+        self.assertEqual(record.with_company(company0).credit_limit, 1000)
+        self.assertEqual(record.with_company(company1).credit_limit, 1000)
+
+    def test_27_company_dependent_default_check_sync_float(self):
+        # updating the value on the company affects the company dependent field
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        record = self.env['test_orm.company_default_for'].create({})
+        company0.credit_limit = 2000
+        self.assertEqual(record.with_company(company0).credit_limit, 2000)
+        self.assertEqual(record.with_company(company1).credit_limit, 1000)
+        companies_query = (company0 + company1)._as_query()
+        self.assertEqual(self.env.execute_query(companies_query.select(
+            companies_query.table.credit_limit,
+        )), [(2000,), (1000,)])
+
+    def test_27_company_dependent_default_check_sync_many2one(self):
+        # updating the value on the company affects the company dependent field
+        company0 = self.env.ref('base.main_company')
+        record = self.env['test_orm.company_default_for'].create({})
+        partner = self.env.company.partner_id
+        self.assertFalse(record.with_company(company0).partner_id)
+        company0.default_partner_id = partner
+        self.assertEqual(record.with_company(company0).partner_id, partner)
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(partner.id,)])
+        company0.default_partner_id = False
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(None,)])
+
+    def test_27_company_dependent_default_check_global_default(self):
+        # The default is set on all the companies, so a global default doesn't change anything
+        company0 = self.env.ref('base.main_company')
+        record = self.env['test_orm.company_default_for'].create({})
+        self.env['ir.default'].set(
+            'test_orm.company_default_for',
+            'credit_limit',
+            2000,
+        )
+        self.assertEqual(record.with_company(company0).credit_limit, 1000)
+
+    def test_27_company_dependent_default_compute_sql_nullish_values(self):
+        company0 = self.env.ref('base.main_company')
+        self.env['ir.default'].search([('field_id', 'in', [
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'credit_limit').id,
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'partner_id').id,
+        ])]).json_value = 'false'
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.credit_limit,
+            company0_query.table.default_partner_id,
+        )), [(0, None)])
+
+    def test_27_company_dependent_default_non_existing_m2o(self):
+        # even though it is stored, we return NULL as the related record doesn't exist
+        company0 = self.env.ref('base.main_company')
+        company0.default_partner_id = 97979797
+        self.assertFalse(company0.default_partner_id)
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.default_partner_id,
+        )), [(None,)])
+
+    def test_27_company_dependent_default_compute_sql_no_default(self):
+        company0 = self.env.ref('base.main_company')
+        self.env['ir.default'].search([('field_id', 'in', [
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'credit_limit').id,
+            self.env['ir.model.fields']._get('test_orm.company_default_for', 'partner_id').id,
+        ])]).unlink()
+        company0_query = company0._as_query()
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            company0_query.table.credit_limit,
+            company0_query.table.default_partner_id,
+        )), [(0, None)])
+
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
             This assumes that filtered_domain() correctly filters records when

@@ -5,14 +5,25 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, _, api, fields, models
 from odoo.fields import Domain
 from odoo.exceptions import UserError
+from odoo.addons.base.models.res_company import company_default_for
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    account_stock_journal_id = fields.Many2one('account.journal', string='Stock Journal', check_company=True)
+    account_stock_journal_id = fields.Many2one(
+        'account.journal',
+        string='Stock Journal',
+        **company_default_for('account_stock_journal_id', 'product.category', 'property_stock_journal'),
+        check_company=True,
+    )
 
-    account_stock_valuation_id = fields.Many2one('account.account', string='Stock Valuation Account', check_company=True)
+    account_stock_valuation_id = fields.Many2one(
+        'account.account',
+        string='Stock Valuation Account',
+        **company_default_for('account_stock_valuation_id', 'product.category', 'property_stock_valuation_account_id'),
+        check_company=True,
+    )
 
     account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
@@ -33,6 +44,7 @@ class ResCompany(models.Model):
             ('periodic', 'Periodic (at closing)'),
             ('real_time', 'Perpetual (at invoicing)'),
         ],
+        **company_default_for('inventory_valuation', 'product.category', 'property_valuation'),
         default='periodic',
     )
 
@@ -43,6 +55,7 @@ class ResCompany(models.Model):
             ('fifo', "First In First Out (FIFO)"),
             ('average', "Average Cost (AVCO)"),
         ],
+        **company_default_for('cost_method', 'product.category', 'property_cost_method'),
         default='standard',
         required=True,
     )
@@ -336,10 +349,3 @@ class ResCompany(models.Model):
         if not closing:
             return False
         return closing.closing_datetime
-
-    def _set_category_defaults(self):
-        for company in self:
-            self.env['ir.default'].set('product.category', 'property_valuation', company.inventory_valuation, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_cost_method', company.cost_method, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_stock_journal', company.account_stock_journal_id.id, company_id=company.id)
-            self.env['ir.default'].set('product.category', 'property_stock_valuation_account_id', company.account_stock_valuation_id.id, company_id=company.id)

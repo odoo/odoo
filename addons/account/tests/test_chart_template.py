@@ -51,9 +51,6 @@ def test_get_data(self, template_code, demo=False):
     return {
         'template_data': {
             'code_digits': 6,
-            'currency_id': self.env.ref('base.EUR').id,
-            'property_account_receivable_id': 'test_account_receivable_template',
-            'property_account_payable_id': 'test_account_payable_template',
         },
         'account.tax.group': {
             'tax_group_taxes': {
@@ -69,6 +66,8 @@ def test_get_data(self, template_code, demo=False):
                 'transfer_account_code_prefix': '3000',
                 'income_account_id': 'test_account_income_template',
                 'expense_account_id': 'test_account_expense_template',
+                'receivable_account_id': 'test_account_receivable_template',
+                'payable_account_id': 'test_account_payable_template',
                 'account_sale_tax_id': 'test_tax_1_template',
             },
         },
@@ -756,6 +755,25 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 self.env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading('test', company=company, install_demo=False)
 
             # silently ignore if the field doesn't exist (yet)
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
+    def test_unknown_template_data_keys(self):
+        """ Tests that if a key is not in TEMPLATE_DATA_KEYS when the context value
+        'l10n_check_fields_complete' is set, an error is raised. Without the context,
+        the key is silently removed."""
+
+        def local_get_data(self, template_code, demo=False):
+            data = test_get_data(self, template_code)
+            data['template_data']['unknown_template_data_key'] = 'some_value'
+            return data
+
+        company = self.company
+        company.chart_template = False
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            with self.assertRaisesRegex(ValueError, 'unknown_template_data_key'):
+                self.env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading('test', company=company, install_demo=False)
+
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
 
     def test_branch(self):

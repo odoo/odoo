@@ -9,6 +9,9 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
 import itertools
 
+from odoo.addons.base.models.res_company import company_default_for
+
+
 _logger = logging.getLogger('precompute_setter')
 
 
@@ -2519,3 +2522,25 @@ class CalendarTest(models.Model):
 
     def _compute_date(self):
         self.date_start = self.date_end = fields.Date.today()
+
+
+class ResCompanyDefaultFor(models.Model):
+    _inherit = 'res.company'
+
+    credit_limit = fields.Float(
+        string="Test Credit Limit",
+        **company_default_for('credit_limit', 'test_orm.company_default_for', 'credit_limit'),
+        default=1000,
+    )
+    default_partner_id = fields.Many2one(
+        string="Test Default Partner",
+        comodel_name='res.partner',
+        **company_default_for('default_partner_id', 'test_orm.company_default_for', 'partner_id'),
+    )
+
+
+class TestCompanyDefaultFor(models.Model):
+    _name = _description = 'test_orm.company_default_for'
+
+    credit_limit = fields.Float(company_dependent=True)
+    partner_id = fields.Many2one('res.partner', company_dependent=True)
