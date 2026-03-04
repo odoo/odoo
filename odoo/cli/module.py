@@ -62,6 +62,8 @@ class Module(Command):
             parser.add_argument(
                 '-d', '--database', dest='db_name', default=None,
                 help="database name, connection details will be taken from the config file")
+            parser.add_argument("-D", "--data-dir", dest="data_dir",
+                 help="directory where to store Odoo data")
 
         install_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
@@ -95,6 +97,8 @@ class Module(Command):
             config_args += ['-c', parsed_args.config]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
+        if parsed_args.data_dir:
+            config_args += ['-D', parsed_args.data_dir]
         config.parse_config(config_args, setup_logging=True)
 
         db_names = config['db_name']
