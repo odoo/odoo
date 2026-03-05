@@ -136,6 +136,26 @@ test("should not preserve image styles when replacing an image with an icon", as
     );
 });
 
+test("should not preserve image shape classes when replacing an image with an icon", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const { el } = await setupEditor(
+        `<p><img class="img-fluid rounded rounded-circle shadow img-thumbnail" src="/web/static/img/logo.png"></p>`
+    );
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    await click("img");
+    await tick(); // selectionchange
+    await expectElementCount(".o-we-toolbar button[name='replace_image']", 1);
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".nav-link:contains('Icons')");
+    await animationFrame();
+    await click(".fa-glass");
+    await animationFrame();
+    expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>[]\ufeff</p>`
+    );
+});
+
 test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
     onRpc("ir.attachment", "search_read", () => [
