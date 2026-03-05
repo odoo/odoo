@@ -92,6 +92,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             );
             if (targetEls.length) {
                 const cloneEl = sourceEl.cloneNode(true);
+                cloneEl.toggleAttribute("contenteditable", sourceEl.isContentEditable);
                 this.dependencies.dom.removeSystemProperties(cloneEl);
                 this.processThrough("clean_for_save_processors", cloneEl);
                 for (const targetEl of targetEls) {
