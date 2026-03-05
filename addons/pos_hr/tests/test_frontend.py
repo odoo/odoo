@@ -16,19 +16,11 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         if payroll_user_group:
             cls.env.user.group_ids |= payroll_user_group
 
-        cls.main_pos_config.write({"module_pos_hr": True})
-
         # Admin employee
-        cls.admin = cls.env['hr.employee'].create({
-            "date_version": '2000-01-01',
-            "company_id": cls.env.company.id,
-            "user_id": cls.pos_admin.id,
-            "name": "Mitchell Admin",
-            "pin": False,
-            'department_id': cls.env.ref('hr.dep_administration').id,
-            'address_id': cls.env.ref('base.main_partner').id,
-            'structure_type_id': cls.env.ref('hr.structure_type_employee').id,
-        })
+        cls.pos_admin.employee_id.name = "Mitchell Admin"
+        cls.admin = cls.pos_admin.employee_id
+
+        cls.main_pos_config.write({"module_pos_hr": True})
 
         # Managers
         cls.manager_user = new_test_user(
