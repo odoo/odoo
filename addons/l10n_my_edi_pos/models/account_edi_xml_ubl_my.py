@@ -110,7 +110,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'company_currency_id': consolidated_invoice.company_currency_id,
 
             'use_company_currency': False,
-            'fixed_taxes_as_allowance_charges': True,
             'export_custom_form_reference': consolidated_invoice.myinvois_custom_form_reference,
         })
 
@@ -213,10 +212,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # Add the grouping functions for the tax totals
         def tax_grouping_function(_base_line, tax_data):
             tax = tax_data and tax_data['tax']
-            # Exclude fixed taxes if 'fixed_taxes_as_allowance_charges' is True
-            if vals['fixed_taxes_as_allowance_charges'] and tax and tax.amount_type == 'fixed':
-                return None
-
             return {
                 'tax_category_code': tax.l10n_my_tax_type if tax else '06',
                 'tax_exemption_reason': tax.l10n_my_tax_exemption_reason if tax and tax.l10n_my_tax_type == 'E' else None,

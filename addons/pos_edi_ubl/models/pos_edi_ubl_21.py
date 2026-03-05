@@ -59,7 +59,6 @@ class PosEdiXmlUBL21(models.AbstractModel):
             'company_currency_id': pos_order.company_id.currency_id,
 
             'use_company_currency': False,  # If true, use the company currency for the amounts instead of the invoice currency
-            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
         })
 
     def _add_pos_order_base_lines_vals(self, vals):

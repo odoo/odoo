@@ -98,7 +98,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'company_currency_id': sale_order.company_id.currency_id,
 
             'use_company_currency': False,  # If true, use the company currency for the amounts instead of the order currency
-            'fixed_taxes_as_allowance_charges': True,  # If true, include fixed taxes as AllowanceCharges on lines instead of as taxes
         })
 
     def _add_sale_order_base_lines_vals(self, vals):
@@ -284,6 +283,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
                 'base_line': vals['base_line'],
             },
         }
+        # Allowance/Charge from taxes with type 'allowance_charge' (includes recycling contribution taxes, excises).
         self._ubl_add_line_allowance_charge_nodes(sub_vals)
 
     def _add_sale_order_line_item_nodes(self, line_node, vals):
@@ -345,7 +345,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """Override of `account.edi.xml.ubl_bis3` to set/update a customer product reference."""
-        line_vals = super()._retrieve_line_vals(
+        line_vals, line_logs = super()._retrieve_line_vals(
             record, tree, document_type=document_type, qty_factor=qty_factor
         )
         line_vals['product_uom_qty'] = line_vals.pop('quantity')
@@ -354,7 +354,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             line_vals['edi_customer_product_ref'] = self._find_value(
                 './cac:Item/cac:BuyersItemIdentification/cbc:ID', tree
             )
-        return line_vals
+        return line_vals, line_logs
 
     def _import_product(self, partner, **product_vals):
         """Override of `account.edi.xml.ubl_bis3` to search for the product from customer product
