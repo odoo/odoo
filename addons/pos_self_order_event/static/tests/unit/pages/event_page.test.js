@@ -108,7 +108,7 @@ describe("EventPage Component", () => {
         const comp = await mountWithCleanup(EventPage, {
             props: { eventTemplate: event },
         });
-        event.is_multi_slots = false;
+        event.has_slots = false;
         const ticket = comp.eventTickets[0];
         expect(comp.seatAvailability(ticket)).toBe(true);
         event.seats_available = 0;
@@ -118,7 +118,7 @@ describe("EventPage Component", () => {
         event.seats_limited = true;
         expect(comp.seatAvailability(ticket)).toBe(false);
 
-        event.is_multi_slots = true;
+        event.has_slots = true;
         comp.state.selectedSlot = 1;
         comp.state.slotTicketAvailabilities = {
             [ticket.id]: { 1: 5 },

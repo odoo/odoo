@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools.date_utils import float_to_time
 from odoo.tools import (
     format_date,
@@ -81,7 +81,7 @@ class EventSlot(models.Model):
     @api.depends_context('name_with_seats_availability')
     def _compute_display_name(self):
         """Adds slot seats availability if requested by context.
-        Always display the name without availabilities if the event is multi slots
+        Always display the name without availabilities if the event has slots
         because the availability displayed won't be relative to the possible ticket combinations
         but only relative to the event and this will confuse the user.
         """
@@ -92,7 +92,7 @@ class EventSlot(models.Model):
             name = f"{date}, {start} - {end}"
             if (
                 self.env.context.get('name_with_seats_availability') and slot.event_id.seats_limited
-                and not slot.event_id.is_multi_slots
+                and not slot.event_id.has_slots
             ):
                 name = _('%(slot_name)s (Sold out)', slot_name=name) if not slot.seats_available else \
                     _(
@@ -136,10 +136,3 @@ class EventSlot(models.Model):
             if slot.event_id.seats_max > 0:
                 slot.seats_available = slot.event_id.seats_max - (slot.seats_reserved + slot.seats_used)
             slot.seats_taken = slot.seats_reserved + slot.seats_used
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_if_registrations(self):
-        if self.registration_ids:
-            raise UserError(_(
-                "The following slots cannot be deleted while they have one or more registrations linked to them:\n- %s",
-                '\n- '.join(self.mapped('display_name'))))

@@ -10,10 +10,12 @@ class EventEvent(models.Model):
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')
     website_track = fields.Boolean(
-        'Tracks on Website', compute='_compute_website_track',
+        'Tracks Agenda', compute='_compute_website_track',
+        help='Display the "Talks" and the "Agenda" tabs on website, redirecting to the list and the agenda of the talks.',
         readonly=False, store=True)
     website_track_proposal = fields.Boolean(
-        'Proposals on Website', compute='_compute_website_track_proposal',
+        'Tracks Proposals', compute='_compute_website_track_proposal',
+        help='Display the "Propose a talk" tab on website, redirecting to the track proposal form.',
         readonly=False, store=True)
     track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
@@ -66,12 +68,6 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
-
-    def toggle_website_track(self, val):
-        self.website_track = val
-
-    def toggle_website_track_proposal(self, val):
-        self.website_track_proposal = val
 
     def copy_event_menus(self, old_events):
         super().copy_event_menus(old_events)

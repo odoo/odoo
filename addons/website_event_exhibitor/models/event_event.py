@@ -12,7 +12,8 @@ class EventEvent(models.Model):
     sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
     # frontend menu management
     exhibitor_menu = fields.Boolean(
-        string='Showcase Exhibitors', compute='_compute_exhibitor_menu',
+        string='Exhibitors', compute='_compute_exhibitor_menu',
+        help='Display the "Exhibitors list" tab on website.',
         readonly=False, store=True)
     exhibitor_menu_ids = fields.One2many(
         'website.event.menu', 'event_id', string='Exhibitors Menus',
@@ -37,9 +38,6 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
-
-    def toggle_exhibitor_menu(self, val):
-        self.exhibitor_menu = val
 
     def copy_event_menus(self, old_events):
         super().copy_event_menus(old_events)
