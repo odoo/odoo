@@ -15,7 +15,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
@@ -24,6 +24,22 @@ defineMailModels();
 test("message sound is 'off'", async () => {
     localStorage.setItem("mail.user_setting.message_sound", "false");
     await start();
+    expect(serverState.serverVersion).toEqual([99, 9]);
+    getService("action").doAction({
+        tag: "mail.discuss_notification_settings_action",
+        type: "ir.actions.client",
+    });
+    await contains("label:has(h5:contains('Message sound')) input:not(:checked)");
+    const messageSoundKey = makeRecordFieldLocalId(Settings.localId(), "messageSound");
+    expect(localStorage.getItem(messageSoundKey)).toBe(toRawValue(false));
+    expect(localStorage.getItem("mail.user_setting.message_sound")).toBe(null);
+});
+
+test("message sound is 'off' (serverVersion with 'saas~' prefix)", async () => {
+    // same test as above but testing with server version with `saas~` prefix that should be ignored and upgrade as expected.
+    localStorage.setItem("mail.user_setting.message_sound", "false");
+    await start({ serverVersion: ["saas~99", "9"] });
+    expect(serverState.serverVersion).toEqual(["saas~99", "9"]);
     getService("action").doAction({
         tag: "mail.discuss_notification_settings_action",
         type: "ir.actions.client",
