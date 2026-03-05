@@ -38,6 +38,7 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
+<<<<<<< 9bebf09ec8626d716b0f18cafff7b2c5349bab01
         if (this.pos.config.set_tip_after_payment && !this.order.is_tipped) {
             if (this.order.adjustableTipLine) {
                 return {
@@ -45,6 +46,28 @@ export default class OrderPaymentValidation {
                     params: { orderUuid: this.order.uuid },
                 };
             }
+||||||| b5511e5ebb919c2c506131bf9e2a4196dac25f79
+        if (
+            this.pos.config.iface_print_auto &&
+            this.pos.config.iface_print_skip_screen &&
+            this.order.payment_ids[0]?.payment_method_id
+        ) {
+            return {
+                page: "FeedbackScreen",
+                params: {
+                    orderUuid: this.order.uuid,
+                    paymentMethodId: this.order.payment_ids[0]?.payment_method_id.id,
+                },
+            };
+=======
+        if (this.pos.config.iface_print_auto && this.pos.config.iface_print_skip_screen) {
+            return {
+                page: "FeedbackScreen",
+                params: {
+                    orderUuid: this.order.uuid,
+                },
+            };
+>>>>>>> f31e74fca790bdeb08af9b604bef5ef53fbfd9be
         }
 
         return {
