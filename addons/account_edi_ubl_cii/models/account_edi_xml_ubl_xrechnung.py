@@ -115,11 +115,3 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
                     'schemeID': None,
                 },
             })
-
-    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
-        # EXTENDS account.edi.xml.ubl_bis3
-        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
-        discount_node['cbc:AllowanceChargeReason'] = None
-        discount_node['cbc:MultiplierFactorNumeric'] = None
-        discount_node['cbc:BaseAmount'] = None
-        return discount_node

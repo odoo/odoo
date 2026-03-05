@@ -228,9 +228,33 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
     def test_invoice_allowance_charge_fixed_tax_recycling_contribution(self):
         """ Ensure the recycling contribution taxes are turned into allowance/charges at the document line level. """
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
-        tax_auvibel = self.fixed_tax(2.0, name="AUVIBEL", include_base_amount=True)
-        tax_bebat = self.fixed_tax(3.0, name="BEBAT", include_base_amount=True)
+        tax_recupel = self._create_allowance_charge_tax(
+            name="RECUPEL",
+            amount_type="fixed",
+            amount=1.0,
+            reason_code="AEO",
+            reason="RECUPEL",
+            is_charge=True,
+            is_emptying=False,
+        )
+        tax_auvibel = self._create_allowance_charge_tax(
+            name="AUVIBEL",
+            amount_type="fixed",
+            amount=2.0,
+            reason_code="AEO",
+            reason="AUVIBEL",
+            is_charge=True,
+            is_emptying=False,
+        )
+        tax_bebat = self._create_allowance_charge_tax(
+            name="BEBAT",
+            amount_type="fixed",
+            amount=3.0,
+            reason_code="CAV",
+            reason="BEBAT",
+            is_charge=True,
+            is_emptying=False,
+        )
         tax_20 = self.percent_tax(20.0)
 
         invoice = self._create_invoice(
@@ -262,7 +286,16 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._assert_invoice_ubl_file(invoice, 'test_invoice_allowance_charge_fixed_tax_recycling_contribution')
 
     def test_invoice_allowance_charge_fixed_tax_included_recycling_contribution(self):
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True, price_include_override='tax_included')
+        tax_recupel = self._create_allowance_charge_tax(
+            name="RECUPEL",
+            amount_type="fixed",
+            amount=1.0,
+            reason_code="AEO",
+            reason="RECUPEL",
+            is_charge=True,
+            is_emptying=False,
+            price_include_override='tax_included',
+        )
         tax_20 = self.percent_tax(20.0, price_include_override='tax_included')
 
         # Price TTC = 120 = (99 + 1 ) * 1.20
@@ -290,7 +323,24 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             - VAT = (20 + 2) * 0.2 = 4.4
         3) Total = 20 + 2 + 4.4 = 26.4
         """
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
+        tax_charge = self._create_allowance_charge_tax(
+            name="RECUPEL Charge",
+            amount_type="fixed",
+            amount=1.0,
+            reason_code="AEO",
+            reason="RECUPEL",
+            is_emptying=False,
+            is_charge=True,
+        )
+        tax_allowance = self._create_allowance_charge_tax(
+            name="RECUPEL Allowance",
+            amount_type="fixed",
+            amount=1.0,
+            reason_code="100",
+            reason="RECUPEL",
+            is_emptying=False,
+            is_charge=False,
+        )
         tax_20 = self.percent_tax(20.0)
 
         invoice = self._create_invoice(
@@ -301,13 +351,13 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
                     product_id=self.product,
                     price_unit=10.0,
                     quantity=5.0,
-                    tax_ids=tax_recupel + tax_20,
+                    tax_ids=tax_charge + tax_20,
                 ),
                 self._prepare_invoice_line(
                     product_id=self.product,
                     price_unit=10.0,
                     quantity=-3.0,
-                    tax_ids=tax_recupel + tax_20,
+                    tax_ids=tax_allowance + tax_20,
                 ),
             ],
             post=True,

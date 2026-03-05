@@ -100,11 +100,6 @@
         <cbc:ID>001000</cbc:ID>
         <cbc:InvoicedQuantity unitCode="H87">150.000</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">70.06</cbc:LineExtensionAmount>
-        <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-            <cbc:AllowanceChargeReason>Remise Conseillée %</cbc:AllowanceChargeReason>
-            <cbc:Amount currencyID="EUR">9.55</cbc:Amount>
-        </cac:AllowanceCharge>
         <cac:Item>
             <cbc:Name>Cheville p. charges légères HLD 2</cbc:Name>
             <cac:SellersItemIdentification>
@@ -119,19 +114,19 @@
             </cac:ClassifiedTaxCategory>
         </cac:Item>
         <cac:Price>
-            <cbc:PriceAmount currencyID="EUR">530.73</cbc:PriceAmount>
+            <cbc:PriceAmount currencyID="EUR">467.06</cbc:PriceAmount>
             <cbc:BaseQuantity unitCode="H87">1000.000</cbc:BaseQuantity>
+		    <cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		       	<cbc:Amount currencyID="EUR">63.67</cbc:Amount>
+		       	<cbc:BaseAmount currencyID="EUR">530.73</cbc:BaseAmount>
+	     	</cac:AllowanceCharge>
         </cac:Price>
     </cac:InvoiceLine>
     <cac:InvoiceLine>
         <cbc:ID>002000</cbc:ID>
         <cbc:InvoicedQuantity unitCode="H87">200.000</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">112.09</cbc:LineExtensionAmount>
-        <cac:AllowanceCharge>
-            <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-            <cbc:AllowanceChargeReason>Remise Conseillée %</cbc:AllowanceChargeReason>
-            <cbc:Amount currencyID="EUR">15.29</cbc:Amount>
-        </cac:AllowanceCharge>
         <cac:Item>
             <cbc:Name>Vis pour cheville HLD 3</cbc:Name>
             <cac:SellersItemIdentification>
@@ -146,8 +141,15 @@
             </cac:ClassifiedTaxCategory>
         </cac:Item>
         <cac:Price>
-            <cbc:PriceAmount currencyID="EUR">63.69</cbc:PriceAmount>
-            <cbc:BaseQuantity unitCode="H87">100.000</cbc:BaseQuantity>
         </cac:Price>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="EUR">56.045</cbc:PriceAmount>
+            <cbc:BaseQuantity unitCode="H87">100.000</cbc:BaseQuantity>
+		    <cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		       	<cbc:Amount currencyID="EUR">7.645</cbc:Amount>
+		       	<cbc:BaseAmount currencyID="EUR">63.69</cbc:BaseAmount>
+	     	</cac:AllowanceCharge>
+	   </cac:Price>
     </cac:InvoiceLine>
 </Invoice>

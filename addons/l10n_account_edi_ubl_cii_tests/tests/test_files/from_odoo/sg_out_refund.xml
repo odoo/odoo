@@ -147,11 +147,6 @@
     <cbc:ID>1</cbc:ID>
     <cbc:CreditedQuantity unitCode="C62">2.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="USD">1600.00</cbc:LineExtensionAmount>
-    <cac:AllowanceCharge>
-      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-      <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-      <cbc:Amount currencyID="USD">400.00</cbc:Amount>
-    </cac:AllowanceCharge>
     <cac:Item>
       <cbc:Name>product_a</cbc:Name>
       <cac:ClassifiedTaxCategory>
@@ -163,8 +158,13 @@
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="USD">1000.0</cbc:PriceAmount>
-    </cac:Price>
+			<cbc:PriceAmount currencyID="USD">800.0</cbc:PriceAmount>
+      <cac:AllowanceCharge>
+        <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+        <cbc:Amount currencyID="USD">200.0</cbc:Amount>
+        <cbc:BaseAmount currencyID="USD">1000.0</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+	  </cac:Price>
   </cac:CreditNoteLine>
   <cac:CreditNoteLine>
     <cbc:ID>2</cbc:ID>

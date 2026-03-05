@@ -757,7 +757,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         taxes = self.company_data['default_tax_sale'].copy({
             'name': 'Custom Exemtion Reason Tax',
             'ubl_cii_tax_category_code': 'AE',
-            'ubl_cii_tax_exemption_reason': 'Just because',
+            'ubl_cii_category_reason': 'Just because',
             'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-AE',
         })
         invoice = self.env["account.move"].create({
@@ -770,7 +770,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         root = etree.fromstring(xml)
         for tax, node in zip(taxes, root.findall('.//{*}TaxTotal/{*}TaxSubtotal/{*}TaxCategory')):
             self.assertEqual(node.findtext('.//{*}ID') or False, tax.ubl_cii_tax_category_code)
-            self.assertEqual(node.findtext('.//{*}TaxExemptionReason') or False, tax.ubl_cii_tax_exemption_reason)
+            self.assertEqual(node.findtext('.//{*}TaxExemptionReason'), 'Just because')
             self.assertEqual(node.findtext('.//{*}TaxExemptionReasonCode') or False, tax.ubl_cii_tax_exemption_reason_code)
 
     def test_oin_code(self):

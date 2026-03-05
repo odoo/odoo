@@ -56,9 +56,33 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         )
 
     def test_import_invoice_eco_tax_and_discount(self):
-        tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
-        tax_auvibel = self.fixed_tax(2.0, name="AUVIBEL", include_base_amount=True)
-        tax_bebat = self.fixed_tax(3.0, name="BEBAT", include_base_amount=True)
+        tax_recupel = self._create_allowance_charge_tax(
+            name="RECUPEL",
+            amount_type="fixed",
+            amount=1.0,
+            reason_code="AEO",
+            reason="RECUPEL",
+            is_charge=True,
+            is_emptying=False,
+        )
+        tax_auvibel = self._create_allowance_charge_tax(
+            name="AUVIBEL",
+            amount_type="fixed",
+            amount=2.0,
+            reason_code="AEO",
+            reason="AUVIBEL",
+            is_charge=True,
+            is_emptying=False,
+        )
+        tax_bebat = self._create_allowance_charge_tax(
+            name="BEBAT",
+            amount_type="fixed",
+            amount=3.0,
+            reason_code="AEO",
+            reason="BEBAT",
+            is_charge=True,
+            is_emptying=False,
+        )
         tax_20 = self.percent_tax(20.0)
 
         invoice = self._import_invoice_as_attachment_on(

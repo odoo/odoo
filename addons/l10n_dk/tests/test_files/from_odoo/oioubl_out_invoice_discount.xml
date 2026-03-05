@@ -200,19 +200,6 @@
     <cbc:ID>___ignore___</cbc:ID>
     <cbc:InvoicedQuantity unitCode="C62">10.0</cbc:InvoicedQuantity>
     <cbc:LineExtensionAmount currencyID="DKK">4500.00</cbc:LineExtensionAmount>
-    <cac:AllowanceCharge>
-      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
-      <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
-      <cbc:Amount currencyID="DKK">500.00</cbc:Amount>
-      <cac:TaxCategory>
-        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">StandardRated</cbc:ID>
-        <cbc:Percent>25.0</cbc:Percent>
-        <cac:TaxScheme>
-          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">63</cbc:ID>
-          <cbc:Name>Moms</cbc:Name>
-        </cac:TaxScheme>
-      </cac:TaxCategory>
-    </cac:AllowanceCharge>
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="DKK">1125.00</cbc:TaxAmount>
       <cac:TaxSubtotal>
@@ -240,7 +227,12 @@
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="DKK">450.0</cbc:PriceAmount>
-    </cac:Price>
+			<cbc:PriceAmount currencyID="DKK">450.0</cbc:PriceAmount>
+      <cac:AllowanceCharge>
+      <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <cbc:Amount currencyID="DKK">50.0</cbc:Amount>
+          <cbc:BaseAmount currencyID="DKK">500.0</cbc:BaseAmount>
+      </cac:AllowanceCharge>
+	  </cac:Price>
   </cac:InvoiceLine>
 </Invoice>

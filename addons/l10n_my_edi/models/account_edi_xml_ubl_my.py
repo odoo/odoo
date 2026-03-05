@@ -147,7 +147,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'company_currency_id': myinvois_document.company_id.currency_id,
 
             'use_company_currency': False,
-            'fixed_taxes_as_allowance_charges': True,
             'custom_form_reference': myinvois_document.myinvois_custom_form_reference,
             'document_ref': document_ref,
             'incoterm_id': myinvois_document.invoice_ids.invoice_incoterm_id,
@@ -562,6 +561,27 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                     'listID': 'CLASS',
                 }
             }
+
+    def _add_document_line_allowance_charge_nodes(self, line_node, vals):
+        # EXTENDS account.edi.xml.ubl_21
+        super()._add_document_line_allowance_charge_nodes(line_node, vals)
+        currency = vals['company_currency_id'] if vals['use_company_currency'] else vals['currency_id']
+        discount_amount = vals[f"discount_amount{vals['currency_suffix']}"]
+        if currency.is_zero(discount_amount):
+            return
+
+        line_node.setdefault('cac:AllowanceCharge', []).insert(0, {
+            'cbc:ChargeIndicator': {'_text': 'false' if discount_amount > 0 else 'true'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '95'},
+            'cbc:Amount': {
+                '_text': self.format_float(abs(discount_amount), vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            },
+        })
+
+    def _is_line_discount_in_line_allowance_charge(self):
+        # OVERRIDE account.edi.xml.ubl_20
+        return True
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints

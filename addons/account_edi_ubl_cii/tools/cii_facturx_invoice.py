@@ -68,6 +68,8 @@ LineItem = {
             'ram:ActualAmount': {},
             'ram:ReasonCode': {},
             'ram:Reason': {},
+            'ram:BasisAmount': {},
+            'ram:CalculationPercent': {},
         },
         'ram:SpecifiedTradeSettlementLineMonetarySummation': {
             'ram:LineTotalAmount': {},

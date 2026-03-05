@@ -6,7 +6,10 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='ubl_cii_tax_exemption_reason']" position="attributes">
+            <xpath expr="//field[@name='ubl_cii_category_reason']" position="attributes">
+                <attribute name="invisible" separator=" or " add="not l10n_sa_show_exemption_reason"></attribute>
+            </xpath>
+            <xpath expr="//label[@name='ubl_cii_exemption_reason_label']" position="attributes">
                 <attribute name="invisible" separator=" or " add="not l10n_sa_show_exemption_reason"></attribute>
             </xpath>
         </field>
