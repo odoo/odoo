@@ -17,6 +17,15 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
 
         cls.product_template_sofa.website_published = True
 
+    def test_add_extra_field_to_product_specifications(self):
+        self.product_template_sofa.product_variant_ids.write({"default_code": "SOFA-REF"})
+
+        self.start_tour(
+            self.env["website"].get_client_action_url(self.product_template_sofa.website_url),
+            "website_sale_add_extra_field",
+            login="admin",
+        )
+
     def test_toggle_contact_us_button_visibility(self):
         """Check that the "Contact Us" button:
         - is shown for zero-priced products
