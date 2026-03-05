@@ -17,6 +17,7 @@ FIGURE_TYPE_SELECTION_VALUES = [
     ('datetime', "Datetime"),
     ('boolean', 'Boolean'),
     ('string', 'String'),
+    ('many2one', 'Many2One'),
 ]
 
 DOMAIN_REGEX = re.compile(r'(-?sum)\((.*)\)')
@@ -609,10 +610,17 @@ class AccountReportExpression(models.Model):
             ('external', "External Value"),
             ('custom', "Custom Python Function"),
             ('text', "Plain Text"),
+            ('reference', "Record Reference"),
         ],
         required=True
     )
     formula = fields.Text(string="Formula", required=True)
+    model_id = fields.Many2one(
+        string="Model",
+        comodel_name="ir.model",
+        compute="_compute_model_id",
+        inverse="_inverse_model_id",
+    )
     subformula = fields.Text(string="Subformula")
     date_scope = fields.Selection(
         string="Date Scope",
@@ -690,6 +698,26 @@ class AccountReportExpression(models.Model):
         auditable_engines = self._get_auditable_engines()
         for expression in self:
             expression.auditable = expression.engine in auditable_engines
+
+    @api.depends('engine', 'formula')
+    def _compute_model_id(self):
+        for expression in self:
+            if expression.engine == "reference" and expression.formula:
+                expression.model_id = self.env["ir.model"].search([("model", "=", expression.formula)], limit=1)
+            else:
+                expression.model_id = False
+
+    @api.onchange('model_id')
+    def _inverse_model_id(self):
+        for expression in self:
+            if expression.engine == "reference":
+                expression.formula = expression.model_id.model
+
+    @api.onchange('engine')
+    def _set_figure_type_for_reference_engine(self):
+        for expression in self:
+            if expression.engine == "reference":
+                expression.figure_type = "many2one"
 
     @api.constrains('engine', 'report_line_id')
     def _validate_engine(self):
