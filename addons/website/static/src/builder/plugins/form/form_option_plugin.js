@@ -45,6 +45,7 @@ import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
+import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -156,7 +157,7 @@ export class FormOptionPlugin extends Plugin {
             ExistingFieldSelectTypeAction,
             MultiCheckboxDisplayAction,
             SetLabelTextAction,
-            SelectLabelPositionAction,
+            SelectLabelsPositionAction,
             ToggleDescriptionAction,
             SelectTextareaValueAction,
             ToggleRequiredAction,
@@ -1291,19 +1292,38 @@ export class SetLabelTextAction extends BuilderAction {
         return labelEl.textContent;
     }
 }
-export class SelectLabelPositionAction extends BuilderAction {
-    static id = "selectLabelPosition";
+export class SelectLabelsPositionAction extends BuilderAction {
+    static id = "selectLabelsPosition";
     static dependencies = ["websiteFormOption"];
+    setup() {
+        this.fieldSelector = ".s_website_form_field:not(.s_website_form_dnone)";
+    }
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
-    apply({ editingElement: fieldEl, value, loadResult: fields }) {
-        const field = getActiveField(fieldEl, { fields });
-        field.formatInfo.labelPosition = value;
-        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    apply({ editingElement: formEl, value, loadResult: fields }) {
+        for (const fieldEl of formEl.querySelectorAll(this.fieldSelector)) {
+            const fieldClassName = !isTargetVisible(fieldEl) ? fieldEl.className : "";
+            const field = getActiveField(fieldEl, { fields });
+            field.formatInfo.labelPosition = value;
+            // Reset label width for the "top" position.
+            if (value === "top") {
+                delete field.formatInfo.labelWidth;
+            }
+            this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+            // For invisible fields (device visibility), we need to reapply
+            // the initial `className` before the label position update.
+            if (fieldClassName) {
+                fieldEl.className = fieldClassName;
+            }
+        }
     }
-    isApplied({ editingElement: fieldEl, value }) {
-        const currentValue = getLabelPosition(fieldEl);
+    isApplied({ editingElement: formEl, value }) {
+        const fieldEls = [...formEl.querySelectorAll(this.fieldSelector)];
+        const labelPositions = fieldEls.map(getLabelPosition);
+        const currentValue = labelPositions.every((val) => val === labelPositions[0])
+            ? labelPositions[0]
+            : false;
         return currentValue === value;
     }
 }

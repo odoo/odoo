@@ -21,10 +21,20 @@
     <BuilderRow label.translate="Mark Text">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
-    <BuilderRow label.translate="Labels Width">
+    <BuilderRow t-if="canChangeFieldsLayout" label.translate="Labels Position">
+        <BuilderButtonGroup action="'selectLabelsPosition'">
+            <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
+                <i class="fa fa-eye-slash"/>
+            </BuilderButton>
+            <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'" id="'label_position_top_opt'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Labels Width" level="1" t-if="!isActiveItem('label_position_hide_opt') and !isActiveItem('label_position_top_opt')">
         <BuilderNumberInput
             styleAction="'width'"
-            unit="'px'" applyTo="'.s_website_form_label'"/>
+            unit="'px'" applyTo="'[data-name=Field]:not(.s_website_form_dnone) .s_website_form_label'"/>
     </BuilderRow>
     <BuilderRow label.translate="On Success">
         <BuilderSelect preview="false" action="'onSuccess'">
@@ -161,16 +171,6 @@
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Position" level="1">
-        <BuilderButtonGroup action="'selectLabelPosition'">
-            <BuilderButton title.translate="Hide" actionValue="'none'">
-                <i class="fa fa-eye-slash"/>
-            </BuilderButton>
-            <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
-        </BuilderButtonGroup>
     </BuilderRow>
     <BuilderRow label.translate="Link to country">
         <BuilderCheckbox action="'linkStateToCountry'" t-if="this.canLinkStateToCountry.value"

@@ -219,6 +219,6 @@ export class VisibilityPlugin extends Plugin {
     }
 }
 
-function isTargetVisible(editingEl) {
+export function isTargetVisible(editingEl) {
     return editingEl.dataset.invisible !== "1";
 }

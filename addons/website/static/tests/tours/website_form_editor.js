@@ -239,10 +239,11 @@ registerWebsitePreviewTour(
             trigger: ':iframe input[name="phone"]',
             run: "click",
         },
+        ...unfoldOptionsGroup("Form"),
         {
-            content: "Change the label position of the phone field",
+            content: "Change the label position of all fields",
             trigger:
-                ".o_customize_tab div[data-label='Position'] button[data-action-value='right']",
+                ".o_customize_tab div[data-label='Labels Position'] button[data-action-value='right']",
             run: "click",
         },
         ...addCustomField("char", "text", "Conditional Visibility Check 1", false),

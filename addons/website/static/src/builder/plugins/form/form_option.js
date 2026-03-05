@@ -47,6 +47,9 @@ export class FormOption extends BaseOptionComponent {
         // Get potential message
         const el = this.env.getEditingElement();
         this.messageEl = el.parentElement.querySelector(".s_website_form_end_message");
+        this.canChangeFieldsLayout = !!el.querySelector(
+            ".s_website_form_field:not(.s_website_form_dnone)"
+        );
         this.showEndMessage = false;
         // Get the email_to value from the data-for attribute if it exists. We
         // use it if there is no value on the email_to input.
