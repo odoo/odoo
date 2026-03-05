@@ -174,6 +174,10 @@ class ResUsers(models.Model):
     def check_calendar_credentials(self):
         return {}
 
+    def get_calendar_email(self):
+        """Meant to be overridden by a specific calendar provider"""
+        return False
+
     def check_synchronization_status(self):
         return {}
 
