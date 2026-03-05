@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mrp.MOViewListDropdown" style="btn" t-if="this.props.record.data.state !== 'done' and !['draft', 'done', 'cancel'].includes(this.props.record.data.production_state)">
-        <Dropdown>
+    <t t-name="mrp.MOViewListDropdown" style="btn">
+        <Dropdown t-if="this.props.record.data.state !== 'done'">
             <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_wo_status {{statusColor}}" t-if="this.props.display === 'bubble'"/>
@@ -42,6 +42,8 @@
                 </DropdownItem>
             </t>
         </Dropdown>
+        <span t-attf-class="o_wo_status {{statusColor}}" t-elif="this.props.display === 'bubble'"/>
+        <span t-esc="formattedValue" class="badge rounded-pill" t-attf-class="{{statusColor}}" t-elif="this.props.display === 'badge'"/>
     </t>
 
 </templates>
