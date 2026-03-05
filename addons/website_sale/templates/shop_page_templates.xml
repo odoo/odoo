@@ -183,7 +183,15 @@
 
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
 
-            <t t-set="hasLeftColumn" t-value="opt_wsale_categories or opt_wsale_attributes"/>
+            <t t-set="show_price_filter" t-value="opt_wsale_filter_price and opt_wsale_attributes"/>
+            <t
+                t-set="hasLeftColumn"
+                t-value="
+                    (opt_wsale_categories and categories)
+                    or (opt_wsale_attributes and (attributes or all_tags or opt_wsale_filter_price))
+                    or show_price_filter
+                "
+            />
 
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
@@ -232,10 +240,6 @@
                                 >
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
-                                <t
-                                    t-set="show_price_filter"
-                                    t-value="opt_wsale_filter_price and opt_wsale_attributes"
-                                />
                                 <div
                                     t-if="attrib_values or tags or (
                                         show_price_filter and isFilteringByPrice
@@ -957,16 +961,6 @@
             <div class="offcanvas-header justify-content-end">
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
             </div>
-            <div
-                t-if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
-                class="offcanvas-body flex-grow-0 overflow-visible"
-            >
-                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                <t t-call="website_sale.search"
-                    placeholder="placeholder"
-                    search="original_search or search"
-                    _s_searchbar_autocomplete_classes.f="bg-primary"/>
-            </div>
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
                 <!-- Show sorting only if it's not avavailbe in the topbar already -->
                 <div t-if="not is_view_active('website_sale.sort')" class="accordion-item">
@@ -1462,7 +1456,7 @@
         </xpath>
     </template>
 
-    <template id="website_sale.filter_products_price" name="Filter by Prices">
+    <template id="website_sale.filter_products_price" name="Filter by Prices" active="False">
         <t t-set="is_disabled" t-value="available_min_price == available_max_price"/>
         <div
             t-if="not is_disabled"
