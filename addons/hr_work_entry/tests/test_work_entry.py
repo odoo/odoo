@@ -151,6 +151,23 @@ class TestWorkEntry(TestWorkEntryBase):
 
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+        })
+=======
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+            'hours_per_week': 21,
+        })
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         # create 4 employees that have versions corresponding to these 4 cases:
         # flexible calendar then standard calendar
         # standard calendar then flexible calendar

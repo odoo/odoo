@@ -169,6 +169,25 @@ class TestTimezones(TestResourceCommon):
         The standard 8 - 17 leave should be converted to a whole day leave interval for the flexible resource.
         """
 
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flex Calendar',
+            'tz': 'UTC',
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+            'hours_per_day': 8,
+        })
+=======
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flex Calendar',
+            'tz': 'UTC',
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+            'hours_per_day': 8,
+            'hours_per_week': 40,
+        })
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         flex_resource = self.env['resource.resource'].create({
             'name': 'Test FlexResource',
             'calendar_id': False,

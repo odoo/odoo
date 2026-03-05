@@ -556,6 +556,25 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             ],
         })
 
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        self.flex_40h_calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 80.0,
+            'flexible_hours': True,
+        })
+=======
+        self.flex_40h_calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'hours_per_week': 80.0,
+            'full_time_required_hours': 80.0,
+            'flexible_hours': True,
+        })
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         logged_in_emp = self.env.user.employee_id
         logged_in_emp.write({
             'resource_calendar_id': False,

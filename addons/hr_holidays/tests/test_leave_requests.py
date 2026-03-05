@@ -338,6 +338,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     @users('Titus')
     def test_create_differnt_calendars_group_leave_without_hr_right(self):
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        flexible_calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+        })
+=======
+        flexible_calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+            'hours_per_week': 21,
+        })
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
@@ -600,6 +617,13 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'resource_calendar_id': False,
             'hours_per_week': 40,
             'hours_per_day': 8.0,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 40
+=======
+            'hours_per_week': 40,
+            'full_time_required_hours': 40
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
 
         leave1 = self.env['hr.leave'].create({
@@ -1418,10 +1442,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee = self.employee_emp
 
         # set a flexible working schedule
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
         employee.write({
             'resource_calendar_id': False,
             'hours_per_week': 40,
             'hours_per_day': 8
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 40,
+            'flexible_hours': True,
+=======
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8.0,
+            'hours_per_week': 40,
+            'full_time_required_hours': 40,
+            'flexible_hours': True,
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Annual Time Off',
@@ -1591,10 +1630,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(modified_leave.request_date_to, two_days_after)
 
     def test_public_holiday_in_the_middle_of_flexible_request(self):
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
         self.employee_emp.write({
             'resource_calendar_id': False,
             'hours_per_week': 56,
             'hours_per_day': 8
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+=======
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8,
+            'hours_per_week': 56,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
         # Create a public holiday for the flexible calendar
         self.env['resource.calendar.leaves'].create({
@@ -1669,6 +1723,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'resource_calendar_id': False,
             'hours_per_week': 56,
             'hours_per_day': 8,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+=======
+            'hours_per_week': 56,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
         self.env['resource.calendar.leaves'].create([
             {
@@ -2493,6 +2556,29 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_flexible_schedule_full_day_off(self):
         """this tests checks that if the morning and afternoon have been selected as time off and the schedule type of
         the employee is flexible, the time considered off is a full day."""
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        calendar = self.env['resource.calendar'].sudo().create({
+            'company_id': False,
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+            'schedule_type': 'flexible',
+        })
+=======
+        calendar = self.env['resource.calendar'].sudo().create({
+            'company_id': False,
+            'name': 'Flexible 40h/week',
+            'tz': 'UTC',
+            'hours_per_day': 8.0,
+            'hours_per_week': 40.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+            'schedule_type': 'flexible',
+        })
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         self.employee_hruser.write({
             'resource_calendar_id': False,
             'hours_per_week': 40,
@@ -2518,6 +2604,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'resource_calendar_id': False,
             'hours_per_week': 56,
             'hours_per_day': 8,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+=======
+            'hours_per_week': 56,
+            'full_time_required_hours': 56,
+            'flexible_hours': True
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
         self.env.user.tz = 'Europe/Brussels'
 

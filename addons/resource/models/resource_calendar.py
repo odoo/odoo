@@ -363,8 +363,20 @@ class ResourceCalendar(models.Model):
                     end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
                     end_date = end_datetime_adjusted.date()
 
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
                     full_time_required_hours = hours_per_week
                     max_hours_per_day = hours_per_day
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+                    calendar = resource_calendars[resource] if resource else self
+
+                    full_time_required_hours = calendar.full_time_required_hours
+                    max_hours_per_day = calendar.hours_per_day
+=======
+                    calendar = resource_calendars[resource] if resource else self
+
+                    max_hours_per_week = calendar.hours_per_week
+                    max_hours_per_day = calendar.hours_per_day
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
 
                     intervals = []
                     current_start_day = start_date
@@ -377,11 +389,11 @@ class ResourceCalendar(models.Model):
 
                         if current_start_day < start_date:
                             prior_days = (start_date - current_start_day).days
-                            prior_hours = min(full_time_required_hours, max_hours_per_day * prior_days)
+                            prior_hours = min(max_hours_per_week, max_hours_per_day * prior_days)
                         else:
                             prior_hours = 0
 
-                        remaining_hours = max(0, full_time_required_hours - prior_hours)
+                        remaining_hours = max(0, max_hours_per_week - prior_hours)
                         remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
 
                         current_day = week_start

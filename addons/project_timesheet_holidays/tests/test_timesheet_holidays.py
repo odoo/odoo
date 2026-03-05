@@ -278,6 +278,15 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'resource_calendar_id': False,
             'hours_per_week': 40,
             'hours_per_day': 8.0,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+=======
+            'hours_per_week': 40.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
 
         time_off = self.Requests.with_user(self.user_employee).create({
@@ -354,6 +363,15 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'resource_calendar_id': False,
             'hours_per_week': 10,
             'hours_per_day': 10,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 10,
+            'flexible_hours': True,
+=======
+            'hours_per_week': 10,
+            'full_time_required_hours': 10,
+            'flexible_hours': True,
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         })
 
         time_off = self.Requests.with_user(self.user_employee).create({

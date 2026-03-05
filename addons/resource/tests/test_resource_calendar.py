@@ -53,6 +53,15 @@ class TestResourceCalendar(TransactionCase):
             'calendar_id': False,
             'hours_per_week': 30.0,
             'hours_per_day': 7.0,
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+            'full_time_required_hours': 30,
+            'flexible_hours': True,
+=======
+            'hours_per_week': 30,
+            'full_time_required_hours': 30,
+            'flexible_hours': True,
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
             'tz': 'UTC',
         })
 

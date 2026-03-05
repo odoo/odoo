@@ -121,6 +121,27 @@ class TestHrAttendanceOvertime(HttpCase):
             'contract_date_start': date(2030, 1, 1),
         })
 
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        cls.calendar_flex_40h = cls.env['resource.calendar'].create({
+            'name': 'Flexible 40 hours/week',
+            'company_id': cls.company.id,
+            'hours_per_day': 8,
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+        })
+
+=======
+        cls.calendar_flex_40h = cls.env['resource.calendar'].create({
+            'name': 'Flexible 40 hours/week',
+            'company_id': cls.company.id,
+            'hours_per_day': 8,
+            'hours_per_week': 40,
+            'flexible_hours': True,
+            'full_time_required_hours': 40,
+        })
+
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
             'company_id': cls.company.id,

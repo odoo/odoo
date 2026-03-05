@@ -592,6 +592,25 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         """ Test that public holidays timesheet duration match the hours per days value for flexible
         """
 
+<<<<<<< 5d1c245f8740d631d0e76a5ec53d4eb7e35fcc20
+||||||| 2ada31b77c71d98efe008a44d37a49ee96bfd4ec
+        self.flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'hours_per_day': 7.0,
+            'full_time_required_hours': 7.0,
+            'flexible_hours': True,
+        })
+
+=======
+        self.flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'hours_per_day': 7.0,
+            'hours_per_week': 7.0,
+            'full_time_required_hours': 7.0,
+            'flexible_hours': True,
+        })
+
+>>>>>>> 98cd5c29ef4dc054c326f52c491991cd85193b7f
         self.flexible_employee = self.env['hr.employee'].create({
             'name': 'Flexible',
             'company_id': self.test_company.id,
