@@ -32,7 +32,8 @@ export const TABLE_ATTRIBUTES = {
 };
 // Cancel tables default styles.
 export const TABLE_STYLES = {
-    'border-collapse': 'collapse',
+    'border-collapse': 'separate',
+    'border-spacing': '0px',
     'text-align': 'inherit',
     'font-size': 'unset',
     'line-height': 'inherit',
@@ -379,6 +380,7 @@ function cardToTable(editable) {
                 col.append(child);
             }
             const subTable = _createTable();
+            subTable.style.height = '100%';
             const superRow = document.createElement('tr');
             const superCol = document.createElement('td');
             row.append(col);
