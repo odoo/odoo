@@ -2,13 +2,16 @@ import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attende
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { useState } from "@odoo/owl";
+import { user } from "@web/core/user";
 
 patch(AttendeeCalendarModel.prototype, {
     setup(params) {
         super.setup(...arguments);
         this.isAlive = params.isAlive;
-        this.googlePendingSync = false;
+        this.googleSyncTimedOut = false;
         this.state = useState({
+            googleSyncResetting: false,
+            googlePendingSync: false,
             googleIsSync: true,
             googleIsPaused: false,
         });
@@ -18,20 +21,21 @@ patch(AttendeeCalendarModel.prototype, {
      * @override
      */
     async updateData() {
-        if (this.googlePendingSync) {
+        this.googleSyncTimedOut = false;
+        if (this.state.googlePendingSync) {
             return super.updateData(...arguments);
         }
         try {
-            await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)),
-                this.syncGoogleCalendar(true)
+            this.googleSyncTimedOut = await Promise.race([
+                new Promise(resolve => setTimeout(resolve, 1000)).then(() => true),
+                this.syncGoogleCalendar(true).then(() => false),
             ]);
         } catch (error) {
             if (error.event) {
                 error.event.preventDefault();
             }
             console.error("Could not synchronize Google events now.", error);
-            this.googlePendingSync = false;
+            this.state.googlePendingSync = false;
         }
         if (this.isAlive()) {
             return super.updateData(...arguments);
@@ -40,7 +44,22 @@ patch(AttendeeCalendarModel.prototype, {
     },
 
     async syncGoogleCalendar(silent = false, force_auth = false) {
-        this.googlePendingSync = true;
+        this.state.googlePendingSync = true;
+        const [{google_synchronization_needs_reset}] = await this.orm.read(
+            "res.users",
+            [user.userId],
+            ["google_synchronization_needs_reset"],
+        );
+        if (google_synchronization_needs_reset) {
+            this.state.googleSyncResetting = true;
+            await this.orm.call(
+                "res.users",
+                "restart_google_synchronization",
+                [[user.userId]],
+            );
+            this.state.googleSyncResetting = false;
+        }
+
         const result = await rpc(
             "/google_calendar/sync_data",
             {
@@ -57,8 +76,14 @@ patch(AttendeeCalendarModel.prototype, {
         } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
             this.state.googleIsSync = true;
         }
-        this.state.googleIsPaused = result.status == "sync_paused";
-        this.googlePendingSync = false;
+        this.state.googleIsPaused = result.status === "sync_paused";
+        this.state.googlePendingSync = false;
+        if (this.googleSyncTimedOut && result.status === "need_refresh") {
+            const data = { ...this.data };
+            await this.keepLast.add(super.updateData(data));
+            this.data = data;
+            this.notify();
+        }
         return result;
     },
 

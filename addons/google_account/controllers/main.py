@@ -34,6 +34,7 @@ class GoogleAuth(http.Controller):
             service_field = 'res_users_settings_id'
             if service_field in request.env.user:
                 request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
+                request.env.user.prepare_for_google_calendar_sync()
             else:
                 raise Warning('No callback field for service <%s>' % service)
 

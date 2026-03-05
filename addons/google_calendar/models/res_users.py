@@ -163,6 +163,14 @@ class ResUsers(models.Model):
     def restart_google_synchronization(self):
         self.ensure_one()
         self.sudo().google_synchronization_stopped = False
+        self.sudo().google_synchronization_needs_reset = False
+        self.env['calendar.recurrence']._restart_google_sync()
+        self.env['calendar.event']._restart_google_sync()
+
+    def prepare_for_google_calendar_sync(self):
+        self.sudo().google_synchronization_needs_reset = True
+
+    def reset_google_sync_records(self):
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
 

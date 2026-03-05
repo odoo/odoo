@@ -44,6 +44,7 @@ patch(AttendeeCalendarController.prototype, {
             "stop_microsoft_synchronization",
             [[user.userId]],
         );
+        this.model._loaded = false;
         await this.model.load();
         this.render(true);
     },
@@ -54,7 +55,8 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_microsoft_synchronization",
             [[user.userId]],
         );
-        await this.onStopMicrosoftSynchronization();
+        this.model._loaded = false;
+        await this.model.load();
         this.render(true);
     }
 });
