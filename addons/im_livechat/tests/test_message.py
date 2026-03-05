@@ -219,7 +219,11 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     },
                 ),
                 "res.users": self._filter_users_fields(
-                    {"id": self.users[1].id, "share": False},
+                    {
+                        "id": self.users[1].id,
+                        "partner_id": self.users[1].partner_id.id,
+                        "share": False,
+                    },
                 ),
             },
         )
@@ -327,7 +331,11 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                     },
                                 ),
                                 "res.users": self._filter_users_fields(
-                                    {"id": self.env.user.id, "share": True},
+                                    {
+                                        "id": self.env.user.id,
+                                        "partner_id": self.env.user.partner_id.id,
+                                        "share": True,
+                                    },
                                 ),
                             },
                             "id": channel.id,
