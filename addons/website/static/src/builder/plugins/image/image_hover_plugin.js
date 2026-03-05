@@ -2,6 +2,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
+import { isImageCorsProtected } from "@html_editor/utils/image";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
 
 /**
  * @typedef { Object } ImageHoverShared
@@ -12,7 +14,7 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
     static shared = ["setHoverEffect", "removeHoverEffect"];
-    static dependencies = ["imagePostProcess", "imageToolOption"];
+    static dependencies = ["imagePostProcess", "imageShapeOption", "imageToolOption"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -141,6 +143,11 @@ export class ImageHoverPlugin extends Plugin {
         },
         on_hover_animation_mode_cleaned_handlers: this.removeHoverEffect.bind(this),
         on_hover_animation_mode_applied_handlers: this.setHoverEffect.bind(this),
+        can_have_hover_effect_predicates: (el, dataset) => this.canHaveHoverEffect(el, dataset),
+        hover_effect_image_dataset_providers: async (imgEl) => ({
+            ...Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl)),
+            isCorsProtected: await isImageCorsProtected(imgEl),
+        }),
     };
 
     defaultHoverEffectIntensity = 20;
@@ -202,6 +209,15 @@ export class ImageHoverPlugin extends Plugin {
             ...defaultEffectValues[hoverEffectId]?.(),
             hoverEffect: hoverEffectId,
         };
+    }
+    canHaveHoverEffect(imgEl, dataset) {
+        return (
+            imgEl.tagName === "IMG" &&
+            !dataset.isCorsProtected &&
+            !(this.dependencies.imageShapeOption.getShapeCategory(imgEl) === "devices") &&
+            !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
+            this.dependencies.imageShapeOption.isImageSupportedForShapes(imgEl, dataset)
+        );
     }
 }
 export class SetHoverEffectAction extends BuilderAction {

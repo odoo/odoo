@@ -7,7 +7,6 @@ import {
     createDataURL,
     cropperDataFields,
     loadImage,
-    loadImageInfo,
     isGif,
 } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
@@ -76,6 +75,8 @@ export class ImageShapeOptionPlugin extends Plugin {
         "aspectRatioShape",
         "getShapeLabel",
         "loadShape",
+        "getShapeCategory",
+        "isImageSupportedForShapes",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -89,9 +90,6 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         on_will_process_image_handlers: this.processImageWarmup.bind(this),
         on_image_processed_handlers: this.processImagePost.bind(this),
-        can_have_hover_effect_predicates: (el, dataset) => this.canHaveHoverEffect(el, dataset),
-        hover_effect_image_dataset_providers: async (imgEl) =>
-            Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl)),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
     };
     setup() {
@@ -103,21 +101,9 @@ export class ImageShapeOptionPlugin extends Plugin {
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
         }
     }
-    canHaveHoverEffect(imgEl, dataset) {
-        return (
-            imgEl.tagName === "IMG" &&
-            !this.isDeviceShape(imgEl) &&
-            !this.isAnimableShape(dataset.shape) &&
-            this.isImageSupportedForShapes(imgEl, dataset)
-        );
-    }
-    isDeviceShape(img) {
+    getShapeCategory(img) {
         const shapeName = img.dataset.shape;
-        if (!shapeName) {
-            return false;
-        }
-        const shapeCategory = shapeName.split("/")[1];
-        return shapeCategory === "devices";
+        return shapeName?.split("/")[1];
     }
     isImageSupportedForShapes(img, dataset = img.dataset) {
         // todo: The hover effect and shape code should probably be define somewhere else.
