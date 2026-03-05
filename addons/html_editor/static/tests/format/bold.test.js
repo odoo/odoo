@@ -541,3 +541,46 @@ test("Should properly apply bold format if closest element is bold but not close
         )
     );
 });
+
+test("should not apply bold to selection placeholder nodes", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>1[]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await press(["ctrl", "a"]);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="">[<br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">1</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="">]<br></p>
+        `)
+    );
+    await press(["ctrl", "b"]);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><strong>[1]</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>
+        `)
+    );
+});
