@@ -447,8 +447,13 @@
         }
     }
 
-    
-    .o_form_sheet .o_field_widget:not(.o_input_box_overlay_start, .o_input_box_overlay_end), .o_input_box:not(.o_input_box .o_input_box) {
+    .o_group, .o_inner_group {
+    .o_field_widget:not(.o_input_box_overlay_start, .o_input_box_overlay_end) {
+            width: 100%;
+        }
+    }
+
+    .o_input_box:not(.o_input_box .o_input_box) {
         width: 100%;
     }
 
