@@ -16,7 +16,7 @@ class SurveySurvey(models.Model):
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') or \
                 self.env.user.has_group('survey.group_survey_user'):
             for survey in self:
-                survey.allowed_survey_types.append('recruitment')
+                survey.allowed_survey_types = [*survey.allowed_survey_types, 'recruitment']
 
     def _compute_job_count(self):
         job_read_group = self.env['hr.job']._read_group(
