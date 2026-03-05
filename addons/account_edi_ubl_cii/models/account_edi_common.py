@@ -356,6 +356,9 @@ class AccountEdiCommon(models.AbstractModel):
         with invoice._get_edi_creation() as invoice:
             self._correct_invoice_tax_amount(tree, invoice)
 
+        # Set XML as ubl_cii_xml_file (XML used to import)
+        file_data['attachment'].res_field = 'ubl_cii_xml_file'
+
         # === Import the embedded documents in the xml if some are found ===
         attachments = self.env['ir.attachment']
         if invoice.message_main_attachment_id:

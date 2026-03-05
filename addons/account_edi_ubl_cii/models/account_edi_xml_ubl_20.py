@@ -957,22 +957,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             invl_logs = self._import_fill_invoice_line_form(invl_el, invoice_line, qty_factor)
             logs += invl_logs
 
-        # group lines
-        if invoice.journal_id.type == 'sale':
-            move_types = invoice.get_sale_types(include_receipts=True)
-        else:
-            move_types = invoice.get_purchase_types(include_receipts=True)
-        if not self.env.context.get('ungroup_lines'):
-            last_bill_from_vendor = self.env['account.move'].search([
-                ('move_type', 'in', move_types),
-                ('partner_id', '=', invoice.partner_id.id),
-                ('state', '=', 'posted'),
-                ('id', '!=', invoice.id),
-                *invoice.journal_id._check_company_domain(invoice.journal_id.company_id),
-            ], order="create_date desc", limit=1)
-            if last_bill_from_vendor and last_bill_from_vendor._has_lines_grouped():
-                invoice._group_lines_by_tax()
-
         # ==== Payable Rounding amount ====
 
         payable_rounding_node = tree.find('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
