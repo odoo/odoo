@@ -12,7 +12,10 @@ registry.category("web_tour.tours").add("test_basic_sale_flow_with_minimal_acces
         ...tourUtils.createNewSalesOrder(),
         ...tourUtils.selectCustomer("partner_a"),
         ...tourUtils.addProduct("Test Product"),
-        tourUtils.checkSOLDescriptionContains("Test Product"),
+        {
+            content: "Wait for the tax to be set by the onchange",
+            trigger: ".o_field_many2many_tags[name=tax_ids] .o_tag",
+        },
         {
             trigger: "button[name=action_confirm]",
             run: "click",
