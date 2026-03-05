@@ -3178,3 +3178,38 @@ class TestStockValuation(TestStockValuationCommon):
         recs[-2:]._compute_cumulative_fields()
         self.assertEqual(recs[-1].total_quantity, 3)
         self.assertEqual(recs[-1].total_value, 30)
+
+    def test_avco_report_after_cost_method_change(self):
+        """Ensure that the AVCO justification report for a product is accurate at all steps, even if
+        the cost method changed after some moves.
+        """
+
+        product_avco = self.env['product.product'].create({
+            'uom_id': self.uom.id,
+            'is_storable': True,
+            'name': "AVCO product",
+            'standard_price': 10,
+        })
+
+        self._make_in_move(product_avco, quantity=10, unit_cost=10)
+        self._make_out_move(product_avco, quantity=5)
+        self._make_in_move(product_avco, quantity=10, unit_cost=25)
+        self._make_out_move(product_avco, quantity=5)
+
+        product_avco.write({'categ_id': self.category_avco.id})
+        product_avco._update_standard_price()
+        self.env.flush_all()
+
+        report_lines = self.env['stock.avco.report'].search([('product_id', '=', product_avco.id)]).sorted('date, id')[1:]
+
+        self.assertEqual(report_lines[-1].avco_value, product_avco.standard_price)
+
+        self.assertRecordValues(
+            report_lines,
+            [
+                {'added_value': 100, 'total_quantity': 10, 'total_value': 100, 'avco_value': 10},
+                {'added_value': -50, 'total_quantity': 5, 'total_value': 50, 'avco_value': 10},
+                {'added_value': 250, 'total_quantity': 15, 'total_value': 300, 'avco_value': 20},
+                {'added_value': -100, 'total_quantity': 10, 'total_value': 200, 'avco_value': 20},
+            ]
+        )
