@@ -285,6 +285,7 @@ export function formatFloatTime(value, options = {}) {
 formatFloatTime.extractOptions = ({ options }) => ({
     showSeconds: Boolean(options.show_seconds),
     numeric: Boolean(options.numeric),
+    unit: options.unit,
 });
 
 /**

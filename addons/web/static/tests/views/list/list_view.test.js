@@ -5132,6 +5132,22 @@ test(`aggregates are formatted according to field widget`, async () => {
     });
 });
 
+test(`aggregates are formatted according to field widget with options`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="qux" widget="float_time" sum="Sum" options="{'unit': 'minutes', 'show_seconds': true}"/>
+            </list>
+        `,
+    });
+    expect(`tfoot`).toHaveText("19m 24s", {
+        message: "total should be formatted as a float_time",
+    });
+});
+
 test(`aggregates of monetary widget with no currency data in grouped list`, async () => {
     await mountView({
         resModel: "foo",
