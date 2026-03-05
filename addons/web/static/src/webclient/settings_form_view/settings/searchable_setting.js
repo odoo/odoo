@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useState } from "@web/owl2/utils";
 import { onMounted } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { normalizedMatch } from "@web/core/l10n/utils";
@@ -14,22 +14,14 @@ export class SearchableSetting extends Setting {
         HighlightText,
     };
     setup() {
-        this.settingRef = useRef("setting");
         this.state = useState({
             search: this.env.searchState,
             showAllContainer: this.env.showAllContainer,
             highlightClass: {},
         });
-        this.labels = [];
-        this.labels.push(this.labelString, this.props.help);
+        this.labels = [this.labelString, this.props.title].filter(Boolean);
         super.setup();
         onMounted(() => {
-            if (this.settingRef.el) {
-                const searchableTexts = this.settingRef.el.querySelectorAll("span[searchableText]");
-                searchableTexts.forEach((st) => {
-                    this.labels.push(st.getAttribute("searchableText"));
-                });
-            }
             if (browser.location.hash.substring(1) === this.props.id) {
                 this.state.highlightClass = { o_setting_highlight: true };
                 setTimeout(() => (this.state.highlightClass = {}), 5000);

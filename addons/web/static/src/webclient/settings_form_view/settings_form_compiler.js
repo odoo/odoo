@@ -1,7 +1,6 @@
 import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { toStringExpression } from "@web/views/utils";
-import { isTextNode } from "@web/views/view_compiler";
 
 export class SettingsFormCompiler extends FormCompiler {
     setup() {
@@ -106,31 +105,6 @@ export class SettingsFormCompiler extends FormCompiler {
         params.componentName =
             el.getAttribute("type") === "header" ? "SettingHeader" : "SearchableSetting";
         const res = super.compileSetting(el, params);
-        return res;
-    }
-
-    compileNode(node, params, evalInvisible) {
-        if (isTextNode(node)) {
-            if (node.textContent.trim()) {
-                return createElement("HighlightText", {
-                    originalText: toStringExpression(node.textContent),
-                });
-            }
-        }
-        return super.compileNode(node, params, evalInvisible);
-    }
-
-    compileButton(el, params) {
-        const res = super.compileButton(el, params);
-        if (res.hasAttribute("string") && res.children.length === 0) {
-            const contentSlot = createElement("t");
-            contentSlot.setAttribute("t-set-slot", "contents");
-            const content = createElement("HighlightText", {
-                originalText: res.getAttribute("string"),
-            });
-            append(contentSlot, content);
-            append(res, contentSlot);
-        }
         return res;
     }
 }
