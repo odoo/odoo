@@ -3,6 +3,8 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
+const DEBOUNCE_DELAY = 250;
+
 export class CarouselSlider extends Interaction {
     static selector = ".carousel";
     dynamicContent = {
@@ -83,6 +85,15 @@ export class CarouselSlider extends Interaction {
         });
         observer.observe(this.el);
         this.registerCleanup(() => observer.unobserve(this.el));
+
+        // Monitor carousel size changes to update maxHeight
+        const resizeObserver = new ResizeObserver(
+            this.debounced(() => {
+                this.computeMaxHeight();
+            }, DEBOUNCE_DELAY)
+        );
+        resizeObserver.observe(this.el);
+        this.registerCleanup(() => resizeObserver.unobserve(this.el));
     }
 
     computeMaxHeight() {
