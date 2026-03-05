@@ -13,7 +13,7 @@ class ProjectTask(models.Model):
     keep working without modification.
     """
 
-    _inherit = "project.task"
+    _inherit = ["hr.mixin", "project.task"]
 
     employee_ids = fields.Many2many(
         "hr.employee",
