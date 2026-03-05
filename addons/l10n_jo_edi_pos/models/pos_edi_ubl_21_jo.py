@@ -45,7 +45,6 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         super()._add_pos_order_config_vals(vals)
         vals.update({
             'document_type': 'invoice',
-            'fixed_taxes_as_allowance_charges': False,
             'is_refund': vals['document_type'] == 'credit_note',
             'is_sales': vals['pos_order'].company_id.l10n_jo_edi_taxpayer_type == 'sales',
             'is_income': vals['pos_order'].company_id.l10n_jo_edi_taxpayer_type == 'income',
@@ -137,10 +136,22 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         base_line = vals['base_line']
         currency_9_dp = vals['currency_id']
 
+        # Remove allowance/charge tax effect from tax_details
+        raw_total_excluded_currency = base_line['tax_details']['raw_total_excluded_currency']
+        raw_total_excluded = base_line['tax_details']['raw_total_excluded']
+        total_excluded_currency = base_line['tax_details']['total_excluded_currency']
+        total_excluded = base_line['tax_details']['total_excluded']
+        for allowance_charge_data in base_line.get('_ubl_values', {}).get('allowance_charge_data', []):
+            tax_data = allowance_charge_data['tax_data']
+            raw_total_excluded_currency -= tax_data['raw_tax_amount_currency']
+            raw_total_excluded -= tax_data['raw_tax_amount']
+            total_excluded_currency -= tax_data['tax_amount_currency']
+            total_excluded -= tax_data['tax_amount']
+
         # OVERRIDE account_edi_xml_ubl_20.py
         discount_factor = 1 - (base_line['discount'] / 100.0)
         if discount_factor != 0.0:
-            gross_subtotal_currency = base_line['tax_details']['raw_total_excluded_currency'] / discount_factor
+            gross_subtotal_currency = raw_total_excluded_currency / discount_factor
         else:
             gross_subtotal_currency = base_line['currency_id'].round(base_line['price_unit'] * base_line['quantity'])
 
@@ -151,7 +162,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         vals['gross_subtotal_currency'] = currency_9_dp.round(vals['gross_price_unit_currency'] * base_line['quantity'])
 
         # Then compute the discount from the gross subtotal
-        vals['discount_amount_currency'] = vals['gross_subtotal_currency'] - base_line['tax_details']['total_excluded_currency']
+        vals['discount_amount_currency'] = vals['gross_subtotal_currency'] - total_excluded_currency
 
     def _add_pos_order_discount_vals(self, vals):
         discount_amount_currency = 0
