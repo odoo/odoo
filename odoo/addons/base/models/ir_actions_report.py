@@ -6,7 +6,7 @@ import threading
 from ast import literal_eval
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Self
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 from warnings import deprecated
 
 import cssselect2.compiler as _cs2_compiler
@@ -128,6 +128,17 @@ def _compile_node_depth_limited(selector: Any) -> str:
 
 _cs2_compiler._compile_node = _compile_node_depth_limited
 
+# Regex patterns for local URL resolution (avoid HTTP self-requests)
+_WEB_IMAGE_MODEL_RE = re.compile(
+    r"^/web/image/(?P<model>[\w.]+)/(?P<id>\d+)/(?P<field>\w+)"
+    r"(?:/(?P<width>\d+)x(?P<height>\d+))?"
+)
+_WEB_IMAGE_ID_RE = re.compile(
+    r"^/web/image/(?P<id>\d+)(?:-[\w]+)?"
+    r"(?:/(?P<width>\d+)x(?P<height>\d+))?"
+)
+_BARCODE_RE = re.compile(r"^/report/barcode/(?P<type>[^/]+)/(?P<value>.+)")
+
 
 class OdooURLFetcher(URLFetcher):
     """WeasyPrint URL fetcher with Odoo resource resolution.
@@ -230,7 +241,19 @@ class OdooURLFetcher(URLFetcher):
             if result:
                 return result
 
-        # 3. HTTP fallback with session cookie
+        # 3. Images: /web/image/<model>/<id>/<field> or /web/image/<id>
+        if "/web/image/" in path:
+            result = self._resolve_web_image(url, path, parsed.query)
+            if result:
+                return result
+
+        # 4. Barcodes: /report/barcode/<type>/<value>
+        if "/report/barcode/" in path:
+            result = self._resolve_barcode(url, path, parsed.query)
+            if result:
+                return result
+
+        # 5. HTTP fallback with session cookie
         return self._fetch_via_http(url, path)
 
     # -- Resolution helpers -----------------------------------------------
@@ -311,6 +334,105 @@ class OdooURLFetcher(URLFetcher):
                 with Path(candidate).open("rb") as f:
                     return self._make_response(url, f.read(), mime)
         return None
+
+    def _resolve_web_image(
+        self, url: str, path: str, query: str,
+    ) -> URLFetcherResponse | None:
+        """Resolve ``/web/image/`` URLs directly from the database/filestore.
+
+        Avoids HTTP self-requests that deadlock when all workers are busy.
+        Falls back to None so the caller can try the HTTP fetcher.
+        """
+        try:
+            model, res_id, field, width, height = self._parse_image_url(path, query)
+            ir_binary = self._env["ir.binary"].sudo()
+            record = ir_binary._find_record(res_model=model, res_id=res_id, field=field)
+            stream = ir_binary._get_image_stream_from(
+                record, field, width=width, height=height,
+            )
+            data = stream.read()
+            if data:
+                return self._make_response(url, data, stream.mimetype or "image/png")
+        except Exception:
+            _logger.debug("Local image resolution failed for %s", path)
+        return None
+
+    def _resolve_barcode(
+        self, url: str, path: str, query: str,
+    ) -> URLFetcherResponse | None:
+        """Resolve ``/report/barcode/`` URLs by generating the barcode directly.
+
+        Avoids HTTP self-requests that deadlock when all workers are busy.
+        """
+        try:
+            match = _BARCODE_RE.match(path)
+            if match:
+                barcode_type = match.group("type")
+                value = match.group("value")
+            else:
+                params = parse_qs(query)
+                barcode_type = params.get("barcode_type", [None])[0]
+                value = params.get("value", [None])[0]
+
+            if not barcode_type or not value:
+                return None
+
+            params = parse_qs(query)
+            kwargs = {}
+            for key in ("width", "height", "humanreadable", "quiet", "mask", "barLevel"):
+                val = params.get(key, [None])[0]
+                if val is not None:
+                    kwargs[key] = val
+
+            barcode_bytes = (
+                self._env["ir.actions.report"].sudo().barcode(
+                    barcode_type, value, **kwargs,
+                )
+            )
+            if barcode_bytes:
+                return self._make_response(url, barcode_bytes, "image/png")
+        except Exception:
+            _logger.debug("Local barcode resolution failed for %s", path)
+        return None
+
+    @staticmethod
+    def _parse_image_url(path: str, query: str) -> tuple:
+        """Extract model, id, field, width, height from a ``/web/image/`` URL."""
+        width = 0
+        height = 0
+
+        match = _WEB_IMAGE_MODEL_RE.match(path)
+        if match:
+            model = match.group("model")
+            res_id = int(match.group("id"))
+            field = match.group("field")
+            if match.group("width"):
+                width = int(match.group("width"))
+                height = int(match.group("height"))
+            return model, res_id, field, width, height
+
+        match = _WEB_IMAGE_ID_RE.match(path)
+        if match:
+            res_id = int(match.group("id"))
+            if match.group("width"):
+                width = int(match.group("width"))
+                height = int(match.group("height"))
+            return "ir.attachment", res_id, "raw", width, height
+
+        params = parse_qs(query)
+        model = params.get("model", ["ir.attachment"])[0]
+        res_id = int(params.get("id", [0])[0])
+        field = params.get("field", ["raw"])[0]
+        if "width" in params:
+            width = int(params["width"][0])
+        if "height" in params:
+            height = int(params["height"][0])
+
+        if not res_id:
+            msg = f"Cannot parse image URL: {path}"
+            raise ValueError(msg)
+
+        return model, res_id, field, width, height
 
     def _fetch_via_http(self, url: str, path: str) -> URLFetcherResponse:
         """Authenticated HTTP fallback for URLs that aren't static or asset bundles."""
