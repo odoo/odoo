@@ -5,7 +5,7 @@ import time
 
 import odoo
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http.requestlib import _request_stack
+from odoo.http import request_var
 from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common, tagged
@@ -210,8 +210,8 @@ class TestAPIKeys(common.HttpCase):
             'geoip': {},
             'get_json_data': get_json_data,
         })
-        _request_stack.push(fake_req)
-        self.addCleanup(_request_stack.pop)
+        request_reset = request_var.set(fake_req)
+        self.addCleanup(request_var.reset, request_reset)
 
     def test_trivial(self):
         uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])

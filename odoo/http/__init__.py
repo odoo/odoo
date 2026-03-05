@@ -2,14 +2,16 @@
 import odoo.init  # noqa: I001
 
 # Initialize the global `request`
+import contextvars
 import typing
-from werkzeug.local import LocalStack
-_request_stack = LocalStack()
 if typing.TYPE_CHECKING:
     from .requestlib import Request
+    request_var: contextvars.ContextVar[Request]
     request: Request
 else:
-    request = _request_stack()
+    from werkzeug.local import LocalProxy
+    request_var = contextvars.ContextVar('request')
+    request = LocalProxy(request_var, unbound_message="request not bound")
 
 
 from .response import Response  # noqa: I001

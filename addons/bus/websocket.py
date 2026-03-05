@@ -1,5 +1,6 @@
 import base64
 import bisect
+import contextvars
 import functools
 import hashlib
 import logging
@@ -23,7 +24,7 @@ import psycopg2
 from psycopg2.pool import PoolError
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
-from werkzeug.local import LocalStack
+from werkzeug.local import LocalProxy
 
 import odoo
 from odoo import api, modules
@@ -922,8 +923,8 @@ class TimeoutManager:
 # ------------------------------------------------------
 
 
-_wsrequest_stack = LocalStack()
-wsrequest = _wsrequest_stack()
+wsrequest_var = contextvars.ContextVar('wsrequest')
+wsrequest = LocalProxy(wsrequest_var, unbound_message='wsrequest is not bound')
 
 
 class WebsocketRequest:
@@ -932,13 +933,6 @@ class WebsocketRequest:
         self.httprequest = httprequest
         self.session = None
         self.ws = websocket
-
-    def __enter__(self):
-        _wsrequest_stack.push(self)
-        return self
-
-    def __exit__(self, *args):
-        _wsrequest_stack.pop()
 
     def serve_websocket_message(self, message):
         try:
@@ -1156,8 +1150,6 @@ class WebsocketConnectionHandler:
         """
         Process incoming messages and dispatch them to the application.
         """
-        current_thread = threading.current_thread()
-        current_thread.type = 'websocket'
         if httprequest.user_agent and version != cls._VERSION:
             # Close the connection from an outdated worker. We can't use a
             # custom close code because the connection is considered successful,
@@ -1173,15 +1165,18 @@ class WebsocketConnectionHandler:
             if message == b'\x00':
                 # Ignore internal sentinel message used to detect dead/idle connections.
                 continue
-            with WebsocketRequest(db, httprequest, websocket) as req:
-                try:
-                    req.serve_websocket_message(message)
-                except SessionExpiredException:
-                    websocket.close(CloseCode.SESSION_EXPIRED)
-                except PoolError:
-                    websocket.close(CloseCode.TRY_LATER)
-                except Exception:
-                    _logger.exception("Exception occurred during websocket request handling")
+            req = WebsocketRequest(db, httprequest, websocket)
+            req_reset = wsrequest_var.set(req)
+            try:
+                req.serve_websocket_message(message)
+            except SessionExpiredException:
+                websocket.close(CloseCode.SESSION_EXPIRED)
+            except PoolError:
+                websocket.close(CloseCode.TRY_LATER)
+            except Exception:
+                _logger.exception("Exception occurred during websocket request handling")
+            finally:
+                wsrequest_var.reset(req_reset)
 
 
 def _kick_all(code=CloseCode.GOING_AWAY):

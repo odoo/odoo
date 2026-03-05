@@ -24,7 +24,7 @@ from werkzeug.utils import redirect
 
 from odoo.tools import consteq, json_default
 
-from . import _request_stack, request
+from . import request
 from .dispatcher import HttpDispatcher
 from .geoip import GeoIP
 from .response import FutureResponse, Response
@@ -54,12 +54,14 @@ CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
 @contextmanager
 def borrow_request():
     """ Get the current request and unexpose it from the local stack. """
-    req = _request_stack.pop()
-    assert req is not None
+    warnings.warn("Use Context().run() to reset the context", DeprecationWarning, stacklevel=2)
+    from . import request_var  # noqa: PLC0415
+    req = request_var.get()
+    token = request_var.set(None)
     try:
         yield req
     finally:
-        _request_stack.push(req)
+        request_var.reset(token)
 
 
 def is_cors_preflight(request: Request, endpoint: Endpoint) -> bool:
