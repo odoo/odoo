@@ -33,7 +33,6 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'type': 'service',
             'uom_id': uom_unit.id,
             'invoice_policy': 'delivery',
-            'expense_policy': 'no',
             'default_code': 'SERV_DEL',
             'service_type': 'manual',
             'taxes_id': False,
@@ -54,7 +53,6 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'type': 'service',
             'uom_id': uom_dozen.id,  # different UoM
             'invoice_policy': 'order',
-            'expense_policy': 'no',
             'default_code': 'SERV_ORD',
             'service_type': 'manual',
             'taxes_id': False,

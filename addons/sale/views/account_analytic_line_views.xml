@@ -39,8 +39,8 @@
                 />
                 <field
                     name="product_id"
-                    domain="[('expense_policy', '!=', 'no')]"
-                    context="{'default_expense_policy' : 'sales_price'}"
+                    domain="[('reinvoice_policy', '!=', 'no')]"
+                    context="{'default_reinvoice_policy' : 'sales_price'}"
                     required="True"
                     width="350px"
                 />
@@ -59,7 +59,7 @@
                     optional="hide"
                     domain="[
                         ('qty_delivered_method', 'in', ('analytic', 'timesheet', 'stock_move')),
-                        ('product_id.expense_policy', '!=', 'no')
+                        ('product_id.reinvoice_policy', '!=', 'no')
                     ]"
                 />
                 <field name="ref" optional="hide"/>
@@ -84,7 +84,7 @@
             'from_services_and_material': 1,
             'default_unit_amount': 1,
         }</field>
-        <field name="domain">[('product_id.expense_policy', '!=', 'no'), ('order_id', '!=', False)]</field>
+        <field name="domain">[('product_id.reinvoice_policy', '!=', 'no'), ('order_id', '!=', False)]</field>
     </record>
 
 </odoo>

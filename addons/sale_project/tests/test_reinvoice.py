@@ -326,7 +326,7 @@ class TestReInvoice(TestSaleCommon):
             'list_price': 180,
             'type': 'consu',
             'invoice_policy': 'order',
-            'expense_policy': 'cost',
+            'reinvoice_policy': 'cost',
             'default_code': 'PROD_COST',
             'service_type': 'manual',
         })

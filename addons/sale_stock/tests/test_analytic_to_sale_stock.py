@@ -12,7 +12,7 @@ class TestAnalyticToSaleStock(TestStockCommon):
             'type': 'consu',
             'is_storable': True,
             'invoice_policy': 'delivery',
-            'expense_policy': 'sales_price',
+            'reinvoice_policy': 'sales_price',
         })
 
         cls.env['stock.quant']._update_available_quantity(cls.product_to_upsell, cls.warehouse_1.lot_stock_id, 10)

@@ -7,8 +7,8 @@ class TestAnalyticToSaleTimesheet(TestCommonSaleTimesheet):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.product_order_timesheet2.expense_policy = 'sales_price'
-        cls.product_delivery_timesheet2.expense_policy = 'sales_price'
+        cls.product_order_timesheet2.reinvoice_policy = 'sales_price'
+        cls.product_delivery_timesheet2.reinvoice_policy = 'sales_price'
 
         cls.timesheet_and_services_sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,

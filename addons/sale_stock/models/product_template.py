@@ -8,9 +8,9 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     @api.depends('type')
-    def _compute_expense_policy(self):
-        super()._compute_expense_policy()
-        self.filtered(lambda t: t.is_storable).expense_policy = 'no'
+    def _compute_reinvoice_policy(self):
+        super()._compute_reinvoice_policy()
+        self.filtered('is_storable').reinvoice_policy = 'no'
 
     @api.depends('type')
     def _compute_service_type(self):

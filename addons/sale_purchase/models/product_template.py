@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
         if not sellers:
             raise ValidationError(_("Please define the vendor from whom you would like to purchase this service automatically."))
 
-    @api.onchange('type', 'expense_policy')
+    @api.onchange('type', 'reinvoice_policy')
     def _onchange_service_to_purchase(self):
-        products_template = self.filtered(lambda p: p.type != 'service' or p.expense_policy != 'no')
+        products_template = self.filtered(lambda p: p.type != 'service' or p.reinvoice_policy != 'no')
         products_template.service_to_purchase = False

@@ -49,7 +49,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         init_price = so.amount_total
         prod_exp_2 = self.env['product.product'].create({
             'name': 'Car Travel',
-            'expense_policy': 'sales_price',
+            'reinvoice_policy': 'sales_price',
             'type': 'service',
             'can_be_expensed': True,
             'invoice_policy': 'delivery',
@@ -90,7 +90,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'standard_price': 100,
-            'expense_policy': 'cost',
+            'reinvoice_policy': 'cost',
         })
 
         sale_order = self.env['sale.order'].create({

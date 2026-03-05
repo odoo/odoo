@@ -37,12 +37,12 @@ class ProductTemplate(models.Model):
                 timesheet_encode_uom = record.company_id.timesheet_encode_uom_id or company_uom
                 record.service_upsell_threshold_ratio = f'(1 {record.uom_id.name} = {timesheet_encode_uom.factor / product_uom_hour.factor:.2f} {timesheet_encode_uom.name})'
 
-    def _compute_visible_expense_policy(self):
+    def _compute_visible_reinvoice_policy(self):
         visibility = self.env.user.has_group('project.group_project_user')
         for product_template in self:
-            if not product_template.visible_expense_policy:
-                product_template.visible_expense_policy = visibility
-        return super()._compute_visible_expense_policy()
+            if not product_template.visible_reinvoice_policy:
+                product_template.visible_reinvoice_policy = visibility
+        return super()._compute_visible_reinvoice_policy()
 
     def _prepare_invoicing_tooltip(self):
         if self.service_policy == 'delivered_timesheet':

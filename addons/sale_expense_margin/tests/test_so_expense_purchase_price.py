@@ -12,9 +12,9 @@ class TestExpenseMargin(TestExpenseCommon):
     def test_expense_reinvoice_purchase_price(self):
         # re-invoiceable products
         product_with_cost = self.product_a
-        product_with_cost.write({'standard_price': 1000, 'expense_policy': 'sales_price'})
+        product_with_cost.write({'standard_price': 1000, 'reinvoice_policy': 'sales_price'})
         product_with_no_cost = self.product_c
-        product_with_no_cost.write({'expense_policy': 'sales_price'})
+        product_with_no_cost.write({'reinvoice_policy': 'sales_price'})
 
         # create SO line and confirm SO (with only one line)
         sale_order = self.env['sale.order'].with_context(

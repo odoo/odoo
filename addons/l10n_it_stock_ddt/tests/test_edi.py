@@ -69,7 +69,6 @@ class TestItEdiDDT(TestItEdi):
                 'uom_id': uom_unit.id,
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
-                'expense_policy': 'no',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
             }, {
@@ -82,7 +81,6 @@ class TestItEdiDDT(TestItEdi):
                 'uom_id': uom_unit.id,
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
-                'expense_policy': 'no',
                 'taxes_id': [(6, 0, [])],
                 'supplier_taxes_id': [(6, 0, [])],
             }

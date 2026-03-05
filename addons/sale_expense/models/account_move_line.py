@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if self.expense_id:  # expense flow is different from vendor bill reinvoice flow
             return (
-                self.expense_id.product_id.expense_policy in {'sales_price', 'cost'}
+                self.expense_id.product_id.reinvoice_policy in {'sales_price', 'cost'}
                 and self.expense_id.sale_order_id
                 and self.display_type == 'product'
             )

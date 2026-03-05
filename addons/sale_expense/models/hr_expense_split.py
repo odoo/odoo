@@ -18,7 +18,7 @@ class HrExpenseSplit(models.TransientModel):
     @api.depends('product_id')
     def _compute_can_be_reinvoiced(self):
         for split in self:
-            split.can_be_reinvoiced = split.product_id.expense_policy in ['sales_price', 'cost']
+            split.can_be_reinvoiced = split.product_id.reinvoice_policy in ['sales_price', 'cost']
 
     @api.depends('can_be_reinvoiced')
     def _compute_sale_order_id(self):

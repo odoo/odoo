@@ -22,10 +22,10 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'service_tracking': 'task_in_project'
         }
         cls.company_data['product_order_no'].write(service_values)
-        service_values['expense_policy'] = 'cost'
+        service_values['reinvoice_policy'] = 'cost'
         cls.company_data['product_order_cost'].write(service_values)
         cls.company_data['product_delivery_cost'].write(service_values)
-        service_values['expense_policy'] = 'sales_price'
+        service_values['reinvoice_policy'] = 'sales_price'
         cls.company_data['product_order_sales_price'].write(service_values)
         cls.company_data['product_delivery_sales_price'].write(service_values)
 
@@ -382,7 +382,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'service_tracking': 'task_in_project',
         }, {
             'name': 'Expense Product',
-            'expense_policy': 'sales_price',
+            'reinvoice_policy': 'sales_price',
             'list_price': 20,
         }])
         sale_order = self.env['sale.order'].create({'partner_id': self.partner_a.id})

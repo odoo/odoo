@@ -8,10 +8,10 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
-    def test_analytic_account_expense_policy(self):
+    def test_analytic_account_reinvoice_policy(self):
         product_form = Form(self.product_a.product_tmpl_id)
         product_form.can_be_expensed = True
-        product_form.expense_policy = 'cost'
+        product_form.reinvoice_policy = 'cost'
         product_form.can_be_expensed = False
         self.product_a.product_tmpl_id = product_form.save()
 
@@ -39,7 +39,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # in the view and will not be computed
         self.env.user.write({'group_ids': [Command.link(self.env.ref('analytic.group_analytic_accounting').id)]})
         # Set the expense policy to 'sales_price' to make the 'sale_order_id' field visible on the form view
-        self.product_c.expense_policy = 'sales_price'
+        self.product_c.reinvoice_policy = 'sales_price'
 
         self.analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Other Plan Test'})
         self.analytic_account_3 = self.env['account.analytic.account'].create({
@@ -105,10 +105,10 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             "The analytic distribution of the expense should keep only the one from the project when the so and project share the same plan",
         )
 
-    def test_change_product_expense_policy_analytic_distribution(self):
+    def test_change_product_reinvoice_policy_analytic_distribution(self):
         """ Test that analytic distribution is not recomputed when changing the expense policy of the expense product """
         analytic_account_2 = self.analytic_account_1.copy()
-        self.product_a.expense_policy = 'sales_price'
+        self.product_a.reinvoice_policy = 'sales_price'
         distribution_model = self.env['account.analytic.distribution.model'].create({
             'account_prefix': self.company_data['default_account_expense'].code,
             'analytic_distribution': {self.analytic_account_1.id: 100.0},
@@ -138,7 +138,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'product_id': self.product_a.id,
         })
 
-        self.product_a.expense_policy = 'cost'
+        self.product_a.reinvoice_policy = 'cost'
 
         self.assertRecordValues(expenses, [
             {

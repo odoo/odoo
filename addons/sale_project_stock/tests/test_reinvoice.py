@@ -32,12 +32,12 @@ class TestReInvoice(TestStockCommon):
             {
                 'name': 'product_order_cost',
                 'standard_price': 100.0,
-                'expense_policy': 'cost',
+                'reinvoice_policy': 'cost',
             },
             {
                 'name': 'product_order_cost',
                 'list_price': 500.0,
-                'expense_policy': 'sales_price',
+                'reinvoice_policy': 'sales_price',
             },
         ])
         cls.sale_order.action_confirm()

@@ -1305,7 +1305,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # deliver lines except 'time and material' then invoice again
         for line in self.sale_order.order_line:
-            line.qty_delivered = 2 if line.product_id.expense_policy == "no" else 0
+            line.qty_delivered = 2 if line.product_id.reinvoice_policy == "no" else 0
         self.assertTrue(
             self.sale_order.invoice_status == "to invoice",
             'Sale: SO status after delivery should be "to invoice"',

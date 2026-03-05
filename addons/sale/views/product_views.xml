@@ -11,7 +11,7 @@
             </page>
             <field name="product_variant_count" position="after">
                 <field name="service_type" widget="radio" invisible="True"/>
-                <field name="visible_expense_policy" invisible="1"/>
+                <field name="visible_reinvoice_policy" invisible="1"/>
             </field>
             <field name="type" position="after">
                 <field
@@ -31,8 +31,8 @@
                                nolabel="1" colspan="2"/>
                     </group>
                 </t>
-                <group name="expense_info" string="Expense" invisible="not visible_expense_policy">
-                    <field name="expense_policy" widget="radio"/>
+                <group name="expense_info" string="Expense" invisible="not visible_reinvoice_policy">
+                    <field name="reinvoice_policy" widget="radio"/>
                 </group>
             </group>
         </field>

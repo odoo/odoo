@@ -4,22 +4,22 @@
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_meal', False)]"/>
-            <value eval="{'expense_policy': 'sales_price'}"/>
+            <value eval="{'reinvoice_policy': 'sales_price'}"/>
         </function>
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_mileage', False)]"/>
-            <value eval="{'expense_policy': 'sales_price', 'invoice_policy': 'delivery'}"/>
+            <value eval="{'reinvoice_policy': 'sales_price', 'invoice_policy': 'delivery'}"/>
         </function>
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_travel_accommodation', False)]"/>
-            <value eval="{'expense_policy': 'cost', 'invoice_policy': 'delivery'}"/>
+            <value eval="{'reinvoice_policy': 'cost', 'invoice_policy': 'delivery'}"/>
         </function>
 
         <function model="product.product" name="write">
             <value eval="[ref('hr_expense.expense_product_communication', False)]"/>
-            <value eval="{'expense_policy': 'cost'}"/>
+            <value eval="{'reinvoice_policy': 'cost'}"/>
         </function>
     </data>
 </odoo>
