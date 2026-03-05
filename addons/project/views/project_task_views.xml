@@ -258,6 +258,7 @@
         <field name="name">Burndown Chart</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
+        <field name="python_method" eval="False"/>
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
     </record>
 
@@ -267,6 +268,7 @@
         <field name="name">Burndown Chart</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
         <field name="action_id" ref="project.action_project_task_burndown_chart_report"/>
+         <field name="python_method" eval="False"/>
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
     </record>
 
