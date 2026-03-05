@@ -39,12 +39,13 @@ patch(AttendeeCalendarModel.prototype, {
         return new Promise(() => {});
     },
 
-    async syncGoogleCalendar(silent = false) {
+    async syncGoogleCalendar(silent = false, force_auth = false) {
         this.googlePendingSync = true;
         const result = await rpc(
             "/google_calendar/sync_data",
             {
                 model: this.resModel,
+                force_auth: force_auth,
                 fromurl: window.location.href
             },
             {
