@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
-const LOCAL_STORAGE_SUBVERSION = 0;
+const LOCAL_STORAGE_SUBVERSION = 1;
 
 /**
  * @typedef {Object} LocalStorageValue

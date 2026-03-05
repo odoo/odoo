@@ -10,7 +10,7 @@ export const upgrade_19_1 = {
      * @returns {UpgradeFnReturn}
      */
     add(key, upgrade) {
-        return addUpgrade({ key, version: "19.1", upgrade });
+        return addUpgrade({ key, version: "19.1.0", upgrade });
     },
 };
 

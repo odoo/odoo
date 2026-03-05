@@ -148,8 +148,16 @@ function compareVersion(v1, v2) {
     const parts2 = v2.split(".");
 
     for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-        const num1 = parseInt(parts1[i]) || 0;
-        const num2 = parseInt(parts2[i]) || 0;
+        let rawPart1 = parts1[i];
+        let rawPart2 = parts2[i];
+        if (typeof rawPart1 === "string" && rawPart1.startsWith("saas~")) {
+            rawPart1 = rawPart1.substring("saas~".length);
+        }
+        if (typeof rawPart2 === "string" && rawPart2.startsWith("saas~")) {
+            rawPart2 = rawPart2.substring("saas~".length);
+        }
+        const num1 = parseInt(rawPart1) || 0;
+        const num2 = parseInt(rawPart2) || 0;
         if (num1 < num2) {
             return -1;
         }
