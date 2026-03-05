@@ -262,6 +262,7 @@ class HrEmployeePrivate(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'res.partner',
             'view_mode': 'form',
+            'context': dict(self.env.context, active_test=True),
         }
         if len(related_partners) > 1:
             action['view_mode'] = 'kanban,list,form'
