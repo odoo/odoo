@@ -93,6 +93,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'is_token_out_of_sync': True,
             'refresh_token': None,
         })
+        self.env.cr.flush()  # if token refreshed & commited in another transaction, crash before doing API call
         try:
             self._make_request(
                 f'{self._get_server_url()}/api/peppol/1/mark_connection_out_of_sync',
@@ -372,7 +373,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
 
         if need_retrigger:
-            self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger()
+            self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(
+                fields.Datetime.add(fields.Datetime.now(), minutes=5),
+            )
 
     def _peppol_get_participant_status(self):
         for edi_user in self:
