@@ -45,13 +45,7 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onStopGoogleSynchronization() {
-        await this.orm.call(
-            "res.users",
-            "stop_google_synchronization",
-            [[user.userId]],
-        );
-        await this.model.load();
-        render(this, true);
+        await this.actionService.doAction("google_calendar.google_calendar_reset_account_action");
     },
 
     async onUnpauseGoogleSynchronization() {
@@ -60,7 +54,6 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_google_synchronization",
             [[user.userId]],
         );
-        await this.onStopGoogleSynchronization();
         render(this, true);
     }
 });

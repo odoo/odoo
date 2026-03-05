@@ -44,13 +44,7 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onStopMicrosoftSynchronization() {
-        await this.orm.call(
-            "res.users",
-            "stop_microsoft_synchronization",
-            [[user.userId]],
-        );
-        await this.model.load();
-        render(this, true);
+        await this.actionService.doAction("microsoft_calendar.microsoft_calendar_reset_account_action");
     },
 
     async onUnpauseMicrosoftSynchronization() {
@@ -59,7 +53,6 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_microsoft_synchronization",
             [[user.userId]],
         );
-        await this.onStopMicrosoftSynchronization();
         render(this, true);
     }
 });
