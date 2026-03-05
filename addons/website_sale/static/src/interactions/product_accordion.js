@@ -16,6 +16,7 @@ export class ProductAccordion extends Interaction {
         if (!firstAccordionItemEl) return;
 
         const firstAccordionItemButtonEl = firstAccordionItemEl.querySelector('.accordion-button');
+        if (!firstAccordionItemButtonEl) return;
         firstAccordionItemButtonEl.classList.remove('collapsed');
         firstAccordionItemButtonEl.setAttribute('aria-expanded', 'true');
         firstAccordionItemEl.querySelector('.accordion-collapse').classList.add('show');
