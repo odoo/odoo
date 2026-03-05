@@ -324,6 +324,36 @@ class TestEditableQuant(TransactionCase):
         move_lines.action_revert()
         self.assertEqual(self.product.qty_available, 0, "After revert multi inventory adjustment qty is not zero")
 
+    def test_revert_scrap_move(self):
+        """Try to revert a scrapped move"""
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        scrap_location = default_wh.company_id.scrap_location_id
+        # Put 1 unit in stock
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 1,
+        })
+        quant.action_apply_inventory()
+        self.assertEqual(self.product.qty_available, 1)
+        # Scrap the product
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'location_dest_id': scrap_location.id,
+            'quantity': 1,
+            'company_id': self.env.company.id,
+        })
+        scrap._action_scrap()
+        self.assertEqual(self.product.qty_available, 0, "After scrapping, qty should be 0")
+        # Revert the scrap move
+        scrap_move_line = scrap.move_line_ids
+        self.assertEqual(len(scrap_move_line), 1)
+        scrap_move_line.action_revert()
+        self.assertEqual(self.product.qty_available, 1, "After reverting scrap, qty should be restored to 1")
+
     def test_set_inventory_quant_to_zero(self):
         """Try to set inventory quantity to zero and check that the quant is deleted after unlinking zero quants"""
         default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)

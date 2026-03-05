@@ -1200,7 +1200,7 @@ class StockMoveLine(models.Model):
         self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
-            if move_line.is_inventory and not move_line.uom_id.is_zero(move_line.quantity):
+            if (move_line.is_inventory or move_line.is_scrap) and not move_line.uom_id.is_zero(move_line.quantity):
                 processed_move_line += move_line
                 move_vals.append(move_line._get_revert_inventory_move_values())
         if not processed_move_line:
