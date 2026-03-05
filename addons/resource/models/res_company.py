@@ -31,7 +31,7 @@ class ResCompany(models.Model):
     def _prepare_resource_calendar_values(self):
         self.ensure_one()
         return {
-            'name': _('Standard 40 hours/week'),
+            'name': _('40 hours/week'),
             'company_id': self.id,
         }
 
