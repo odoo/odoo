@@ -81,8 +81,7 @@ class AccountEdiCii(models.AbstractModel):
         supplier = vals['supplier']
         if tax_data and (
             tax_data['tax'].amount_type != 'percent'
-            or self._cii_is_recycling_contribution_tax(tax_data)
-            or self._cii_is_excise_tax(tax_data)
+            or self._is_allowance_charge_tax(tax_data)
         ):
             return
         else:
@@ -125,30 +124,6 @@ class AccountEdiCii(models.AbstractModel):
         if not tax_grouping_key or tax_grouping_key['is_withholding']:
             return
         return tax_grouping_key
-
-    def _cii_is_recycling_contribution_tax(self, tax_data):
-        """ Indicate if the 'tax_data' passed as parameter is a recycling contribution tax.
-
-        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
-        :return:            True if tax_data['tax'] is a recycling contribution tax, False otherwise.
-        """
-        if not tax_data:
-            return False
-
-        tax = tax_data['tax']
-        return tax.amount_type == 'fixed' and tax.include_base_amount
-
-    def _cii_is_excise_tax(self, tax_data):
-        """ Indicate if the 'tax_data' passed as parameter is an excise tax.
-
-        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
-        :return:            True if tax_data['tax'] is an excise tax, False otherwise.
-        """
-        if not tax_data:
-            return False
-
-        tax = tax_data['tax']
-        return tax.amount_type == 'code' and tax.include_base_amount
 
     def _cii_extract_cash_rounding_lines(self, vals):
         """
@@ -375,78 +350,55 @@ class AccountEdiCii(models.AbstractModel):
             'allowance_charge_node': nodes,
             'base_line': base_line,
         }
-        # Recycling contribution taxes.
-        self._cii_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
-        # Excise taxes.
-        self._cii_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
+        # Allowance/Charge taxes
+        self._cii_add_line_allowance_charge_nodes(sub_vals)
         return nodes
 
-    def _cii_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(self, vals):
-        base_line = vals['base_line']
-        currency = base_line['currency_id']
-
-        allowance_charges_nodes = vals['allowance_charge_node']
-        for tax_data in base_line['tax_details']['taxes_data']:
-            if not self._cii_is_recycling_contribution_tax(tax_data):
-                continue
-
-            allowance_charges_nodes.append(self._cii_get_line_allowance_charge_recycling_contribution_node(vals, {
-                'tax': tax_data['tax'],
-                'is_charge': tax_data['tax_amount'] * tax_data['base_amount'] > 0.0,
-                'amount': tax_data['tax_amount_currency'],
-                'currency': currency,
-            }))
-
-    def _cii_get_line_allowance_charge_recycling_contribution_node(self, vals, recycling_contribution_values):
-        currency = recycling_contribution_values['currency']
-        amount = recycling_contribution_values['amount']
-        tax = recycling_contribution_values['tax']
-        if 'bebat' in tax.name.lower():
-            charge_reason_code = 'CAV'
-        else:
-            charge_reason_code = 'AEO'
-        is_charge = recycling_contribution_values['is_charge']
+    def _cii_create_line_allowance_charge_node_vals(self, allowance_charge_vals):
+        currency = allowance_charge_vals['currency']
+        tax = allowance_charge_vals['tax']
+        tax_amount = allowance_charge_vals['tax_amount']
+        base_amount = allowance_charge_vals['base_amount']
+        is_charge = allowance_charge_vals['is_charge']
         return {
             'ram:ChargeIndicator': {
                 'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
             },
-            'ram:ReasonCode': {'_text': charge_reason_code if is_charge else '100'},
-            'ram:Reason': {'_text': tax.name},
+            'ram:ReasonCode': {
+                '_text': tax.ubl_cii_charge_reason_code if is_charge else tax.ubl_cii_allowance_reason_code,
+            },
+            'ram:Reason': {
+                '_text': tax.ubl_cii_charge_reason if is_charge else tax.ubl_cii_allowance_reason,
+            },
+            # Allowance/Charge CalculationPercent is required to predict tax during import
+            'ram:CalculationPercent': (
+                {'_text': abs(tax.amount)}
+                if tax.amount_type == 'percent'
+                else None
+            ),
+            # Only keep BasisAmount in conjunction with CalculationPercent
+            'ram:BasisAmount': {
+                '_text': FloatFmt(abs(base_amount), max_dp=currency.decimal_places),
+            } if tax.amount_type == 'percent' else None,
             'ram:ActualAmount': {
-                '_text': FloatFmt(amount, max_dp=currency.decimal_places),
+                '_text': FloatFmt(abs(tax_amount), max_dp=currency.decimal_places),
             },
         }
 
-    def _cii_add_line_allowance_charge_nodes_for_excise_taxes(self, vals):
+    def _cii_add_line_allowance_charge_nodes(self, vals):
+        """Fetch Allowance/Charge node from taxes having `ubl_cii_type` as `allowance/charge`"""
+        allowance_charges_nodes = vals['allowance_charge_node']
         base_line = vals['base_line']
         currency = base_line['currency_id']
-
-        allowance_charges_nodes = vals['allowance_charge_node']
-        for tax_data in base_line['tax_details']['taxes_data']:
-            if not self._cii_is_excise_tax(tax_data):
-                continue
-
-            allowance_charges_nodes.append(self._cii_get_line_allowance_charge_excise_node(vals, {
-                'tax': tax_data['tax'],
-                'is_charge': tax_data['tax_amount'] > 0.0,
-                'amount': tax_data['tax_amount_currency'],
+        taxes_data = base_line['tax_details']['taxes_data']
+        for tax_data in (t for t in taxes_data if self._is_allowance_charge_tax(t)):
+            allowance_charges_nodes.append(self._cii_create_line_allowance_charge_node_vals({
                 'currency': currency,
+                'tax': tax_data['tax'],
+                'tax_amount': tax_data['tax_amount_currency'],
+                'base_amount': tax_data['base_amount_currency'],
+                'is_charge': tax_data['tax'].ubl_cii_type == 'charge',
             }))
-
-    def _cii_get_line_allowance_charge_excise_node(self, vals, excise_values):
-        currency = excise_values['currency']
-        amount = excise_values['amount']
-        tax = excise_values['tax']
-        is_charge = excise_values['is_charge']
-        return {
-            'ram:ChargeIndicator': {
-                'udt:Indicator': {'_text': 'true' if is_charge else 'false'},
-            },
-            'ram:Reason': {'_text': tax.name},
-            'ram:ActualAmount': {
-                '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
-            },
-        }
 
     def _cii_get_specified_trade_settlement_line_monetary_summation_node(self, vals, base_line):
         currency = vals['currency_id']
@@ -1174,30 +1126,31 @@ class AccountEdiCii(models.AbstractModel):
 
     def _import_cii_invoice_line_add_allowance_charges_values(self, collected_values):
         line_tree = collected_values['line_tree']
-        allowances = collected_values['allowances'] = []
-        charges = collected_values['charges'] = []
+        allowance_charge_vals = collected_values['allowance_charge_vals'] = []
+        has_invalid_nodes = False
+
         for allowance_charge_elem in line_tree.iterfind('.//{*}SpecifiedTradeAllowanceCharge'):
-            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator')
-            amount_str = allowance_charge_elem.findtext('.//{*}ActualAmount')
-            base_amount_str = allowance_charge_elem.findtext('.//{*}BasisAmount')
+            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator', default='').lower()
+            amount = allowance_charge_elem.findtext('.//{*}ActualAmount')
+            base_amount = allowance_charge_elem.findtext('.//{*}BasisAmount')
+            calculation_percent = allowance_charge_elem.findtext('.//{*}CalculationPercent')
             reason = allowance_charge_elem.findtext('.//{*}Reason')
             reason_code = allowance_charge_elem.findtext('.//{*}ReasonCode')
 
-            if amount_str:
-                amount = float(amount_str)
+            if self._is_allowance_charge_node_valid(charge_indicator, reason_code, reason, amount):
+                allowance_charge_vals.append({
+                    'amount': float(amount),
+                    'base_amount': float(base_amount) if base_amount else None,
+                    'reason': reason,
+                    'reason_code': reason_code,
+                    'charge_indicator': charge_indicator,
+                    'calculation_percent': float(calculation_percent) if calculation_percent else None,
+                })
             else:
-                continue
+                has_invalid_nodes = True
 
-            allowance_charge_values = {
-                'amount': amount,
-                'base_amount': float(base_amount_str) if base_amount_str else None,
-                'reason': reason,
-                'reason_code': reason_code,
-            }
-            if charge_indicator.lower() == 'true':
-                charges.append(allowance_charge_values)
-            else:
-                allowances.append(allowance_charge_values)
+        if has_invalid_nodes:
+            collected_values['logs'].append(self.env._("Some line-level allowance/charge nodes were invalid and were skipped during import."))
 
         allowance_elem = line_tree.find('.//{*}GrossPriceProductTradePrice/{*}AppliedTradeAllowanceCharge')
         collected_values['price_allowance_values'] = {}
@@ -1248,14 +1201,14 @@ class AccountEdiCii(models.AbstractModel):
         billed_quantity = billed_quantity_str and float(billed_quantity_str) * file_document_sign
         base_quantity = base_quantity_str and float(base_quantity_str)
 
-        total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
-        total_charges = sum(charge['amount'] for charge in collected_values['charges'])
+        total_allowances_charges = self._get_allowance_charge_sum(collected_values['allowance_charge_vals'])
         price_allowance_values = collected_values.get('price_allowance_values', {})
         price_allowance_base_amount = price_allowance_values.get('base_amount')
         price_allowance_amount = price_allowance_values.get('amount')
         if price_allowance_amount and (price_allowance_charge_indicator_sign := price_allowance_values.get('charge_indicator_sign')):
             price_allowance_amount *= price_allowance_charge_indicator_sign
-        subtotal = (line_total_amount or 0.0) + total_allowances - total_charges
+        subtotal = (line_total_amount or 0.0) - total_allowances_charges
+        discount_amount = 0.0
 
         # Price level.
         # Define at the product level the price for which quantity and how many discount you get
@@ -1287,7 +1240,6 @@ class AccountEdiCii(models.AbstractModel):
         ):
             price_unit = subtotal
             quantity = 1.0
-            discount_amount = total_allowances
 
             # Combine with the price level. Suppose:
             # line_total_amount = 1000.0
@@ -1312,7 +1264,6 @@ class AccountEdiCii(models.AbstractModel):
         ):
             quantity = billed_quantity
             price_unit = subtotal / quantity
-            discount_amount = total_allowances
 
             # Combine with the price level. Suppose:
             # line_total_amount = 1200.0
@@ -1336,7 +1287,6 @@ class AccountEdiCii(models.AbstractModel):
         else:
             quantity = 0.0
             price_unit = 0.0
-            discount_amount = total_allowances
 
             # Combine with the price level.
             if not currency.is_zero(price_subtotal):
@@ -1344,8 +1294,8 @@ class AccountEdiCii(models.AbstractModel):
                 quantity = price_quantity
                 discount_amount += price_discount_amount
 
-        # Extra charges.
-        price_unit += total_charges / (quantity or 1.0)
+        # Extra Allowance/Charges.
+        price_unit += total_allowances_charges / (quantity or 1.0)
 
         # Turn discount_amount to a percentage
         gross_subtotal = price_unit * quantity
@@ -1438,28 +1388,22 @@ class AccountEdiCii(models.AbstractModel):
             }
         return tax_values
 
-    def _import_cii_invoice_line_prepare_charge_tax_values(self, collected_values, charge):
-        if charge['reason_code'] != 'AEO':
-            return
-
-        odoo_document_type = collected_values['odoo_document_type']
-        fixed_tax_amount = charge['amount'] / collected_values['to_write']['quantity']
-        charge['attempt_tax_values'] = tax_values = {
-            'name': charge['reason'],
-            'amount_type': 'fixed',
-            'type_tax_use': odoo_document_type,
-            'amount': fixed_tax_amount,
-            'tax_amount_currency': fixed_tax_amount,
-        }
-
+    def _import_cii_invoice_line_prepare_allowance_charge_tax_values(self, collected_values, allowance_charge_vals):
         partner = collected_values.get('customer_values', {}).get('customer')
-        if partner and (name := collected_values['to_write'].get('name')):
-            tax_values['invoice_predictive'] = {
-                'invoice': collected_values['invoice'],
-                'name': name,
-                'partner': partner,
-            }
-        return tax_values
+        name = collected_values['to_write'].get('name')
+        allowance_charge_taxes_vals = self._prepare_invoice_line_allowance_charge_tax_values(
+            collected_values,
+            allowance_charge_vals,
+            format_specific_keys={'percent': 'calculation_percent'},
+        )
+        if partner and name:
+            for tax_values in allowance_charge_taxes_vals:
+                tax_values['invoice_predictive'] = {
+                    'invoice': collected_values['invoice'],
+                    'name': name,
+                    'partner': partner,
+                }
+        return allowance_charge_taxes_vals
 
     def _import_cii_invoice_line_add_taxes_values(self, collected_values):
         line_tree = collected_values['line_tree']
@@ -1474,11 +1418,12 @@ class AccountEdiCii(models.AbstractModel):
                 global_tax_values = tax_total_values.get(tax_values['_tax_key'])
                 global_tax_values['related_taxes_values'].append(tax_values)
 
-        # Fixed taxes.
-        for charge in collected_values['charges']:
-            tax_values = self._import_cii_invoice_line_prepare_charge_tax_values(collected_values, charge)
-            if tax_values:
-                taxes_values.append(tax_values)
+        # Allowance/Charge taxes.
+        if allowance_charge_taxes_vals := self._import_cii_invoice_line_prepare_allowance_charge_tax_values(
+            collected_values,
+            collected_values['allowance_charge_vals'],
+        ):
+            taxes_values.extend(allowance_charge_taxes_vals)
 
     def _import_cii_invoice_predict_values(self, collected_values):
         self._import_invoice_predict_values(collected_values)
@@ -1525,10 +1470,11 @@ class AccountEdiCii(models.AbstractModel):
         invoice = collected_values['invoice']
         difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
         for line_collected_values in collected_values['lines_collected_values']:
-            for charge in line_collected_values['charges']:
-                attempt_tax_values = charge.get('attempt_tax_values')
+            for allowance_charge in line_collected_values['allowance_charge_vals']:
+                attempt_tax_values = allowance_charge.get('attempt_tax_values')
                 if attempt_tax_values and attempt_tax_values.get('tax'):
-                    difference -= charge['amount']
+                    charge_sign = self._get_allowance_charge_sign(allowance_charge)
+                    difference -= (allowance_charge['amount'] * charge_sign)
         if currency.is_zero(difference):
             return
 

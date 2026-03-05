@@ -286,14 +286,13 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             },
         }
 
-    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+    def _retrieve_rebate_val(self, company_id, tree, xpath_dict, quantity, net_price_unit):
         # Override 'account.edi.xml.ubl_20' to include AllowanceCharge in it, as PriceAmount is different in OIOUBL
-        rebate = super()._retrieve_rebate_val(tree, xpath_dict, quantity)
+        rebate = super()._retrieve_rebate_val(company_id, tree, xpath_dict, quantity, net_price_unit)
 
-        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
-        charge_amount = sum(d['amount'] for d in charges)
-
-        return rebate + (discount_amount - charge_amount) / quantity
+        discount_amount, allowance_charge_vals, _ = self._retrieve_allowance_charge_vals(company_id, tree, xpath_dict, quantity, net_price_unit)
+        allowance_charge_sum = self._get_allowance_charge_sum(allowance_charge_vals)
+        return rebate + (discount_amount - allowance_charge_sum) / quantity
 
     def _get_line_discount_allowance_charge_node(self, vals):
         if not (charge_node := super()._get_line_discount_allowance_charge_node(vals)):
