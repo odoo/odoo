@@ -367,8 +367,8 @@
                 </button>
             </div>
             <xpath expr="//page[@name='job_description_page']" position="after">
-                <page string="Trackers" name="trackers_page" groups="hr.group_hr_user">
-                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <page string="Trackers" name="trackers_page" groups="hr_recruitment.group_hr_recruitment_user">
+                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_user"/>
                 </page>
             </xpath>
             <xpath expr="//sheet" position="after">
