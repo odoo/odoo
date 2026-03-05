@@ -496,7 +496,7 @@ class JSTooling:
             and file.path.suffix in ['.xml', '.js']
             and not re.search(excluded_path_pattern, file.path._str)
         ]
-    
+
     @staticmethod
     def get_xml_files(file_manager):
         path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
@@ -843,7 +843,7 @@ def upgrade_t_model(file_manager, log_info, log_error):
 
         file_manager.print_progress(fileno, len(files))
 
-        
+
 WEB_WHITELIST = {
     "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
     "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
@@ -888,6 +888,8 @@ MISC_WHITELIST = {
     "event.mailTemplateReferenceField": {'relation'},  # Nested t-inherits
     "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
     "hr_calendar.CalendarCommonRenderer.buttonWorklocation": {'multiCalendar'},  # Nested t-inherits with a xpath t-call
+    "hr_calendar.AttendeeCalendarCommonPopover.body": {'slot'},  # dynamic t-call
+    "hr_skills.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
     "crm.ColumnProgress": {'bar'},  # Nested inherit
     "pos_restaurant.floor_screen_element": {'element'},  # for each + t-call
     "sale_management.ListRenderer.RecordRow": {'record'},  # Nested t-inherits
