@@ -9,6 +9,11 @@
         "point_of_sale._assets_pos": [
             "pos_bancontact_pay/static/src/**/*",
         ],
+        'point_of_sale.payment_terminals': [
+            'pos_bancontact_pay/static/src/app/payment_bancontact.js',
+            'pos_bancontact_pay/static/src/app/pos_payment_method.js',
+            'pos_bancontact_pay/static/src/app/pos_payment.js',
+        ],
         "web.assets_tests": [
             "pos_bancontact_pay/static/tests/tours/**/*",
         ],

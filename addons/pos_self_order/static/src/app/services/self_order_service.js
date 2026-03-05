@@ -142,6 +142,11 @@ export class SelfOrder extends Reactive {
                     this.paymentError = true;
                 }
             });
+
+            this.data.connectWebSocket(
+                "FINALIZE_KIOSK_PAYMENT",
+                this._onFinalizeKiokPayment.bind(this)
+            );
         }
         this.data.connectWebSocket("REMOVE_ORDERS", (data) => {
             this.removeOrdersByAccessTokens(data.deleted_order_tokens);
@@ -176,6 +181,36 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+    }
+
+    _onFinalizeKiokPayment(args) {
+        const payment = this.currentOrder?.payment_ids.at(-1);
+        const order_id = args.order_id || payment?.pos_order_id?.id;
+        if (
+            !this.currentOrder ||
+            this.currentOrder.id !== order_id ||
+            payment?.pos_order_id?.id !== order_id
+        ) {
+            return;
+        }
+
+        if (args.status === "success" && payment) {
+            payment.setPaymentStatus("done");
+            rpc(`/kiosk/payment/${this.config.id}/kiosk`, {
+                order: this.currentOrder.serializeForORM(),
+                access_token: this.access_token,
+                payment_method_id: payment.payment_method_id.id,
+            });
+        } else {
+            for (const p of this.currentOrder.payment_ids) {
+                this.currentOrder.removePaymentline(p);
+            }
+            this.paymentError = true;
+            this.notification.add(_t("Please try again or select another payment method"), {
+                title: args.error || _t("Payment failed"),
+                type: "danger",
+            });
+        }
     }
 
     /**
@@ -489,9 +524,7 @@ export class SelfOrder extends Reactive {
             const PaymentInterface = registry
                 .category("pos_payment_providers")
                 .get(pm.payment_provider, null);
-            if (PaymentInterface) {
-                pm.payment_interface = new PaymentInterface(this, pm);
-            }
+            pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
         }
 
         if (this.ticketPrinter.useLna) {

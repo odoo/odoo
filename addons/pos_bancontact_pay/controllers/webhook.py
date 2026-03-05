@@ -1,59 +1,48 @@
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.pos_bancontact_pay.controllers.signature import BancontactSignatureValidation
-from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignatureValidationError
+from odoo.addons.pos_bancontact_pay.controllers.signature import (
+    BancontactSignatureValidation,
+)
+from odoo.addons.pos_bancontact_pay.errors.exceptions import (
+    BancontactSignatureValidationError,
+)
 
 
 class BancontactPayController(http.Controller):
 
     @http.route(["/bancontact_pay/webhook"], type="http", auth="public", methods=["POST"], csrf=False)
-    def bancontact_pay_webhook(self, mode=None):
+    def bancontact_pay_webhook(self, config_id=None, ppid=None, mode=None):
         bancontact_signature_validation = BancontactSignatureValidation(request.httprequest, mode == "test")
         try:
-            bancontact_signature_validation.verify_signature()
+            bancontact_signature_validation.verify_signature(ppid)
         except BancontactSignatureValidationError as e:
             return http.Response(str(e), status=403)
-
-        data = request.get_json_data()
-        bancontact_payment_id = data.get("paymentId")
-
-        pos_payment = None
-        if bancontact_payment_id:
-            pos_payment = self.env["pos.payment"].sudo().search([("bancontact_id", "=", bancontact_payment_id)], limit=1)
-        if not pos_payment or not pos_payment.exists():
-            return http.Response("Payment not found.", status=404)
 
         try:
-            bancontact_signature_validation.verify_subject(pos_payment.payment_method_id.bancontact_ppid)
-        except BancontactSignatureValidationError as e:
-            return http.Response(str(e), status=403)
+            config_id = int(config_id)
+        except (TypeError, ValueError):
+            return http.Response("Invalid or missing config_id parameter", status=400)
 
+        pos_config = self.env['pos.config'].sudo().browse(config_id)
+        if not pos_config.exists():
+            return http.Response("Invalid POS configuration ID", status=400)
+
+        data = request.get_json_data()
+        bancontact_id = data.get("paymentId")
         bancontact_status = data.get("status")
+        if bancontact_status not in ["SUCCEEDED", "AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"]:
+            return http.Response(status=204)
 
-        def _notify_pos():
-            pos_order = pos_payment.pos_order_id
-            pos_order.config_id._notify(
-                "BANCONTACT_PAY_PAYMENTS_NOTIFICATION",
-                {
-                    "order_id": pos_order.id,
-                    "payment_id": pos_payment.id,
-                    "bancontact_status": bancontact_status,
-                },
-            )
-
-        if pos_payment.payment_status != "done":
-            if bancontact_status == "SUCCEEDED":
-                pos_payment.payment_status = "done"
-                pos_payment.qr_code = False
-                _notify_pos()
-            elif bancontact_status in ("AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED") and pos_payment.payment_status != "retry":
-                pos_payment.payment_status = "retry"
-                pos_payment.qr_code = False
-                pos_payment.bancontact_id = False
-                _notify_pos()
-
-            # PENDING, IDENTIFIED, AUTHORIZED, PENDING_MERCHANT_ACKNOWLEDGEMENT, VOIDED --> no action
-            # https://docs.payconiq.be/guides/general/callback052025
+        self._notify_pos(pos_config, bancontact_id, bancontact_status)
 
         return http.Response(status=200)
+
+    def _notify_pos(self, pos_config, bancontact_id, bancontact_status):
+        pos_config._notify(
+            "BANCONTACT_PAY_PAYMENTS_NOTIFICATION",
+            {
+                "bancontact_id": bancontact_id,
+                "bancontact_status": bancontact_status,
+            },
+        )

@@ -4,6 +4,7 @@ import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
+import { advanceTime } from "@odoo/hoot-mock";
 
 definePosSelfModels();
 
@@ -11,15 +12,22 @@ class MockPaymentInterface extends PaymentInterface {
     setup() {
         this.hasBeenCalled = false;
     }
-    sendPaymentRequest() {
+    sendPaymentRequest(line) {
         this.hasBeenCalled = true;
+        if (line.useQr) {
+            line.qr_code = "mock_qr_code";
+            return false;
+        }
         return true;
     }
 }
 
 class MockPaymentInterfaceWithError extends MockPaymentInterface {
-    sendPaymentRequest() {
+    sendPaymentRequest(line) {
         this.hasBeenCalled = true;
+        if (line.useQr) {
+            throw new Error("Payment failed");
+        }
         return false;
     }
 }
@@ -27,28 +35,53 @@ class MockPaymentInterfaceWithError extends MockPaymentInterface {
 const setupPaymentPage = async () => {
     const store = await setupSelfPosEnv();
 
-    const nonPaymentTerminal = store.models["pos.payment.method"].create({
+    const paymentNoProvider = store.models["pos.payment.method"].create({
         payment_provider: null,
+        payment_method_type: "none",
     });
+
     const paymentTerminal = store.models["pos.payment.method"].create({
         payment_provider: "mock_terminal",
+        payment_method_type: "terminal",
     });
     paymentTerminal.payment_interface = new MockPaymentInterface();
+
     const paymentTerminalWithError = store.models["pos.payment.method"].create({
         payment_provider: "mock_terminal",
+        payment_method_type: "terminal",
     });
     paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
-    await getFilledSelfOrder(store);
 
+    const paymentExternalQr = store.models["pos.payment.method"].create({
+        payment_provider: "mock_qr",
+        payment_method_type: "external_qr",
+    });
+    paymentExternalQr.payment_interface = new MockPaymentInterface();
+
+    const paymentExternalQrWithError = store.models["pos.payment.method"].create({
+        payment_provider: "mock_qr",
+        payment_method_type: "external_qr",
+    });
+    paymentExternalQrWithError.payment_interface = new MockPaymentInterfaceWithError();
+
+    await getFilledSelfOrder(store);
     const paymentPage = await mountWithCleanup(PaymentPage, {});
 
-    return { paymentPage, store, nonPaymentTerminal, paymentTerminal, paymentTerminalWithError };
+    return {
+        paymentPage,
+        store,
+        paymentNoProvider,
+        paymentTerminal,
+        paymentTerminalWithError,
+        paymentExternalQr,
+        paymentExternalQrWithError,
+    };
 };
 
 describe("startPayment", () => {
     test("succeeds if the backend returns no error", async () => {
-        const { paymentPage, store, nonPaymentTerminal } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = nonPaymentTerminal.id;
+        const { paymentPage, store, paymentNoProvider } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentNoProvider.id;
 
         onRpc("/kiosk/payment/1/kiosk", () => true);
         await paymentPage.startPayment();
@@ -57,8 +90,8 @@ describe("startPayment", () => {
     });
 
     test("fails if the backend returns an error", async () => {
-        const { paymentPage, store, nonPaymentTerminal } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = nonPaymentTerminal.id;
+        const { paymentPage, store, paymentNoProvider } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentNoProvider.id;
 
         onRpc("/kiosk/payment/1/kiosk", () => {
             throw new Error();
@@ -100,6 +133,28 @@ describe("startPayment", () => {
         await paymentPage.startPayment();
 
         expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
+        expect(store.paymentError).toBe(true);
+    });
+
+    test("succeeds if the external QR code payment interface succeeds and backend returns no error", async () => {
+        const { paymentPage, store, paymentExternalQr } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentExternalQr.id;
+
+        await paymentPage.startPayment();
+
+        expect(paymentExternalQr.payment_interface.hasBeenCalled).toBe(true);
+        expect(store.paymentError).toBe(false);
+        await advanceTime(500); // Wait timeout fade out
+        expect(paymentPage.state.qrCode).toBe("mock_qr_code");
+    });
+
+    test("fails if the external QR code payment interface fails", async () => {
+        const { paymentPage, store, paymentExternalQrWithError } = await setupPaymentPage();
+        paymentPage.state.paymentMethodId = paymentExternalQrWithError.id;
+
+        await paymentPage.startPayment();
+
+        expect(paymentExternalQrWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 });

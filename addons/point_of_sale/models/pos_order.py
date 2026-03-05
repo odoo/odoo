@@ -190,7 +190,8 @@ class PosOrder(models.Model):
         self.payment_ids.unlink()
 
     def _compute_amount_paid(self):
-        return sum(self.payment_ids.mapped('amount'))
+        paid_payment_ids = self.payment_ids.filtered(lambda p: not p.payment_status or p.payment_status == "done")
+        return sum(paid_payment_ids.mapped('amount'))
 
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.

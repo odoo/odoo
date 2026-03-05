@@ -17,7 +17,7 @@ describe("sendPaymentRequest", () => {
         const display = store.models["pos.payment.method"].get(4);
         const sticker = store.models["pos.payment.method"].get(5);
 
-        const opts = { amount: -1, payment_status: "waiting" };
+        const opts = { amount: -403, payment_status: "waiting" };
         const paymentlineDisplay = createPaymentLine(store, order, display, opts);
         const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
         const paymentlines = [paymentlineDisplay, paymentlineSticker];
@@ -56,12 +56,10 @@ describe("sendPaymentRequest", () => {
         };
         for (const paymentline of paymentlines) {
             const result = await paymentline.payment_interface.sendPaymentRequest(paymentline);
-            const bancontactId = "bancontact_" + paymentline.id;
-            const qrCodeUrl = `https://example.com/qrcode/${bancontactId}`;
 
             expect(result).toBe(true);
-            expect(paymentline.bancontact_id).toBe(bancontactId);
-            expect(paymentline.qr_code).toBe(qrCodeUrl);
+            expect(paymentline.bancontact_id).toBe("bancontact_id");
+            expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
             expect.verifySteps(
                 paymentline.payment_method_id.bancontact_usage === "display"
@@ -73,6 +71,78 @@ describe("sendPaymentRequest", () => {
             expect(paymentline.payment_status).toBe("waiting");
         }
     });
+
+    test("already has bancontact id + waitingScan status", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+        const sticker = store.models["pos.payment.method"].get(5);
+
+        const opts = {
+            bancontact_id: "origin_bancontact_id",
+            qr_code: "origin_bancontact_qr_code",
+            payment_status: "waitingScan",
+        };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
+        const paymentlines = [paymentlineDisplay, paymentlineSticker];
+
+        store.displayQrCode = () => {
+            expect.step("store.displayQrCode");
+        };
+        for (const paymentline of paymentlines) {
+            const result = await paymentline.payment_interface.sendPaymentRequest(paymentline);
+
+            expect(result).toBe(true);
+            expect(paymentline.bancontact_id).toBe("origin_bancontact_id");
+            expect(paymentline.qr_code).toBe("origin_bancontact_qr_code");
+
+            expect.verifySteps(
+                paymentline.payment_method_id.bancontact_usage === "display"
+                    ? ["store.displayQrCode"]
+                    : []
+            );
+
+            // The payment status will be updated by `handlePaymentResponse`
+            expect(paymentline.payment_status).toBe("waitingScan");
+        }
+    });
+
+    test("already has bancontact id + retry status", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+        const sticker = store.models["pos.payment.method"].get(5);
+
+        const opts = {
+            bancontact_id: "origin_bancontact_id",
+            qr_code: "origin_bancontact_qr_code",
+            payment_status: "retry",
+        };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
+        const paymentlines = [paymentlineDisplay, paymentlineSticker];
+
+        store.displayQrCode = () => {
+            expect.step("store.displayQrCode");
+        };
+        for (const paymentline of paymentlines) {
+            const result = await paymentline.payment_interface.sendPaymentRequest(paymentline);
+
+            expect(result).toBe(true);
+            expect(paymentline.bancontact_id).toBe("bancontact_id");
+            expect(paymentline.qr_code).toBe("bancontact_qr_code");
+
+            expect.verifySteps(
+                paymentline.payment_method_id.bancontact_usage === "display"
+                    ? ["store.displayQrCode"]
+                    : []
+            );
+
+            // The payment status will be updated by `handlePaymentResponse`
+            expect(paymentline.payment_status).toBe("retry");
+        }
+    });
 });
 
 describe("sendPaymentCancel", () => {
@@ -82,16 +152,13 @@ describe("sendPaymentCancel", () => {
         const display = store.models["pos.payment.method"].get(4);
         const sticker = store.models["pos.payment.method"].get(5);
 
-        const opts = (bancontact_id) => ({
-            amount: -400, // To trigger ERR: 400
+        const opts = {
+            bancontact_id: -400,
             payment_status: "waitingCancel",
-            bancontact_id: bancontact_id,
-            qr_code: `https://example.com/qrcode/${bancontact_id}`,
-        });
-        const displayTestId = "bancontact_1";
-        const stickerTestId = "bancontact_2";
-        const paymentlineDisplay = createPaymentLine(store, order, display, opts(displayTestId));
-        const paymentlineSticker = createPaymentLine(store, order, sticker, opts(stickerTestId));
+            qr_code: "bancontact_qr_code",
+        };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
         const paymentlines = [paymentlineDisplay, paymentlineSticker];
 
         for (const paymentline of paymentlines) {
@@ -111,27 +178,19 @@ describe("sendPaymentCancel", () => {
         const display = store.models["pos.payment.method"].get(4);
         const sticker = store.models["pos.payment.method"].get(5);
 
-        const opts = (bancontact_id) => ({
-            amount: -422, // To trigger ERR: 422
+        const opts = {
+            bancontact_id: -422,
             payment_status: "waitingCancel",
-            bancontact_id: bancontact_id,
-            qr_code: `https://example.com/qrcode/${bancontact_id}`,
-        });
-        const displayTestId = "bancontact_1";
-        const stickerTestId = "bancontact_2";
-        const paymentlineDisplay = createPaymentLine(store, order, display, opts(displayTestId));
-        const paymentlineSticker = createPaymentLine(store, order, sticker, opts(stickerTestId));
+            qr_code: "bancontact_qr_code",
+        };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
         const paymentlines = [paymentlineDisplay, paymentlineSticker];
-        const getBancontactId = (pl) =>
-            pl.id === paymentlineDisplay.id ? displayTestId : stickerTestId;
-        const qrCodeUrl = (pl) =>
-            pl.id === paymentlineDisplay.id
-                ? `https://example.com/qrcode/${displayTestId}`
-                : `https://example.com/qrcode/${stickerTestId}`;
 
         await activateMountingDialogs(store.env);
         for (const paymentline of paymentlines) {
             // ---- Click on 'Close' button ----
+
             const promiseResultClose = paymentline.payment_interface.sendPaymentCancel(paymentline);
 
             await animationFrame();
@@ -139,8 +198,8 @@ describe("sendPaymentCancel", () => {
 
             const resultClose = await promiseResultClose;
             expect(resultClose).toBe(false);
-            expect(paymentline.bancontact_id).toBe(getBancontactId(paymentline));
-            expect(paymentline.qr_code).toBe(qrCodeUrl(paymentline));
+            expect(paymentline.bancontact_id).toBe(-422);
+            expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
             // The payment status will be updated by `handlePaymentResponse`
             expect(paymentline.payment_status).toBe("waitingCancel");
@@ -167,15 +226,13 @@ describe("sendPaymentCancel", () => {
         const display = store.models["pos.payment.method"].get(4);
         const sticker = store.models["pos.payment.method"].get(5);
 
-        const opts = (bancontact_id) => ({
+        const opts = {
+            bancontact_id: "bancontact_id",
             payment_status: "waitingCancel",
-            bancontact_id: bancontact_id,
-            qr_code: `https://example.com/qrcode/${bancontact_id}`,
-        });
-        const displayTestId = "bancontact_1";
-        const stickerTestId = "bancontact_2";
-        const paymentlineDisplay = createPaymentLine(store, order, display, opts(displayTestId));
-        const paymentlineSticker = createPaymentLine(store, order, sticker, opts(stickerTestId));
+            qr_code: "bancontact_qr_code",
+        };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
         const paymentlines = [paymentlineDisplay, paymentlineSticker];
 
         for (const paymentline of paymentlines) {

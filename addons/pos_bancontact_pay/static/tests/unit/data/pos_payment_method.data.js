@@ -6,45 +6,29 @@ patch(PosPaymentMethod.prototype, {
         return [...super._load_pos_data_fields(), "bancontact_usage"];
     },
 
-    create_bancontact_payment(id, ...args) {
-        const { amount, payment_id } = args[0];
-        if (amount <= 0) {
-            throw new Error("Failed to create payment");
+    create_bancontact_payment(id, data) {
+        if (this[id].payment_provider !== "bancontact_pay") {
+            throw new Error("Error Server: Wrong Provider");
         }
-        const PosPayment = this.env["pos.payment"];
-        const pos_payment_id = PosPayment.search([["id", "=", payment_id]])[0];
-        const pos_payment = PosPayment.read(
-            [pos_payment_id],
-            PosPayment._load_pos_data_fields(),
-            false
-        )[0];
-        pos_payment.bancontact_id = "bancontact_" + pos_payment_id;
-        pos_payment.qr_code = "https://example.com/qrcode/bancontact_" + pos_payment_id;
+
+        if (data.amount < 0) {
+            throw new Error(`Failed to create payment (ERR: ${-data.amount})`);
+        }
 
         return {
-            "pos.payment": [pos_payment],
+            bancontact_id: "bancontact_id",
+            qr_code: "bancontact_qr_code",
         };
     },
 
-    cancel_bancontact_payment(id, ...args) {
-        const { payment_id, force_cancel } = args[0];
-        const PosPayment = this.env["pos.payment"];
-        const pos_payment_id = PosPayment.search([["id", "=", payment_id]])[0];
-        const pos_payment = PosPayment.read(
-            [pos_payment_id],
-            PosPayment._load_pos_data_fields(),
-            false
-        )[0];
-
-        if (!force_cancel && pos_payment.amount < 0) {
-            throw new Error(`Failed to cancel payment (ERR: ${-pos_payment.amount})`);
+    cancel_bancontact_payment(id, bancontact_id) {
+        if (this[id].payment_provider !== "bancontact_pay") {
+            throw new Error("Error Server: Wrong Provider");
         }
-        pos_payment.bancontact_id = null;
-        pos_payment.qr_code = null;
 
-        return {
-            "pos.payment": [pos_payment],
-        };
+        if (typeof bancontact_id === "number" && bancontact_id < 0) {
+            throw new Error(`Failed to cancel payment (ERR: ${-bancontact_id})`);
+        }
     },
 });
 
@@ -65,6 +49,7 @@ PosPaymentMethod._records.push(
         image: false,
         sequence: 3,
         default_qr: false,
+        config_ids: [1],
     },
     {
         id: 5,
@@ -82,6 +67,7 @@ PosPaymentMethod._records.push(
         image: false,
         sequence: 4,
         default_qr: false,
+        config_ids: [1],
     },
     {
         id: 6,
@@ -99,5 +85,6 @@ PosPaymentMethod._records.push(
         image: false,
         sequence: 5,
         default_qr: false,
+        config_ids: [1],
     }
 );

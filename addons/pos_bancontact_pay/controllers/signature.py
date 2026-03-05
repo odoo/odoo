@@ -25,7 +25,7 @@ class BancontactSignatureValidation:
         self.test_mode = test_mode
         self.bancontact_api_urls = const.API_URLS["preprod" if test_mode else "production"]
 
-    def verify_signature(self):
+    def verify_signature(self, ppid):
         """Verify the JWS signature and mandatory protected headers of the request."""
         if self.test_mode:
             return
@@ -34,20 +34,10 @@ class BancontactSignatureValidation:
             protected_b64, signature_b64, kid, protected = self._extract_jws_parts()
             jwk = self._get_jwk_by_kid(kid)
             self._verify_jws_signature(jwk, protected_b64, signature_b64)
-            self._validate_critical_headers(protected)
+            self._validate_critical_headers(protected, ppid)
         except BancontactSignatureValidationError as e:
             _logger.warning("Bancontact signature verification failed:\n%s", e)
             raise
-
-    def verify_subject(self, expected_subject):
-        """Ensure the JWS subject matches the expected payment profile identifier."""
-        if self.test_mode:
-            return
-
-        if self.subject != expected_subject:
-            e = f"Invalid subject: {self.subject}"
-            _logger.warning("Bancontact signature subject verification failed:\n%s", e)
-            raise BancontactSignatureValidationError(e)
 
     # ----- Private Methods ----- #
     def _extract_jws_parts(self):
@@ -171,7 +161,7 @@ class BancontactSignatureValidation:
         else:
             raise BancontactSignatureValidationError(f"Unsupported JWK algorithm: {alg}")
 
-    def _validate_critical_headers(self, protected):
+    def _validate_critical_headers(self, protected, ppid):
         """Validate critical protected headers and extract the subject for later checks."""
         # -- crit
         crits = set(protected.get("crit", []))
@@ -222,7 +212,9 @@ class BancontactSignatureValidation:
             raise BancontactSignatureValidationError(f"Path mismatch: {jws_path} != {expected_path}")
 
         # -- sub
-        self.subject = protected.get(const.SUB_KEY)
+        subject = protected.get(const.SUB_KEY)
+        if not ppid or subject != ppid:
+            raise BancontactSignatureValidationError(f"Invalid subject: {subject}")
 
     def _b64url_decode(self, data: str) -> bytes:
         try:

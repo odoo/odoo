@@ -17,17 +17,32 @@
                             <span t-out="payment_method.name" />
                         </button>
                     </div>
-                    <div class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-50 mx-auto p-3">
-                        <h1 class="mb-3 text-center">Follow instructions on the terminal</h1>
-                        <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
-                            <i class="fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
-                        </div>
+                    <div t-else="" class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-sm-75 w-50-md mx-auto"
+                        t-att-class="{'fade-out': state.fadeOut}">
+                        <t name="terminal" t-if="state.paymentMethodType === 'terminal'">
+                            <h1 class="text-center">Follow instructions on the terminal</h1>
+                            <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
+                                <i class="fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
+                            </div>
+                        </t>
+                        <t name="external_qr" t-elif="this.showQrCode">
+                            <h1 class="text-center">Scan the QR code to pay</h1>
+                            <div class="qr-code border rounded-4 p-4 bg-view">
+                                <img class="w-100" t-att-src="state.qrCode" />
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <h1 class="text-center">Processing your payment...</h1>
+                            <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
+                                <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                            </div>
+                        </t>
                     </div>
                </div>
             </div>
 
             <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
-                <button class="btn btn-secondary btn-lg" t-if="this.state.selection || this.selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="this.back">Back</button>
+                <button class="btn btn-secondary btn-lg" t-if="this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError" t-on-click="this.back">Back</button>
                 <button class="btn btn-primary btn-lg" t-if="!this.state.selection and this.selfOrder.paymentError" t-on-click="this.startPayment">Retry</button>
             </div>
 

@@ -16,6 +16,9 @@ export class PaymentPage extends Component {
         this.state = useState({
             selection: true,
             paymentMethodId: null,
+            qrCode: null,
+            fadeOut: false,
+            paymentMethodType: null,
         });
 
         onMounted(() => {
@@ -34,9 +37,14 @@ export class PaymentPage extends Component {
         this.router.back();
     }
 
+    get showQrCode() {
+        return this.state.paymentMethodType === "external_qr" && this.state.qrCode;
+    }
+
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
+        this.state.paymentMethodType = this.selectedPaymentMethod.payment_method_type;
         this.startPayment();
     }
 
@@ -49,6 +57,7 @@ export class PaymentPage extends Component {
     // this function will be override by pos_online_payment_self_order module
     // in mobile is the only available payment method
     async startPayment() {
+        this.state.qrCode = null;
         this.selfOrder.paymentError = false;
         try {
             if (this.selectedPaymentMethod.payment_interface) {
@@ -62,7 +71,16 @@ export class PaymentPage extends Component {
                 try {
                     const paymentSuccessful = await newPaymentLine.pay();
                     if (!paymentSuccessful) {
-                        throw new Error("Payment terminal payment failed");
+                        if (newPaymentLine.useQr && newPaymentLine.qr_code) {
+                            this.state.fadeOut = true;
+                            setTimeout(() => {
+                                this.state.qrCode = newPaymentLine.qr_code;
+                                this.state.fadeOut = false;
+                            }, 300);
+                            return;
+                        }
+
+                        throw new Error("Payment failed");
                     }
                 } catch (err) {
                     this.selfOrder.currentOrder.removePaymentline(newPaymentLine);

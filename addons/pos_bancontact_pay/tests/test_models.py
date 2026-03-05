@@ -132,157 +132,87 @@ class TestModels(TestBancontactPay, CommonPosTest):
     # --------------------------------------
     # Create Bancontact Payment
     # --------------------------------------
-
-    def test_create_bancontact_payment_not_found(self):
+    def test_create_bancontact_payment_wrong_provider(self):
         with (self.assertRaises(ValidationError)):
-            self.payment_method_display.create_bancontact_payment(payment_id=9999)
+            self.bank_payment_method.create_bancontact_payment({})
 
     def test_create_bancontact_payment_success(self):
-        payment = self._init_bancontact_pos_payment()
         generated_bancontact_id = self._generate_bancontact_id()
         generated_qr_code = self._generate_qr_code()
 
         with self.mock_bancontact_call(bancontact_id=generated_bancontact_id, qr_code=generated_qr_code):
-            result = payment.payment_method_id.create_bancontact_payment(payment_id=payment.id)
-
-            self.assertEqual(len(result["pos.payment"]), 1)
-            self.assertEqual(result["pos.payment"][0]["id"], payment.id)
-            self.assertEqual(payment.bancontact_id, generated_bancontact_id)
-            self.assertEqual(payment.qr_code, generated_qr_code)
-
-    def test_create_bancontact_payment_already_exists_not_processing(self):
-        existing_bancontact_id = "__bancontact_existing_id__"
-        existing_qr_code = "__bancontact_existing_qr_code__"
-        payment = self._init_bancontact_pos_payment(
-            bancontact_id=existing_bancontact_id,
-            qr_code=existing_qr_code,
-            payment_status="retry",
-        )
-
-        generated_bancontact_id = self._generate_bancontact_id()
-        generated_qr_code = self._generate_qr_code()
-
-        with self.mock_bancontact_call(bancontact_id=generated_bancontact_id, qr_code=generated_qr_code):
-            result = payment.payment_method_id.create_bancontact_payment(payment_id=payment.id)
-
-            self.assertEqual(len(result["pos.payment"]), 1)
-            self.assertEqual(result["pos.payment"][0]["id"], payment.id)
-            self.assertEqual(payment.bancontact_id, generated_bancontact_id)
-            self.assertEqual(payment.qr_code, generated_qr_code)
-
-    def test_create_bancontact_payment_already_exists_processing(self):
-        existing_bancontact_id = "__bancontact_existing_id__"
-        existing_qr_code = "__bancontact_existing_qr_code__"
-        payment = self._init_bancontact_pos_payment(
-            bancontact_id=existing_bancontact_id,
-            qr_code=existing_qr_code,
-            payment_status="waitingScan",
-        )
-
-        generated_bancontact_id = self._generate_bancontact_id()
-        generated_qr_code = self._generate_qr_code()
-
-        with self.mock_bancontact_call(bancontact_id=generated_bancontact_id, qr_code=generated_qr_code):
-            result = payment.payment_method_id.create_bancontact_payment(payment_id=payment.id)
-
-            self.assertEqual(len(result["pos.payment"]), 1)
-            self.assertEqual(result["pos.payment"][0]["id"], payment.id)
-            self.assertEqual(payment.bancontact_id, existing_bancontact_id)
-            self.assertEqual(payment.qr_code, existing_qr_code)
+            result = self.payment_method_display.create_bancontact_payment({})
+            self.assertEqual(result, {"bancontact_id": generated_bancontact_id, "qr_code": generated_qr_code})
 
     def test_create_bancontact_payment_api_error(self):
         codes = [(400, MissingError), (401, AccessDenied), (403, AccessDenied),
                  (404, UserError), (422, ValidationError), (429, AccessDenied),
                  (500, AccessError), (503, AccessError)]
 
-        payment = self._init_bancontact_pos_payment()
         for status_code, expected_exception in codes:
             with self.mock_bancontact_call(post_status_code=status_code), self.assertRaises(expected_exception):
-                payment.payment_method_id.create_bancontact_payment(payment_id=payment.id)
+                self.payment_method_display.create_bancontact_payment({})
 
     # --------------------------------------
     # Cancel Bancontact Payment
     # --------------------------------------
-
-    def test_cancel_bancontact_payment_not_found(self):
+    def test_cancel_bancontact_payment_wrong_provider(self):
         with (self.assertRaises(ValidationError)):
-            self.payment_method_display.cancel_bancontact_payment(payment_id=9999)
+            self.bank_payment_method.cancel_bancontact_payment("bancontact_id")
 
     def test_cancel_bancontact_payment_success(self):
-        bancontact_id = self._generate_bancontact_id()
-        qr_code = self._generate_qr_code()
-        payment = self._init_bancontact_pos_payment(bancontact_id=bancontact_id, qr_code=qr_code, payment_status="waitingScan")
         with self.mock_bancontact_call():
-            result = payment.payment_method_id.cancel_bancontact_payment(payment_id=payment.id)
-
-            self.assertEqual(len(result["pos.payment"]), 1)
-            self.assertEqual(result["pos.payment"][0]["id"], payment.id)
-            self.assertFalse(payment.bancontact_id)
-            self.assertFalse(payment.qr_code)
-
-    def test_cancel_bancontact_payment_no_bancontact_id(self):
-        payment = self._init_bancontact_pos_payment(payment_status="waitingScan", qr_code="some_qr_code")
-        with self.mock_bancontact_call():
-            result = payment.payment_method_id.cancel_bancontact_payment(payment_id=payment.id)
-
-            self.assertEqual(len(result["pos.payment"]), 1)
-            self.assertEqual(result["pos.payment"][0]["id"], payment.id)
-            self.assertFalse(payment.bancontact_id)
-            self.assertEqual(payment.qr_code, "some_qr_code")
+            self.payment_method_display.cancel_bancontact_payment("bancontact_id")
 
     def test_cancel_bancontact_payment_api_error(self):
         codes = [(400, MissingError), (401, AccessDenied), (403, AccessDenied),
                  (404, UserError), (422, ValidationError), (429, AccessDenied),
                  (500, AccessError), (503, AccessError)]
 
-        bancontact_id = self._generate_bancontact_id()
-        qr_code = self._generate_qr_code()
-        payment = self._init_bancontact_pos_payment(bancontact_id=bancontact_id, qr_code=qr_code, payment_status="waitingScan")
-
         for status_code, expected_exception in codes:
             with self.mock_bancontact_call(delete_status_code=status_code), self.assertRaises(expected_exception):
-                payment.payment_method_id.cancel_bancontact_payment(payment_id=payment.id)
+                self.payment_method_display.cancel_bancontact_payment("bancontact_id")
 
     # --------------------------------------
     # Prepare Bancontact Payment Request
     # --------------------------------------
     def test_prepare_display_payment_request(self):
-        actual = self.payment_method_display._prepare_display_payment_request(
-            amount=10.00,
-            currency="EUR",
-            description="sample description",
-        )
+        actual = self.payment_method_display._prepare_display_payment_request({
+            "configId": 1,
+            "amount": 10.00,
+            "currency": "EUR",
+            "description": "sample description",
+        })
         expected = [
             f"{const.API_URLS['preprod']['merchant']}/v3/payments",
             {
                 "amount": 1000,
                 "currency": "EUR",
                 "description": "sample description",
-                "identifyCallbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?mode=test",
-                "callbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?mode=test",
+                "identifyCallbackUrl": f"{self.payment_method_display.get_base_url()}/bancontact_pay/webhook?config_id=1&ppid={self.payment_method_display.bancontact_ppid}&mode=test",
+                "callbackUrl": f"{self.payment_method_display.get_base_url()}/bancontact_pay/webhook?config_id=1&ppid={self.payment_method_display.bancontact_ppid}&mode=test",
             },
         ]
         self.assertEqual(actual, expected)
 
     def test_prepare_sticker_payment_request(self):
-        actual = self.payment_method_sticker_1._prepare_sticker_payment_request(
-            amount=10.00,
-            currency="EUR",
-            description="sample description",
-            paymentMethodId=1,
-            posId=2,
-            shopName="Shop Name",
-        )
+        actual = self.payment_method_sticker_1._prepare_sticker_payment_request({
+            "configId": 1,
+            "amount": 10.00,
+            "currency": "EUR",
+            "description": "sample description",
+            "shopName": "Shop Name",
+        })
         expected = [
             f"{const.API_URLS['preprod']['merchant']}/v3/payments/pos",
             {
                 "amount": 1000,
                 "currency": "EUR",
                 "description": "sample description",
-                "identifyCallbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?mode=test",
-                "callbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?mode=test",
-                "posId": "pm1",
-                "shopId": "pos2",
+                "identifyCallbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?config_id=1&ppid={self.payment_method_sticker_1.bancontact_ppid}&mode=test",
+                "callbackUrl": f"{self.payment_method_sticker_1.get_base_url()}/bancontact_pay/webhook?config_id=1&ppid={self.payment_method_sticker_1.bancontact_ppid}&mode=test",
+                "posId": f"pm{self.payment_method_sticker_1.id}",
+                "shopId": "pos1",
                 "shopName": "Shop Name",
             },
         ]
@@ -323,22 +253,3 @@ class TestModels(TestBancontactPay, CommonPosTest):
 
     def _generate_qr_code(self):
         return "https://example.com/bancontact_qrcode/" + str(uuid.uuid4())
-
-    def _init_bancontact_pos_payment(self, **kwargs):
-        order, _ = self.create_backend_pos_order(
-            {
-                "pos_config": self.main_pos_config,
-                "line_data": [
-                    {"product_id": self.ten_dollars_no_tax.product_variant_id.id},
-                ],
-            },
-        )
-        return self.env["pos.payment"].create(
-            {
-                "amount": 100,
-                "payment_status": "pending",
-                "payment_method_id": self.payment_method_display.id,
-                "pos_order_id": order.id,
-                **kwargs,
-            },
-        )

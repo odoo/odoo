@@ -90,7 +90,8 @@ class PosOrder(models.Model):
             'data': {
                 'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
                 'pos.order.line': self.lines.read(self.lines._load_pos_self_data_fields(self.config_id), load=False),
-            }
+                'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
+            },
         })
         if payment_result == 'Success':
             self._send_self_order_receipt()
@@ -117,7 +118,7 @@ class PosOrder(models.Model):
             product = pos_config.env['product.product'].browse(line_data.get('product_id'))
             tax_ids = fiscal_position_id.map_tax(product.taxes_id)
 
-            return [Command.CREATE, 0, {
+            return [line[0], 0 if line[0] == Command.CREATE else line[1], {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
@@ -131,11 +132,45 @@ class PosOrder(models.Model):
                 'full_product_name': line_data.get('full_product_name'),
                 'customer_note': line_data.get('customer_note'),
                 'uuid': line_data.get('uuid'),
-                'id': line_data.get('id'),
                 'order_id': existing_order.id if existing_order.exists() else None,
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
                 'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
+            }]
+        return []
+
+    @api.model
+    def _check_pos_order_payments(self, pos_config, order, payment):
+        existing_order = pos_config.env['pos.order'].browse(order.get('id'))
+        existing_payments = existing_order.payment_ids if existing_order.exists() else pos_config.env['pos.payment']
+
+        if payment[0] == Command.DELETE and payment[1] in existing_payments.ids:
+            return [Command.DELETE, payment[1]]
+        if payment[0] == Command.UNLINK and payment[1] in existing_payments.ids:
+            return [Command.UNLINK, payment[1]]
+        if payment[0] == Command.CREATE or payment[0] == Command.UPDATE:
+            payment_data = payment[2]
+
+            return [payment[0], 0 if payment[0] == Command.CREATE else payment[1], {
+                'amount': payment_data.get('amount'),
+                'card_brand': payment_data.get('card_brand'),
+                'card_no': payment_data.get('card_no'),
+                'card_type': payment_data.get('card_type'),
+                'cardholder_name': payment_data.get('cardholder_name'),
+                'is_change': payment_data.get('is_change'),
+                'name': payment_data.get('name'),
+                'payment_date': payment_data.get('payment_date'),
+                'payment_method_authcode': payment_data.get('payment_method_authcode'),
+                'payment_method_id': payment_data.get('payment_method_id'),
+                'payment_method_issuer_bank': payment_data.get('payment_method_issuer_bank'),
+                'payment_method_payment_mode': payment_data.get('payment_method_payment_mode'),
+                'payment_ref_no': payment_data.get('payment_ref_no'),
+                'payment_status': payment_data.get('payment_status'),
+                'pos_order_id': existing_order.id if existing_order.exists() else None,
+                'qr_code': payment_data.get('qr_code'),
+                'ticket': payment_data.get('ticket'),
+                'transaction_id': payment_data.get('transaction_id'),
+                'uuid': payment_data.get('uuid'),
             }]
         return []
 
@@ -154,6 +189,7 @@ class PosOrder(models.Model):
         fiscal_position_id = preset_id.fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
         pricelist_id = preset_id.pricelist_id if preset_id else pos_config.pricelist_id
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
+        payments = [self._check_pos_order_payments(pos_config, order, payment) for payment in order.get('payment_ids', [])]
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
 
@@ -201,6 +237,7 @@ class PosOrder(models.Model):
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
+            'payment_ids': payments,
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 

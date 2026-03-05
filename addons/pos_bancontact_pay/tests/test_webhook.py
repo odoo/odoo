@@ -11,148 +11,71 @@ from odoo.addons.pos_bancontact_pay.errors.exceptions import BancontactSignature
 
 @tagged("post_install", "-at_install")
 class TestWebhook(CommonPosTest, TestPointOfSaleHttpCommon):
-
-    def setUp(self):
-        super().setUp()
-        self.test_ppid = "test_bancontact_ppid"
-        self.web_hook_payload_base = {"transferAmount": 100, "amount": 100, "currency": "EUR"}
-
-        self.bancontact_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Bancontact Pay',
-            'bancontact_ppid': self.test_ppid,
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'receivable_account_id': self.company_data['default_account_receivable'].id,
-        })
-
-        self.pos_config_usd.write({
-            'payment_method_ids': [(4, self.bancontact_payment_method.id, 0)],
-        })
-
     # ----- Payment Status ----- #
-    def test_bancontact_webhook_payment_status_done(self):
-        pos_payment, payload = self._make_payment_and_payload("succeeded_id", "waitingScan", "succeeded_qr_code")
+    def test_bancontact_webhook(self):
+        payload = self._make_payload("any_id", "any_status")
 
-        with self._notify_patcher(pos_payment) as mock_notify:
-            self._post_status(payload, "SUCCEEDED")
-            self.assertEqual(pos_payment.payment_status, "done")
-            self.assertFalse(pos_payment.qr_code)
-            self.assertEqual(pos_payment.bancontact_id, "succeeded_id")
-            self._assert_notify_called_once(mock_notify, pos_payment, "SUCCEEDED")
+        response = self._post_bancontact_webhook("string_config_id", payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.text, "Invalid or missing config_id parameter")
 
-    def test_bancontact_webhook_payment_status_done_ignore(self):
-        pos_payment, payload = self._make_payment_and_payload("not_updated", "done", "not_updated_qr_code")
+        response = self._post_bancontact_webhook(999, payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.text, "Invalid POS configuration ID")
 
-        with self._notify_patcher(pos_payment) as mock_notify:
-            for status in ("SUCCEEDED", "CANCELLED"):
-                self._post_status(payload, status)
-                self.assertEqual(pos_payment.payment_status, "done")
-                self.assertEqual(pos_payment.qr_code, "not_updated_qr_code")
-                self.assertEqual(pos_payment.bancontact_id, "not_updated")
-
-            mock_notify.assert_not_called()
-
-    def test_bancontact_webhook_payment_status_error(self):
-        for bancontact_status in ("AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"):
-            pos_payment, payload = self._make_payment_and_payload("error_id", "waitingScan", "error_qr_code")
-
-            with self._notify_patcher(pos_payment) as mock_notify:
-                self._post_status(payload, bancontact_status)
-                self.assertEqual(pos_payment.payment_status, "retry")
-                self.assertFalse(pos_payment.qr_code)
-                self.assertFalse(pos_payment.bancontact_id)
-                self._assert_notify_called_once(mock_notify, pos_payment, bancontact_status)
-
-    def test_bancontact_webhook_payment_status_error_ignore(self):
-        pos_payment, payload = self._make_payment_and_payload("not_updated", "retry", "not_updated_qr_code")
-
-        with self._notify_patcher(pos_payment) as mock_notify:
-            for status in ("AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"):
-                self._post_status(payload, status)
-                self.assertEqual(pos_payment.payment_status, "retry")
-                self.assertEqual(pos_payment.qr_code, "not_updated_qr_code")
-                self.assertEqual(pos_payment.bancontact_id, "not_updated")
-
-            mock_notify.assert_not_called()
-
-    # ----- Errors ----- #
-    def test_bancontact_webhook_payment_not_found(self):
-        response = self._post_bancontact_webhook({"paymentId": "not_found_id"})
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.text, "Payment not found.")
-
-    def test_bancontact_webhook_invalid_signature(self):
         with self.mock_bancontact_signature_validation_error(verify_signature=True):
-            response = self._post_bancontact_webhook({"paymentId": "any_id"})
+            response = self._post_bancontact_webhook(self.main_pos_config.id, payload)
             self.assertEqual(response.status_code, 403)
             self.assertEqual(response.text, "MOCK: Invalid signature")
 
-    def test_bancontact_webhook_subject_mismatch(self):
-        _pos_payment, payload = self._make_payment_and_payload("subject_mismatch_id", "waitingScan", "subject_mismatch_qr_code")
+        with self._notify_patcher() as mock_notify:
+            response = self._post_bancontact_webhook(self.main_pos_config.id, payload)
+            self.assertEqual(response.status_code, 204)
+            self._assert_notify_count(mock_notify, "BANCONTACT_PAY_PAYMENTS_NOTIFICATION", 0)
 
-        with self.mock_bancontact_signature_validation_error(verify_subject=True):
-            response = self._post_bancontact_webhook(payload)
-            self.assertEqual(response.status_code, 403)
-            self.assertEqual(response.text, "MOCK: Subject mismatch")
+        for bancontact_status in ("SUCCEEDED", "AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"):
+            payload["status"] = bancontact_status
+            with self._notify_patcher() as mock_notify:
+                response = self._post_bancontact_webhook(self.main_pos_config.id, payload)
+                self.assertEqual(response.status_code, 200)
+                self._assert_notify_count(mock_notify, "BANCONTACT_PAY_PAYMENTS_NOTIFICATION", 1)
+                self._assert_notify_bancontact_pay_payments_notification(mock_notify, "any_id", bancontact_status)
 
     # ----- Helpers ----- #
-    def _make_payment_and_payload(self, bancontact_id, payment_status, qr_code):
-        pos_payment = self._init_bancontact_pos_payment(bancontact_id, payment_status, qr_code)
-        payload = dict(self.web_hook_payload_base, paymentId=bancontact_id)
-        return pos_payment, payload
+    def _make_payload(self, bancontact_id, payment_status):
+        return {"transferAmount": 100, "amount": 100, "currency": "EUR", "paymentId": bancontact_id, "status": payment_status}
 
-    def _notify_patcher(self, pos_payment):
-        return patch.object(pos_payment.pos_order_id.config_id.__class__, "_notify")
+    def _notify_patcher(self):
+        return patch.object(self.env["pos.config"].__class__, "_notify")
 
-    def _assert_notify_called_once(self, mock_notify, pos_payment, bancontact_status):
-        mock_notify.assert_called_once_with(
-            "BANCONTACT_PAY_PAYMENTS_NOTIFICATION",
-            {
-                "order_id": pos_payment.pos_order_id.id,
-                "payment_id": pos_payment.id,
-                "bancontact_status": bancontact_status,
-            },
-        )
+    def _assert_notify_count(self, mock_notify, name, expected_count):
+        calls = [call for call in mock_notify.mock_calls if call.args and call.args[0] == name]
+        self.assertEqual(len(calls), expected_count, f"Expected {expected_count} calls to _notify with name '{name}', but got {len(calls)} calls.")
 
-    def _init_bancontact_pos_payment(self, bancontact_id, payment_status, qr_code):
-        order, _ = self.create_backend_pos_order(
-            {
-                "line_data": [
-                    {"product_id": self.ten_dollars_no_tax.product_variant_id.id},
-                ],
-            },
-        )
-        return self.env["pos.payment"].create(
-            {
-                "amount": 100,
-                "payment_status": payment_status,
-                "bancontact_id": bancontact_id,
-                "payment_method_id": self.bancontact_payment_method.id,
-                "pos_order_id": order.id,
-                "qr_code": qr_code,
-            },
-        )
+    def _assert_notify_with(self, mock_notify, name, expected_payload):
+        args_list = [call.args for call in mock_notify.mock_calls]
+        actual = [args == (name, expected_payload) for args in args_list]
+        self.assertTrue(any(actual), f"Notification not found\nExpected: {(name, expected_payload)}\nActual: {args_list}")
 
-    def _post_bancontact_webhook(self, payload):
+    def _assert_notify_bancontact_pay_payments_notification(self, mock_notify, bancontact_id, bancontact_status):
+        expected_payload = {
+            "bancontact_id": bancontact_id,
+            "bancontact_status": bancontact_status,
+        }
+        self._assert_notify_with(mock_notify, "BANCONTACT_PAY_PAYMENTS_NOTIFICATION", expected_payload)
+
+    def _post_bancontact_webhook(self, config_id, payload):
         return self.url_open(
-            "/bancontact_pay/webhook?mode=test",
+            f"/bancontact_pay/webhook?config_id={config_id}&mode=test",
             data=json.dumps(payload),
             headers={"content-type": "application/json"},
             method="POST",
         )
 
-    def _post_status(self, payload, status):
-        payload["status"] = status
-        response = self._post_bancontact_webhook(payload)
-        self.assertEqual(response.status_code, 200)
-        return response
-
     # ----- Context Manager ----- #
     @contextmanager
-    def mock_bancontact_signature_validation_error(self, verify_signature=None, verify_subject=None):
-        with patch("odoo.addons.pos_bancontact_pay.controllers.signature.BancontactSignatureValidation.verify_signature") as verify_signature_mock, \
-             patch("odoo.addons.pos_bancontact_pay.controllers.signature.BancontactSignatureValidation.verify_subject") as verify_subject_mock:
+    def mock_bancontact_signature_validation_error(self, verify_signature=None):
+        with patch("odoo.addons.pos_bancontact_pay.controllers.signature.BancontactSignatureValidation.verify_signature") as verify_signature_mock:
             if verify_signature:
                 verify_signature_mock.side_effect = BancontactSignatureValidationError("MOCK: Invalid signature")
-            if verify_subject:
-                verify_subject_mock.side_effect = BancontactSignatureValidationError("MOCK: Subject mismatch")
             yield

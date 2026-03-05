@@ -17,6 +17,8 @@ class TestModels(TestBancontactPay):
             },
         )
         with self.assertRaises(ValidationError):
-            kiosk_config.payment_method_ids = [Command.link(self.payment_method_display.id)]
+            kiosk_config.payment_method_ids = [Command.link(self.payment_method_sticker_1.id)]
+        kiosk_config.payment_method_ids = [Command.link(self.payment_method_display.id)]
         with self.assertRaises(ValidationError):
-            self.payment_method_display.config_ids = [Command.link(kiosk_config.id)]
+            self.payment_method_sticker_1.config_ids = [Command.link(kiosk_config.id)]
+        self.payment_method_display.config_ids = [Command.link(kiosk_config.id)]

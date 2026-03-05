@@ -57,9 +57,7 @@ describe("handleBancontactPayNotification", () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
-
-        const data = { payment_status: "waitingScan" };
-        const paymentline = createPaymentLine(store, order, display, data);
+        const paymentline = createPaymentLine(store, order, display);
 
         // Prepare asserts
         order.floating_order_name = "test_order_1";
@@ -76,6 +74,9 @@ describe("handleBancontactPayNotification", () => {
         });
 
         const reset = (orderSelected, paymentlineSelected, id) => {
+            paymentline.payment_status = "waitingScan";
+            paymentline.qr_code = "bancontact_qr_code";
+            paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
             paymentline.uiState.qrCode = "test_qr_code";
             store.setOrder(orderSelected);
@@ -94,24 +95,30 @@ describe("handleBancontactPayNotification", () => {
         // Current order + current qr code displayed + current payment line
         reset(order, paymentline, 1);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(null);
         expect(store.qrCode).toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.qrCode.closer.1", "store.autoValidateOrder.1"]);
 
         // Current order + current qr code displayed + different payment line
-        const paymentline2 = createPaymentLine(store, order, display, data);
+        const paymentline2 = createPaymentLine(store, order, display);
         reset(order, paymentline2, 2);
         store.qrCode.paymentline = paymentline;
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment received");
         expect(store.qrCode).toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -121,10 +128,13 @@ describe("handleBancontactPayNotification", () => {
         reset(order, paymentline, 3);
         store.qrCode.paymentline = paymentline2;
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(null);
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -133,10 +143,13 @@ describe("handleBancontactPayNotification", () => {
         // Current order + different qr code displayed + different payment line
         reset(order, paymentline2, 4);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment received");
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -145,13 +158,16 @@ describe("handleBancontactPayNotification", () => {
         // Other order selected - Fully paid
         order.toBeValidate = () => true;
         const order2 = await getFilledOrder(store);
-        const paymentline3 = createPaymentLine(store, order2, display, data);
+        const paymentline3 = createPaymentLine(store, order2, display);
         reset(order2, paymentline3, 5);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toInclude(`The order test_order_1 has been fully paid.`);
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -161,10 +177,13 @@ describe("handleBancontactPayNotification", () => {
         order.toBeValidate = () => false;
         reset(order2, paymentline3, 6);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
 
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toInclude(`The order test_order_1 has been partially paid.`);
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -175,9 +194,7 @@ describe("handleBancontactPayNotification", () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
-
-        const data = { payment_status: "waitingScan" };
-        const paymentline = createPaymentLine(store, order, display, data);
+        const paymentline = createPaymentLine(store, order, display);
 
         // Prepare asserts
         order.floating_order_name = "test_order_1";
@@ -194,6 +211,9 @@ describe("handleBancontactPayNotification", () => {
         });
 
         const reset = (orderSelected, paymentlineSelected, id) => {
+            paymentline.payment_status = "waitingScan";
+            paymentline.qr_code = "bancontact_qr_code";
+            paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
             paymentline.uiState.qrCode = "test_qr_code";
             store.setOrder(orderSelected);
@@ -208,23 +228,29 @@ describe("handleBancontactPayNotification", () => {
         // Current order and current payment line
         reset(order, paymentline, 1);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "FAILED",
         });
 
+        expect(paymentline.payment_status).toBe("retry");
+        expect(paymentline.bancontact_id).toBe(null);
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment failed");
         expect(store.qrCode).toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps(["store.qrCode.closer.1"]);
 
         // Current order but different payment line selected
-        const paymentline2 = createPaymentLine(store, order, display, data);
+        const paymentline2 = createPaymentLine(store, order, display);
         reset(order, paymentline2, 2);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "FAILED",
         });
 
+        expect(paymentline.payment_status).toBe("retry");
+        expect(paymentline.bancontact_id).toBe(null);
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe("Payment failed");
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
@@ -232,16 +258,78 @@ describe("handleBancontactPayNotification", () => {
 
         // Other order selected
         const order2 = await getFilledOrder(store);
-        const paymentline3 = createPaymentLine(store, order2, display, data);
+        const paymentline3 = createPaymentLine(store, order2, display);
         reset(order2, paymentline3, 3);
         await store.handleBancontactPayNotification({
-            payment_id: paymentline.id,
+            bancontact_id: "bancontact_id",
             bancontact_status: "FAILED",
         });
 
+        expect(paymentline.payment_status).toBe("retry");
+        expect(paymentline.bancontact_id).toBe(null);
+        expect(paymentline.qr_code).toBe(null);
         expect(notificationMessage).toBe(`A payment for order test_order_1 has failed.`);
         expect(store.qrCode).not.toBe(null);
         expect(paymentline.uiState.qrCode).toBe(null);
         expect.verifySteps([]);
+
+        // Already retry
+        reset(order, paymentline, 4);
+        paymentline.payment_status = "retry";
+        await store.handleBancontactPayNotification({
+            bancontact_id: "bancontact_id",
+            bancontact_status: "FAILED",
+        });
+
+        expect(paymentline.payment_status).toBe("retry");
+        expect(paymentline.bancontact_id).toBe("bancontact_id");
+        expect(paymentline.qr_code).toBe("bancontact_qr_code");
+        expect(notificationMessage).toBe(null);
+        expect(store.qrCode).not.toBe(null);
+        expect(paymentline.uiState.qrCode).toBe("test_qr_code");
+        expect.verifySteps([]);
+    });
+
+    test("skip", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+        const paymentline = createPaymentLine(store, order, display);
+        paymentline.setPaymentStatus = () => {
+            expect.step("paymentline.setPaymentStatus");
+        };
+
+        // not found
+        await store.handleBancontactPayNotification({
+            bancontact_id: "not_found_bancontact_id",
+            bancontact_status: "SUCCEEDED",
+        });
+        expect.verifySteps([]);
+
+        // already done
+        paymentline.bancontact_id = "bancontact_id";
+        paymentline.payment_status = "done";
+        await store.handleBancontactPayNotification({
+            bancontact_id: "bancontact_id",
+            bancontact_status: "SUCCEEDED",
+        });
+        expect.verifySteps([]);
+
+        // order finalized
+        paymentline.payment_status = "waitingScan";
+        order.state = "done";
+        await store.handleBancontactPayNotification({
+            bancontact_id: "bancontact_id",
+            bancontact_status: "SUCCEEDED",
+        });
+        expect.verifySteps([]);
+
+        // success
+        order.state = "draft";
+        await store.handleBancontactPayNotification({
+            bancontact_id: "bancontact_id",
+            bancontact_status: "SUCCEEDED",
+        });
+        expect.verifySteps(["paymentline.setPaymentStatus"]);
     });
 });

@@ -12,20 +12,26 @@ patch(PosStore.prototype, {
         );
     },
 
-    async handleBancontactPayNotification({ payment_id, bancontact_status }) {
-        const paymentLine = this.models["pos.payment"].get(payment_id);
-        if (!paymentLine) {
+    async handleBancontactPayNotification({ bancontact_id, bancontact_status }) {
+        const paymentline = this.models["pos.payment"].find(
+            (line) => line.bancontact_id === bancontact_id
+        );
+        if (!paymentline || paymentline.payment_status === "done") {
             return;
         }
-        // refresh payment line to get the latest data
-        await this.data.read("pos.payment", [paymentLine.id]);
 
-        const order = paymentLine.pos_order_id;
+        const order = paymentline.pos_order_id;
+        if (!order || order.finalized) {
+            return;
+        }
+
         const currentOrder = this.getOrder();
 
         // --- SUCCEEDED ---
         if (bancontact_status === "SUCCEEDED") {
-            paymentLine.updateCustomerDisplayQrCode(null);
+            paymentline.updateCustomerDisplayQrCode(null);
+            paymentline.setPaymentStatus("done");
+            paymentline.qr_code = null;
 
             // Other order selected
             if (order !== currentOrder) {
@@ -37,27 +43,33 @@ patch(PosStore.prototype, {
             }
 
             // Close QR code if currently displayed
-            if (paymentLine.uuid === this.qrCode?.paymentline.uuid) {
+            if (paymentline.uuid === this.qrCode?.paymentline.uuid) {
                 this.closeQrCode();
             }
 
             // Notify only if another payment line is selected
-            if (paymentLine.uuid !== currentOrder.getSelectedPaymentline()?.uuid) {
+            if (paymentline.uuid !== currentOrder.getSelectedPaymentline()?.uuid) {
                 this.notification.add(_t("Payment received"), { type: "success" });
             }
             await this.autoValidateOrder({ order });
+            return;
         }
 
         // --- FAILED ---
-        else if (
+        if (
+            paymentline.payment_status !== "retry" &&
             ["AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"].includes(bancontact_status)
         ) {
-            paymentLine.updateCustomerDisplayQrCode(null);
+            paymentline.updateCustomerDisplayQrCode(null);
+            paymentline.setPaymentStatus("retry");
+            paymentline.bancontact_id = null;
+            paymentline.qr_code = null;
+
             const message = this.getBancontactErrorMessage(bancontact_status, order);
             this.notification.add(message, { type: "warning" });
 
             // Close QR code if currently displayed
-            if (paymentLine.uuid === this.qrCode?.paymentline.uuid) {
+            if (paymentline.uuid === this.qrCode?.paymentline.uuid) {
                 this.closeQrCode();
             }
 

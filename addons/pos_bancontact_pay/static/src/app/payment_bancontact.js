@@ -10,28 +10,31 @@ export class PaymentBancontact extends PaymentInterface {
     }
 
     async sendPaymentRequest(line) {
-        await super.sendPaymentRequest(...arguments);
-
-        await this.pos.syncAllOrders({ orders: [line.pos_order_id] });
-        await this.pos.data.callRelated(
-            "pos.payment.method",
-            "create_bancontact_payment",
-            [line.payment_method_id.id],
-            {
-                payment_id: line.id,
-                amount: line.amount,
-                currency: this.pos.currency.name,
-                posId: this.pos.config.id,
-                shopName: this.pos.config.name,
-                paymentMethodId: line.payment_method_id.id,
-                description: _t(
-                    "Payment at %s\nPOS %s",
-                    this.pos.company.name,
-                    this.pos.config.name
-                ),
-                usage: line.payment_method_id.bancontact_usage,
-            }
-        );
+        if (
+            !line.bancontact_id ||
+            !line.qr_code ||
+            !["waiting", "waitingScan", "waitingCancel"].includes(line.payment_status)
+        ) {
+            const { bancontact_id, qr_code } = await this.callPaymentMethod(
+                "create_bancontact_payment",
+                [
+                    line.payment_method_id.id,
+                    {
+                        amount: line.amount,
+                        currency: this.pos.currency.name,
+                        configId: this.pos.config.id,
+                        shopName: this.pos.config.name,
+                        description: _t(
+                            "Payment at %s\nPOS %s",
+                            this.pos.company.name,
+                            this.pos.config.name
+                        ),
+                    },
+                ]
+            );
+            line.bancontact_id = bancontact_id;
+            line.qr_code = qr_code;
+        }
 
         if (line.payment_method_id.bancontact_usage === "display") {
             this.pos.displayQrCode(line);
@@ -40,8 +43,6 @@ export class PaymentBancontact extends PaymentInterface {
     }
 
     async sendPaymentCancel(line) {
-        await super.sendPaymentCancel(...arguments);
-
         const blockingErrorCodes = [422];
         const askForceCancel = async (errorCode) => {
             let message = _t(
@@ -67,13 +68,12 @@ export class PaymentBancontact extends PaymentInterface {
         };
 
         try {
-            await this.pos.syncAllOrders({ orders: [line.pos_order_id] });
-            await this.pos.data.callRelated(
-                "pos.payment.method",
-                "cancel_bancontact_payment",
-                [line.payment_method_id.id],
-                { payment_id: line.id }
-            );
+            await this.callPaymentMethod("cancel_bancontact_payment", [
+                line.payment_method_id.id,
+                line.bancontact_id,
+            ]);
+            line.bancontact_id = null;
+            line.qr_code = null;
             return true;
         } catch (error) {
             const message = error.data?.message || "";

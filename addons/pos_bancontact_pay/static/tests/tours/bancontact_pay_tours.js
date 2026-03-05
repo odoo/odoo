@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("bancontact_pay_show_qr_code", {
             initOrder(),
 
             // Display waiting
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // bancontact_show_qr_code_0
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
             PaymentScreen.qrPopupIsShown("10.00"),
             PaymentScreen.closeQrPopup(),
@@ -137,7 +137,7 @@ registry.category("web_tour.tours").add("bancontact_pay_show_qr_code", {
             // Display retry
             PaymentScreen.enterPaymentLineAmount("Bancontact - Display", "2"),
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "2.00"),
-            PaymentScreen.clickRetryButton(),
+            PaymentScreen.clickRetryButton(), // **bancontact_show_qr_code_1**
             PaymentScreen.qrPopupIsShown("2.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.showQrPopup({ selected: true }),
@@ -145,7 +145,7 @@ registry.category("web_tour.tours").add("bancontact_pay_show_qr_code", {
             PaymentScreen.closeQrPopup(),
 
             // Sticker waiting
-            PaymentScreen.clickPaymentMethod("Bancontact - Sticker 1"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Sticker 1"), // bancontact_show_qr_code_2
             PaymentScreen.selectedPaymentlineHas("Bancontact - Sticker 1", "10.00"),
             PaymentScreen.qrPopupIsNotShown(),
             PaymentScreen.showQrPopup({ selected: true }),
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("bancontact_pay_show_qr_code", {
             // Sticker retry
             PaymentScreen.enterPaymentLineAmount("Bancontact - Sticker 1", "3"),
             PaymentScreen.selectedPaymentlineHas("Bancontact - Sticker 1", "3.00"),
-            PaymentScreen.clickRetryButton(),
+            PaymentScreen.clickRetryButton(), // **bancontact_show_qr_code_3**
             PaymentScreen.qrPopupIsNotShown(),
             PaymentScreen.showQrPopup({ selected: true }),
             PaymentScreen.qrPopupIsShown("3.00"),
@@ -168,18 +168,18 @@ registry.category("web_tour.tours").add("bancontact_pay_show_qr_code", {
             // Open display sticker without selecting it and pay for the sticker
             PaymentScreen.showQrPopup({ name: "Bancontact - Display" }),
             PaymentScreen.qrPopupIsShown("2.00"),
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_show_qr_code_3", "SUCCEEDED"),
             PaymentScreen.qrPopupIsShown("2.00"),
 
             // Pay now for the display
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED", 2),
+            Bancontact.mockCallbackBancontactPay("bancontact_show_qr_code_1", "SUCCEEDED"),
             PaymentScreen.qrPopupIsNotShown(),
 
             // Payment failed close qr
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_show_qr_code_4**
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "5.00"),
             PaymentScreen.qrPopupIsShown("5.00"),
-            Bancontact.mockCallbackBancontactPay("FAILED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_show_qr_code_4", "FAILED"),
             PaymentScreen.qrPopupIsNotShown(),
         ].flat(),
 });
@@ -192,31 +192,31 @@ registry.category("web_tour.tours").add("bancontact_pay_success_payment", {
             initOrder(),
 
             // Order 1001 - Display 5€ [A]
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // bancontact_success_0
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.clickCancelButton(),
             PaymentScreen.hasActionState("retry"),
             PaymentScreen.enterPaymentLineAmount("Bancontact - Display", "5"),
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "5.00"),
-            PaymentScreen.clickRetryButton(),
+            PaymentScreen.clickRetryButton(), // **bancontact_success_1**
             PaymentScreen.closeQrPopup(),
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Order 1001 - Display 2€ [B]
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // bancontact_success_2
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.clickCancelButton(),
             PaymentScreen.hasActionState("retry"),
             PaymentScreen.enterPaymentLineAmount("Bancontact - Display", "2"),
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "2.00"),
-            PaymentScreen.clickRetryButton(),
+            PaymentScreen.clickRetryButton(), // **bancontact_success_3**
             PaymentScreen.closeQrPopup(),
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Pay payment line A while being on another payment line - notified
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED", 2),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_1", "SUCCEEDED"),
             Bancontact.notifiedPaymentReceived(),
             PaymentScreen.clickPaymentline("Bancontact - Display", "5"),
             PaymentScreen.hasActionState("paid"),
@@ -224,47 +224,47 @@ registry.category("web_tour.tours").add("bancontact_pay_success_payment", {
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Pay payment line B
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED", 1),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_3", "SUCCEEDED"),
             PaymentScreen.hasActionState("paid"),
 
             // Order 1001 - Display 3€ (fully paid) [C]
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_success_4**
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "3.00"),
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Pay payment line C - Autovalidate order
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_4", "SUCCEEDED"),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
 
             // Order 1002 - Display 5€ [D]
             initOrder(),
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // bancontact_success_5
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.clickCancelButton(),
             PaymentScreen.hasActionState("retry"),
             PaymentScreen.enterPaymentLineAmount("Bancontact - Display", "5"),
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "5.00"),
-            PaymentScreen.clickRetryButton(),
+            PaymentScreen.clickRetryButton(), // **bancontact_success_6**
             PaymentScreen.closeQrPopup(),
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Pay payment line D while on another order - notified
             Chrome.createFloatingOrder(),
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_6", "SUCCEEDED"),
             Bancontact.notifiedOrderPartiallyPaid("1002"),
 
             // Order 1002 - Display 5€ (fully paid) [E]
             Chrome.clickFloatingOrder("1002"),
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_success_7**
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "5.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.hasActionState("waiting_scan"),
 
             // Pay payment line E while on another order - notified + NOT autovalidate
             Chrome.clickFloatingOrder("1003"),
-            Bancontact.mockCallbackBancontactPay("SUCCEEDED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_7", "SUCCEEDED"),
             Bancontact.notifiedOrderFullyPaid("1002"),
             Chrome.clickFloatingOrder("1002"),
             PaymentScreen.clickValidate(),
@@ -273,7 +273,7 @@ registry.category("web_tour.tours").add("bancontact_pay_success_payment", {
             // Order 1003 - Force done payment [F] - autovalidate
             FeedbackScreen.clickNextOrder(),
             initOrder(),
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_success_8**
             PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
             PaymentScreen.closeQrPopup(),
             PaymentScreen.hasActionState("waiting_scan"),
@@ -290,38 +290,38 @@ registry.category("web_tour.tours").add("bancontact_pay_failed_payment", {
             initOrder(),
 
             // Simulate a AUTHORIZATION_FAILED payment from Bancontact side
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_failed_0**
             PaymentScreen.hasActionState("waiting_scan"),
-            Bancontact.mockCallbackBancontactPay("AUTHORIZATION_FAILED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_failed_0", "AUTHORIZATION_FAILED"),
             PaymentScreen.hasActionState("retry"),
             Bancontact.notifiedPaymentError("Payment failed"),
 
             // Simulate a FAILED payment from Bancontact side
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_failed_1**
             PaymentScreen.hasActionState("waiting_scan"),
-            Bancontact.mockCallbackBancontactPay("FAILED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_failed_1", "FAILED"),
             PaymentScreen.hasActionState("retry"),
             Bancontact.notifiedPaymentError("Payment failed"),
 
             // Simulate a EXPIRED payment from Bancontact side
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_failed_2**
             PaymentScreen.hasActionState("waiting_scan"),
-            Bancontact.mockCallbackBancontactPay("EXPIRED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_failed_2", "EXPIRED"),
             PaymentScreen.hasActionState("retry"),
             Bancontact.notifiedPaymentError("Payment expired"),
 
             // Simulate a CANCELLED payment from Bancontact side
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_failed_3**
             PaymentScreen.hasActionState("waiting_scan"),
-            Bancontact.mockCallbackBancontactPay("CANCELLED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_failed_3", "CANCELLED"),
             PaymentScreen.hasActionState("retry"),
             Bancontact.notifiedPaymentError("Payment cancelled"),
 
             // Failed while not current order
-            PaymentScreen.clickPaymentMethod("Bancontact - Display"),
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // **bancontact_failed_4**
             PaymentScreen.closeQrPopup(),
             Chrome.createFloatingOrder(),
-            Bancontact.mockCallbackBancontactPay("FAILED"),
+            Bancontact.mockCallbackBancontactPay("bancontact_failed_4", "FAILED"),
             Bancontact.notifiedPaymentError("A payment for order 1001 has failed."),
         ].flat(),
 });
