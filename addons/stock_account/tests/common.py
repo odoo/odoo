@@ -273,33 +273,16 @@ class TestStockValuationCommon(BaseCommon):
 
         return out_move
 
-    def _make_dropship_move(self, product, quantity, unit_cost=None, lot_ids=None):
-        dropshipped = self.env['stock.move'].create({
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.customer_location.id,
-            'uom_id': self.uom.id,
-            'product_uom_qty': quantity,
-            'picking_type_id': self.picking_type_out.id,
-        })
-        if unit_cost:
-            dropshipped.price_unit = unit_cost
-        dropshipped._action_confirm()
-        dropshipped._action_assign()
-        if lot_ids:
-            dropshipped.move_line_ids = [Command.clear()]
-            dropshipped.move_line_ids = [Command.create({
-                'location_id': self.supplier_location.id,
-                'location_dest_id': self.customer_location.id,
-                'quantity': quantity / len(lot_ids),
-                'product_id': product.id,
-                'lot_id': lot.id,
-            }) for lot in lot_ids]
-        else:
-            dropshipped.move_line_ids.quantity = quantity
-        dropshipped.picked = True
-        dropshipped._action_done()
-        return dropshipped
+    def _make_dropship_move(self,
+        product,
+        quantity,
+        unit_cost=None,
+        create_picking=False,
+        company=None,
+        **kwargs,
+    ):
+        kwargs.setdefault('location_dest_id', self.customer_location.id)
+        return self._make_in_move(product, quantity, unit_cost, create_picking, company, **kwargs)
 
     def _make_return(self, move, quantity_to_return):
         return_pick = move.picking_id._create_return()
