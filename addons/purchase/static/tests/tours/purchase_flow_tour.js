@@ -36,6 +36,10 @@ registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_a
             run: "click",
         },
         {
+            content: "Wait for the tax to be set by the onchange",
+            trigger: ".o_field_many2many_tags[name=tax_ids] .o_tag",
+        },
+        {
             trigger: ".o_data_cell[name=price_unit]",
             run: "click",
         },
