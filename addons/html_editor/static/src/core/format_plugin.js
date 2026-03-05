@@ -328,11 +328,13 @@ export class FormatPlugin extends Plugin {
             }
         }
 
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
             this.dependencies.selection
                 .getTargetedNodes()
                 .filter(
                     (n) =>
+                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
                         this.dependencies.selection.areNodeContentsFullySelected(n) &&
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
                             (n.nodeName === "BR" &&
