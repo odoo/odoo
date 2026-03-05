@@ -87,7 +87,7 @@ class PosPaymentMethod(models.Model):
         providers = self.get_payment_providers()
         module_names = [provider["module"] for provider in providers]
         module_states = {m['name']: {'state': m['state'], 'id': m['id']} for m in self.env['ir.module.module'].search_read([('name', 'in', module_names)], ['name', 'state'])}
-        return [{**p, 'state': module_states[p['module']]['state'], 'id': module_states[p['module']]['id']} for p in providers]
+        return [{**p, 'state': module_states[p['module']]['state'], 'id': module_states[p['module']]['id']} for p in providers if p['module'] in module_states]
 
     @api.model
     def get_payment_providers(self):
@@ -105,7 +105,6 @@ class PosPaymentMethod(models.Model):
             {"type": "terminal", "provider": "qfpay", "module": "pos_qfpay", "name": "QFPay"},
             {"type": "terminal", "provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
             {"type": "terminal", "provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
-
             {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
         ]
 
