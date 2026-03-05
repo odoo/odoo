@@ -36,7 +36,7 @@ class LeaveReportCalendar(models.Model):
 
     is_absent = fields.Boolean(related='employee_id.is_absent')
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
-    leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True, groups='hr_holidays.group_hr_holidays_user')
+    leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True)
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
 
     def init(self):

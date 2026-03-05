@@ -262,6 +262,30 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
+    <record id="hr_leave_report_calendar_rule_responsible_read" model="ir.rule">
+        <field name="name">Time Off Report Calendar: Responsible Read</field>
+        <field name="model_id" ref="model_hr_leave_report_calendar"/>
+        <field name="domain_force">[
+            '|',
+                ('employee_id.user_id', '=', user.id),
+                ('leave_manager_id', '=', user.id)
+        ]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+    </record>
+
+    <record id="hr_leave_report_calendar_rule_officer_read" model="ir.rule">
+        <field name="name">Time Off Report Calendar: Officer read all</field>
+        <field name="model_id" ref="model_hr_leave_report_calendar"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+
     <record id="hr_leave_report_rule_multi_company" model="ir.rule">
         <field name="name">Time Off Report: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave_report"/>
