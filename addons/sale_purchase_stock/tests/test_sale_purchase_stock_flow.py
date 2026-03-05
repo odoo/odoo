@@ -536,3 +536,26 @@ class TestSalePurchaseStockFlow(TransactionCase):
             {'sale_line_id': so1.order_line.id, 'value': 10.0},
             {'sale_line_id': so2.order_line.id, 'value': 20.0},
         ])
+
+    def test_mto_sale_order_propagates_analytic_distribution_to_purchase_line(self):
+        """Ensure that the analytic distribution defined on a Sale Order line
+        with an MTO + Buy product is propagated to the generated Purchase Order line.
+        """
+        default_plan = self.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Test Analytic Account',
+            'plan_id': default_plan.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 1,
+                'analytic_distribution': {str(analytic_account.id): 100},
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()
+        self.assertEqual(purchase_order.order_line.analytic_distribution, {str(analytic_account.id): 100})

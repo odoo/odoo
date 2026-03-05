@@ -136,6 +136,8 @@ class StockMove(models.Model):
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.analytic_distribution:
+                res['analytic_distribution'] = self.sale_line_id.analytic_distribution
         return res
 
     def _reassign_sale_lines(self, sale_order):
