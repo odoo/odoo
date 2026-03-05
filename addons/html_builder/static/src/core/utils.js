@@ -18,6 +18,7 @@ import {
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
+import { BuilderAction } from "./builder_action";
 
 /**
  * @typedef { import("../../../../html_editor/static/src/editor").EditorContext } EditorContext
@@ -628,7 +629,7 @@ export function useClickableBuilderComponent() {
                 );
             }
         }
-        await Promise.all(cleanOrApplyProms);
+        return await Promise.all(cleanOrApplyProms);
     }
     function getPriority() {
         return (
@@ -658,12 +659,14 @@ function useOperationWithReload(callApply, reload) {
     return async (...args) => {
         const { editingElement } = args[0][0];
         env.services.ui.block();
-        await callApply(...args);
-        env.editor.shared.history.addStep();
-        await env.editor.shared.savePlugin.save();
-        const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
-        const url = reload.getReloadUrl?.();
-        await env.editor.config.reloadEditor({ target, url });
+        const applyResults = await callApply(...args);
+        if (!applyResults.includes(BuilderAction.cancelReload)) {
+            env.editor.shared.history.addStep();
+            await env.editor.shared.savePlugin.save();
+            const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
+            const url = reload.getReloadUrl?.();
+            await env.editor.config.reloadEditor({ target, url });
+        }
         env.services.ui.unblock();
     };
 }
@@ -714,7 +717,7 @@ export function useInputBuilderComponent({
                 })
             );
         }
-        await Promise.all(proms);
+        return await Promise.all(proms);
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(callApply);
