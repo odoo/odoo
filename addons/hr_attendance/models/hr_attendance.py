@@ -19,6 +19,7 @@ from odoo.http import request
 from odoo.tools import convert, format_duration, format_time, format_datetime
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
+from odoo.tools.float_utils import float_compare
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -270,8 +271,8 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = [Domain.AND([
             Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(SU)),
-            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(MO(-1))),
+            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(weekday=SU)),
+            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(weekday=MO(-1))),
         ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
         if not domain_list:
             return Domain.FALSE
@@ -309,9 +310,14 @@ class HrAttendance(models.Model):
                 ruleset_sudo.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             )
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
-        self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
+        to_recompute = self.search([('employee_id', 'in', employees.ids)])
+
+        # for automatically validated attendances, avoid recomputing extra hours if user has changed its value
+        validated_modified = to_recompute.filtered(lambda att: att.employee_id.company_id.attendance_overtime_validation == 'no_validation'
+                                                               and float_compare(att.overtime_hours, att.validated_overtime_hours, precision_digits=2))
+        self.env.add_to_compute(self._fields['overtime_hours'], to_recompute)
+        self.env.add_to_compute(self._fields['validated_overtime_hours'], to_recompute - validated_modified)
+        self.env.add_to_compute(self._fields['expected_hours'], to_recompute)
 
     @api.model_create_multi
     def create(self, vals_list):

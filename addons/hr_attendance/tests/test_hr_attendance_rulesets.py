@@ -111,6 +111,11 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     def test_weekly_overtime(self):
         """ Test weekly overtime for the 40-hour rule """
+        weekly_ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'weekly Ruleset',
+            'rule_ids': [self.ruleset.rule_ids[2].id]
+        })
+        self.employee.write({'ruleset_id': weekly_ruleset.id})
         with freeze_time("2021-01-04"):
             # Week: Mon-Fri, 10 hours/day = 50 hours total (40 expected + 10 overtime at 200%)
             [

@@ -1280,3 +1280,19 @@ class TestHrAttendanceOvertime(HttpCase):
         ruleset_1.action_regenerate_overtimes()
         self.assertEqual(attendance_1.overtime_hours, 1)
         self.assertEqual(attendance_2.overtime_hours, 0.5)
+
+    def test_regenerate_overtime_with_different_work_schedule_tz(self):
+        """Checks that overtime lines get unlinked correctly when regenerating overtimes with a timezone that would
+        set the overtime (pacific) to the day after the checkin/checkout (UTC) date"""
+        self.ruleset.rule_ids.write({'expected_hours': 8.0})
+        self.employee.resource_calendar_id.write({'tz': 'Pacific/Fiji'})
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2020, 3, 2, 3, 0),
+            'check_out': datetime(2020, 3, 2, 15, 0)
+        })
+        overtime_lines_before_regeneration = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
+        self.ruleset.action_regenerate_overtimes()
+        overtime_lines_after_regeneration = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
+        self.assertEqual(len(overtime_lines_after_regeneration), 2)
+        self.assertNotEqual(overtime_lines_before_regeneration[-1], overtime_lines_after_regeneration[0])
