@@ -47,7 +47,8 @@ class AccountMove(models.Model):
         if self.move_type == 'out_invoice':
             # filter out the invoices that have been fully refund and re-invoice otherwise, the quantities would be
             # consumed by the reversed invoice and won't be print on the new draft invoice
-            previous_amls = previous_amls.filtered(lambda aml: aml.move_id.payment_state != 'reversed')
+            reversed_entry_ids = previous_amls.mapped('move_id.reversed_entry_id')
+            previous_amls = previous_amls.filtered(lambda aml: aml.move_id.payment_state != 'reversed' or aml.move_id in reversed_entry_ids)
 
         previous_qties_invoiced = previous_amls._get_invoiced_qty_per_product()
 

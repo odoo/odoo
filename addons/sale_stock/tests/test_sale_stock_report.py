@@ -567,3 +567,85 @@ class TestSaleStockInvoices(TestSaleCommon):
         html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice02.ids)[0]
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By USN\n1.00Units\nUSN0001', "There should be a line that specifies 1 x USN0001")
+
+    def test_invoice_after_reversal(self):
+        """
+        Test that after reversing an invoice and creating a new invoice at a later date
+        that it correctly maintains the invoiced lot quantites so that future invoices print the
+        correct lots.
+
+        The credit note needs to be dated in the past because the account move lines are sorted
+        by date. The means the credit note's account move line will be included in the previous
+        amls in _get_invoiced_lot_values.
+
+        Scenario:
+        1. Create a Sale Order for 10 units of a lot-tracked product.
+        2. Deliver 7 units (LOT0001) and create a backorder.
+        3. Invoice the 7 delivered units dated yesterday.
+        4. Reverse the invoice with the reversal date set to yesterday
+           and create a new invoice for 7 units.
+        5. Deliver the remaining 3 units from the backorder using a new lot (LOT0002).
+        6. Invoice the remaining 3 units.
+        """
+        display_lots = self.env.ref('stock_account.group_lot_on_invoice')
+        display_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [Command.link(display_lots.id), Command.link(display_uom.id)]})
+
+        lot2 = self.env['stock.lot'].create({
+            'name': 'LOT0002',
+            'product_id': self.product_by_lot.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_by_lot, self.stock_location, 3, lot_id=lot2)
+
+        yesterday = datetime.today() - timedelta(days=1)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'date_order': yesterday,
+            'order_line': [
+                Command.create({'name': self.product_by_lot.name, 'product_id': self.product_by_lot.id, 'product_uom_qty': 10}),
+            ],
+        })
+        so.action_confirm()
+
+        # Deliver 7 units and create a backorder for 3 units
+        picking = so.picking_ids
+        picking.move_ids.move_line_ids[0].quantity = 7
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.save().process()
+
+        # Invoice the 7 delivered units
+        invoice01 = so._create_invoices()
+        with Form(invoice01) as form:
+            form.invoice_date = yesterday
+            with form.invoice_line_ids.edit(0) as line:
+                line.quantity = 7
+        invoice01.action_post()
+
+        # Reverse the original invoice with the reversal date set to yeseterday and create a new invoice
+        res = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=invoice01.ids)\
+            .create({
+                'journal_id': invoice01.journal_id.id,
+                'date': yesterday,
+            }).modify_moves()
+        invoice02 = self.env['account.move'].browse(res['res_id'])
+        invoice02.action_post()
+
+        # Validte the backorder using LOT0002
+        backorder = picking.backorder_ids
+        backorder.move_ids.move_line_ids.quantity = 3
+        backorder.move_ids.move_line_ids.lot_id = lot2
+        backorder.button_validate()
+
+        # Invoice the remaining delviered quantities
+        invoice03 = so._create_invoices()
+        invoice03.action_post()
+
+        # The invoice should show 3 units from LOT0002
+        IrActionsReport = self.env['ir.actions.report']
+        html = IrActionsReport._render_qweb_html('account.report_invoice_with_payments', invoice03.ids)[0]
+        text = html2plaintext(html)
+        self.assertRegex(text, r'Product By Lot\n3.00Units\nLOT0002', "There should be a line that specifies 3 x LOT0002")
+        self.assertNotIn('LOT0001', text)
