@@ -15,10 +15,10 @@ export class CommonSkillsListRenderer extends ListRenderer {
         return '';
     }
 
-    get groupedList() {
+    groupedList(list) {
         const grouped = {};
 
-        for (const record of this.list.records) {
+        for (const record of list.records) {
             const data = record.data;
             const group = data[this.groupBy];
 
