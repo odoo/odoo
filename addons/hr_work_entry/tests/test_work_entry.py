@@ -195,6 +195,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'flexible_hours': True,
             'full_time_required_hours': 21,
             'hours_per_day': 3,
+            'hours_per_week': 21,
         })
         # create 4 employees that have versions corresponding to these 4 cases:
         # flexible calendar then standard calendar

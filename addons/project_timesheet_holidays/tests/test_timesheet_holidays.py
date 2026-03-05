@@ -267,6 +267,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         flex_40h_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 40h/week',
             'hours_per_day': 8.0,
+            'hours_per_week': 40.0,
             'full_time_required_hours': 40.0,
             'flexible_hours': True,
         })
@@ -343,6 +344,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         flex_40h_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible 10h/week',
             'hours_per_day': 10,
+            'hours_per_week': 10,
             'full_time_required_hours': 10,
             'flexible_hours': True,
         })

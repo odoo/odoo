@@ -421,7 +421,7 @@ class ResourceCalendar(models.Model):
 
                     calendar = resource_calendars[resource] if resource else self
 
-                    full_time_required_hours = calendar.full_time_required_hours
+                    max_hours_per_week = calendar.hours_per_week
                     max_hours_per_day = calendar.hours_per_day
 
                     intervals = []
@@ -435,11 +435,11 @@ class ResourceCalendar(models.Model):
 
                         if current_start_day < start_date:
                             prior_days = (start_date - current_start_day).days
-                            prior_hours = min(full_time_required_hours, max_hours_per_day * prior_days)
+                            prior_hours = min(max_hours_per_week, max_hours_per_day * prior_days)
                         else:
                             prior_hours = 0
 
-                        remaining_hours = max(0, full_time_required_hours - prior_hours)
+                        remaining_hours = max(0, max_hours_per_week - prior_hours)
                         remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
 
                         current_day = week_start
