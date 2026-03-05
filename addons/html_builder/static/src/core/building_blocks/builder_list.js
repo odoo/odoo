@@ -7,12 +7,39 @@ import {
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, onPatched } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
+
+/**
+ * Focus the last added input item to a list container.
+ *
+ * @param {string} refName The list container's ref.
+ */
+export function useAutoFocusNewItem(refName) {
+    const ref = useRef(refName);
+    let nbRow = 0;
+    function autofocus() {
+        const prevSize = nbRow;
+        const rowEls = ref.el?.querySelectorAll(".o_row_draggable") || [];
+        nbRow = rowEls.length;
+        if (nbRow <= prevSize) {
+            return;
+        }
+        const newRowEl = rowEls[nbRow - 1];
+        const newInputEl = newRowEl.querySelector("input, textarea");
+        if (newInputEl) {
+            newInputEl.focus();
+            if (!["checkbox", "number"].includes(newInputEl.type)) {
+                newInputEl.selectionStart = newInputEl.selectionEnd = newInputEl.value.length;
+            }
+        }
+    }
+    onPatched(autofocus);
+}
 
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
@@ -65,6 +92,7 @@ export class BuilderList extends Component {
         }
         this.dialog = useService("dialog");
         useBuilderComponent();
+        useAutoFocusNewItem("table");
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
             defaultValue: this.parseDisplayValue([]),

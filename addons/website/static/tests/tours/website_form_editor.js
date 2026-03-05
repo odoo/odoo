@@ -810,7 +810,7 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Form"),
         {
             content: "Change the Recipient Email",
-            trigger: '[data-label="Recipient Email"] input',
+            trigger: '[data-label="Recipient Emails"] input',
             run: "edit test@test.test",
         },
         // Test a field visibility when it's tied to another Date [Time] field
@@ -928,7 +928,7 @@ registerWebsitePreviewTour(
             ...unfoldOptionsGroup("Form"),
             {
                 content: "Change the Recipient Email",
-                trigger: "div[data-label='Recipient Email'] input",
+                trigger: "div[data-label='Recipient Emails'] input",
                 run: "edit test@test.test",
             },
         ])
@@ -949,7 +949,7 @@ registerWebsitePreviewTour(
             {
                 content: "Check that the recipient email is correct",
                 trigger:
-                    "div[data-label='Recipient Email'] input:value('website_form_contactus_edition_no_email@mail.com')",
+                    "div[data-label='Recipient Emails'] input:value('website_form_contactus_edition_no_email@mail.com')",
             },
         ])
 );
