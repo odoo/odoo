@@ -334,13 +334,14 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                     if (suggestion.isSpecial) {
                         return {
                             ...suggestion,
-                            group: 1,
+                            group: 3,
                             optionTemplate: "mail.Composer.suggestionSpecial",
                             classList,
                         };
                     }
                     if (suggestion?.Model?.getName?.() === "res.role") {
                         return {
+                            group: 2,
                             label: suggestion.name,
                             role: suggestion,
                             thread,
@@ -349,6 +350,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         };
                     }
                     return {
+                        group: 1,
                         label: thread?.getPersonaName(suggestion) ?? suggestion.name,
                         partner: suggestion,
                         thread,

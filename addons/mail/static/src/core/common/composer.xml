@@ -192,12 +192,15 @@
                 "<t t-out="option.thread.getPersonaName(partner)"/>"
             </t>
         </strong>
-        <span t-if="partner.email" class="text-600 text-truncate align-self-center" t-att-title="title">(<t t-out="partner.email"/>)</span>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partner.email"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionRole">
+        <span class="d-flex justify-content-center opacity-75" style="width:24px;">
+            <i class="oi oi-users"/>
+        </span>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-out="option.label"/>
-        <em class="text-600 text-truncate align-self-center">
+        <em class="text-600 text-truncate align-self-center opacity-75">
             <t t-if="option.thread?.channel?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
             <t t-else="">Notify users with this role</t>
         </em>

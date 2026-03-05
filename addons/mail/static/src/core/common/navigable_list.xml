@@ -7,22 +7,23 @@
                 <div t-if="this.state.showLoading" t-att-class="{ 'position-absolute bg-inherit smaller o-mail-NavigableList-floatingLoading': this.props.options.length, 'bg-300': this.props.options.length and this.state.activeIndex === 0, 'o-mail-NavigableList-item': !this.props.options.length }">
                     <t t-call="mail.NavigableList.spinner"/>
                 </div>
-                <div
-                    t-foreach="this.sortedOptions" t-as="option" t-key="option_index"
-                    class="o-mail-NavigableList-item"
-                    t-att-class="option.classList"
-                    t-att-title="option.title"
-                    t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
-                    t-on-click="(ev) => this.selectOption(ev, option_index)"
-                >
-                    <hr class="my-2" t-if="option.group != lastGroup and option_index != 0"/>
-                    <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': this.state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
-                        <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
-                        <t t-elif="this.props.optionTemplate" t-call="{{ this.props.optionTemplate }}"/>
-                        <t t-else="" t-out="option.label"/>
-                    </a>
+                <t t-foreach="this.sortedOptions" t-as="option" t-key="option_index">
+                    <hr class="o-discuss-separator mx-2 my-1" t-if="option.group != lastGroup and option_index != 0"/>
+                    <div
+                        class="o-mail-NavigableList-item"
+                        t-att-class="option.classList"
+                        t-att-title="option.title"
+                        t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
+                        t-on-click="(ev) => this.selectOption(ev, option_index)"
+                    >
+                        <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
+                            <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
+                            <t t-elif="this.props.optionTemplate" t-call="{{ this.props.optionTemplate }}"/>
+                            <t t-else="" t-out="option.label"/>
+                        </a>
+                    </div>
                     <t t-set="lastGroup" t-value="option.group"/>
-                </div>
+                </t>
             </div>
         </div>
     </t>
