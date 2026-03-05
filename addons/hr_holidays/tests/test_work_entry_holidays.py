@@ -426,6 +426,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(resource_leave.work_entry_type_id, self.work_entry_type, "it should have the corresponding work_entry type")
 
     def test_multi_contract_holiday(self):
+        self.work_entry_type.request_unit = 'day'
         # Leave during second contract
         leave = self.create_leave(datetime(2015, 11, 17), datetime(2015, 11, 20), name="Doctor Appointment", employee_id=self.jules_emp.id)
         start = datetime(2015, 11, 1, 0, 0, 0)
@@ -451,6 +452,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
             ],
         })
         self.work_entry_type_leave.requires_allocation = False
+        self.work_entry_type_leave.request_unit = 'day'
         self.contract_cdi.resource_calendar_id = calendar_20h
         leave = self.env['hr.leave'].create({
             'name': 'Holiday!!',

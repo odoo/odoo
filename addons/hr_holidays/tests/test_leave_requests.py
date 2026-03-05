@@ -2646,6 +2646,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'code': 'Training',
             'requires_allocation': False,
             'leave_validation_type': 'no_validation',
+            'request_unit': 'day',
         })
 
         # Use the Wizard to create a Training for the whole company: Feb 24 - Feb 26
@@ -2719,6 +2720,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     'code': 'Training',
                     'requires_allocation': False,
                     'leave_validation_type': 'no_validation',
+                    'request_unit': 'day',
                 })
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
             'work_entry_type_id': training_type.id,

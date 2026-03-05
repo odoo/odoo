@@ -406,17 +406,17 @@
                             </div>
                             <field name="work_entry_type_id" force_save="1"
                                 domain="[
-                                    '&amp;',
-                                        ('id', 'in', work_entry_type_filter_domain or []),
-                                        '|',
-                                            ('requires_allocation', '=', False),
-                                            '&amp;',
-                                                ('has_valid_allocation', '=', True),
-                                                '|',
-                                                    ('allows_negative', '=', True),
-                                                    '&amp;',
-                                                        ('virtual_remaining_leaves', '>', 0),
-                                                        ('allows_negative', '=', False),
+                                    ('time_off_selectable', '=', True),
+                                    ('id', 'in', work_entry_type_filter_domain or []),
+                                    '|',
+                                        ('requires_allocation', '=', False),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '>', 0),
+                                                    ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
@@ -568,6 +568,19 @@
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
+                <attribute name="domain">[
+                    '|',
+                        ('requires_allocation', '=', False),
+                        '&amp;',
+                            ('has_valid_allocation', '=', True),
+                            '|',
+                                ('allows_negative', '=', True),
+                                '&amp;',
+                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                    ('allows_negative', '=', False),
+                ]</attribute>
             </xpath>
         </field>
     </record>
