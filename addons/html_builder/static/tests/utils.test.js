@@ -218,3 +218,53 @@ test("System should not crash if an asynchronous useDomState is working with rem
     queryOne(":iframe .test").remove();
     editingElRemoved.resolve();
 });
+
+test("Shouldn't reload(save, etc) when a reload is canceled", async () => {
+    const { promise, resolve } = Promise.withResolvers();
+
+    onRpc("ir.ui.view", "save", async () => {
+        await promise;
+        expect.step("save");
+        return true;
+    });
+    addBuilderAction({
+        TestCancelReloadAction: class extends BuilderAction {
+            static id = "testCancelReload";
+            setup() {
+                this.reload = {};
+            }
+            load({ editingElement }) {
+                return { shouldReload: editingElement.classList.contains("should_reload") };
+            }
+            async apply({ editingElement, loadResult }) {
+                editingElement.dataset.applied = "true";
+                if (!loadResult.shouldReload) {
+                    return BuilderAction.cancelReload;
+                }
+            }
+        },
+    });
+
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton action="'testCancelReload'">Click</BuilderButton>`;
+        }
+    );
+
+    await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container [data-action-id='testCancelReload']").click();
+    expect(".o_blockUI").toHaveCount(0);
+    expect.verifySteps([]);
+
+    const editingEl = queryOne(":iframe .test-options-target");
+    editingEl.classList.add("should_reload");
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container [data-action-id='testCancelReload']").click();
+    expect(".o_blockUI").toHaveCount(1);
+    resolve();
+    await animationFrame();
+    expect(".o_blockUI").toHaveCount(0);
+    expect.verifySteps(["save"]);
+});
