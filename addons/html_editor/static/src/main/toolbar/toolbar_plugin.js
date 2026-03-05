@@ -107,6 +107,14 @@ export const DISABLED_NAMESPACE = "disabled";
  *
  * @typedef {ToolbarGroup[]} toolbar_groups
  * @typedef {ToolbarNamespace[]} toolbar_namespaces
+ *
+ *
+ * @example
+ * toolbar_namespace_extra_group_providers: {
+ *     myNamespace: ["font", "decoration"],
+ * }
+ *
+ * @typedef {{ [namespace: string]: string[] }} toolbar_namespace_extra_group_providers
  */
 
 /**
@@ -310,6 +318,19 @@ export class ToolbarPlugin extends Plugin {
         const buttons = this.getButtons();
         /** @type {ToolbarGroup[]} */
         const groups = this.getResource("toolbar_groups");
+        const extraGroupsPerNamespace = this.getResource("toolbar_namespace_extra_group_providers");
+
+        // Invert { namespace: [groupIds] } → { groupId: [namespaces] }
+        // for efficient lookup when assigning extra namespaces to buttons
+        const extraNamespacesPerGroup = {};
+        for (const mapping of extraGroupsPerNamespace) {
+            for (const [namespace, groupIds] of Object.entries(mapping)) {
+                for (const groupId of groupIds) {
+                    extraNamespacesPerGroup[groupId] ??= [];
+                    extraNamespacesPerGroup[groupId].push(namespace);
+                }
+            }
+        }
 
         return groups.map((group) => ({
             ...omit(group, "namespaces"),
@@ -317,7 +338,10 @@ export class ToolbarPlugin extends Plugin {
                 .filter((button) => button.groupId === group.id)
                 .map((button) => ({
                     ...button,
-                    namespaces: button.namespaces || group.namespaces || ["expanded"],
+                    namespaces: [
+                        ...(button.namespaces || group.namespaces || ["expanded"]),
+                        ...(extraNamespacesPerGroup[group.id] || []),
+                    ],
                 })),
         }));
     }

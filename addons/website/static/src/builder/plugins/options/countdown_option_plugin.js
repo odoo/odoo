@@ -4,6 +4,7 @@ import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequenc
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
@@ -36,6 +37,18 @@ class CountdownOptionPlugin extends Plugin {
             for (const countdownEl of countdownEls) {
                 countdownEl.classList.remove("s_countdown_enable_preview");
             }
+        },
+        toolbar_namespace_providers: [
+            withSequence(
+                1,
+                (nodeList, editableSelection) =>
+                    !editableSelection.isCollapsed &&
+                    nodeList.find((node) => closestElement(node, ".s_countdown")) &&
+                    "countdownToolbar"
+            ),
+        ],
+        toolbar_namespace_extra_group_providers: {
+            countdownToolbar: ["font", "decoration"],
         },
         before_insert_processors: (container, block) => {
             if (block.closest(".countdown_metrics")) {
