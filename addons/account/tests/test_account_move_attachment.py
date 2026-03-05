@@ -22,3 +22,12 @@ class TestAccountMoveAttachment(HttpCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(invoice.attachment_ids)
+
+    def test_create_records_from_empty_pdf_attachment(self):
+        """Ensure importing an empty PDF attachment does not crash and still returns created records."""
+        attachment = self.env['ir.attachment'].create({
+            'name': 'invoice.pdf',
+            'mimetype': 'application/pdf',
+        })
+        records = self.env['account.move']._create_records_from_attachments(attachment)
+        self.assertTrue(records)
