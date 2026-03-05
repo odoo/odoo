@@ -246,7 +246,10 @@
                                                     t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
                                                     class="fw-bold"
                                                 />
-                                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                                (<b
+                                                    t-esc="sale_order.prepayment_percent * 100"
+                                                    t-options="{'widget': 'float'}"
+                                                />%),
                                             </span>
                                             <span id="o_sale_portal_use_amount_total">
                                                 By paying,
