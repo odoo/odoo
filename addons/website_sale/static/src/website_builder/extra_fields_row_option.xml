@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website_sale.ExtraFieldRowOption">
+    <BuilderRow label.translate="Move to Category">
+        <BuilderSelect
+            action="'selectExtraFieldRowCategory'"
+            preview="false"
+            t-key="`row-category-${this.state.rowCategoryId}`"
+        >
+            <BuilderSelectItem t-if="this.currentCategoryId" actionValue="false">
+                No category
+            </BuilderSelectItem>
+            <t t-foreach="this.getAvailableCategories()" t-as="category" t-key="category.id">
+                <BuilderSelectItem actionValue="category.id">
+                    <t t-out="category.name"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+        <t
+            t-call="website_sale.CategoryCreateToggle"
+            categoryCreateMode="this.state.rowCategoryCreateMode"
+            onOpenCreateMode="() => this.setCategoryCreateMode(true)"
+            onCloseCreateMode="() => this.setCategoryCreateMode(false)"
+        />
+    </BuilderRow>
+
+    <t t-if="this.state.rowCategoryCreateMode">
+        <t t-call="website_sale.CategoryCreateForm" createActionName="'createRowCategory'"/>
+    </t>
+
+    <t t-if="!this.state.rowCategoryCreateMode">
+        <BuilderRow label.translate=" ">
+            <BuilderButton
+                t-if="this.state.rowCategoryId !== null"
+                action="'changeExtraFieldCategory'"
+                preview="false"
+                type="'success'"
+                className="'flex-grow-1'"
+            >
+                Confirm
+            </BuilderButton>
+            <BuilderButton
+                action="'deleteExtraField'"
+                preview="false"
+                type="'danger'"
+                className="'flex-grow-1'"
+            >
+                Remove
+            </BuilderButton>
+        </BuilderRow>
+    </t>
+
+</t>
+</templates>
