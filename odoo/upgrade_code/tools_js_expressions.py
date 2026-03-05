@@ -457,7 +457,7 @@ SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
 COMPONENT_TARGET_RE = re.compile(r"//([A-Z][\w\.-]*)")
 VALUE_ATTR_RE = re.compile(r"(@value)='(.*?)'")
 ENTITY_RE = re.compile(r"&([A-Za-z0-9#]{2,4});")
-UNMASK_RE = re.compile(r"__([A-Za-z0-9#]{2,4})__")
+UNMASK_RE = re.compile(r"__x([A-Za-z0-9#]{2,4})x__")
 
 
 def mask_xml_entities(text):
@@ -465,7 +465,7 @@ def mask_xml_entities(text):
     def repl(match):
         name = match.group(1)
         # skip masking &amp;
-        return match.group(0) if name == "amp" else f"__{name}__"
+        return match.group(0) if name == "amp" else f"__x{name}x__"
     return ENTITY_RE.sub(repl, text)
 
 def unmask_xml_entities(text):
