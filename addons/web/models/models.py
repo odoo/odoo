@@ -134,25 +134,36 @@ class Base(models.AbstractModel):
 
                 co_records = self[field_name]
 
-                if 'order' in field_spec and field_spec['order']:
+                field_spec_order = field_spec.get('order')
+                field_spec_has_fields = 'fields' in field_spec
+
+                if field_spec_order or field_spec_has_fields:
+                    # Re-search the records to apply read record rules
+                    # (cache may contain inaccessible ids after write/read) and apply order.
                     co_records = co_records.with_context(active_test=False).search(
-                        [('id', 'in', co_records.ids)], order=field_spec['order'],
+                        [('id', 'in', co_records.ids)], order=field_spec_order,
                     ).with_context(co_records.env.context)  # Reapply previous context
+
+                    co_records_ids = set(co_records.ids)
+
+                    for values in values_list:
+                        # filter out inaccessible corecords in case of "cache pollution"
+                        values[field_name] = [id_ for id_ in values[field_name] if id_ in co_records_ids]
+
+                if field_spec_order:
                     order_key = {
                         co_record.id: index
                         for index, co_record in enumerate(co_records)
                     }
                     for values in values_list:
-                        # filter out inaccessible corecords in case of "cache pollution"
-                        values[field_name] = [id_ for id_ in values[field_name] if id_ in order_key]
                         values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
 
                 if 'context' in field_spec:
                     co_records = co_records.with_context(**field_spec['context'])
 
-                if 'fields' in field_spec:
-                    if field_spec.get('limit') is not None:
-                        limit = field_spec['limit']
+                if field_spec_has_fields:
+                    limit = field_spec.get('limit')
+                    if limit is not None:
                         ids_to_read = OrderedSet(
                             id_
                             for values in values_list
