@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+
+        <!-- Add the license plate in the item description if a vehicle is set on the line -->
+        <xpath expr="//t[@name='account_invoice_line_accountable']//td[@name='account_invoice_line_name']//span[@t-field='line.name']" position="before">
+            <t t-if="line.vehicle_id.license_plate">
+                <span t-field="line.vehicle_id.license_plate" t-options="{'widget': 'text'}">1-ABC-123</span><span t-if="line.name">, </span>
+            </t>
+        </xpath>
+
+    </template>
+
+</odoo>

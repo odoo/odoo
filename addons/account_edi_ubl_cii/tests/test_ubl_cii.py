@@ -979,6 +979,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertRecordValues(bill_line.invoice_line_ids, [
             {'vehicle_id': car.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
             {'vehicle_id': car2.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
+            {'vehicle_id': car.id},  # match License Plate in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'PlateNumber'
             {'vehicle_id': car3.id},  # search VIN in Item/Description
             {'vehicle_id': car.id},  # search License Plate in Item/Description
             {'vehicle_id': car.id},  # search combined License Plate and VIN in Item/Description

@@ -418,6 +418,11 @@ class AccountEdiUBL(models.AbstractModel):
             }
             for value in product.product_template_attribute_value_ids
         ]
+        if 'fleet.vehicle' in self.env and base_line.get('vehicle_id'):
+            item_node['cac:AdditionalItemProperty'].append({
+                'cbc:Name': {'_text': 'PlateNumber'},
+                'cbc:Value': {'_text': base_line['vehicle_id'].license_plate},
+            })
 
     def _ubl_get_line_item_commodity_classification_node_from_intrastat_code(self, vals, intrastat_code):
         return {
