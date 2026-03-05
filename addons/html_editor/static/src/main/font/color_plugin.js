@@ -198,8 +198,12 @@ export class ColorPlugin extends Plugin {
         };
 
         const hexColor = rgbaToHex(color).toLowerCase();
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedNodes = targetedNodes
             .filter((node) => {
+                if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
+                    return false;
+                }
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
