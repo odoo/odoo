@@ -510,7 +510,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         :return: a `files_data` list representation of the embedded attachements.
         """
         embedded = []
-        if file_data['import_file_type'] == 'pdf':
+        if file_data['import_file_type'] == 'pdf' and file_data['raw']:
             for filename, content in extract_pdf_embedded_files(file_data['name'], file_data['raw']):
                 embedded_file_data = {
                     'name': filename,
