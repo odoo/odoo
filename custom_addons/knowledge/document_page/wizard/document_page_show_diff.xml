@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Create Index Form view  -->
+    <record id="view_wiki_show_diff" model="ir.ui.view">
+        <field name="name">Show Difference</field>
+        <field name="model">wizard.document.page.history.show_diff</field>
+        <field name="arch" type="xml">
+            <form string="Difference">
+                <field name="diff" widget="html" class="overflow-x: scroll" />
+                <footer>
+                    <button string="Close" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_wiki_show_diff_values">
+        <field name="name">Difference</field>
+        <field name="res_model">wizard.document.page.history.show_diff</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field
+            name="binding_model_id"
+            ref="document_page.model_document_page_history"
+        />
+    </record>
+</odoo>

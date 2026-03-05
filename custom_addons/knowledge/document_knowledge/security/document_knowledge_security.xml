@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="privilege_document_knowledge" model="res.groups.privilege">
+        <field name="name">Documents Knowledge</field>
+        <field name="category_id" ref="module_category_knowledge" />
+    </record>
+    <record id="privilege_document_technical" model="res.groups.privilege">
+        <field name="name">Documents Technical Access</field>
+        <field name="category_id" ref="base.module_category_hidden" />
+    </record>
+    <record id="group_document_user" model="res.groups">
+        <field name="name">Document Knowledge user</field>
+        <field name="privilege_id" ref="privilege_document_knowledge" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="user_ids" eval="[(4, ref('base.user_root'))]" />
+    </record>
+    <record id="group_ir_attachment_user" model="res.groups">
+        <field name="name">Central access to Documents</field>
+        <field name="privilege_id" ref="privilege_document_technical" />
+        <field name="implied_ids" eval="[(4, ref('group_document_user'))]" />
+    </record>
+</odoo>

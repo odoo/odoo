@@ -24,6 +24,7 @@ AI_PROVIDER_SELECTION = [
     ("odoo_chat", "Odoo Chat (Interno)"),
     ("openai", "OpenAI (ChatGPT)"),
     ("anthropic", "Anthropic (Claude)"),
+    ("huggingface", "Hugging Face (LangChain)"),
     ("ollama", "Ollama Local"),
 ]
 

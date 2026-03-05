@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- If user wants to make upgrade-proof customizations to email templates, he should edit ir.model.data and check noupdate himself -->
+    <record id="email_template_new_draft_need_approval" model="mail.template">
+        <field name="name">Automated new draft need approval Notification Mail</field>
+        <field
+            name="email_from"
+        >{{object.create_uid.company_id.email or 'noreply@localhost.com'}}</field>
+        <field
+            name="subject"
+        >New version of {{object.display_name}} needs your approval</field>
+        <field name="model_id" ref="model_document_page_history" />
+        <field name="auto_delete" eval="True" />
+        <field name="lang">{{object.create_uid.partner_id.lang}}</field>
+        <field name="body_html" type="html">
+            <p>Hello,</p>
+            <p><t t-out="object.create_uid.name" /> submited a new Change Request for <b
+                t-out="object.page_id.name"
+            /> and it needs your approval.</p>
+            <h1>
+                <a t-att-href="object.page_url" t-out="object.display_name" />
+            </h1>
+            <p>
+                <b>Modified by:</b>
+                <t t-out="object.create_uid.name" />
+            </p>
+            <p>
+                <b>Date:</b>
+                <t t-out="object.create_date" />
+            </p>
+            <t t-if="object.summary">
+                <h3>Summary</h3>
+                <p t-out="object.summary" />
+            </t>
+            <h3>Diff</h3>
+            <div style="overflow-x:scroll; font-size:0.85em; margin-bottom:2em;">
+                <t t-out="object.diff" />
+            </div>
+            <p>Have a great day.</p>
+            <br />
+            <p>Odoo</p>
+        </field>
+    </record>
+</odoo>

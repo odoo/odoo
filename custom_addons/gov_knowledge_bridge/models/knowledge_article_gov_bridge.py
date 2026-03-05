@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class KnowledgeArticleGovBridge(models.Model):
-    _inherit = "knowledge.article"
+class DocumentPageGovBridge(models.Model):
+    _inherit = "document.page"
 
     processo_ids = fields.Many2many(
         "gov.processo",
@@ -18,6 +18,19 @@ class KnowledgeArticleGovBridge(models.Model):
         "doc_id",
         string="Documentos GOV",
     )
+    processo_count = fields.Integer(
+        string="Qtd. Processos GOV",
+        compute="_compute_gov_counts",
+    )
+    processo_doc_count = fields.Integer(
+        string="Qtd. Documentos GOV",
+        compute="_compute_gov_counts",
+    )
+
+    def _compute_gov_counts(self):
+        for rec in self:
+            rec.processo_count = len(rec.processo_ids)
+            rec.processo_doc_count = len(rec.processo_doc_ids)
 
     def action_open_gov_processos(self):
         self.ensure_one()
@@ -38,4 +51,3 @@ class KnowledgeArticleGovBridge(models.Model):
             "view_mode": "list,form",
             "domain": [("id", "in", self.processo_doc_ids.ids)],
         }
-

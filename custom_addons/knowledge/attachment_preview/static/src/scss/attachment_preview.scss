@@ -1,0 +1,27 @@
+.attachment_preview_buttons {
+    padding: 4px;
+    float: left;
+    width: 100%;
+    background-color: #fff;
+    border-left: 1px solid $gray-800;
+}
+@include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+    .attachment_preview_widget {
+        position: absolute;
+        left: 65.3%;
+        width: 100%;
+        height: 100%;
+        z-index: 20;
+    }
+    .attachment_preview_iframe {
+        width: 36%;
+        height: calc(100% - 30px);
+        float: left;
+        border-left: 1px solid $gray-800;
+    }
+}
+@include media-breakpoint-down(xxl, $o-extra-grid-breakpoints) {
+    .attachment_preview_iframe {
+        width: 100%;
+    }
+}

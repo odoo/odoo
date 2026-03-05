@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Category Views -->
+    <record id="view_category_form" model="ir.ui.view">
+        <field name="name">document.page.category.form</field>
+        <field name="model">document.page</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <sheet>
+                    <field name="type" invisible="1" />
+                    <field name="image" widget="image" class="oe_avatar" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field
+                                name="parent_id"
+                                string="Category"
+                                context="{'default_type':'category'}"
+                            />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group>
+                            <field name="write_uid" groups="base.group_no_one" />
+                            <field name="write_date" groups="base.group_no_one" />
+                            <field name="menu_id" groups="base.group_no_one" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Template" name="template">
+                            <field
+                                name="template"
+                                placeholder="e.g. Once upon a time..."
+                            />
+                        </page>
+                        <page string="Documents" name="documents">
+                            <field
+                                name="content"
+                                widget="html"
+                                class="oe_view_only"
+                                options='{"safe": True, "codeview": True}'
+                                required="0"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+    <record id="view_browse_top_document_filter" model="ir.ui.view">
+        <field name="name">document.page.category.search</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="view_wiki_filter" />
+        <field name="arch" type="xml">
+            <field name="content_uid" position="after">
+                <separator />
+                <filter
+                    string="Top Level Ressources"
+                    name="no_parent_id"
+                    domain="[('parent_id', '=', False)]"
+                />
+            </field>
+        </field>
+    </record>
+    <record id="action_browse_top_content" model="ir.actions.act_window">
+        <field name="name">Browse Wiki Content</field>
+        <field name="res_model">document.page</field>
+        <field name="domain">[]</field>
+        <field
+            name="context"
+        >{'default_type': 'content', 'search_default_no_parent_id':1, }</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_browse_top_document_filter" />
+    </record>
+    <record id="action_browse_all_content" model="ir.actions.act_window">
+        <field name="name">Browse Wiki Content</field>
+        <field name="res_model">document.page</field>
+        <field name="domain">[]</field>
+        <field
+            name="context"
+        >{'default_type': 'content', 'search_default_parent_id': [active_id] }</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_wiki_filter" />
+    </record>
+    <record id="view_browse_content_kanban" model="ir.ui.view">
+        <field name="name">document.page.browse.kanban</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <kanban
+                js_class="document_page_kanban_view"
+                highlight_color="color"
+                openRecord="openRecord"
+            >
+                <field name="id" />
+                <field name="name" />
+                <field name="display_name" />
+                <field name="create_uid" />
+                <field name="write_date" />
+                <field name="parent_id" />
+                <field name="content_uid" />
+                <field name="image" />
+                <field name="type" />
+                <field name="color" />
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside style="margin-right: 8px;">
+                            <t
+                                t-if="record.type.raw_value === 'category' || record.type.raw_value === 'content'"
+                            >
+                                <field
+                                    name="image"
+                                    widget="image"
+                                    t-att-alt="record.display_name.raw_value"
+                                    t-if="record.image.raw_value"
+                                />
+                                <i
+                                    t-if="!record.image.raw_value"
+                                    t-attf-class="o_field_image fa #{record.type.raw_value === 'category' ? 'fa-folder-open' : 'fa-file'}"
+                                    t-attf-style="font-size: 64px; color: #{record.type.raw_value === 'category' ? 'lightslategray' : 'lightgray'};"
+                                />
+                            </t>
+                        </aside>
+                        <main>
+                            <div>
+                                <field name="name" class="fw-bolder" />
+                                <small
+                                    t-if="record.parent_id.raw_value"
+                                    class="d-flex align-items-center"
+                                >
+                                    <field
+                                        name="parent_id"
+                                        widget="image"
+                                        options="{'preview_image': 'image'}"
+                                        t-att-alt="record.parent_id.display_name"
+                                        style="margin-right:5px; width:24px; height:24px;"
+                                    />
+
+                                    <field name="parent_id" />
+                                </small>
+                            </div>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                                t-if="record.type.raw_value == 'content'"
+                            >
+                                <field name="write_date" widget="date" />
+                                <field
+                                    name="content_uid"
+                                    widget="image"
+                                    options="{'preview_image': 'image_small'}"
+                                    t-att-alt="record.content_uid.value"
+                                    style="margin-right:5px; width:24px; height:24px;"
+                                />
+                            </div>
+                        </main>
+
+                        <div
+                            t-if="record.type.raw_value == 'category'"
+                            class="o_document_page_kanban_boxes"
+                        >
+                            <a
+                                class="o_document_page_kanban_box"
+                                name="%(action_browse_all_content)d"
+                                type="action"
+                            />
+                        </div>
+                    </t>
+
+                    <t t-name="menu">
+                        <field name="color" widget="kanban_color_picker" />
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_category_tree" model="ir.ui.view">
+        <field name="name">document.page.category.list</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="parent_id" />
+                <field name="create_uid" column_invisible="1" />
+                <field name="write_uid" />
+                <field name="write_date" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+    <record id="view_document_category_filter" model="ir.ui.view">
+        <field name="name">document.page.category.search</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <search string="Document Category">
+                <field
+                    name="name"
+                    string="Content"
+                    filter_domain="['|', ('name','ilike',self), ('template','ilike',self)]"
+                />
+                <field name="parent_id" />
+                <field name="create_uid" />
+                <field name="content_uid" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <group>
+                    <filter
+                        name="group_by_category"
+                        string="Category"
+                        context="{'group_by':'parent_id'}"
+                    />
+                    <filter
+                        name="group_by_author"
+                        string="Author"
+                        context="{'group_by':'create_uid'}"
+                    />
+                    <filter
+                        name="group_by_last_contributor"
+                        string="Last Contributor"
+                        context="{'group_by':'content_uid'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Category Action -->
+    <record id="action_category" model="ir.actions.act_window">
+        <field name="name">Category</field>
+        <field name="path">document_page_categories</field>
+        <field name="res_model">document.page</field>
+        <field name="domain">[('type','=','category')]</field>
+        <field name="context">{'default_type': 'category'}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_category_tree" />
+        <field name="search_view_id" ref="view_document_category_filter" />
+    </record>
+    <record id="action_category_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_category_tree" />
+        <field name="act_window_id" ref="action_category" />
+    </record>
+    <record id="action_category_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_category_form" />
+        <field name="act_window_id" ref="action_category" />
+    </record>
+    <menuitem
+        id="menu_category"
+        parent="menu_wiki"
+        name="Categories"
+        action="action_category"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_browse_content"
+        parent="document_knowledge.menu_document_root"
+        name="Browse Wiki Content"
+        action="action_browse_top_content"
+        sequence="5"
+    />
+</odoo>

@@ -1,6 +1,6 @@
 {
     "name": "GRP - Gestão de Processos",
-    "version": "19.0.4.0.0",
+    "version": "19.0.5.0.0",
     "category": "Government",
     "depends": ["gov_base", "mail", "base_automation", "web"],
     "data": [

@@ -1,6 +1,6 @@
 import { jsonError, jsonOk } from "@/lib/api-response";
 import { OdooClientError } from "@/lib/errors";
-import { fetchGovList } from "@/lib/server/odoo-service";
+import { lisgov } from "@/lib/server/odoo-service";
 
 export const runtime = "nodejs";
 
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const page = parsePositiveInt(url.searchParams.get("page"), 1);
     const pageSize = parsePositiveInt(url.searchParams.get("pageSize"), 10);
 
-    const data = await fetchGovList("processos", page, Math.min(pageSize, 100));
+    const data = await lisgov("processos", page, Math.min(pageSize, 100));
     if (!data) {
       return jsonError("Suite gov/processos nao configurada", 404);
     }

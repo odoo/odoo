@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_compras_item_track_list" model="ir.ui.view">
+        <field name="name">gov.compras.item.track.list</field>
+        <field name="model">gov.compras.item.track</field>
+        <field name="arch" type="xml">
+            <list string="Itens de Compras">
+                <field name="track_id"/>
+                <field name="processo_id"/>
+                <field name="catalog_item_id"/>
+                <field name="quantidade"/>
+                <field name="unidade_medida"/>
+                <field name="valor_etp" widget="monetary" optional="show"/>
+                <field name="valor_estimado_ref" widget="monetary"/>
+                <field name="valor_arrematado" widget="monetary" optional="show"/>
+                <field name="fornecedor_arrematado" optional="show"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_compras_item_track_form" model="ir.ui.view">
+        <field name="name">gov.compras.item.track.form</field>
+        <field name="model">gov.compras.item.track</field>
+        <field name="arch" type="xml">
+            <form string="Item de Compra">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="track_id" readonly="1"/>
+                            <field name="processo_id"/>
+                            <field name="ug_id" readonly="1"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="catalog_item_id"/>
+                            <field name="unidade_medida"/>
+                            <field name="quantidade"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Valores">
+                        <field name="valor_etp" widget="monetary"/>
+                        <field name="valor_estimado_ref" widget="monetary"/>
+                        <field name="valor_arrematado" widget="monetary"/>
+                    </group>
+                    <group string="Histórico Dinâmico">
+                        <field name="media_preco_historico" widget="monetary" readonly="1"/>
+                        <field name="media_preco_sazonal" widget="monetary" readonly="1"/>
+                        <field name="preco_referencia_conservador" widget="monetary" readonly="1"/>
+                        <field name="media_qtd_historica" readonly="1"/>
+                    </group>
+                    <group string="Licitação e Empenho">
+                        <field name="fornecedor_arrematado"/>
+                        <field name="data_arremate"/>
+                        <field name="empenho_id"/>
+                    </group>
+                    <group string="Descrição">
+                        <field name="descricao" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_compras_item_track_search" model="ir.ui.view">
+        <field name="name">gov.compras.item.track.search</field>
+        <field name="model">gov.compras.item.track</field>
+        <field name="arch" type="xml">
+            <search string="Itens de Compras">
+                <field name="track_id"/>
+                <field name="processo_id"/>
+                <field name="catalog_item_id"/>
+                <field name="status"/>
+                <field name="fornecedor_arrematado"/>
+                <filter string="Rascunho" name="f_rasc" domain="[('status', '=', 'rascunho')]"/>
+                <filter string="Requisição" name="f_req" domain="[('status', '=', 'requisitado')]"/>
+                <filter string="NAD" name="f_nad" domain="[('status', '=', 'nad')]"/>
+                <filter string="Licitado" name="f_lic" domain="[('status', '=', 'licitado')]"/>
+                <filter string="Empenhado" name="f_emp" domain="[('status', '=', 'empenhado')]"/>
+                <filter name="g_ug" string="UG" context="{'group_by': 'ug_id'}"/>
+                <filter name="g_status" string="Etapa" context="{'group_by': 'status'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gov_compras_item_track" model="ir.actions.act_window">
+        <field name="name">Itens de Compras</field>
+        <field name="res_model">gov.compras.item.track</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gov_compras_item_track_search"/>
+    </record>
+
+    <record id="view_gov_processo_form_compras" model="ir.ui.view">
+        <field name="name">gov.processo.form.compras</field>
+        <field name="model">gov.processo</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_processo_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_open_compras_itens" type="object" icon="fa-shopping-cart">
+                    <field name="compras_item_count" widget="statinfo" string="Itens Compras"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page name="compras" string="Compras">
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                        <button
+                            name="action_compras_enviar_requisicao"
+                            string="Gerar Requisição"
+                            type="object"
+                            class="btn-secondary"
+                        />
+                        <button
+                            name="action_compras_aprovar_requisicao"
+                            string="Aprovar Requisição (NAD)"
+                            type="object"
+                            class="btn-primary"
+                        />
+                    </div>
+                    <field name="compras_item_ids" context="{'default_processo_id': id}">
+                        <list editable="bottom">
+                            <field name="track_id" readonly="1"/>
+                            <field name="catalog_item_id"/>
+                            <field name="descricao" optional="show"/>
+                            <field name="unidade_medida"/>
+                            <field name="quantidade"/>
+                            <field name="valor_etp" widget="monetary" optional="show"/>
+                            <field name="valor_estimado_ref" widget="monetary"/>
+                            <field name="preco_referencia_conservador" widget="monetary" readonly="1" optional="show"/>
+                            <field name="valor_arrematado" widget="monetary" optional="show"/>
+                            <field name="status" widget="badge"/>
+                            <field name="empenho_id" optional="show"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='dossie']/field[@name='doc_ids']/list/field[@name='doc_type']" position="after">
+                <field name="compras_item_track_ids" widget="many2many_tags" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

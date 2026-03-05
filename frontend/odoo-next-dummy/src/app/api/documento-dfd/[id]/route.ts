@@ -20,7 +20,13 @@ export async function GET(_request: Request, context: RouteContext) {
     if (!data) {
       return jsonError("Documento nao encontrado", 404);
     }
-    return jsonOk(data);
+    return jsonOk({
+      id: data.id,
+      titulo: data.nome,
+      criadoEm: data.criadoEm,
+      atualizadoEm: data.atualizadoEm,
+      resumo: data.resumo
+    });
   } catch (error) {
     if (error instanceof OdooClientError) {
       return jsonError(error.message, error.status, error.payload);

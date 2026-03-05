@@ -32,7 +32,7 @@ class GovAiProviderConfig(models.Model):
     )
     endpoint_url = fields.Char(
         string="Endpoint URL",
-        help="Opcional para OpenAI/Claude. Obrigatório para Ollama custom.",
+        help="Opcional para OpenAI/Claude/Hugging Face. Obrigatório para Ollama custom.",
     )
     api_key = fields.Char(
         string="API Key",
@@ -57,6 +57,9 @@ class GovAiProviderConfig(models.Model):
             elif rec.provider == "anthropic":
                 rec.model_name = rec.model_name or "claude-3-5-sonnet-latest"
                 rec.endpoint_url = rec.endpoint_url or "https://api.anthropic.com/v1/messages"
+            elif rec.provider == "huggingface":
+                rec.model_name = rec.model_name or "mistralai/Mistral-7B-Instruct-v0.3"
+                rec.endpoint_url = rec.endpoint_url or "https://api-inference.huggingface.co/models"
             elif rec.provider == "ollama":
                 rec.model_name = rec.model_name or "qwen2.5:0.5b"
                 rec.endpoint_url = rec.endpoint_url or "http://127.0.0.1:11434/api/generate"

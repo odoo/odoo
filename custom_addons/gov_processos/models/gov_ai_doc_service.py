@@ -135,6 +135,68 @@ class GovAiDocService:
         return text, raw_response
 
     @classmethod
+    def _generate_huggingface(cls, config, system_prompt, user_prompt):
+        api_key = (config.api_key or "").strip()
+        if not api_key:
+            raise UserError("API key Hugging Face não configurada.")
+
+        model_name = (config.model_name or "").strip()
+        if not model_name:
+            raise UserError("Modelo Hugging Face não configurado.")
+
+        try:
+            from langchain_core.messages import HumanMessage, SystemMessage
+            from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+        except Exception as exc:
+            raise UserError(
+                "Provider Hugging Face requer LangChain: instale "
+                "'langchain-huggingface' e 'langchain-core'."
+            ) from exc
+
+        endpoint = (config.endpoint_url or "").strip()
+        endpoint_kwargs = {}
+        if endpoint and endpoint.startswith("http"):
+            if endpoint.endswith("/models"):
+                endpoint_kwargs["endpoint_url"] = f"{endpoint.rstrip('/')}/{model_name}"
+            else:
+                endpoint_kwargs["endpoint_url"] = endpoint
+
+        llm = HuggingFaceEndpoint(
+            repo_id=model_name,
+            huggingfacehub_api_token=api_key,
+            temperature=config.temperature,
+            max_new_tokens=int(config.max_tokens or 2000),
+            timeout=int(config.timeout_seconds or 90),
+            **endpoint_kwargs,
+        )
+
+        messages = [
+            SystemMessage(content=system_prompt or ""),
+            HumanMessage(content=user_prompt or ""),
+        ]
+
+        raw_response = ""
+        text = ""
+        try:
+            chat = ChatHuggingFace(llm=llm)
+            result = chat.invoke(messages)
+            raw_response = str(getattr(result, "response_metadata", "") or "")
+            text = (getattr(result, "content", "") or "").strip()
+        except Exception:
+            # Fallback de compatibilidade para versões sem ChatHuggingFace.
+            prompt = (system_prompt or "").strip()
+            if prompt:
+                prompt += "\n\n"
+            prompt += user_prompt or ""
+            result = llm.invoke(prompt)
+            text = (result or "").strip() if isinstance(result, str) else str(result).strip()
+            raw_response = str(result)
+
+        if not text:
+            raise UserError("Hugging Face retornou resposta vazia.")
+        return text, raw_response
+
+    @classmethod
     def _generate_ollama(cls, config, system_prompt, user_prompt):
         endpoint = (config.endpoint_url or "").strip() or "http://127.0.0.1:11434/api/generate"
         prompt = (system_prompt or "").strip()
@@ -217,6 +279,8 @@ class GovAiDocService:
             text, raw_response = cls._generate_openai(config, system_prompt, user_prompt)
         elif provider == "anthropic":
             text, raw_response = cls._generate_anthropic(config, system_prompt, user_prompt)
+        elif provider == "huggingface":
+            text, raw_response = cls._generate_huggingface(config, system_prompt, user_prompt)
         elif provider == "ollama":
             text, raw_response, used_model = cls._generate_ollama(config, system_prompt, user_prompt)
             model_name = used_model or model_name

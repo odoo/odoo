@@ -11,14 +11,14 @@ class GovProcessoKnowledgeBridge(models.Model):
     _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
     knowledge_article_ids = fields.Many2many(
-        "knowledge.article",
+        "document.page",
         "gov_processo_knowledge_article_rel",
         "processo_id",
         "article_id",
-        string="Artigos Knowledge",
+        string="Paginas de Conhecimento",
     )
     knowledge_article_count = fields.Integer(
-        string="Qtd. Artigos Knowledge",
+        string="Qtd. Paginas de Conhecimento",
         compute="_compute_knowledge_article_count",
     )
 
@@ -26,29 +26,65 @@ class GovProcessoKnowledgeBridge(models.Model):
         for rec in self:
             rec.knowledge_article_count = len(rec.knowledge_article_ids)
 
+    def _get_or_create_default_knowledge_category(self):
+        self.ensure_one()
+        Page = self.env["document.page"]
+        category = Page.search(
+            [
+                ("type", "=", "category"),
+                "|",
+                ("company_id", "=", False),
+                ("company_id", "=", self.ug_id.id),
+            ],
+            order="company_id desc, id",
+            limit=1,
+        )
+        if category:
+            return category
+        return Page.create(
+            {
+                "name": f"GOV - Processos ({self.ug_id.name})",
+                "type": "category",
+                "company_id": self.ug_id.id,
+            }
+        )
+
     def action_open_knowledge_articles(self):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": f"Knowledge - {self.name}",
-            "res_model": "knowledge.article",
+            "name": f"Conhecimento - {self.name}",
+            "res_model": "document.page",
             "view_mode": "list,form",
             "domain": [("id", "in", self.knowledge_article_ids.ids)],
-            "context": {"default_company_id": self.ug_id.id},
+            "context": {
+                "default_company_id": self.ug_id.id,
+                "default_type": "content",
+            },
         }
 
     def action_create_knowledge_article(self):
         self.ensure_one()
+        category = self._get_or_create_default_knowledge_category()
+        title = f"Processo {self.name} - {self.subject or ''}".strip(" -")
+        intro_html = (
+            "<p><strong>Processo:</strong> "
+            f"{html.escape(self.name or '')}</p>"
+            "<p><strong>Assunto:</strong> "
+            f"{html.escape(self.subject or '')}</p>"
+        )
         return {
             "type": "ir.actions.act_window",
-            "name": "Novo Artigo Knowledge",
-            "res_model": "knowledge.article",
+            "name": "Nova Pagina de Conhecimento",
+            "res_model": "document.page",
             "view_mode": "form",
             "target": "current",
             "context": {
-                "default_name": f"Processo {self.name} - {self.subject or ''}".strip(" -"),
-                "default_category": "workspace",
+                "default_name": title,
+                "default_type": "content",
+                "default_parent_id": category.id,
                 "default_company_id": self.ug_id.id,
+                "default_content": intro_html,
                 "default_processo_ids": [(6, 0, [self.id])],
             },
         }
@@ -68,22 +104,22 @@ class GovProcessoKnowledgeBridge(models.Model):
         updated = 0
 
         for article in self.knowledge_article_ids:
-            plain = self._plain_text_from_html(article.body or "")
+            plain = self._plain_text_from_html(article.content or "")
             if not plain:
                 continue
             vals = {
-                "name": f"Knowledge: {article.name}",
+                "name": f"Conhecimento: {article.name}",
                 "company_id": self.ug_id.id,
                 "source_type": "outro",
-                "source_model": "knowledge.article",
+                "source_model": "document.page",
                 "source_res_id": article.id,
-                "tags": f"knowledge,processo:{self.name or ''}",
+                "tags": f"document_page,processo:{self.name or ''}",
                 "content_text": plain,
             }
             existing = Memory.search(
                 [
                     ("company_id", "=", self.ug_id.id),
-                    ("source_model", "=", "knowledge.article"),
+                    ("source_model", "=", "document.page"),
                     ("source_res_id", "=", article.id),
                 ],
                 limit=1,

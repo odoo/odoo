@@ -1,0 +1,21 @@
+{
+    "name": "GRP - Compras",
+    "version": "19.0.1.0.0",
+    "category": "Government",
+    "summary": "Catálogo, banco de preços, trilha de item e previsão orçamentária de compras",
+    "depends": ["gov_processos", "gov_empenho", "mail"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/ir_sequence.xml",
+        "views/gov_compras_catalog_views.xml",
+        "views/gov_compras_previsao_views.xml",
+        "views/gov_processo_compras_views.xml",
+        "views/gov_processo_doc_compras_views.xml",
+        "views/gov_empenho_compras_views.xml",
+        "views/gov_compras_menus.xml",
+    ],
+    "installable": True,
+    "application": True,
+    "author": "GRP",
+    "license": "LGPL-3",
+}

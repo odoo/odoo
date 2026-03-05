@@ -7,6 +7,8 @@
             <list string="Vetores de Memoria">
                 <field name="memory_id"/>
                 <field name="company_id"/>
+                <field name="embedding_provider"/>
+                <field name="embedding_model"/>
                 <field name="embedding_dim"/>
                 <field name="text_hash"/>
                 <field name="updated_at"/>
@@ -23,6 +25,8 @@
                     <group>
                         <field name="memory_id" readonly="1"/>
                         <field name="company_id" readonly="1"/>
+                        <field name="embedding_provider" readonly="1"/>
+                        <field name="embedding_model" readonly="1"/>
                         <field name="embedding_dim" readonly="1"/>
                         <field name="updated_at" readonly="1"/>
                     </group>
@@ -43,4 +47,3 @@
         <field name="view_mode">list,form</field>
     </record>
 </odoo>
-

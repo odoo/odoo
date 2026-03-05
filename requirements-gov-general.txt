@@ -1,0 +1,16 @@
+# GOV suite - optional Python dependencies for production hosts
+# Base Odoo deps stay in requirements.txt
+
+# LaTeX validation in gov_processos/models/gov_latex_service.py
+pylatexenc>=2.10
+
+# Hugging Face + LangChain integration (gov_processos + gov_ai_ml)
+langchain-core>=0.3.0
+langchain-huggingface>=0.1.0
+sentence-transformers>=3.0.0
+huggingface-hub>=0.24.0
+
+# OCR stack (host-side capability for scanned uploads / sideprojects)
+pytesseract>=0.3.10
+ocrmypdf>=16.0.0
+pdf2image>=1.17.0

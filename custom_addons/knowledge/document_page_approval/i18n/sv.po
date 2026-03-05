@@ -1,0 +1,495 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document_page_approval
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-24 22:33+0000\n"
+"PO-Revision-Date: 2025-09-18 16:42+0000\n"
+"Last-Translator: jakobkrabbe <jakob@syscare.se>\n"
+"Language-Team: Swedish (https://www.transifex.com/oca/teams/23907/sv/)\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"<b>You already have a Draft Change Request for this page.</b>\n"
+"                    It is highly recommended that you edit that one instead "
+"of creating a new one."
+msgstr ""
+"<b>Du har redan ett utkast till ändringsbegäran för den här sidan.</b>\n"
+"                    Det rekommenderas starkt att du redigerar den i stället "
+"för att skapa en ny."
+
+#. module: document_page_approval
+#: model:mail.template,body_html:document_page_approval.email_template_new_draft_need_approval
+msgid ""
+"<p>Hello,</p>\n"
+"            <p><t t-out=\"object.create_uid.name\"/> submited a new Change "
+"Request for <b t-out=\"object.page_id.name\"/> and it needs your approval.</"
+"p>\n"
+"            <h1>\n"
+"                <a t-att-href=\"object.page_url\" t-out=\"object."
+"display_name\"/>\n"
+"            </h1>\n"
+"            <p>\n"
+"                <b>Modified by:</b>\n"
+"                <t t-out=\"object.create_uid.name\"/>\n"
+"            </p>\n"
+"            <p>\n"
+"                <b>Date:</b>\n"
+"                <t t-out=\"object.create_date\"/>\n"
+"            </p>\n"
+"            <t t-if=\"object.summary\">\n"
+"                <h3>Summary</h3>\n"
+"                <p t-out=\"object.summary\"/>\n"
+"            </t>\n"
+"            <h3>Diff</h3>\n"
+"            <div style=\"overflow-x:scroll; font-size:0.85em; margin-"
+"bottom:2em;\">\n"
+"                <t t-out=\"object.diff\"/>\n"
+"            </div>\n"
+"            <p>Have a great day.</p>\n"
+"            <br/>\n"
+"            <p>Odoo</p>\n"
+"        "
+msgstr ""
+"<p>Hej,</p>\n"
+"            <p><t t-out=\"object.create_uid.name\"/> har skickat in en ny "
+"ändringsbegäran för <b t-out=\"object.page_id.name\"/> och den behöver ditt "
+"godkännande.</p>\n"
+"            <h1>\n"
+"                <a t-att-href=\"object.page_url\" t-out="
+"\"object.display_name\"/>\n"
+"            </h1>\n"
+"            <p>\n"
+"                <b>Modifierad av:</b>\n"
+"                <t t-out=\"object.create_uid.name\"/>\n"
+"            </p>\n"
+"            <p>\n"
+"                <b>Datum:</b>\n"
+"                <t t-out=\"object.create_date\"/>\n"
+"            </p>\n"
+"            <t t-if=\"object.summary\">\n"
+"                <h3>Sammanfattning</h3>\n"
+"                <p t-out=\"object.summary\"/>\n"
+"            </t>\n"
+"            <h3>Diff</h3>\n"
+"            <div style="
+"\"overflow-x:scroll; font-size:0.85em; margin-bottom:2em;\">\n"
+"                <t t-out=\"object.diff\"/>\n"
+"            </div>\n"
+"            <p>Ha en bra dag.</p>\n"
+"            <br/>\n"
+"            <p>Odoo</p>\n"
+"        "
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_needaction
+msgid "Action Needed"
+msgstr "Åtgärder krävs"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__am_i_approver
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__am_i_approver
+msgid "Am I Approver"
+msgstr "Är jag godkännare"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__am_i_owner
+msgid "Am I Owner"
+msgstr "Är jag ägare"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__is_approval_required
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__is_approval_required
+msgid "Approval required"
+msgstr "Godkännande krävs"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Approve"
+msgstr "Godkänna"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__approved
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Approved"
+msgstr "Godkänd"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approved_date
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__approved_date
+msgid "Approved Date"
+msgstr "Godkänt datum"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approved_uid
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__approved_uid
+msgid "Approved by"
+msgstr "Godkänd av"
+
+#. module: document_page_approval
+#: model:res.groups,name:document_page_approval.group_document_approver_user
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Approver"
+msgstr "Godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approver_gid
+msgid "Approver group"
+msgstr "Godkännande grupp"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approver_group_ids
+msgid "Approver groups"
+msgstr "Godkännande grupper"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal bifogade filer"
+
+#. module: document_page_approval
+#: model:mail.template,name:document_page_approval.email_template_new_draft_need_approval
+msgid "Automated new draft need approval Notification Mail"
+msgstr "Automatiserad notifiering av nya utkast som behöver godkännas"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Back to draft"
+msgstr "Tillbaka till utkast"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Can't approve page in '%s' state."
+msgstr "Kan inte godkänna sidan i \"%s\"-status."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Can't approve pages in '%s' state."
+msgstr "Kan inte godkänna sidor i \"%s\"-status."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__cancelled
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Cancelled"
+msgstr "Avbruten"
+
+#. module: document_page_approval
+#: model:ir.actions.act_window,name:document_page_approval.action_change_requests
+#: model:ir.ui.menu,name:document_page_approval.menu_page_change_requests
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid "Change Requests"
+msgstr "Ändringsbegäran"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Change request <b>%(name)s</b> has been cancelled by %(user)s."
+msgstr "Ändringsbegäran <b>%(name)s</b> har annullerats av %(user)s."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Change request has been approved by %s."
+msgstr "Ändringsbegäran har godkänts av %s."
+
+#. module: document_page_approval
+#: model:ir.model,name:document_page_approval.model_document_page
+msgid "Document Page"
+msgstr "Dokumentsida"
+
+#. module: document_page_approval
+#: model:ir.model,name:document_page_approval.model_document_page_history
+msgid "Document Page History"
+msgstr "Dokumentets sidhistorik"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__draft
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Draft"
+msgstr "Utkast"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_follower_ids
+msgid "Followers"
+msgstr "Följare"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Följare (Partners)"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approver_group_ids
+msgid "Groups that can approve changes to this document"
+msgstr "Grupper som kan godkänna ändringar i detta dokument"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__has_message
+msgid "Has Message"
+msgstr "Har meddelande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__has_changes_pending_approval
+msgid "Has changes pending approval"
+msgstr "Har ändringar som väntar på godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__history_ids
+msgid "History"
+msgstr "Historia"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Om den är markerad kräver nya meddelanden din uppmärksamhet."
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Om kryssrutan är markerad får vissa meddelanden ett leveransfel."
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__is_approval_required
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__is_approval_required
+msgid "If true, changes of this page require approval"
+msgstr "Om det är sant, kräver ändringar av denna sida godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_is_follower
+msgid "Is Follower"
+msgstr "Är följare"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_has_error
+msgid "Message Delivery error"
+msgstr "Fel vid leverans av meddelande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_ids
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "New version of the document %s approved."
+msgstr "Ny version av dokumentet %s godkänd."
+
+#. module: document_page_approval
+#: model:mail.template,subject:document_page_approval.email_template_new_draft_need_approval
+msgid "New version of {{object.display_name}} needs your approval"
+msgstr "Ny version av {{object.display_name}} behöver ditt godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal åtgärder"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fel"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärder"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal meddelanden med leveransfel"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__to_approve
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Pending Approval"
+msgstr "Avvaktar godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__rating_ids
+msgid "Ratings"
+msgstr "Betyg"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approval_required
+msgid "Require approval"
+msgstr "Kräver godkännande"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approval_required
+msgid "Require approval for changes on this page or its child pages."
+msgstr ""
+"Kräver godkännande för ändringar på den här sidan eller dess undersidor."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Send to Review"
+msgstr "Skicka till granskning"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "State"
+msgstr "Stat"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__state
+msgid "Status"
+msgstr "Status"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"This document has <b>Changes Pending Approval</b>. You are viewing the last "
+"approved content."
+msgstr ""
+"Detta dokument har <b>Ändringar i väntan på godkännande</b>. Du tittar på "
+"det senast godkända innehållet."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"This document requires approval. If edited, you will create a new <b>Change "
+"Request</b>."
+msgstr ""
+"Detta dokument kräver godkännande. Om det redigeras kommer du att skapa en "
+"ny <b>Ändringsbegäran</b>."
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__page_url
+msgid "URL"
+msgstr "URL"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__user_has_drafts
+msgid "User has drafts?"
+msgstr "Användaren har utkast?"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approver_gid
+msgid "Users must also belong to the Approvers group"
+msgstr "Användarna måste också tillhöra gruppen Approvers"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__website_message_ids
+msgid "Website Messages"
+msgstr "Webbplatsmeddelanden"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__website_message_ids
+msgid "Website communication history"
+msgstr "Webbplatsens kommunikationshistorik"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only approvers with these groups can approve this: {}"
+msgstr ""
+"Du har inte behörighet att göra detta.\n"
+"Endast godkännare med dessa grupper kan godkänna detta: {}"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only owners or approvers can reopen Change Requests."
+msgstr ""
+"Du är inte behörig att göra detta.\r\n"
+"Endast ägare eller godkännare kan öppna ändringsbegäran igen."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only owners or approvers can request approval."
+msgstr ""
+"Du är inte behörig att göra detta.\r\n"
+"Endast ägare eller godkännare kan begära godkännande."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "You need to cancel it before reopening."
+msgstr "Du måste avbryta det innan du öppnar igen."
+
+#~ msgid ""
+#~ "<p>Hello,</p>\n"
+#~ "            <p><t t-out=\"object.create_uid.name\"></t> submited a new "
+#~ "Change Request for <b t-out=\"object.page_id.name\"></b> and it needs "
+#~ "your approval.</p>\n"
+#~ "            <h1>\n"
+#~ "                <a t-att-href=\"object.page_url\" t-out=\"object."
+#~ "display_name\"></a>\n"
+#~ "            </h1>\n"
+#~ "            <p><b>Modified by:</b> <t t-out=\"object.create_uid.name\"></"
+#~ "t></p>\n"
+#~ "            <p><b>Date:</b> <t t-out=\"object.create_date\"></t></p>\n"
+#~ "            <t t-if=\"object.summary\">\n"
+#~ "                <h3>Summary</h3>\n"
+#~ "                <p t-out=\"object.summary\"></p>\n"
+#~ "            </t>\n"
+#~ "            <h3>Diff</h3>\n"
+#~ "            <div style=\"overflow-x:scroll; font-size:0.85em; margin-"
+#~ "bottom:2em;\">\n"
+#~ "                <t t-out=\"object.diff\"></t>\n"
+#~ "            </div>\n"
+#~ "            <p>Have a great day.</p>\n"
+#~ "            <br>\n"
+#~ "            <p>Odoo</p>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<p>Hej!</p>\n"
+#~ " <p><t t-out=\"object.create_uid.name\"></t> har skickat in en ny "
+#~ "ändringsbegäran för <b t-out=\"object.page_id.name\"></b> och den behöver "
+#~ "ditt godkännande .</p>\n"
+#~ " <h1>\n"
+#~ " <a t-att-href=\"object.page_url\" t-out=\"object.display_name\"></a>\n"
+#~ " </h1>\n"
+#~ " <p><b>Ändrad av:</b> <t t-out=\"object.create_uid.name\"></t></p>\n"
+#~ " <p><b>Datum:</b> <t t-out=\"object.create_date\"></t></p>\n"
+#~ " <t t-if=\"object.summary\">\n"
+#~ " <h3>Sammanfattning</h3>\n"
+#~ " <p t-out=\"object.summary\"></p>\n"
+#~ " </t>\n"
+#~ " <h3>Diff</h3>\n"
+#~ " <div style=\"overflow-x:scroll; font-size:0.85em; margin-bottom:2em;\">\n"
+#~ " <t t-out=\"object.diff\"></t>\n"
+#~ " </div>\n"
+#~ " <p>Ha en bra dag.</p>\n"
+#~ " <br>\n"
+#~ " <p>Odoo</p>\n"
+#~ "        "
+
+#, python-format
+#~ msgid ""
+#~ "You are not authorized to do this.\r\n"
+#~ "Only approvers with these groups can approve this: "
+#~ msgstr ""
+#~ "Du är inte behörig att göra detta.\r\n"
+#~ "Endast godkännare med dessa grupper kan godkänna detta: "
+
+#~ msgid "Main Attachment"
+#~ msgstr "Huvudfäste"

@@ -29,7 +29,9 @@ export function Tabs({ items }: TabsProps) {
               style={{
                 border: "1px solid var(--o-color-border)",
                 borderRadius: 8,
-                background: isActive ? "var(--o-color-primary)" : "var(--o-color-surface)",
+                background: isActive
+                  ? "linear-gradient(90deg, var(--o-color-primary), var(--o-color-primary-700))"
+                  : "var(--o-color-surface)",
                 color: isActive ? "white" : "var(--o-color-text)",
                 padding: "8px 12px",
                 cursor: "pointer"

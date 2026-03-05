@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_gov_compras_root"
+        name="Compras"
+        parent="gov_processos.menu_gov_root"
+        sequence="7"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_compras_itens"
+        name="Itens de Compras"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_item_track"
+        sequence="10"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_compras_catalogo"
+        name="Catálogo da UG"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_catalog_item"
+        sequence="20"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_compras_previsao"
+        name="Previsão Orçamentária"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_previsao"
+        sequence="30"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+</odoo>
+

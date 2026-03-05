@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_list_compras_track" model="ir.ui.view">
+        <field name="name">gov.processo.doc.list.compras.track</field>
+        <field name="model">gov.processo.doc</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_processo_doc_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='doc_type']" position="after">
+                <field name="compras_item_track_ids" widget="many2many_tags" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_doc_form_compras_track" model="ir.ui.view">
+        <field name="name">gov.processo.doc.form.compras.track</field>
+        <field name="model">gov.processo.doc</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_processo_doc_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='doc_type']]/field[@name='doc_type']" position="after">
+                <field
+                    name="compras_item_track_ids"
+                    widget="many2many_tags"
+                    options="{'no_create': True}"
+                    required="doc_type != 'dfd'"
+                    readonly="state == 'assinado'"
+                />
+            </xpath>
+
+            <xpath expr="//sheet/notebook/page[1]/group[1]" position="after">
+                <group string="Rastreio de Compras">
+                    <field
+                        name="compras_item_track_ids"
+                        widget="many2many_tags"
+                        options="{'no_create': True}"
+                        readonly="state == 'assinado'"
+                    />
+                    <div class="alert alert-info" role="alert">
+                        No DFD o vinculo de ID de rastreio e opcional. Nas demais etapas, obrigatorio.
+                    </div>
+                </group>
+            </xpath>
+
+            <xpath expr="//page[field[@name='content_html']]/div[1]" position="before">
+                <div class="alert alert-warning" role="alert" invisible="doc_type == 'dfd'">
+                    Para esta etapa, vincule ao menos um ID de rastreio cadastrado no processo.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -4,14 +4,23 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
+import { getGovSuiteByPath } from "@/lib/gov-suite";
 
 const titleByPath: Record<string, string> = {
   "/": "Dashboard",
+  "/gov": "Gov Suite",
   "/processos": "Processos",
   "/documento-dfd": "Documento DFD"
 };
 
 function getTitle(pathname: string): string {
+  const govSuite = getGovSuiteByPath(pathname);
+  if (govSuite) {
+    return govSuite.label;
+  }
+  if (pathname.startsWith("/gov")) {
+    return titleByPath["/gov"];
+  }
   if (pathname.startsWith("/documento-dfd")) {
     return titleByPath["/documento-dfd"];
   }
@@ -26,11 +35,11 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
 
   return (
-    <div style={{ minHeight: "100dvh", display: "grid", gridTemplateRows: "56px 1fr" }}>
+    <div className="app-shell">
       <Topbar title={getTitle(pathname)} />
-      <div style={{ display: "grid", gridTemplateColumns: "232px 1fr", minHeight: 0 }}>
+      <div className="app-main-grid">
         <Sidebar />
-        <main style={{ padding: 20 }}>{children}</main>
+        <main className="app-main-content">{children}</main>
       </div>
     </div>
   );

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 Creu Blanca
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="document_page_form_view">
+        <field name="name">document.page.form (in document_page_group)</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_category_form" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="direct_group_ids" widget="many2many_tags" />
+            </field>
+        </field>
+    </record>
+</odoo>

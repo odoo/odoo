@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_project_kanban" model="ir.ui.view">
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
+                <a
+                    class="o_project_kanban_box"
+                    name="%(action_document_page_projects)d"
+                    type="action"
+                >
+                    <div>
+                        <b>
+                            <field
+                                name="document_page_count"
+                                nolabel="1"
+                                class="o_value"
+                            />
+                        </b>
+                        <span class="o_label">Wiki Pages</span>
+                    </div>
+                </a>
+            </xpath>
+        </field>
+    </record>
+    <record id="edit_project" model="ir.ui.view">
+        <field name="name">project.project.form - document_page_project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="action"
+                    name="%(action_document_page_projects)d"
+                    icon="fa-book"
+                >
+                    <field
+                        string="Wiki Pages"
+                        name="document_page_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

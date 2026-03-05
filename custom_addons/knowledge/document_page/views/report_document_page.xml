@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_documentpage_doc">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h1 t-field="doc.name" />
+                <div t-out="doc.content" />
+            </div>
+        </t>
+    </template>
+
+    <template id="report_documentpage">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="document_page.report_documentpage_doc" />
+            </t>
+        </t>
+    </template>
+
+    <record id="report_document_page" model="ir.actions.report">
+        <field name="name">Document Page</field>
+        <field name="model">document.page</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">document_page.report_documentpage</field>
+        <field name="report_file">document_page.report_documentpage</field>
+        <field name="binding_type">report</field>
+        <field name="binding_model_id" ref="model_document_page" />
+    </record>
+</odoo>

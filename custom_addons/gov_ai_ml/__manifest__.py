@@ -1,6 +1,6 @@
 {
     "name": "GRP - IA Machine Learning",
-    "version": "19.0.0.0.0",
+    "version": "19.0.1.0.0",
     "category": "Government",
     "summary": "Camada de ML para recuperação híbrida e feedback de geração IA",
     "depends": ["gov_processos"],

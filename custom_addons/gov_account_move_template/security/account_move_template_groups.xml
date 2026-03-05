@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="privilege_account_move_template" model="res.groups.privilege">
+        <field name="name">Move Templates</field>
+    </record>
+
+    <record id="group_account_move_template_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="gov_account_move_template.privilege_account_move_template"/>
+    </record>
+
+    <record id="group_account_move_template_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="privilege_id" ref="gov_account_move_template.privilege_account_move_template"/>
+        <field name="implied_ids" eval="[(4, ref('gov_account_move_template.group_account_move_template_user'))]"/>
+    </record>
+</odoo>
+
+

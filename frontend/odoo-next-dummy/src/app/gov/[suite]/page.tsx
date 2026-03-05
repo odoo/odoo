@@ -14,5 +14,5 @@ export default async function GovSuitePage({ params }: GovSuitePageProps) {
     return <StatusState kind="error" message={`Suite gov/${resolved.suite} nao encontrada.`} />;
   }
 
-  return <GovListView suite={suite} />;
+  return <GovListView suiteKey={suite.key} />;
 }

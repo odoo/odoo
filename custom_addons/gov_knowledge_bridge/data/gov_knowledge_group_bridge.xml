@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="gov_base.group_gov_operador" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('knowledge.group_knowledge_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('document_page.group_document_editor'))]"/>
     </record>
 
     <record id="gov_base.group_gov_admin" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('knowledge.group_knowledge_manager'))]"/>
+        <field name="implied_ids" eval="[(4, ref('document_page.group_document_manager'))]"/>
     </record>
 </odoo>
-

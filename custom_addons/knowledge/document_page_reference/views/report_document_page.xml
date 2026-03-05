@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="report_documentpage_doc"
+        inherit_id="document_page.report_documentpage_doc"
+    >
+        <xpath expr="//div[@t-out='doc.content']" position="attributes">
+            <attribute name="t-if">1==0</attribute>
+        </xpath>
+        <xpath expr="//div[@t-out='doc.content']" position="after">
+            <t t-out="doc.get_raw_content()" />
+        </xpath>
+    </template>
+</odoo>

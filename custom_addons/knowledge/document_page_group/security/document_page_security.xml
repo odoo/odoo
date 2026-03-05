@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.rule" id="document_page_groups_rule">
+        <field name="name">document_page groups</field>
+        <field name="model_id" ref="model_document_page" />
+        <field name="global" eval="True" />
+        <field
+            name="domain_force"
+        >['|','&amp;',('type', '=', 'content'),'|','|',('parent_id', '=', False), ('parent_id.group_ids','=',False),('parent_id.group_ids.users','=',user.id), '&amp;', ('type', '=', 'category'), '|', ('group_ids', '=', False), ('group_ids.users', '=', user.id)]</field>
+    </record>
+</odoo>

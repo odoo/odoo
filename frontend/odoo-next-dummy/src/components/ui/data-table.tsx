@@ -13,16 +13,9 @@ type DataTableProps<T extends { id: number }> = {
 
 export function DataTable<T extends { id: number }>({ rows, columns }: DataTableProps<T>) {
   return (
-    <div
-      style={{
-        border: "1px solid var(--o-color-border)",
-        borderRadius: "var(--o-radius)",
-        overflow: "hidden",
-        background: "var(--o-color-surface)"
-      }}
-    >
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead style={{ background: "#f7f7fb" }}>
+    <div className="table-wrap">
+      <table>
+        <thead>
           <tr>
             {columns.map((column) => (
               <th

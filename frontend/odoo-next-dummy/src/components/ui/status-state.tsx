@@ -18,7 +18,7 @@ export function StatusState({ kind, message }: StatusStateProps) {
         borderRadius: "var(--o-radius)",
         padding: 20,
         color: colors[kind],
-        background: "var(--o-color-surface)"
+        background: "linear-gradient(180deg, #fffdf9, #f8f3e8)"
       }}
     >
       {message}

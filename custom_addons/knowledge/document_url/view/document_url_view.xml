@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id='action_ir_attachment_add_url' model='ir.actions.act_window'>
+        <field name='name'>Add URL</field>
+        <field name='res_model'>ir.attachment.add_url</field>
+        <field name='type'>ir.actions.act_window</field>
+        <field name='target'>new</field>
+        <field name='view_mode'>form</field>
+    </record>
+
+    <record id="view_ir_attachment_add_url_form" model="ir.ui.view">
+        <field name="name">ir.attachment.add_url.form</field>
+        <field name="model">ir.attachment.add_url</field>
+        <field name="arch" type="xml">
+            <form string="Add URL">
+                <group>
+                    <field name="name" />
+                    <field name="url" widget="url" />
+                </group>
+                <footer>
+                    <button
+                        name="action_add_url"
+                        string="Add"
+                        class="oe_highlight"
+                        type="object"
+                    />
+                    <button special="cancel" string="Cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

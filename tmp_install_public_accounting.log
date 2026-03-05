@@ -1,0 +1,110 @@
+2026-03-05 01:12:11,510 20284 INFO ? odoo: Odoo version 19.0 
+2026-03-05 01:12:11,511 20284 INFO ? odoo: Using configuration file at c:\users\ander\onedrive\documentos\github\odoo\kore.conf 
+2026-03-05 01:12:11,511 20284 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\ander\\OneDrive\\Documentos\\GitHub\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons\\knowledge']) 
+2026-03-05 01:12:11,511 20284 INFO ? odoo: database: atlas@localhost:5433 
+2026-03-05 01:12:12,964 20284 INFO kore odoo.modules.loading: loading 1 modules... 
+2026-03-05 01:12:12,971 20284 INFO kore odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-05 01:12:13,035 20284 INFO kore odoo.modules.loading: updating modules list 
+2026-03-05 01:12:13,041 20284 INFO kore odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-05 01:12:15,892 20284 INFO kore odoo.addons.base.models.ir_module: ALLOW access to module.button_install on ['GRP - Public Accounting Adaptation'] to user __system__ #1 via n/a 
+2026-03-05 01:12:16,023 20284 INFO kore odoo.modules.loading: loading 63 modules... 
+2026-03-05 01:12:17,971 20284 INFO kore odoo.modules.loading: Loading module gov_account_fiscal_year (58/63) 
+2026-03-05 01:12:18,348 20284 INFO kore odoo.registry: module gov_account_fiscal_year: creating or updating database tables 
+2026-03-05 01:12:18,710 20284 INFO kore odoo.modules.loading: loading gov_account_fiscal_year/security/account_fiscal_year_groups.xml 
+2026-03-05 01:12:18,800 20284 INFO kore odoo.modules.loading: loading gov_account_fiscal_year/security/ir.model.access.csv 
+2026-03-05 01:12:18,831 20284 INFO kore odoo.modules.loading: loading gov_account_fiscal_year/data/account_fiscal_year_sequence.xml 
+2026-03-05 01:12:18,844 20284 INFO kore odoo.modules.loading: loading gov_account_fiscal_year/views/account_fiscal_year_views.xml 
+2026-03-05 01:12:18,904 20284 INFO kore odoo.modules.loading: loading gov_account_fiscal_year/views/account_fiscal_year_menus.xml 
+2026-03-05 01:12:18,953 20284 INFO kore odoo.modules.loading: Module gov_account_fiscal_year loaded in 0.98s, 152 queries (+152 other) 
+2026-03-05 01:12:18,953 20284 INFO kore odoo.modules.loading: Loading module gov_account_move_template (59/63) 
+2026-03-05 01:12:19,003 20284 INFO kore odoo.registry: module gov_account_move_template: creating or updating database tables 
+2026-03-05 01:12:19,351 20284 INFO kore odoo.modules.loading: loading gov_account_move_template/security/account_move_template_groups.xml 
+2026-03-05 01:12:19,384 20284 INFO kore odoo.modules.loading: loading gov_account_move_template/security/ir.model.access.csv 
+2026-03-05 01:12:19,402 20284 INFO kore odoo.modules.loading: loading gov_account_move_template/views/account_move_template_views.xml 
+2026-03-05 01:12:19,440 20284 WARNING kore odoo.fields: Couldn't generate a company-dependent domain for field account.move.template.line.account_id. The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either. 
+2026-03-05 01:12:19,452 20284 INFO kore odoo.modules.loading: loading gov_account_move_template/views/account_move_template_run_wizard_views.xml 
+2026-03-05 01:12:19,473 20284 INFO kore odoo.modules.loading: loading gov_account_move_template/views/account_move_template_menus.xml 
+2026-03-05 01:12:19,511 20284 INFO kore odoo.modules.loading: Module gov_account_move_template loaded in 0.56s, 215 queries (+215 other) 
+2026-03-05 01:12:19,512 20284 INFO kore odoo.modules.loading: Loading module gov_account_journal_lock_date (60/63) 
+2026-03-05 01:12:19,586 20284 INFO kore odoo.registry: module gov_account_journal_lock_date: creating or updating database tables 
+2026-03-05 01:12:19,864 20284 INFO kore odoo.modules.loading: loading gov_account_journal_lock_date/security/account_journal_lock_date_groups.xml 
+2026-03-05 01:12:19,895 20284 INFO kore odoo.modules.loading: loading gov_account_journal_lock_date/security/ir.model.access.csv 
+2026-03-05 01:12:19,908 20284 INFO kore odoo.modules.loading: loading gov_account_journal_lock_date/views/account_journal_views.xml 
+2026-03-05 01:12:19,952 20284 INFO kore odoo.modules.loading: loading gov_account_journal_lock_date/views/account_journal_lock_date_wizard_views.xml 
+2026-03-05 01:12:20,002 20284 INFO kore odoo.modules.loading: Module gov_account_journal_lock_date loaded in 0.49s, 196 queries (+196 other) 
+2026-03-05 01:12:20,002 20284 INFO kore odoo.modules.loading: Loading module gov_account_spread_cost_revenue (61/63) 
+2026-03-05 01:12:20,120 20284 INFO kore odoo.registry: module gov_account_spread_cost_revenue: creating or updating database tables 
+2026-03-05 01:12:20,244 20284 WARNING kore odoo.addons.base.models.ir_model: Two fields (spread_count, spread_ids) of account.move() have the same label: Spreads. [Modules: gov_account_spread_cost_revenue and gov_account_spread_cost_revenue] 
+2026-03-05 01:12:20,245 20284 WARNING kore odoo.addons.base.models.ir_model: Two fields (spread_count, spread_ids) of account.bank.statement.line() have the same label: Spreads. [Modules: None and None] 
+2026-03-05 01:12:20,593 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/security/account_spread_groups.xml 
+2026-03-05 01:12:20,634 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/security/ir.model.access.csv 
+2026-03-05 01:12:20,650 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/data/account_spread_cron.xml 
+2026-03-05 01:12:20,732 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/views/account_spread_views.xml 
+2026-03-05 01:12:20,782 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/views/account_spread_line_views.xml 
+2026-03-05 01:12:20,810 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/views/account_move_views.xml 
+2026-03-05 01:12:20,851 20284 INFO kore odoo.modules.loading: loading gov_account_spread_cost_revenue/views/account_spread_menus.xml 
+2026-03-05 01:12:20,899 20284 INFO kore odoo.modules.loading: Module gov_account_spread_cost_revenue loaded in 0.90s, 411 queries (+411 other) 
+2026-03-05 01:12:20,899 20284 INFO kore odoo.modules.loading: Loading module gov_account_lock_date_update (62/63) 
+2026-03-05 01:12:20,975 20284 INFO kore odoo.registry: module gov_account_lock_date_update: creating or updating database tables 
+2026-03-05 01:12:21,199 20284 INFO kore odoo.modules.loading: loading gov_account_lock_date_update/security/account_lock_date_update_groups.xml 
+2026-03-05 01:12:21,239 20284 INFO kore odoo.modules.loading: loading gov_account_lock_date_update/security/ir.model.access.csv 
+2026-03-05 01:12:21,252 20284 INFO kore odoo.modules.loading: loading gov_account_lock_date_update/views/account_lock_date_log_views.xml 
+2026-03-05 01:12:21,296 20284 INFO kore odoo.modules.loading: loading gov_account_lock_date_update/views/account_lock_date_update_wizard_views.xml 
+2026-03-05 01:12:21,314 20284 INFO kore odoo.modules.loading: loading gov_account_lock_date_update/views/res_company_views.xml 
+2026-03-05 01:12:21,364 20284 INFO kore odoo.modules.loading: Module gov_account_lock_date_update loaded in 0.46s, 197 queries (+197 other) 
+2026-03-05 01:12:21,365 20284 INFO kore odoo.modules.loading: Loading module gov_public_accounting (63/63) 
+2026-03-05 01:12:21,437 20284 INFO kore odoo.registry: module gov_public_accounting: creating or updating database tables 
+2026-03-05 01:12:21,517 20284 WARNING kore odoo.addons.base.models.ir_model: Two fields (spread_count, spread_ids) of account.move() have the same label: Spreads. [Modules: gov_account_spread_cost_revenue and gov_account_spread_cost_revenue] 
+2026-03-05 01:12:21,517 20284 WARNING kore odoo.addons.base.models.ir_model: Two fields (spread_count, spread_ids) of account.bank.statement.line() have the same label: Spreads. [Modules: None and None] 
+2026-03-05 01:12:21,673 20284 INFO kore odoo.modules.loading: loading gov_public_accounting/data/gov_public_accounting_group_bridge.xml 
+2026-03-05 01:12:21,738 20284 INFO kore odoo.modules.loading: loading gov_public_accounting/views/res_company_views.xml 
+2026-03-05 01:12:21,782 20284 WARNING kore odoo.modules.loading: Transient module states were reset 
+2026-03-05 01:12:21,784 20284 ERROR kore odoo.registry: Failed to load registry 
+2026-03-05 01:12:21,784 20284 CRITICAL kore odoo.service.server: Failed to initialize database `kore`. 
+Traceback (most recent call last):
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\service\server.py", line 1510, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\registry.py", line 199, in new
+    load_modules(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 456, in load_modules
+    load_module_graph(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 209, in load_module_graph
+    load_data(env, idref, 'init', kind='data', package=package)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 59, in load_data
+    convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 693, in convert_file
+    convert_xml_import(env, module, fp, idref, mode, noupdate)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 792, in convert_xml_import
+    obj.parse(doc.getroot())
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 663, in parse
+    self._tag_root(de)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 616, in _tag_root
+    raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+odoo.tools.convert.ParseError: while parsing file:/c:/users/ander/onedrive/documentos/github/odoo/custom_addons/gov_public_accounting/views/res_company_views.xml:3
+Error while validating view near:
+
+                  <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_all_company_branches" type="object" invisible="not all_child_ids" icon="fa-sitemap" string="Branches"/>
+                    </div>
+                    <div class="d-flex gap-2">
+
+Label tag must contain a "for". To match label style without corresponding field or button, use 'class="o_form_label"'.
+
+View error context:
+{'file': 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons\\gov_public_accounting\\views\\res_company_views.xml',
+ 'line': 4,
+ 'name': 'res.company.form.inherit.gov.public.accounting',
+ 'view': ir.ui.view(1011,),
+ 'view.model': 'res.company',
+ 'view.parent': ir.ui.view(118,),
+ 'xmlid': 'res_company_view_form_inherit_gov_public_accounting'}
+
+2026-03-05 01:12:21,790 20284 INFO kore odoo.service.server: Initiating shutdown 
+2026-03-05 01:12:21,790 20284 INFO kore odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-05 01:12:21,790 20284 INFO kore odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

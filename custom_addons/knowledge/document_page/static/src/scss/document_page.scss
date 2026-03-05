@@ -1,0 +1,40 @@
+.o_document_page_diff {
+    table.diff {
+        font-family: Courier;
+        border: medium;
+
+        .diff_header {
+            background-color: $o_document_page_diff_header_background;
+        }
+
+        td.diff_header {
+            text-align: right;
+        }
+
+        .diff_next {
+            background-color: $o_document_page_diff_next_background;
+        }
+
+        .diff_add {
+            background-color: $o_document_page_diff_add_background;
+        }
+
+        .diff_chg {
+            background-color: $o_document_page_diff_change_background;
+        }
+
+        .diff_sub {
+            background-color: $o_document_page_diff_subtract_background;
+        }
+    }
+    removed {
+        display: inline;
+        text-decoration: line-through;
+        opacity: 0.5;
+        background-color: $o_document_page_diff_subtract_background;
+    }
+    added {
+        display: inline;
+        background-color: $o_document_page_diff_add_background;
+    }
+}

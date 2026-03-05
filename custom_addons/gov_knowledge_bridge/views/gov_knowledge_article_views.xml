@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="knowledge_article_view_form_gov_bridge" model="ir.ui.view">
-        <field name="name">knowledge.article.form.gov.bridge</field>
-        <field name="model">knowledge.article</field>
-        <field name="inherit_id" ref="knowledge.knowledge_article_view_form"/>
+        <field name="name">document.page.form.gov.bridge</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
-                <button
-                    name="action_open_gov_processos"
-                    type="object"
-                    string="Processos GOV"
-                    class="btn-secondary"
-                    invisible="not processo_ids"
-                />
-                <button
-                    name="action_open_gov_documentos"
-                    type="object"
-                    string="Documentos GOV"
-                    class="btn-secondary"
-                    invisible="not processo_doc_ids"
-                />
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_open_gov_processos" type="object" icon="fa-folder-open" invisible="not processo_ids">
+                    <field name="processo_count" widget="statinfo" string="Processos GOV"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_gov_documentos" type="object" icon="fa-file" invisible="not processo_doc_ids">
+                    <field name="processo_doc_count" widget="statinfo" string="Docs GOV"/>
+                </button>
             </xpath>
 
-            <xpath expr="//group[1]/group[1]" position="inside">
-                <field name="processo_ids" widget="many2many_tags"/>
-                <field name="processo_doc_ids" widget="many2many_tags"/>
+            <xpath expr="//notebook" position="inside">
+                <page name="gov_bridge" string="Processos GOV">
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                        <button
+                            name="action_open_gov_processos"
+                            type="object"
+                            string="Abrir Processos"
+                            class="btn-primary"
+                            invisible="not processo_ids"
+                        />
+                        <button
+                            name="action_open_gov_documentos"
+                            type="object"
+                            string="Abrir Documentos"
+                            class="btn-secondary"
+                            invisible="not processo_doc_ids"
+                        />
+                    </div>
+                    <group>
+                        <field name="processo_ids" widget="many2many_tags"/>
+                        <field name="processo_doc_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
 </odoo>
-

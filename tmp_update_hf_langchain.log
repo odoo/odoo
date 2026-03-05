@@ -1,0 +1,59 @@
+2026-03-05 01:42:32,357 8836 INFO ? odoo: Odoo version 19.0 
+2026-03-05 01:42:32,357 8836 INFO ? odoo: Using configuration file at c:\users\ander\onedrive\documentos\github\odoo\kore.conf 
+2026-03-05 01:42:32,357 8836 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\ander\\OneDrive\\Documentos\\GitHub\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons\\knowledge']) 
+2026-03-05 01:42:32,357 8836 INFO ? odoo: database: atlas@localhost:5433 
+2026-03-05 01:42:40,957 8836 INFO kore odoo.modules.loading: loading 1 modules... 
+2026-03-05 01:42:40,964 8836 INFO kore odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-03-05 01:42:41,035 8836 INFO kore odoo.modules.loading: updating modules list 
+2026-03-05 01:42:41,049 8836 INFO kore odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-05 01:42:42,382 8836 ERROR kore odoo.sql_db: bad query: b'INSERT INTO "ir_model_data" ("create_date", "create_uid", "model", "module", "name", "noupdate", "res_id", "write_date", "write_uid") VALUES (\'2026-03-05T01:42:40.743134\'::timestamp, 1, \'ir.module.module\', \'base\', \'module_iot_box_image\', true, 1068, \'2026-03-05T01:42:40.743134\'::timestamp, 1) RETURNING "id"'
+ERROR: ERRO:  duplicar valor da chave viola a restri��o de unicidade "ir_model_data_module_name_uniq_index"
+DETAIL:  Chave (module, name)=(base, module_iot_box_image) j� existe.
+ 
+2026-03-05 01:42:42,387 8836 WARNING kore odoo.modules.loading: Transient module states were reset 
+2026-03-05 01:42:42,387 8836 ERROR kore odoo.registry: Failed to load registry 
+2026-03-05 01:42:42,387 8836 CRITICAL kore odoo.service.server: Failed to initialize database `kore`. 
+Traceback (most recent call last):
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\service\server.py", line 1510, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\registry.py", line 199, in new
+    load_modules(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 419, in load_modules
+    Module.update_list()
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\addons\base\models\ir_module.py", line 72, in check_and_log
+    return method(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\addons\base\models\ir_module.py", line 811, in update_list
+    mod = self.create(dict(name=manifest.name, state=state, **values))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\addons\base\models\ir_module.py", line 776, in create
+    self.env['ir.model.data'].create(module_metadata_list)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\addons\base\models\ir_model.py", line 2309, in create
+    res = super().create(vals_list)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\decorators.py", line 365, in create
+    return method(self, vals_list)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\models.py", line 4709, in create
+    records = self._create(data_list)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\models.py", line 4885, in _create
+    cr.execute(SQL(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\sql_db.py", line 433, in execute
+    self._obj.execute(query, params)
+psycopg2.errors.UniqueViolation: ERRO:  duplicar valor da chave viola a restri��o de unicidade "ir_model_data_module_name_uniq_index"
+DETAIL:  Chave (module, name)=(base, module_iot_box_image) j� existe.
+
+2026-03-05 01:42:42,399 8836 INFO kore odoo.service.server: Initiating shutdown 
+2026-03-05 01:42:42,399 8836 INFO kore odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-05 01:42:42,399 8836 INFO kore odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

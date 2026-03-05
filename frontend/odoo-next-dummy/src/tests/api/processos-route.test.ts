@@ -1,20 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const fetchProcessosMock = vi.fn();
+const lisgovMock = vi.fn();
 
 vi.mock("@/lib/server/odoo-service", () => ({
-  fetchProcessos: (...args: unknown[]) => fetchProcessosMock(...args)
+  lisgov: (...args: unknown[]) => lisgovMock(...args)
 }));
 
 import { GET } from "@/app/api/processos/route";
 
 describe("GET /api/processos", () => {
   beforeEach(() => {
-    fetchProcessosMock.mockReset();
+    lisgovMock.mockReset();
   });
 
   it("retorna payload paginado", async () => {
-    fetchProcessosMock.mockResolvedValue({
+    lisgovMock.mockResolvedValue({
       page: 2,
       pageSize: 5,
       total: 11,
@@ -27,6 +27,6 @@ describe("GET /api/processos", () => {
 
     expect(response.status).toBe(200);
     expect(payload.totalPages).toBe(3);
-    expect(fetchProcessosMock).toHaveBeenCalledWith(2, 5);
+    expect(lisgovMock).toHaveBeenCalledWith("processos", 2, 5);
   });
 });

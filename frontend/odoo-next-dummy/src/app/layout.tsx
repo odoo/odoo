@@ -4,8 +4,8 @@ import { AppShell } from "@/components/layout/app-shell";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Odoo Next Dummy",
-  description: "Frontend Next.js com BFF para Odoo"
+  title: "GRP",
+  description: "Frontend Next.js GRP com BFF para Odoo"
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

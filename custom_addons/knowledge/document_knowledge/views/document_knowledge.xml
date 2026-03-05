@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="knowledge_action_documents" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="path">knowledge-documents</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_user_documents': True}</field>
+    </record>
+    <record id="ir_attachment_view_user_documents" model="ir.ui.view">
+        <field name="name">Documents search view: additional filters</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="res_model" />
+                <field name="index_content" />
+                <filter
+                    name="user_documents"
+                    string="Documents"
+                    domain="[('res_model', 'not like', 'ir.%'), ('res_model', '!=', False)]"
+                />
+            </xpath>
+            <xpath expr="//search/group" position="inside">
+                <filter
+                    name="group_model"
+                    string="Model"
+                    context="{'group_by': 'res_model'}"
+                />
+            </xpath>
+        </field>
+    </record>
+    <!-- Top menu item -->
+    <menuitem
+        id="menu_document_root"
+        name="Knowledge"
+        groups="document_knowledge.group_document_user"
+        web_icon="document_knowledge,static/description/icon.png"
+        sequence="116"
+    />
+    <menuitem
+        id="menu_document_section"
+        name="Documents"
+        groups="document_knowledge.group_ir_attachment_user"
+        parent="menu_document_root"
+        sequence="150"
+    />
+    <menuitem
+        id="menu_document"
+        name="Documents"
+        action="knowledge_action_documents"
+        parent="menu_document_section"
+        sequence="0"
+    />
+</odoo>

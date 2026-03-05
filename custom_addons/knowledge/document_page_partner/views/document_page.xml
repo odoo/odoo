@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_wiki_form" model="ir.ui.view">
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_form" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="partner_id" />
+            </field>
+        </field>
+    </record>
+    <record id="view_wiki_tree" model="ir.ui.view">
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_tree" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="partner_id" />
+            </field>
+        </field>
+    </record>
+    <record id="view_wiki_filter" model="ir.ui.view">
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_filter" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="partner_id" />
+            </field>
+            <xpath expr="//group//filter/ancestor::group">
+                <filter
+                    name="partner_id"
+                    string="Partner"
+                    domain="[]"
+                    context="{'group_by': 'partner_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
