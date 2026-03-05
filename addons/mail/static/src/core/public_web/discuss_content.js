@@ -53,7 +53,7 @@ export class DiscussContent extends Component {
                 }
                 return 60000 - (Date.now() % 60000);
             },
-            () => [this.thread?.correspondent?.persona?.tz, this.store.self?.tz]
+            () => [this.thread?.channel?.correspondent?.persona?.tz, this.store.self?.tz]
         );
     }
 

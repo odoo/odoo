@@ -7,7 +7,14 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Command, mockService, patchWithCleanup, withUser } from "@web/../tests/web_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
+import {
+    Command,
+    mockService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -59,4 +66,21 @@ test("notify message to user as non member", async () => {
     );
     await contains(".o-mail-Message:has(:text('Hello!'))");
     expect.verifySteps(["push notification"]);
+});
+
+test("show correspondent local time in DM header when timezones differ", async () => {
+    mockDate("2026-01-01 12:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { tz: "Europe/Brussels" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", tz: "Asia/Kolkata" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-header:has(:text('17:30 local time'))");
 });
