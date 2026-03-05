@@ -611,6 +611,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         return fixed_taxes_charge_list, emptying_taxes_lines_list
 
+    def _enumerate_invoice_lines(self, invoice, start=0):
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
+        return enumerate(invoice_lines, start=start)
+
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
@@ -643,11 +647,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
         # actual invoice lines are added to invoice_line_vals_list
-        for line_id, line in enumerate(invoice_lines):
+        for line_id, line in self._enumerate_invoice_lines(invoice):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
             line_vals = self._get_invoice_line_vals(line, line_id, {**line_taxes_vals, 'invoice_line': line})
             invoice_line_vals_list.append(line_vals)

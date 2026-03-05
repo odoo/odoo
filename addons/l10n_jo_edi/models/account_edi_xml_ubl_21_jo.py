@@ -55,26 +55,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return invoice._get_invoice_scope_code() + invoice._get_invoice_payment_method_code() + invoice._get_invoice_tax_payer_type_code()
 
     def _get_line_edi_id(self, line, default_id):
-        if not line.is_refund:  # in case it's invoice not credit note
-            return default_id
-
-        refund_move = line.move_id
-        invoice_move = refund_move.reversed_entry_id
-        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
-        n = len(invoice_lines)
-
-        line_id = -1
-        for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
-            if line.product_id == invoice_line.product_id \
-                    and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit \
-                    and line.discount == invoice_line.discount:
-                line_id = invoice_line_id
-                break
-        if line_id == -1:
-            line_id = n + default_id
-
-        return line_id
+        # only kept for stable policy, would be removed in FWs
+        return default_id
 
     def _aggregate_totals(self, vals):
         """
@@ -283,7 +265,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return {
             'currency': JO_CURRENCY,
             'currency_dp': self._get_currency_decimal_places(),
-            'id': self._get_line_edi_id(line, default_id=line_id + 1),
+            'id': line_id,
             'line_quantity': line.quantity,
             'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
             'line_extension_amount': self._get_line_taxable_amount(line),
@@ -381,6 +363,34 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     ####################################################
     # export methods
     ####################################################
+
+    def _enumerate_invoice_lines(self, invoice, start=0):
+        if invoice.move_type == 'out_refund':
+            invoice_edi_id_x_line = dict(self._enumerate_invoice_lines(invoice.reversed_entry_id, start=start))
+            overflow_edi_id = len(invoice_edi_id_x_line) + 1
+
+            refund_edi_id_x_line = {}
+            refund_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+            for refund_line in refund_lines:
+                matching_edi_ids = [
+                    line_id for line_id, line in invoice_edi_id_x_line.items()
+                    if line.product_id == refund_line.product_id
+                    and line.price_unit == refund_line.price_unit
+                    and line.discount == refund_line.discount
+                    and line.quantity >= refund_line.quantity
+                ]
+
+                if matching_edi_ids:
+                    edi_id = min(matching_edi_ids, key=lambda line_id: invoice_edi_id_x_line[line_id].quantity)
+                    refund_edi_id_x_line[edi_id] = refund_line
+                    invoice_edi_id_x_line.pop(edi_id)
+                else:
+                    refund_edi_id_x_line[overflow_edi_id] = refund_line
+                    overflow_edi_id += 1
+
+            return refund_edi_id_x_line.items()
+        else:
+            return super()._enumerate_invoice_lines(invoice, 1)
 
     def _export_invoice_vals(self, invoice):
         vals = super()._export_invoice_vals(invoice)
