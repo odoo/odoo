@@ -1,5 +1,6 @@
 import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Component, onWillUpdateProps } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -56,6 +57,7 @@ export class Notebook extends Component {
         className: "",
         orientation: "horizontal",
         onPageUpdate: () => {},
+        onWillActivatePage: () => {},
     };
     static props = {
         slots: { type: Object, optional: true },
@@ -66,6 +68,7 @@ export class Notebook extends Component {
         orientation: { type: String, optional: true },
         icons: { type: Object, optional: true },
         onPageUpdate: { type: Function, optional: true },
+        onWillActivatePage: { type: Function, optional: true },
     };
 
     setup() {
@@ -74,6 +77,7 @@ export class Notebook extends Component {
         this.invalidPages = new Set();
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
+        this.keepLastPageTransition = new KeepLast();
         useLayoutEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
@@ -101,10 +105,14 @@ export class Notebook extends Component {
         return page.Component && page;
     }
 
-    activatePage(pageIndex) {
+    async activatePage(pageIndex) {
         if (!this.disabledPages.includes(pageIndex) && this.state.currentPage !== pageIndex) {
-            this.activePane.el?.classList.remove("show");
-            this.state.currentPage = pageIndex;
+            const prom = (async () => this.props.onWillActivatePage(pageIndex))();
+            const canProceed = await this.keepLastPageTransition.add(prom);
+            if (canProceed !== false) {
+                this.activePane.el?.classList.remove("show");
+                this.state.currentPage = pageIndex;
+            }
         }
     }
 

@@ -531,6 +531,10 @@ export class FormCompiler extends ViewCompiler {
             "onPageUpdate",
             `(page) => __comp__.props.onNotebookPageChange(${noteBookId}, page)`
         );
+        noteBook.setAttribute(
+            "onWillActivatePage",
+            `(page) => __comp__.onWillChangeNotebookPage?.(${noteBookId}, page)`
+        );
 
         for (const child of el.children) {
             if (getTag(child, true) !== "page") {
