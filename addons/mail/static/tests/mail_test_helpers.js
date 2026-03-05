@@ -347,9 +347,7 @@ export async function start(options) {
             after(() => this.clear());
         },
     });
-    if (!options?.serverVersion) {
-        serverState.serverVersion = [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
-    }
+    serverState.serverVersion = options?.serverVersion ?? [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
     if (!MockServer.current) {
         await startServer();
     }
