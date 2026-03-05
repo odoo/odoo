@@ -190,6 +190,11 @@ class ResUsers(models.Model):
     def check_synchronization_status(self):
         return {}
 
+    @api.model
+    def get_calendar_sync_email(self):
+        """Meant to be overridden by a specific calendar provider"""
+        return False
+
     def _has_any_active_synchronization(self):
         """
         Overridable method for checking if user has any synchronization active in inherited modules.

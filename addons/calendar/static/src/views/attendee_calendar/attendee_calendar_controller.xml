@@ -26,7 +26,11 @@
                                     <t t-if="this.model.syncStatus.google_calendar == 'sync_active'">Google</t>
                                     <t t-else="">Outlook</t>
                                 </span>
-                                <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                                <div class="o_calendar_stop o-xsmaller flex-col text-end">
+                                    <i id="stop_symbol" class="fa fa-square px-1 o_text_red"/>
+                                    <span id="stop_text" class="o_text_red">Stop Sync</span>
+                                    <div t-if="this.model.syncEmail" t-out="this.model.syncEmail"/>
+                                </div>
                             </div>
                         </button>
                     </div>
@@ -36,8 +40,8 @@
                         <div>
                             <i id="pause_symbol" class='fa fa-pause px-1 o_text_orange o_calendar_pause'/>
                             <i id="stop_symbol" class='fa fa-square px-1 o_text_red o_calendar_stop'/>
-                            <span id="pause_text" class='o_text_orange o_calendar_pause'>Synchro is paused</span>
-                            <span id="stop_text" class="o_text_red o_calendar_stop">Stop synchro</span>
+                            <span id="pause_text" class='o_text_orange o_calendar_pause'>Sync is paused</span>
+                            <span id="stop_text" class="o_text_red o_calendar_stop">Stop Sync</span>
                         </div>
                     </button>
                 </t>
