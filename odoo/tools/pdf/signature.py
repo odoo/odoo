@@ -35,7 +35,6 @@ from odoo.tools.pdf import (
     NumberObject,
     FloatObject,
     ByteStringObject,
-    TextStringObject,
     DecodedStreamObject as StreamObject,
     create_string_object
 )
@@ -113,16 +112,17 @@ class PdfSigner:
 
         incremented_objects = {}
         pdf_merger = IncrementalPdfMerge(self.pdf_raw)
+        signer_identifier = f"{signer.name} <{signer.email}>"
 
         # 1. Merge Overlay (if provided) or Load Original
         if overlay_items:
             overlay_pdf = PdfFileReader(overlay_items, strict=False)
-            pdf_reader, incremented_objects = pdf_merger._merge_pdf_pages(overlay_pdf)
+            pdf_reader, incremented_objects = pdf_merger._merge_pdf_pages_as_annotation(overlay_pdf, signer_identifier)
         else:
             pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
 
         # 2. Prepare the Signature Field Structure
-        self._setup_form(pdf_reader, True, field_name, incremented_objects, signer)
+        self._setup_form(pdf_reader, True, field_name, incremented_objects, signer_identifier)
 
         # 3. Write the Incremental Update (with empty signature placeholders)
         pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
@@ -161,7 +161,7 @@ class PdfSigner:
             visible_signature: bool,
             field_name: str,
             incremented_objects: dict[tuple[int, int], Any],
-            signer: Optional[ResUsers] = None
+            signed_by: str
     ) -> None:
         """
         Configures the PDF ``/AcroForm`` and creates the Signature Field dictionaries.
@@ -181,10 +181,10 @@ class PdfSigner:
         :type pdf_reader: PdfFileReader
         :param visible_signature: Whether to generate visual appearance streams.
         :type visible_signature: bool
-        :param field_name: The name of the form field.
+        :param field_name: The name of the acro_form field.
         :type field_name: str
-        :param signer: The user context for text generation.
-        :type signer: ResUsers or None
+        :param signed_by: Text identifier of the user who is signing this document.
+        :type signer: str or None
         """
         writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
@@ -192,30 +192,27 @@ class PdfSigner:
         # --- 1. SETUP ACROFORM ---
         acro_form_originally_exist = False
         if CD.ACRO_FORM not in catalog:
-            form = DictionaryObject()
-            form.update({
+            acro_form = DictionaryObject()
+            acro_form.update({
                 NameObject(IF.SigFlags): NumberObject(3)
             })
-            form_ref = writer._add_object(form)
-
-            catalog[NameObject(CD.ACRO_FORM)] = form_ref
+            catalog[NameObject(CD.ACRO_FORM)] = writer._add_object(acro_form)
         else:
             acro_form_originally_exist = True
-            form = catalog[CD.ACRO_FORM]
-
+            acro_form = catalog[CD.ACRO_FORM].get_object()
             # Update flags: Allow Append Mode (Bit 2) | Signatures Exist (Bit 1) = 3
-            if IF.SigFlags not in form:
-                form[NameObject(IF.SigFlags)] = NumberObject(3)
+            if IF.SigFlags not in acro_form:
+                acro_form[NameObject(IF.SigFlags)] = NumberObject(3)
             else:
-                current_flags = form[IF.SigFlags]
-                form[NameObject(IF.SigFlags)] = NumberObject(int(current_flags) | 3)
+                current_flags = acro_form[IF.SigFlags]
+                acro_form[NameObject(IF.SigFlags)] = NumberObject(int(current_flags) | 3)
 
         # --- 2. DEFINE SIGNATURE FIELD METADATA ---
         # We create a Widget Annotation that acts as the signature field.
         # Flags=132 (Print + Locked): Visible when printed, cannot be deleted by user.
         page = pdf_reader.pages[0]
-        signature_field = DictionaryObject()
-        signature_field.update({
+        signature_annotation = DictionaryObject()
+        signature_annotation.update({
             NameObject("/FT"): NameObject("/Sig"),  # Field Type: Signature
             NameObject("/T"): create_string_object(field_name),
             NameObject("/Type"): NameObject("/Annot"),  # Object Type: Annotation
@@ -226,16 +223,12 @@ class PdfSigner:
 
         # --- 3. CONSTRUCT VISUAL APPEARANCE (Optional) ---
         if visible_signature:
-            # ------------------------------------------------------------------
             # 1. Text content
-            # ------------------------------------------------------------------
             date_str = datetime.datetime.now().strftime("%Y-%m-%d")
-            line1 = f"Digitally signed by {signer.name} <{signer.email}>"  #TODO: Sanitize to prevent PDF crashes if needed
+            line1 = f"Digitally signed by {signed_by}"  #TODO: Sanitize to prevent PDF crashes if needed
             line2 = f"Date: {date_str}"
 
-            # ------------------------------------------------------------------
             # 2. Dynamic size calculation (SAFE HEURISTIC)
-            # ------------------------------------------------------------------
             font_size = 10
             padding = 5
             avg_char_width = font_size * 0.55
@@ -245,9 +238,7 @@ class PdfSigner:
             calc_width = int((max_chars * avg_char_width) + (padding * 4))
             calc_height = int((font_size * 2) + (padding * 4))
 
-            # ------------------------------------------------------------------
             # 3. Positioning (top-right of page)
-            # ------------------------------------------------------------------
             origin = page.mediabox.upper_right
             margin = 20
 
@@ -258,11 +249,9 @@ class PdfSigner:
 
             rect = [x1, y1, x2, y2]
 
-            # ------------------------------------------------------------------
             # 4. Create appearance stream (Form XObject)
-            # ------------------------------------------------------------------
-            stream = StreamObject()
-            stream.update({
+            signature_appearance_stream = StreamObject()
+            signature_appearance_stream.update({
                 NameObject("/Type"): NameObject("/XObject"),
                 NameObject("/Subtype"): NameObject("/Form"),
                 NameObject("/BBox"): ArrayObject([
@@ -285,9 +274,7 @@ class PdfSigner:
                 })
             })
 
-            # ------------------------------------------------------------------
             # 5. Deterministic text layout (NO T*)
-            # ------------------------------------------------------------------
             text_y_top = calc_height - padding - font_size
             text_y_bottom = text_y_top - (font_size + 2)
 
@@ -302,23 +289,21 @@ class PdfSigner:
                 "ET Q"
             )
 
-            stream._data = b_(pdf_ops)
+            signature_appearance_stream._data = b_(pdf_ops)
 
-            # ------------------------------------------------------------------
             # 6. Attach appearance to signature field
-            # ------------------------------------------------------------------
             signature_appearance = DictionaryObject()
             signature_appearance.update({
-                NameObject("/N"): stream
+                NameObject("/N"): signature_appearance_stream
             })
 
-            signature_field.update({
+            signature_annotation.update({
                 NameObject("/Rect"): ArrayObject([NumberObject(x) for x in rect]),
                 NameObject("/AP"): signature_appearance
             })
         else:
             # Invisible signature (Zero-width rect)
-            signature_field.update({
+            signature_annotation.update({
                 NameObject("/Rect"): ArrayObject([NumberObject(0), NumberObject(0), NumberObject(0), NumberObject(0)])
             })
 
@@ -326,7 +311,6 @@ class PdfSigner:
         # /Contents: A large hex string (0-padded) to hold the CMS signature later.
         # /ByteRange: A placeholder array [0, 0, 0, 0] to hold offsets later.
         # Reserve 60 bytes for ByteRange (enough for four 10-digit integers).
-        # byte_range_placeholder = TextStringObject(" " * 60)
         byte_range_placeholder = ArrayObject([
             NumberObject(0),
             NumberObject(9999999999),
@@ -334,8 +318,8 @@ class PdfSigner:
             NumberObject(9999999999)
         ])
 
-        signature_field_value = DictionaryObject()
-        signature_field_value.update({
+        signature_object = DictionaryObject()
+        signature_object.update({
             NameObject("/Type"): NameObject("/Sig"),
             NameObject("/Contents"): ByteStringObject(b"\0" * 8192),
             NameObject("/ByteRange"): byte_range_placeholder,
@@ -345,34 +329,59 @@ class PdfSigner:
         })
 
         # Register objects with the temporary writer to get references
-        signature_field_ref = writer._add_object(signature_field)
-        signature_field_value_ref = writer._add_object(signature_field_value)
+        signature_annotation_ref = writer._add_object(signature_annotation)
+        signature_object_ref = writer._add_object(signature_object)
 
         # Link signature value dict to the field dict
-        signature_field.update({
-            NameObject("/V"): signature_field_value_ref
+        signature_annotation.update({
+            NameObject("/V"): signature_object_ref
         })
 
         # --- 5. REGISTER FIELD IN CATALOG AND PAGE ---
         # Add to /AcroForm /Fields
-        if CD.Fields not in form:
-            fields = ArrayObject()
+        try:
+            raw_fields = acro_form.raw_get(CD.Fields)
+        except KeyError:
+            raw_fields = None
+        if raw_fields and isinstance(raw_fields, IndirectObject):
+            fields_array = raw_fields.get_object()
+            fields_array.append(signature_annotation_ref)
+            raw_id = raw_fields.idnum
+            raw_gen = raw_fields.generation
+            if (raw_id, raw_gen) not in incremented_objects:
+                incremented_objects[(raw_id, raw_gen)] = fields_array
+            pdf_reader.cache_indirect_object(raw_gen, raw_id, fields_array)
         else:
-            fields = form[CD.Fields]
-        fields.append(signature_field_ref)
-        form.update({
-            NameObject(CD.Fields): fields
-        })
+            if raw_fields is None:
+                raw_fields = ArrayObject()
+            raw_fields.append(signature_annotation_ref)
+            acro_form[NameObject(CD.Fields)] = raw_fields
 
         # Add to Page /Annots
-        if PG.ANNOTS not in page:
-            page[NameObject(PG.ANNOTS)] = ArrayObject()
-        page[NameObject(PG.ANNOTS)].append(signature_field_ref)
+        try:
+            raw_annots = page.raw_get(PG.ANNOTS)
+        except KeyError:
+            raw_annots = None
+        if raw_annots and isinstance(raw_annots, IndirectObject):
+            annots_array = raw_annots.get_object()
+            annots_array.append(signature_annotation_ref)
+            raw_id = raw_annots.idnum
+            raw_gen = raw_annots.generation
+            if (raw_id, raw_gen) not in incremented_objects:
+                incremented_objects[(raw_id, raw_gen)] = annots_array
+            pdf_reader.cache_indirect_object(raw_gen, raw_id, annots_array)
+        else:
+            if raw_annots is None:
+                raw_annots = ArrayObject()
+            raw_annots.append(signature_annotation_ref)
+            page[NameObject(PG.ANNOTS)] = raw_annots
 
-        page_ref_id = page.indirect_reference.idnum
-        page_ref_gen = page.indirect_reference.generation
-        incremented_objects[(page_ref_id, page_ref_gen)] = page
-        pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
+            page_ref_id = page.indirect_reference.idnum
+            page_ref_gen = page.indirect_reference.generation
+            if (page_ref_id, page_ref_gen) not in incremented_objects:
+                incremented_objects[(page_ref_id, page_ref_gen)] = page
+            pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
+
 
         root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
         if isinstance(root_entry, IndirectObject):
@@ -380,10 +389,11 @@ class PdfSigner:
             incremented_objects[(root_entry.idnum, root_entry.generation)] = catalog
             pdf_reader.cache_indirect_object(root_entry.generation, root_entry.idnum, catalog)
 
+
         acro_ref = catalog.raw_get(CD.ACRO_FORM)
         if acro_form_originally_exist and isinstance(acro_ref, IndirectObject):
-            incremented_objects[(acro_ref.idnum, acro_ref.generation)] = form
-            pdf_reader.cache_indirect_object(acro_ref.generation, acro_ref.idnum, form)
+            incremented_objects[(acro_ref.idnum, acro_ref.generation)] = acro_form
+            pdf_reader.cache_indirect_object(acro_ref.generation, acro_ref.idnum, acro_form)
 
     def _get_cms_object(self, digest: bytes) -> Optional[cms.ContentInfo]:
         """

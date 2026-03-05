@@ -48,8 +48,10 @@ from odoo.tools.pdf import (
     ArrayObject,
     DictionaryObject,
     NameObject,
+    BooleanObject,
     NumberObject,
     FloatObject,
+    TextStringObject,
     ContentStream,
     DecodedStreamObject as StreamObject,
 )
@@ -149,7 +151,7 @@ class IncrementalPdfMerge:
         """
         return self.output_stream.getvalue()
 
-    def merge_pdf(self, overlay_pdf: PdfFileReader) -> None:
+    def merge_pdf(self, overlay_pdf: PdfFileReader, merge_res_as_annotation=False) -> None:
         """
         Merges the content of an overlay PDF onto the current PDF output stream.
 
@@ -164,8 +166,90 @@ class IncrementalPdfMerge:
         :type overlay_pdf: PdfFileReader
         :return: None
         """
-        pdf_reader, incremented_objects = self._merge_pdf_pages(overlay_pdf)
+        if merge_res_as_annotation:
+            pdf_reader, incremented_objects = self._merge_pdf_pages_as_annotation(overlay_pdf)
+        else:
+            pdf_reader, incremented_objects = self._merge_pdf_pages(overlay_pdf)
+
         self._write_incremented_pdf(pdf_reader, incremented_objects)
+
+    def _merge_pdf_pages_as_annotation(self, overlay_pdf: PdfFileReader, annotations_title="OverlayPage") -> tuple[Any, dict[tuple[int, int], Any]]:
+        """ Merges two PDFs as if the second PDF is a stamp of the first one """
+        pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
+        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
+        incremented_objects = {}
+
+        for page_index in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_index]
+            overlay_page = overlay_pdf.pages[page_index]
+
+            content_stream = overlay_page.get_contents()
+            if not content_stream:
+                continue  # Skip if the ReportLab page is completely blank
+
+            overlay_resources = overlay_page.get(PG.RESOURCES, DictionaryObject())
+            media_box = page.mediabox
+
+            # Create the Appearance Stream (The ReportLab Graphics)
+            appearance_stream = StreamObject()
+            appearance_stream._data = content_stream.get_data()
+            appearance_stream.update({
+                NameObject("/Type"): NameObject("/XObject"),
+                NameObject("/Subtype"): NameObject("/Form"),
+                NameObject("/FormType"): NumberObject(1),
+                NameObject("/BBox"): ArrayObject([
+                    NumberObject(media_box.left), NumberObject(media_box.bottom),
+                    NumberObject(media_box.right), NumberObject(media_box.top)
+                ]),
+                NameObject("/Resources"): overlay_resources
+            })
+
+            # Create the Annotation
+            appearance_stream_ref = writer._add_object(appearance_stream)
+            annot_dict = DictionaryObject()
+            annot_dict.update({
+                NameObject("/Type"): NameObject("/Annot"),
+                NameObject("/Subtype"): NameObject("/Stamp"),
+                NameObject("/T"): TextStringObject(f"{annotations_title}_{page_index}"),
+                NameObject("/Rect"): ArrayObject([
+                    NumberObject(media_box.left), NumberObject(media_box.bottom),
+                    NumberObject(media_box.right), NumberObject(media_box.top)
+                ]),
+                NameObject("/F"): NumberObject(196),
+                NameObject("/Locked"): BooleanObject(True),
+                NameObject("/LockedContents"): BooleanObject(True),
+                NameObject("/AP"): DictionaryObject({
+                    NameObject("/N"): appearance_stream_ref
+                })
+            })
+
+            # Attach the Annotation to the Original Page
+            annot_ref = writer._add_object(annot_dict)
+            try:
+                raw_annots = page.raw_get(PG.ANNOTS)
+            except KeyError:
+                raw_annots = None
+            if raw_annots and isinstance(raw_annots, IndirectObject):
+                annots_array = raw_annots.get_object()
+                annots_array.append(annot_ref)
+                raw_id = raw_annots.idnum
+                raw_gen = raw_annots.generation
+                if (raw_id, raw_gen) not in incremented_objects:
+                    incremented_objects[(raw_id, raw_gen)] = annots_array
+                pdf_reader.cache_indirect_object(raw_gen, raw_id, annots_array)
+            else:
+                if raw_annots is None:
+                    raw_annots = ArrayObject()
+
+                raw_annots.append(annot_ref)
+                page[NameObject(PG.ANNOTS)] = raw_annots
+
+                page_ref_id = page.indirect_reference.idnum
+                page_ref_gen = page.indirect_reference.generation
+                incremented_objects[(page_ref_id, page_ref_gen)] = page
+                pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
+
+        return pdf_reader, incremented_objects
 
     def _merge_pdf_pages(self, overlay_pdf: PdfFileReader) -> tuple[PdfFileReader, dict[int, Any]]:
         """
