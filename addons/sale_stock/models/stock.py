@@ -29,6 +29,12 @@ class StockMove(models.Model):
             if move.sale_line_id:
                 move.packaging_uom_id = move.sale_line_id.product_uom_id
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        if self.sale_line_id.analytic_distribution:
+            res['analytic_distribution'] = self.sale_line_id.analytic_distribution
+        return res
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.
