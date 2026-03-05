@@ -1218,6 +1218,7 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
         channel_id: channelId,
         partner_id: pyEnv["res.partner"].create({ name: "Batman" }),
     });
+    listenStoreFetch("channels_as_member");
     setupChatHub({ opened: [channelId] });
     patchWithCleanup(SoundEffects.prototype, {
         play(name) {
@@ -1225,6 +1226,10 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
         },
     });
     const env = await start();
+    // Open messaging menu to force channels_as_member store fetch,
+    // as to not receive wrong outdated rtc_session data that would fail the "Batman video" step at the end
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await waitStoreFetch("channels_as_member");
     const network = await makeMockRtcNetwork({ env, channelId });
     const mockedRemote = network.makeMockRemote(channelMemberId);
     await click("[title='Join Call']");
