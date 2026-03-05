@@ -90,7 +90,7 @@ class StockScrap(models.Model):
         }
         for scrap in self:
             if scrap.company_id:
-                scrap.scrap_location_id = locations_per_company[scrap.company_id.id]
+                scrap.scrap_location_id = locations_per_company.get(scrap.company_id.id, False)
 
     @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
