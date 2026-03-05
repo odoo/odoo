@@ -29,6 +29,7 @@
             </field>
             <div name="commitment_date_div" position="after">
                 <field name="effective_date" invisible="not effective_date"/>
+                <field name="expected_date" invisible="1"/>  <!-- Needed for the placeholder widget -->
             </div>
             <field name="commitment_date" position="attributes">
                 <attribute name="options">{'placeholder_field': 'expected_date'}</attribute>
