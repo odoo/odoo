@@ -6,6 +6,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { effect } from "@web/core/utils/reactive";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
@@ -66,7 +67,25 @@ export class ThemeSelector extends Component {
             const height = Math.trunc(
                 this.themeSelectorWrapperRef.el.getBoundingClientRect().height
             );
-            iframe.style.height = height + "px";
+
+            // If reducing the size of the frame would cause the scrollable element to become unscrollable,
+            // then we don't resize the frame down to avoid flickering on Chromium-based browsers.
+            const scrollable = closestScrollableY(iframe);
+            const scrollableRange = scrollable
+                ? scrollable.scrollHeight - scrollable.clientHeight
+                : 0;
+            let adjustHeight = true;
+            if (
+                scrollable &&
+                iframe.style.height &&
+                iframe.clientHeight - height >= scrollableRange &&
+                iframe.clientHeight - height - scrollableRange < 20
+            ) {
+                adjustHeight = false;
+            }
+            if (adjustHeight) {
+                iframe.style.height = height + "px";
+            }
         });
         onMounted(() => {
             this.htmlResizeObserver = new ResizeObserver(this.throttledResize);
