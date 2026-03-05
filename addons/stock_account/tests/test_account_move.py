@@ -217,6 +217,7 @@ class TestAccountMove(TestStockValuationCommon):
         bill = self.env['account.move'].with_company(branch.id).with_context(default_move_type='in_invoice').create({
             'partner_id': self.partner.id,
             'invoice_date': fields.Date.today(),
+            'company_id': branch.id,
             'invoice_line_ids': [
                 Command.create({
                     'product_id': product.id,
