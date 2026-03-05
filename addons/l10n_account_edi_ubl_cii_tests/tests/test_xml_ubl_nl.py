@@ -83,6 +83,9 @@ class TestUBLNL(TestUBLCommon):
             'include_base_amount': True,
             'country_id': cls.env.ref('base.nl').id,
             'amount': 10.0,
+            'ubl_cii_type': 'allowance_charge',
+            'ubl_cii_charge_reason_code': 'AEO',
+            'ubl_cii_allowance_charge_reason': 'Test Tax',
             'sequence': 1,
         })
 
