@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+import { animationFrame, press } from "@odoo/hoot-dom";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -1028,4 +1029,47 @@ test("should change text color for text with color and background gradient", asy
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter: `<p><font style="color: rgb(255, 0, 0);">this <font style="background-image: ${redToBlueGradient};">is a <font style="color: rgb(0, 0, 255);">[tes]</font>t</font> line</font></p>`,
     });
+});
+
+test("should not apply color to selection placeholder nodes", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>1[]</td>
+                    </tr>
+                </tbody>
+            </table>
+        `)
+    );
+    await press(["ctrl", "a"]);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="">[<br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">1</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="">]<br></p>
+        `)
+    );
+    setColor("#FF0000", "color")(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder="">[<br></p>
+            <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><font style="color: rgb(255, 0, 0);">1</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="">]<br></p>
+        `)
+    );
 });
