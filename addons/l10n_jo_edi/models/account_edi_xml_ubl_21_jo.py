@@ -29,7 +29,6 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _add_invoice_config_vals(self, vals):
         super()._add_invoice_config_vals(vals)
         vals['document_type'] = 'invoice'  # Only use Invoice in JO, even for credit and debit notes
-        vals['fixed_taxes_as_allowance_charges'] = False  # In JO, fixed taxes should be reported as taxes, not as AllowanceCharges
 
         # We cannot use a new `res.currency` record to round to 9 decimals, because the
         # `res.currency.rounding` field definition prevents rounding to more than 6 decimal places.
@@ -385,10 +384,22 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         base_line = vals['base_line']
         currency_9_dp = vals['currency_id']
 
+        # Remove allowance/charge tax effect from tax_details
+        raw_total_excluded_currency = base_line['tax_details']['raw_total_excluded_currency']
+        raw_total_excluded = base_line['tax_details']['raw_total_excluded']
+        total_excluded_currency = base_line['tax_details']['total_excluded_currency']
+        total_excluded = base_line['tax_details']['total_excluded']
+        for allowance_charge_data in base_line.get('_ubl_values', {}).get('allowance_charge_data', []):
+            tax_data = allowance_charge_data['tax_data']
+            raw_total_excluded_currency -= tax_data['raw_tax_amount_currency']
+            raw_total_excluded -= tax_data['raw_tax_amount']
+            total_excluded_currency -= tax_data['tax_amount_currency']
+            total_excluded -= tax_data['tax_amount']
+
         # OVERRIDE account_edi_xml_ubl_20.py
         discount_factor = 1 - (base_line['discount'] / 100.0)
         if discount_factor != 0.0:
-            gross_subtotal_currency = base_line['tax_details']['raw_total_excluded_currency'] / discount_factor
+            gross_subtotal_currency = raw_total_excluded_currency / discount_factor
         else:
             gross_subtotal_currency = base_line['currency_id'].round(base_line['price_unit'] * base_line['quantity'])
 
@@ -399,7 +410,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         vals['gross_subtotal_currency'] = currency_9_dp.round(vals['gross_price_unit_currency'] * base_line['quantity'])
 
         # Then compute the discount from the gross subtotal
-        vals['discount_amount_currency'] = vals['gross_subtotal_currency'] - base_line['tax_details']['total_excluded_currency']
+        vals['discount_amount_currency'] = vals['gross_subtotal_currency'] - total_excluded_currency
 
     def _add_invoice_line_amount_nodes(self, line_node, vals):
         super()._add_invoice_line_amount_nodes(line_node, vals)
