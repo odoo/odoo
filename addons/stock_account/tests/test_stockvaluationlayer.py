@@ -367,9 +367,9 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self._make_in_move(self.product, 1, unit_cost=20)
         self._make_dropship_move(self.product, 1, unit_cost=10)
 
-        self.assertEqual(self.product.total_value, 30)
+        self.assertEqual(self.product.total_value, 26.67)
         self.assertEqual(self.product.qty_available, 2)
-        self.assertEqual(self.product.standard_price, 15)
+        self.assertAlmostEqual(self.product.standard_price, 13.33, places=2)
 
     def test_rounding_1(self):
         self._make_in_move(self.product, 1, unit_cost=1.00)

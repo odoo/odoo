@@ -18,7 +18,7 @@ class StockLot(models.Model):
         Used to compute margins on sale orders."""
     )
 
-    @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated', 'product_id.stock_move_ids.value')
+    @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated', 'product_id.stock_move_ids.value', 'standard_price')
     @api.depends_context('to_date', 'company', 'warehouse_id')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
@@ -38,7 +38,7 @@ class StockLot(models.Model):
             elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
                 lot.total_value = lot.standard_price * qty_valued
             elif valuated_product.cost_method == 'average':
-                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))[1] * qty_valued / qty_available
             else:
                 lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False)) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_valued if qty_valued else 0.0
@@ -79,7 +79,10 @@ class StockLot(models.Model):
                 if not lot.standard_price:
                     lot.standard_price = lot.product_id.standard_price
                 continue
-            lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
+            elif lot.product_id.cost_method == 'average':
+                lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
+            else:
+                lot.standard_price = lot.product_id._run_fifo_batch(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
 
     def _change_standard_price(self, old_price):
         """Helper to create the stock valuation layers and the account moves
@@ -101,5 +104,4 @@ class StockLot(models.Model):
                 'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
             })
-
         self.env['product.value'].sudo().create(product_values)

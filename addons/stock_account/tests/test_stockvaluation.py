@@ -2979,17 +2979,17 @@ class TestStockValuation(TestStockValuationCommon):
         # Make dropship move, where the quantity stay in negative
         self._make_dropship_move(self.product_avco, 5, unit_cost=15)
         self.assertEqual(self.product_avco.qty_available, -10)
-        self.assertEqual(self.product_avco.standard_price, 10)
+        self.assertEqual(self.product_avco.standard_price, 15)
 
         # Make dropship move, where the quantity reach 0
         self._make_dropship_move(self.product_avco, 10, unit_cost=15)
         self.assertEqual(self.product_avco.qty_available, -10)
-        self.assertEqual(self.product_avco.standard_price, 10)
+        self.assertEqual(self.product_avco.standard_price, 15)
 
         # Make dropship move, where the quantity do not go in positive
         self._make_dropship_move(self.product_avco, 15, unit_cost=15)
         self.assertEqual(self.product_avco.qty_available, -10)
-        self.assertEqual(self.product_avco.standard_price, 10)
+        self.assertEqual(self.product_avco.standard_price, 15)
 
     def test_avco_adjusted_valuation_updates_unit_cost_correctly(self):
         """Ensure that for AVCO products, adjusting the total valuation recomputes

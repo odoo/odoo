@@ -428,6 +428,12 @@ class ProductProduct(models.Model):
                     '&', ('state', '=', 'done'), ~dest_loc_domain_done,
                     '&', ('state', '!=', 'done'), ~dest_loc_domain_in_progress,
             ])
+            if self.env.context.get('skip_in_progress'):
+                return (
+                    loc_domain,
+                    dest_loc_domain_done & ~loc_domain,
+                    loc_domain & ~dest_loc_domain_done
+                )
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
         return (
