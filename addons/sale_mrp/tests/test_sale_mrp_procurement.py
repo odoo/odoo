@@ -19,6 +19,8 @@ class TestSaleMrpProcurement(TransactionCase):
     def test_sale_mrp(self):
         # Required for `uom_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('uom.group_uom')
+        # Required for `tracking` to be visible in the view
+        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         self.env.ref('stock.route_warehouse0_mto').active = True
         warehouse0 = self.env.ref('stock.warehouse0')
         # In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
@@ -89,6 +91,8 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env.user.group_ids += self.env.ref('uom.group_uom')
         # Required for `manufacture_step` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
+        # Required for `tracking` to be visible in the view
+        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         self.env.ref('stock.route_warehouse0_mto').active = True
         # Create warehouse
         self.customer_location = self.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
