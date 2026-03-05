@@ -185,7 +185,13 @@ class StockForecasted(models.AbstractModel):
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
-        def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents):
+        def _get_effective_location(location, wh_stock_loc, wh_stock_sub_loc_ids):
+            # Any sublocation qties will be added to the main stock location qty
+            if location.id in wh_stock_sub_loc_ids:
+                return wh_stock_loc
+            return location
+
+        def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_loc, wh_stock_sub_loc_ids):
             reserved_out = 0
             # the move to show when qty is reserved
             reserved_move = self.env['stock.move']
@@ -201,7 +207,8 @@ class StockForecasted(models.AbstractModel):
                 # add to reserved line data
                 reserved_out += reserved
                 used_reserved_moves[move] += reserved
-                currents[(out.product_id.id, move.location_id.id)] -= reserved
+                location = _get_effective_location(move.location_id, wh_stock_loc, wh_stock_sub_loc_ids)
+                currents[out.product_id.id, location.id] -= reserved
                 if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
                     break
 
@@ -211,7 +218,7 @@ class StockForecasted(models.AbstractModel):
                 'linked_moves': linked_moves,
             }
 
-        def _get_out_move_taken_from_stock_data(out, currents, reserved_data):
+        def _get_out_move_taken_from_stock_data(out, currents, reserved_data, wh_stock_loc, wh_stock_sub_loc_ids):
             reserved_out = reserved_data['reserved']
             demand_out = out.product_qty - reserved_out
             linked_moves = reserved_data['linked_moves']
@@ -237,7 +244,8 @@ class StockForecasted(models.AbstractModel):
                 # this can happen if stock adjustment is done after orig moves are done
                 taken_from_stock = min(demand, move_available_qty, currents[(out.product_id.id, move.location_id.id)])
                 if taken_from_stock > 0:
-                    currents[(out.product_id.id, move.location_id.id)] -= taken_from_stock
+                    location = _get_effective_location(move.location_id, wh_stock_loc, wh_stock_sub_loc_ids)
+                    currents[out.product_id.id, location.id] -= taken_from_stock
                     taken_from_stock_out += taken_from_stock
                 demand_out -= taken_from_stock
             return {
@@ -331,11 +339,8 @@ class StockForecasted(models.AbstractModel):
         )
         currents = defaultdict(float)
         for product, location, quantity in qties:
-            location_id = location.id
-            # any sublocation qties will be added to the main stock location qty
-            if location_id in wh_stock_sub_location_ids:
-                location_id = wh_stock_location.id
-            currents[(product.id, location_id)] += quantity
+            location = _get_effective_location(location, wh_stock_location, wh_stock_sub_location_ids)
+            currents[product.id, location.id] += quantity
         moves_data = {}
         for _, out_moves in outs_per_product.items():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)
@@ -343,11 +348,18 @@ class StockForecasted(models.AbstractModel):
             # for all out moves, check for linked moves and count reserved quantity
             for out in out_moves:
                 moves_data[out] = _get_out_move_reserved_data(
-                    out, linked_moves_per_out[out], used_reserved_moves, currents
+                    out,
+                    linked_moves_per_out[out],
+                    used_reserved_moves,
+                    currents,
+                    wh_stock_location,
+                    wh_stock_sub_location_ids,
                 )
             # another loop to remove qty from current stock after reserved is counted for
             for out in out_moves:
-                data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
+                data = _get_out_move_taken_from_stock_data(
+                    out, currents, moves_data[out], wh_stock_location, wh_stock_sub_location_ids
+                )
                 moves_data[out].update(data)
         product_sum = defaultdict(float)
         for product_loc, quantity in currents.items():
