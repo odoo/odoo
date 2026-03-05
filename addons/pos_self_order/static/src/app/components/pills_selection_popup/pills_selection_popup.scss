@@ -1,15 +1,24 @@
 .self_order_pills_selection_popup_dialog {
     border-radius: 35px 35px 0 0 !important;
     bottom: 0;
+    top: auto !important;
+    height: auto !important;
+
+    .modal-body {
+        height: auto !important;
+    }
 }
 
 .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
 }
 
 /* On small screens (576px - 767px) */
@@ -35,3 +44,4 @@
         max-height: 70vh;
     }
 }
+
