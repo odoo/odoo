@@ -32,6 +32,7 @@ class MicrosoftAuth(http.Controller):
                 redirect_uri=f'{base_url}/microsoft_account/authentication'
             )
             request.env.user._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
+            request.env.user.restart_microsoft_synchronization()
             self._set_outlook_email(token=access_token)
             return request.redirect(url_return)
         elif kw.get('error'):
