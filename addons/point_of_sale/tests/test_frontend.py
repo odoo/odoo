@@ -1977,6 +1977,55 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
 
+    def test_limited_categories_child_product_search(self):
+        """
+        Regression test: when only a parent category is set in iface_available_categ_ids,
+        searching for an unloaded product assigned to a child category (via "Search more")
+        must still find the product. Before the fix the JS domain only included the top-level
+        category IDs, so products in sub-categories were never returned by the server search.
+        """
+        parent_category = self.env['pos.category'].create({'name': 'Parent Search Cat'})
+        child_category = self.env['pos.category'].create({
+            'name': 'Child Search Cat',
+            'parent_id': parent_category.id,
+        })
+        # Service products sort before consumable/storable in the limited-loading SQL
+        # (ORDER BY CASE WHEN type='service' THEN 1 ELSE 0 END DESC), so this product
+        # is guaranteed to occupy the single pre-loaded slot.
+        self.env['product.product'].create({
+            'name': 'Anchor Product',
+            'available_in_pos': True,
+            'list_price': 1.0,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, parent_category.id)],
+            'type': 'service',
+        })
+        # Consumable in the child category. Sorts after the service Anchor Product, so it
+        # will NOT be pre-loaded when the slot limit is 1.
+        self.env['product.product'].create({
+            'name': 'Child Cat Product',
+            'available_in_pos': True,
+            'list_price': 5.0,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category.id)],
+            'type': 'consu',
+        })
+        # Only the parent is configured; child categories must be resolved automatically.
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_category.id])],
+        })
+        # Limit to 1 product so "Child Cat Product" (non-service) is not pre-loaded;
+        # the service "Anchor Product" takes the single slot.
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            'test_limited_categories_child_product_search',
+            login="pos_user",
+        )
+
     def test_one_attribute_value_scan_barcode(self):
         product = self.env['product.template'].create({
             'name': 'Product Test',
