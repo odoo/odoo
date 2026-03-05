@@ -211,7 +211,8 @@ class MicrosoftCalendarService():
             from_url,
             service='calendar',
             scope=self._get_calendar_scope(),
-            redirect_uri=redirect_uri
+            redirect_uri=redirect_uri,
+            prompt='select_account'
         )
 
     def _can_authorize_microsoft(self, user):

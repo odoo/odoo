@@ -43,12 +43,13 @@ patch(AttendeeCalendarModel.prototype, {
         return new Promise(() => {});
     },
 
-    async syncMicrosoftCalendar(silent = false) {
+    async syncMicrosoftCalendar(silent = false, force_auth = false) {
         this.microsoftPendingSync = true;
         const result = await rpc(
             "/microsoft_calendar/sync_data",
             {
                 model: this.resModel,
+                force_auth: force_auth,
                 fromurl: window.location.href
             },
             {
