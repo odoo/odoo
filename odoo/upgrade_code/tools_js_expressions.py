@@ -456,6 +456,21 @@ COMP_REGEXP = re.compile(r"^//[A-Z]\w*")
 SKIP_XPATH_ATTRS = {"name", "ref", "set-slot", "slot"}  # attributes to skip
 COMPONENT_TARGET_RE = re.compile(r"//([A-Z][\w\.-]*)")
 VALUE_ATTR_RE = re.compile(r"(@value)='(.*?)'")
+ENTITY_RE = re.compile(r"&([A-Za-z0-9#]+);")
+UNMASK_RE = re.compile(r"__([A-Za-z0-9#]+)__")
+
+
+def mask_xml_entities(text):
+    """Convert XML entities like &apos; to __apos__ before parsing."""
+    def repl(match):
+        name = match.group(1)
+        # skip masking &amp;
+        return match.group(0) if name == "amp" else f"__{name}__"
+    return ENTITY_RE.sub(repl, text)
+
+def unmask_xml_entities(text):
+    """Restore masked entities back to XML form."""
+    return UNMASK_RE.sub(r"&\1;", text)
 
 
 def iter_elements(root):
@@ -888,6 +903,7 @@ class TemplateCompiler:
 
 def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator, excluded_templates: set[str]):
     compiler = TemplateCompiler(path, modules, aggregator, excluded_templates)
+    content = mask_xml_entities(content)
 
     def callback(tree):
         compiler.fix_rendering_context(tree)
@@ -896,6 +912,7 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
     result = result.replace("><![CDATA[", ">").replace("]]>", "")
     result = result.replace("\u200b", "&#8203;")
     result = result.replace("&&", "&amp;&amp;")
+    result = unmask_xml_entities(result)
     return result, compiler.warnings
 
 # ------------------------------------------------------------------------------
@@ -1374,16 +1391,16 @@ tests = [
     <t t-name="knowledge.MacrosEmbeddedClipboard" t-inherit="knowledge.EmbeddedClipboard" t-inherit-mode="primary">
          <xpath expr='//EmbeddedComponentToolbarButton[@name="&apos;copyToClipboard&apos;"]' position="before">
             <EmbeddedComponentToolbarButton
-                hidden="!targetRecordInfo?.canPostMessages"
+                hidden="!this.targetRecordInfo?.canPostMessages"
                 icon="'fa-envelope'"
                 label.translate="Send as Message"
-                onClick.bind="onClickSendAsMessage"
+                onClick.bind="this.onClickSendAsMessage"
             />
             <EmbeddedComponentToolbarButton
-                hidden="!targetRecordInfo?.withHtmlField"
+                hidden="!this.targetRecordInfo?.withHtmlField"
                 icon="'fa-pencil-square'"
-                label="htmlFieldTargetMessage"
-                onClick.bind="onClickUseAsDescription"
+                label="this.htmlFieldTargetMessage"
+                onClick.bind="this.onClickUseAsDescription"
             />
         </xpath>
     </t>
