@@ -12,7 +12,6 @@ export class FeedbackScreen extends Component {
     static props = {
         orderUuid: String,
         waitFor: { type: Object, optional: true },
-        paymentMethodId: { type: Number, optional: true, default: null },
     };
 
     setup() {
