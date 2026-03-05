@@ -23,6 +23,9 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
     def setUpClass(cls):
         super().setUpClass()
 
+        # Activate the price filter when testing the performance
+        cls.env.ref('website_sale.filter_products_price').active = True
+
         # Attachment needed for the replacement of images
         cls.env['ir.attachment'].create({
             'public': True,
