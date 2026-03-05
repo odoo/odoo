@@ -30,7 +30,11 @@ export class SupportedPaymentMethods extends Interaction {
         this.el.replaceChildren();
         this.renderAt(
             this.templateKey,
-            { payment_methods: this.payment_methods, height: this.height },
+            {
+                payment_methods: this.payment_methods,
+                height: this.height,
+                alignmentClass: this.alignmentClass,
+            },
             this.el,
         );
     }
@@ -38,6 +42,8 @@ export class SupportedPaymentMethods extends Interaction {
     get limit() { return parseInt(this.el.dataset.limit) || 6; }
 
     get height() { return parseInt(this.el.dataset.height) || 30; }
+
+    get alignmentClass() { return `justify-content-${this.el.dataset.alignment}`; }
 }
 
 registry
