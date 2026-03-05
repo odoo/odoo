@@ -120,7 +120,18 @@ class TestHrAttendanceOvertime(TransactionCase):
                     'check_out': datetime(2021, 1, day, 18, 0)
                 }) for day in range(4, 9)  # Monday to Friday
             ]
-            self.assertAlmostEqual(self.employee.total_overtime, 10, 2, msg="He should work from 8-16h so each day he did 2 hours of overtime")
+
+            # Daily rule: 8 hours/day (1)
+            # Weekly rule: 40 hours/week (2)
+            #
+            # Generated overtimes:
+            #   - Monday: 2h from (1)
+            #   - Tuesday: 2h from (1)
+            #   - Wednesday: 2h from (1)
+            #   - Thursday: 2h from (1)
+            #   - Friday: 8h from (2) and 2h from (1, 2)
+            # Total: 18h
+            self.assertAlmostEqual(self.employee.total_overtime, 18, 2)
 
     def test_multiple_attendances_same_day(self):
         """ Test multiple attendances in one day """
