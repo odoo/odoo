@@ -10,3 +10,4 @@ from . import pos_preset
 from . import restaurant_order_course
 from . import pos_category
 from . import pos_course
+from . import product_template
