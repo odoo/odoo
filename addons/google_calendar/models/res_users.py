@@ -165,7 +165,10 @@ class ResUsers(models.Model):
     def stop_google_synchronization(self):
         self.ensure_one()
         self.sudo().google_synchronization_stopped = True
-        self.res_users_settings_id.sudo().google_account_email = False
+        self.user_id.res_users_settings_id._set_google_auth_tokens(False, False, 0)
+        self.user_id.res_users_settings_id.sudo().write({
+            'google_calendar_sync_token': False,
+        })
 
     def restart_google_synchronization(self):
         self.ensure_one()

@@ -23,10 +23,4 @@ class MicrosoftCalendarAccountReset(models.TransientModel):
             events.with_context(dont_notify=True).microsoft_id = False
             events.unlink()
 
-        self.user_id._set_microsoft_auth_tokens(False, False, 0)
-        self.user_id.res_users_settings_id.write({
-            'microsoft_calendar_sync_token': False,
-            'microsoft_last_sync_date': False
-        })
-
         self.user_id.stop_microsoft_synchronization()

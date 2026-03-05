@@ -128,7 +128,11 @@ class ResUsers(models.Model):
         self.ensure_one()
         self.sudo().microsoft_synchronization_stopped = True
         self.sudo().microsoft_last_sync_date = None
-        self.res_users_settings_id.sudo().microsoft_account_email = False
+        self.user_id._set_microsoft_auth_tokens(False, False, 0)
+        self.user_id.sudo().write({
+            'microsoft_calendar_sync_token': False,
+            'microsoft_last_sync_date': False
+        })
 
     def restart_microsoft_synchronization(self):
         self.ensure_one()
