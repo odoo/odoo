@@ -64,6 +64,7 @@
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <field name="statistics_for_current_session" />
+                <field name="kanban_dashboard_graph"/>
                 <templates>
                     <t t-name="menu">
                         <div class="container dropdown-pos-config">
@@ -97,18 +98,21 @@
                         </div>
                     </t>
                     <t t-name="card">
-                        <div name="card_title" class="mb-4 ms-2">
-                            <field name="name" class="fw-bold fs-4 d-block"/>
-                            <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge rounded-pill text-bg-info d-inline-block">Opened by <field name="pos_session_username"/></div>
-                            <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge rounded-pill text-bg-info d-inline-block">Opening Control</div>
-                            <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge rounded-pill text-bg-info d-inline-block">Closing Control</div>
-                            <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded-pill bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} d-inline-block"
-                                    title="The session has been opened for an unusually long period. Please consider closing.">
-                                    To Close
+                        <div name="card_title" class="mb-1 ms-2">
+                            <div class="d-flex align-items-center gap-2 position-relative">
+                                <field name="name" class="fw-bold fs-4"/>
+                                <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Opening Control</div>
+                                <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Opened by <field name="pos_session_username"/></div>
+                                <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Closing Control</div>
+                                <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded-pill bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} position-absolute start-50 translate-middle-x"
+                                        title="The session has been opened for an unusually long period. Please consider closing.">
+                                        To Close
+                            </div>
+                                <field name="current_user_id" widget="many2one_avatar_user" class="ms-auto me-4" options="{'size': 'sm'}"/>
                             </div>
                         </div>
-                        <div class="row g-0 pb-4 ms-2 mt-auto">
-                            <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-center gap-2 mb-2 mb-md-0">
+                        <div class="row g-0 pb-2 ms-2 mt-4">
+                            <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-start gap-2 mb-2 mb-md-0">
                                 <div t-if="record.current_session_state.raw_value != 'closing_control'">
                                     <widget name="pos_open_ui_button" action="open_ui"/>
                                 </div>
@@ -163,7 +167,9 @@
                                 </a>
                             </div>
                         </div>
-                        <field name="current_user_id" widget="many2one_avatar_user" class="mt-auto ms-auto"/>
+                        <div class="px-4">
+                            <field name="kanban_dashboard_graph" widget="dashboard_graph" graph_type="line"/>
+                        </div>
                     </t>
                 </templates>
             </kanban>

@@ -1,14 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import uuid4
+
+from babel.dates import format_date
 
 import odoo.release
 from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import SQL, convert
+from odoo.tools.misc import get_lang
 
 from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
 
@@ -218,6 +222,7 @@ class PosConfig(models.Model):
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
         store=True, help="These payment methods will be available for fast payment", readonly=False)
     statistics_for_current_session = fields.Json(string="Session Statistics", compute="_compute_statistics_for_session")
+    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     iface_printbill = fields.Boolean(string='Bill Printing', help="Allows to print the Bill before payment.")
 
     pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
@@ -387,6 +392,47 @@ class PosConfig(models.Model):
                 config.statistics_for_current_session = False
                 continue
             config.statistics_for_current_session = config.get_statistics_for_session(session_record)
+
+    def _kanban_dashboard_graph(self):
+        graph_datas = self._get_pos_graph_data()
+        for config in self:
+            config.kanban_dashboard_graph = json.dumps(graph_datas[config.id])
+
+    def _get_pos_graph_data(self):
+        """Computes the data used to display the graph for POS configs in the dashboard"""
+        def build_graph_data(date, amount, currency):
+            name = format_date(date, 'd LLLL Y', locale=locale)
+            short_name = format_date(date, 'd MMM', locale=locale)
+            return {'x': short_name, 'y': currency.round(amount), 'name': name}
+
+        locale = get_lang(self.env).code
+
+        self.env.cr.execute("""
+            SELECT o.config_id,
+                   DATE(o.date_order AT TIME ZONE 'UTC') AS order_date,
+                   SUM(o.amount_total) AS total
+              FROM pos_order o
+             WHERE o.config_id = ANY(%s)
+               AND o.state IN ('done', 'paid', 'invoiced')
+               AND DATE(o.date_order AT TIME ZONE 'UTC') >= (CURRENT_DATE - INTERVAL '6 days')
+          GROUP BY o.config_id, order_date
+        """, (self.ids,))
+        rows = {}
+        for config_id, order_date, total in self.env.cr.fetchall():
+            rows.setdefault(config_id, {})[order_date] = total
+
+        today = datetime.utcnow().date()
+        result = {}
+        for config in self:
+            currency = config.currency_id
+            config_rows = rows.get(config.id, {})
+            data = [
+                build_graph_data(day, config_rows.get(day, 0), currency)
+                for day in (today - timedelta(days=i) for i in range(6, -1, -1))
+            ]
+            is_sample_data = not any(pt['y'] for pt in data)
+            result[config.id] = [{'values': data, 'key': _('Sales Last 7 Days'), 'is_sample_data': is_sample_data}]
+        return result
 
     def get_statistics_for_session(self, session):
         self.ensure_one()
