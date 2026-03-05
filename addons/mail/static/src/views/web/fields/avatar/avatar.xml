@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Avatar">
-        <div class="o-mail-Avatar o_avatar d-flex align-items-center btn btn-link-inline p-0" t-att-class="this.props.cssClass">
+        <div class="o-mail-Avatar o_avatar d-flex align-items-center p-0" t-att-class="this.props.cssClass" t-attf-class="{{this.props.btnClasses ? '' : 'btn btn-link-inline'}}">
             <img t-attf-class="rounded {{this.props.noSpacing ? '' : 'me-2'}}"
                 t-att-src="this.src"
                 t-on-click.stop.prevent="this.onClickAvatar"

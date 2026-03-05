@@ -13,6 +13,7 @@ export class Avatar extends Component {
         cssClass: { type: [String, Object], optional: true },
         displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
+        btnClasses: { type: Boolean, optional: true },
     };
     static defaultProps = {
         canOpenPopover: true,
