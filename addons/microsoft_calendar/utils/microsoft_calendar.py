@@ -203,7 +203,7 @@ class MicrosoftCalendarService():
         return bool(user.sudo().microsoft_calendar_rtoken)
 
     def _get_calendar_scope(self):
-        return 'offline_access openid Calendars.ReadWrite'
+        return 'offline_access openid profile email User.Read Calendars.ReadWrite'
 
     def _microsoft_authentication_url(self, from_url='http://www.odoo.com'):
         redirect_uri = self.microsoft_service.get_base_url() + '/microsoft_account/authentication'

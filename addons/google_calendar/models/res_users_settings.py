@@ -2,17 +2,21 @@
 
 from datetime import timedelta
 
+import logging
 import requests
 
 from odoo import api, fields, models, _
+from odoo.addons.google_account.models.google_service import TIMEOUT
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
 
 
 class ResUsersSettings(models.Model):
     _inherit = "res.users.settings"
 
     # Google Calendar tokens and synchronization information.
+    google_account_email = fields.Char("Google Calendar Email", copy=False, groups='base.group_system')
     google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups='base.group_system')
     google_calendar_token = fields.Char('User token', copy=False, groups='base.group_system')
     google_calendar_token_validity = fields.Datetime('Token Validity', copy=False, groups='base.group_system')
@@ -25,6 +29,7 @@ class ResUsersSettings(models.Model):
     def _get_fields_blacklist(self):
         """ Get list of google fields that won't be formatted in session_info. """
         google_fields_blacklist = [
+            'google_account_email',
             'google_calendar_rtoken',
             'google_calendar_token',
             'google_calendar_token_validity',
@@ -39,6 +44,7 @@ class ResUsersSettings(models.Model):
             'google_calendar_rtoken': refresh_token,
             'google_calendar_token': access_token,
             'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl) if ttl else False,
+            'google_account_email': self._get_email_from_google(access_token) if access_token else False,
         })
 
     def _google_calendar_authenticated(self):
@@ -69,3 +75,15 @@ class ResUsersSettings(models.Model):
                           "You should check your Client ID and secret on the Google APIs plateform or try to stop and restart your calendar synchronization.",
                           error_key)
             raise UserError(error_msg)
+
+    def _get_email_from_google(self, token, timeout=TIMEOUT):
+        headers = {'Content-type': 'application/json'}
+        params = {'access_token': token}
+        url = '/oauth2/v2/userinfo'
+        try:
+            status, mail_info, _ = self.env['google.service']._do_request(url, params, headers, method='GET', timeout=timeout)
+        except requests.exceptions.HTTPError as e:
+            _logger.error('Error getting google email: %s', e)
+        else:
+            return mail_info.get('email') if status == 200 else False
+        return False
