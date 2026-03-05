@@ -117,6 +117,7 @@ onRpc("get_state_selections", () => [
     ["needsAction", "Needs Action"],
 ]);
 onRpc("res.users", "read", () => [{ user: serverState.userId }]);
+onRpc("res.users", "get_calendar_email", () => false);
 
 beforeEach(() => {
     mockDate("2020-12-10 15:00:00");

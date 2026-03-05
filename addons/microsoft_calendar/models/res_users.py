@@ -21,6 +21,7 @@ class ResUsers(models.Model):
     microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
     microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')
     microsoft_last_sync_date = fields.Datetime(related='res_users_settings_id.microsoft_last_sync_date', readonly=False, groups='base.group_system')
+    microsoft_synchronization_needs_reset = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_needs_reset', readonly=False)
 
     def _microsoft_calendar_authenticated(self):
         return bool(self.sudo().microsoft_calendar_rtoken)
@@ -128,6 +129,7 @@ class ResUsers(models.Model):
         self.ensure_one()
         self.sudo().microsoft_synchronization_stopped = True
         self.sudo().microsoft_last_sync_date = None
+        self.sudo()._set_microsoft_email(False)
 
     def restart_microsoft_synchronization(self):
         self.ensure_one()
@@ -149,6 +151,13 @@ class ResUsers(models.Model):
         client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
         client_secret = microsoft_service._get_microsoft_client_secret(ICP_sudo, 'calendar')
         return bool(client_id and client_secret)
+
+    def get_calendar_email(self):
+        # Only one calendar provider should be active at a time
+        if self.sudo().microsoft_calendar_email:
+            return self.sudo().microsoft_calendar_email
+        else:
+            return super().get_calendar_email()
 
     @api.model
     def check_calendar_credentials(self):
