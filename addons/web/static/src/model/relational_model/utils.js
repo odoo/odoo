@@ -100,6 +100,7 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
 
 function completeActiveField(activeField, extra) {
     if (extra.related) {
+        activeField.related = activeField.related || { activeFields: {}, fields: {} };
         for (const fieldName in extra.related.activeFields) {
             if (fieldName in activeField.related.activeFields) {
                 completeActiveField(

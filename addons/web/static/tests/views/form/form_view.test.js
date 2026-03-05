@@ -13813,3 +13813,44 @@ test(`Do not mix dependencies across multiple widgets in multiple views`, async 
     await clickSave();
     expect(`.o_notification_content`).toHaveText("Missing required fields");
 });
+
+test("x2many with same m2o in list (plain) and form (widget with relatedFields)", async () => {
+    Product._records[0].write_date = "2023-02-13 10:00:00";
+    Partner._records[0].child_ids = [2];
+    Partner._records[1].product_id = 37;
+
+    class MyM2O extends Component {
+        static props = ["*"];
+        static components = { Many2OneField };
+        static template = xml`
+            <div>
+                <Many2OneField t-props="this.props"/>
+                <span class="date" t-out="this.writeDate"/>
+            </div>`;
+        get writeDate() {
+            return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
+        }
+    }
+    const myM2O = {
+        ...buildM2OFieldDescription(MyM2O),
+        relatedFields: [{ name: "write_date", type: "datetime" }],
+    };
+    registry.category("fields").add("my_m2o", myM2O);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list><field name="product_id"/></list>
+                    <form><field name="product_id" widget="my_m2o"/></form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
+});
