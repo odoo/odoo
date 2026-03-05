@@ -35,9 +35,6 @@
             <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
                 <field name="is_published" widget="website_redirect_button"/>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]/h1" position="attributes">
-                <attribute name="class" add="w-75" separator=" "/>
-            </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" class="o_event_menu_configuration" groups="base.group_no_one">
                     <label for="website_menu" string="Website Submenu" class="me-1"/>
