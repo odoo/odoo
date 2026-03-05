@@ -40,7 +40,7 @@ from odoo.modules.registry import Registry
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
-from . import request, _request_stack
+from . import request, request_var
 from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
 from .response import Response
 from .retrying import retrying
@@ -49,7 +49,6 @@ from .stream import STATIC_CACHE, Stream
 from .requestlib import (
     HTTPRequest,
     Request,
-    borrow_request,
     is_cors_preflight,
 )
 from .session import SessionExpiredException, get_default_session, logout, session_store
@@ -136,11 +135,14 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
     else:
         raise ValueError(f"Invalid service name: {service_name}")
 
-    with borrow_request():
+    # Remove the request to simulate that the call does not come from HTTP
+    request_reset = request_var.set(None)
+    try:
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
-
         return dispatch(method, params)
+    finally:
+        request_var.reset(request_reset)
 
 
 class RegistryError(RuntimeError):
@@ -258,8 +260,7 @@ class Application:
 
         with HTTPRequest(environ) as httprequest:
             request = Request(httprequest)
-            _request_stack.push(request)
-
+            request_reset = request_var.set(request)
             try:
                 _set_session_and_dbname(request)
                 threading.current_thread().url = httprequest.url
@@ -312,7 +313,7 @@ class Application:
                 return exc.error_response(environ, start_response)
 
             finally:
-                _request_stack.pop()
+                request_var.reset(request_reset)
 
 
 root = Application()

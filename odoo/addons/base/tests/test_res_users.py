@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.http.requestlib import _request_stack
+from odoo.http import request_var
 from odoo.tests import (
     Form,
     HttpCase,
@@ -705,8 +705,8 @@ class TestUsersIdentitycheck(HttpCase):
 
         # Push a fake request to the request stack, because @check_identity requires a request.
         # Use the first session created above, used to invalid other sessions than itself.
-        _request_stack.push(SimpleNamespace(session=session, env=self.env))
-        self.addCleanup(_request_stack.pop)
+        request_reset = request_var.set(SimpleNamespace(session=session, env=self.env))
+        self.addCleanup(request_var.reset, request_reset)
         # The user clicks the button logout from all devices from his profile
         action = self.env.user.action_revoke_all_devices()
         # The form of the check identity wizard opens

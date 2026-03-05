@@ -58,7 +58,8 @@ import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.http.requestlib import Request, _request_stack, request
+from odoo.http import request, request_var
+from odoo.http.requestlib import Request
 from odoo.http.session import (
     DEFAULT_LANG,
     get_default_session,
@@ -752,16 +753,19 @@ class BaseCase(case.TestCase):
             env=self.env,
             session=DotDict(get_default_session(), debug='1', sid=''),
         )
+        reset_req = None
         try:
             self.env.flush_all()
             self.env.invalidate_all()
-            _request_stack.push(request)
+            reset_req = request_var.set(request)
             yield
             self.env.flush_all()
             self.env.invalidate_all()
         finally:
-            popped_request = _request_stack.pop()
-            if popped_request is not request:
+            current_request = request_var.get()
+            if reset_req is not None:
+                request_var.reset(reset_req)
+            if current_request is not request:
                 raise Exception('Wrong request stack cleanup.')
 
     @contextmanager

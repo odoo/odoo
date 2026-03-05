@@ -121,8 +121,8 @@ def MockRequest(
     request.update_context = update_context
 
     with contextlib.ExitStack() as s:
-        odoo.http.requestlib._request_stack.push(request)
-        s.callback(odoo.http.requestlib._request_stack.pop)
+        request_reset = odoo.http.request_var.set(request)
+        s.callback(odoo.http.request_var.reset, request_reset)
         s.enter_context(patch('odoo.http.router.root.get_db_router', router))
 
         yield request
