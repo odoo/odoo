@@ -31,7 +31,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_foot': 'FOT',
     'uom.product_uom_mile': 'SMI',
     'uom.product_uom_floz': 'OZA',
-    'uom.product_uom_qt': 'QT',
+    'uom.product_uom_qt': 'QTL',
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_inch': 'INQ',
     'uom.product_uom_cubic_foot': 'FTQ',
@@ -103,8 +103,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _get_uom_unece_code(self, line):
         """
-        list of codes: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/
-        or https://unece.org/fileadmin/DAM/cefact/recommendations/bkup_htm/add2c.htm (sorted by letter)
+        list of codes: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/ (sorted by letter)
         """
         xmlid = line.product_uom_id.get_external_id()
         if xmlid and line.product_uom_id.id in xmlid:

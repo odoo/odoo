@@ -8,7 +8,8 @@ class UoM(models.Model):
 
     def _get_unece_code(self):
         """ Returns the UNECE code used for international trading for corresponding to the UoM as per
-        https://unece.org/fileadmin/DAM/cefact/recommendations/rec20/rec20_rev3_Annex2e.pdf"""
+        https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/
+        """
         mapping = {
             'uom.product_uom_unit': 'C62',
             'uom.product_uom_dozen': 'DZN',
@@ -27,7 +28,7 @@ class UoM(models.Model):
             'uom.product_uom_foot': 'FOT',
             'uom.product_uom_mile': 'SMI',
             'uom.product_uom_floz': 'OZA',
-            'uom.product_uom_qt': 'QT',
+            'uom.product_uom_qt': 'QTL',
             'uom.product_uom_gal': 'GLL',
             'uom.product_uom_cubic_meter': 'MTQ',
             'uom.product_uom_cubic_inch': 'INQ',
