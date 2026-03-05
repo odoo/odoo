@@ -284,6 +284,10 @@ class StockMove(models.Model):
             if move.is_dropship or move.is_in:
                 products_to_recompute.add(move.product_id.id)
                 if move.product_id.lot_valuated:
+                    if any(not ml.lot_id for ml in move.move_line_ids):
+                        raise UserError(self.env._(
+                            "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
+                            move.product_id.display_name))
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
             if move.is_in:
                 move.value = move.sudo()._get_value()

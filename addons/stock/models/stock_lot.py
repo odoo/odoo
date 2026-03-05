@@ -228,7 +228,7 @@ class StockLot(models.Model):
                 lot.product_qty = quant_qty_by_lot.get(lot, 0.0)
         else:
             # If the date is in the past, we need to adjust the quantity on hand with the moves that happened after that date.
-            domain_lot_done = Domain([('lot_id', 'in', self.ids), ('state', '=', 'done'), ('date', '>', to_date)])
+            domain_lot_done = Domain([('lot_id', 'in', self.ids), ('state', '=', 'done'), ('move_id.date', '>', to_date)])
             move_in_qty_by_lot = dict(self.env['stock.move.line']._read_group(domain_move_in_loc & domain_lot_done, ['lot_id'], ['quantity_product_uom:sum']))
             move_out_qty_by_lot = dict(self.env['stock.move.line']._read_group(domain_move_out_loc & domain_lot_done, ['lot_id'], ['quantity_product_uom:sum']))
             for lot in self:
