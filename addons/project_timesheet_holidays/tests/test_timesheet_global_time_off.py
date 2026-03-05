@@ -572,6 +572,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible Calendar',
             'hours_per_day': 7.0,
+            'hours_per_week': 7.0,
             'full_time_required_hours': 7.0,
             'flexible_hours': True,
         })
