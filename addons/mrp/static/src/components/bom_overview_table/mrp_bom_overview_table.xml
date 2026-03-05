@@ -15,8 +15,8 @@
                             <th t-if="this.forecastMode" class="text-center" title="Resupply lead time.">Lead Time</th>
                             <th t-if="this.forecastMode">Route</th>
                             <th t-else=""/>
-                            <th class="text-end"
-                                title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">Cost</th>
+                            <th class="text-end text-nowrap"
+                                title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">Total Cost</th>
                             <th t-if="this.showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
                         </tr>
                     </thead>

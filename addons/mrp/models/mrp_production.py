@@ -294,7 +294,7 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
-    note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, help="Add this note on the manufacturing order to share any additional information")
+    note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',

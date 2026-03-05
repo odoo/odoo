@@ -20,7 +20,7 @@
                             <th t-if="data['forecast_mode']" class="text-center">Status</th>
                             <th t-if="data['forecast_mode']" class="text-center">Lead Time</th>
                             <th t-if="data['forecast_mode']">Route</th>
-                            <th class="text-end" t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}">Cost</th>
+                            <th class="text-end text-nowrap" t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}">Total Cost</th>
                         </tr>
                     </thead>
                     <tbody>

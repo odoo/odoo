@@ -4,7 +4,7 @@
     <t t-name="mrp.BomOverviewControlPanel">
         <ControlPanel display="this.controlPanelDisplay">
             <t t-set-slot="control-panel-buttons">
-                <button t-if="this.props.showOptions.mode == 'forecast'" t-on-click="this.manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
+                <button t-on-click="this.manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
                 <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
                 <!-- <t t-if="props.showVariants"> commented, waiting for ui update
                     <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
@@ -27,29 +27,25 @@
                     </div>
                 </div>
                 <div class="d-flex gap-1">
-                    <t t-if="this.props.showOptions.mode == 'forecast'">
-                        <div>
-                            <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row">
-                                <label class="visually-hidden" for="bom_quantity"/>
-                                <div t-attf-class="input-group align-items-center">
-                                    <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
-                                    <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="this.props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-custom-ref="quantity"/>
-                                    <div t-if="this.props.showOptions.uom" t-out="this.props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
-                                </div>
-                            </form>
-                        </div>
-                    </t>
+                    <div>
+                        <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row">
+                            <label class="visually-hidden" for="bom_quantity"/>
+                            <div t-attf-class="input-group align-items-center">
+                                <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
+                                <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="this.props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-custom-ref="quantity"/>
+                                <div t-if="this.props.showOptions.uom" t-out="this.props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </t>
             <t t-set-slot="control-panel-navigation-additional">
-                <t t-if="this.props.showOptions.mode == 'forecast'">
-                    <t t-if="this.props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
-                        <Dropdown items="this.warehousesItems">
-                            <button class="btn btn-secondary o-dropdown-caret">
-                                <span class="fa fa-home"/> Warehouse: <t t-out="this.props.currentWarehouse.name"/>
-                            </button>
-                        </Dropdown>
-                    </t>
+                <t t-if="this.props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
+                    <Dropdown items="this.warehousesItems">
+                        <button class="btn btn-light o-dropdown-caret">
+                            <span class="fa fa-home"/> Warehouse: <t t-out="this.props.currentWarehouse.name"/>
+                        </button>
+                    </Dropdown>
                 </t>
                 <t t-if="this.props.showOptions.mode == 'overview'">
                     <div class="o_row" t-on-click="() => this.props.changeMode('forecast')" >
