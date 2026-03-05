@@ -59,7 +59,6 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_microsoft_synchronization",
             [[user.userId]],
         );
-        await this.onStopMicrosoftSynchronization();
         render(this, true);
     }
 });
