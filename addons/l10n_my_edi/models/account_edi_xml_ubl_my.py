@@ -138,6 +138,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         ]
         vals['vals']['accounting_customer_party_vals']['party_vals']['party_identification_vals'] = customer_identification_vals
 
+        vals['vals'].update({
+            'prepaid_payment_vals': {
+                'currency': invoice.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
+                'amount': invoice.amount_total - invoice.amount_residual,
+            },
+        })
+
         # Debit/Credit note original invoice ref.
         # Applies to credit notes, debit notes, refunds for both invoices and self-billed invoices.
         # The original document is mandatory; but in some specific cases it will be empty (sending a credit note for an invoice
@@ -160,13 +168,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 },
             })
 
-        vals['vals'].update({
-            'prepaid_payment_vals': {
-                'currency': invoice.currency_id,
-                'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
-                'amount': invoice.amount_total - invoice.amount_residual,
-            },
-        })
+            # For credit, debit, refund notes, and their self-billed variants,
+            # the PrepaidPayment amount must be set to 0. This ensures the PayableAmount reflects the full refund/adjustment
+            # amount without being reduced by the prepayment, as per MyInvois specifications.
+            vals['vals'].get('monetary_total_vals', {})['payable_amount'] = invoice.amount_total
+            vals['vals']['prepaid_payment_vals']['amount'] = 0
 
         return vals
 

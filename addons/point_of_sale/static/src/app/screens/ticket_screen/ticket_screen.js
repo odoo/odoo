@@ -300,66 +300,71 @@ export class TicketScreen extends Component {
             return;
         }
 
-        // The order that will contain the refund orderlines.
-        // Use the destinationOrder from props if the order to refund has the same
-        // partner as the destinationOrder.
-        const destinationOrder =
-            this.props.destinationOrder &&
-            partner === this.props.destinationOrder.get_partner() &&
-            !this.pos.doNotAllowRefundAndSales()
-                ? this.props.destinationOrder
-                : this._getEmptyOrder(partner);
-
-        // Add orderline for each toRefundDetail to the destinationOrder.
-        const originalToDestinationLineMap = new Map();
-
-        // First pass: add all products to the destination order
-        for (const refundDetail of allToRefundDetails) {
-            const product = await this.pos.getProductById(refundDetail.orderline.productId);
-            if (!product) {
-                continue;
+        const refundDetailsByOrderId = allToRefundDetails.reduce((acc, detail) => {
+            const orderId = detail.orderline.orderBackendId;
+            if (!acc[orderId]) {
+                acc[orderId] = [];
             }
-            const options = this._prepareRefundOrderlineOptions(refundDetail);
-            const newOrderline = await destinationOrder.add_product(product, options);
-            originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
-            refundDetail.destinationOrderUid = destinationOrder.uid;
-        }
-        // Second pass: update combo relationships in the destination order
-        for (const refundDetail of allToRefundDetails) {
-            const originalOrderline = refundDetail.orderline;
-            const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
-            if (originalOrderline.comboParent) {
-                const comboParentLine = originalToDestinationLineMap.get(
-                    originalOrderline.comboParent.id
-                );
-                if (comboParentLine) {
-                    destinationOrderline.comboParent = comboParentLine;
+            acc[orderId].push(detail);
+            return acc;
+        }, {});
+
+        for (const refundDetails of Object.values(refundDetailsByOrderId)) {
+            // DestinationOrder props make no sense since we cannot add several refund orderlines from
+            // different orders into the same destination order, so we just get an empty order.
+            const destinationOrder = this._getEmptyOrder(partner);
+
+            // Add orderline for each toRefundDetail to the destinationOrder.
+            const originalToDestinationLineMap = new Map();
+
+            // First pass: add all products to the destination order
+            for (const refundDetail of refundDetails) {
+                const product = await this.pos.getProductById(refundDetail.orderline.productId);
+                if (!product) {
+                    continue;
+                }
+                const options = this._prepareRefundOrderlineOptions(refundDetail);
+                const newOrderline = await destinationOrder.add_product(product, options);
+                originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
+                refundDetail.destinationOrderUid = destinationOrder.uid;
+            }
+            // Second pass: update combo relationships in the destination order
+            for (const refundDetail of refundDetails) {
+                const originalOrderline = refundDetail.orderline;
+                const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+                if (originalOrderline.comboParent) {
+                    const comboParentLine = originalToDestinationLineMap.get(
+                        originalOrderline.comboParent.id
+                    );
+                    if (comboParentLine) {
+                        destinationOrderline.comboParent = comboParentLine;
+                    }
+                }
+                if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
+                    destinationOrderline.comboLines = originalOrderline.comboLines.map(
+                        (comboLine) => originalToDestinationLineMap.get(comboLine.id)
+                    );
                 }
             }
-            if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
-                destinationOrderline.comboLines = originalOrderline.comboLines.map((comboLine) => {
-                    return originalToDestinationLineMap.get(comboLine.id);
+            //Add a check too see if the fiscal position exist in the pos
+            if (order.fiscal_position_not_found) {
+                this.showPopup("ErrorPopup", {
+                    title: _t("Fiscal Position not found"),
+                    body: _t(
+                        "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
+                    ),
                 });
+                return;
             }
-        }
-        //Add a check too see if the fiscal position exist in the pos
-        if (order.fiscal_position_not_found) {
-            this.showPopup("ErrorPopup", {
-                title: _t("Fiscal Position not found"),
-                body: _t(
-                    "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
-                ),
-            });
-            return;
-        }
-        destinationOrder.fiscal_position = order.fiscal_position;
-        // Set the partner to the destinationOrder.
-        this.setPartnerToRefundOrder(partner, destinationOrder);
+            destinationOrder.fiscal_position = order.fiscal_position;
+            // Set the partner to the destinationOrder.
+            this.setPartnerToRefundOrder(partner, destinationOrder);
 
-        if (this.pos.get_order().cid !== destinationOrder.cid) {
-            this.pos.set_order(destinationOrder);
+            if (this.pos.get_order().cid !== destinationOrder.cid) {
+                this.pos.set_order(destinationOrder);
+            }
+            await this.addAdditionalRefundInfo(order, destinationOrder);
         }
-        await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.closeTicketScreen();
     }
@@ -420,9 +425,7 @@ export class TicketScreen extends Component {
             }
             return repr && repr.toString().toLowerCase().includes(searchTerm.toLowerCase());
         };
-        const predicate = (order) => {
-            return filterCheck(order) && searchCheck(order);
-        };
+        const predicate = (order) => filterCheck(order) && searchCheck(order);
         return this._getOrderList().filter(predicate);
     }
     getDate(order) {
@@ -613,9 +616,7 @@ export class TicketScreen extends Component {
                 tax_ids: orderline.get_taxes().map((tax) => tax.id),
                 discount: orderline.discount,
                 pack_lot_lines: orderline.pack_lot_lines
-                    ? orderline.pack_lot_lines.map((lot) => {
-                          return { lot_name: lot.lot_name };
-                      })
+                    ? orderline.pack_lot_lines.map((lot) => ({ lot_name: lot.lot_name }))
                     : false,
                 comboParent: orderline.comboParent,
                 comboLines: orderline.comboLines,
@@ -700,7 +701,7 @@ export class TicketScreen extends Component {
                 displayName: _t("Date"),
                 modelField: "date_order",
                 formatSearch: (searchTerm) => {
-                    const includesTime = searchTerm.includes(':');
+                    const includesTime = searchTerm.includes(":");
                     let parsedDateTime;
                     try {
                         parsedDateTime = parseDateTime(searchTerm);
@@ -712,7 +713,7 @@ export class TicketScreen extends Component {
                     } else {
                         return parsedDateTime.toFormat("yyyy-MM-dd");
                     }
-                }
+                },
             },
             PARTNER: {
                 repr: (order) => order.get_partner_name(),
@@ -810,15 +811,17 @@ export class TicketScreen extends Component {
         );
         // If no cacheDate, then assume reasonable earlier date.
         const cacheDate = this._state.syncedOrders.cacheDate || DateTime.fromMillis(0);
-        const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
-            return deserializeDateTime(orderInfo[1]) > cacheDate;
-        });
+        const idsNotUpToDate = ordersInfo.filter(
+            (orderInfo) => deserializeDateTime(orderInfo[1]) > cacheDate
+        );
         const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
             // Remove not loaded Order IDs
-            const fetchedOrderIds = new Set(fetchedOrders.map(order => order.id));
-            const notLoadedIds = idsNotInCache.filter((orderInfo) => !fetchedOrderIds.has(orderInfo[0]));
+            const fetchedOrderIds = new Set(fetchedOrders.map((order) => order.id));
+            const notLoadedIds = idsNotInCache.filter(
+                (orderInfo) => !fetchedOrderIds.has(orderInfo[0])
+            );
             ordersInfo = ordersInfo.filter((orderInfo) => !notLoadedIds.includes(orderInfo[0]));
             // Check for missing products and partners and load them in the PoS
             await this.pos._loadMissingProducts(fetchedOrders);
