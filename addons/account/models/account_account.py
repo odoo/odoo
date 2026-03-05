@@ -518,7 +518,7 @@ class AccountAccount(models.Model):
             """
             return (
                 new_code not in cache
-                and not self.sudo().search_count([
+                and not self.sudo().with_context(active_test=False).search_count([
                     ('code', '=', new_code),
                     '|',
                     ('company_ids', 'parent_of', self.env.company.id),
