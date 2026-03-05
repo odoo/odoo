@@ -354,3 +354,64 @@ test("icons can be given for each page tab", async () => {
     expect(".nav-item:nth-child(3) i").toHaveClass("fa-pencil");
     expect(".nav-item:nth-child(3)").toHaveText("page3");
 });
+
+test("switch notebook page after async work", async () => {
+    let { promise, resolve } = Promise.withResolvers();
+    class Page extends Component {
+        static template = xml`<h3>Coucou</h3>`;
+        static props = ["*"];
+    }
+
+    class Parent extends Component {
+        static template = xml`<Notebook pages="this.pages" onWillActivatePage="() => this.onWillActivatePage()"/>`;
+        static components = { Notebook };
+        static props = ["*"];
+        setup() {
+            this.pages = [
+                {
+                    Component: Page,
+                    index: 1,
+                    title: "Page 1",
+                },
+                {
+                    Component: Page,
+                    index: 2,
+                    title: "Page 2",
+                },
+            ];
+        }
+        onWillActivatePage() {
+            return promise;
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const h3Capture1 = queryFirst("h3");
+    expect(h3Capture1).toBeInstanceOf(HTMLElement);
+
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await animationFrame();
+    // async work is not finished
+    const h3Capture2 = queryFirst("h3");
+    expect(h3Capture2).toBe(h3Capture1);
+
+    resolve(true);
+    await animationFrame();
+    // async work completed successfully
+    const h3Capture3 = queryFirst("h3");
+    expect(h3Capture3).toBeInstanceOf(HTMLElement);
+    expect(h3Capture3).not.toBe(h3Capture1);
+
+    ({ promise, resolve } = Promise.withResolvers());
+    await click(".o_notebook_headers .nav-item:nth-child(1) a");
+    await animationFrame();
+    // async work is not finished
+    const h3Capture4 = queryFirst("h3");
+    expect(h3Capture4).toBe(h3Capture3);
+
+    resolve(false);
+    await animationFrame();
+    // async work resolved with false, preventing the page change
+    const h3Capture5 = queryFirst("h3");
+    expect(h3Capture5).toBe(h3Capture3);
+});
