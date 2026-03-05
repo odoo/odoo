@@ -50,6 +50,7 @@ class TestResourceCalendar(TransactionCase):
         flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible Calendar',
             'hours_per_day': 7.0,
+            'hours_per_week': 30,
             'full_time_required_hours': 30,
             'flexible_hours': True,
             'tz': 'UTC',

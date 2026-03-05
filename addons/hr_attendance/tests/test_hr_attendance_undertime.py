@@ -124,6 +124,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'name': 'Flexible 40 hours/week',
             'company_id': cls.company.id,
             'hours_per_day': 8,
+            'hours_per_week': 40,
             'flexible_hours': True,
             'full_time_required_hours': 40,
         })
