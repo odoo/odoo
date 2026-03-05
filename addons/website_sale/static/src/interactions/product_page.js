@@ -58,7 +58,7 @@ export class ProductPage extends Interaction {
         const max = parseFloat(input.dataset.max || Infinity);
         const previousQty = parseFloat(input.value || 0);
         const quantity = (
-            ev.currentTarget.name === 'remove_one' ? -1 : 1
+            ev.currentTarget.name === 'minus_button' ? -1 : 1
         ) + previousQty;
         const newQty = quantity > min ? (quantity < max ? quantity : max) : min;
 

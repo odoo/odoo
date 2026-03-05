@@ -34,7 +34,7 @@ export class CartLine extends Interaction {
         const input = currentTargetEl.closest('.css_quantity').querySelector('input.js_quantity');
         const maxQuantity = parseFloat(input.dataset.max || Infinity);
         const oldQuantity = parseFloat(input.value || 0);
-        const newQuantity = currentTargetEl.querySelector('i').classList.contains('oi-minus')
+        const newQuantity = currentTargetEl.name === 'minus_button'
             ? Math.min(Math.max(oldQuantity - 1, 0), maxQuantity)
             : Math.min(oldQuantity + 1, maxQuantity);
         if (oldQuantity !== newQuantity) {
