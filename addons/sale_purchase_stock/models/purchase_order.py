@@ -46,4 +46,6 @@ class PurchaseOrderLine(models.Model):
         # only set the sale line id in case of a dropshipping
         if not values.get('move_dest_ids'):
             res['sale_line_id'] = values.get('sale_line_id', False)
+        if values.get('analytic_distribution'):
+            res['analytic_distribution'] = values['analytic_distribution']
         return res
