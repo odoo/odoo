@@ -117,6 +117,9 @@
             <field name="state" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </field>
+            <field name="workcenter_id" position="after">
+                <field name="production_id" optional="show"/>
+            </field>
         </field>
     </record>
 
@@ -300,7 +303,6 @@
                 <filter string="Planned" name="filter_planned" domain="[('production_state', 'not in', ('done', 'cancel')), ('date_start', '!=', False)]"/>
                 <filter string="To Plan" name="filter_to_plan" domain="[('production_state', '=', 'confirmed'), ('date_start', '=', False)]"/>
                 <separator/>
-                <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', 'now'), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <group>
@@ -394,16 +396,11 @@
                             <field name="production_id"/>
                             <field name="name" class="ps-4"/>
                         </div>
-                        <t t-set="start_datetime" t-value="luxon.DateTime.fromISO(record.date_start.raw_value)"/>
-                        <div class="o_kanban_workorder_date"
-                            t-att-class="{'o_wo_orange': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
-                                 'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                                 '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                             }">
+                        <div class="o_kanban_workorder_date">
                             <field name="date_start" invisible="not date_start" class="pe-2"/> - <field name="date_finished" invisible="not date_start" class="ps-2"/>
                         </div>
                         <footer>
-                            <div class="o_kanban_workorder_remaining" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
+                            <div class="o_kanban_workorder_remaining">
                                 <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
                             </div>
                             <div class="d-flex ms-auto">

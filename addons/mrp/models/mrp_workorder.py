@@ -68,7 +68,7 @@ class MrpWorkorder(models.Model):
         ('blocked', 'Blocked'),
         ('ready', 'To Do'),
         ('progress', 'In Progress'),
-        ('done', 'Finished'),
+        ('done', 'Done'),
         ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', store=True,
         default='ready', copy=False, index=True)
@@ -724,7 +724,7 @@ class MrpWorkorder(models.Model):
                     'name': wo.display_name,
                     'calendar_id': wo.workcenter_id.resource_calendar_id.id,
                     'date_from': date_start,
-                    'date_to': date_start + relativedelta(minutes=wo.duration_expected),
+                    'date_to': wo._calculate_date_finished(date_start),
                     'resource_id': wo.workcenter_id.resource_id.id,
                     'count_as': 'working_time'
                 })
@@ -732,10 +732,7 @@ class MrpWorkorder(models.Model):
                 vals['leave_id'] = leave.id
                 wo.write(vals)
             else:
-                if not wo.date_start or wo.date_start > date_start:
-                    vals['date_finished'] = wo._calculate_date_finished(date_start)
-                if wo.date_finished and wo.date_finished < date_start:
-                    vals['date_finished'] = date_start
+                vals['date_finished'] = wo._calculate_date_finished(date_start)
                 wo.with_context(bypass_duration_calculation=True).write(vals)
 
     def button_finish(self):

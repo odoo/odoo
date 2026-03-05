@@ -27,19 +27,36 @@
         flex-basis: 40%;
         flex-direction: row;
         color: gray;
-        &.o_wo_red {
-          color: red;
-        }
-        &.o_wo_orange {
-          color: orange;
-        }
     }
     .o_kanban_workorder_remaining {
         border: solid 1px;
         padding: 3px;
         border-color: green;
-        &.o_wo_red {
-          border-color: red;
+    }
+    .o_kanban_record.o_wo_draft {
+        .o_kanban_workorder_title {
+            opacity: 0.5;
+        }
+        .o_kanban_workorder_production_name {
+            opacity: 0.5;
+        }
+        .o_kanban_workorder_remaining {
+            border: 0px;
+        }
+    }
+    .o_kanban_record.o_wo_date_orange {
+        .o_kanban_workorder_date {
+           color: orange;
+        }
+    }
+    .o_kanban_record.o_wo_date_red {
+        .o_kanban_workorder_date {
+           color: red;
+        }
+    }
+    .o_kanban_record.o_wo_remaining_red {
+        .o_kanban_workorder_remaining {
+           border-color: red;
         }
     }
 }
