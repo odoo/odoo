@@ -94,6 +94,6 @@ $o-color-system-initialized: true;
 // "small" font size. Grep: SMALLER_FONT_SIZE_RATIO.
 $small-font-size: if(
     variable-exists('font-size-base'),
-    ($o-small-font-size / $font-size-base) * 1em,
+    ($o-small-font-size / $font-size-base) * 1rem,
     null
 ) !default;
