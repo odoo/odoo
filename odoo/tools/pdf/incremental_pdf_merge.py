@@ -663,13 +663,15 @@ class IncrementalPdfMerge:
         new_xref_entries = self._write_objects(incremented_objects)
 
         # 5. construct the end of the PDF
-        if size:
-            # Generate Xref table
-            xref_start, new_size = self._write_xref_table(new_xref_entries)
-            # Construct the PDF trailer
-            self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
-        else: # Compressed Xref Object Streams (PDF 1.5+)
-            self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+        # if True or size:
+        # Generate Xref table
+        xref_start, new_size = self._write_xref_table(new_xref_entries)
+        # Construct the PDF trailer
+        self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
+        # else: # Compressed Xref Object Streams (PDF 1.5+)
+        #     self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+
+        return new_xref_entries
 
     def _write_objects(self, incremented_objects):
         """

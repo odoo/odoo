@@ -125,11 +125,18 @@ class PdfSigner:
         self._setup_form(pdf_reader, True, field_name, incremented_objects, signer_identifier)
 
         # 3. Write the Incremental Update (with empty signature placeholders)
-        pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
+        xref = pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
+
+        sig_obj_start = None
+        for obj_key, obj_data in incremented_objects.items():
+            if "/Type" in obj_data and obj_data["/Type"] == "/Sig":
+                sig_obj_start = xref[obj_key]
+                break
+
         final_output = pdf_merger.get_output_stream_value()
 
         # 4. Sign the Document (fill the placeholders)
-        signed_pdf_bytes = self._perform_signature(final_output)
+        signed_pdf_bytes = self._perform_signature(final_output, sig_obj_start)
         return signed_pdf_bytes
 
     def _load_key_and_certificate(self) -> tuple[Optional[PrivateKeyTypes], Optional[Certificate], Optional[list[Certificate]]]:
@@ -498,7 +505,7 @@ class PdfSigner:
             'content': cms.SignedData(signed_data)
         })
 
-    def _perform_signature(self, pdf_data: bytes) -> bytes:
+    def _perform_signature(self, pdf_data: bytes, sig_obj_start: int) -> bytes:
         """
         Injects the cryptographic signature into the reserved placeholders.
 
@@ -523,20 +530,22 @@ class PdfSigner:
         pdf_buffer = bytearray(pdf_data)
 
         # 1. FIND THE TARGET SIGNATURE OBJECT (Last /Type /Sig in file)
-        sig_obj_start = pdf_buffer.rfind(b"/Type /Sig")
-        if sig_obj_start == -1:
+        # sig_obj_start = pdf_buffer.rfind(b"/Type /Sig")
+        if not sig_obj_start:
             raise ValueError("No signature placeholder found in the incremental update.")
 
         # 2. LOCATE PLACEHOLDERS (ByteRange and Contents)
         # Search forward from the object start to find the specific keys belonging to it
         br_key_pos = pdf_buffer.find(b"/ByteRange", sig_obj_start)
         array_start = pdf_buffer.find(b"[", br_key_pos)
+        # array_start = pdf_buffer.find(b"[ 0 9999999999 9999999999 9999999999 ]", sig_obj_start)
         array_end = pdf_buffer.find(b"]", array_start) + 1
         placeholder_len = array_end - array_start
 
         # Locate Contents hex string < ... >
-        c_key_pos = pdf_buffer.find(b"/Contents", sig_obj_start)
-        hex_start = pdf_buffer.find(b"<", c_key_pos) + 1  # First byte of hex data
+        # c_key_pos = pdf_buffer.find(b"/Contents", sig_obj_start)
+        # hex_start = pdf_buffer.find(b"<", c_key_pos) + 1  # First byte of hex data
+        hex_start = pdf_buffer.find(b"<" + b"00" * 8192 + b">", sig_obj_start) + 1
         hex_end = pdf_buffer.find(b">", hex_start)  # Byte after hex data
 
         # 3. CALCULATE OFFSETS (The "Hole")
