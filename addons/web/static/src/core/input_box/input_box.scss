@@ -12,7 +12,7 @@
     --inputbox-overlay-padding-suffix: 0px;
     // STORE THE COMPUTED VALUE IN REUSABLE VARIABLES
     --inputbox-inner-padding-start: calc((1.5 * var(--inputbox-overlay-padding-x)) + var(--inputbox-overlay-padding-prefix));
-    --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-padding-suffix)) + var(--inputbox-overlay-padding-toggler);
+    --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-padding-suffix) + var(--inputbox-overlay-padding-toggler));
 
     &:is(.o_touch_device .o_input_box) {
         --inputbox-overlay-padding-x: var(--inputbox-spacing-unit);
@@ -23,7 +23,7 @@
         --inputbox-overlay-padding-toggler: calc(var(--inputbox-overlay-padding-x) + (2 * var(--inputbox-spacing-unit)));
 
         .o_dropdown_button {
-            inset-inline-end: var(--inputbox-overlay-padding-suffix);
+            inset-inline-end: var(--inputbox-overlay-padding-suffix) !important;
         }
     }
 
