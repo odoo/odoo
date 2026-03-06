@@ -16,109 +16,104 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   8: store add odoobot:
-    #       - fetch res_partner (_read_format)
-    #       - search res_users (_compute_im_status)
-    #       - search presence (_compute_im_status)
-    #       - fetch presence (_compute_im_status)
-    #       - _get_on_leave_ids (_compute_im_status hr_holidays override)
-    #       - search employee (_compute_im_status hr_homeworking override)
-    #       - fetch employee (_compute_im_status hr_homeworking override)
-    #       - fetch res_users (_read_format)
-    #       - fetch hr_employee (user)
-    #   5: settings:
+    #   6: settings:
     #       - search res_users_settings (_find_or_create_for_user)
+    #       - search res_users_settings_embedded_action (_format_settings)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
-    #       - search res_users_settings_embedded_action (_format_settings)
+    #         [enterprise] fetch voip_provider
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
-    #       - search mail_canned_response
+    #       - search_count mail_canned_response
+    #   [enterprise] search_fetch mail_activity_type (voip_config)
+    #   [enterprise] search_count voip_call (_get_number_of_missed_calls)
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
+    #   9: store add odoobot:
+    #       - fetch res_partner (_read_format)
+    #         [enterprise] search ai_agent (_compute_im_status ai override)
+    #       - search res_users (_compute_im_status)
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
+    #       - search employee (_store_im_status_fields)
+    #       - fetch res_users (_read_format)
+    #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
+    #       - fetch hr_employee (_compute_work_location_type)
+    #       - search hr_leave (_compute_leave_status)
     _query_count_init_store = 21
     # Queries for _query_count_init_messaging (in order):
-    #   1: insert res_device_log
-    #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
+    #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
-    #       - search discuss_channel_member
-    #       - fetch discuss_channel
-    #   1: search bus_bus (_bus_last_id)
+    #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
-    #   1: channels_as_member
-    #   2: _init_messaging_global_fields (discuss)
-    #       - fetch discuss_channel_member (is_self)
-    #       - _compute_message_unread
-    #   4: _init_messaging (mail)
-    #       - search bus_bus (_bus_last_id)
+    #   1: search bus_bus (_bus_last_id)
+    #   1: search_fetch discuss_channel_member (_store_init_messaging_global_fields)
+    #   1: _compute_message_unread (_init_messaging_global_fields discuss)
+    #   2: _init_messaging (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (bookmark counter)
-    #           - _check_access
     #   23: _process_request_for_all (discuss):
-    #       - search discuss_channel (channels_domain)
-    #       22: store add channel:
+    #       - search_fetch discuss_channel (channels_domain)
+    #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
+    #       21: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           10: member:
-    #               10: partner:
-    #                   - fetch res_partner (partner)
+    #           9: member:
+    #               9: partner:
+    #                   - search_fetch res_partner (partner)
+    #                     [enterprise] search ai_agent (_compute_im_status ai override)
     #                   - fetch res_users (_compute_im_status)
     #                   - search mail_presence (_compute_im_status)
     #                   - fetch mail_presence (_compute_im_status)
-    #                   - _get_on_leave_ids (_compute_im_status override)
-    #                   - search hr_employee (_compute_im_status override)
-    #                   - fetch hr_employee (_compute_im_status override)
-    #                   - search hr_employee (user override)
-    #                   - search hr_leave (leave_date_to)
-    #                   - fetch res_users (_compute_main_user_id)
+    #                   - search hr_employee (_store_im_status_fields override)
+    #                   - search hr_employee_location (_store_im_status_fields override)
+    #                   - fetch hr_employee (_compute_work_location_type)
+    #                   - search hr_leave (_compute_leave_status)
+    #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
-    #           - search discuss_channel_res_groups_rel (group_ids)
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
+    #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 36
+    _query_count_init_messaging = 31
     # Queries for _query_count_discuss_channels (in order):
-    #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
-    #       - fetch discuss_channel
-    #   2: _get_channels_as_member
-    #       - search discuss_channel (member_domain)
-    #       - search discuss_channel (pinned_member_domain)
-    #   34: channel _to_store_defaults:
-    #       - read mail.message model for get_annotatable models and check access
+    #       - search_fetch discuss_channel
+    #   1: search_count discuss_channel_member (_add_has_unpinned_channels_to_store)
+    #   33: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
     #       - fetch discuss_channel_rtc_session
-    #       - search member (channel_member_ids)
-    #       - search member (channel_name_member_ids)
+    #       - search_fetch member (channel_member_ids)
+    #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       16: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           12: partner:
     #               - fetch res_partner (partner)
+    #                 [enterprise] search ai_agent (_compute_im_status ai override)
     #               - fetch res_users (_compute_im_status)
     #               - search mail_presence (_compute_im_status)
     #               - fetch mail_presence (_compute_im_status)
-    #               - _get_on_leave_ids (_compute_im_status override)
-    #               - search hr_employee (_compute_im_status override)
-    #               - fetch hr_employee (_compute_im_status override)
-    #               - search hr_employee (user override)
-    #               - search hr_leave (leave_date_to)
-    #               - search res_users_settings (livechat username)
+    #               - search hr_employee (_store_im_status_fields override)
+    #               - search hr_employee_location (_store_im_status_fields override)
+    #               - fetch hr_employee (_compute_work_location_type)
+    #               - search hr_leave (_compute_leave_status)
+    #               - search_fetch res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
-    #               - fetch res_users (_compute_main_user_id)
+    #               - fetch res_users (_read_format)
     #               - fetch res_country (livechat override)
     #           2: guest:
     #               - fetch mail_presence (_compute_im_status)
@@ -126,39 +121,40 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search bus_bus (_bus_last_id)
     #       - count discuss_channel_member (member_count)
     #       - _compute_message_needaction
-    #       - search ir_attachment (_compute_avatar_128)
+    #       - fetch ir_attachment (_compute_avatar_128)
     #       - search discuss_channel_res_groups_rel (group_ids)
+    #         [enterprise] fetch discuss_channel (sudo fields, ai_agent_id)
     #       - fetch im_livechat_channel_member_history (requested_by_operator)
     #       - fetch livechat_expertise_ids
     #       - fetch res_groups (group_ids)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   1: _get_last_messages
-    #   22: store add message:
+    #   23: store add message:
     #       - fetch mail_message
+    #       - search mail_message (_compute_linked_message_ids)
+    #       - fetch mail_message (_compute_linked_message_ids)
     #       - search mail_message_schedule
     #       - search mail_message_res_partner_bookmarked_rel
     #       - search message_attachment_rel
     #       - search mail_message_res_partner_rel
     #       - search mail_message_reaction
-    #       - search mail_poll (_compute_has_poll start_message_id)
-    #       - search mail_poll (_compute_has_poll end_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll start_message_id)
+    #       - search_fetch mail_poll (_compute_has_poll end_message_id)
     #       - search mail_message_link_preview
     #       - search mail_notification
     #       - search mail_tracking_value
     #       - search rating_rating
     #       - fetch mail_notification
-    #       - search mail_message_subtype
     #       - search discuss_call_history
     #       - fetch mail_message_reaction
-    #       - read_group (_compute_rating_stats)
     #       - fetch mail_message_subtype
+    #       - read_group (_compute_rating_stats)
     #       - fetch partner (author)
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    # TODO use assertQueries
-    _query_count_discuss_channels = 64
+    _query_count_discuss_channels = 61
 
     def setUp(self):
         super().setUp()
@@ -384,7 +380,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """Test performance of `/mail/data` with `channels_as_member`."""
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
-                "/mail/data", {"fetch_params": ["channels_as_member"]}
+                "/mail/data", {"fetch_params": ["channels_as_member"]},
             ),
             count=self._query_count_discuss_channels,
             results=self._get_discuss_channels_result(),
