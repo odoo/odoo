@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("L10nJoEdiPosTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             {
