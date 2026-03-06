@@ -312,3 +312,24 @@ describe("Merge similar lists", () => {
         });
     });
 });
+
+describe("Nested lists with oe-nested class", () => {
+    test("should allow an oe-nested list item without any children", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li class="oe-nested"></li>
+                </ul>
+            `),
+            contentAfter: unformat(`
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li class="oe-nested"><br></li>
+                </ul>
+            `),
+        });
+    });
+});

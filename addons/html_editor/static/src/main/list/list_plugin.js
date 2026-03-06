@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
+    fillEmpty,
     removeClass,
     removeStyle,
     toggleClass,
@@ -318,6 +319,9 @@ export class ListPlugin extends Plugin {
             root = closestNestedLI.parentElement;
         }
         for (let element of selectElements(root, "ul, ol, li")) {
+            if (element.nodeName === "LI" && !element.hasChildNodes()) {
+                fillEmpty(element);
+            }
             if (isProtected(element) || isProtecting(element)) {
                 continue;
             }
