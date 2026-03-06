@@ -14,7 +14,7 @@ class DashboardDataRoute(Controller):
         dashboard = dashboard.exists()
         if not dashboard:
             raise request.not_found()
-        if dashboard._dashboard_is_empty() and dashboard.sample_dashboard_file_path:
+        if dashboard.sample_dashboard_file_path and dashboard._dashboard_is_empty():
             sample_data = dashboard._get_sample_dashboard()
             if sample_data:
                 return request.make_json_response({
