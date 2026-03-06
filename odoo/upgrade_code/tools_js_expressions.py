@@ -655,6 +655,8 @@ class TemplateCompiler:
                     node.set(attr, self._compile_expr(value))
                 if attr.startswith("t-att-") and not attr.startswith("t-attf-"):
                     node.set(attr, self._compile_expr(value))
+                if attr.startswith(("t-custom-model", "t-custom-portal")) and value:
+                    node.set(attr, self._compile_expr(value))
                 if attr.startswith("t-attf-"):
                     self.process_dynamic_string(node, attr)
                 if attr == "t-call" or attr == "t-ref" or attr == "t-slot":
@@ -1080,6 +1082,21 @@ tests = [
         "name": "t-on-click.bind",
         "content": '<div t-on-click.bind="onClick"/>',
         "expected": '<div t-on-click.bind="this.onClick"/>',
+    },
+    {
+        "name": "t-custom-model",
+        "content": '<input t-custom-model="state.name"/>',
+        "expected": '<input t-custom-model="this.state.name"/>',
+    },
+    {
+        "name": "t-custom-model modifier",
+        "content": '<input t-custom-model.trim="state.name"/>',
+        "expected": '<input t-custom-model.trim="this.state.name"/>',
+    },
+    {
+        "name": "t-custom-portal",
+        "content": '<div t-custom-portal="portalTarget"/>',
+        "expected": '<div t-custom-portal="this.portalTarget"/>',
     },
     {
         "name": "t-if",
