@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -128,6 +128,9 @@ class HrLeave(models.Model):
             - Filters Indian, full-day, sandwich-enabled leaves.
             - Prepares dicts for sibling employee leaves and company public holidays.
         """
+        def _to_local_date(datetime, tz):
+            return datetime.replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).date()
+
         indian_leaves = self.filtered(
             lambda leave: leave.company_id.country_id.code == "IN"
             and leave.work_entry_type_id.l10n_in_is_sandwich_leave
@@ -156,22 +159,23 @@ class HrLeave(models.Model):
                 for offset in range((leave.request_date_to - leave.request_date_from).days + 1)
             }
 
-        tz = ZoneInfo(self.env.context.get("tz") or self.env.user.tz or "UTC")
-        public_holidays_dates_by_company = {
-            company_id: {
-                (datetime.date(holiday.date_from.astimezone(tz)) + timedelta(days=offset)): holiday
-                for holiday in recs
-                for offset in range((holiday.date_to.date() - holiday.date_from.date()).days + 1)
-            }
-            for company_id, recs in self.env['resource.calendar.leaves']._read_group(
-                domain=[
-                    ('resource_id', '=', False),
-                    ('company_id', 'in', indian_leaves.company_id.ids),
-                ],
-                groupby=['company_id'],
-                aggregates=['id:recordset'],
-            )
-        }
+        public_holidays_dates_by_company = {}
+        for company_id, recs in self.env['resource.calendar.leaves']._read_group(
+            domain=[
+                ('resource_id', '=', False),
+                ('company_id', 'in', indian_leaves.company_id.ids),
+            ],
+            groupby=['company_id'],
+            aggregates=['id:recordset'],
+        ):
+            company_dates = {}
+            tz = company_id.tz or self.env.context.get("tz") or self.env.user.tz or "UTC"
+            for holiday in recs:
+                local_start = _to_local_date(holiday.date_from, tz)
+                local_end = _to_local_date(holiday.date_to, tz)
+                for offset in range((local_end - local_start).days + 1):
+                    company_dates[local_start + timedelta(days=offset)] = holiday
+            public_holidays_dates_by_company[company_id] = company_dates
 
         return indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company
 
