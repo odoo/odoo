@@ -1231,6 +1231,19 @@ class HrExpense(models.Model):
         if len(employee_expenses.company_id) > 1:
             raise UserError(_("You can't post simultaneously employee-paid expenses belonging to different companies"))
 
+        # For company-paid expenses using SEPA Credit Transfer, the vendor must be set
+        # because SEPA XML generation requires a creditor name (partner).
+        expenses_missing_vendor = company_expenses.filtered(
+            lambda exp: exp.payment_method_line_id.code == 'sepa_ct' and not exp.vendor_id
+        )
+        if expenses_missing_vendor:
+            expense_names = ', '.join(expenses_missing_vendor.mapped('name'))
+            raise UserError(_(
+                "The vendor is required for expenses using SEPA Credit Transfer as the payment method."
+                "\nPlease set a vendor on the following expenses: %s",
+                expense_names
+            ))
+
         if company_expenses:
             company_expenses._create_company_paid_moves()
             # Post the company-paid expense through the payment, to post both at the same time
