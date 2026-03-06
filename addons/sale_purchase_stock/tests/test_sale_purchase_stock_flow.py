@@ -597,3 +597,146 @@ class TestSalePurchaseStockFlow(TransactionCase):
             so.picking_ids[2].move_ids.quantity = 10
             so.picking_ids[2].button_validate()
         self.assertEqual(self.mto_product.monthly_demand, 10.0)
+
+    def test_lot_visibility_and_transfer_branch_to_parent(self):
+        """
+        Sell a lot-tracked product from a branch company to the parent company.
+        Stock users only have access to their respective company.
+        Both users should be able to see the same lot and validate their transfer:
+        - The branch stock user validates the outgoing delivery.
+        - The parent stock user validates the incoming receipt.
+        Since the product is limited to the parent company, the lot's company_id
+        is computed as the parent company, making it visible to the branch user
+        through the parent_of domain, and naturally visible to the parent user.
+        """
+        parent_company = self.env.company
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': parent_company.id,
+        })
+
+        group_stock_user = self.env.ref('stock.group_stock_user')
+        group_base_user = self.env.ref('base.group_user')
+
+        branch_stock_user = self.env['res.users'].create({
+            'name': 'Branch Stock User',
+            'login': 'branch_stock_user@test.com',
+            'email': 'branch_stock_user@test.com',
+            'company_id': branch_company.id,
+            'company_ids': [(6, 0, [branch_company.id])],
+            'group_ids': [(6, 0, [group_base_user.id, group_stock_user.id])],
+        })
+        parent_stock_user = self.env['res.users'].create({
+            'name': 'Parent Stock User',
+            'login': 'parent_stock_user@test.com',
+            'email': 'parent_stock_user@test.com',
+            'company_id': parent_company.id,
+            'company_ids': [(6, 0, [parent_company.id])],
+            'group_ids': [(6, 0, [group_base_user.id, group_stock_user.id])],
+        })
+
+        # Product limited to parent company, tracked by lot
+        product = self.env['product.product'].create({
+            'name': 'Lot Tracked Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'company_id': parent_company.id,
+        })
+
+        # Create a lot — product.company_id = parent_company so lot.company_id
+        # is computed as parent_company
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT001',
+            'product_id': product.id,
+        })
+        self.assertEqual(
+            lot.company_id, parent_company,
+            "Lot should belong to the parent company since the product is limited to it",
+        )
+
+        branch_warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', branch_company.id)], limit=1)
+
+        # Put stock in the branch warehouse with the lot
+        self.env['stock.quant']._update_available_quantity(
+            product, branch_warehouse.lot_stock_id, 10.0, lot_id=lot)
+
+        # Branch company creates a sale order, selling to the parent company
+        so = self.env['sale.order'].with_company(branch_company).create({
+            'partner_id': parent_company.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 5,
+                'price_unit': 10,
+            })],
+        })
+        so.action_confirm()
+
+        # Parent company creates a purchase order, buying from the branch
+        po = self.env['purchase.order'].with_company(parent_company).create({
+            'partner_id': branch_company.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 5,
+                'price_unit': 10,
+                'product_uom_id': product.uom_id.id,
+            })],
+        })
+        po.button_confirm()
+
+        # Both stock users can search and find the lot in their own company context.
+        # The branch user can see it because lot.company_id (= parent) is an ancestor
+        # of the branch (check_company_domain_parent_of).
+        branch_lot = self.env['stock.lot'].with_user(branch_stock_user).with_context(
+            allowed_company_ids=branch_company.ids,
+        ).search([('id', '=', lot.id)])
+        self.assertTrue(
+            branch_lot,
+            "Branch stock user should be able to see the lot from the parent company",
+        )
+
+        parent_lot = self.env['stock.lot'].with_user(parent_stock_user).with_context(
+            allowed_company_ids=parent_company.ids,
+        ).search([('id', '=', lot.id)])
+        self.assertTrue(
+            parent_lot,
+            "Parent stock user should be able to see the lot from their own company",
+        )
+
+        # Branch stock user validates the outgoing delivery.
+        # The lot is already reserved from the quant created above.
+        delivery = so.picking_ids
+        self.assertEqual(len(delivery), 1)
+        delivery.with_user(branch_stock_user).with_context(
+            allowed_company_ids=branch_company.ids,
+        ).button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(
+            delivery.move_ids.move_line_ids.lot_id, lot,
+            "The delivery should have been validated with the correct lot",
+        )
+
+        # Parent stock user validates the incoming receipt using the same lot.
+        receipt = po.picking_ids
+        self.assertEqual(len(receipt), 1)
+        # Set the lot and done quantity on the receipt move lines
+        if not receipt.move_ids.move_line_ids:
+            self.env['stock.move.line'].create({
+                'move_id': receipt.move_ids.id,
+                'picking_id': receipt.id,
+                'product_id': product.id,
+                'product_uom_id': product.uom_id.id,
+                'lot_id': lot.id,
+                'quantity': 5,
+                'location_id': receipt.location_id.id,
+                'location_dest_id': receipt.location_dest_id.id,
+                'company_id': parent_company.id,
+            })
+        else:
+            receipt.move_ids.move_line_ids.lot_id = lot
+            receipt.move_ids.move_line_ids.quantity = 5
+        receipt.move_ids.picked = True
+        receipt.with_user(parent_stock_user).with_context(
+            allowed_company_ids=parent_company.ids,
+        ).button_validate()
+        self.assertEqual(receipt.state, 'done')

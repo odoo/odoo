@@ -27,6 +27,7 @@ class StockLot(models.Model):
     _description = 'Lot/Serial'
     _check_company_auto = True
     _order = 'name, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     @api.model
     def default_get(self, fields):
