@@ -747,13 +747,44 @@ class TestSearchRelated(TransactionCase):
         """]):
             model.search([('foo_foo_sudo_ids.name', '=', 'a')])
 
+    def test_binary_attachment(self):
+        model = self.env['test_orm.attachment.host'].with_user(self.env.ref('base.user_admin'))
+
+        # warmup
+        model.search([('real_binary', '=', False)])
+        model.search([('real_binary', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_attachment_host"."id"
+            FROM "test_orm_attachment_host"
+            WHERE NOT EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_orm_attachment_host"."id"
+            )
+            ORDER BY "test_orm_attachment_host"."id"
+        """]):
+            model.search([('real_binary', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_attachment_host"."id"
+            FROM "test_orm_attachment_host"
+            WHERE EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_orm_attachment_host"."id"
+            )
+            ORDER BY "test_orm_attachment_host"."id"
+        """]):
+            model.search([('real_binary', '!=', False)])
+
     def test_related_binary(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
 
         # warmup
         model.search([('foo_binary_att', '!=', False)])
+        model.search([('foo_binary_att', '=', False)])
         model.search([('foo_binary_bin', '!=', False)])
         model.search([('foo_binary_att_sudo', '!=', False)])
+        model.search([('foo_binary_att_sudo', '=', False)])
         model.search([('foo_binary_bin_sudo', '!=', False)])
 
         with self.assertQueries(["""
@@ -762,8 +793,9 @@ class TestSearchRelated(TransactionCase):
             WHERE "test_orm_related"."foo_id" IN (
                 SELECT "test_orm_related_foo"."id"
                 FROM "test_orm_related_foo"
-                WHERE "test_orm_related_foo"."id" IN (
-                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                WHERE EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related_foo"."id"
                 )
                 AND "test_orm_related_foo"."id" < %s
             )
@@ -771,6 +803,24 @@ class TestSearchRelated(TransactionCase):
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_binary_att', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            WHERE ("test_orm_related"."foo_id" IS NULL OR
+                  "test_orm_related"."foo_id" IN (
+                SELECT "test_orm_related_foo"."id"
+                FROM "test_orm_related_foo"
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related_foo"."id"
+                )
+                AND "test_orm_related_foo"."id" < %s
+            ))
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att', '=', False)])
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
@@ -793,14 +843,35 @@ class TestSearchRelated(TransactionCase):
                 ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
             WHERE (
                 "test_orm_related"."foo_id" IS NOT NULL
-                AND "test_orm_related__foo_id"."id" IN (
-                    SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND EXISTS (
+                    SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                    AND res_id = "test_orm_related__foo_id"."id"
                 )
             )
             AND "test_orm_related"."id" < %s
             ORDER BY "test_orm_related"."id"
         """]):
             model.search([('foo_binary_att_sudo', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NULL
+                OR (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND NOT EXISTS (
+                        SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                        AND res_id = "test_orm_related__foo_id"."id"
+                    )
+                )
+            )
+            AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search([('foo_binary_att_sudo', '=', False)])
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
