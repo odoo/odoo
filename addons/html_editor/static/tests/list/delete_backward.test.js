@@ -960,9 +960,9 @@ describe("Selection collapsed", () => {
 
             test("should remove the checkmark when the list item marker is deleted", async () => {
                 await testEditor({
-                    contentBefore: '<ul class="o_checklist"><li class="o_checked">[]</li></ul>',
+                    contentBefore: '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<ul class="o_checklist"><li class="oe-nested">[]</li></ul>',
+                    contentAfter: '<ul class="o_checklist"><li class="oe-nested">[]<br></li></ul>',
                 });
             });
 

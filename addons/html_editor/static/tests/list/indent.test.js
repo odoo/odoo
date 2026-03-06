@@ -272,7 +272,7 @@ describe("Regular list", () => {
             contentBefore: unformat(`
                     <ul>
                         <li>abc</li>
-                        <li>[]</li>
+                        <li>[]<br></li>
                     </ul>
                     <p>def</p>`),
             stepFunction: keydownTab,
@@ -280,7 +280,7 @@ describe("Regular list", () => {
                     <ul>
                         <li><p>abc</p>
                             <ul>
-                                <li>[]</li>
+                                <li>[]<br></li>
                             </ul>
                         </li>
                     </ul>
