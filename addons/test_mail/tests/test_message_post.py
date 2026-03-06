@@ -1278,7 +1278,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         message_type='comment',
                         partner_ids=[self.partner_1.id],
                         subject='Exotic email',
-                        subtype_xmlid='mt_comment',
+                        subtype_xmlid='mail.mt_comment',
                     )
 
                 self.assertSentEmail(
@@ -1313,7 +1313,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         partner_ids=partner_ids,
                         outgoing_email_to=','.join(email_to_lst),
                         subject='Email recipients',
-                        subtype_xmlid='mt_comment',
+                        subtype_xmlid='mail.mt_comment',
                     )
                 for partner in exp_partner_mail:
                     # one mail for the asked recipient
@@ -1327,6 +1327,75 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     author=self.partner_employee,
                     email_to_all=email_to_normalized_lst,
                 )
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_notification_states_based_on_user_and_email(self):
+        """ Validate notification behavior:
+        - Archived user → no email sent
+        - Invalid email → exception
+        - Valid email + active user → email should be sent
+        """
+
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        # Active user (valid email)
+        user_active = mail_new_test_user(
+            self.env(su=True),
+            login='user_active',
+            groups='base.group_user',
+            email='active@example.com',
+            name='Active User',
+            notification_type='email',
+        )
+        partner_active = user_active.partner_id
+
+        # Archived user (valid email)
+        user_archived = mail_new_test_user(
+            self.env(su=True),
+            login='user_archived',
+            groups='base.group_user',
+            email='archived@example.com',
+            name='Archived User',
+            active=False
+        )
+        partner_archived = user_archived.partner_id
+
+        # Invalid email user
+        user_invalid = mail_new_test_user(
+            self.env(su=True),
+            login='user_invalid',
+            groups='base.group_user',
+            email='invalid-email',
+            name='Invalid User',
+            notification_type='email',
+        )
+        partner_invalid = user_invalid.partner_id
+
+        with self.mock_mail_gateway():
+            message = test_record.message_post(
+                body='Test notification matrix',
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+                partner_ids=[
+                    partner_active.id,
+                    partner_archived.id,
+                    partner_invalid.id,
+                ],
+            )
+
+        def _notif(partner):
+            return message.notification_ids.filtered(
+                lambda n: n.res_partner_id == partner
+            )
+
+        notif_active = _notif(partner_active)
+        notif_archived = _notif(partner_archived)
+        notif_invalid = _notif(partner_invalid)
+
+        self.assertEqual(notif_active.notification_status, 'sent')
+        self.assertEqual(notif_archived.notification_status, False)
+        self.assertEqual(notif_invalid.notification_status, 'exception')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule', 'odoo.models.unlink')

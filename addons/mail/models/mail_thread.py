@@ -3554,6 +3554,12 @@ class MailThread(models.AbstractModel):
         if notif_create_values:
             SafeNotification.create(notif_create_values)
 
+        if message and message.message_type == 'comment' and message.subtype_id.name == 'Notes':
+            emails = emails.filtered(
+                lambda m: any(u.active for p in m.recipient_ids for u in p.user_ids)
+            )
+            emails = self.env['mail.mail'].sudo().browse(emails.ids)
+
         # NOTE:
         #   1. for more than 50 followers, use the queue system
         #   2. do not send emails immediately if the registry is not loaded,
