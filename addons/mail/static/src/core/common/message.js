@@ -29,7 +29,7 @@ import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
+import { useForwardRefsToParent, useLongPress, useShrinkWrap } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
@@ -128,6 +128,17 @@ export class Message extends Component {
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        useSubEnv({ messageComposerAutoresize: {} }); // sub-composer expected to register its auto-resize function as `invoke`
+        useShrinkWrap(this.root, this.messageBody, {
+            onAfterShrinkWrap: (element) => {
+                if (this.state.isEditing) {
+                    element.style.width = "auto";
+                    element.style.boxSizing = "auto";
+                    // Composer autoresize happens before message shrink-wrap, so need to ask to auto-resize composer again
+                    this.env.messageComposerAutoresize?.invoke();
+                }
+            },
+        });
         useSubEnv({ inMessage: true });
         useChildSubEnv({
             message: this.props.message,

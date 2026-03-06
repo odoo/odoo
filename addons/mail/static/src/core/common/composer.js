@@ -1,4 +1,11 @@
-import { reactive, useChildSubEnv, useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import {
+    reactive,
+    useChildSubEnv,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -15,14 +22,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
-import {
-    Component,
-    markup,
-    onMounted,
-    onWillUnmount,
-    toRaw,
-    EventBus,
-} from "@odoo/owl";
+import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -187,6 +187,9 @@ export class Composer extends Component {
                     (!this.store.rtc.isFullscreen || this.env.inMeetingView)
             );
         }
+        if (this.env.messageComposerAutoresize) {
+            this.env.messageComposerAutoresize.invoke = this.autoresize.bind(this);
+        }
         useChildSubEnv({ inComposer: true });
         useLayoutEffect(
             (focus) => {
@@ -210,18 +213,7 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                if (this.fakeTextarea.el?.scrollHeight) {
-                    let wasEmpty = false;
-                    if (!this.fakeTextarea.el.value) {
-                        wasEmpty = true;
-                        this.fakeTextarea.el.value = "0";
-                    }
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
-                    if (wasEmpty) {
-                        this.fakeTextarea.el.value = "";
-                    }
-                }
-                this.saveContentDebounced();
+                this.autoresize();
             },
             () => [this.props.composer.composerText, this.ref.el]
         );
@@ -264,6 +256,21 @@ export class Composer extends Component {
 
     get areAllActionsDisabled() {
         return this.props.disabled;
+    }
+
+    autoresize() {
+        if (this.fakeTextarea.el?.scrollHeight) {
+            let wasEmpty = false;
+            if (!this.fakeTextarea.el.value) {
+                wasEmpty = true;
+                this.fakeTextarea.el.value = "0";
+            }
+            this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+            if (wasEmpty) {
+                this.fakeTextarea.el.value = "";
+            }
+        }
+        this.saveContentDebounced();
     }
 
     get isMultiUpload() {
