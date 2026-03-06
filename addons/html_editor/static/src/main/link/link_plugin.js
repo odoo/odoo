@@ -23,7 +23,7 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { hasTouch, isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 import { session } from "@web/session";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
@@ -708,8 +708,10 @@ export class LinkPlugin extends Plugin {
                 this.dependencies.selection.focusEditable();
             },
             onRemove: () => {
-                this.removeLinkInDocument();
-                this.linkInDocument = null;
+                if (this.linkInDocument) {
+                    this.removeLinkInDocument();
+                    this.linkInDocument = null;
+                }
                 this.currentOverlay.close();
             },
             onCopy: () => {
@@ -1526,6 +1528,7 @@ export class LinkPlugin extends Plugin {
                     },
                     {
                         sequence: 50,
+                        useBottomSheet: this.services.ui.isSmall && hasTouch(),
                     }
                 ),
                 isAvailable: link_popover.isAvailable,
