@@ -97,3 +97,40 @@ $o-we-color-success: #00ff9e !default;
         color: $o-we-color-success;
     }
 }
+
+.o_bottom_sheet_body .o_font_color_selector {
+    width: unset;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: unset;
+
+    button.fa-trash.btn-light {
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    .gradient-angle-knob {
+        display: none !important;
+    }
+
+    .o_colorpicker_section, .o_color_section {
+        width: -webkit-fill-available;
+    }
+
+    .o_color_picker_button {
+        &:not(.o_gradient_color_button, .o_custom_gradient_button) {
+            width: unset;
+            height: unset;
+            aspect-ratio: 1 / 1;
+        }
+        &.o_gradient_color_button, &.o_custom_gradient_button {
+            height: 40px;
+        }
+    }
+
+    .o_color_pick_area {
+        height: unset;
+        aspect-ratio: 144 / 125;
+    }
+}

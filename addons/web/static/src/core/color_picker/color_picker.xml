@@ -7,7 +7,9 @@
             <t t-if="this.isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
-                        <span class="px-1" t-out="this.state.activeTab"/>
+                        <t t-foreach="this.tabs" t-as="item" t-key="item.id">
+                            <span t-if="this.state.activeTab === item.id" class="px-1" t-out="item.name"/>
+                        </t>
                         <i class="fa fa-caret-down ms-2"/>
                     </button>
                     <t t-set-slot="content">
