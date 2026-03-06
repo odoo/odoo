@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="stock_account.StockValuationReport.InventoryValuationLine">
-        <tr t-att-class="cssClass">
-            <td class="line_name w-50" t-on-click="onClick">
+        <tr t-att-class="this.cssClass">
+            <td class="line_name w-50" t-on-click="this.onClick">
                 <div class="wrapper">
-                    <t t-if="label">
-                        <a t-if="props.onClickMethod" href="#" t-out="label"/>
-                        <span t-else="" t-out="label"/>
+                    <t t-if="this.label">
+                        <a t-if="this.props.onClickMethod" href="#" t-out="this.label"/>
+                        <span t-else="" t-out="this.label"/>
                     </t>
                 </div>
             </td>
             <td class="w-25">
-                <div t-if="formattedValue" t-out="formattedValue"/>
-                <div t-elif="debit" t-out="debit"/>
+                <div t-if="this.formattedValue" t-out="this.formattedValue"/>
+                <div t-elif="this.debit" t-out="this.debit"/>
             </td>
-            <td t-if="credit" class="w-25">
-                <div t-out="credit"/>
+            <td t-if="this.credit" class="w-25">
+                <div t-out="this.credit"/>
             </td>
-            <td t-else="" t-on-click="onClickToggle" class="w-25">
-                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}"
-                        t-att-tabindex="props.lines ? 0 : -1">
-                    <i t-if="hasSublines"
-                        t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
+            <td t-else="" t-on-click="this.onClickToggle" class="w-25">
+                <button t-attf-class="btn btn_foldable#{this.props.sublines ? '' : '_empty'}"
+                        t-att-tabindex="this.props.lines ? 0 : -1">
+                    <i t-if="this.hasSublines"
+                        t-attf-class="fa fa-folder#{this.state.displaySublines ? '-open' : ''}-o"/>
                 </button>
             </td>
         </tr>
-        <t t-if="state.displaySublines &amp;&amp; hasSublines">
-            <t t-if="props.displayDebitCredit">
+        <t t-if="this.state.displaySublines &amp;&amp; this.hasSublines">
+            <t t-if="this.props.displayDebitCredit">
                 <tr>
                     <td/>
                     <td>Debit</td>
                     <td>Credit</td>
                 </tr>
             </t>
-            <t t-foreach="props.sublines" t-as="line" t-key="line.account_id">
+            <t t-foreach="this.props.sublines" t-as="line" t-key="line.account_id">
                 <StockValuationReportLine
                     label="line.display_name || line.label"
                     line="line"
                     sublines="line.lines"
-                    level="props.level + 2"
+                    level="this.props.level + 2"
                     onClickMethod="line.method"
                     value="line.value"/>
             </t>

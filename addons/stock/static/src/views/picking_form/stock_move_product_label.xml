@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="stock.MoveProductLabelField">
         <div class="o_input_box">
-            <Many2One t-props="this.m2oProps" t-on-keydown="onM2oInputKeydown"/>
-            <t t-if="showLabelVisibilityToggler">
+            <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
+            <t t-if="this.showLabelVisibilityToggler">
                 <button
                     class="o_input_box_overlay_end btn btn-link fa fa-bars"
                     id="labelVisibilityButtonId"
@@ -17,9 +17,9 @@
             placeholder="Enter a description"
             rows="1"
             type="text"
-            t-att-class="{ 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
-            t-att-readonly="isDescriptionReadonly"
-            t-att-value="label"
+            t-att-class="{ 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+            t-att-readonly="this.isDescriptionReadonly"
+            t-att-value="this.label"
             t-custom-ref="labelNodeRef"
         />
     </t>

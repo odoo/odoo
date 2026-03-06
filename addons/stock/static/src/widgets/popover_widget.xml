@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="stock.popoverButton">
-        <a tabindex="0" t-on-click.stop="showPopup" t-attf-class="p-1 fa #{ icon || 'fa-info-circle'} #{ color || 'text-primary'}"/>
+        <a tabindex="0" t-on-click.stop="this.showPopup" t-attf-class="p-1 fa #{ this.icon || 'fa-info-circle'} #{ this.color || 'text-primary'}"/>
     </t>
 
     <div t-name="stock.popoverContent" class="m-3">
-        <h6 t-out="props.title"/>
-        <t t-if="props.popoverTemplate" t-call="{{props.popoverTemplate}}" />
-        <t t-else="" t-out="props.msg"/>
+        <h6 t-out="this.props.title"/>
+        <t t-if="this.props.popoverTemplate" t-call="{{this.props.popoverTemplate}}" />
+        <t t-else="" t-out="this.props.msg"/>
     </div>
 </templates>

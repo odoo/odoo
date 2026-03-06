@@ -4,7 +4,7 @@
     <t t-name="stock.PickingLockedStatusBarField.ItemLabel">
         <span t-out="item.label"/>
         <t t-if="['done', 'cancel'].includes(item.value) and item.isSelected">
-            <i t-attf-class="fa fa-fw ms-1 #{isLocked ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
+            <i t-attf-class="fa fa-fw ms-1 #{this.isLocked ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
         </t>
     </t>
 

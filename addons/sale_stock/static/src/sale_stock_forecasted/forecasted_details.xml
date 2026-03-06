@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
                 <td/>
                 <td>
                 <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
@@ -15,7 +15,7 @@
                 </td>
                 <td class="text-end">
                     <span class="text-danger">
-                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                        <t t-out="this._formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
                     </span>
                 </td>
                 <td colspan="3"/>
