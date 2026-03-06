@@ -269,6 +269,14 @@ export class PosData {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
+
+        const serverProductIds = this.models["product.product"].map((p) => p.id);
+        const databaseProductIds = missing["product.product"]?.map((p) => p.id) ?? [];
+        const loadedProductIds = new Set([...databaseProductIds, ...serverProductIds]);
+        missing["pos.order.line"] = missing["pos.order.line"]?.filter((line) =>
+            loadedProductIds.has(line.product_id)
+        );
+
         const results = this.models.loadConnectedData(missing, []);
 
         await this.checkAndDeleteMissingOrders(results);
