@@ -186,11 +186,15 @@ class AccountMoveSend(models.AbstractModel):
         writer.addAttachment(attachment_name, xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if ((invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
-                or (invoice.commercial_partner_id.country_code in ('FR', 'DE') and invoice.commercial_partner_id.peppol_eas != '0204'))
-                and invoice.country_code in ('FR', 'DE')
+        invoice_country = invoice.country_code or ''
+        partner_country = invoice.commercial_partner_id.country_code or ''
+
+        if (
+                (invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
+                 or (partner_country in ('FR', 'DE') and invoice.commercial_partner_id.peppol_eas != '0204'))
+                and invoice_country in ('FR', 'DE')
                 and not writer.is_pdfa
-            ):
+        ):
             try:
                 writer.convert_to_pdfa()
             except Exception:
