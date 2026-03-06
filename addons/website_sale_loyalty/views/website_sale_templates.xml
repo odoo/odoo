@@ -173,12 +173,6 @@
         </xpath>
     </template>
 
-    <template id="website_sale_loyalty.reduction_coupon_code" inherit_id="website_sale.reduction_code">
-        <xpath expr="//t[@t-set='force_coupon']" position="after">
-            <t t-set="_placeholder">Discount code or gift card</t>
-        </xpath>
-    </template>
-
     <template
         id="website_sale_loyalty.cart_summary"
         inherit_id="website_sale.cart_product_price"
