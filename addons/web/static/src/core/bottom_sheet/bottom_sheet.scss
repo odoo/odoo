@@ -250,7 +250,7 @@
 
     .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
         // Leave space for the active checkmark icon
-        &:has(.dropdown-item.active, .dropdown-item.selected) .dropdown-item {
+        &:has(.dropdown-item.active, .dropdown-item.selected):has(.dropdown-item:not(.dropdown-item_active_noarrow)) .dropdown-item {
             padding-right: $spacer * 2.5;
         }
 

@@ -836,6 +836,28 @@ test("should allow font size up to 144px in editor", async () => {
     expect(inputEl).toHaveValue(144);
 });
 
+test.tags("mobile");
+test("toolbar works: displays correct font size on input (mobile)", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(inputEl).toHaveValue(14);
+    inputEl.select();
+    await press("backspace");
+    await press("backspace");
+    await press("8");
+    expect(inputEl).toHaveValue(8);
+    await advanceTime(200);
+    // Responsive font-size: check for o_rfs class and clamp() value
+    const rfsSpan = el.querySelector("span.o_rfs");
+    expect(rfsSpan !== null).toBe(true);
+    expect(rfsSpan.style.fontSize.startsWith("clamp(")).toBe(true);
+    await expectElementCount(".o-we-toolbar", 1);
+});
+
+test.tags("desktop");
 test("toolbar works: font size dropdown closes on Enter and Escape key press", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
@@ -855,6 +877,21 @@ test("toolbar works: font size dropdown closes on Enter and Escape key press", a
     await press("Escape");
     await animationFrame();
     expect(".o_font_size_selector_menu").toHaveCount(0);
+});
+
+test.tags("mobile");
+test("toolbar works: font size dropdown closes on Escape key press (mobile)", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size'] iframe");
+    expect(iframeEl).toHaveCount(1);
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(inputEl).click();
+    expect(".o_font_size_selector_menu").toHaveCount(1);
+
+    await press("Escape");
+    await waitForNone(".o_font_size_selector_menu", { timeout: 500 });
 });
 
 test.tags("desktop");
