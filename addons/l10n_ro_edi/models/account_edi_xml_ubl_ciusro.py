@@ -218,8 +218,7 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
         company_id = None
 
         if not _has_vat(commercial_partner.vat):
-            if commercial_partner.company_registry:
-                company_id = DEFAULT_VAT
+            company_id = DEFAULT_VAT
         else:
             company_id = commercial_partner.vat
 
