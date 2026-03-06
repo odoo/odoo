@@ -30,9 +30,8 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Moves" create="0" editable="bottom" default_order="date desc" duplicate="0">
-                    <field name="date" groups="base.group_no_one"
-                           decoration-danger="(state not in ('cancel','done')) and date > current_date"
-                            readonly="1"/>
+                    <field name="date" string="Date" optional="show" readonly="1"
+                        decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True" readonly="1"/>
                     <field name="location_usage" column_invisible="True" readonly="1"/>
@@ -409,7 +408,7 @@
                         <filter string="Destination Location" name="groupby_dest_location_id" domain="[]" context="{'group_by': 'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Creation Date" name="groupby_create_date" domain="[]" context="{'group_by': 'create_date'}" groups="base.group_no_one"/>
-                        <filter string="Scheduled Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
