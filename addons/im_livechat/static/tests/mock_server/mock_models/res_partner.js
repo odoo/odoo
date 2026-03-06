@@ -58,10 +58,10 @@ export class ResPartner extends mailModels.ResPartner {
                 makeKwArgs({
                     extra_fields: [
                         "is_in_call",
-                        mailDataHelpers.Store.one(
-                            "main_user_id",
-                            mailDataHelpers.Store.many("livechat_expertise_ids", ["name", "color"])
-                        ),
+                        mailDataHelpers.Store.one("main_user_id", [
+                            "partner_id",
+                            mailDataHelpers.Store.many("livechat_expertise_ids", ["name", "color"]),
+                        ]),
                     ],
                 })
             );

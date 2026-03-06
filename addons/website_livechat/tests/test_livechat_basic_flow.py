@@ -275,7 +275,11 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     },
                 ),
                 "res.users": self._filter_users_fields(
-                    {"id": self.operator.id, "employee_ids": []},
+                    {
+                        "id": self.operator.id,
+                        "employee_ids": [],
+                        "partner_id": self.operator.partner_id.id,
+                    },
                 ),
                 "website": [
                     {"id": self.env.ref("website.default_website").id, "name": "My Website"}

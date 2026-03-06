@@ -398,7 +398,8 @@ class ResUsers(models.Model):
         res.one(
             "partner_id",
             lambda res: (
-                res.extend(["active", "main_user_id", "name", "tz"]),
+                res.extend(["active", "name", "tz"]),
+                res.one("main_user_id", ["partner_id"]),
                 res.from_method("_store_avatar_fields"),
                 res.from_method("_store_im_status_fields"),
             ),
@@ -407,10 +408,10 @@ class ResUsers(models.Model):
         res.extend(["notification_type", "share", "signature"])
 
     def _store_main_user_fields(self, res: Store.FieldList):
-        res.attr("share")
+        res.extend(["partner_id", "share"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("id")
+        res.attr("partner_id")
 
     def _store_bookmark_box_global_fields(self, res: Store.FieldList, bus_last_id=None):
         """ Update the bookmark box info in the given store."""
