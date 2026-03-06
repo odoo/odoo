@@ -60,7 +60,7 @@ class PortalThreadController(ThreadController):
             "portal_partner",
             lambda res: (
                 res.attr("active"),
-                res.one("main_user_id", ["share"]),
+                res.one("main_user_id", ["partner_id", "share"]),
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
             ),

@@ -8,20 +8,20 @@ export class ResPartner extends hrModels.ResPartner {
     get _to_store_defaults() {
         return [
             ...super._to_store_defaults,
-            mailDataHelpers.Store.one(
-                "main_user_id",
-                mailDataHelpers.Store.many("employee_ids", "leave_date_to")
-            ),
+            mailDataHelpers.Store.one("main_user_id", [
+                "partner_id",
+                mailDataHelpers.Store.many("employee_ids", ["leave_date_to"]),
+            ]),
         ];
     }
 
     _get_store_im_status_fields() {
         return [
             ...super._get_store_im_status_fields(),
-            mailDataHelpers.Store.one(
-                "main_user_id",
-                mailDataHelpers.Store.many("employee_ids", "leave_date_to")
-            ),
+            mailDataHelpers.Store.one("main_user_id", [
+                "partner_id",
+                mailDataHelpers.Store.many("employee_ids", "leave_date_to"),
+            ]),
         ];
     }
 }
