@@ -7,9 +7,11 @@ from odoo.exceptions import ValidationError
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    def _create_analytic_move(self):
+        moves = self.filtered(lambda move: move.picking_type_id.analytic_costs)
+        return super(StockMove, moves)._create_analytic_move()
+
     def _get_analytic_distribution(self):
-        if not self.picking_type_id.analytic_costs:
-            return super()._get_analytic_distribution()
         distribution = self.picking_id.project_id._get_analytic_distribution()
         return distribution or super()._get_analytic_distribution()
 
