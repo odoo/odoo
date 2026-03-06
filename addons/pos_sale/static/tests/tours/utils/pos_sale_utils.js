@@ -58,12 +58,18 @@ export function downPaymentFirstOrder(amount) {
     return [
         ...selectNthOrder(1),
         {
-            content: `click on select the order`,
-            trigger: `.selection-item:contains('Apply a down payment')`,
+            content: `click on select the order (percentage)`,
+            trigger: `.modal:has(.modal-title:contains(what do you want to do?)) .selection-item:contains('Apply a down payment')`,
             run: "click",
         },
+        Dialog.is({ title: "Down payment" }),
         Numpad.click(amount),
-        Dialog.confirm("Apply"),
+        {
+            trigger: `.modal:has(.modal-title:contains(Down payment)) .popup-input:contains(${Number(
+                amount
+            )})`,
+        },
+        Dialog.proceed({ title: "down payment", button: "Apply" }),
     ];
 }
 
