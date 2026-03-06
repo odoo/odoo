@@ -468,6 +468,7 @@ def mask_xml_entities(text):
         return match.group(0) if name == "amp" else f"__x{name}x__"
     return ENTITY_RE.sub(repl, text)
 
+
 def unmask_xml_entities(text):
     """Restore masked entities back to XML form."""
     return UNMASK_RE.sub(r"&\1;", text)
@@ -796,6 +797,7 @@ class TemplateCompiler:
                 and tok.value not in RESERVED_WORDS
                 and tok.value not in self.node_vars
                 and tok.value not in local_vars
+                and not UNMASK_RE.fullmatch(tok.value)
                 and tok.value != "this"
                 and not (prev_tok and prev_tok.type == "OPERATOR" and prev_tok.value == ".")
                 and not (
@@ -1422,6 +1424,15 @@ tests = [
         </xpath>
     </t>
 </templates>
+""",
+    },
+    {
+        "name": "Doesn't but this before &...; expr",
+        "content": """
+<div t-att-class="account?.balance &lt; 0 ? 'text-danger' : ''" t-out="formattedBalance(account)"/>
+""",
+        "expected": """
+<div t-att-class="this.account?.balance &lt; 0 ? 'text-danger' : ''" t-out="this.formattedBalance(this.account)"/>
 """,
     },
     {
