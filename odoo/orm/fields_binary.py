@@ -13,7 +13,6 @@ from odoo.tools import SQL, human_size
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from .fields import Field
-from .utils import SQL_OPERATORS
 
 if typing.TYPE_CHECKING:
     from .environments import Environment
@@ -201,11 +200,11 @@ class Binary(Field[BinaryValue]):
             return super().condition_to_sql(table, field_expr, operator, value)
         assert operator in ('in', 'not in') and set(value) == {False}, "Should have been done in Domain optimization"
         return SQL(
-            "%s%s(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
-            table.id,
-            SQL_OPERATORS['not in' if operator in ('in', '=') else 'in'],
+            "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
+            SQL("NOT ") if operator == 'in' else SQL(),
             table._model._name,
             self.name,
+            table.id,
         )
 
 
