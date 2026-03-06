@@ -2,7 +2,7 @@ import re
 from markupsafe import Markup
 
 from odoo import _, api, models
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
+from odoo.addons.base_bank.models.res_partner_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero, float_repr
 from odoo.tools.float_utils import float_round
