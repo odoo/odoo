@@ -3,7 +3,7 @@
 {
     'name': 'Privacy',
     'category': 'Hidden',
-    'depends': ['mail'],
+    'depends': ['mail', 'base_bank'],
     'data': [
         'wizard/privacy_lookup_wizard_views.xml',
         'views/privacy_log_views.xml',
