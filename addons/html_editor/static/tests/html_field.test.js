@@ -312,16 +312,16 @@ test("html field in readonly with embedded components and editable descendants",
     READONLY_MAIN_EMBEDDINGS.pop();
 });
 
-test("links should open on a new tab in readonly", async () => {
+test("only external links should always open on a new tab in readonly", async () => {
     Partner._records = [
         {
             id: 1,
             txt: `
             <body>
                 <p>first</p>
-                <a href="/contactus">Relative link</a>
-                <a href="${browser.location.origin}/contactus">Internal link</a>
-                <a href="https://google.com">External link</a>
+                <a class="internal" href="/contactus">Relative link</a>
+                <a class="internal" href="${browser.location.origin}/contactus">Internal link</a>
+                <a class="external" href="https://google.com">External link</a>
             </body>`,
         },
         {
@@ -329,9 +329,9 @@ test("links should open on a new tab in readonly", async () => {
             txt: `
             <body>
                 <p>second</p>
-                <a href="/contactus2">Relative link</a>
-                <a href="${browser.location.origin}/contactus2">Internal link</a>
-                <a href="https://google2.com">External link</a>
+                <a class="internal" href="/contactus2">Relative link</a>
+                <a class="internal" href="${browser.location.origin}/contactus2">Internal link</a>
+                <a class="external" href="https://google2.com">External link</a>
             </body>`,
         },
     ];
@@ -347,16 +347,24 @@ test("links should open on a new tab in readonly", async () => {
     });
 
     expect("[name='txt'] p").toHaveText("first");
-    for (const link of queryAll("a")) {
+    for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noreferrer");
+    }
+    for (const link of queryAll("a.internal")) {
+        expect(link.getAttribute("target")).toBe(null);
+        expect(link.getAttribute("rel")).toBe(null);
     }
 
     await contains(`.o_pager_next`).click();
     expect("[name='txt'] p").toHaveText("second");
-    for (const link of queryAll("a")) {
+    for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noreferrer");
+    }
+    for (const link of queryAll("a.internal")) {
+        expect(link.getAttribute("target")).toBe(null);
+        expect(link.getAttribute("rel")).toBe(null);
     }
 });
 
