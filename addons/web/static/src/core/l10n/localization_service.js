@@ -38,7 +38,11 @@ export const localizationService = {
 
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { method, model } = ev.detail.data.params || {};
-            if (method === "lang_install" && model === "base.language.install") {
+            if (
+                method === "lang_install" &&
+                model === "base.language.install" &&
+                !ev.detail.error
+            ) {
                 rpcBus.trigger("CLEAR-CACHES");
             }
         });

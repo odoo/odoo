@@ -46,7 +46,7 @@ export const viewService = {
     start(env, { orm }) {
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { model, method } = ev.detail.data.params;
-            if (["ir.ui.view", "ir.filters"].includes(model)) {
+            if (["ir.ui.view", "ir.filters"].includes(model) && !ev.detail.error) {
                 if (UPDATE_METHODS.includes(method)) {
                     rpcBus.trigger("CLEAR-CACHES", "get_views");
                 }

@@ -17,15 +17,7 @@ import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
-import {
-    Component,
-    markup,
-    onMounted,
-    onWillUnmount,
-    onError,
-    xml,
-    status,
-} from "@odoo/owl";
+import { Component, markup, onMounted, onWillUnmount, onError, xml, status } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
@@ -143,7 +135,11 @@ export function makeActionManager(env, router = _router) {
 
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
-        if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
+        if (
+            model === "ir.actions.act_window" &&
+            UPDATE_METHODS.includes(method) &&
+            !ev.detail.error
+        ) {
             rpcBus.trigger("CLEAR-CACHES", "/web/action/load");
             const virtualStack = await _controllersFromState(router.current);
             const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];

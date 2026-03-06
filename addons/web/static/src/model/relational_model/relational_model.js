@@ -108,7 +108,7 @@ const DEFAULT_HOOKS = {
 };
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
-    if (ev.detail.data.params?.method === "unlink") {
+    if (ev.detail.data.params?.method === "unlink" && !ev.detail.error) {
         rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
     }
 });
