@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="stock.picking.type" name="write">
+            <value model="stock.picking.type" eval="obj().search([('code', '=', 'mrp_operation')]).ids"/>
+            <value eval="{'analytic_costs': True}"/>
+        </function>
+    </data>
+</odoo>

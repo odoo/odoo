@@ -107,6 +107,41 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -100.0)
 
+    def test_mo_analytic_disabled(self):
+        """Test no analytic line is created when analytic costs are disabled.
+        """
+        # create a mo
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 10.0
+        mo_form.project_id = self.project
+        mo = mo_form.save()
+        mo.picking_type_id.analytic_costs = False
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
+
+        # increase qty_producing to 5.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo_form.save()
+        self.assertEqual(mo.state, 'progress')
+        self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
+
+        # increase qty_producing to 10.0
+        mo_form = Form(mo)
+        mo_form.qty_producing = 10.0
+        mo_form.save()
+        mo.workorder_ids.button_finish()
+        self.assertEqual(mo.state, 'to_close')
+        self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
+
+        # mark as done
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertFalse(mo.move_raw_ids.analytic_account_line_ids)
+
     def test_mo_analytic_backorder(self):
         """Test the analytic lines are correctly posted when backorder.
         """
