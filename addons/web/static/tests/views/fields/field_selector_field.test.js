@@ -71,23 +71,6 @@ test("no specified options", async () => {
     );
 });
 
-test("only_searchable option", async () => {
-    await mountView({
-        type: "form",
-        resModel: "update.record.action",
-        arch: /* xml */ `
-            <form>
-                <field name="update_path" widget="field_selector" options="{'only_searchable': true}"/>
-            </form>
-        `,
-    });
-    await contains(".o_field_widget[name='update_path'] .o_input").click();
-    expect(queryAllTexts(".o_model_field_selector_popover_item")).toEqual(
-        ["Created on", "Display name", "Id", "Last Modified on", "Model", "Update path"],
-        { message: "should not display non searchable fields" }
-    );
-});
-
 test("model option", async () => {
     await mountView({
         type: "form",

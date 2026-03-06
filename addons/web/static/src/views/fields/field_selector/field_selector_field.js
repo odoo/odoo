@@ -2,7 +2,6 @@ import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { registry } from "@web/core/registry";
-import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 import { formatChar } from "../formatters";
 
@@ -12,7 +11,6 @@ export class FieldSelectorField extends Component {
     static props = {
         ...standardFieldProps,
         resModel: { type: String, optional: true },
-        onlySearchable: { type: Boolean, optional: true },
         allowProperties: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
     };
@@ -25,7 +23,7 @@ export class FieldSelectorField extends Component {
         if (!this.props.allowProperties && fieldDef.type === "properties") {
             return false;
         }
-        return !this.props.onlySearchable || fieldDef.searchable;
+        return true;
     }
 
     async update(value) {
@@ -71,17 +69,11 @@ export const fieldSelectorField = {
             name: "model",
             type: "string",
         },
-        {
-            label: _t("Only searchable"),
-            name: "only_searchable",
-            type: "string",
-        },
     ],
-    extractProps({ options }, dynamicInfo) {
+    extractProps({ options }) {
         return {
             allowProperties: options.allow_properties ?? true,
             followRelations: options.follow_relations ?? true,
-            onlySearchable: exprToBoolean(options.only_searchable),
             resModel: options.model,
         };
     },
