@@ -21,7 +21,6 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
-import { delay } from "@web/core/utils/concurrency";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -1364,13 +1363,12 @@ test("Should not close the color picker on icon color change", async () => {
         focusNode: icon.nextSibling,
         focusOffset: 0,
     });
-    await delay(50);
+    await waitFor(".o-select-color-foreground");
     await click(".o-select-color-foreground");
-    await animationFrame();
+    await waitFor('[data-color="o-color-1"]');
     await hover('[data-color="o-color-1"]');
-    await animationFrame();
-    expect('[data-color="o-color-1"]').toHaveCount(1);
+    expectElementCount('[data-color="o-color-1"]', 1);
     await hover('[data-color="o-color-2"]');
-    await delay(50);
-    expect('[data-color="o-color-2"]').toHaveCount(1);
+    // Color picker should stay open
+    expectElementCount('[data-color="o-color-2"]', 1);
 });
