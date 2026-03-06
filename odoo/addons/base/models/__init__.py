@@ -40,8 +40,6 @@ from . import avatar_mixin
 from . import res_country
 from . import res_lang
 from . import res_partner
-from . import clearing_label
-from . import res_partner_bank
 from . import res_config
 from . import res_currency
 from . import res_company

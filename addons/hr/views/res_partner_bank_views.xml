@@ -3,7 +3,7 @@
     <record id="view_partner_bank_form_inherit_hr" model="ir.ui.view">
         <field name="name">res.partner.bank.form.inherit.hr</field>
         <field name="model">res.partner.bank</field>
-        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="inherit_id" ref="base_bank.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <field name="employee_salary_amount_is_percentage" groups="hr.group_hr_user" invisible="1"/>

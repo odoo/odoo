@@ -9,7 +9,7 @@
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
     """,
-    'depends': ['base'],
+    'depends': ['base', 'base_bank'],
     'data': [
         'data/res_company_data.xml',
         'views/res_partner_bank_views.xml'
