@@ -5,6 +5,7 @@
  */
 import { Component, useState, useRef, onMounted } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useActiveElement } from "@web/core/ui/ui_service";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
@@ -17,6 +18,7 @@ export class BottomSheet extends Component {
 
     static defaultProps = {
         class: "",
+        setActiveElement: false,
     };
 
     static props = {
@@ -27,6 +29,7 @@ export class BottomSheet extends Component {
 
         class: { optional: true },
         role: { optional: true, type: String },
+        setActiveElement: { optional: true, type: Boolean },
 
         // Technical props
         ref: { optional: true, type: Function },
@@ -50,6 +53,10 @@ export class BottomSheet extends Component {
             maxHeight: 0,
             dismissThreshold: 0,
         };
+
+        if (this.props.setActiveElement) {
+            useActiveElement("ref");
+        }
 
         // Popover Ref Requirement
         useForwardRefToParent("ref");

@@ -82,6 +82,7 @@ export class Dropdown extends Component {
         disabled: { type: Boolean, optional: true },
         holdOnHover: { type: Boolean, optional: true },
         focusToggleOnClosed: { type: Boolean, optional: true },
+        setActiveElement: { type: Boolean, optional: true },
 
         beforeOpen: { type: Function, optional: true },
         onOpened: { type: Function, optional: true },
@@ -119,6 +120,7 @@ export class Dropdown extends Component {
         noClasses: false,
         navigationOptions: {},
         bottomSheet: true,
+        setActiveElement: false,
     };
 
     setup() {
@@ -167,7 +169,7 @@ export class Dropdown extends Component {
             },
             ref: this.menuRef,
             shrink: true,
-            setActiveElement: false,
+            setActiveElement: this.props.setActiveElement,
         };
         if (this.isBottomSheet) {
             Object.assign(options, {
@@ -359,6 +361,9 @@ export class Dropdown extends Component {
     }
 
     closePopover() {
+        if (this.props.setActiveElement && this.menuRef.el) {
+            this.uiService.deactivateElement(this.menuRef.el);
+        }
         this.popover.close();
         if (this.props.focusToggleOnClosed && !this.group.isInGroup) {
             this._focusedElBeforeOpen?.focus();

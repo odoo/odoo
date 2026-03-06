@@ -10,6 +10,7 @@ import { registry } from "@web/core/registry";
  *   role?: string;
  *   ref?: Function;
  *   useBottomSheet?: Boolean;
+ *   setActiveElement?: Boolean;
  * }} PopoverServiceAddOptions
  *
  * @typedef {ReturnType<popoverService["start"]>["add"]} PopoverServiceAddFunction
@@ -47,6 +48,7 @@ export const popoverService = {
                     ref: options.ref,
                     class: options.class,
                     role: options.role,
+                    setActiveElement: options.setActiveElement,
                 },
                 {
                     env: options.env,

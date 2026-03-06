@@ -19,6 +19,7 @@ import {
     contains,
     defineParams,
     getMockEnv,
+    getService,
     makeMockEnv,
     mockService,
     mountWithCleanup,
@@ -147,6 +148,40 @@ test("can be toggled", async () => {
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "false");
+});
+
+test("can become the active UI element when opening with setActiveElement", async () => {
+    class Parent extends Component {
+        static components = { Dropdown };
+        static props = [];
+        static template = xml`
+            <div class="outside">outside</div>
+            <Dropdown setActiveElement="true">
+                <button>Dropdown</button>
+                <t t-set-slot="content">
+                    <input class="dropdown-input" />
+                </t>
+            </Dropdown>
+        `;
+    }
+
+    await mountWithCleanup(Parent);
+
+    const uiService = getService("ui");
+
+    expect(uiService.activeElement).toBe(document);
+    await click(DROPDOWN_TOGGLE);
+    await animationFrame();
+
+    expect(uiService.activeElement).toBe(
+        queryOne(getMockEnv().isSmall ? ".o_bottom_sheet_body.dropdown-menu" : ".o_popover")
+    );
+    expect(".dropdown-input").toBeFocused();
+
+    await click(getMockEnv().isSmall ? ".o_bottom_sheet_backdrop" : "div.outside");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+    expect(uiService.activeElement).toBe(document);
 });
 
 test("initial open state can be true", async () => {
