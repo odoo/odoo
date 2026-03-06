@@ -12,11 +12,12 @@ import {
     getPagerLimit,
 } from "@web/../tests/web_test_helpers";
 import { click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
-import { runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
 import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
+import { FormController } from "@web/views/form/form_controller";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -205,6 +206,12 @@ describe("field HTML", () => {
             // Css assets are not needed for these tests.
             loadIframeAssets() {
                 return {
+                    "mass_mailing.assets_iframe_style": {
+                        toggle: () => {},
+                    },
+                    "mass_mailing.assets_inside_basic_editor_iframe": {
+                        toggle: () => {},
+                    },
                     "mass_mailing.assets_inside_builder_iframe": {
                         toggle: () => {},
                     },
@@ -251,7 +258,111 @@ describe("field HTML", () => {
         // assert that tElement style has inline attibute
         expect(tElement).toHaveAttribute("data-oe-t-inline", "true");
     });
-
+    test("switch out from a notebook tab with html field should update the record", async () => {
+        const arch = `
+            <form>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_id" invisible="1"/>
+                <field name="mailing_model_real" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <notebook>
+                    <page string="body_arch" name="body_arch">
+                        <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                            options="{
+                                'inline_field': 'body_html',
+                                'dynamic_placeholder': true,
+                                'dynamic_placeholder_model_reference_field': 'mailing_model_real'
+                                }" readonly="state in ('sending', 'done')"/>
+                    </page>
+                    <page string="body_html" name="body_html">
+                        <field name="body_html" class="o_mail_body_inline" readonly="true"/>
+                    </page>
+                </notebook>
+            </form>
+        `;
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 5,
+            arch,
+        });
+        await waitFor(":iframe .o_layout .container:contains(Builder)", { timeout: 3000 });
+        // ensure conversion of the existing html content
+        await htmlField.commitChanges();
+        const oldConvert = htmlField.converter.convertToEmailHtml;
+        const { promise: conversionDelay, resolve: resumeConversion } = Promise.withResolvers();
+        htmlField.converter.convertToEmailHtml = (fragment, config) =>
+            conversionDelay.then(() => oldConvert(fragment, config));
+        const p = htmlField.editor.editable.querySelector("p");
+        p.append(htmlField.editor.document.createTextNode("Updated"));
+        htmlField.editor.shared.history.addStep();
+        await contains(".o_notebook a[name='body_html']").click();
+        await animationFrame();
+        await waitFor(".o_notebook a[name='body_html']");
+        resumeConversion();
+        expect(
+            (
+                await waitFor(".o_field_widget[name='body_html']:contains(BuilderUpdated)", {
+                    timeout: 3000,
+                })
+            ).innerText.trim()
+        ).toBe("BuilderUpdated");
+    });
+    test("beforeLeave a FormController with html field should save the record", async () => {
+        let formController;
+        patchWithCleanup(FormController.prototype, {
+            setup() {
+                formController = this;
+                super.setup();
+            },
+        });
+        const arch = `
+            <form>
+                <field name="mailing_model_name" invisible="1"/>
+                <field name="mailing_model_id" invisible="1"/>
+                <field name="mailing_model_real" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <notebook>
+                    <page string="body_arch" name="body_arch">
+                        <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                            options="{
+                                'inline_field': 'body_html',
+                                'dynamic_placeholder': true,
+                                'dynamic_placeholder_model_reference_field': 'mailing_model_real'
+                                }" readonly="state in ('sending', 'done')"/>
+                        <field name="body_html" class="o_mail_body_inline" readonly="true"/>
+                    </page>
+                </notebook>
+            </form>
+        `;
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 5,
+            arch,
+        });
+        await waitFor(":iframe .o_layout .container:contains(Builder)", { timeout: 3000 });
+        // ensure conversion of the existing html content
+        await htmlField.commitChanges();
+        expect(
+            (
+                await waitFor(".o_field_widget[name='body_html']:contains(Builder)", {
+                    timeout: 3000,
+                })
+            ).innerText.trim()
+        ).toBe("Builder");
+        const p = htmlField.editor.editable.querySelector("p");
+        p.append(htmlField.editor.document.createTextNode("Updated"));
+        htmlField.editor.shared.history.addStep();
+        await formController.beforeLeave();
+        expect(
+            (
+                await waitFor(".o_field_widget[name='body_html']:contains(BuilderUpdated)", {
+                    timeout: 3000,
+                })
+            ).innerText.trim()
+        ).toBe("BuilderUpdated");
+    });
     test("builder in modal -- owl reconciliation iframe unload", async () => {
         // Related to ad-hoc fix where in modal, some editor's popovers
         // get to be spawned before the modal in the DOM and in OWL

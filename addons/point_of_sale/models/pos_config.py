@@ -1025,9 +1025,12 @@ class PosConfig(models.Model):
             bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
             if not bank_journal:
                 raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
+            chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
+            outstanding_account = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.env.company.transfer_account_id
             bank_pm = self.env['pos.payment.method'].create({
                 'name': _('Card'),
                 'journal_id': bank_journal.id,
+                'outstanding_account_id': outstanding_account.id if outstanding_account else False,
                 'company_id': self.env.company.id,
                 'sequence': 1,
             })

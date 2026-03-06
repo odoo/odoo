@@ -1,6 +1,7 @@
 <templates>
     <t t-name="mass_mailing.MassMailingIframe">
         <div class="o_mass_mailing_iframe_wrapper"
+            t-ref="iframeWrapperRef"
             t-att-class="{
                 'o_mass_mailing_fullscreen': state.showFullscreen,
                 [props.extraClass]: props.extraClass,
@@ -33,6 +34,7 @@
     <t t-name="mass_mailing.IframeHead">
         <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
         <meta charset="utf-8"/>
+        <!-- Deprecated, useless element -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
@@ -43,6 +45,7 @@
                 <t t-out="props.config.value"/>
             </t>
         </div>
+        <!-- Deprecated, unused element -->
         <div class="o_mass_mailing_processing_container" style="
             position: absolute;
             top: -9999px;
