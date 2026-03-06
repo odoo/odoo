@@ -67,7 +67,7 @@
                         </group>
                         <group invisible="not res_model_id">
                             <field name="domain" widget="domain" options="{'model': 'res_model_name'}"/>
-                            <field name="time_field_id"/>
+                            <field name="time_field_id" options="{'no_create': True}"/>
                             <field name="time_field_delta"/>
                             <field name="time_field_delta_unit"/>
                         </group>

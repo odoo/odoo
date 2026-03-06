@@ -44,13 +44,17 @@ class Data_RecycleModel(models.Model):
     time_field_id = fields.Many2one(
         'ir.model.fields', string='Time Field',
         domain="[('model_id', '=', res_model_id), ('ttype', 'in', ('date', 'datetime')), ('store', '=', True)]",
-        ondelete='cascade')
-    time_field_delta = fields.Integer(string='Delta', default=1)
+        ondelete='cascade', store=True,
+        compute='_compute_time_field_id', readonly=False,
+        help='Date or datetime field on the target model used to determine how old a record is.')
+    time_field_delta = fields.Integer(string='Delta', default=1, required=True,
+        help='Number of time units a record must exceed to be considered for recycling.')
     time_field_delta_unit = fields.Selection([
         ('days', 'Days'),
         ('weeks', 'Weeks'),
         ('months', 'Months'),
-        ('years', 'Years')], string='Delta Unit', default='months')
+        ('years', 'Years')], string='Delta Unit', default='months', required=True,
+        help='Unit of time applied to the delta to compute the age threshold.')
     include_archived = fields.Boolean()
 
     records_to_recycle_count = fields.Integer(
@@ -83,6 +87,28 @@ class Data_RecycleModel(models.Model):
     @api.depends('res_model_id')
     def _compute_domain(self):
         self.domain = '[]'
+
+    def _get_default_time_field_id(self, model_id):
+        """ Return write_date if available, otherwise the first stored date/datetime field on the model. """
+        IrModelFields = self.env['ir.model.fields']
+        base_domain = [('model_id', '=', model_id)]
+        write_date_field = IrModelFields.search(base_domain + [('name', '=', 'write_date')], limit=1)
+        first_date_field = IrModelFields.search(base_domain + [('ttype', 'in', ('date', 'datetime')), ('store', '=', True)], limit=1)
+        return write_date_field or first_date_field
+
+    @api.depends('res_model_id')
+    def _compute_time_field_id(self):
+        """ Default to write_date, or the first stored date/datetime field on the model.
+        Only sets the field when it is currently empty, preserving values defined by the user. """
+        for recycle_model in self:
+            if not recycle_model.time_field_id:
+                recycle_model.time_field_id = self._get_default_time_field_id(recycle_model.res_model_id.id)
+
+    @api.constrains('time_field_id')
+    def _check_time_field_id(self):
+        for model in self:
+            if not model.time_field_id:
+                raise UserError(_("A Time Field is required to determine which records are old enough to recycle."))
 
     @api.depends('res_model_id')
     def _compute_name(self):
