@@ -52,7 +52,7 @@ class MailActivityMixin(models.AbstractModel):
     activity_state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
-        ('planned', 'Planned')], string='Activity State',
+        ('planned', 'Planned')], string='Activity Status',
         compute='_compute_activity_state',
         compute_sql='_compute_sql_activity_state',
         compute_sudo=False,

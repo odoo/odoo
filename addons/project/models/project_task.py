@@ -171,9 +171,9 @@ class ProjectTask(models.Model):
         ('03_approved', 'Approved'),
         *CLOSED_STATES.items(),
         ('04_waiting_normal', 'Waiting'),
-    ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state',
+    ], string='Status', copy=False, default='01_in_progress', required=True, compute='_compute_state',
         inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
-    is_closed = fields.Boolean("Closed state", compute='_compute_is_closed', search='_search_is_closed')
+    is_closed = fields.Boolean("Closed Status", compute='_compute_is_closed', search='_search_is_closed')
 
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
@@ -186,7 +186,7 @@ class ProjectTask(models.Model):
         index=True,
         copy=False,
         readonly=True,
-        help="Date on which the state of your task has last been modified.\n"
+        help="Date on which the status of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
@@ -213,7 +213,7 @@ class ProjectTask(models.Model):
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
         domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
-    personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
+    personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage Status', compute_sudo=False,
         compute='_compute_personal_stage_id',
         search='_search_personal_stage_id',
         group_expand='_read_group_personal_stage_type_ids',

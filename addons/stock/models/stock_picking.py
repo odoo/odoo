@@ -670,7 +670,7 @@ class StockPicking(models.Model):
     products_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
-        ('late', 'Late')], compute='_compute_products_availability', search='_search_products_availability_state')
+        ('late', 'Late')], string="Product Availability Status", compute='_compute_products_availability', search='_search_products_availability_state')
 
     picking_properties = fields.Properties(
         'Properties',

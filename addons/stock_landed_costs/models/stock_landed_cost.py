@@ -55,7 +55,7 @@ class StockLandedCost(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Posted'),
-        ('cancel', 'Cancelled')], 'State', default='draft',
+        ('cancel', 'Cancelled')], 'Status', default='draft',
         copy=False, readonly=True, tracking=True)
     account_move_id = fields.Many2one(
         'account.move', 'Journal Entry',

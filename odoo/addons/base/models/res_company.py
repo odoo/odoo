@@ -61,7 +61,7 @@ class ResCompany(models.CachedModel):
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
     state_id = fields.Many2one(
         'res.country.state', compute='_compute_address', inverse='_inverse_state',
-        string="Fed. State", domain="[('country_id', '=?', country_id)]"
+        string="State/Province", domain="[('country_id', '=?', country_id)]"
     )
     bank_ids = fields.One2many(related='partner_id.bank_ids', readonly=False)
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")

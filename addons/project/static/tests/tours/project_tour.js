@@ -104,9 +104,9 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: "wait the new record is created",
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list a:contains(newer subtask)",
     },
-    {    
+    {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
-        content: 'Change the subtask state',
+        content: 'Change the subtask status',
         run: "click",
     },
     {

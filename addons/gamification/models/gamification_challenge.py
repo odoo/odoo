@@ -78,7 +78,7 @@ class GamificationChallenge(models.Model):
             ('inprogress', "In Progress"),
             ('done', "Done"),
         ], default='draft', copy=False,
-        string="State", required=True, tracking=True)
+        string="Status", required=True, tracking=True)
     manager_id = fields.Many2one(
         'res.users', default=lambda self: self.env.uid,
         string="Responsible")

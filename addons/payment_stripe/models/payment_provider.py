@@ -107,7 +107,7 @@ class PaymentProvider(models.Model):
             if provider.state == "enabled" and provider._stripe_onboarding_is_ongoing():
                 raise ValidationError(
                     _(
-                        "You cannot set the provider state to Enabled until your onboarding to"
+                        "You cannot set the provider status to Enabled until your onboarding to"
                         " Stripe is completed."
                     )
                 )

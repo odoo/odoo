@@ -60,8 +60,8 @@ class CrmIapLeadMiningRequest(models.Model):
     company_size_min = fields.Integer(string='Size', default=1)
     company_size_max = fields.Integer(default=1000)
     country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
-    state_ids = fields.Many2many('res.country.state', string='States')
-    available_state_ids = fields.One2many('res.country.state', compute='_compute_available_state_ids')
+    state_ids = fields.Many2many('res.country.state', string='States/Provinces')
+    available_state_ids = fields.One2many('res.country.state', string="Available States/Provinces", compute='_compute_available_state_ids')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
     # Contact Generation Filter

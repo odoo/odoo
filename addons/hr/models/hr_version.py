@@ -77,9 +77,9 @@ class HrVersion(models.Model):
     private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=1)
     private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=1)
     private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=1)
-    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
+    allowed_country_state_ids = fields.Many2many("res.country.state", string="Allowed States/Provinces", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
     private_state_id = fields.Many2one(
-        "res.country.state", string="Private State",
+        "res.country.state", string="Private State/Province",
         domain="[('id', 'in', allowed_country_state_ids)]",
         groups="hr.group_hr_user", tracking=1)
     private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)

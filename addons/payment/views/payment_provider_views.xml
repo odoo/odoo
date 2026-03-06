@@ -209,7 +209,7 @@
                 <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
                 <group>
                     <filter string="Provider" name="code" context="{'group_by': 'code'}"/>
-                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Status" name="state" context="{'group_by': 'state'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>
             </search>

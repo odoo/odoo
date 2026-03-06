@@ -41,7 +41,7 @@ class AccountMove(models.Model):
     )
 
     l10n_rs_edi_state = fields.Selection(
-        string="Serbia E-Invoice state",
+        string="Serbia E-Invoice Status",
         selection=[
             ('sent', 'Sent'),
             ('sending_failed', 'Error'),

@@ -123,7 +123,7 @@ class StockReturnPicking(models.TransientModel):
                 product_return_moves_data.update(wizard._prepare_stock_return_picking_line_vals_from_move(move))
                 product_return_moves.append(Command.create(product_return_moves_data))
             if not product_return_moves:
-                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
+                raise UserError(_("No products to return (only lines with status 'Done' and not fully returned yet can be returned)."))
             wizard.product_return_moves = product_return_moves
 
     @api.model

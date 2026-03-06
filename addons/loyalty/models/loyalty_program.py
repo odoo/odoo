@@ -594,7 +594,7 @@ class LoyaltyProgram(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active(self):
         if any(program.active for program in self):
-            raise UserError(_("You can not delete a program in an active state"))
+            raise UserError(_("You can not delete a program that is not archived."))
 
     def write(self, vals):
         # There is an issue when we change the program type, since we clear the rewards and create

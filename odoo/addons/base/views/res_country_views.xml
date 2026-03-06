@@ -132,7 +132,7 @@
             <field name="name">res.country.state.list</field>
             <field name="model">res.country.state</field>
             <field name="arch" type="xml">
-                <list string="State" editable="bottom">
+                <list string="State/Province" editable="bottom">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
@@ -144,7 +144,7 @@
             <field name="name">res.country.state.form</field>
             <field name="model">res.country.state</field>
             <field name="arch" type="xml">
-                <form string="State">
+                <form string="State/Province">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -171,14 +171,14 @@
         </record>
 
         <record id="action_country_state" model="ir.actions.act_window">
-            <field name="name">Fed. States</field>
+            <field name="name">States/Provinces</field>
             <field name="res_model">res.country.state</field>
             <field name="view_id" ref="view_country_state_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a State
+                    Create a State/Province
                 </p><p>
-                    Federal States belong to countries and are part of your contacts' addresses.
+                    States/Provinces belong to countries and are part of your contacts' addresses.
                 </p>
             </field>
         </record>

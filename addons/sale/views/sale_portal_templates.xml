@@ -323,7 +323,7 @@
 
                     <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissible d-print-none" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        Your order is not in a state to be rejected.
+                        Your order does not have a status to be rejected.
                     </div>
 
                     <t t-set="current_tx" t-value="sale_order.get_portal_last_transaction()"/>
@@ -484,7 +484,7 @@
                     t-elif="not sale_order._has_to_be_paid() and not payment_amount"
                     class="alert alert-danger"
                 >
-                    The order is not in a state requiring customer payment.
+                    The order does not have a status requiring customer payment.
                 </div>
                 <div t-else="" id="payment_method" class="text-start mt-0" >
                     <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->

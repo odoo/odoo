@@ -181,7 +181,7 @@ class MrpProduction(models.Model):
         ('progress', 'In Progress'),
         ('to_close', 'To Close'),
         ('done', 'Done'),
-        ('cancel', 'Cancelled')], string='State',
+        ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', copy=False, index=True, readonly=True,
         store=True, tracking=True,
         help=" * Draft: The MO is not confirmed yet.\n"
@@ -270,7 +270,7 @@ class MrpProduction(models.Model):
         ('available', 'Available'),
         ('expected', 'Expected'),
         ('late', 'Late'),
-        ('unavailable', 'Not Available')], compute='_compute_components_availability', search='_search_components_availability_state')
+        ('unavailable', 'Not Available')], string="Component Availability Status", compute='_compute_components_availability', search='_search_components_availability_state')
     production_capacity = fields.Float(compute='_compute_production_capacity', help="Quantity that can be produced with the current stock of components")
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
@@ -1443,7 +1443,7 @@ class MrpProduction(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if any(production.state == 'done' for production in self):
-            raise UserError(_('Cannot delete a manufacturing order in done state.'))
+            raise UserError(_('Cannot delete a manufacturing order in status "Done".'))
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
@@ -2906,7 +2906,7 @@ class MrpProduction(models.Model):
         if additional_raw_ids or additional_byproduct_ids:
             raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
         if len(set(self.mapped('state'))) > 1:
-            raise UserError(_("You can only merge manufacturing with the same state."))
+            raise UserError(_("You can only merge manufacturing with the same status."))
         if len(set(self.mapped('picking_type_id'))) > 1:
             raise UserError(_('You can only merge manufacturing with the same operation type'))
         # TODO explode and check no quantity has been edited

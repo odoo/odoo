@@ -93,7 +93,7 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     last_state_change = fields.Datetime(
-        string="Last State Change Date", readonly=True, default=fields.Datetime.now
+        string="Last Status Change Date", readonly=True, default=fields.Datetime.now
     )
 
     # Fields used for traceability.
@@ -157,7 +157,7 @@ class PaymentTransaction(models.Model):
     partner_address = fields.Char(string="Address")
     partner_zip = fields.Char(string="Zip")
     partner_city = fields.Char(string="City")
-    partner_state_id = fields.Many2one(string="State", comodel_name="res.country.state")
+    partner_state_id = fields.Many2one(string="State/Province", comodel_name="res.country.state")
     partner_country_id = fields.Many2one(string="Country", comodel_name="res.country")
     partner_phone = fields.Char(string="Phone")
 

@@ -28,8 +28,8 @@ class AccountMove(models.Model):
         export_string_translation=False,
     )
     l10n_my_edi_state = fields.Selection(
-        string='MyInvois State',
-        help='State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
+        string='MyInvois Status',
+        help='Status of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.',
         selection=[
             ('in_progress', 'Validation In Progress'),
             ('valid', 'Valid'),

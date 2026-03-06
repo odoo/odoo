@@ -106,7 +106,7 @@ class ResUsers(models.Model):
     private_street = field_employee(fields.Char, 'private_street', string="Private Street", user_writeable=True)
     private_street2 = field_employee(fields.Char, 'private_street2', string="Private Street2", user_writeable=True)
     private_city = field_employee(fields.Char, 'private_city', string="Private City", user_writeable=True)
-    private_state_id = field_employee(fields.Many2one, 'private_state_id', string="Private State", user_writeable=True,
+    private_state_id = field_employee(fields.Many2one, 'private_state_id', string="Private State/Province", user_writeable=True,
         comodel_name='res.country.state',
         domain="[('country_id', '=?', private_country_id)]")
     private_zip = field_employee(fields.Char, 'private_zip', string="Private Zip", user_writeable=True)

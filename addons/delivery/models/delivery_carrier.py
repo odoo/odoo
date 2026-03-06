@@ -88,7 +88,7 @@ class DeliveryCarrier(models.Model):
         column2="country_id",
     )
     state_ids = fields.Many2many(
-        string="States",
+        string="States/Provinces",
         comodel_name="res.country.state",
         relation="delivery_carrier_state_rel",
         column1="carrier_id",

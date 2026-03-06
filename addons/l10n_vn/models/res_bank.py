@@ -85,7 +85,7 @@ class ResPartnerBank(models.Model):
             return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
         if not (self.partner_id.city or self.partner_id.state_id):
-            return _("Missing Merchant City or State.")
+            return _("Missing Merchant City or State/Province.")
         if not self.proxy_type:
             return _("Missing Proxy Type.")
         if self.proxy_type not in ['merchant_id', 'payment_service', 'atm_card', 'bank_acc']:

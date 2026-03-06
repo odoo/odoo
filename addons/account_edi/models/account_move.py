@@ -20,10 +20,10 @@ class AccountMove(models.Model):
         string="Electronic invoicing",
         store=True,
         compute='_compute_edi_state',
-        help='The aggregated state of all the EDIs with web-service of this move')
+        help='The aggregated status of all the EDIs with web-service of this invoice')
     edi_error_count = fields.Integer(
         compute='_compute_edi_error_count',
-        help='How many EDIs are in error for this move?')
+        help='How many EDIs are in error for this invoice?')
     edi_blocking_level = fields.Selection(
         selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
         compute='_compute_edi_error_message')

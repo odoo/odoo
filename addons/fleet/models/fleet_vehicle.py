@@ -75,10 +75,10 @@ class FleetVehicle(models.Model):
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
     color = fields.Char(help='Color of the vehicle', compute='_compute_color', store=True, readonly=False)
-    state_id = fields.Many2one('fleet.vehicle.state', 'State',
+    state_id = fields.Many2one('fleet.vehicle.state', 'Status',
         default=_get_default_state, group_expand='_read_group_expand_full',
         tracking=True,
-        help='Current state of the vehicle', ondelete="set null")
+        help='Current status of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seating Capacity', help='Number of seats of the vehicle',
         compute='_compute_seats', store=True, readonly=False)
@@ -123,7 +123,7 @@ class FleetVehicle(models.Model):
          ('open', 'In Progress'),
          ('expired', 'Expired'),
          ('closed', 'Closed')
-        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
+        ], string='Last Contract Status', compute='_compute_contract_reminder', required=False)
     car_value = fields.Float(string="Catalog Value (Tax Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
@@ -443,7 +443,7 @@ class FleetVehicle(models.Model):
                     Domain.OR([[
                         ('future_driver_id', '=', future_driver_id),
                         ('vehicle_type', '=', vehicle_type)
-                    ] for future_driver_id, vehicle_type in cleanup])    
+                    ] for future_driver_id, vehicle_type in cleanup])
                 ])
                 vehicles_to_update = self.search(cleanup_domain)
                 vehicles_to_update.write({'future_driver_id': False})
@@ -477,7 +477,7 @@ class FleetVehicle(models.Model):
             'driver_id': False,
             'plan_to_change_vehicle': False,
         })
-        
+
         for vehicle in self:
             vehicle.plan_to_change_vehicle = False
             vehicle.driver_id = vehicle.future_driver_id

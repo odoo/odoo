@@ -38,7 +38,7 @@ class PaymentProvider(models.Model):
         required=True,
     )
     state = fields.Selection(
-        string="State",
+        string="Status",
         help="In test mode, a fake payment is processed through a test payment interface.\n"
         "This mode is advised when setting up the provider.",
         selection=[("disabled", "Disabled"), ("enabled", "Enabled"), ("test", "Test Mode")],
@@ -215,7 +215,7 @@ class PaymentProvider(models.Model):
 
     # Module-related fields
     module_id = fields.Many2one(string="Corresponding Module", comodel_name="ir.module.module")
-    module_state = fields.Selection(string="Installation State", related="module_id.state")
+    module_state = fields.Selection(string="Installation Status", related="module_id.state")
     module_to_buy = fields.Boolean(string="Odoo Enterprise Module", related="module_id.to_buy")
 
     # === COMPUTE METHODS === #

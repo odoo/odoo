@@ -28,8 +28,8 @@ class HrLeaveReportCalendar(models.Model):
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
-        ('validate', 'Approved')
-    ], readonly=True)
+        ('validate', 'Approved'),
+    ], string="Status", readonly=True)
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
     work_entry_type_id = fields.Many2one('hr.work.entry.type', readonly=True, string="Time Off Type",
         groups='hr_holidays.group_hr_holidays_user')

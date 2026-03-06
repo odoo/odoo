@@ -138,7 +138,7 @@ class MrpUnbuild(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
-            raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
+            raise UserError(_("You cannot delete an unbuild order if the status is 'Done'."))
 
     def _prepare_finished_move_line_vals(self, finished_move):
         return {

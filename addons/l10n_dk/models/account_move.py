@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         ],
         compute='_compute_nemhandel_move_state',
         store=True,
-        string='Nemhandel status',
+        string='Nemhandel Status',
         copy=False,
     )
 

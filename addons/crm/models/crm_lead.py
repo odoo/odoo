@@ -208,7 +208,7 @@ class CrmLead(models.Model):
     zip = fields.Char('Zip', change_default=True, compute='_compute_partner_address_values', readonly=False, store=True, tracking=62)
     city = fields.Char('City', compute='_compute_partner_address_values', readonly=False, store=True, tracking=63)
     state_id = fields.Many2one(
-        "res.country.state", string='State',
+        "res.country.state", string='State/Province',
         compute='_compute_partner_address_values', readonly=False, store=True,
         domain="[('country_id', '=?', country_id)]", tracking=64)
     country_id = fields.Many2one(

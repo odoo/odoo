@@ -256,7 +256,7 @@ class AccountEdiFormat(models.Model):
         partner_id = invoice.company_id.partner_id.commercial_partner_id
         missing_fields = []
         if not partner_id.state_id:
-            missing_fields.append(_('State'))
+            missing_fields.append(_('State/Province'))
         if not partner_id.city:
             missing_fields.append(_('City'))
         return missing_fields

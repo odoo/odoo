@@ -140,7 +140,7 @@ class HrExpense(models.Model):
         default='draft',
         tracking=True,
     )
-    approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, copy=False, readonly=True)
+    approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, string="Approval Status", copy=False, readonly=True)
     approval_date = fields.Datetime(string="Approval Date", readonly=True)
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
     same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings

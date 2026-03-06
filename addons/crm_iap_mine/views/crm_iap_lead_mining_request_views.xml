@@ -62,7 +62,7 @@
                         <group name="companies">
                             <field name="country_ids" widget="many2many_tags" required="True" readonly="state == 'done'" options="{'no_create': True, 'no_open': True}"/>
                             <field name="available_state_ids" invisible="1"/>
-                            <field name="state_ids" widget="many2many_tags" placeholder="Pick States..."
+                            <field name="state_ids" widget="many2many_tags" placeholder="Pick States/Provinces..."
                                 invisible="not country_ids or not available_state_ids"
                                 readonly="state == 'done'"
                                 domain="[('id', 'in', available_state_ids)]" options="{'no_create': True, 'no_open': True}"/>

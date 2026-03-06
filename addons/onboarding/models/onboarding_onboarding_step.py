@@ -36,7 +36,7 @@ class OnboardingOnboardingStep(models.Model):
         'onboarding.progress.step', string='Step Progress',
         compute='_compute_current_progress', help='Onboarding Progress Step for the current context (company).')
     current_step_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES, string='Completion State', compute='_compute_current_progress')
+        ONBOARDING_PROGRESS_STATES, string='Completion Status', compute='_compute_current_progress')
     progress_ids = fields.One2many(
         'onboarding.progress.step', 'step_id', string='Onboarding Progress Step Records', readonly=True,
         help='All related Onboarding Progress Step Records (across companies)')

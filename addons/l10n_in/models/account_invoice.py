@@ -515,7 +515,7 @@ class AccountMove(models.Model):
                 raise UserError(_("Please set a valid TIN Number on the Place of Supply %s", move.l10n_in_state_id.name))
             if not move.company_id.state_id:
                 msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
-                "Set the address of your company (Don't forget the State field)", move.company_id.name)
+                "Set the address of your company (Don't forget the State/Province field)", move.company_id.name)
                 action = {
                     "view_mode": "form",
                     "res_model": "res.company",

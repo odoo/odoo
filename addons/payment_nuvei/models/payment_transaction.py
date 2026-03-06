@@ -151,7 +151,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = payment_data.get("Status") or payment_data.get("ppp_status")
         if not status:
-            self._set_error(_("Received data with missing payment state."))
+            self._set_error(_("Received data with missing payment status."))
             return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING["pending"]:

@@ -205,7 +205,7 @@ class PosSession(models.Model):
                 'status': 'success',
             }
         if self.state != 'opening_control' or len(self.order_ids) > 0:
-            raise UserError(_("You can only cancel a session that is in opening control state and has no orders."))
+            raise UserError(_("You can only cancel a session that is in opening control status and has no orders."))
         self.sudo().unlink()
         return {
             'status': 'success',
@@ -1762,7 +1762,7 @@ class PosSession(models.Model):
         draft_orders = self.get_session_orders().filtered(lambda order: order.state == 'draft')
         if draft_orders:
             raise UserError(_(
-                    'There are still orders in draft state in the session. '
+                    'There are still orders in draft status in the session. '
                     'Pay or cancel the following orders to validate the session:\n%s',
                     ', '.join(draft_orders.mapped('name'))
             ))

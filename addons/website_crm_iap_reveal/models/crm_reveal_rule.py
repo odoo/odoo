@@ -31,7 +31,7 @@ class CrmRevealRule(models.Model):
     # Website Traffic Filter
     country_ids = fields.Many2many('res.country', string='Countries', help='Only visitors of following countries will be converted into leads/opportunities (using GeoIP).')
     website_id = fields.Many2one('website', help='Restrict Lead generation to this website.')
-    state_ids = fields.Many2many('res.country.state', string='States', help='Only visitors of following states will be converted into leads/opportunities.')
+    state_ids = fields.Many2many('res.country.state', string='States/Provinces', help='Only visitors of following states/provinces will be converted into leads/opportunities.')
     regex_url = fields.Char(string='URL Expression', help='Regex to track website pages. Leave empty to track the entire website, or / to target the homepage. Example: /page* to track all the pages which begin with /page')
     sequence = fields.Integer(help='Used to order the rules with same URL and countries. '
                                    'Rules with a lower sequence number will be processed first.')
@@ -146,7 +146,7 @@ class CrmRevealRule(models.Model):
                         # Remove country because rule doesn't apply to any state
                         states.remove((state_id.country_id.code, False))
                     states += [(state_id.country_id.code, state_id.code)]
-                
+
             rules.append({
                 'id': rule.id,
                 'regex': regex_url,

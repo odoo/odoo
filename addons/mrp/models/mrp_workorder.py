@@ -46,7 +46,7 @@ class MrpWorkorder(models.Model):
         string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True) # Technical: used in views and domains only
     production_state = fields.Selection(
-        string='Production State', readonly=True,
+        string='Production Status', readonly=True,
         related='production_id.state') # Technical: used in views only
     production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
@@ -506,7 +506,7 @@ class MrpWorkorder(models.Model):
         if 'qty_produced' in values:
             for wo in self:
                 if wo.state in ['done', 'cancel']:
-                    raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
+                    raise UserError(_('You cannot change the quantity produced of a work order that has status "Done" or "Cancelled".'))
                 elif wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
 

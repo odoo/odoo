@@ -71,14 +71,14 @@ class EventTrack(models.Model):
     kanban_state = fields.Selection([
         ('normal', 'Grey'),
         ('done', 'Green'),
-        ('blocked', 'Red')], string='Kanban State',
+        ('blocked', 'Red')], string='Kanban Status',
         copy=False, default='normal', required=True,
-        help="A track's kanban state indicates special situations affecting it:\n"
+        help="A track's kanban status indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this track\n"
              " * Green indicates the track is ready to be pulled to the next stage")
     kanban_state_label = fields.Char(
-        string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
+        string='Kanban Status Label', compute='_compute_kanban_state_label', store=True,
         tracking=True)
     partner_id = fields.Many2one('res.partner', 'Contact')
     # speaker information

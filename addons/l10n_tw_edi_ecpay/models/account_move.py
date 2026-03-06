@@ -137,7 +137,7 @@ class AccountMove(models.Model):
     )
     l10n_tw_edi_invoice_create_date = fields.Datetime(string="Creation Date", readonly=True, copy=False)
     l10n_tw_edi_refund_state = fields.Selection(
-        string="Refund State",
+        string="Refund Status",
         selection=[
             ("to_be_agreed", "To be agreed"),
             ("agreed", "Agreed"),

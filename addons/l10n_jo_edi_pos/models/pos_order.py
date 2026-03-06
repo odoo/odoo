@@ -17,7 +17,7 @@ class PosOrder(models.Model):
     l10n_jo_edi_pos_qr = fields.Char(string="QR", copy=False)
     l10n_jo_edi_pos_state = fields.Selection(
         selection=[('to_send', 'To Send'), ('sent', 'Sent'), ('demo', 'Sent (Demo)')],
-        string="JoFotara State",
+        string="JoFotara Status",
         tracking=True,
         copy=False,
     )

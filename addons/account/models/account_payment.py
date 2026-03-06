@@ -41,6 +41,7 @@ class AccountPayment(models.Model):
             ('canceled', "Canceled"),
             ('rejected', "Rejected"),
         ],
+        string="Status",
         required=True,
         default='draft',
         compute='_compute_state', store=True, readonly=False,
@@ -1167,7 +1168,7 @@ class AccountPayment(models.Model):
             if payment.outstanding_account_type == 'asset_cash':
                 raise UserError(_("Payments linked to an Asset Cash account cannot be reconciled."))
             if payment.state != 'paid':
-                raise UserError(_("Payment must be in paid state to be reconciled."))
+                raise UserError(_("Payment must have the status 'Paid' to be reconciled."))
             payment.state = 'reconciled'
 
     def action_reject(self):

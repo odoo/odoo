@@ -57,7 +57,7 @@ class HrExpenseSplit(models.TransientModel):
         string="Is product with non zero cost selected",
         compute='_compute_from_product_id', store=True,
     )
-    approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, copy=False, readonly=True)
+    approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, string="Approval Status", copy=False, readonly=True)
     approval_date = fields.Datetime(string="Approval Date", readonly=True)
     manager_id = fields.Many2one(
         comodel_name='res.users',

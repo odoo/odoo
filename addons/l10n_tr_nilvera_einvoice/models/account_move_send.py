@@ -79,11 +79,11 @@ class AccountMoveSend(models.AbstractModel):
                 'level': 'danger',
                 "message": _(
                     "The following company(s) either do not have their country set as Türkiye "
-                    "or are missing at least one of these fields: Tax ID, Street, City, or State"
+                    "or are missing at least one of these fields: Tax ID, Street, City, or State/Province",
                 ),
                 "action_text": _("View Company(s)"),
                 "action": tr_companies_missing_required_fields._get_records_action(name=_(
-                    "Check Tax ID, City, Street, State, and Country or Company(s)"
+                    "Check Tax ID, City, Street, State/Province, and Country or Company(s)"
                 )),
             }
 
@@ -276,9 +276,9 @@ class AccountMoveSend(models.AbstractModel):
             ),
         ).partner_id:
             return {
-                "message": _("The following partner(s) are missing at least one of these fields: Tax ID, Street, City, State or Country"),
+                "message": _("The following partner(s) are missing at least one of these fields: Tax ID, Street, City, State/Province or Country"),
                 "action_text": _("View Partner(s)"),
-                "action": tr_partners_missing_required_fields._get_records_action(name=_("Check Tax ID, City, Street, State, and Country or Partner(s)")),
+                "action": tr_partners_missing_required_fields._get_records_action(name=_("Check Tax ID, City, Street, State/Province, and Country or Partner(s)")),
                 "level": "danger",
             }
         return {}

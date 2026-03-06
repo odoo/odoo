@@ -763,7 +763,7 @@ class HrLeave(models.Model):
             return
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
-                raise ValidationError(_("This modification is not allowed in the current state."))
+                raise ValidationError(_("This modification is not allowed in the current status."))
 
     def _check_validity(self):
         sorted_leaves = defaultdict(lambda: self.env['hr.leave'])
@@ -1454,7 +1454,7 @@ class HrLeave(models.Model):
             if holiday.state == state:
                 error_message = self.env._('You can\'t do the same action twice.')
             elif state == 'validate1' and validation_type != 'both':
-                error_message = self.env._('Not possible state. State Approve is only used for leave needed 2 approvals')
+                error_message = self.env._('Impossible status. Status "Approve" is only used for leaves needing 2 approvals.')
             elif holiday.state == 'cancel':
                 error_message = self.env._('A cancelled leave cannot be modified.')
             elif state not in dict_all_possible_state.get(holiday.state, {}):
