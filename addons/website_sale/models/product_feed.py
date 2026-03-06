@@ -200,6 +200,7 @@ class ProductFeed(models.Model):
                 **self._prepare_gmc_identifier(product),
                 **self._prepare_gmc_image_links(product, base_url),
                 **price_info,
+                **self._prepare_gmc_weight_info(product),
                 **self._prepare_gmc_stock_info(product),
                 **self._prepare_gmc_additional_info(product),
             }
@@ -345,6 +346,19 @@ class ProductFeed(models.Model):
                 price_info["unit_pricing_base_measure"] = f"{base_count}{base_unit}"
 
         return price_info
+
+    def _prepare_gmc_weight_info(self, product):
+        """Prepare weight-related information for Google Merchant Center.
+
+        :return: A dictionary containing:
+            - Weight + Weight UoM
+        :rtype: dict
+        """
+        weight, uom = product.weight, product.weight_uom_name
+        if weight:
+            return {"product_weight": f"{weight} {uom}"}
+
+        return {}
 
     def _prepare_gmc_stock_info(self, _product):  # noqa: PLR6301
         """Intended to be overridden in stock."""
