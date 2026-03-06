@@ -23,7 +23,7 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
+import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -1207,7 +1207,9 @@ export class LinkPlugin extends Plugin {
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
             // In case of multiple matches, only the last one will be converted.
-            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g"))].pop();
+            const match = [
+                ...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g")),
+            ].pop();
 
             if (match) {
                 selection.anchorNode.splitText(selection.anchorOffset);
@@ -1334,6 +1336,7 @@ export class LinkPlugin extends Plugin {
                     },
                     {
                         sequence: 50,
+                        useBottomSheet: this.services.ui.isSmall && hasTouch(),
                     }
                 ),
                 isAvailable: link_popover.isAvailable,

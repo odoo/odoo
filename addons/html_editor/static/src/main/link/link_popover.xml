@@ -184,7 +184,9 @@
                     </div>
                     <div t-if="this.state.imgSrc" class="o_extra_info_card" style="align-self: center; max-width: 235px">
                             <a href="#" target="_blank" t-attf-href="{{this.state.url}}" title="Open in a new tab">
-                                <img t-att-src="this.state.imgSrc" class="img-fluid mb-1" style="max-width: 230; max-height: 100%;"/>
+                                <img t-att-src="this.state.imgSrc" class="img-fluid mb-1" style="max-width: 230; max-height: 100%;"
+                                    t-on-load="this.onImageLoaded"
+                                />
                             </a>
                     </div>
                     <div t-if="this.state.urlDescription" class="d-flex">
