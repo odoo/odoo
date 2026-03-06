@@ -87,30 +87,28 @@ export const catalogSuggestion = {
     /**
      * Checks catalog kanban record fields match expectations
      * @param {string} productName The product display name of the card to check
-     * @param {number} [monthly] The product monthly demand
+     * @param {number | string} [monthly] The product monthly demand
      * @param {number} [suggest] The product suggested quantity
      * @param {number} [forecast] The product forecasted quantity
      */
     assertCatalogRecord(productName, { monthly, suggest, forecast } = {}) {
         const steps = [];
-        if (monthly) {
+        const card = `.o_kanban_record:contains('${productName}')`;
+        monthly &&
             steps.push({
                 content: "Check catalog record monthly demand for product ${productName}",
-                trigger: `.o_kanban_record:contains('${productName}') div[name='monthly_demand'] span:visible:contains('${monthly}')`,
+                trigger: `${card} div[name='monthly_demand'] span:visible:text('${monthly}')`,
             });
-        }
-        if (suggest) {
+        suggest &&
             steps.push({
                 content: `Check catalog record suggested quantity for product ${productName}`,
-                trigger: `.o_kanban_record:contains('${productName}') div[name='kanban_purchase_suggest'] span:visible:contains('${suggest}')`,
+                trigger: `${card} div[name='kanban_purchase_suggest'] span:visible:text('${suggest}')`,
             });
-        }
-        if (forecast) {
+        forecast &&
             steps.push({
                 content: `Check catalog record forecasted quantity for product ${productName}`,
-                trigger: `.o_kanban_record:contains('${productName}') span[name='o_kanban_forecasted_qty']:visible:contains('${forecast}')`,
+                trigger: `${card} span[name='o_kanban_forecasted_qty']:visible:text('${forecast}')`,
             });
-        }
         return steps;
     },
 
@@ -137,7 +135,9 @@ export const catalogSuggestion = {
      * @param {number } expectedOrder 0 is the first card
      */
     checkKanbanRecordPosition(product, expectedOrder) {
-        const trigger = `.o_purchase_product_kanban_catalog_view article.o_kanban_record:nth-child(${expectedOrder + 1}):contains("${product}")`;
+        const trigger = `.o_purchase_product_kanban_catalog_view article.o_kanban_record:nth-child(${
+            expectedOrder + 1
+        }):contains("${product}")`;
         return [{ trigger }];
     },
 

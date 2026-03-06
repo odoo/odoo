@@ -54,15 +54,15 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         ...catalogSuggestion.toggleSuggest(true),
         {
             content: "Toggling Suggestion activates filter for products in PO or suggested",
-            trigger: '.o_facet_value:contains("Suggested")', // Suggested
+            trigger: '.o_facet_value:text("Suggested")', // Suggested
         },
         ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", nbDays: 90, factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 20.00')" },
+        { trigger: "span[name='suggest_total']:visible:text('$ 20.00')" },
         ...productCatalog.goBackToOrder(),
         ...purchaseForm.selectWarehouse("Base Warehouse: Receipts"),
         ...purchaseForm.openCatalog(),
         ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" }, // 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
+        { trigger: "span[name='suggest_total']:visible:text('$ 480.00')" }, // 12 units/week * 4 weeks * 20$/ unit * 50% = 480$
 
         // --- Check Add All: suggest qty added and suggest parameters are saved on vendor
         ...catalogSuggestion.addAllSuggestions(),
@@ -80,36 +80,38 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * ------------------------------------------------------------------
          */
         ...catalogSuggestion.setParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }), // 1 order of 12 used in computation of demand // 28 days --> forecast uses both 50 delivery
-        { trigger: "span[name='suggest_total']:visible:contains('480')" },
+        { trigger: "span[name='suggest_total']:visible:text('$ 480.00')" },
         ...catalogSuggestion.assertCatalogRecord("test_product", {
-            monthly: 52,
+            monthly: 52.18,
             suggest: 24,
-            forecast: 100,
+            forecast: -100,
         }),
         ...catalogSuggestion.checkKanbanRecordPosition("test_product", 0),
 
         ...catalogSuggestion.setParameters({ basedOn: "Last 30 days", factor: 10 }), // 2 orders of 12
-        { trigger: "span[name='suggest_total']:visible:contains('60')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 24, suggest: 3 }),
+        { trigger: "span[name='suggest_total']:visible:text('$ 60.00')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: "24.00", suggest: 3 }),
 
         ...catalogSuggestion.setParameters({ basedOn: "Last 3 months", factor: 500 }), // 2 orders of 12
-        { trigger: "span[name='suggest_total']:visible:contains('740')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 8, suggest: 37 }),
+        { trigger: "span[name='suggest_total']:visible:text('$ 740.00')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: "8.00", suggest: 37 }),
 
         // --- Check with Forecasted quantities
         ...catalogSuggestion.setParameters({ basedOn: "Forecasted", nbDays: 18, factor: 100 }),
-        { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
-        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 50, suggest: 50 }), // 18 days --> forecast uses only one 50 delivery
+        { trigger: "span[name='suggest_total']:visible:text('$ 1,000.00')" },
+        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: -50, suggest: 50 }), // 18 days --> forecast uses only one 50 delivery
 
         ...catalogSuggestion.setParameters({ nbDays: 7 }),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days
+        { trigger: "span[name='suggest_total']:visible:text('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days
         { trigger: ".o_view_nocontent_smiling_face" }, // Should suggest no products
 
         // --- Check with suggest OFF we come back to normal
         ...catalogSuggestion.toggleSuggest(false),
-        ...catalogSuggestion.assertCatalogRecord("test_product", { forecast: 100, monthly: 24 }),
+        ...catalogSuggestion.assertCatalogRecord("test_product", {
+            forecast: -100,
+            monthly: "24.00",
+        }),
         ...catalogSuggestion.checkKanbanRecordPosition("Courage", 0),
-        ...catalogSuggestion.assertCatalogRecord("test_product", { monthly: 24 }), // Should come back to normal monthly demand
         /*
          * -------------------  PART 3 : KANBAN FILTERS ---------------------
          * Checks suggest and searchModel (filters) interactions
@@ -138,11 +140,11 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
 
         // Check that categories work well with suggestions
         ...productCatalog.selectSearchPanelCategory("Goods"),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Should recompute estimated price
+        { trigger: "span[name='suggest_total']:visible:text('$ 0.00')" }, // Should recompute estimated price
         ...productCatalog.selectSearchPanelCategory("Test Category"),
-        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+        { trigger: "span[name='suggest_total']:visible:text('$ 480.00')" },
         ...catalogSuggestion.removeSuggestFilter(), // Shouldn't impact categories
-        { trigger: "span[name='suggest_total']:visible:contains('$ 480.00')" },
+        { trigger: "span[name='suggest_total']:visible:text('$ 480.00')" },
 
         // ---- Finally done :)
         ...productCatalog.goBackToOrder(),
