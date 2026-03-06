@@ -54,7 +54,6 @@ const stepSchemaDebug = {
 
 const tourSchema = {
     steps: Function,
-    url: { type: String, optional: true },
     undeterministicTour_doNotCopy: { type: Boolean, optional: true },
 };
 
