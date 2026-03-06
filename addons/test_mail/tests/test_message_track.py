@@ -20,6 +20,8 @@ class TestTrackingCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_portal = cls._create_portal_user()
+
         cls.dt_ref = datetime(2025, 9, 30, 9, 28, 15)
         cls.tracking_parent_for_properties = cls.env['mail.test.track.all.properties.parent'].with_user(cls.user_admin).create({
             'definition_properties': [
@@ -556,7 +558,7 @@ class TestTrackingTemplate(TestTrackingCommon):
 
 
 @tagged('mail_track')
-class TestTrackingInternals(MailCommon):
+class TestTrackingInternals(TestTrackingCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -958,6 +960,75 @@ class TestTrackingInternals(MailCommon):
             ]}
         )
 
+    @users('employee')
+    def test_track_control_precommit_data(self):
+        """ Cover _track_discard and other methods controlling precommit
+        data. """
+        track_records = self.test_tracking_records.with_env(self.env)
+        track_records._track_discard()
+        track_records._track_set_log_message('Forced until finalize')
+        track_records._track_set_author(self.partner_admin)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            track_records.write({
+                'char_field': 'should not track',
+                'integer_field': 1,
+                'selection_field': 'second',
+            })
+            self.flush_tracking()
+        self.assertFalse(self._new_msgs)
+
+        # flushing and _track_finalize cleans precommit data (including author, body), discard is discarded !
+        # also check successive recordset update means tracking for all records
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            track_records[0].write({
+                'char_field': 'should track',
+                'integer_field': 2,
+                'selection_field': 'first',
+            })
+            track_records[1].write({
+                'char_field': 'should track',
+                'integer_field': 2,
+                'selection_field': 'first',
+            })
+            track_records[2:].write({
+                'char_field': 'should track',
+                'integer_field': 2,
+                'selection_field': 'first',
+            })
+            self.flush_tracking()
+        for record, msg in zip(track_records, self._new_msgs, strict=True):
+            self.assertMessageFields(msg, {
+                'author_id': self.partner_employee,  # forced author should have been discarded
+                'body': '',  # forced body should have been discarded
+                'tracking_values': [
+                    ('char_field', 'char', 'should not track', 'should track'),
+                    ('integer_field', 'integer', 1, 2),
+                    ('selection_field', 'selection', 'SECOND', 'FIRST'),
+                ],
+            })
+
+        # manual precommit manipulation
+        track_records._track_prepare(('char_field', 'integer_field'))
+        track_records._track_set_log_message('Forced <b>again</b> until finalize')
+        track_records._track_set_author(self.partner_admin)
+        # mail_notrack skips tracking precommit changes but does not erase them
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            track_records.with_context(mail_notrack=True).write({
+                'char_field': 'should track also',
+                'integer_field': 2,  # writing same value -> should not be tracked even if prepared
+                'selection_field': 'second',
+            })
+            self.flush_tracking()
+        for record, msg in zip(track_records, self._new_msgs, strict=True):
+            self.assertMessageFields(msg, {
+                'author_id': self.partner_admin,  # forced author
+                'body': '<p>Forced &lt;b&gt;again&lt;/b&gt; until finalize</p>',  # forced body
+                'tracking_values': [
+                    ('char_field', 'char', 'should track', 'should track also'),
+                ],
+            })
+
     def test_track_groups(self):
         """ Test field groups and filtering when using standard helpers """
         # say that 'email_from' is accessible to erp_managers only
@@ -965,17 +1036,16 @@ class TestTrackingInternals(MailCommon):
         self.addCleanup(setattr, field, 'groups', field.groups)
         field.groups = 'base.group_erp_manager'
 
-        self.record.sudo().write({'email_from': 'X'})
-        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.record.sudo().write({'email_from': 'X'})
+            self.flush_tracking()
+        track_msg = self._new_msgs
+        self.assertMessageFields(track_msg, {'tracking_values': [
+            ('email_from', 'char', False, 'X'),
+        ]})
 
-        msg_emp = Store().add(self.record.message_ids, "_store_message_fields").get_result()
-        record_w_admin = self.record.with_user(self.user_admin)
-        msg_admin = Store().add(record_w_admin.message_ids, "_store_message_fields").get_result()
-        msg_sudo = Store().add(self.record.sudo().message_ids, "_store_message_fields").get_result()
-
-        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids[0].id)])
         formatted_tracking_values = [{
-            'id': tracking_values[0]['id'],
+            'id': track_msg.tracking_value_ids.id,
             'fieldInfo': {
                 'changedField': 'Email From',
                 'currencyId': False,
@@ -986,25 +1056,24 @@ class TestTrackingInternals(MailCommon):
             'newValue': 'X',
             'oldValue': False,
         }]
-        self.assertEqual(
-            msg_emp["mail.message"][0].get("trackingValues"),
-            [],
-            "should not have protected tracking values",
-        )
-        self.assertEqual(
-            msg_admin["mail.message"][0].get("trackingValues"),
-            formatted_tracking_values,
-            "should have protected tracking values",
-        )
-        self.assertEqual(
-            msg_sudo["mail.message"][0].get("trackingValues"),
-            formatted_tracking_values,
-            "should have protected tracking values",
-        )
+        for user, exp_values in [(self.user_employee, []), (self.user_admin, formatted_tracking_values)]:
+            self.env.transaction.reset()
+            msg_as_user = Store().add(track_msg.with_user(user), "_store_message_fields").get_result()
+            self.assertEqual(
+                msg_as_user["mail.message"][0].get("trackingValues"), exp_values,
+            )
+            msg_as_user = Store().add(track_msg.with_user(user).sudo(), "_store_message_fields").get_result()
+            self.assertEqual(
+                msg_as_user["mail.message"][0].get("trackingValues"),
+                formatted_tracking_values,
+                "Sudo should allow to bypass field protection",
+            )
 
-        values_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        values_admin = record_w_admin._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
-        values_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
+        record_as_user = self.record.with_user(self.user_employee)
+        record_as_admin = self.record.with_user(self.user_admin)
+        values_emp = record_as_user._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
+        values_admin = record_as_admin._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
+        values_sudo = record_as_user.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
         self.assertFalse(values_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(values_admin.get('tracking_values'), "should have protected tracking values")
         self.assertTrue(values_sudo.get('tracking_values'), "should have protected tracking values")

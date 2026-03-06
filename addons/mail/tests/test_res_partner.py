@@ -112,10 +112,8 @@ class TestPartner(MailCommon):
             change_messages = partner.message_ids - original_messages
             self.assertEqual(len(change_messages), 1)
             self.assertMessageFields(change_messages, {
-                'tracking_values': [expected_address_log],
+                'tracking_values': [expected_address_log],  # only tracked field for address
             })
-            # none of the address fields are logged at the same time
-            self.assertEqual(set(), set(partner._address_fields()) & set(change_messages.sudo().tracking_value_ids.field_id.mapped('name')))
 
     def test_discuss_mention_suggestions_priority(self):
         name = uuid4()  # unique name to avoid conflict with already existing users

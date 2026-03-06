@@ -187,11 +187,13 @@ class TestMessageValues(MailCommon):
 
         # check content
         self.assertEqual(len(message.attachment_ids), 1)
-        self.assertFalse(is_html_empty(message.body))
+        self.assertMessageFields(message.sudo(), {
+            'body': '<p>Test</p>',
+            'bookmarked_partner_ids': self.partner_admin,
+            'notified_partner_ids': self.partner_admin,
+            'tracking_values': [],
+        })
         self.assertEqual(len(message.sudo().notification_ids), 1)
-        self.assertEqual(message.notified_partner_ids, self.partner_admin)
-        self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)
-        self.assertFalse(message.sudo().tracking_value_ids)
 
         # Reset body case
         record._message_update_content(
