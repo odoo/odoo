@@ -583,9 +583,10 @@ class PdfSigner:
         if available_len_for_val4 < len(str(val4)):
             raise ValueError(f"Not enough space! Need {len(str(val4))}, have {available_len_for_val4}")
 
-        # 3. Format val4 with leading zeros to fill that space EXACTLY
-        # e.g., if we have 10 bytes and val4 is "99", we get "0000000099"
-        s_val4 = str(val4).zfill(available_len_for_val4).encode('ascii')
+        # 3. Format val4 with trailing spaces to fill that space EXACTLY
+        # Padding with spaces instead of zeros prevents PDF strict parsers (Adobe)
+        # from interpreting the number as an invalid octal representation.
+        s_val4 = str(val4).ljust(available_len_for_val4).encode('ascii')
 
         # 4. Combine them
         new_range_str = prefix + s_val4 + suffix

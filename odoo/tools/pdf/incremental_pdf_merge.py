@@ -31,6 +31,8 @@
 
 import io
 import logging
+import struct
+import datetime
 from collections import deque
 import uuid
 from typing import (
@@ -220,7 +222,11 @@ class IncrementalPdfMerge:
                 NameObject("/LockedContents"): BooleanObject(True),
                 NameObject("/AP"): DictionaryObject({
                     NameObject("/N"): appearance_stream_ref
-                })
+                }),
+                # Missing essential metadata for compliant annotations
+                NameObject("/P"): page.indirect_reference,  # Anchor to the specific exact page reference
+                NameObject("/NM"): TextStringObject(str(uuid.uuid4())), # Unique UUID name to prevent orphaned detached states
+                NameObject("/M"): TextStringObject(datetime.datetime.now(datetime.timezone.utc).strftime("D:%Y%m%d%H%M%SZ"))
             })
 
             # Attach the Annotation to the Original Page
@@ -662,14 +668,25 @@ class IncrementalPdfMerge:
         # 4. Write all objects to the output stream
         new_xref_entries = self._write_objects(incremented_objects)
 
+        # Check if the original PDF uses an XRef stream
+        # PyPDF2 strips /Type /XRef from the trailer dict.
+        # Check the raw bytes at original_startxref: if it does NOT start with 'xref',
+        # it is an object representing an XRef stream!
+        is_xref_stream = pdf_reader.trailer.get("/Type") == "/XRef"
+        if not is_xref_stream:
+            raw_data = self.get_output_stream_value()
+            target_bytes = raw_data[original_startxref:original_startxref+20].lstrip()
+            if target_bytes and not target_bytes.startswith(b"xref"):
+                is_xref_stream = True
+
         # 5. construct the end of the PDF
-        # if True or size:
-        # Generate Xref table
-        xref_start, new_size = self._write_xref_table(new_xref_entries)
-        # Construct the PDF trailer
-        self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
-        # else: # Compressed Xref Object Streams (PDF 1.5+)
-        #     self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+        if is_xref_stream:
+            self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+        else:
+            # Generate Xref table
+            xref_start, new_size = self._write_xref_table(new_xref_entries)
+            # Construct the PDF trailer
+            self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
 
         return new_xref_entries
 
@@ -744,29 +761,28 @@ class IncrementalPdfMerge:
             index_array.append(chunk_ids[0][0])
             index_array.append(len(chunk_ids))
 
-            # Generate Hex Data for this chunk
+            # Generate Data for this chunk
             for oid_tuple in chunk_ids:
                 oid, ogen = oid_tuple  # Unpack the tuple
 
                 if oid == 0:
                     # Free Object: Type 0, Gen 65535 (FFFF)
-                    stream_data_hex.append("0000000000FFFF")
+                    stream_data_hex.append(struct.pack(">B I H", 0, 0, 65535))
                 else:
-                    # Normal Object: Type 1, Offset (Hex), Gen (Hex)
+                    # Normal Object: Type 1, Offset, Gen
                     offset = new_xref_entries[oid_tuple]
 
-                    # FIX: Dynamically inject the generation (ogen) instead of hardcoding 0000!
-                    # 01 = Type 1 (1 byte / 2 hex chars)
-                    # {offset:08X} = Offset (4 bytes / 8 hex chars)
-                    # {ogen:04X} = Generation (2 bytes / 4 hex chars)
-                    stream_data_hex.append(f"01{offset:08X}{ogen:04X}")
+                    # 1 = Type 1
+                    # offset = Offset
+                    # ogen = Generation
+                    stream_data_hex.append(struct.pack(">B I H", 1, offset, ogen))
             i += 1
 
-        # Join data and add the EOD marker for ASCIIHexDecode
-        stream_content_str = "".join(stream_data_hex) + ">"
+        # Join data as raw bytes
+        stream_content_bytes = b"".join(stream_data_hex)
 
         # 5. Calculate exact stream length
-        stream_length = len(stream_content_str)
+        stream_length = len(stream_content_bytes)
 
         # 6. Construct the Stream Dictionary
         xref_dict = DictionaryObject()
@@ -774,22 +790,22 @@ class IncrementalPdfMerge:
             NameObject("/Type"): NameObject("/XRef"),
             NameObject("/Size"): NumberObject(xref_stream_obj_id + 1),
 
-            # /W defines the byte sizes of the 3 fields in the hex string:
+            # /W defines the byte sizes of the 3 fields in the stream:
             # [1 byte for Type, 4 bytes for Offset, 2 bytes for Generation]
             NameObject("/W"): ArrayObject([NumberObject(1), NumberObject(4), NumberObject(2)]),
 
             NameObject("/Root"): pdf_reader.trailer.raw_get("/Root"),
-            NameObject("/Info"): pdf_reader.trailer.raw_get("/Info"),
             NameObject("/Prev"): NumberObject(original_startxref),
-            NameObject("/Filter"): NameObject("/ASCIIHexDecode"),
             NameObject("/Index"): ArrayObject([NumberObject(x) for x in index_array]),
             NameObject("/Length"): NumberObject(stream_length)
         })
 
-        # Copy ID/Encrypt if present
-        if hasattr(pdf_reader.trailer, "/ID"):
+        # Copy Info/ID/Encrypt if present
+        if "/Info" in pdf_reader.trailer:
+            xref_dict[NameObject("/Info")] = pdf_reader.trailer.raw_get("/Info")
+        if "/ID" in pdf_reader.trailer:
             xref_dict[NameObject("/ID")] = pdf_reader.trailer.raw_get("/ID")
-        if hasattr(pdf_reader.trailer, "/Encrypt"):
+        if "/Encrypt" in pdf_reader.trailer:
             xref_dict[NameObject("/Encrypt")] = pdf_reader.trailer.raw_get("/Encrypt")
 
         # 7. Write everything to the file
@@ -801,7 +817,7 @@ class IncrementalPdfMerge:
 
         # Stream Content
         output.write(b"\nstream\n")
-        output.write(b_(stream_content_str))
+        output.write(stream_content_bytes)
         output.write(b"\nendstream\nendobj\n")
 
         # Trailer / EOF
