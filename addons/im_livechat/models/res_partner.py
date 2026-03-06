@@ -54,7 +54,10 @@ class ResPartner(models.Model):
         # sudo - res.partner: checking if operator is in call for live
         # chat invitation is acceptable.
         res.attr("is_in_call", sudo=True)
-        res.one("main_user_id", lambda res: res.many("livechat_expertise_ids", ["name"]))
+        res.one(
+            "main_user_id",
+            lambda res: (res.attr("partner_id"), res.many("livechat_expertise_ids", ["name"])),
+        )
 
     @api.depends('user_ids.livechat_username')
     def _compute_user_livechat_username(self):
