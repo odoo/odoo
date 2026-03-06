@@ -5,7 +5,7 @@
             <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country'"/>
         </xpath>
         <xpath expr="//*[@t-custom-ref='displayNameAdditionalContent']" position="inside">
-            <span t-if="channel.livechat_lang_id" class="fw-normal small text-uppercase" t-out="channel.livechat_lang_id.baseCode" t-att-title="channel.livechat_lang_id.name"/>
+            <span t-if="channel.livechat_lang_id" class="fw-normal small text-uppercase text-muted" t-out="channel.livechat_lang_id.baseCode" t-att-title="channel.livechat_lang_id.name"/>
             <t t-if="channel.livechat_status === 'need_help'">
                 <i t-if="channel.matchesSelfExpertise" class="fa fa-star o-mail-favorite" role="image" title="Relevant to your expertise"/>
                 <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller" t-out="helpState.text"/>

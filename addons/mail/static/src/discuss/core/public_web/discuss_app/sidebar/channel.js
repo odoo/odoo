@@ -67,7 +67,7 @@ export class DiscussSidebarChannel extends Component {
             "opacity-50": this.channel.self_member_id?.mute_until_dt,
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
-            "px-0": !this.store.discuss.isSidebarCompact,
+            "ps-0": !this.store.discuss.isSidebarCompact,
         };
     }
 
