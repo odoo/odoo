@@ -240,7 +240,7 @@ def _configure_access_point(on=True):
     if on:
         _logger.info("Starting access point with SSID %s", ssid)
         with open('/etc/hostapd/hostapd.conf', 'w', encoding='utf-8') as f:
-            f.write(f"interface=wlan0\nssid={ssid}\nchannel=1\n")
+            f.write(f"interface=wlan0\nssid={ssid}\nchannel=36\nhw_mode=a\n")
     mode = 'add' if on else 'del'
     return (
         subprocess.run(
