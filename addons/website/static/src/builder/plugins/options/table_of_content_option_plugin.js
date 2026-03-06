@@ -45,6 +45,9 @@ export class TableOfContentOptionPlugin extends Plugin {
         },
         is_unremovable_selectors: ".s_table_of_content_navbar_wrap, .s_table_of_content_main",
         content_not_editable_selectors: ".s_table_of_content_navbar",
+        anchor_allowed_selectors: ".s_table_of_content_main > *",
+        anchor_excluded_selectors:
+            ".s_table_of_content, .s_table_of_content_navbar_wrap, .s_table_of_content_main",
     };
 
     normalize(root) {

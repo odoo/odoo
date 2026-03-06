@@ -21,6 +21,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
                 return true;
             }
         },
+        anchor_excluded_selectors: ".carousel *",
     };
 
     /**

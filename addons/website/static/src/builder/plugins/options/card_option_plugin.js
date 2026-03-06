@@ -23,6 +23,7 @@ export class CardOptionPlugin extends Plugin {
             cardParentHandlers: CARD_PARENT_HANDLERS,
             specialCardSelector: SPECIAL_CARD_SELECTOR,
         },
+        anchor_allowed_selectors: ".s_card",
     };
 }
 
