@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_gov_processo_all" model="ir.actions.act_window">
+        <field name="name">Todos os Processos</field>
+        <field name="res_model">gov.processo</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="gov_processos.view_gov_processo_search"/>
+        <field name="context">{'search_default_my_ug': 1, 'default_ug_id': allowed_company_ids and allowed_company_ids[0]}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                <i class="fa fa-folder-open"/> Cadastre seu primeiro processo administrativo.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_gov_processo_my" model="ir.actions.act_window">
+        <field name="name">Meus Processos</field>
+        <field name="res_model">gov.processo</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="gov_processos.view_gov_processo_search"/>
+        <field name="domain">[('responsible_id', '=', uid)]</field>
+        <field name="context">{'search_default_my_ug': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                <i class="fa fa-folder-open"/> Você ainda não possui processos sob sua responsabilidade.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_gov_root"
+        name="GRP"
+        sequence="10"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_processos"
+        name="Processos"
+        parent="gov_processos.menu_gov_root"
+        sequence="10"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_dashboard"
+        name="Dashboard"
+        parent="gov_processos.menu_gov_root"
+        action="gov_processos.action_gov_dashboard_owl"
+        sequence="1"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_relatorio"
+        name="Relatório Executivo"
+        parent="gov_processos.menu_gov_root"
+        action="gov_processos.action_gov_relatorio_wizard"
+        sequence="2"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_relatorios"
+        name="Relatórios"
+        parent="gov_processos.menu_gov_root"
+        sequence="90"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_execucao_pdf"
+        name="Execução Orçamentária"
+        parent="gov_processos.menu_gov_relatorios"
+        action="gov_processos.action_gov_execucao_wizard"
+        sequence="10"
+        groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_processo_novo"
+        name="Novo Processo"
+        parent="gov_processos.menu_gov_processos"
+        action="gov_processos.action_gov_processo_wizard"
+        sequence="5"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_processos_all"
+        name="Todos os Processos"
+        parent="gov_processos.menu_gov_processos"
+        action="gov_processos.action_gov_processo_all"
+        sequence="10"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_processos_my"
+        name="Meus Processos"
+        parent="gov_processos.menu_gov_processos"
+        action="gov_processos.action_gov_processo_my"
+        sequence="20"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_config"
+        name="Configuração"
+        parent="gov_processos.menu_gov_root"
+        sequence="90"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_timbres"
+        name="Timbres"
+        parent="gov_processos.menu_gov_config"
+        action="gov_processos.action_gov_timbre"
+        sequence="10"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_policies"
+        name="Políticas de Qualidade"
+        parent="gov_processos.menu_gov_config"
+        action="gov_processos.action_gov_ai_quality_policy"
+        sequence="20"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_exportacoes"
+        name="Exportações"
+        parent="gov_processos.menu_gov_config"
+        sequence="30"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_siafi_export"
+        name="Exportar SIAFI"
+        parent="gov_processos.menu_gov_exportacoes"
+        action="gov_processos.action_gov_siafi_wizard"
+        sequence="10"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_root"
+        name="Assistência"
+        parent="gov_processos.menu_gov_config"
+        sequence="40"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_providers"
+        name="Provedores de Modelo"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_processos.action_gov_ai_provider_config"
+        sequence="10"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_memories"
+        name="Memórias por UG"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_processos.action_gov_ai_memory"
+        sequence="20"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_ingest"
+        name="Ingestão de Memória"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_processos.action_gov_ai_memory_ingest_wizard"
+        sequence="30"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_runs"
+        name="Logs de Geração"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_processos.action_gov_ai_run"
+        sequence="40"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_ai_templates"
+        name="Modelos e Checklists"
+        parent="gov_processos.menu_gov_ai_root"
+        action="gov_processos.action_gov_ai_template"
+        sequence="50"
+        groups="gov_base.group_gov_admin"
+    />
+</odoo>

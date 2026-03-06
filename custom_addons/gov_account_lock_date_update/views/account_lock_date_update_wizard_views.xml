@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_lock_date_update_wizard_view_form" model="ir.ui.view">
+        <field name="name">account.lock.date.update.wizard.form</field>
+        <field name="model">account.lock.date.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update Lock Date">
+                <group>
+                    <field name="company_id"/>
+                    <field name="current_lock_date"/>
+                    <field name="suggested_date" readonly="1"/>
+                    <field name="fiscal_year_id"/>
+                    <field name="new_lock_date"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Apply" class="btn-primary"/>
+                    <button
+                        name="action_apply_and_lock_journals"
+                        type="object"
+                        string="Apply and Lock Journals"
+                        class="btn-secondary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_lock_date_update_wizard_action" model="ir.actions.act_window">
+        <field name="name">Update Lock Date</field>
+        <field name="res_model">account.lock.date.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_lock_date_update_wizard_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
+

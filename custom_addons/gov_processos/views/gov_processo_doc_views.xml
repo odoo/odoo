@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_list" model="ir.ui.view">
+        <field name="name">gov.processo.doc.list</field>
+        <field name="model">gov.processo.doc</field>
+        <field name="arch" type="xml">
+            <list string="Documentos do Processo">
+                <field name="sequence" widget="handle"/>
+                <field name="doc_type"/>
+                <field name="name"/>
+                <field name="version"/>
+                <field
+                    name="state"
+                    decoration-success="state == 'assinado'"
+                    decoration-warning="state == 'revisao'"
+                    decoration-info="state == 'aprovado'"
+                    widget="badge"
+                />
+                <field name="ai_generated" string="Assistido" optional="show"/>
+                <field name="signed_at" optional="show"/>
+                <field name="pdf_file" widget="binary" string="PDF" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_processo_doc_form" model="ir.ui.view">
+        <field name="name">gov.processo.doc.form</field>
+        <field name="model">gov.processo.doc</field>
+        <field name="arch" type="xml">
+            <form string="Documento do Processo">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="rascunho,revisao,aprovado,assinado"/>
+                    <button
+                        name="action_gerar_com_ia"
+                        string="Gerar Conteúdo"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state == 'assinado'"
+                    />
+                    <button
+                        name="action_gerar_pdf"
+                        string="📄 Gerar PDF"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'assinado'"
+                    />
+                    <button
+                        name="action_regenerar_checklist_manual"
+                        string="🧾 Regenerar Checklist"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not manual_checklist or state == 'assinado'"
+                    />
+                    <button
+                        name="action_clonar_checklist_como_nova_versao"
+                        string="📑 Clonar como Nova Versão"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not manual_checklist"
+                    />
+                    <button
+                        name="action_aprovar"
+                        string="Aprovar"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('rascunho','revisao')"
+                    />
+                    <button
+                        name="action_voltar_rascunho"
+                        string="Voltar a Rascunho"
+                        type="object"
+                        invisible="state not in ('revisao','aprovado')"
+                    />
+                </header>
+
+                <sheet>
+                    <div class="alert alert-warning mb-3" role="alert" invisible="not ai_generated">
+                        Este documento foi gerado com assistência do sistema e está pendente de revisão humana antes da aprovação.
+                    </div>
+                    <div class="alert alert-danger mb-3" role="alert" invisible="state != 'assinado'">
+                        🔒 Documento assinado - conteúdo bloqueado para edição.
+                    </div>
+
+                    <group>
+                        <group string="Identificação">
+                            <field name="processo_id" readonly="1"/>
+                            <field name="process_type" readonly="1"/>
+                            <field name="process_scope" readonly="1"/>
+                            <field name="doc_type"/>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="ai_template_id"/>
+                            <field name="manual_checklist"/>
+                            <field name="checklist_mode" invisible="not manual_checklist"/>
+                            <field name="clone_of_id" readonly="1" invisible="not clone_of_id"/>
+                        </group>
+                        <group string="Controle">
+                            <field name="version"/>
+                            <field name="ai_generated" widget="boolean_toggle"/>
+                            <field name="timbre_id" help="Se vazio, usa o timbre padrão da UG."/>
+                            <field name="ai_provider_used" readonly="1" invisible="not ai_provider_used"/>
+                            <field name="ai_model_used" readonly="1" invisible="not ai_model_used"/>
+                            <field name="ai_last_run_id" readonly="1" invisible="not ai_last_run_id"/>
+                            <field name="signed_at" readonly="1"/>
+                            <field name="hash_sha256" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Dados DFD" invisible="doc_type != 'dfd'">
+                            <group string="Identificação da Demanda">
+                                <field name="dfd_area_requisitante"/>
+                                <field name="dfd_responsavel_tecnico"/>
+                                <field name="dfd_data_necessidade"/>
+                                <field name="dfd_vinculo_ppa"/>
+                            </group>
+                            <group string="Objeto e Quantitativos" colspan="2">
+                                <field
+                                    name="dfd_valor_estimado"
+                                    widget="monetary"
+                                    invisible="1"
+                                />
+                                <field name="currency_id" invisible="1"/>
+                                <field
+                                    name="pesquisa_precos_html"
+                                    widget="html"
+                                    string="Planilha de Itens e Quantitativos"
+                                    readonly="state == 'assinado'"
+                                    options="{'collaborative': false}"
+                                    colspan="2"
+                                />
+                            </group>
+                            <group string="Descrição do Objeto" colspan="2">
+                                <field
+                                    name="dfd_objeto"
+                                    widget="html"
+                                    options="{'collaborative': false}"
+                                    placeholder="Descreva o objeto da demanda..."
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+                            </group>
+                            <group string="Justificativa" colspan="2">
+                                <field
+                                    name="dfd_justificativa"
+                                    widget="html"
+                                    options="{'collaborative': false}"
+                                    placeholder="Justifique a necessidade conforme IN SEGES 65/2021..."
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+                            </group>
+                        </page>
+
+                        <page string="Conteúdo (HTML)" invisible="doc_type == 'dfd'">
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_gerar_com_ia"
+                                    string="Gerar Conteúdo"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_gerar_pdf"
+                                    string="📄 Gerar PDF"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_salvar_memoria_ia"
+                                    string="Salvar como Referência"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                                <button
+                                    name="action_regenerar_checklist_manual"
+                                    string="🧾 Regenerar Checklist"
+                                    type="object"
+                                    class="btn-secondary"
+                                    invisible="not manual_checklist or state == 'assinado'"
+                                />
+                            </div>
+                            <div class="alert alert-info mb-2" role="alert" invisible="not manual_checklist">
+                                Checklist manual ativo. Se alterar o modo, clique em <strong>Regenerar Checklist</strong>
+                                para aplicar a estrutura AGU/UG.
+                            </div>
+                            <field
+                                name="content_html"
+                                widget="html"
+                                readonly="state == 'assinado'"
+                                options="{'collaborative': false}"
+                                nolabel="1"
+                            />
+                        </page>
+
+                        <page string="Pesquisa de Preços (Excel)">
+                            <div class="alert alert-info mb-2" role="alert">
+                                A etapa de DFD registra necessidade e quantitativos. Valores podem ficar para a pesquisa de preços.
+                                Use o editor HTML nativo do Odoo para montar tabelas e editar como planilha.
+                            </div>
+                            <group string="Planilha de Pesquisa (Editor Nativo)">
+                                <field
+                                    name="pesquisa_precos_html"
+                                    widget="html"
+                                    readonly="state == 'assinado'"
+                                    options="{'collaborative': false}"
+                                    nolabel="1"
+                                />
+                            </group>
+                            <group string="Anexo de Planilha">
+                                <field
+                                    name="pesquisa_precos_planilha"
+                                    widget="binary"
+                                    filename="pesquisa_precos_planilha_filename"
+                                    readonly="state == 'assinado'"
+                                />
+                                <field name="pesquisa_precos_planilha_filename" invisible="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Fonte LaTeX">
+                            <div class="alert alert-info mb-2" role="alert">
+                                Cole ou edite o código LaTeX aqui e use o botão "Gerar PDF".
+                            </div>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_gerar_com_ia"
+                                    string="Gerar Conteúdo"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_gerar_pdf"
+                                    string="📄 Gerar PDF"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_salvar_memoria_ia"
+                                    string="Salvar como Referência"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                            <field
+                                name="latex_source"
+                                widget="ace"
+                                options="{'mode': 'text'}"
+                                readonly="state == 'assinado'"
+                                nolabel="1"
+                                style="min-height: 400px; font-family: monospace;"
+                            />
+                        </page>
+
+                        <page string="PDF">
+                            <group>
+                                <field
+                                    name="pdf_file"
+                                    widget="binary"
+                                    readonly="state == 'assinado'"
+                                    filename="pdf_filename"
+                                />
+                                <field name="pdf_filename" invisible="1"/>
+                                <field name="hash_sha256" readonly="1" string="SHA-256" optional="show"/>
+                            </group>
+
+                            <div invisible="not pdf_file" class="mt-3">
+                                <div class="alert alert-success" role="alert">
+                                    ✅ PDF disponível para download.
+                                    SHA-256:
+                                    <field
+                                        name="hash_sha256"
+                                        readonly="1"
+                                        style="font-family: monospace; font-size: 0.85em;"
+                                    />
+                                </div>
+                                <div class="border rounded p-2 bg-light" style="min-height: 200px;">
+                                    <p class="text-muted text-center mt-4">
+                                        Faça o download do PDF acima para visualizar.
+                                        O preview inline completo será habilitado quando o documento for servido via URL dedicada (step 9.x).
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div invisible="pdf_file" class="alert alert-info mt-3" role="alert">
+                                Nenhum PDF gerado ainda. Use o botão
+                                <strong>📄 Gerar PDF</strong> na aba LaTeX ou HTML.
+                            </div>
+                        </page>
+
+                        <page string="Upload Externo">
+                            <div class="alert alert-info" role="alert">
+                                Use esta aba para anexar um documento externo (PDF escaneado, DOCX recebido). O arquivo substitui o PDF gerado internamente para fins de assinatura e arquivamento.
+                            </div>
+                            <group>
+                                <field
+                                    name="upload_externo"
+                                    widget="binary"
+                                    filename="upload_externo_filename"
+                                />
+                                <field name="upload_externo_filename" invisible="1"/>
+                                <field name="upload_externo_tipo"/>
+                                <field
+                                    name="timbre_id"
+                                    help="Timbre para geração do PDF. Vazio = timbre padrão da UG."
+                                />
+                            </group>
+                        </page>
+
+                        <page string="Versões">
+                            <field name="versao_ids" mode="list" readonly="1">
+                                <list>
+                                    <field name="version_number" string="Versão"/>
+                                    <field name="changed_at" string="Data"/>
+                                    <field name="changed_by" string="Alterado por"/>
+                                    <field name="ai_generated" string="Assistido" widget="boolean"/>
+                                    <field name="change_reason" string="Motivo"/>
+                                    <field
+                                        name="pdf_snapshot"
+                                        string="PDF"
+                                        widget="binary"
+                                        optional="show"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Assistência">
+                            <div class="alert alert-info" role="alert">
+                                Gere conteúdo com assistência do sistema, audite prompts e salve referências por UG.
+                            </div>
+                            <group>
+                                <field name="ai_template_id"/>
+                                <field name="ai_provider_used" readonly="1"/>
+                                <field name="ai_model_used" readonly="1"/>
+                                <field name="ai_last_run_id" readonly="1"/>
+                            </group>
+                            <div class="mb-2 d-flex gap-2">
+                                <button
+                                    name="action_gerar_com_ia"
+                                    string="Gerar Conteúdo"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="state == 'assinado'"
+                                />
+                                <button
+                                    name="action_salvar_memoria_ia"
+                                    string="Salvar como Referência"
+                                    type="object"
+                                    class="btn-secondary"
+                                />
+                            </div>
+                        </page>
+
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_processo_doc_new" model="ir.actions.act_window">
+        <field name="name">Novo Documento</field>
+        <field name="res_model">gov.processo.doc</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'default_processo_id': active_id}</field>
+    </record>
+</odoo>
+

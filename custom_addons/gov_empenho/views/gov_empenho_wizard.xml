@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_empenho_wizard_form" model="ir.ui.view">
+        <field name="name">gov.empenho.wizard.form</field>
+        <field name="model">gov.empenho.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Emitir Nota de Empenho">
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="not alerta_sem_dotacao">
+                        Nenhuma dotação orçamentária selecionada.
+                        O empenho será criado sem vínculo de dotação.
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="not alerta_valor_excede">
+                        Valor do empenho
+                        (<field name="valor_empenho" readonly="1" widget="monetary"/>)
+                        excede o valor estimado da dotação
+                        (<field name="valor_dotacao_disponivel" readonly="1" widget="monetary"/>).
+                    </div>
+                    <div class="alert alert-danger" role="alert" invisible="not retroativo">
+                        <b>EMPENHO RETROATIVO</b> - Processo de exceção.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not urgencia">
+                        <b>EMPENHO DE URGÊNCIA</b> - OS emergencial.
+                    </div>
+
+                    <group string="Processo de Origem">
+                        <field name="processo_id" readonly="1"/>
+                        <field name="retroativo" invisible="1"/>
+                        <field name="urgencia" invisible="1"/>
+                    </group>
+
+                    <group string="Dotação Orçamentária">
+                        <field name="dotacao_id"/>
+                        <field name="alerta_sem_dotacao" invisible="1"/>
+                        <field name="alerta_valor_excede" invisible="1"/>
+                        <field
+                            name="valor_dotacao_disponivel"
+                            readonly="1"
+                            widget="monetary"
+                            string="Valor Estimado na Dotação"
+                        />
+                    </group>
+
+                    <group string="Classificação (pré-preenchida da dotação)">
+                        <group>
+                            <field name="programa"/>
+                            <field name="acao"/>
+                            <field name="exercicio"/>
+                        </group>
+                        <group>
+                            <field name="natureza_despesa"/>
+                            <field name="fonte_recurso"/>
+                        </group>
+                    </group>
+
+                    <group string="Credor e Tipo">
+                        <field name="credor_id" options="{'no_create': True}"/>
+                        <field name="tipo_empenho"/>
+                        <field name="data_empenho"/>
+                        <field name="data_vencimento"/>
+                    </group>
+
+                    <group string="Valor">
+                        <field name="valor_empenho" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+
+                    <group string="Objeto do Empenho">
+                        <field
+                            name="objeto"
+                            nolabel="1"
+                            colspan="2"
+                            placeholder="Descreva o objeto do empenho conforme o processo..."
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_emitir_ne"
+                        string="Criar e Abrir NE"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_criar_rascunho"
+                        string="Criar como Rascunho"
+                        type="object"
+                        class="btn-secondary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_empenho_wizard" model="ir.actions.act_window">
+        <field name="name">Emitir NE</field>
+        <field name="res_model">gov.empenho.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

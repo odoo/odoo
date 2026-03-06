@@ -1,0 +1,228 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- wiki list view -->
+    <record id="view_wiki_tree_children" model="ir.ui.view">
+        <field name="name">document.page.list</field>
+        <field name="model">document.page</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="content_uid" />
+                <field name="content_date" />
+            </list>
+        </field>
+    </record>
+    <!-- wiki list view  -->
+    <record id="view_wiki_tree" model="ir.ui.view">
+        <field name="name">document.page.list</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="parent_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="create_uid" column_invisible="1" />
+                <field name="content_uid" />
+                <field name="content_date" />
+            </list>
+        </field>
+    </record>
+    <!-- wiki Form view  -->
+    <record id="view_wiki_form" model="ir.ui.view">
+        <field name="name">document.page.form</field>
+        <field name="model">document.page</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Document Page">
+                <sheet>
+                    <div name="button_box" id="button_box" class="oe_button_box" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        invisible="active"
+                    />
+                    <field name="active" invisible="1" />
+                    <field name="type" invisible="1" />
+                    <field
+                        name="image"
+                        widget="image"
+                        class="oe_avatar"
+                        style="z-index:1"
+                    />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name" />
+                        </h1>
+                    </div>
+                    <field
+                        name="content"
+                        widget="html"
+                        placeholder="e.g. Once upon a time..."
+                        required="1"
+                        options="{'safe': True, 'codeview': True, 'collaborative': True}"
+                    />
+                    <notebook>
+                        <page name="info" string="Information">
+                            <group>
+                                <group>
+                                    <field
+                                        name="parent_id"
+                                        required="True"
+                                        string="Category"
+                                        context="{'default_type':'category', 'form_view_ref': 'document_page.view_category_form'}"
+                                    />
+                                    <field
+                                        name="company_id"
+                                        groups="base.group_multi_company"
+                                    />
+                                    <field name="content_uid" />
+                                    <field name="content_date" />
+                                    <field
+                                        name="menu_id"
+                                        readonly="1"
+                                        invisible="not menu_id"
+                                    />
+                                </group>
+                                <group string="Revision">
+                                    <field
+                                        name="draft_name"
+                                        placeholder="Rev 01"
+                                        required="True"
+                                    />
+                                    <field
+                                        name="draft_summary"
+                                        placeholder="eg: Changed ... for ..."
+                                        required="True"
+                                        widget="text"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="history" string="History">
+                            <field name="history_ids">
+                                <list>
+                                    <field name="id" />
+                                    <field name="create_date" />
+                                    <field name="name" />
+                                    <field name="summary" />
+                                    <field name="create_uid" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+    <record id="view_wiki_menu_form" model="ir.ui.view">
+        <field name="name">document.page.menu.form</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <form string="Document Page" create="0">
+                <field name="type" invisible="1" />
+                <h1>
+                    <field name="name" placeholder="Name" />
+                </h1>
+                <field
+                    name="content"
+                    widget="html"
+                    class="oe_view_only"
+                    required="1"
+                    options='{"safe": True}'
+                />
+            </form>
+        </field>
+    </record>
+    <!-- page Search view  -->
+    <record id="view_wiki_filter" model="ir.ui.view">
+        <field name="name">document.page.search</field>
+        <field name="model">document.page</field>
+        <field name="arch" type="xml">
+            <search string="Document Page">
+                <field
+                    name="draft_summary"
+                    string="Summary"
+                    filter_domain="[('draft_summary','ilike',self)]"
+                />
+                <field
+                    name="name"
+                    string="Content"
+                    filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"
+                />
+                <field name="parent_id" />
+                <field name="create_uid" />
+                <field name="content_uid" />
+                <field name="name" string="Title" />
+                <group>
+                    <filter
+                        name="group_by_category"
+                        string="Category"
+                        context="{'group_by':'parent_id'}"
+                    />
+                    <filter
+                        name="group_by_author"
+                        string="Author"
+                        context="{'group_by':'create_uid'}"
+                    />
+                    <filter
+                        name="group_by_last_contributor"
+                        string="Last Contributor"
+                        context="{'group_by':'content_uid'}"
+                    />
+                </group>
+                <searchpanel>
+                    <field
+                        name="parent_id"
+                        icon="fa-folder"
+                        string="Categories"
+                        enable_counters="1"
+                    />
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+    <!-- page action -->
+    <record id="action_page" model="ir.actions.act_window">
+        <field name="name">Pages</field>
+        <field name="path">document_pages</field>
+        <field name="res_model">document.page</field>
+        <field name="domain">[('type','=','content')]</field>
+        <field name="context">{'default_type': 'content'}</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_wiki_tree" />
+        <field name="search_view_id" ref="view_wiki_filter" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new web page.
+            </p>
+        </field>
+    </record>
+    <record id="action_page_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_wiki_tree" />
+        <field name="act_window_id" ref="action_page" />
+    </record>
+    <record id="action_page_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_wiki_form" />
+        <field name="act_window_id" ref="action_page" />
+    </record>
+    <menuitem
+        id="menu_wiki"
+        name="Pages"
+        parent="document_knowledge.menu_document_root"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_page"
+        name="Pages"
+        parent="menu_wiki"
+        action="action_page"
+        sequence="20"
+    />
+</odoo>

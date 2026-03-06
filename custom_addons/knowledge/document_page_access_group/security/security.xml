@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 Manuel Regidor <manuel.regidor@sygel.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="document_page_rule" model="ir.rule">
+        <field name="name">Document Page Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_knowledge.group_document_user'))]"
+        />
+        <field
+            name="domain_force"
+        >['|', ('groups_id', 'in', [g.id for g in user.group_ids]), '|', ('user_ids', 'in', [user.id]), '&amp;', ('groups_id', '=', False), ('user_ids', '=', False)]</field>
+    </record>
+    <record id="document_page_rule_full_access" model="ir.rule">
+        <field name="name">Document Page Full Access</field>
+        <field name="model_id" ref="model_document_page" />
+        <field eval="False" name="global" />
+        <field
+            name="groups"
+            eval="[Command.link(ref('document_page.group_document_manager'))]"
+        />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

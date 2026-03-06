@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_account_spread" model="ir.cron">
+        <field name="name">Spread: post due recognition entries</field>
+        <field name="model_id" ref="gov_account_spread_cost_revenue.model_account_spread"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_post_spread_lines()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>
+

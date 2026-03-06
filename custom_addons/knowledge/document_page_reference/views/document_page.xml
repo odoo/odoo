@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 Creu Blanca
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="document_page_form_view">
+        <field name="name">document.page.form (in knowledge_reference)</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//h1" position="before">
+                <h2>
+                    <field
+                        name="reference"
+                        placeholder="internal_reference (autofilled if not value is provided)"
+                    />
+                </h2>
+            </xpath>
+            <field name="content" position="attributes">
+                <attribute name="class">oe_edit_only</attribute>
+            </field>
+            <field name="content" position="before">
+                <field
+                    name="content_parsed"
+                    class="oe_read_only"
+                    widget="document_page_reference"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_wiki_menu_form" model="ir.ui.view">
+        <field name="name">document.page.menu.form</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_menu_form" />
+        <field name="arch" type="xml">
+            <field name="content" position="attributes">
+                <attribute name="class">oe_edit_only</attribute>
+            </field>
+            <field name="content" position="before">
+                <field
+                    name="content_parsed"
+                    class="oe_read_only"
+                    widget="document_page_reference"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="document_page_search_view">
+        <field name="name">document.page.search (in knowledge_reference)</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_filter" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="before">
+                <field name="reference" />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="document_page_tree_view">
+        <field name="name">document.page.tree (in knowledge_reference)</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="reference" optional="hidden" />
+            </field>
+        </field>
+    </record>
+</odoo>

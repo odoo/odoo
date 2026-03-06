@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="template_aviso_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Aviso de Contratação Direta Lei 14.133 (setembro/2025)</field>
+            <field name="doc_type">edital</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-aviso-de-contratacao-direta-lei-no-14-133-set-25.docx</field>
+            <field name="fase">2</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Aviso de Contratação Direta (set/2025)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Defina corretamente a hipótese de contratação direta (art. 74 ou art. 75) com inciso aplicável.
+2) Em cláusulas com opções ("SIM/NÃO", "menor preço/maior desconto"), mantenha apenas uma alternativa.
+3) Informe prazo, canal e regras de envio de propostas de forma objetiva e verificável.
+4) Assegure coerência entre objeto, critério de julgamento e estimativa de valor.
+5) Não omita publicidade mínima e regras de habilitação exigíveis no caso concreto.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string", "description": "Artigo/inciso da Lei 14.133/2021"},
+    {"key": "criterio_julgamento", "type": "string"},
+    {"key": "estimativa_valor", "type": "number"},
+    {"key": "prazo_envio_propostas", "type": "string"},
+    {"key": "setor_responsavel", "type": "string"},
+    {"key": "endereco_eletronico", "type": "string"}
+  ],
+  "optional": [
+    {"key": "admite_registro_precos", "type": "boolean"},
+    {"key": "disputa_por", "type": "string"},
+    {"key": "reserva_me_epp", "type": "string"},
+    {"key": "exigencia_amostra", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "regra_local_1", "type": "string"},
+    {"key": "regra_local_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "percentual_maior_desconto", "when": "criterio_julgamento=maior_desconto"},
+    {"key": "itens_lotes", "when": "disputa_por in ['item','grupo']"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "criterio_julgamento": ["menor_preco", "maior_desconto"],
+  "disputa_por": ["global", "item", "grupo"],
+  "registro_precos": ["sim", "nao"],
+  "reserva_me_epp": ["nao", "sim_com_justificativa"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar Aviso de Contratação Direta para o processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Classificar e preencher os campos em required_by_law, optional e additional_fields.
+Aplicar orientação de alternativas únicas e fundamentação legal explícita.
+            ]]></field>
+        </record>
+
+        <record id="template_edital_credenciamento_14133" model="gov.ai.template">
+            <field name="name">Modelo Edital Credenciamento Lei 14.133 (setembro/2025)</field>
+            <field name="doc_type">edital</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-edital-credenciamento-lei-no-14-133-set-25.docx</field>
+            <field name="fase">3</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Edital de Credenciamento (set/2025)</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Defina objeto credenciável e critérios objetivos para ingresso/permanência no credenciamento.
+2) Informe prazos, documentação e meios para impugnação e esclarecimentos.
+3) Estabeleça regras de convocação, distribuição de demanda e condições de execução.
+4) Elimine trechos alternativos não aplicáveis e mantenha linguagem normativa direta.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "objeto_credenciamento", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "criterios_habilitacao", "type": "string"},
+    {"key": "criterios_ingresso", "type": "string"},
+    {"key": "prazo_credenciamento", "type": "string"},
+    {"key": "setor_responsavel", "type": "string"},
+    {"key": "canais_impugnacao_esclarecimentos", "type": "string"}
+  ],
+  "optional": [
+    {"key": "criterio_distribuicao_demandas", "type": "string"},
+    {"key": "vigencia_edital", "type": "string"},
+    {"key": "requisitos_tecnicos_especificos", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "regra_local_credenciamento_1", "type": "string"},
+    {"key": "regra_local_credenciamento_2", "type": "string"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "fundamento_legal": ["art74_iv_credenciamento"],
+  "natureza_objeto": ["fornecimento", "prestacao_servicos"],
+  "vigencia": ["meses", "anos", "prazo_indeterminado_com_regras"],
+  "distribuicao_demanda": ["rodizio", "ordem_classificacao", "escolha_usuario_com_criterios"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar Edital de Credenciamento para o processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Preencher required_by_law, optional e additional_fields sem criar fatos novos.
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Lista de Verificação Contratações Diretas Lei 14.133 (setembro/2024)</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">modelo-de-lista-de-verificacao-contratacoes-diretas-lei-no-14-133-set-24.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Checklist AGU Contratações Diretas (set/2024)</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist de instrução para contratação direta:
+- validar enquadramento legal e motivação;
+- validar pesquisa de preços e vantajosidade;
+- validar publicidade mínima e formalização;
+- apontar não conformidades com plano de saneamento.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "itens_checklist", "type": "array"}
+  ],
+  "optional": [
+    {"key": "auditor_revisor", "type": "string"},
+    {"key": "numero_sessao", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_1", "type": "array"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["fundamentacao_legal", "pesquisa_precos", "publicidade", "formalizacao_contratual", "controle_riscos"],
+  "acao_corretiva": ["complementar_justificativa", "refazer_pesquisa_preco", "regularizar_publicidade", "ajustar_minuta"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist operacional de contratação direta para o processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Usar blocos normativos e classificar itens em required_by_law, optional e additional_fields.
+            ]]></field>
+        </record>
+
+        <record id="template_justificativa_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Justificativa Contratação Direta (emergencial/urgente/fática) Lei 14.133</field>
+            <field name="doc_type">despacho</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">Modelo interno GRP - Justificativa Contratação Direta</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo GRP de justificativa motivada</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Documento de justificativa para contratação direta, com foco em motivação robusta e prova fática.
+Deve explicitar: fatos, fundamento legal, vantajosidade, riscos da não contratação e medidas de controle.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "tipo_justificativa", "type": "string", "description": "emergencial, urgente ou fatica"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "fatos_motivadores", "type": "string"},
+    {"key": "demonstracao_vantajosidade", "type": "string"},
+    {"key": "riscos_nao_contratacao", "type": "string"}
+  ],
+  "optional": [
+    {"key": "prazo_regularizacao", "type": "string"},
+    {"key": "plano_mitigacao_riscos", "type": "string"},
+    {"key": "referencias_documentais", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "ponto_controle_adicional_1", "type": "string"},
+    {"key": "ponto_controle_adicional_2", "type": "string"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "tipo_justificativa": ["emergencial", "urgente", "fatica"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar justificativa de contratação direta para o processo {{processo_numero}}.
+Tipo de justificativa: {{tipo_justificativa}}.
+Preencher required_by_law, optional e additional_fields com linguagem técnica e objetiva.
+            ]]></field>
+        </record>
+
+        <record id="template_justificativa_emergencial_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Justificativa Emergencial - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">despacho</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">Modelo interno GRP - Justificativa Emergencial Contratação Direta</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Justificativa Emergencial (dispensa)</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Justificativa emergencial para contratação direta.
+Deve demonstrar risco concreto, urgência de atendimento, nexo entre fato e solução proposta,
+medidas de contenção e plano de regularização.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fatos_emergenciais", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "riscos_imediatos", "type": "string"},
+    {"key": "demonstracao_vantajosidade", "type": "string"}
+  ],
+  "optional": [
+    {"key": "prazo_regularizacao", "type": "string"},
+    {"key": "plano_mitigacao_riscos", "type": "string"},
+    {"key": "referencias_documentais", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "ponto_controle_emergencial_1", "type": "string"},
+    {"key": "ponto_controle_emergencial_2", "type": "string"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "fundamento_legal": ["art75_viii"],
+  "tipo_justificativa": ["emergencial"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar justificativa emergencial de contratação direta para o processo {{processo_numero}}.
+Escopo: {{process_scope}}.
+Fundamento legal esperado: art. 75, VIII.
+Preencher required_by_law, optional e additional_fields sem criar fatos novos.
+            ]]></field>
+        </record>
+
+        <record id="template_justificativa_urgente_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Justificativa Urgente - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">despacho</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">Modelo interno GRP - Justificativa Urgente Contratação Direta</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Justificativa por Urgência Fática</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Justificativa urgente para contratação direta.
+Foco em risco de descontinuidade do serviço/fornecimento, prazo crítico e impacto administrativo.
+Deve conter cronologia dos fatos e medidas para normalização.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "cronologia_fatos", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "impacto_descontinuidade", "type": "string"},
+    {"key": "demonstracao_vantajosidade", "type": "string"}
+  ],
+  "optional": [
+    {"key": "prazo_regularizacao", "type": "string"},
+    {"key": "plano_contingencia", "type": "string"},
+    {"key": "referencias_documentais", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "ponto_controle_urgencia_1", "type": "string"},
+    {"key": "ponto_controle_urgencia_2", "type": "string"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "tipo_justificativa": ["urgente"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar justificativa urgente de contratação direta para o processo {{processo_numero}}.
+Escopo: {{process_scope}}.
+Preencher required_by_law, optional e additional_fields com foco em cronologia, risco e continuidade.
+            ]]></field>
+        </record>
+
+        <record id="template_justificativa_fatica_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Justificativa Fática - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">despacho</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">all</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">Modelo interno GRP - Justificativa Fática Contratação Direta</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Justificativa Fática Motivada</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Justificativa fática para contratação direta.
+Foco em robustez probatória: fatos, evidências, documentos de suporte e correlação com a hipótese legal.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fatos_comprovados", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "evidencias_documentais", "type": "string"},
+    {"key": "demonstracao_vantajosidade", "type": "string"}
+  ],
+  "optional": [
+    {"key": "jurisprudencia_referencia", "type": "string"},
+    {"key": "plano_mitigacao_riscos", "type": "string"},
+    {"key": "prazo_regularizacao", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "ponto_controle_fatico_1", "type": "string"},
+    {"key": "ponto_controle_fatico_2", "type": "string"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras", "servicos", "servicos_prestacao_continuada"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "tipo_justificativa": ["fatica"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar justificativa fática de contratação direta para o processo {{processo_numero}}.
+Escopo: {{process_scope}}.
+Basear a redação apenas em fatos e evidências fornecidos.
+Preencher required_by_law, optional e additional_fields.
+            ]]></field>
+        </record>
+
+        <record id="template_tr_compras_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Termo de Referência Compras - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">tr</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-referencia-compras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU TR Compras (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Use a estrutura do TR de compras, mas com motivação explícita de contratação direta (art. 74/75).
+2) Evidencie vantajosidade e alinhamento da pesquisa de preços com a hipótese legal adotada.
+3) Em alternativas "OU", mantenha somente a opção aplicável ao caso concreto.
+4) Não omita justificativas de quantitativos, prazo, forma de entrega e adequação orçamentária.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string", "description": "Artigo/inciso da contratação direta"},
+    {"key": "justificativa_contratacao_direta", "type": "string"},
+    {"key": "itens_tabela", "type": "array"},
+    {"key": "estimativa_valor_total", "type": "number"},
+    {"key": "adequacao_orcamentaria", "type": "string"}
+  ],
+  "optional": [
+    {"key": "criterio_julgamento", "type": "string"},
+    {"key": "justificativa_marca_modelo", "type": "string"},
+    {"key": "exigencia_amostra", "type": "string"},
+    {"key": "cronograma_entrega", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "campo_adicional_cd_1", "type": "string"},
+    {"key": "campo_adicional_cd_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_emergencial", "when": "fundamento_legal=art75_viii"},
+    {"key": "requisito_inexigibilidade", "when": "fundamento_legal in ['art74_i','art74_ii','art74_iii']"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "criterio_julgamento": ["menor_preco", "maior_desconto"],
+  "sigilo_orcamento": ["aberto", "sigiloso_ate_julgamento"],
+  "reserva_me_epp": ["nao", "sim_com_justificativa"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar TR de Compras para Contratação Direta no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Fundamento legal: {{fundamento_legal}}.
+Preencher required_by_law, optional e additional_fields sem criar fatos novos.
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_compras_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Compras - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-compras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Contrato Compras (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Defina claramente a origem da contratação direta no preâmbulo e fundamentos.
+2) Mantenha aderência total entre contrato, TR e aviso de contratação direta.
+3) Em opções alternativas, preserve apenas a cláusula aplicável.
+4) Verifique coerência de vigência, pagamento, penalidades e garantias.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"}
+  ],
+  "optional": [
+    {"key": "garantia_execucao", "type": "string"},
+    {"key": "indice_reajuste", "type": "string"},
+    {"key": "fiscal_titular_nome", "type": "string"},
+    {"key": "fiscal_substituto_nome", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_cd_1", "type": "string"},
+    {"key": "clausula_adicional_cd_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_emergencial", "when": "fundamento_legal=art75_viii"},
+    {"key": "clausula_inexigibilidade", "when": "fundamento_legal in ['art74_i','art74_ii','art74_iii']"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "origem_contratacao": ["dispensa", "inexigibilidade"],
+  "vigencia": ["art105_padrao", "art75_viii_improrrogavel"],
+  "garantia_execucao": ["nao_exigida", "exigida_percentual"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar Contrato de Compras para Contratação Direta no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Fundamento legal: {{fundamento_legal}}.
+Preencher required_by_law, optional e additional_fields com consistência normativa.
+            ]]></field>
+        </record>
+
+        <record id="template_tr_servicos_obras_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Termo de Referência único serviços (com, sem, engenharia) e obras - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">tr</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-referencia-servicos-e-obras-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU TR Serviços/Obras (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Este TR cobre múltiplas modalidades: serviços sem dedicação, serviços com dedicação, serviços de engenharia e obras.
+2) Selecione uma modalidade principal e mantenha consistência com a minuta contratual correspondente.
+3) Em cláusulas alternativas ("OU"), preserve apenas a aplicável ao caso.
+4) Fundamente a hipótese de contratação direta com base no art. 74/75 e evidencie vantajosidade.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "modalidade_servico_obra", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "regime_execucao", "type": "string"},
+    {"key": "estimativa_valor_total", "type": "number"},
+    {"key": "adequacao_orcamentaria", "type": "string"}
+  ],
+  "optional": [
+    {"key": "imr_ou_medicao", "type": "string"},
+    {"key": "vistoria_regras", "type": "string"},
+    {"key": "perfil_equipe", "type": "string"},
+    {"key": "matriz_risco_resumo", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "campo_operacional_1", "type": "string"},
+    {"key": "campo_operacional_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "requisito_dedicacao_exclusiva", "when": "modalidade_servico_obra=servico_com_mao_exclusiva"},
+    {"key": "requisito_engenharia", "when": "modalidade_servico_obra in ['servico_engenharia','obra']"},
+    {"key": "clausula_continuado", "when": "natureza_contrato=continuado"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos", "servicos_prestacao_continuada"],
+  "modalidade_servico_obra": ["servico_sem_mao_exclusiva", "servico_com_mao_exclusiva", "servico_engenharia", "obra"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "regime_execucao": ["empreitada_preco_global", "empreitada_preco_unitario", "tarefa", "integrada", "semi_integrada"],
+  "natureza_contrato": ["escopo", "continuado"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar TR multimodal de serviços/obras para contratação direta no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Modalidade principal: {{modalidade_servico_obra}}.
+Selecionar cláusulas compatíveis com a minuta contratual correspondente.
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_servico_sem_mao_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Serviço Sem Mão de Obra - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-servico-sem-mao-de-obra-exclusiva-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Contrato Serviço sem mão de obra exclusiva (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Garantir aderência entre objeto, medição e pagamento.
+2) Explicitar origem por dispensa/inexigibilidade e fundamentação legal.
+3) Manter somente alternativas aplicáveis em cláusulas opcionais.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"}
+  ],
+  "optional": [
+    {"key": "imr_ou_medicao", "type": "string"},
+    {"key": "garantia_execucao", "type": "string"},
+    {"key": "indice_reajuste", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_sem_mao_1", "type": "string"},
+    {"key": "clausula_adicional_sem_mao_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_emergencial", "when": "fundamento_legal=art75_viii"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos"],
+  "origem_contratacao": ["dispensa", "inexigibilidade"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "forma_pagamento": ["medicao_periodica", "por_entrega", "por_marco"]
+}
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_servico_com_mao_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Serviço com Mão de Obra Exclusiva - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos_continuados</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-servico-com-mao-de-obra-exclusiva-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Contrato Serviço com mão de obra exclusiva (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Priorize cláusulas de gestão de pessoal, fiscalização, encargos e mecanismos de controle.
+2) Reforce regras de medição, glosa e conformidade trabalhista.
+3) Manter coerência integral com TR e justificativa da contratação direta.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"}
+  ],
+  "optional": [
+    {"key": "regras_substituicao_pessoal", "type": "string"},
+    {"key": "controle_encargos", "type": "string"},
+    {"key": "conta_vinculada", "type": "string"},
+    {"key": "criterios_glosa", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_com_mao_1", "type": "string"},
+    {"key": "clausula_adicional_com_mao_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_emergencial", "when": "fundamento_legal=art75_viii"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos_prestacao_continuada"],
+  "origem_contratacao": ["dispensa", "inexigibilidade"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "controle_trabalhista": ["conta_vinculada", "controle_documental_periodico"]
+}
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_servico_com_mao_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Checklist Serviço com Mão de Obra Exclusiva - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos_continuados</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">Modelo interno GRP - Checklist Serviço com Mão de Obra Exclusiva (Contratação Direta)</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Controle reforçado para serviço com dedicação exclusiva</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist reforçado para contratação direta de serviços com mão de obra exclusiva:
+- validar documentação trabalhista/previdenciária/fundiária da contratada;
+- validar critérios de substituição de pessoal, controle de jornada e encargos;
+- validar mecanismos de glosa, conta vinculada (quando aplicável) e fiscalização.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "itens_checklist", "type": "array"}
+  ],
+  "optional": [
+    {"key": "cct_referencia", "type": "string"},
+    {"key": "metodologia_glosa", "type": "string"},
+    {"key": "conta_vinculada_ativa", "type": "boolean"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_mao_exclusiva_1", "type": "array"},
+    {"key": "bloco_local_mao_exclusiva_2", "type": "array"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos_prestacao_continuada"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["documentacao_trabalhista", "encargos_e_beneficios", "controle_jornada", "fiscalizacao_e_glosa", "riscos_trabalhistas"],
+  "acao_corretiva": ["complementar_documentacao", "ajustar_planilha_custos", "revisar_clausula_contrato", "acionar_fiscalizacao"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist de conformidade para contratação direta de serviço com mão de obra exclusiva.
+Processo: {{processo_numero}} | Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Classificar itens em required_by_law, optional e additional_fields.
+Retornar tabela: Item | Atende | Evidência | Observação.
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_compras_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Checklist Compras - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">compras</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">modelo-de-lista-de-verificacao-contratacoes-diretas-lei-no-14-133-set-24.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Checklist AGU Contratações Diretas (compras)</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist orientado para contratação direta de compras.
+Valida enquadramento legal, pesquisa de preços, formalização do TR e minuta contratual.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "itens_checklist", "type": "array"}
+  ],
+  "optional": [
+    {"key": "auditor_revisor", "type": "string"},
+    {"key": "numero_sessao", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_compras_1", "type": "array"},
+    {"key": "bloco_local_compras_2", "type": "array"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["compras"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["fundamentacao_legal", "pesquisa_precos", "especificacao_objeto", "formalizacao_contratual", "publicidade"],
+  "acao_corretiva": ["complementar_justificativa", "refazer_pesquisa_preco", "ajustar_especificacao", "ajustar_minuta"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist de contratação direta para compras no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Retornar itens por bloco com status e evidências.
+            ]]></field>
+        </record>
+
+        <record id="template_checklist_servicos_sem_mao_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Checklist Serviços sem Mão de Obra Exclusiva - Contratação Direta Lei 14.133</field>
+            <field name="doc_type">outro</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">True</field>
+            <field name="source_document">modelo-de-lista-de-verificacao-compras-e-servicos-sem-mao-de-obra-exclusiva-lei-no-14-133-set-24.docx</field>
+            <field name="fase">1</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Checklist AGU Serviços sem mão de obra exclusiva</field>
+            <field name="output_format">html</field>
+            <field name="guidance_text"><![CDATA[
+Checklist orientado para contratação direta de serviços sem dedicação exclusiva de mão de obra.
+Foco em medição, desempenho, riscos de execução e coerência entre TR e contrato.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "orgao_entidade", "type": "string"},
+    {"key": "responsavel_checklist", "type": "string"},
+    {"key": "itens_checklist", "type": "array"}
+  ],
+  "optional": [
+    {"key": "auditor_revisor", "type": "string"},
+    {"key": "numero_sessao", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "bloco_local_servicos_1", "type": "array"},
+    {"key": "bloco_local_servicos_2", "type": "array"}
+  ],
+  "item_schema": {
+    "descricao": "string",
+    "atende": "boolean",
+    "evidencia_localizacao": "string",
+    "observacao": "string"
+  }
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos"],
+  "status_item": ["atende", "nao_atende", "nao_aplicavel"],
+  "blocos": ["fundamentacao_legal", "pesquisa_precos", "metrica_medicao", "formalizacao_contratual", "controle_riscos"],
+  "acao_corretiva": ["complementar_justificativa", "refazer_pesquisa_preco", "ajustar_metrica_medicao", "ajustar_minuta"]
+}
+            ]]></field>
+            <field name="prompt_user_tpl"><![CDATA[
+Gerar checklist de contratação direta para serviços sem mão de obra exclusiva no processo {{processo_numero}}.
+Tipo: {{process_type}} | Escopo: {{process_scope}}.
+Retornar itens por bloco com status, evidências e ação corretiva sugerida.
+            ]]></field>
+        </record>
+
+        <record id="template_contrato_obras_engenharia_contratacao_direta_14133" model="gov.ai.template">
+            <field name="name">Modelo Contrato Obras e Serviços de Engenharia - Contratação Direta Lei 14.133 (dezembro/2025)</field>
+            <field name="doc_type">contrato</field>
+            <field name="process_type">contratacao_direta</field>
+            <field name="process_scope">servicos</field>
+            <field name="is_checklist">False</field>
+            <field name="source_document">modelo-de-termo-de-contrato-obras-e-servicos-de-engenharia-lei-no-14-133-dez-25.docx</field>
+            <field name="fase">4</field>
+            <field name="versao_normativa">Lei 14.133/2021 · Modelo AGU Contrato Obras/Serviços de Engenharia (dez/2025) para contratação direta</field>
+            <field name="output_format">latex</field>
+            <field name="guidance_text"><![CDATA[
+1) Definir regime de execução compatível (global, unitário, tarefa, integrada, semi-integrada).
+2) Garantir aderência entre medições, marcos de execução e pagamento.
+3) Preservar cláusulas de riscos, recebimento provisório/definitivo e responsabilidades técnicas.
+            ]]></field>
+            <field name="parameter_spec_json"><![CDATA[
+{
+  "required_by_law": [
+    {"key": "contratante_nome", "type": "string"},
+    {"key": "contratado_nome", "type": "string"},
+    {"key": "processo_numero", "type": "string"},
+    {"key": "numero_contrato", "type": "string"},
+    {"key": "objeto", "type": "string"},
+    {"key": "fundamento_legal", "type": "string"},
+    {"key": "regime_execucao", "type": "string"},
+    {"key": "valor_total", "type": "number"},
+    {"key": "vigencia", "type": "string"}
+  ],
+  "optional": [
+    {"key": "cronograma_fisico_financeiro", "type": "string"},
+    {"key": "matriz_risco", "type": "string"},
+    {"key": "metodologia_medicao", "type": "string"}
+  ],
+  "additional_fields": [
+    {"key": "clausula_adicional_engenharia_1", "type": "string"},
+    {"key": "clausula_adicional_engenharia_2", "type": "string"}
+  ],
+  "conditional": [
+    {"key": "clausula_integrada", "when": "regime_execucao in ['integrada','semi_integrada']"}
+  ]
+}
+            ]]></field>
+            <field name="option_catalog_json"><![CDATA[
+{
+  "segregacao_objeto": ["servicos", "servicos_engenharia"],
+  "origem_contratacao": ["dispensa", "inexigibilidade"],
+  "fundamento_legal": ["art74_i", "art74_ii", "art74_iii", "art75_i", "art75_ii", "art75_viii"],
+  "regime_execucao": ["empreitada_preco_global", "empreitada_preco_unitario", "tarefa", "integrada", "semi_integrada"]
+}
+            ]]></field>
+        </record>
+    </data>
+</odoo>

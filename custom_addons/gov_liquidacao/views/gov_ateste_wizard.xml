@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ateste_wizard_form" model="ir.ui.view">
+        <field name="name">gov.ateste.wizard.form</field>
+        <field name="model">gov.ateste.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ateste de Recebimento - Checklist AGU">
+                <sheet>
+                    <group string="Liquidação">
+                        <field name="nl_name" readonly="1" string="NL"/>
+                        <field name="nl_empenho" readonly="1" string="NE"/>
+                        <field name="nl_credor" readonly="1" string="Credor"/>
+                        <field name="nl_valor" readonly="1" widget="monetary" string="Valor"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+
+                    <div
+                        class="alert alert-success"
+                        role="alert"
+                        invisible="score_conformidade &lt; 80 or itens_criticos_pendentes"
+                    >
+                        <field name="score_badge" readonly="1" nolabel="1"/>
+                        - Score:
+                        <field name="score_conformidade" readonly="1" nolabel="1"/>
+                        %
+                    </div>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="score_conformidade &gt;= 80 and not itens_criticos_pendentes"
+                    >
+                        <field name="score_badge" readonly="1" nolabel="1"/>
+                        - Score:
+                        <field name="score_conformidade" readonly="1" nolabel="1"/>
+                        %
+                        <span invisible="not itens_criticos_pendentes">
+                            <br/>
+                            <b>Itens críticos pendentes:</b>
+                            <br/>
+                            <field name="itens_criticos_pendentes" readonly="1" nolabel="1" widget="text"/>
+                        </span>
+                    </div>
+
+                    <group string="Checklist de Conformidade (AGU / Lei 14.133/2021)">
+                        <group>
+                            <field
+                                name="chk_nf_valida"
+                                widget="boolean_toggle"
+                                string="NF/Fatura válida (CRÍTICO)"
+                            />
+                            <field
+                                name="chk_objeto_conforme"
+                                widget="boolean_toggle"
+                                string="Objeto conforme contrato/TR (CRÍTICO)"
+                            />
+                            <field
+                                name="chk_prazo_cumprido"
+                                widget="boolean_toggle"
+                                string="Prazo de entrega cumprido (CRÍTICO)"
+                            />
+                            <field
+                                name="chk_quantidade"
+                                widget="boolean_toggle"
+                                string="Quantidade/extensão conferida (CRÍTICO)"
+                            />
+                        </group>
+                        <group>
+                            <field
+                                name="chk_qualidade"
+                                widget="boolean_toggle"
+                                string="Qualidade/acabamento aceito"
+                            />
+                            <field
+                                name="chk_docs_anexados"
+                                widget="boolean_toggle"
+                                string="Documentos de aceite anexados"
+                            />
+                            <field
+                                name="chk_retencoes"
+                                widget="boolean_toggle"
+                                string="Retenções fiscais corretas"
+                            />
+                        </group>
+                    </group>
+
+                    <group string="Resumo do Checklist (referência normativa)">
+                        <field
+                            name="resumo_checklist"
+                            nolabel="1"
+                            colspan="2"
+                            readonly="1"
+                            widget="text"
+                            style="font-family: monospace; font-size: 0.82em; white-space: pre; min-height: 100px;"
+                        />
+                    </group>
+
+                    <group string="Atestante">
+                        <field name="atestante_id" options="{'no_create': True}"/>
+                        <field
+                            name="observacao"
+                            placeholder="Ressalvas, pendencias ou observacoes..."
+                        />
+                    </group>
+
+                    <field name="pode_atestar" invisible="1"/>
+                    <field name="itens_criticos_pendentes" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_atestar"
+                        string="Confirmar Ateste"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not pode_atestar"
+                    />
+                    <button
+                        name="action_atestar_com_ressalva"
+                        string="Atestar com Ressalva"
+                        type="object"
+                        class="btn-warning"
+                        invisible="pode_atestar"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_wizard_form" model="ir.ui.view">
+        <field name="name">gov.processo.wizard.form</field>
+        <field name="model">gov.processo.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Novo Processo" class="gov-proc-wizard">
+                <group>
+                    <field name="subject"/>
+                    <field name="origin_type"/>
+                    <field name="process_type"/>
+                    <field name="process_scope"/>
+                    <field name="ug_id"/>
+                    <field name="responsible_id"/>
+                </group>
+                <group string="Modelos e Checklists para o Tipo Selecionado" class="gov-proc-wizard-recommendations">
+                    <field
+                        name="recommended_template_ids"
+                        widget="many2many_tags"
+                        readonly="1"
+                        options="{'no_create': True}"
+                    />
+                    <div class="text-muted gov-proc-wizard-muted" invisible="recommended_template_ids">
+                        Nenhum modelo/checklist cadastrado para este tipo de processo.
+                    </div>
+                </group>
+                <footer>
+                    <button
+                        name="action_criar_processo"
+                        string="Criar Processo"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_processo_wizard" model="ir.actions.act_window">
+        <field name="name">Novo Processo</field>
+        <field name="res_model">gov.processo.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

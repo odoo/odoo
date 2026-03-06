@@ -1,0 +1,21 @@
+{
+    "name": "GRP - Pagamento",
+    "version": "19.0.2.0.0",
+    "summary": "Programacao de Desembolso e Ordem de Pagamento",
+    "author": "GRP",
+    "license": "LGPL-3",
+    "category": "Government",
+    "depends": ["gov_base", "gov_processos", "gov_empenho", "gov_liquidacao", "account"],
+    "data": [
+        "security/ir.model.access.csv",
+        "security/gov_pagamento_rules.xml",
+        "data/gov_pd_sequence.xml",
+        "data/gov_pagamento_sequence.xml",
+        "views/gov_pd_views.xml",
+        "views/gov_pagamento_views.xml",
+        "views/gov_pd_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+}
+

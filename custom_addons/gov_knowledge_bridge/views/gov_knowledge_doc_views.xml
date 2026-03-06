@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_doc_form_knowledge_bridge" model="ir.ui.view">
+        <field name="name">gov.processo.doc.form.knowledge.bridge</field>
+        <field name="model">gov.processo.doc</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_processo_doc_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='ai_generated']]" position="inside">
+                <field name="knowledge_article_count" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page name="knowledge" string="Knowledge">
+                    <div class="alert alert-info mb-3" role="alert">
+                        Vincule artigos de conhecimento para apoiar revisão, padronização e memória institucional.
+                    </div>
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                        <button
+                            string="Abrir Artigos Vinculados"
+                            name="action_open_knowledge_articles"
+                            type="object"
+                            class="btn-primary"
+                        />
+                        <button
+                            string="Novo Artigo"
+                            name="action_create_knowledge_article"
+                            type="object"
+                            class="btn-secondary"
+                        />
+                        <button
+                            string="Sincronizar na Memória IA"
+                            name="action_sync_knowledge_to_ai_memory"
+                            type="object"
+                            class="btn-secondary"
+                        />
+                    </div>
+                    <group>
+                        <field name="knowledge_article_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

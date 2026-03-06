@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gov_base.group_gov_operador" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('gov_account_move_template.group_account_move_template_user'))]"/>
+    </record>
+
+    <record id="gov_base.group_gov_admin" model="res.groups">
+        <field name="implied_ids" eval="[
+            (4, ref('gov_account_fiscal_year.group_account_fiscal_year_manager')),
+            (4, ref('gov_account_journal_lock_date.group_account_journal_lock_manager')),
+            (4, ref('gov_account_lock_date_update.group_account_lock_date_manager')),
+            (4, ref('gov_account_move_template.group_account_move_template_manager')),
+            (4, ref('gov_account_spread_cost_revenue.group_account_spread_manager'))
+        ]"/>
+    </record>
+</odoo>

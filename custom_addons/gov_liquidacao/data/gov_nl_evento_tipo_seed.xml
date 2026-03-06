@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="evt_tipo_fornecedor" model="gov.nl.evento.tipo">
+        <field name="codigo">pagamento_fornecedor</field>
+        <field name="descricao">Fornecedores e Credores do Exercicio</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_02"/>
+        <field name="tipo_pagamento">transferencia</field>
+        <field name="norma">Lei 14.133/2021, Art. 140</field>
+        <field name="notes">
+            Pagamento liquido ao fornecedor apos deducoes.
+            Conta: 2.1.1.2.02 - Fornecedores a Pagar.
+        </field>
+    </record>
+
+    <record id="evt_tipo_inss" model="gov.nl.evento.tipo">
+        <field name="codigo">retencao_inss</field>
+        <field name="descricao">INSS Retido na Fonte</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">gps</field>
+        <field name="norma">Lei 8.212/1991; IN RFB 971/2009</field>
+        <field name="notes">
+            Retencao de INSS sobre servicos. Recolher via GPS.
+            Conta: 2.1.3.1.01 (criar se nao existir no plano de contas).
+        </field>
+    </record>
+
+    <record id="evt_tipo_iss" model="gov.nl.evento.tipo">
+        <field name="codigo">retencao_iss</field>
+        <field name="descricao">ISS Retido na Fonte</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">guia_iss</field>
+        <field name="norma">LC 116/2003; Lei Municipal de ISS</field>
+        <field name="notes">
+            ISS retido pelo tomador de servicos. Recolher a Prefeitura.
+            Aliquota e destinatario conforme legislacao municipal.
+        </field>
+    </record>
+
+    <record id="evt_tipo_irrf" model="gov.nl.evento.tipo">
+        <field name="codigo">retencao_ir</field>
+        <field name="descricao">IRRF Retido na Fonte</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">darf</field>
+        <field name="norma">Lei 9.430/1996; IN RFB 1.234/2012</field>
+        <field name="notes">
+            IRRF sobre servicos prestados por PJ.
+            Codigo DARF: 1708 (servicos em geral).
+        </field>
+    </record>
+
+    <record id="evt_tipo_csll_pis_cofins" model="gov.nl.evento.tipo">
+        <field name="codigo">retencao_csll_pis_cofins</field>
+        <field name="descricao">CSLL / PIS / COFINS Retidos (IN 1.234)</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">darf</field>
+        <field name="norma">IN RFB 1.234/2012, Art. 2o</field>
+        <field name="notes">
+            Retencao agregada CSLL/PIS/COFINS para PJ.
+            Codigo DARF: 5952. Aplicavel a pagamentos acima de R$ 5.000.
+        </field>
+    </record>
+
+    <record id="evt_tipo_judicial" model="gov.nl.evento.tipo">
+        <field name="codigo">bloqueio_judicial</field>
+        <field name="descricao">Bloqueio Judicial / Precatorio</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">judicial</field>
+        <field name="norma">CPC, Art. 854; CF/88, Art. 100</field>
+        <field name="notes">
+            Retencao por determinacao judicial (penhora, precatorio).
+            Destinatario: Juizo ou credor indicado na ordem judicial.
+        </field>
+    </record>
+
+    <record id="evt_tipo_ajuste" model="gov.nl.evento.tipo">
+        <field name="codigo">ajuste_bancario</field>
+        <field name="descricao">Ajuste / Taxa Bancaria</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">ajuste</field>
+        <field name="norma">-</field>
+        <field name="notes">
+            Usado para lancamentos de taxas bancarias, tarifas,
+            ajustes de conciliacao. Nao requer processo administrativo.
+            Uso restrito a contadores.
+        </field>
+    </record>
+
+    <record id="evt_tipo_outros" model="gov.nl.evento.tipo">
+        <field name="codigo">outros</field>
+        <field name="descricao">Outros Descontos / Retencoes</field>
+        <field name="account_id" ref="gov_empenho.account_2_1_1_2_03"/>
+        <field name="tipo_pagamento">outros</field>
+        <field name="norma">-</field>
+        <field name="notes">
+            Categoria residual para descontos nao previstos nos tipos
+            anteriores. Documentar obrigatoriamente no campo observacao.
+        </field>
+    </record>
+</odoo>

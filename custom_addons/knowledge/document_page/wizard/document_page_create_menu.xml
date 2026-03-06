@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Create Menu From view -->
+    <record id="view_wiki_create_menu" model="ir.ui.view">
+        <field name="name">Create Menu</field>
+        <field name="model">document.page.create.menu</field>
+        <field name="arch" type="xml">
+            <form>
+                <group string="Menu Information">
+                    <field name="menu_name" />
+                    <field
+                        name="menu_parent_id"
+                        context="{'ir.ui.menu.authorized_list': True}"
+                    />
+                </group>
+                <footer>
+                    <button
+                    name="document_page_menu_create"
+                    string="Create Menu"
+                    type="object"
+                    class="oe_highlight"
+                />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_related_page_create_menu">
+        <field name="name">Create Menu</field>
+        <field name="res_model">document.page.create.menu</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="document_page.model_document_page" />
+    </record>
+</odoo>

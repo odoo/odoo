@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="group_document_approver_user" model="res.groups">
+        <field name="name">Approver</field>
+        <field
+            name="privilege_id"
+            ref="document_knowledge.privilege_document_knowledge"
+        />
+        <field
+            name="implied_ids"
+            eval="[(4, ref('document_page.group_document_editor'))]"
+        />
+    </record>
+    <record id="document_page.group_document_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_document_approver_user'))]" />
+    </record>
+    <record model="ir.rule" id="rule_change_request_global">
+        <field name="name">Change Request Global</field>
+        <field name="model_id" ref="model_document_page_history" />
+        <field
+            name="groups"
+            eval="[(6, 0, [ref('document_knowledge.group_document_user')])]"
+        />
+        <field
+            name="domain_force"
+        >['|',('state','=','approved'),('create_uid','=',user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="perm_create" eval="True" />
+    </record>
+    <record model="ir.rule" id="rule_change_request_approver">
+        <field name="name">Change Request Approver</field>
+        <field name="model_id" ref="model_document_page_history" />
+        <field name="groups" eval="[(6, 0, [ref('group_document_approver_user')])]" />
+        <field name="domain_force">[('state','!=','draft')]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="perm_create" eval="True" />
+    </record>
+    <record model="ir.rule" id="rule_change_request_manager">
+        <field name="name">Change Request Manager</field>
+        <field name="model_id" ref="model_document_page_history" />
+        <field
+            name="groups"
+            eval="[(6, 0, [ref('document_page.group_document_manager')])]"
+        />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_unlink" eval="True" />
+        <field name="perm_create" eval="True" />
+    </record>
+</odoo>

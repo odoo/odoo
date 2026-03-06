@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_quality_policy_list" model="ir.ui.view">
+        <field name="name">gov.ai.quality.policy.list</field>
+        <field name="model">gov.ai.quality.policy</field>
+        <field name="arch" type="xml">
+            <list string="Políticas de Qualidade">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="doc_type"/>
+                <field name="process_type"/>
+                <field name="num_passagens"/>
+                <field name="estado_apos_geracao"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_ai_quality_policy_form" model="ir.ui.view">
+        <field name="name">gov.ai.quality.policy.form</field>
+        <field name="model">gov.ai.quality.policy</field>
+        <field name="arch" type="xml">
+            <form string="Política de Qualidade">
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="doc_type"/>
+                            <field name="process_type"/>
+                        </group>
+                        <group string="Comportamento">
+                            <field name="num_passagens"/>
+                            <field name="estado_apos_geracao"/>
+                            <field name="notificar_responsavel"/>
+                            <field name="exigir_aprovacao_humana"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Passagens">
+                            <group>
+                                <field name="passagem_1_instrucao" placeholder="Instrução adicional da passagem 1..."/>
+                                <field name="passagem_2_instrucao" placeholder="Instrução da revisão jurídica..."/>
+                                <field name="passagem_3_instrucao" placeholder="Instrução do ajuste final..."/>
+                            </group>
+                        </page>
+                        <page string="Validação">
+                            <group>
+                                <field name="validar_artigos_lei"/>
+                                <field name="validar_campos_obrigatorios"/>
+                                <field name="validar_valores_monetarios"/>
+                                <field name="min_palavras"/>
+                            </group>
+                            <group string="Prompt de Auto-validação">
+                                <field name="prompt_validacao" nolabel="1" placeholder="Prompt opcional para avaliação extra em JSON..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_quality_policy" model="ir.actions.act_window">
+        <field name="name">Políticas de Qualidade</field>
+        <field name="res_model">gov.ai.quality.policy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

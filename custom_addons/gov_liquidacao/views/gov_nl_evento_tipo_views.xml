@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_nl_evento_tipo_list" model="ir.ui.view">
+        <field name="name">gov.nl.evento.tipo.list</field>
+        <field name="model">gov.nl.evento.tipo</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Evento de Liquidacao">
+                <field name="codigo"/>
+                <field name="descricao"/>
+                <field name="account_id"/>
+                <field name="tipo_pagamento"/>
+                <field name="norma"/>
+                <field name="active" widget="boolean" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_nl_evento_tipo_form" model="ir.ui.view">
+        <field name="name">gov.nl.evento.tipo.form</field>
+        <field name="model">gov.nl.evento.tipo</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Evento de Liquidacao">
+                <sheet>
+                    <group string="Identificacao">
+                        <field name="codigo" placeholder="Ex: retencao_inss"/>
+                        <field name="descricao"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group string="Vinculo Contabil e Pagamento">
+                        <field name="account_id" options="{'no_create': True}"/>
+                        <field name="tipo_pagamento"/>
+                        <field name="norma" placeholder="Ex: IN RFB 1.234/2012"/>
+                    </group>
+                    <group string="Instrucao de Uso">
+                        <field
+                            name="notes"
+                            nolabel="1"
+                            colspan="2"
+                            placeholder="Orientacoes para o contador..."
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_nl_evento_tipo" model="ir.actions.act_window">
+        <field name="name">Tipos de Evento</field>
+        <field name="res_model">gov.nl.evento.tipo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

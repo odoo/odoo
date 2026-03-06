@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_gov_dashboard" model="ir.actions.act_window">
+        <field name="name">Painel Executivo GRP</field>
+        <field name="res_model">gov.processo</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="gov_processos.view_gov_processo_search"/>
+        <field name="domain">[('state', 'not in', ['encerrado'])]</field>
+        <field name="context">{'search_default_filter_ativos': 1, 'search_default_group_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                <i class="fa fa-dashboard"/> Painel executivo focado em processos ativos e críticos.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_gov_processos_criticos_list" model="ir.ui.view">
+        <field name="name">gov.processo.criticos.list</field>
+        <field name="model">gov.processo</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list
+                string="Processos Críticos"
+                decoration-danger="prazo_vencido"
+                decoration-warning="urgencia"
+            >
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="state" widget="badge"/>
+                <field name="ug_id"/>
+                <field name="responsible_id"/>
+                <field name="prazo_resposta"/>
+                <field name="prazo_vencido" widget="boolean"/>
+                <field name="urgencia" widget="boolean"/>
+                <field name="fase_atual" widget="progressbar" options="{'max_value': 6}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_gov_processos_por_estado" model="ir.actions.act_window">
+        <field name="name">Processos</field>
+        <field name="res_model">gov.processo</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="gov_processos.view_gov_processo_search"/>
+    </record>
+
+</odoo>

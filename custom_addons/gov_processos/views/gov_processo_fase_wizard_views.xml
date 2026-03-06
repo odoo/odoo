@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_fase_wizard_form" model="ir.ui.view">
+        <field name="name">gov.processo.fase.wizard.form</field>
+        <field name="model">gov.processo.fase.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmar transição de fase" class="gov-proc-fase-wizard">
+                <group>
+                    <field name="processo_id" readonly="1"/>
+                    <field name="direction" readonly="1"/>
+                    <field name="warning_message" nolabel="1" readonly="1" class="gov-proc-fase-warning"/>
+                </group>
+                <group invisible="direction != 'retroceder'">
+                    <field
+                        name="justificativa"
+                        required="direction == 'retroceder'"
+                        placeholder="Explique o motivo do retrocesso de fase..."
+                        colspan="2"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_confirmar"
+                        string="Confirmar"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

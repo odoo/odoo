@@ -1,0 +1,24 @@
+{
+    "name": "GRP - Empenho",
+    "version": "19.0.2.0.0",
+    "summary": "Nota de Empenho integrada ao ciclo de processos GRP",
+    "author": "GRP",
+    "license": "LGPL-3",
+    "category": "Government",
+    "depends": ["gov_base", "gov_processos", "account"],
+    "data": [
+        "security/ir.model.access.csv",
+        "security/gov_empenho_rules.xml",
+        "data/gov_empenho_sequence.xml",
+        "data/gov_mcasp_seed.xml",
+        "data/gov_account_config_seed.xml",
+        "views/gov_empenho_views.xml",
+        "views/gov_empenho_wizard.xml",
+        "views/gov_account_config_views.xml",
+        "views/gov_empenho_move_wizard.xml",
+        "views/gov_empenho_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+}
+

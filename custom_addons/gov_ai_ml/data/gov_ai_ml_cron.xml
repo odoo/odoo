@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_gov_ai_ml_refresh_embeddings" model="ir.cron">
+        <field name="name">GOV IA ML - Atualizar Vetores de Memoria</field>
+        <field name="model_id" ref="model_gov_ai_ml_memory_vector"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_refresh_embeddings()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

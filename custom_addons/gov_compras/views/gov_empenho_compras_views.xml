@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_empenho_form_compras_link" model="ir.ui.view">
+        <field name="name">gov.empenho.form.compras.link</field>
+        <field name="model">gov.empenho</field>
+        <field name="inherit_id" ref="gov_empenho.view_gov_empenho_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='processo_id_ref']]" position="inside">
+                <field
+                    name="compras_item_track_id"
+                    domain="[('processo_id', '=', processo_id_ref), ('status', 'in', ('nad','licitado','empenhado','encerrado'))]"
+                    options="{'no_create': True}"
+                    required="processo_id_ref != False"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_gov_empenho_wizard_form_compras_link" model="ir.ui.view">
+        <field name="name">gov.empenho.wizard.form.compras.link</field>
+        <field name="model">gov.empenho.wizard</field>
+        <field name="inherit_id" ref="gov_empenho.view_gov_empenho_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='processo_id']]" position="inside">
+                <field
+                    name="compras_item_track_id"
+                    options="{'no_create': True}"
+                    required="True"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

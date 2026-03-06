@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- History Form View -->
+    <record id="wiki_history_form_inherit" model="ir.ui.view">
+        <field name="name">document.page.history.form</field>
+        <field name="model">document.page.history</field>
+        <field name="inherit_id" ref="document_page.wiki_history_form" />
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <header>
+                    <!-- draft -> to approve -->
+                    <button
+                        name="action_to_approve"
+                        type="object"
+                        string="Send to Review"
+                        class="oe_highlight"
+                        invisible="not is_approval_required or not am_i_owner or state != 'draft'"
+                    />
+                    <!-- approve if i am approver -->
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        invisible="not is_approval_required or not am_i_approver or state not in ('draft', 'to approve')"
+                    />
+                    <!-- approve if it's not required and i am owner -->
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        invisible="is_approval_required or not am_i_owner or state not in ('draft', 'to approve')"
+                    />
+                    <!-- cancel if i am owner or approver -->
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        invisible="(not am_i_owner or not am_i_approver) and (state not in ('draft', 'to approve'))"
+                    />
+                    <!-- reopen if i am owner or approver -->
+                    <button
+                        name="action_draft"
+                        type="object"
+                        string="Back to draft"
+                        invisible="(not am_i_owner or not am_i_approver) and (state not in ('cancelled', 'to approve'))"
+                        groups="document_page.group_document_manager"
+                    />
+                    <field name="am_i_owner" invisible="1" />
+                    <field name="am_i_approver" invisible="1" />
+                    <field name="is_approval_required" invisible="1" />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,approved"
+                    />
+                </header>
+            </sheet>
+            <xpath expr="//field[@name='create_uid']/parent::group" position="after">
+                <group>
+                    <field
+                        name="approved_uid"
+                        readonly="1"
+                        invisible="state != 'approved'"
+                    />
+                    <field
+                        name="approved_date"
+                        readonly="1"
+                        invisible="state != 'approved'"
+                    />
+                </group>
+            </xpath>
+            <!-- Readonly fields -->
+            <field name="content" position="attributes">
+                <attribute name="readonly">state != 'draft'
+                </attribute>
+            </field>
+            <field name="page_id" position="attributes">
+                <attribute name="readonly">state != 'draft'
+                </attribute>
+            </field>
+            <field name="name" position="attributes">
+                <attribute name="readonly">state != 'draft'
+                </attribute>
+            </field>
+            <field name="summary" position="attributes">
+                <attribute name="readonly">state != 'draft'
+                </attribute>
+            </field>
+            <!-- Chatter -->
+            <sheet position="after">
+                <chatter />
+            </sheet>
+        </field>
+    </record>
+    <!-- History Form View Manager Rights -->
+    <record id="wiki_history_form_inherit_manager" model="ir.ui.view">
+        <field name="name">document.page.history.form</field>
+        <field name="model">document.page.history</field>
+        <field name="inherit_id" ref="wiki_history_form_inherit" />
+        <field name="arch" type="xml">
+            <!-- Readonly fields -->
+            <field
+                name="name"
+                position="attributes"
+                groups="document_page.group_document_manager"
+            >
+                <attribute name="readonly">False</attribute>
+            </field>
+            <field
+                name="summary"
+                position="attributes"
+                groups="document_page.group_document_manager"
+            >
+                <attribute name="readonly">False</attribute>
+            </field>
+        </field>
+    </record>
+    <!-- Page Form View -->
+    <record id="wiki_form_inherit" model="ir.ui.view">
+        <field name="name">document.page.form</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_form" />
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not has_changes_pending_approval"
+                >
+                    This document has <b
+                >Changes Pending Approval</b>. You are viewing the last approved content.
+                </div>
+                <div
+                    class="alert alert-warning oe_edit_only"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not is_approval_required"
+                >
+                    This document requires approval. If edited, you will create a new <b
+                >Change Request</b>.
+                </div>
+                <div
+                    class="alert alert-warning oe_edit_only"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not user_has_drafts"
+                >
+                    <b>You already have a Draft Change Request for this page.</b>
+                    It is highly recommended that you edit that one instead of creating a new one.
+                </div>
+                <field name="is_approval_required" invisible="1" />
+                <field name="has_changes_pending_approval" invisible="1" />
+                <field name="user_has_drafts" invisible="1" />
+            </sheet>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    class="oe_stat_button"
+                    name="action_changes_pending_approval"
+                    string="Change Requests"
+                    type="object"
+                    invisible="not has_changes_pending_approval and not user_has_drafts"
+                    icon="fa-edit"
+                />
+            </xpath>
+            <field name="content_uid" position="after">
+                <field name="approved_uid" />
+            </field>
+            <field name="content_date" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="content_date" position="after">
+                <field name="approved_date" />
+            </field>
+            <field name="history_ids" position="inside">
+                <list>
+                    <field name="id" />
+                    <field name="approved_date" />
+                    <field name="summary" />
+                    <field name="create_uid" />
+                    <field name="approved_uid" />
+                </list>
+            </field>
+        </field>
+    </record>
+    <!-- Page Menu Form View -->
+    <record id="view_wiki_menu_form_inherit" model="ir.ui.view">
+        <field name="name">document.page.form</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_menu_form" />
+        <field name="arch" type="xml">
+            <field name="content" position="before">
+                <group class="oe_read_only" invisible="type != 'content'">
+                    <field name="approved_date" />
+                    <field name="approved_uid" />
+                </group>
+            </field>
+        </field>
+    </record>
+    <!-- Catgory Form View -->
+    <record id="view_category_form_inherit" model="ir.ui.view">
+        <field name="name">document.page.category.form</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_category_form" />
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="approval_required" />
+                <field
+                    name="approver_gid"
+                    invisible="not approval_required"
+                    required="approval_required"
+                />
+            </field>
+        </field>
+    </record>
+    <!-- History Tree view -->
+    <record id="view_wiki_history_tree_inherit" model="ir.ui.view">
+        <field name="name">document.page.history.tree</field>
+        <field name="model">document.page.history</field>
+        <field name="inherit_id" ref="document_page.view_wiki_history_tree" />
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-info">state=='draft'</attribute>
+                <attribute name="decoration-primary">state=='to approve'</attribute>
+                <attribute name="decoration-muted">state=='cancelled'</attribute>
+            </list>
+            <list position="inside">
+                <field name="state" />
+                <field name="approved_uid" />
+                <field name="approved_date" />
+            </list>
+        </field>
+    </record>
+    <!-- History Search view  -->
+    <record id="view_wiki_history_filter" model="ir.ui.view">
+        <field name="name">document.page.history.search</field>
+        <field name="model">document.page.history</field>
+        <field name="inherit_id" ref="document_page.view_wiki_history_filter" />
+        <field name="arch" type="xml">
+            <field name="page_id" position="before">
+                <field name="state" />
+            </field>
+            <field name="create_uid" position="after">
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]" />
+                <filter
+                    name="pending"
+                    string="Pending Approval"
+                    domain="[('state','=','to approve')]"
+                />
+                <filter
+                    name="approved"
+                    string="Approved"
+                    domain="[('state','=','approved')]"
+                />
+                <filter
+                    name="cancelled"
+                    string="Cancelled"
+                    domain="[('state','=','cancelled')]"
+                />
+            </field>
+            <filter name="group_by_author" position="before">
+                <filter
+                    name="group_state"
+                    string="State"
+                    context="{'group_by':'state'}"
+                />
+            </filter>
+            <filter name="group_by_author" position="after">
+                <filter
+                    name="group_approver"
+                    string="Approver"
+                    context="{'group_by':'approved_uid'}"
+                />
+            </filter>
+        </field>
+    </record>
+    <!-- Change Requests Action  -->
+    <record model="ir.actions.act_window" id="action_change_requests">
+        <field name="name">Change Requests</field>
+        <field name="res_model">document.page.history</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_draft': 1, 'search_default_pending': 1}
+        </field>
+    </record>
+    <menuitem
+        id="menu_page_change_requests"
+        name="Change Requests"
+        parent="document_page.menu_wiki"
+        action="action_change_requests"
+        sequence="25"
+        groups="document_page.group_document_editor"
+    />
+</odoo>

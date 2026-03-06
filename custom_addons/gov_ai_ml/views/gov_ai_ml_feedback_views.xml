@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_ml_feedback_list" model="ir.ui.view">
+        <field name="name">gov.ai.ml.feedback.list</field>
+        <field name="model">gov.ai.ml.feedback</field>
+        <field name="arch" type="xml">
+            <list string="Feedback IA">
+                <field name="create_date"/>
+                <field name="company_id"/>
+                <field name="doc_id"/>
+                <field name="template_id"/>
+                <field name="accepted" widget="boolean_toggle"/>
+                <field name="score_manual"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_ai_ml_feedback_form" model="ir.ui.view">
+        <field name="name">gov.ai.ml.feedback.form</field>
+        <field name="model">gov.ai.ml.feedback</field>
+        <field name="arch" type="xml">
+            <form string="Feedback IA">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="processo_id"/>
+                            <field name="doc_id"/>
+                            <field name="run_id"/>
+                            <field name="template_id"/>
+                        </group>
+                        <group>
+                            <field name="accepted"/>
+                            <field name="score_manual"/>
+                            <field name="doc_type" readonly="1"/>
+                            <field name="process_type" readonly="1"/>
+                            <field name="process_scope" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Observacoes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_ml_feedback" model="ir.actions.act_window">
+        <field name="name">Feedback de Geracao</field>
+        <field name="res_model">gov.ai.ml.feedback</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
+

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_gov_empenho_list" model="ir.ui.view">
+        <field name="name">gov.empenho.list</field>
+        <field name="model">gov.empenho</field>
+        <field name="arch" type="xml">
+            <list
+                string="Notas de Empenho"
+                decoration-danger="state == 'anulado'"
+                decoration-success="state == 'emitido'"
+                decoration-warning="state == 'aprovado'"
+            >
+                <field name="name"/>
+                <field name="ug_id"/>
+                <field name="exercicio"/>
+                <field name="credor_id"/>
+                <field name="tipo_empenho"/>
+                <field name="valor_empenho" widget="monetary"/>
+                <field name="valor_liquido" widget="monetary"/>
+                <field name="data_empenho"/>
+                <field name="natureza_despesa" optional="show"/>
+                <field name="processo_numero" optional="show" string="Processo"/>
+                <field name="state" widget="badge"/>
+                <field name="retroativo" widget="boolean" optional="show"/>
+                <field name="urgencia" widget="boolean" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_empenho_form" model="ir.ui.view">
+        <field name="name">gov.empenho.form</field>
+        <field name="model">gov.empenho</field>
+        <field name="arch" type="xml">
+            <form string="Nota de Empenho">
+
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="rascunho,aprovado,emitido,anulado"/>
+                    <button
+                        name="action_aprovar"
+                        string="Aprovar"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'rascunho'"
+                    />
+                    <button
+                        name="action_emitir"
+                        string="Emitir NE"
+                        type="object"
+                        class="btn-success"
+                        invisible="state != 'aprovado'"
+                    />
+                    <button
+                        name="action_anular"
+                        string="Anular"
+                        type="object"
+                        class="btn-danger"
+                        invisible="state not in ('aprovado', 'emitido')"
+                        groups="gov_base.group_gov_admin"
+                    />
+                </header>
+
+                <sheet>
+                    <div class="alert alert-danger mb-2" invisible="not retroativo" role="alert">
+                        <b>EMPENHO RETROATIVO (NE Indenizatória)</b>
+                    </div>
+                    <div class="alert alert-warning mb-2" invisible="not urgencia" role="alert">
+                        <b>EMPENHO DE URGÊNCIA (OS)</b>
+                    </div>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-money" type="object" name="action_open_liquidacoes">
+                            <field name="liquidacao_count" widget="statinfo" string="Liquidações"/>
+                        </button>
+                        <button
+                            class="oe_stat_button"
+                            name="action_open_move_wizard"
+                            type="object"
+                            icon="fa-book"
+                            invisible="not move_ne_id"
+                        >
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Lançamento</span>
+                                <span class="o_stat_value">
+                                    <field name="move_ne_state"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group string="Identificação">
+                            <field name="name" readonly="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="ug_id"/>
+                            <field name="exercicio"/>
+                            <field name="tipo_empenho"/>
+                            <field name="data_empenho"/>
+                            <field name="data_vencimento"/>
+                        </group>
+                        <group string="Credor">
+                            <field name="credor_id" options="{'no_create': True}"/>
+                            <field name="cnpj_credor" readonly="1"/>
+                            <field name="retroativo" widget="boolean_toggle"/>
+                            <field name="urgencia" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <group string="Classificação Orçamentária">
+                        <group>
+                            <field name="programa"/>
+                            <field name="acao"/>
+                        </group>
+                        <group>
+                            <field name="natureza_despesa"/>
+                            <field name="fonte_recurso"/>
+                        </group>
+                    </group>
+
+                    <group string="Vínculo com Processo GRP">
+                        <field
+                            name="processo_id_ref"
+                            string="ID do Processo"
+                            help="Informe o ID do gov.processo que originou este empenho."
+                        />
+                        <field name="processo_numero" readonly="1"/>
+                        <field name="processo_subject" readonly="1" string="Objeto do Processo"/>
+                        <field
+                            name="dotacao_id"
+                            domain="[('processo_id', '=', processo_id_ref)]"
+                            options="{'no_create': True}"
+                        />
+                    </group>
+
+                    <group string="Valores">
+                        <field name="valor_empenho" widget="monetary" readonly="state != 'rascunho'"/>
+                        <field name="valor_anulado" readonly="1"/>
+                        <field name="valor_liquido" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+
+                    <group string="Lançamentos Contábeis" invisible="not move_ne_id and not natureza_despesa">
+                        <field name="move_ne_id" readonly="1" options="{'no_open': False}"/>
+                        <field name="move_ne_state" readonly="1" string="Estado do Lançamento"/>
+                        <field name="contabil_configurado" invisible="1"/>
+                        <div
+                            class="alert alert-warning"
+                            role="alert"
+                            invisible="contabil_configurado or not natureza_despesa"
+                        >
+                            Natureza <b><field name="natureza_despesa" readonly="1" nolabel="1"/></b>
+                            sem mapeamento contábil. Configure em
+                            <b>GRP -> Configuração -> Configuração Contábil</b>.
+                        </div>
+                    </group>
+
+                    <group string="Objeto">
+                        <field name="objeto" nolabel="1" colspan="2" readonly="state != 'rascunho'"/>
+                    </group>
+
+                    <group string="Observação">
+                        <field name="observacao" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_empenho_search" model="ir.ui.view">
+        <field name="name">gov.empenho.search</field>
+        <field name="model">gov.empenho</field>
+        <field name="arch" type="xml">
+            <search string="Notas de Empenho">
+                <field name="name" string="Número NE"/>
+                <field name="credor_id" string="Credor"/>
+                <field name="processo_numero" string="Processo"/>
+                <filter string="Rascunhos" name="f_rascunho" domain="[('state', '=', 'rascunho')]"/>
+                <filter string="Aprovados" name="f_aprovado" domain="[('state', '=', 'aprovado')]"/>
+                <filter string="Emitidos" name="f_emitido" domain="[('state', '=', 'emitido')]"/>
+                <filter string="Anulados" name="f_anulado" domain="[('state', '=', 'anulado')]"/>
+                <separator/>
+                <filter string="Urgentes" name="f_urgentes" domain="[('urgencia', '=', True)]"/>
+                <filter string="Retroativos" name="f_retroativos" domain="[('retroativo', '=', True)]"/>
+                <separator/>
+                <filter name="g_estado" string="Estado" context="{'group_by': 'state'}"/>
+                <filter name="g_ug" string="UG" context="{'group_by': 'ug_id'}"/>
+                <filter name="g_credor" string="Credor" context="{'group_by': 'credor_id'}"/>
+                <filter name="g_exercicio" string="Exercício" context="{'group_by': 'exercicio'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gov_empenho" model="ir.actions.act_window">
+        <field name="name">Notas de Empenho</field>
+        <field name="res_model">gov.empenho</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

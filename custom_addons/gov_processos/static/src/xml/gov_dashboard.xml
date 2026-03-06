@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="gov_processos.GovDashboard" owl="1">
+        <div class="gov-dashboard o_action">
+            <t t-if="state.loading">
+                <div class="gov-loading">
+                    <div class="gov-spinner"/>
+                    <p>Carregando dashboard...</p>
+                </div>
+            </t>
+
+            <t t-elif="state.error">
+                <div class="gov-error-box">
+                    <h3>Erro</h3>
+                    <p t-esc="state.error"/>
+                    <button class="gov-btn-primary" t-on-click="onRefresh">
+                        Tentar novamente
+                    </button>
+                </div>
+            </t>
+
+            <t t-elif="state.data">
+                <div class="gov-dash-header">
+                    <div class="gov-dash-title">
+                        <div>
+                            <h1>GRP - Painel Executivo</h1>
+                            <p class="gov-dash-sub">Execucao orcamentaria e financeira</p>
+                        </div>
+                    </div>
+                    <button class="gov-btn-secondary" t-on-click="onRefresh">
+                        Atualizar
+                    </button>
+                </div>
+
+                <div class="gov-kpi-grid">
+                    <div class="gov-kpi-card gov-kpi-blue" t-on-click="abrirProcessos">
+                        <div class="gov-kpi-body">
+                            <div class="gov-kpi-value" t-esc="fmtInt(state.data.kpis.total_processos)"/>
+                            <div class="gov-kpi-label">Processos</div>
+                        </div>
+                    </div>
+
+                    <div class="gov-kpi-card gov-kpi-red" t-on-click="abrirProcessos">
+                        <div class="gov-kpi-body">
+                            <div class="gov-kpi-value" t-esc="fmtInt(state.data.kpis.processos_criticos)"/>
+                            <div class="gov-kpi-label">Criticos</div>
+                        </div>
+                    </div>
+
+                    <div class="gov-kpi-card gov-kpi-indigo" t-on-click="abrirEmpenhos">
+                        <div class="gov-kpi-body">
+                            <div class="gov-kpi-value" t-esc="fmt(state.data.kpis.total_empenhos)"/>
+                            <div class="gov-kpi-label">Empenhado</div>
+                        </div>
+                    </div>
+
+                    <div class="gov-kpi-card gov-kpi-green" t-on-click="abrirLiquidacoes">
+                        <div class="gov-kpi-body">
+                            <div class="gov-kpi-value" t-esc="fmt(state.data.kpis.total_liquidado)"/>
+                            <div class="gov-kpi-label">Liquidado</div>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="state.data.contabil.configurado">
+                    <div class="gov-exec-bar-container">
+                        <div class="gov-exec-bar-header">
+                            <span>Execucao Orcamentaria Global</span>
+                            <span class="gov-exec-pct" t-esc="fmtPct(state.data.contabil.pct_executado)"/>
+                        </div>
+                        <div class="gov-progress-track">
+                            <div
+                                class="gov-progress-fill"
+                                t-att-style="'width: ' + pctWidth(state.data.contabil.pct_executado) + '; background: ' + corPct(state.data.contabil.pct_executado) + ';'"
+                            />
+                        </div>
+                        <div class="gov-exec-sub">
+                            <span>Dotacao: <b t-esc="fmt(state.data.contabil.total_dotacao)"/></span>
+                            <span>Empenhado: <b t-esc="fmt(state.data.contabil.total_empenhado)"/></span>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="gov-tabs">
+                    <button
+                        class="gov-tab"
+                        t-att-class="'gov-tab ' + (state.tab === 'kpis' ? 'gov-tab-active' : '')"
+                        t-on-click="setTabKpis"
+                    >
+                        KPIs
+                    </button>
+                    <button
+                        class="gov-tab"
+                        t-att-class="'gov-tab ' + (state.tab === 'contabil' ? 'gov-tab-active' : '')"
+                        t-on-click="setTabContabil"
+                    >
+                        Contabil
+                    </button>
+                    <button
+                        class="gov-tab"
+                        t-att-class="'gov-tab ' + (state.tab === 'alertas' ? 'gov-tab-active' : '')"
+                        t-on-click="setTabAlertas"
+                    >
+                        Alertas
+                        <t t-if="alertasLista.length">
+                            <span class="gov-badge-red" t-esc="alertasLista.length"/>
+                        </t>
+                    </button>
+                </div>
+
+                <div t-if="state.tab === 'kpis'" class="gov-tab-content">
+                    <t t-if="svgBarras">
+                        <div class="gov-chart-card">
+                            <h3 class="gov-card-title">Saldo por Conta MCASP (posted)</h3>
+                            <div class="gov-chart-legend">
+                                <span class="gov-legend-emp">Debitado</span>
+                                <span class="gov-legend-est">Estornado</span>
+                            </div>
+                            <svg t-att-width="svgBarras.width" t-att-height="svgBarras.height" style="overflow:visible">
+                                <t t-foreach="svgBarras.contas" t-as="row" t-key="row.codigo">
+                                    <text
+                                        t-att-x="svgBarras.paddingLeft - 8"
+                                        t-att-y="row.y + 19"
+                                        text-anchor="end"
+                                        font-size="11"
+                                        fill="#374151"
+                                        t-esc="row.label"
+                                    />
+                                    <rect
+                                        t-att-x="svgBarras.paddingLeft"
+                                        t-att-y="row.y"
+                                        t-att-width="Math.max(row.wEmp, 2)"
+                                        height="28"
+                                        fill="#1F4E79"
+                                        rx="3"
+                                    />
+                                    <rect
+                                        t-att-x="svgBarras.paddingLeft"
+                                        t-att-y="row.y"
+                                        t-att-width="Math.max(row.wEst, 0)"
+                                        height="28"
+                                        fill="#EF4444"
+                                        rx="3"
+                                        opacity="0.6"
+                                    />
+                                    <text
+                                        t-att-x="svgBarras.paddingLeft + Math.max(row.wEmp, 4) + 4"
+                                        t-att-y="row.y + 19"
+                                        font-size="10"
+                                        fill="#6B7280"
+                                        t-esc="row.liquidoFmt"
+                                    />
+                                </t>
+                                <line
+                                    t-att-x1="svgBarras.paddingLeft"
+                                    y1="20"
+                                    t-att-x2="svgBarras.paddingLeft"
+                                    t-att-y2="svgBarras.height - 30"
+                                    stroke="#CBD5E1"
+                                    stroke-width="1"
+                                />
+                            </svg>
+                        </div>
+                    </t>
+
+                    <t t-if="state.data.lista_criticos and state.data.lista_criticos.length">
+                        <div class="gov-card">
+                            <h3 class="gov-card-title">Processos Criticos</h3>
+                            <table class="gov-table">
+                                <thead>
+                                    <tr>
+                                        <th>Processo</th>
+                                        <th>Assunto</th>
+                                        <th>Prazo</th>
+                                        <th>Risco</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.data.lista_criticos" t-as="p" t-key="p.id">
+                                        <tr>
+                                            <td t-esc="p.name or p.id"/>
+                                            <td t-esc="p.subject"/>
+                                            <td t-esc="p.prazo_resposta || '-'"/>
+                                            <td>
+                                                <span class="gov-badge" t-att-style="'background:' + corAlerta(riscoProcesso(p))">
+                                                    <t t-esc="riscoLabel(p)"/>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+
+                <div t-if="state.tab === 'contabil'" class="gov-tab-content">
+                    <t t-if="state.data.contabil.configurado">
+                        <t t-if="state.data.contabil.alertas_estouro and state.data.contabil.alertas_estouro.length">
+                            <div class="gov-alert-box gov-alert-red">
+                                <b>Contas com execucao acima da dotacao:</b>
+                                <ul>
+                                    <t t-foreach="state.data.contabil.alertas_estouro" t-as="al" t-key="al.conta">
+                                        <li>
+                                            <t t-esc="al.conta"/> - Empenhado:
+                                            <b t-esc="fmt(al.empenhado)"/> / Dotacao:
+                                            <t t-esc="fmt(al.dotacao)"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+
+                        <t t-if="state.data.contabil.moves_draft_count > 0">
+                            <div class="gov-alert-box gov-alert-yellow">
+                                <b t-esc="state.data.contabil.moves_draft_count"/>
+                                lancamento(s) contabil(is) em rascunho pendente(s).
+                            </div>
+                        </t>
+
+                        <div class="gov-card">
+                            <h3 class="gov-card-title">Saldo por Conta (lancamentos posted)</h3>
+                            <table class="gov-table">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Conta</th>
+                                        <th>Debitado</th>
+                                        <th>Estornado</th>
+                                        <th>Liquido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.data.contabil.saldo_por_conta" t-as="c" t-key="c.codigo">
+                                        <tr>
+                                            <td><code t-esc="c.codigo"/></td>
+                                            <td t-esc="c.nome"/>
+                                            <td t-esc="fmt(c.empenhado)"/>
+                                            <td t-esc="fmt(c.estornado)"/>
+                                            <td><b t-esc="fmt(c.liquido)"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="gov-alert-box gov-alert-yellow">
+                            Modulo contabil nao configurado. Configure o mapeamento de contas.
+                        </div>
+                    </t>
+                </div>
+
+                <div t-if="state.tab === 'alertas'" class="gov-tab-content">
+                    <t t-if="alertasLista.length">
+                        <div class="gov-card">
+                            <h3 class="gov-card-title">Alertas Ativos</h3>
+                            <t t-foreach="alertasLista" t-as="alerta" t-key="alerta.titulo">
+                                <div class="gov-alerta-row" t-att-style="'border-left:4px solid ' + corAlerta(alerta.nivel || 'baixo')">
+                                    <div class="gov-alerta-titulo">
+                                        <span class="gov-badge" t-att-style="'background:' + corAlerta(alerta.nivel || 'baixo')">
+                                            <t t-esc="(alerta.nivel || 'info').toUpperCase()"/>
+                                        </span>
+                                        <b t-esc="alerta.titulo || alerta.message || 'Alerta'"/>
+                                    </div>
+                                    <div class="gov-alerta-desc" t-esc="alerta.descricao || alerta.detail || ''"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="gov-empty-state">
+                            Nenhum alerta ativo no momento.
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

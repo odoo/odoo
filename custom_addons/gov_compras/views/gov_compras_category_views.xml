@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_compras_category_list" model="ir.ui.view">
+        <field name="name">gov.compras.category.list</field>
+        <field name="model">gov.compras.category</field>
+        <field name="arch" type="xml">
+            <list string="Categorias">
+                <field name="code"/>
+                <field name="display_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_compras_category_form" model="ir.ui.view">
+        <field name="name">gov.compras.category.form</field>
+        <field name="model">gov.compras.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoria de Itens">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ex: Material Gráfico"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sub-Categorias">
+                            <field name="child_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_compras_category" model="ir.actions.act_window">
+        <field name="name">Categorias de Itens</field>
+        <field name="res_model">gov.compras.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

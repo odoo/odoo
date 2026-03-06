@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_empenho_move_wizard_form" model="ir.ui.view">
+        <field name="name">gov.empenho.move.wizard.form</field>
+        <field name="model">gov.empenho.move.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Lançamentos Contábeis da NE">
+                <sheet>
+                    <group string="Nota de Empenho">
+                        <field name="empenho_id" readonly="1"/>
+                        <field name="empenho_state" readonly="1" string="Estado da NE"/>
+                        <field name="valor_empenho" readonly="1" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+
+                    <group string="Lançamento Contábil">
+                        <field name="move_ne_id" readonly="1"/>
+                        <field name="move_ne_state" readonly="1"/>
+                        <field name="pode_confirmar" invisible="1"/>
+                        <field name="pode_estornar" invisible="1"/>
+                        <field name="pode_gerar" invisible="1"/>
+                    </group>
+
+                    <div class="alert alert-info" role="alert" invisible="not pode_confirmar">
+                        O lancamento esta em <b>rascunho</b>. Clique em
+                        <b>Confirmar Lancamento</b> para postar.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="not pode_gerar">
+                        Esta NE nao possui lancamento contabil.
+                        Clique em <b>Gerar Lancamento</b> para criar agora.
+                    </div>
+
+                    <group string="Totais (lancamentos confirmados)">
+                        <field name="total_debitado" readonly="1" widget="monetary"/>
+                        <field name="total_creditado" readonly="1" widget="monetary"/>
+                        <field name="saldo_liquido" readonly="1" widget="monetary"/>
+                    </group>
+
+                    <group string="Historico de Lancamentos">
+                        <field
+                            name="resumo_lancamentos"
+                            nolabel="1"
+                            colspan="2"
+                            readonly="1"
+                            widget="text"
+                            style="font-family: monospace; font-size: 0.85em; white-space: pre; min-height: 120px;"
+                        />
+                    </group>
+
+                    <group string="Estorno Manual" invisible="not pode_estornar">
+                        <field
+                            name="motivo_estorno"
+                            placeholder="Descreva o motivo do estorno..."
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_confirmar_lancamento"
+                        string="Confirmar Lancamento"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not pode_confirmar"
+                    />
+                    <button
+                        name="action_gerar_lancamento"
+                        string="Gerar Lancamento"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not pode_gerar"
+                    />
+                    <button
+                        name="action_estornar"
+                        string="Estornar"
+                        type="object"
+                        class="btn-danger"
+                        invisible="not pode_estornar"
+                        confirm="Confirma o estorno do lancamento desta NE?"
+                    />
+                    <button
+                        name="action_abrir_move"
+                        string="Abrir Lancamento"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not move_ne_id"
+                    />
+                    <button string="Fechar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

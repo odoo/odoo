@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            The target model (gov.processo) lives in a future addon.
+            This hook creates the rules only when that model exists.
+        -->
+        <function model="res.company" name="_gov_base_sync_processo_rules"/>
+    </data>
+</odoo>
+

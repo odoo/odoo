@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_compras_previsao_list" model="ir.ui.view">
+        <field name="name">gov.compras.previsao.list</field>
+        <field name="model">gov.compras.previsao</field>
+        <field name="arch" type="xml">
+            <list string="Previsões de Compras">
+                <field name="ano"/>
+                <field name="ug_id"/>
+                <field name="state" widget="badge"/>
+                <field name="total_previsto" widget="monetary"/>
+                <field name="currency_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_compras_previsao_form" model="ir.ui.view">
+        <field name="name">gov.compras.previsao.form</field>
+        <field name="model">gov.compras.previsao</field>
+        <field name="arch" type="xml">
+            <form string="Previsão de Compras">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="rascunho,revisao,aprovado"/>
+                    <button name="action_gerar_linhas_catalogo" string="Atualizar pelo Catálogo" type="object" class="btn-secondary" invisible="state != 'rascunho'"/>
+                    <button name="action_enviar_revisao" string="Enviar para Revisão" type="object" class="btn-primary" invisible="state != 'rascunho'"/>
+                    <button name="action_aprovar" string="Aprovar" type="object" class="btn-primary" invisible="state != 'revisao'"/>
+                    <button name="action_voltar_rascunho" string="Voltar ao Rascunho" type="object" invisible="state == 'rascunho'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="ano"/>
+                            <field name="ug_id"/>
+                        </group>
+                        <group>
+                            <field name="total_previsto" widget="monetary" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Itens Previstos">
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="catalog_item_id"/>
+                                <field name="natureza_despesa" optional="show"/>
+                                <field name="quantidade_prevista"/>
+                                <field name="valor_unit_previsto" widget="monetary"/>
+                                <field name="valor_total_previsto" widget="monetary" readonly="1"/>
+                                <field name="justificativa" optional="show"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Observações">
+                        <field name="observacao" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gov_compras_previsao_search" model="ir.ui.view">
+        <field name="name">gov.compras.previsao.search</field>
+        <field name="model">gov.compras.previsao</field>
+        <field name="arch" type="xml">
+            <search string="Previsões">
+                <field name="ano"/>
+                <field name="ug_id"/>
+                <field name="state"/>
+                <filter string="Rascunho" name="f_rasc" domain="[('state','=','rascunho')]"/>
+                <filter string="Em Revisão" name="f_rev" domain="[('state','=','revisao')]"/>
+                <filter string="Aprovado" name="f_apr" domain="[('state','=','aprovado')]"/>
+                <filter name="g_ug" string="UG" context="{'group_by': 'ug_id'}"/>
+                <filter name="g_ano" string="Ano" context="{'group_by': 'ano'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gov_compras_previsao" model="ir.actions.act_window">
+        <field name="name">Previsão Orçamentária</field>
+        <field name="res_model">gov.compras.previsao</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gov_compras_previsao_search"/>
+    </record>
+</odoo>
+

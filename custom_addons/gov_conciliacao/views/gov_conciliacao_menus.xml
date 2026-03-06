@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_gov_conciliacao_root"
+        name="Conciliação Bancária"
+        parent="gov_processos.menu_gov_root"
+        sequence="70"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_conc_importacoes"
+        name="Importações de Extrato"
+        parent="menu_gov_conciliacao_root"
+        action="action_gov_conciliacao_importacao"
+        sequence="10"
+        groups="gov_base.group_gov_operador"
+    />
+
+    <menuitem
+        id="menu_gov_conc_pendencias"
+        name="Pendências"
+        parent="menu_gov_conciliacao_root"
+        action="action_gov_conciliacao_pendencia"
+        sequence="20"
+        groups="gov_base.group_gov_operador"
+    />
+</odoo>

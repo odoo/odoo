@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- History List view -->
+    <record model="ir.ui.view" id="view_wiki_history_tree">
+        <field name="name">document.page.history.list</field>
+        <field name="model">document.page.history</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="id" />
+                <field name="page_id" />
+                <field name="name" />
+                <field name="summary" />
+                <field name="create_uid" />
+                <field name="create_date" />
+            </list>
+        </field>
+    </record>
+
+    <!-- History Search view  -->
+    <record id="view_wiki_history_filter" model="ir.ui.view">
+        <field name="name">document.page.history.search</field>
+        <field name="model">document.page.history</field>
+        <field name="arch" type="xml">
+            <search string="Document Page History">
+                <field name="page_id" />
+                <field name="content" />
+                <field name="create_uid" />
+                <group>
+                    <filter
+                        name="group_by_author"
+                        string="Author"
+                        context="{'group_by':'create_uid'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- History Form view  -->
+    <record model="ir.ui.view" id="wiki_history_form">
+        <field name="name">document.page.history.form</field>
+        <field name="model">document.page.history</field>
+        <field name="arch" type="xml">
+            <form string="Document Page History">
+                <sheet>
+                    <h1>
+                        <field name="page_id" readonly="1" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="create_uid" readonly="1" />
+                            <field name="create_date" readonly="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" placeholder="Rev 01" />
+                        <field name="summary" placeholder="eg: Changed ... for ..." />
+                    </group>
+                    <notebook>
+                        <page name="content" string="Content">
+                            <field
+                                name="content"
+                                widget="html"
+                                placeholder="e.g. Once upon a time..."
+                                options="{'safe': True, 'codeview': True}"
+                            />
+                        </page>
+                        <page name="diff" string="Changes">
+                            <field
+                                name="diff"
+                                widget="html"
+                                class="o_document_page_diff"
+                                style="overflow-x: scroll"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- History Action  -->
+    <record model="ir.actions.act_window" id="action_history">
+        <field name="name">Page history</field>
+        <field name="path">document_page_history_all</field>
+        <field name="res_model">document.page.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_page_history"
+        parent="menu_wiki"
+        name="Pages history"
+        action="action_history"
+        sequence="30"
+        groups="base.group_no_one"
+    />
+
+    <record id="action_related_page_history" model="ir.actions.act_window">
+        <field name="name">Page History</field>
+        <field name="path">document_page_history</field>
+        <field name="res_model">document.page.history</field>
+        <field name="domain">[('page_id','=',active_id)]</field>
+        <field
+            name="context"
+        >{'search_default_page_id': [active_id], 'default_page_id': active_id}</field>
+        <field name="binding_model_id" ref="document_page.model_document_page" />
+    </record>
+</odoo>

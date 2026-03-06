@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_processo_form_knowledge_bridge" model="ir.ui.view">
+        <field name="name">gov.processo.form.knowledge.bridge</field>
+        <field name="model">gov.processo</field>
+        <field name="inherit_id" ref="gov_processos.view_gov_processo_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_open_knowledge_articles" type="object" icon="fa-book">
+                    <field name="knowledge_article_count" widget="statinfo" string="Knowledge"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page name="knowledge" string="Knowledge">
+                    <div class="mb-3 d-flex gap-2 align-items-center">
+                        <button
+                            string="Abrir Artigos Vinculados"
+                            name="action_open_knowledge_articles"
+                            type="object"
+                            class="btn-primary"
+                        />
+                        <button
+                            string="Novo Artigo"
+                            name="action_create_knowledge_article"
+                            type="object"
+                            class="btn-secondary"
+                        />
+                        <button
+                            string="Sincronizar na Memória IA"
+                            name="action_sync_knowledge_to_ai_memory"
+                            type="object"
+                            class="btn-secondary"
+                        />
+                    </div>
+                    <group>
+                        <field name="knowledge_article_ids" widget="many2many_tags"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

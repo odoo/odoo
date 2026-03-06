@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_memory_ingest_wizard_form" model="ir.ui.view">
+        <field name="name">gov.ai.memory.ingest.wizard.form</field>
+        <field name="model">gov.ai.memory.ingest.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ingestão de Referências">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Faça ingestão de conhecimento institucional por UG.
+                        Upload usa parser Lexoid (quando configurado) e converte para LaTeX por padrão.
+                    </div>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="name"/>
+                        <field name="tags"/>
+                    </group>
+                    <group string="Texto Manual">
+                        <field name="text_input" nolabel="1"/>
+                    </group>
+                    <group string="Arquivo">
+                        <field name="upload_file" filename="upload_filename"/>
+                        <field name="upload_filename" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_ingest"
+                        string="Ingerir Memória"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_memory_ingest_wizard" model="ir.actions.act_window">
+        <field name="name">Ingestão de Referências</field>
+        <field name="res_model">gov.ai.memory.ingest.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

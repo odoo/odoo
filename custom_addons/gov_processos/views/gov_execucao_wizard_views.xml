@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_execucao_wizard_form" model="ir.ui.view">
+        <field name="name">gov.execucao.wizard.form</field>
+        <field name="model">gov.execucao.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Relatorio de Execucao Orcamentaria">
+                <sheet>
+                    <group string="Parametros">
+                        <group>
+                            <field name="ug_id" options="{'no_create': True}"/>
+                            <field name="exercicio"/>
+                            <field name="agrupar_por"/>
+                        </group>
+                        <group>
+                            <field name="data_ini"/>
+                            <field name="data_fim"/>
+                        </group>
+                    </group>
+
+                    <group string="Resumo do Periodo">
+                        <field
+                            name="preview_resumo"
+                            nolabel="1"
+                            colspan="2"
+                            readonly="1"
+                            widget="text"
+                            style="font-family: monospace; font-size: 0.9em; white-space: pre; min-height: 70px;"
+                        />
+                    </group>
+
+                    <group string="PDF Gerado" invisible="not gerado">
+                        <field
+                            name="pdf_file"
+                            widget="binary"
+                            filename="pdf_filename"
+                            readonly="1"
+                        />
+                        <field name="pdf_filename" invisible="1"/>
+                        <field
+                            name="hash_sha256"
+                            readonly="1"
+                            string="SHA-256"
+                            style="font-family: monospace; font-size: 0.85em;"
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_gerar_pdf"
+                        string="Gerar Relatorio PDF"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Fechar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_execucao_wizard" model="ir.actions.act_window">
+        <field name="name">Execucao Orcamentaria</field>
+        <field name="res_model">gov.execucao.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

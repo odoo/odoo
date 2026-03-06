@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_company_view_form_inherit_gov_public_accounting" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.gov.public.accounting</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="GOV Public Accounting">
+                    <field name="gov_public_accounting_enabled"/>
+                    <div class="o_form_label text-muted">
+                        Quando desativado, o ambiente usa contabilidade societaria padrao sem regras publicas extras.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_company_view_form_inherit_lock_date_visibility" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.lock.date.visibility.gov</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="gov_account_lock_date_update.res_company_view_form_inherit_lock_date"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_lock_date_wizard']" position="attributes">
+                <attribute name="invisible">not gov_public_accounting_enabled</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

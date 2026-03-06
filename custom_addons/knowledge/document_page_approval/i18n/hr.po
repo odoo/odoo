@@ -1,0 +1,414 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document_page_approval
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2018
+# Bole <bole@dajmi5.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-24 22:33+0000\n"
+"PO-Revision-Date: 2023-02-16 11:23+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
+"Language-Team: Croatian (https://www.transifex.com/oca/teams/23907/hr/)\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.14.1\n"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"<b>You already have a Draft Change Request for this page.</b>\n"
+"                    It is highly recommended that you edit that one instead "
+"of creating a new one."
+msgstr ""
+
+#. module: document_page_approval
+#: model:mail.template,body_html:document_page_approval.email_template_new_draft_need_approval
+msgid ""
+"<p>Hello,</p>\n"
+"            <p><t t-out=\"object.create_uid.name\"/> submited a new Change "
+"Request for <b t-out=\"object.page_id.name\"/> and it needs your approval.</"
+"p>\n"
+"            <h1>\n"
+"                <a t-att-href=\"object.page_url\" t-out=\"object."
+"display_name\"/>\n"
+"            </h1>\n"
+"            <p>\n"
+"                <b>Modified by:</b>\n"
+"                <t t-out=\"object.create_uid.name\"/>\n"
+"            </p>\n"
+"            <p>\n"
+"                <b>Date:</b>\n"
+"                <t t-out=\"object.create_date\"/>\n"
+"            </p>\n"
+"            <t t-if=\"object.summary\">\n"
+"                <h3>Summary</h3>\n"
+"                <p t-out=\"object.summary\"/>\n"
+"            </t>\n"
+"            <h3>Diff</h3>\n"
+"            <div style=\"overflow-x:scroll; font-size:0.85em; margin-"
+"bottom:2em;\">\n"
+"                <t t-out=\"object.diff\"/>\n"
+"            </div>\n"
+"            <p>Have a great day.</p>\n"
+"            <br/>\n"
+"            <p>Odoo</p>\n"
+"        "
+msgstr ""
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna radnja"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__am_i_approver
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__am_i_approver
+msgid "Am I Approver"
+msgstr "Ja sam odobrio"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__am_i_owner
+msgid "Am I Owner"
+msgstr "Ja sam vlasnik"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__is_approval_required
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__is_approval_required
+msgid "Approval required"
+msgstr "Zahtijeva odobrenje"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Approve"
+msgstr "Odobri"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__approved
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Approved"
+msgstr "Odobreno"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approved_date
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__approved_date
+msgid "Approved Date"
+msgstr "Datum odobravanja"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approved_uid
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__approved_uid
+msgid "Approved by"
+msgstr "Odobrio"
+
+#. module: document_page_approval
+#: model:res.groups,name:document_page_approval.group_document_approver_user
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Approver"
+msgstr "Odobrava"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approver_gid
+msgid "Approver group"
+msgstr "Grupa odobravatelja"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approver_group_ids
+msgid "Approver groups"
+msgstr "Grupe odobravatelja"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_attachment_count
+msgid "Attachment Count"
+msgstr "Broj priloga"
+
+#. module: document_page_approval
+#: model:mail.template,name:document_page_approval.email_template_new_draft_need_approval
+msgid "Automated new draft need approval Notification Mail"
+msgstr ""
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Back to draft"
+msgstr "Nazad u nacrt"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Can't approve page in '%s' state."
+msgstr "Nije moguće odobriti stranicu u '%s' statusu."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Can't approve pages in '%s' state."
+msgstr "Nije moguće odobriti stranice u '%s' statusu."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Cancel"
+msgstr "Odustani"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__cancelled
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Cancelled"
+msgstr "Otkazano"
+
+#. module: document_page_approval
+#: model:ir.actions.act_window,name:document_page_approval.action_change_requests
+#: model:ir.ui.menu,name:document_page_approval.menu_page_change_requests
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid "Change Requests"
+msgstr "Zahtjevi za izmjenom"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Change request <b>%(name)s</b> has been cancelled by %(user)s."
+msgstr "Zahtjev za izmjenom <b>%(name)s</b> je otkazao %(user)s."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "Change request has been approved by %s."
+msgstr "Zahtjev za izmjenom je odobrio %s."
+
+#. module: document_page_approval
+#: model:ir.model,name:document_page_approval.model_document_page
+msgid "Document Page"
+msgstr "Stranica dokumenata"
+
+#. module: document_page_approval
+#: model:ir.model,name:document_page_approval.model_document_page_history
+msgid "Document Page History"
+msgstr "Povijest stranica Dokumenata"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__draft
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Draft"
+msgstr "Nacrt"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (partneri)"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approver_group_ids
+msgid "Groups that can approve changes to this document"
+msgstr "Grupe koje mogu odobriti izmjene ovog dokumenta"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__has_message
+msgid "Has Message"
+msgstr "Ima poruka"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__has_changes_pending_approval
+msgid "Has changes pending approval"
+msgstr "Ima zahtjev za izmjenom na čekanju"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__history_ids
+msgid "History"
+msgstr "Povijest"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke traže vašu pozornost."
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Ako je označeno, neke poruke imaju greške pri isporuci."
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__is_approval_required
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__is_approval_required
+msgid "If true, changes of this page require approval"
+msgstr "Ako je označeno, izmjene na ovoj stranici trebaju odobrenje"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_has_error
+msgid "Message Delivery error"
+msgstr "Greška pri isporuci poruke"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "New version of the document %s approved."
+msgstr "Nova verzija dokumenta %s odobrena"
+
+#. module: document_page_approval
+#: model:mail.template,subject:document_page_approval.email_template_new_draft_need_approval
+msgid "New version of {{object.display_name}} needs your approval"
+msgstr ""
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj radnji"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__message_has_error_counter
+msgid "Number of errors"
+msgstr "Broj grešaka"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Broj poruka sa greškom pri isporuci"
+
+#. module: document_page_approval
+#: model:ir.model.fields.selection,name:document_page_approval.selection__document_page_history__state__to_approve
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "Pending Approval"
+msgstr "Čeka odobrenje"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__approval_required
+msgid "Require approval"
+msgstr "Zahtijeva odobrenje"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approval_required
+msgid "Require approval for changes on this page or its child pages."
+msgstr "Traži odobrenje za izmjene na ovoj ili podređenim stranicama."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_history_form_inherit
+msgid "Send to Review"
+msgstr "Pošalji na reviziju"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.view_wiki_history_filter
+msgid "State"
+msgstr "Stanje"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__state
+msgid "Status"
+msgstr "Status"
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"This document has <b>Changes Pending Approval</b>. You are viewing the last "
+"approved content."
+msgstr ""
+"Odaj dokument ima <b>Izmjene koje čekaju odobrenje</b>. Gledate zadnji "
+"odobreni sadržaj."
+
+#. module: document_page_approval
+#: model_terms:ir.ui.view,arch_db:document_page_approval.wiki_form_inherit
+msgid ""
+"This document requires approval. If edited, you will create a new <b>Change "
+"Request</b>."
+msgstr ""
+"Ovaj dokument zahtijeva odobrenje. Ako je uređivan, kreirate novi <b>Zahtjev "
+"za izmjenom</b>."
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__page_url
+msgid "URL"
+msgstr "URL"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page__user_has_drafts
+msgid "User has drafts?"
+msgstr "Korisnik ina nacrte?"
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page__approver_gid
+msgid "Users must also belong to the Approvers group"
+msgstr "Korisnici moraju biti u grupi odobravatelja"
+
+#. module: document_page_approval
+#: model:ir.model.fields,field_description:document_page_approval.field_document_page_history__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: document_page_approval
+#: model:ir.model.fields,help:document_page_approval.field_document_page_history__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only approvers with these groups can approve this: {}"
+msgstr ""
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only owners or approvers can reopen Change Requests."
+msgstr ""
+"Niste za ovo ovlašteni. \n"
+"Samo vlasnici ili odobravatelji mogu ponovo otvoriti Zahtjev za izmjenom."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid ""
+"You are not authorized to do this.\r\n"
+"Only owners or approvers can request approval."
+msgstr ""
+"Niste za ovo ovlašteni. \n"
+"Samo vlasnici ili odobravatelji mogu zatražiti odobrenje."
+
+#. module: document_page_approval
+#. odoo-python
+#: code:addons/document_page_approval/models/document_page_history.py:0
+msgid "You need to cancel it before reopening."
+msgstr "Morate otkazati prije ponovnog otvaranja."
+
+#, python-format
+#~ msgid ""
+#~ "You are not authorized to do this.\r\n"
+#~ "Only approvers with these groups can approve this: "
+#~ msgstr ""
+#~ "Niste ovlašteni za ovo. \n"
+#~ "Samo odobravatelji sa sljedećim grupama mogu odobriti ovo: "
+
+#~ msgid "Main Attachment"
+#~ msgstr "Glavni prilog"

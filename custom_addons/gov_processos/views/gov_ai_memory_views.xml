@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_ai_memory_list" model="ir.ui.view">
+        <field name="name">gov.ai.memory.list</field>
+        <field name="model">gov.ai.memory</field>
+        <field name="arch" type="xml">
+            <list string="Referências">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="source_type"/>
+                <field name="tags" optional="show"/>
+                <field name="word_count"/>
+                <field name="use_count"/>
+                <field name="last_used_at" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gov_ai_memory_form" model="ir.ui.view">
+        <field name="name">gov.ai.memory.form</field>
+        <field name="model">gov.ai.memory</field>
+        <field name="arch" type="xml">
+            <form string="Referência">
+                <sheet>
+                    <group>
+                        <group string="Identificação">
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="source_type"/>
+                            <field name="source_model" invisible="source_type in ('manual', 'upload')"/>
+                            <field name="source_res_id" invisible="source_type in ('manual', 'upload')"/>
+                            <field name="tags"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Métricas">
+                            <field name="word_count" readonly="1"/>
+                            <field name="use_count" readonly="1"/>
+                            <field name="last_used_at" readonly="1"/>
+                            <field name="created_by" readonly="1"/>
+                            <field name="content_hash" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Conteúdo">
+                        <field name="content_text" nolabel="1"/>
+                    </group>
+                    <group string="Arquivo de Origem" invisible="not upload_file">
+                        <field name="upload_file" filename="upload_filename" readonly="1"/>
+                        <field name="upload_filename" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_ai_memory" model="ir.actions.act_window">
+        <field name="name">Memórias por UG</field>
+        <field name="res_model">gov.ai.memory</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

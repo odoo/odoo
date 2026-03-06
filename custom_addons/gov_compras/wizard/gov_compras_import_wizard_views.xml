@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gov_compras_import_wizard_form" model="ir.ui.view">
+        <field name="name">gov.compras.import.wizard.form</field>
+        <field name="model">gov.compras.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar Catálogo (CSV)">
+                <group>
+                    <div class="alert alert-info" role="alert" colspan="2">
+                        O arquivo CSV deve conter pelo menos as colunas: <b>Código</b>, <b>Nome do Item</b> e <b>Natureza da Despesa</b>.
+                        Colunas opcionais suportadas: <i>Categoria</i>, <i>Unidade de Medida</i>, <i>Descrição Técnica</i>.
+                        As categorias que não existirem serão criadas automaticamente respeitando a hierarquia da barra "/".
+                    </div>
+                </group>
+                <group>
+                    <field name="delimiter"/>
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Iniciar Importação" name="action_import" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gov_compras_import_wizard" model="ir.actions.act_window">
+        <field name="name">Importar Catálogo em Lote</field>
+        <field name="res_model">gov.compras.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
