@@ -148,7 +148,7 @@ class TestSyncGoogle(HttpCase):
         """
         manually calls postcommit hooks defined with the decorator @after_commit
         """
-
+        self.env.cr.flush()  # flush changes first
         funcs = self.env.cr.postcommit._funcs.copy()
         while funcs:
             func = funcs.popleft()

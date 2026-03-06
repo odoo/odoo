@@ -1398,7 +1398,7 @@ class TestUpdateEvents(TestCommon):
 
         # Ensure that the event was deleted and recreated with the new organizer and the organizer listed as attendee.
         mock_delete.assert_any_call(
-            event.microsoft_id,
+            "test_id_for_organizer",
             token=mock_get_token(self.attendee_user),
             timeout=ANY,
         )
