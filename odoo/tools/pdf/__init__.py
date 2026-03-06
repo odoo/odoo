@@ -354,14 +354,25 @@ class OdooPdfFileReader(PdfFileReader):
             # If the PDF is owner-encrypted, try to unwrap it by giving it an empty user password.
             self.decrypt('')
 
-        try:
-            file_path = self.trailer["/Root"].get("/Names", {}).get("/EmbeddedFiles", {}).get("/Names")
-
-            if not file_path:
-                return []
+        def _traverse_nodes(obj):
+            file_path = obj.get("/Names", [])
             for p in file_path[1::2]:
                 attachment = p.getObject()
-                yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
+                try:
+                    yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
+                except (KeyError, AttributeError):
+                    continue
+            for kid in obj.get("/Kids", []):
+                if id(kid) not in visited_nodes:
+                    visited_nodes.add(id(kid))
+                    yield from _traverse_nodes(kid.getObject())
+
+        try:
+            file_path = self.trailer["/Root"].get("/Names", {}).get("/EmbeddedFiles", {})
+            if not file_path:
+                return []
+            visited_nodes = set()
+            yield from _traverse_nodes(file_path)
         except Exception:  # noqa: BLE001
             # malformed pdf (i.e. invalid xref page)
             return []
