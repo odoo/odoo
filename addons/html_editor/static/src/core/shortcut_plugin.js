@@ -1,5 +1,4 @@
 import { Plugin, isValidTargetForDomListener } from "../plugin";
-import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
@@ -152,12 +151,12 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        let blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
         let lineBreak;
         let lineOffset = 0;
         let leftLeaf = leftDOMPath.next().value;
+        let textContent = selection.anchorNode.textContent;
         while (leftLeaf) {
             // Calculate spaceOffset by adding lengths of previous text nodes
             // to correctly find offset position for selection within inline
@@ -171,9 +170,10 @@ export class ShortCutPlugin extends Plugin {
             } else if (leftLeaf.nodeName === "BR") {
                 lineBreak = leftLeaf;
             }
+            textContent = leftLeaf.textContent + textContent;
             leftLeaf = leftDOMPath.next().value;
         }
-        const precedingText = blockEl.textContent.substring(lineOffset, spaceOffset - 1);
+        const precedingText = textContent.substring(lineOffset, spaceOffset - 1);
         const matchedShortcut = this.shorthands.find(({ pattern }) =>
             pattern.test(precedingText.trimStart())
         );
@@ -182,7 +182,6 @@ export class ShortCutPlugin extends Plugin {
             if (command) {
                 if (lineBreak) {
                     this.dependencies.split.splitBlockSegments();
-                    blockEl = closestBlock(selection.anchorNode);
                 }
                 // Set selection to the matched string with space
                 let offset =
