@@ -66,3 +66,9 @@ class TestTZ(TransactionCase):
         expected_offset = datetime.datetime.now(ZoneInfo('America/New_York')).strftime('%z')
         # offest will be -0400 in summer, -0500 in winter
         self.assertEqual(partner.tz_offset, expected_offset)
+
+    def test_tz_selection_excludes_special_timezones(self):
+        with self.assertRaises(ValueError):
+            self.env['res.partner'].create({'name': 'test', 'tz': 'localtime'})
+        with self.assertRaises(ValueError):
+            self.env['res.partner'].create({'name': 'test', 'tz': 'Factory'})
