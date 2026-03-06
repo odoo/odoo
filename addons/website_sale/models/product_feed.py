@@ -361,11 +361,11 @@ class ProductFeed(models.Model):
         return {'availability': 'in_stock'}
 
     def _prepare_gmc_additional_info(self, product):
+        direct, others = product._get_mapped_attribute_values()
+
         additional_info = {
-            'product_detail': [
-                (attr.attribute_id.name, attr.name)
-                for attr in product.product_template_attribute_value_ids
-            ],
+            'gmc_direct_attributes': list(direct.items()),
+            'product_detail': others,
             'is_bundle': 'yes' if product.type == 'combo' else 'no',
             'product_type': [
                 category.replace('/', '>')  # Google uses a different format

@@ -969,13 +969,20 @@ class ProductTemplate(models.Model):
 
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
-        return {
+        tracking_data = {
             'item_id': product.barcode or product.id,
             'item_name': combination_info['display_name'],
             'item_category': self.categ_id.name,
             'currency': combination_info['currency'].name,
             'price': combination_info['list_price'],
         }
+
+        direct, _ = product._get_mapped_attribute_values()
+        for ext_id, value in direct.items():
+            # 'brand' maps to predefined GA4 item_brand, others are custom item-scoped parameters
+            key = f'item_{ext_id}' if ext_id == 'brand' else ext_id
+            tracking_data[key] = value
+        return tracking_data
 
     def _get_contextual_pricelist(self):
         """ Override to fallback on website current pricelist """

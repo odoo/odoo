@@ -5,7 +5,7 @@ from collections import OrderedDict
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-
+from odoo.addons.website_sale import const
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -202,6 +202,15 @@ class ProductProduct(models.Model):
             markup_data['description'] = self.website_meta_description or self.description_sale
         if self.barcode:
             markup_data['gtin'] = self.barcode
+
+        direct, others = self._get_mapped_attribute_values()
+        markup_data.update(direct)
+        if others:
+            markup_data['additionalProperty'] = [
+                {'@type': 'PropertyValue', 'name': name, 'value': value}
+                for name, value in others
+            ]
+
         return markup_data
 
     def _get_image_1920_url(self):
@@ -282,3 +291,27 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env['website'].image_url(self, 'image_1024')
+
+    def _get_mapped_attribute_values(self):
+        """Split product attributes into directly mapped fields and the rest.
+
+        Direct fields are attributes whose external_identifier matches a known
+        identifier used across Microdata, GMC Feeds, and Tracking.
+
+        :return: A tuple of:
+            - dict of {external_identifier: value} for known direct fields
+            - list of (attribute_name, value) for all other attributes
+        :rtype: tuple(dict, list)
+        """
+        self.ensure_one()
+        direct = {}
+        others = []
+        for ptav in self.product_template_attribute_value_ids:
+            external_id = ptav.attribute_id.external_identifier
+            ext_id = external_id and external_id.lower()
+            value = ptav.product_attribute_value_id.name
+            if ext_id and ext_id in const.DIRECT_MAPPED_ATTRIBUTE_IDENTIFIERS:
+                direct[ext_id] = value
+            else:
+                others.append((ptav.attribute_id.name, value))
+        return direct, others
