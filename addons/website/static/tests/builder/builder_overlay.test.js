@@ -55,6 +55,8 @@ test("Do not show the hover overlay for an element with another overlay", async 
 
     await contains(":iframe section").hover();
     expect(".oe_overlay.o_hover_overlay").toHaveCount(1);
+    // The size and position is given in the `style` attribute
+    expect(".oe_overlay.o_hover_overlay").toHaveAttribute("style");
     await contains(":iframe .col-lg-3").hover();
     expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
 });
