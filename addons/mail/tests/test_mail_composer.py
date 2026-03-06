@@ -152,12 +152,13 @@ class TestMailComposerForm(TestMailComposer):
         partner_classic = self.partner_classic.with_env(self.env)
         test_record = self.test_record.with_env(self.env)
 
-        with self.assertRaises(AccessError):
-            _form = Form(self.env['mail.compose.message'].with_context({
-                'default_partner_ids': (self.partner_private + partner_classic).ids,
-                'default_model': test_record._name,
-                'default_res_ids': test_record.ids,
-            }))
+        form = Form(self.env['mail.compose.message'].with_context({
+            'default_partner_ids': (self.partner_private + partner_classic).ids,
+            'default_model': test_record._name,
+            'default_res_ids': test_record.ids,
+        }))
+        msg = form.save()
+        self.assertEqual(partner_classic, msg.sudo().partner_ids, 'partner_private must not be saved')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
