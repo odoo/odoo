@@ -185,6 +185,11 @@ class TestStructure(TransactionCase):
             with self.assertRaises(ValidationError):
                 test_partner.vat = ubn
 
+    def test_revised_nri_gstin_format(self):
+        """Test valid NRI GSTIN number is accepted"""
+        in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
+        in_partner.vat = "9922JPN29001OSU"
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):

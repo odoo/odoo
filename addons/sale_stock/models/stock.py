@@ -91,7 +91,12 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, index='btree_not_null')
+    sale_id = fields.Many2one(compute="_compute_sale_id", comodel_name="sale.order", string="Sales Order", store=True, index='btree_not_null')
+
+    @api.depends('group_id')
+    def _compute_sale_id(self):
+        for picking in self:
+            picking.sale_id = picking.group_id.sale_id if picking.group_id else picking.sale_id
 
     def _auto_init(self):
         """
