@@ -86,9 +86,6 @@ export class PartnerAutoCompleteCharField extends CharField {
                 this.props.record.load();
             }
         }
-        if (this.props.setDirty) {
-            this.props.setDirty(false);
-        }
     }
 }
 

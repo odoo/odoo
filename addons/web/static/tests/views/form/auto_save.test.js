@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { unload, waitFor } from "@odoo/hoot-dom";
+import { press, unload, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
 import {
     contains,
@@ -366,6 +366,51 @@ test(`save when breadcrumb clicked`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
     expect(`.o_breadcrumb`).toHaveText("Partner\naaa");
     expect('.o_field_widget[name="name"] input').toHaveValue("aaa");
+});
+
+test.tags("desktop");
+test(`save unblured char field when alt+B (breadcrumb back) pressed`, async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    Partner._views = {
+        list: `<list><field name="name"/></list>`,
+        form: `
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        `,
+    };
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args).toEqual([[1], { name: "aaa" }]);
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_field_cell:eq(0)`).toHaveText("Xavier Lancer");
+
+    await contains(`.o_data_row td.o_data_cell`).click();
+    expect(`.o_breadcrumb`).toHaveText("Partner\nXavier Lancer");
+
+    await contains(`.o_field_widget[name='name'] input`).edit("aaa", { confirm: false });
+    await press(["alt", "b"]);
+    await waitFor(".o_list_view");
+    expect(`.o_breadcrumb`).toHaveText("Partner");
+    expect(`.o_field_cell:eq(0)`).toHaveText("aaa");
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");

@@ -11931,7 +11931,7 @@ test("open a one2many record with optional open record displayed", async () => {
     });
 
     await contains(`td.o_list_record_open_form_view`).click();
-    expect.verifySteps(["partner.get_views"]);
+    expect.verifySteps([["getItem", localStorageKey, "true"], "partner.get_views"]);
 });
 
 test("if there are less than 4 lines in a one2many, empty lines must be displayed to cover the difference.", async () => {

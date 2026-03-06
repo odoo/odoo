@@ -4,13 +4,19 @@ import { runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
+    defineActions,
     defineModels,
     fields,
+    getService,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
+    webModels,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 
+const { ResCompany, ResPartner, ResUsers } = webModels;
 class Partner extends models.Model {
     int_field = fields.Integer({ sortable: true });
     timmy = fields.Many2many({ string: "pokemon", relation: "partner.type" });
@@ -31,7 +37,7 @@ class PartnerType extends models.Model {
     ];
 }
 
-defineModels([Partner, PartnerType]);
+defineModels([Partner, PartnerType, ResCompany, ResPartner, ResUsers]);
 
 test("Many2ManyCheckBoxesField", async () => {
     Partner._records[0].timmy = [12];
@@ -515,4 +521,34 @@ test("Many2ManyCheckBoxesField in a notebook tab", async () => {
     // save
     await clickSave();
     expect.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
+});
+
+test(`Many2ManyCheckBoxesField: edit and leave within 500ms`, async () => {
+    Partner._views = {
+        form: `<form><field name="timmy" widget="many2many_checkboxes" /></form>`,
+        list: `<list><field name="timmy"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["No records"]);
+
+    await contains(".o_data_cell").click();
+
+    // edit and leave directly => the value must be saved anyway
+    await contains(".o_field_many2many_checkboxes input[type=checkbox]").click();
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(queryAllTexts(".o_data_cell")).toEqual(["1 record"]);
 });

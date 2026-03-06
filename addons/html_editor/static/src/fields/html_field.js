@@ -235,9 +235,6 @@ export class HtmlField extends Component {
         // Keep track of every change individually to avoid resetting dirtiness
         // after committing a change if another change occurred in the meantime.
         this.lastChangeId++;
-        // Ensure that FormController.beforeLeave is able to save record
-        // changes.
-        this.props.record.setDirty();
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
     }
 
