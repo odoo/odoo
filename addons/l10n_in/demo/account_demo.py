@@ -26,20 +26,11 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_use_credit_limit': True,
+                'account_credit_limit': 10000,
                 'l10n_in_is_gst_registered': True,
                 'l10n_in_tcs_feature': True,
                 'l10n_in_tds_feature': True,
                 'l10n_in_edi_production_env': False,
-            },
-        }
-
-    @template(template='in', model='ir.default', demo=True)
-    def _l10n_in_ir_default_demo(self):
-        return {
-            'sales_credit_limit': {
-                'field_id': 'account.field_res_partner__credit_limit',
-                'company_id': self.env.company.id,
-                'json_value': '10000',
             },
         }
 

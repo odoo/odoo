@@ -157,6 +157,10 @@ class ResCompany(models.Model):
     )
     account_use_credit_limit = fields.Boolean(
         string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
+    account_credit_limit = fields.Float(
+        string="Default Credit Limit",
+        **company_default_for('account_credit_limit', 'res.partner', 'credit_limit'),
+    )
 
     batch_payment_sequence_id = fields.Many2one(
         comodel_name='ir.sequence',
