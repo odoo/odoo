@@ -337,7 +337,11 @@ class ResourceResource(models.Model):
                 year_week = weeknumber(babel_locale_parse(locale), day)
                 year, week = year_week
                 if (year < end_year) or (year == end_year and week <= end_week):
-                    resource_hours_per_week[resource.id][year_week] = min(resource.calendar_id.full_time_required_hours, day_working_hours + resource_hours_per_week[resource.id][year_week])
+                    # cap weekly hours to the calendar's configured hours_per_week (not the
+                    # company default full_time_required_hours which does not respect
+                    # part-time schedules).
+                    cap = resource.calendar_id.hours_per_week or resource.calendar_id.full_time_required_hours
+                    resource_hours_per_week[resource.id][year_week] = min(cap, day_working_hours + resource_hours_per_week[resource.id][year_week])
 
         for calendar, resources in calendar_resources.items():
             domain = [('calendar_id', '=', False)] if not calendar else None

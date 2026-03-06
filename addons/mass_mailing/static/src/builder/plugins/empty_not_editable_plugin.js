@@ -23,7 +23,8 @@ export class EmptyNotEditableElementsPlugin extends Plugin {
                 emptyNonEditableBlock.remove();
             }
         });
-        if (!this.dependencies.selection.isSelectionInEditable) {
+        const selection = this.document.getSelection();
+        if (!this.dependencies.selection.isSelectionInEditable(selection)) {
             this.dependencies.selection.resetSelection();
         }
     }

@@ -233,9 +233,6 @@ class PurchaseOrder(models.Model):
             pikings_to_cancel = self.env['stock.picking'].browse(pickings_to_cancel_ids)
             pikings_to_cancel.action_cancel()
 
-        if order_lines:
-            order_lines.write({'move_dest_ids': [(5, 0, 0)]})
-
         return super().button_cancel()
 
     def action_view_picking(self):

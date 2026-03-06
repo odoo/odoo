@@ -96,6 +96,9 @@ def _make_request(company, endpoint_type, params=False):
             if response_json['error']['code'] == 404:
                 message = company.env._('The url that this service tried to contact does not exist. The url was “%s”', url)
             raise MojEracunServiceError('connection_error', message)
+        elif 'Username' in response_json:  # No valid response contains this, it is a credentials error format
+            message = company.env._("MER service returned an error: Username '%(name)s': %(desc)s", name=response_json['Username'].get('Value'), desc=response_json['Username'].get('Messages'))
+            raise MojEracunServiceError('credentials_error', message)
         return response_json
     else:
         return response.content

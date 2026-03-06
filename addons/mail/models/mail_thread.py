@@ -5089,6 +5089,8 @@ class MailThread(models.AbstractModel):
             _logger.warning("Invalid access parameters to _get_thread_with_access: %s", invalid)
 
         thread = self.browse(thread_id)
-        if thread.exists() and thread.sudo(False).has_access(mode):
+        if thread.exists() and thread.sudo(False).with_context(
+            allowed_company_ids=[]
+        ).has_access(mode):
             return thread
         return self.browse()

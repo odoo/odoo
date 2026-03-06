@@ -7,9 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { EventBus } from "@odoo/owl";
 import { Command, mockService, patchWithCleanup, withUser } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -17,18 +15,12 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test("open channel in discuss from push notification", async () => {
-    patchWithCleanup(window.navigator, {
-        serviceWorker: Object.assign(new EventBus(), {
-            register: () => Promise.resolve(),
-            ready: Promise.resolve(),
-        }),
-    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
-    browser.navigator.serviceWorker.dispatchEvent(
+    navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId } },
         })

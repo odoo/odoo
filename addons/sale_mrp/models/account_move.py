@@ -34,9 +34,8 @@ class AccountMoveLine(models.Model):
                 components_qty = so_line._get_bom_component_qty(bom)
                 storable_components = self.env['product.product'].search([('id', 'in', list(components_qty.keys())), ('is_storable', '=', True)])
                 for product in storable_components:
-                    factor = components_qty[product.id]['qty']
                     prod_moves = moves.filtered(lambda m: m.product_id == product)
                     product = product.with_company(self.company_id)
-                    average_price_unit += factor * prod_moves._get_price_unit()
+                    average_price_unit += prod_moves._get_price_unit()
                 price_unit = average_price_unit / bom.product_qty or price_unit
         return price_unit

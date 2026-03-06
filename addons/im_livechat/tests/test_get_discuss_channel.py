@@ -93,7 +93,11 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "share": False},
+                {
+                    "id": self.user_root.id,
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
             ),
         )
         # ensure visitor info are correct with real user
@@ -164,12 +168,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "employee_ids": [], "share": False},
+                {
+                    "id": self.user_root.id,
+                    "employee_ids": [],
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": test_user.id,
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": test_user.partner_id.id,
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
                 },
@@ -285,12 +295,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(
             data["res.users"],
             self._filter_users_fields(
-                {"id": self.user_root.id, "employee_ids": [], "share": False},
+                {
+                    "id": self.user_root.id,
+                    "employee_ids": [],
+                    "partner_id": self.partner_root.id,
+                    "share": False,
+                },
                 {
                     "id": operator.id,
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "email",
+                    "partner_id": operator.partner_id.id,
                     "share": False,
                     "signature": ["markup", str(operator.signature)],
                 },

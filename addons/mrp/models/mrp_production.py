@@ -610,7 +610,7 @@ class MrpProduction(models.Model):
             workorders_list = [Command.link(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.ids)]
             relevant_boms = [exploded_boms[0] for exploded_boms in production.bom_id.explode(production.product_id, 1.0, picking_type=production.bom_id.picking_type_id)[0]]
             # we don't delete wo's that are not bom related nor related to a subom
-            deleted_workorders_ids = production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id not in relevant_boms).ids
+            deleted_workorders_ids = production.workorder_ids.filtered(lambda wo: wo.operation_id and wo.operation_id.bom_id not in relevant_boms).mapped('id')
             workorders_list += [Command.delete(wo_id) for wo_id in deleted_workorders_ids]
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
@@ -646,7 +646,7 @@ class MrpProduction(models.Model):
                             'state': 'ready',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
-                    lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
+                    lambda wo: wo.operation_id and wo.id not in deleted_workorders_ids)}
                 for workorder_values in workorders_values:
                     if workorder_values['operation_id'] in workorders_dict:
                         # update existing entries
@@ -656,7 +656,7 @@ class MrpProduction(models.Model):
                         workorders_list += [Command.create(workorder_values)]
                 production.workorder_ids = workorders_list
             else:
-                production.workorder_ids = [Command.delete(wo.id) for wo in production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)]
+                production.workorder_ids = [Command.delete(wo_id) for wo_id in production.workorder_ids.filtered(lambda wo: wo.operation_id).mapped('id')]
 
     @api.depends('state', 'move_raw_ids.state')
     def _compute_reservation_state(self):
@@ -2573,6 +2573,8 @@ class MrpProduction(models.Model):
         # For draft MO, all the work will be done by compute methods.
         # For cancelled and done MO, we don't want to do anything more than assinging the BoM.
         if self.state == 'draft' and self.bom_id == bom:
+            # Only remove manual lines (not coming from BoM)
+            workorders_to_unlink = workorders_to_unlink.filtered(lambda w: not w.operation_id)
             # Empties `bom_id` field so when the BoM is reassigns to this field, depending computes
             # will be triggered (doesn't happen if the field's value doesn't change).
             self.bom_id = False
@@ -2668,6 +2670,7 @@ class MrpProduction(models.Model):
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
                     move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
+                move_raw.manual_consumption = move_raw._determine_is_manual_consumption(bom_line)
             elif not bom_line:
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.

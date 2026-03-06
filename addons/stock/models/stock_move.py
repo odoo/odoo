@@ -49,7 +49,7 @@ class StockMove(models.Model):
         'move_id', 'template_attribute_value_id',
         string="Never attribute Values"
     )
-    description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking')
+    description_picking = fields.Text(string="Description Of Picking", compute='_compute_description_picking', inverse='_inverse_description_picking', compute_sudo=True)
     description_picking_manual = fields.Text(readonly=True)
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
@@ -1370,8 +1370,8 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
-        if self.partner_id and not self.reference_ids:
-            keys += (self.partner_id, )
+        if self.move_orig_ids.picking_id and not self.reference_ids:
+            keys += (self.move_orig_ids.picking_id, )
         return keys
 
     def _search_picking_for_assignation_domain(self):
@@ -1382,12 +1382,12 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
-        if self.partner_id and not self.reference_ids:
-            domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
     def _search_picking_for_assignation(self):
         self.ensure_one()
+        if not self.reference_ids:
+            return self.env['stock.picking']
         domain = self._search_picking_for_assignation_domain()
         picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
@@ -1696,7 +1696,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'date_order': dates_info.get('date_order'),
             'date_deadline': self.date_deadline,
             'move_dest_ids': move_dest_ids,
-            'partner_id': move_dest_ids._get_partner_id() if move_dest_ids else False,
+            'partner_id': self._get_partner_id() if self.rule_id.procure_method in ('make_to_order', 'mts_else_mto') else False,
             'route_ids': route,
             'warehouse_id': warehouse,
             'priority': self.priority,

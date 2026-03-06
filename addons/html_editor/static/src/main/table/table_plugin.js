@@ -1,17 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
     isProtecting,
     isEmptyBlock,
-    isTextNode,
     nextLeaf,
     previousLeaf,
     isTableCell,
@@ -875,19 +870,26 @@ export class TablePlugin extends Plugin {
         }
         // Handle selection for the single cell.
         if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
-            const { focusNode, focusOffset } = selection;
+            const { focusNode } = selection;
             // Do not prevent default when there is a text in cell.
-            if (focusNode.nodeType === Node.TEXT_NODE) {
-                const textNodes = descendants(startTd).filter(isTextNode);
-                const lastTextChild = textNodes[textNodes.length - 1];
-                const firstTextChild = textNodes[0];
-                const isAtTextBoundary = {
-                    ArrowRight: nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
-                    ArrowLeft: focusOffset === 0 && focusNode === firstTextChild,
-                    ArrowUp: focusNode === firstTextChild,
-                    ArrowDown: focusNode === lastTextChild,
+            if (
+                !(ev.ctrlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) &&
+                (focusNode.nodeType === Node.TEXT_NODE ||
+                    focusNode.matches("br, p, div.o-paragraph"))
+            ) {
+                const isAtTextBoundary = (key) => {
+                    const actualSelection = this.document.getSelection();
+                    const preserveSelection = this.dependencies.selection.preserveSelection();
+                    actualSelection.modify(
+                        "extend",
+                        ["ArrowDown", "ArrowRight"].includes(ev.key) ? "forward" : "backward",
+                        ["ArrowUp", "ArrowDown"].includes(key) ? "line" : "character"
+                    );
+                    const reachedTd = closestElement(actualSelection.focusNode, "td");
+                    preserveSelection.restore();
+                    return startTd !== reachedTd;
                 };
-                if (isAtTextBoundary[ev.key]) {
+                if (isAtTextBoundary(ev.key)) {
                     ev.preventDefault();
                     this.selectTableCells(this.dependencies.selection.getEditableSelection());
                 }
@@ -1140,13 +1142,33 @@ export class TablePlugin extends Plugin {
 
     navigateCell(ev) {
         const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const anchorNode = selection.anchorNode;
-        const currentCell = closestElement(anchorNode, isTableCell);
-        const currentTable = closestElement(anchorNode, "table");
-        if (!selection.isCollapsed || !currentCell) {
+        // Using focusNode because we might be leaving a multi-cell selection.
+        const focusNode = selection.focusNode;
+        const currentCell = closestElement(focusNode, isTableCell);
+        if (!currentCell) {
             return;
         }
+        const currentTable = closestElement(currentCell, "table");
+        const areCellsSelected = currentCell.classList.contains("o_selected_td");
         const isArrowUp = ev.key === "ArrowUp";
+        // Should navigate within multi-line text node itself ?
+        if (!areCellsSelected) {
+            if (ev.ctrlKey) {
+                ev.preventDefault();
+                this.dependencies.selection.setSelection({
+                    anchorNode: currentCell,
+                    anchorOffset: isArrowUp ? 0 : currentCell.childNodes.length,
+                });
+                return;
+            }
+            const actualSelection = this.document.getSelection();
+            actualSelection.modify("move", isArrowUp ? "backward" : "forward", "line");
+            const reachedCell = closestElement(actualSelection.focusNode, "td");
+            ev.preventDefault();
+            if (currentCell === reachedCell) {
+                return;
+            }
+        }
         const cellPosition = {
             row: getRowIndex(currentCell),
             col: getColumnIndex(currentCell),
@@ -1178,7 +1200,7 @@ export class TablePlugin extends Plugin {
             // If no target cell is available, navigate to sibling element
             targetNode = siblingElement;
         }
-        if (shouldNavigateCell(anchorNode)) {
+        if (shouldNavigateCell(focusNode)) {
             ev.preventDefault();
             if (targetNode) {
                 targetNode = isArrowUp ? lastLeaf(targetNode) : firstLeaf(targetNode);

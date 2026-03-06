@@ -19,6 +19,19 @@ class PosPaymentMethod(models.Model):
         params += ['is_online_payment']
         return params
 
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+
+        for record in read_records:
+            if not record.get('is_online_payment'):
+                continue
+
+            pm = self.env['pos.payment.method'].browse(record['id']).exists()
+            providers = pm._get_online_payment_providers().mapped('code') if pm else []
+            record['_customer_required'] = bool(set(providers) & set(self._get_customer_required_providers_code()))
+        return read_records
+
     @api.depends('is_online_payment')
     def _compute_type(self):
         opm = self.filtered('is_online_payment')
@@ -146,3 +159,6 @@ class PosPaymentMethod(models.Model):
 
     def _is_online_payment(self):
         return self.is_online_payment
+
+    def _get_customer_required_providers_code(self):
+        return ['aps', 'flutterwave']

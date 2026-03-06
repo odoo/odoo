@@ -33,8 +33,14 @@ patch(OrderSummary.prototype, {
         return result;
     },
     async unbookTable() {
-        const order = this.pos.getOrder();
-        await this.pos.deleteOrders([order]);
+        this.env.services.ui.block();
+        try {
+            const order = this.pos.getOrder();
+            await this.pos.deleteOrders([order]);
+            this.pos.showDefault();
+        } finally {
+            this.env.services.ui.unblock();
+        }
     },
     showUnbookButton() {
         if (this.pos.selectedTable) {

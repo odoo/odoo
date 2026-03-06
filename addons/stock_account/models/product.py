@@ -267,6 +267,7 @@ class ProductProduct(models.Model):
         domain = Domain([
             ('product_id', 'in', self.ids),
             ('move_id', '=', False),
+            ('company_id', '=', self.env.company.id),
         ])
         if lot:
             domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])

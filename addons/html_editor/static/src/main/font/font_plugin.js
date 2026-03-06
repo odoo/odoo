@@ -31,7 +31,7 @@ import {
     getBaseContainerSelector,
     SUPPORTED_BASE_CONTAINER_NAMES,
 } from "@html_editor/utils/base_container";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -298,8 +298,8 @@ export class FontPlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: [
-            this.updateFontSelectorParams.bind(this),
-            this.updateFontSizeSelectorParams.bind(this),
+            withSequence(READ, this.updateFontSelectorParams.bind(this)),
+            withSequence(READ, this.updateFontSizeSelectorParams.bind(this)),
         ],
         post_undo_handlers: [
             this.updateFontSelectorParams.bind(this),

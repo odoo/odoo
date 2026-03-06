@@ -270,6 +270,17 @@ class TestUBLRO(TestUBLCommon):
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_company_registry.xml')
 
+    def test_export_invoice_no_vat_prefix(self):
+        self.company_data['company'].vat = self.company_data['company'].vat[2:]
+        no_vat_partner = self.partner_a.copy({'name': 'Roasted Romanian Roller', 'vat': False, 'invoice_edi_format': 'ciusro'})
+        invoice = self.create_move("out_invoice", partner_id=no_vat_partner.id, currency_id=self.company.currency_id.id)
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_defaults.xml')
+
+    def test_export_invoice_defaults_new(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
+        self.test_export_invoice_no_vat_prefix()
+
     def test_export_no_vat_and_no_company_registry_raises_error(self):
         self.company_data['company'].write({'vat': False, 'company_registry': False})
         invoice = self.create_move("out_invoice", send=False)
@@ -344,7 +355,7 @@ class TestUBLRO(TestUBLCommon):
         ])
         self.assertEqual(len(bills), 1)
         self.assertEqual(bills.state, 'draft')
-        self.assertEqual(bills.amount_total, 1785.0)
+        self.assertEqual(bills.amount_total, 1815.0)
         self.assertEqual(bills.commercial_partner_id.vat, '8001011234567')
         self.assertEqual(bills.l10n_ro_edi_index, '5020704741')
         self.assertEqual(bills.l10n_ro_edi_state, 'invoice_validated')

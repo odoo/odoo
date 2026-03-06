@@ -384,3 +384,15 @@ class TestMrpReplenish(TestMrpCommon):
             'product_id': self.bom_2.product_id.id,
         })
         self.assertEqual(orderpoint.company_id, company_2)
+
+    def test_product_replenish_wizard_multiple_manufacture_routes(self):
+        self.route_manufacture.copy()
+        wizard_form = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product_4.product_tmpl_id.id
+        ))
+        manufacture_route = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture'),
+            ('company_id', '=', self.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ], limit=1).route_id
+        self.assertEqual(wizard_form.route_id, manufacture_route)

@@ -11,6 +11,7 @@ import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_transl
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 const TRANSLATE_DIALOG_TITLE = "Translate with AI";
 
@@ -79,8 +80,7 @@ test("Translate should be disabled if selection spans across non editable conten
 
 test.todo("should not open toolbar when selection contains contenteditable false", async () => {
     await setupEditor('<div contenteditable="false">a[b</div><div>c]d</div>');
-    await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test("Translate should be disabled if selection spans across non editable content or unsplittable (4)", async () => {

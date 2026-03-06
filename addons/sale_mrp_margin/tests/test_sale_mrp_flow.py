@@ -66,6 +66,7 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         sub_kit, kit = self._cls_create_product('Sub Kit', self.uom_unit), self._cls_create_product('Lovely Kit', self.uom_ten)
         kit.uom_ids = [Command.set([self.uom_unit.id, self.uom_ten.id])]
         self.product_category.property_cost_method = 'average'
+        self.product_category.property_valuation = 'real_time'
         (kit + sub_kit + self.component_a + self.component_b).categ_id = self.product_category
         self.env['mrp.bom'].create([
             {
@@ -122,3 +123,15 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
         self.assertEqual(so.picking_ids.state, 'done')
         self.assertRecordValues(so.order_line, [{'purchase_price': 600, 'qty_delivered': 3.0}])
         self.assertEqual(so.order_line.purchase_price, 600)
+        # create an invoice to check that the cost price on the invoice line is correct
+        inv_1 = so._create_invoices()
+        inv_1.action_post()
+        self.assertEqual(inv_1.state, 'posted', 'invoice should be in posted state')
+        # The cost price on the invoice line should be 600 * 3 = 1800
+        self.assertRecordValues(inv_1.line_ids, [
+            {'debit': 0.0, 'credit': 3.0},
+            {'debit': 0.0, 'credit': 0.45},
+            {'debit': 3.45, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 1800},
+            {'debit': 1800, 'credit': 0.0},
+        ])

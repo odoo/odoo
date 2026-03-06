@@ -55,6 +55,9 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertAlmostEqual(order.amount_total, order.amount_paid)
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         self.assertTrue(refund.payment_ids.payment_method_id.is_cash_count)
+        # refund lines should be positive
+        self.assertEqual(refund.lines[0].price_subtotal_incl, 10.0)
+        self.assertEqual(refund.lines[1].price_subtotal_incl, 20.0)
 
         current_session = self.pos_config_usd.current_session_id
         total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
@@ -1411,6 +1414,64 @@ class TestPointOfSaleFlow(CommonPosTest):
         refunded_order_line = self.env['pos.order.line'].search([('product_id', '=', product.id), ('qty', '=', -2)])
         self.assertEqual(refunded_order_line.total_cost, -20)
 
+    def test_ship_later_total_cost_fallback_to_standard_price(self):
+        # Test that total_cost falls back to standard_price for a regular (non-refund) ship later
+        # order on a FIFO/AVCO product when the stock moves have no valuation yet (goods not
+        # yet delivered). Before the fix, total_cost was incorrectly computed as 0.
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        self.pos_config_usd.write({'ship_later': True})
+
+        categ = self.env['product.category'].create({
+            'name': 'AVCO Category',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Ship Later AVCO Product',
+            'categ_id': categ.id,
+            'lst_price': 15,
+            'standard_price': 10,
+            'is_storable': True,
+        })
+
+        order_data = {
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'shipping_date': fields.Date.today(),
+            'lines': [[0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 15,
+                'discount': 0,
+                'qty': 2,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 30,
+                'price_subtotal_incl': 30,
+            }]],
+            'payment_ids': [(0, 0, {
+                'amount': 30,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id,
+            })],
+            'amount_paid': 30.0,
+            'amount_total': 30.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+        }
+        self.env['pos.order'].sync_from_ui([order_data])
+        order = current_session.order_ids[0]
+
+        # Stock moves exist (ship later picking created) but are unvalued because the goods
+        # have not been delivered yet. total_cost must fall back to qty * standard_price.
+        self.assertEqual(
+            order.lines[0].total_cost, 20,
+            "total_cost should equal qty * standard_price (2 * 10 = 20) when ship later "
+            "stock moves have zero valuation",
+        )
+
     def test_cancel_order_with_past_preset(self):
         # Test that cancelling an order with a past preset does not raise an error and does cancel the order.
         preset_takeaway = self.env['pos.preset'].create({
@@ -2241,3 +2302,35 @@ class TestPointOfSaleFlow(CommonPosTest):
         }])
         self.assertEqual(len(order.lines), 1, "Two lines with the same UUID were created")
         self.assertEqual(order.lines[0].qty, 2, "The quantity of the line should have been updated to 2")
+
+    def test_manual_refund_negative_qty_invoice_creates_credit_note(self):
+        """Invoicing a POS order created with negative qty (manual refund, no Refund action)
+        must create a credit note (RINV/out_refund), not a customer invoice (INV)."""
+        self.pos_config_usd.open_ui()
+
+        # Create an order with negative qty only (no Refund action → is_refund stays False)
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_mobt.id,
+                'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': -1},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': -10},
+            ],
+        })
+
+        self.assertEqual(order.state, 'paid')
+        self.assertLess(order.amount_total, 0, 'Order total should be negative (manual refund).')
+        self.assertFalse(order.is_refund, 'Order was not created via Refund action.')
+
+        order.action_pos_order_invoice()
+
+        self.assertTrue(order.account_move, 'An invoice/credit note should be created.')
+        self.assertEqual(
+            order.account_move.move_type,
+            'out_refund',
+            'Invoicing a manual refund (negative qty) must create a credit note (RINV), not a customer invoice.',
+        )
