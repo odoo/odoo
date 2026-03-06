@@ -1,5 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { getImageSrc } from "@html_editor/utils/image";
+import { getImageSrc, isImageCorsProtected } from "@html_editor/utils/image";
 import { getDataURLBinarySize } from "@html_editor/utils/image_processing";
 
 const imageCacheSize = new Map();
@@ -26,6 +26,9 @@ export class ImageSize extends BaseOptionComponent {
             if (imageCacheSize.has(src)) {
                 size = imageCacheSize.get(src);
             } else {
+                if (await isImageCorsProtected(el)) {
+                    return;
+                }
                 size = await this.imagePostProcess.getProcessedImageSize(el);
                 imageCacheSize.set(src, size);
             }

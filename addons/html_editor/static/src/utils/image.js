@@ -1,4 +1,10 @@
+import { Cache } from "@web/core/utils/cache";
 import { isColorGradient } from "@web/core/utils/colors";
+
+const headResponseCache = new Cache(
+    async (src) => await fetch(src, { method: "HEAD" }),
+    JSON.stringify
+);
 
 /**
  * Extracts url and gradient parts from the background-image CSS property.
@@ -68,7 +74,8 @@ export async function isImageCorsProtected(img) {
         //    same database behind.
         // 2. A "attachment-url" which is just a redirect to the real image
         //    which could be hosted on another website.
-        isCorsProtected = await fetch(src, { method: "HEAD" })
+        isCorsProtected = await headResponseCache
+            .read(src)
             .then(() => false)
             .catch(() => true);
     }
