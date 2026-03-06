@@ -46,8 +46,8 @@ class ReportProjectTaskUser(models.Model):
         ('03_approved', 'Approved'),
         ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
-    ], string='State', readonly=True)
-    is_closed = fields.Boolean(string='Closed state', readonly=True)
+    ], string='Status', readonly=True)
+    is_closed = fields.Boolean(string='Closed Status', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)

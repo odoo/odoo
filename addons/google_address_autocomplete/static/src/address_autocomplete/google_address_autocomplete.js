@@ -20,7 +20,7 @@ const standardAddressFields = {
         type: ["char"]
     },
     state_id: {
-        label: _t("State field"),
+        label: _t("State/Province field"),
         type: ["char", "many2one"]
     },
     zip: {

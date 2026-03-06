@@ -181,7 +181,7 @@ class ResCompany(models.Model):
 
         if not all(self[field] for field in ('street', 'city', 'state_id', 'country_id')):
             return (
-                ('message', self.env._("Company/ies should have a complete address, verify their Street, City, State and Country.")),
+                ('message', self.env._("Company/ies should have a complete address, verify their Street, City, State/Province and Country.")),
                 ('error_code', 'l10n_pk_edi_company_address_missing'),
                 ('level', 'danger'),
             )

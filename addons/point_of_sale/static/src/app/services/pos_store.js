@@ -2258,7 +2258,7 @@ export class PosStore extends WithLazyGetterTrap {
                 ]);
             } catch (error) {
                 if (error instanceof RPCError) {
-                    // If the error is an RPC error, it should be "You can only cancel a session that is in opening control state and has no orders."
+                    // If the error is an RPC error, it should be "You can only cancel a session with the status "Opening Control" and no orders."
                     // In this case, we still go to the backend without deleting the session.
                     logPosMessage(
                         "Store",

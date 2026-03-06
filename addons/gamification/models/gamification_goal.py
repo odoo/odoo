@@ -41,7 +41,7 @@ class GamificationGoal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Cancelled"),
-    ], default='draft', string='State', required=True)
+    ], default='draft', string='Status', required=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal')
 

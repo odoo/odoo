@@ -357,7 +357,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         if not order_sudo._has_to_be_signed():
             return {
-                "error": self.env._("The order is not in a state requiring customer signature.")
+                "error": self.env._("The order does not require a customer signature in its current status.")
             }
         if not signature:
             return {"error": self.env._("Signature is missing.")}

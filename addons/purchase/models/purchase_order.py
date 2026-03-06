@@ -899,7 +899,7 @@ class PurchaseOrder(models.Model):
 
         # Group RFQs by vendor
         if len(rfq_to_merge) < 2:
-            raise UserError(_("Please select at least two purchase orders with state RFQ and RFQ sent to merge."))
+            raise UserError(_('Please select at least two purchase orders with the status "RFQ" or "RFQ Sent" to merge.'))
 
         rfqs_grouped = defaultdict(lambda: self.env['purchase.order'])
         for rfq in rfq_to_merge:

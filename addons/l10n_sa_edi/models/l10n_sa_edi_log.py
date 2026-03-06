@@ -10,7 +10,7 @@ class L10nSaEdiLog(models.Model):
 
     l10n_sa_edi_document_id = fields.Many2one(comodel_name='l10n_sa_edi.document')
     document_state = fields.Selection(related='l10n_sa_edi_document_id.state')
-    state = fields.Selection(selection=L10N_SA_DOCUMENT_STATES)
+    state = fields.Selection(selection=L10N_SA_DOCUMENT_STATES, string="Status")
     attachment_name = fields.Char()
     is_test = fields.Boolean()
     message = fields.Html(translate=True)

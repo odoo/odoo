@@ -16,6 +16,7 @@ class L10nTrTaxOffice(models.Model):
     )
     state_id = fields.Many2one(
         comodel_name="res.country.state",
+        string="State/Province",
         help="The Turkish province (İl) where this Tax Office is located.",
     )
     state_code = fields.Char(related="state_id.code")

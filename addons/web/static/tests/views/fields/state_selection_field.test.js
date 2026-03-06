@@ -387,7 +387,7 @@ test("StateSelectionField line stay in edit mode when StateSelectionField is ope
     });
 });
 
-test('StateSelectionField edited by the smart actions "Set kanban state as <state name>"', async () => {
+test('StateSelectionField edited by the smart actions "Set kanban status to <state name>"', async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -402,8 +402,8 @@ test('StateSelectionField edited by the smart actions "Set kanban state as <stat
     expect(".o_status_red").toHaveCount(1);
     await press(["control", "k"]);
     await animationFrame();
-    expect(`.o_command:contains("Set kanban state as Normal ALT + D")`).toHaveCount(1);
-    const doneItem = `.o_command:contains("Set kanban state as Done ALT + G")`;
+    expect(`.o_command:contains("Set kanban status to Normal ALT + D")`).toHaveCount(1);
+    const doneItem = `.o_command:contains("Set kanban status to Done ALT + G")`;
     expect(doneItem).toHaveCount(1);
 
     await click(doneItem);
@@ -412,9 +412,9 @@ test('StateSelectionField edited by the smart actions "Set kanban state as <stat
 
     await press(["control", "k"]);
     await animationFrame();
-    expect(`.o_command:contains("Set kanban state as Normal ALT + D")`).toHaveCount(1);
-    expect(`.o_command:contains("Set kanban state as Blocked ALT + F")`).toHaveCount(1);
-    expect(`.o_command:contains("Set kanban state as Done ALT + G")`).toHaveCount(0);
+    expect(`.o_command:contains("Set kanban status to Normal ALT + D")`).toHaveCount(1);
+    expect(`.o_command:contains("Set kanban status to Blocked ALT + F")`).toHaveCount(1);
+    expect(`.o_command:contains("Set kanban status to Done ALT + G")`).toHaveCount(0);
 });
 
 test("StateSelectionField uses legend_* fields", async () => {
@@ -524,11 +524,11 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
     await press(["control", "k"]);
     await animationFrame();
 
-    expect(".o_command#o_command_2").toHaveText("Set kanban state as Done ALT + G", {
+    expect(".o_command#o_command_2").toHaveText("Set kanban status to Done ALT + G", {
         inline: true,
         message: "hotkey and command are present",
     });
-    expect(".o_command#o_command_4").toHaveText("Set kanban state as Martine", {
+    expect(".o_command#o_command_4").toHaveText("Set kanban status to Martine", {
         message: "no hotkey is present, but the command exists",
     });
 

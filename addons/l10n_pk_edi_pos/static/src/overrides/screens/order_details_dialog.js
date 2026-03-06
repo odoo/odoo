@@ -13,7 +13,7 @@ patch(OrderDetailsDialog.prototype, {
         fields.push(
             {
                 id: "l10n_pk_edi_pos_state",
-                label: _t("FBR State"),
+                label: _t("FBR Status"),
                 value: status,
                 condition: Boolean(status),
             },

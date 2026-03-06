@@ -25,7 +25,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         ('03_approved', 'Approved'),
         ('1_canceled', 'Cancelled'),
         ('02_changes_requested', 'Changes Requested'),
-    ], string='State', readonly=True)
+    ], string='Status', readonly=True)
     is_open = fields.Boolean(string='Open', readonly=True)
     is_done = fields.Boolean(string='Done', readonly=True)
     is_canceled = fields.Boolean(string='Cancelled', readonly=True)
