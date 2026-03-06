@@ -14,7 +14,7 @@
                         <field name="street2" invisible="country_code and country_code != 'TH'" placeholder="House no. Moo Soi Yaek Road" class="o_address_street"/>
                         <field name="city" invisible="not country_code or country_code == 'TH'" placeholder="City" class="o_address_city"/>
                         <field name="city" invisible="country_code and country_code != 'TH'" placeholder="Sub-district District" class="o_address_city d-block"/>
-                        <field name="state_id" invisible="not country_code or country_code == 'TH'" placeholder="State" class="o_address_state"
+                        <field name="state_id" invisible="not country_code or country_code == 'TH'" placeholder="State/Province" class="o_address_state"
                                options="{'no_open': True, 'no_quick_create': True}"
                                context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                         <field name="state_id" invisible="country_code and country_code != 'TH'" placeholder="Province" class="o_address_state"

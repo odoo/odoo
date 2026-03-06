@@ -31,7 +31,7 @@ class PosPreset(models.Model):
     )
     delivery_from_state_id = fields.Many2one(
         comodel_name="res.country.state",
-        string="State",
+        string="State/Province",
     )
     delivery_from_latitude = fields.Float(string="Latitude", digits=(10, 7))
     delivery_from_longitude = fields.Float(string="Longitude", digits=(10, 7))

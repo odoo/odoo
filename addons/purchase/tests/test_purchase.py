@@ -960,7 +960,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         with self.assertRaises(UserError) as context:
             PurchaseOrder.browse([po_1.id]).action_merge()
-        self.assertEqual(context.exception.args[0], "Please select at least two purchase orders with state RFQ and RFQ sent to merge.")
+        self.assertEqual(context.exception.args[0], 'Please select at least two purchase orders with the status "RFQ" or "RFQ Sent" to merge.')
 
         selected_purchase_orders = po_1 | po_2
         selected_purchase_orders.action_merge()

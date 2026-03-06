@@ -560,7 +560,7 @@ class Picking(models.Model):
 
                 missing_field_names = []
                 if not partner.state_id:
-                    missing_field_names.append(_("State"))
+                    missing_field_names.append(_("State/Province"))
                 if not partner.city:
                     missing_field_names.append(_("City"))
                 if not partner.street:
@@ -964,4 +964,4 @@ class Picking(models.Model):
         Reports an unknown document state from anaf to the user in the chatter
         """
         self.ensure_one()
-        self.message_post(body=_("Unhandled eTransport document state: %(state)s", state=state))
+        self.message_post(body=_("Unhandled eTransport document status: %(status)s", status=state))

@@ -30,7 +30,7 @@ class ResCompany(models.Model):
             ('inactive', 'Inactive'),
             ('active', 'Active'),
         ],
-        string='MojEracun connection status',
+        string='MojEracun Connection Status',
         required=True,
         default='inactive',
         compute='_compute_l10n_hr_mojeracun_state',

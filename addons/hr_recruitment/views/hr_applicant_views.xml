@@ -31,7 +31,7 @@
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="hide" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="stage_id" widget="rotting" optional="hide" column_invisible="context.get('default_talent_pool_ids')" options="{'no_open': True}"/>
-                <field name="kanban_state" widget="hr_applicant_state_selection" string="State" optional="hide"/>
+                <field name="kanban_state" widget="hr_applicant_state_selection" string="Status" optional="hide"/>
                 <field name="matching_score" string="Matching Score" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score" column_invisible="context.get('default_talent_pool_ids', False)"/>
                 <field name="priority" widget="priority" nolabel="1" optional="hide"/>
                 <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

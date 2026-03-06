@@ -17,7 +17,7 @@ class ReportProjectTaskStage(models.Model):
     create_date = fields.Datetime("Create Date", readonly=True)
     date_deadline = fields.Datetime(string="Deadline", readonly=True)
     date_last_stage_update = fields.Datetime(string="Last Stage Update", readonly=True)
-    is_closed = fields.Boolean(string="Closed state", readonly=True)
+    is_closed = fields.Boolean(string="Closed Status", readonly=True)
     priority = fields.Selection(
         [
             ("0", "Low priority"),

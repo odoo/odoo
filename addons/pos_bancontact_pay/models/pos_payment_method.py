@@ -125,7 +125,7 @@ class PosPaymentMethod(models.Model):
         try:
             response = requests.delete(url, headers=headers, timeout=5)
             self._assert_bancontact_http_success(response,
-                {422: (_("Unable to cancel payment. The payment may not be in a cancellable state."), ValidationError)},
+                {422: (_("Unable to cancel the payment. Its current status may not allow it."), ValidationError)},
             )
         except Exception as e:
             reason = response.text if response is not None else str(e)

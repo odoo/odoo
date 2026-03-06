@@ -2564,7 +2564,7 @@ class HrLeave(models.Model):
             if holiday.state == state:
                 error_message = self.env._('You can\'t do the same action twice.')
             elif state == 'validate1' and validation_type != 'both':
-                error_message = self.env._('Not possible state. State Approve is only used for leave needed 2 approvals')
+                error_message = self.env._('Invalid status. The status "Second Approval" is only used for time off requiring two approvals.')
             elif holiday.state == 'cancel':
                 error_message = self.env._('A cancelled leave cannot be modified.')
             elif state not in dict_all_possible_state.get(holiday.state, {}):

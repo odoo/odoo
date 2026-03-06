@@ -18,7 +18,7 @@ class ProductProduct(models.Model):
             ('paid', 'Paid'),
             ('open_paid', 'Open and Paid'),
             ('draft_open_paid', 'Draft, Open and Paid')
-        ], string='Invoice State', readonly=True)
+        ], string='Invoice Status', readonly=True)
     sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
     purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',

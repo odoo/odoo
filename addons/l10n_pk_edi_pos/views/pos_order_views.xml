@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
         <field name="arch" type="xml">
             <filter name="status" position="after">
-                <filter string="FBR State" name="l10n_pk_edi_pos_state" domain="[]" context="{'group_by': 'l10n_pk_edi_pos_state'}"/>
+                <filter string="FBR Status" name="l10n_pk_edi_pos_state" domain="[]" context="{'group_by': 'l10n_pk_edi_pos_state'}"/>
             </filter>
         </field>
     </record>

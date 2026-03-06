@@ -15,7 +15,7 @@ class ResPartner(models.Model):
             ('valid', 'Valid'),
             ('invalid', 'Invalid'),
         ],
-        string='Tin Validation State',
+        string='TIN Validation Status',
         help="Technical field, hold the result of TIN validation using MyInvois API.\n"
              "It is non blocking, and will simply help ensure that the customer of an invoice is valid to avoid submission errors.",
         compute='_compute_l10n_my_tin_validation_state',

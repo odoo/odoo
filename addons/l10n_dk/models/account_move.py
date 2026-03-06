@@ -19,7 +19,7 @@ class AccountMove(models.Model):
         compute='_compute_nemhandel_move_state',
         init_storage=lambda model: None,
         store=True,
-        string='Nemhandel status',
+        string='Nemhandel Status',
         copy=False,
     )
     nemhandel_response_ids = fields.One2many('nemhandel.response', 'move_id')

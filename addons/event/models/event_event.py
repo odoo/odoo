@@ -102,8 +102,8 @@ class EventEvent(models.Model):
         ('normal', 'In Progress'),
         ('done', 'Ready for Next Stage'),
         ('blocked', 'Blocked'),
-        ('cancel', 'Cancelled')
-    ], default='normal', copy=False, compute='_compute_kanban_state', readonly=False, store=True, tracking=True)
+        ('cancel', 'Cancelled'),
+    ], string="Kanban Status", default='normal', copy=False, compute='_compute_kanban_state', readonly=False, store=True, tracking=True)
     stage_id = fields.Many2one(
         'event.stage', ondelete='restrict', default=_get_default_stage_id,
         group_expand='_read_group_expand_full', tracking=True, copy=False)
