@@ -8,4 +8,5 @@ from . import (
     sale_order,
     sale_order_coupon_points,
     sale_order_line,
+    account_move_line,
 )
