@@ -335,19 +335,21 @@ export class GeneratePrinterData {
         let orderChange = override || changesToOrder(this.order, categoryIdsSet, opts.cancelled);
         let reprint = false;
 
-        if (
-            !orderChange.new.length &&
-            !orderChange.cancelled.length &&
-            !orderChange.noteUpdate.length &&
-            !orderChange.internal_note &&
-            !orderChange.general_customer_note &&
-            order.uiState.lastPrints
-        ) {
-            orderChange = [order.uiState.lastPrints.at(-1)];
-            reprint = true;
-        } else {
-            order.uiState.lastPrints.push(orderChange);
-            orderChange = [orderChange];
+        if (!opts.reprintAll) {
+            if (
+                !orderChange.new.length &&
+                !orderChange.cancelled.length &&
+                !orderChange.noteUpdate.length &&
+                !orderChange.internal_note &&
+                !orderChange.general_customer_note &&
+                order.uiState.lastPrints
+            ) {
+                orderChange = [order.uiState.lastPrints.at(-1)];
+                reprint = true;
+            } else {
+                order.uiState.lastPrints.push(orderChange);
+                orderChange = [orderChange];
+            }
         }
 
         if (reprint && opts.orderDone) {

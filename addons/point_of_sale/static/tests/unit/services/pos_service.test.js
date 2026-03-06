@@ -537,4 +537,65 @@ describe("pos_store.js", () => {
         expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
     });
+
+    test("generatePreparationData - reprint all scenario", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        const posCategories = new Set(store.models["pos.category"].getAll().map((c) => c.id));
+
+        const generator = store.ticketPrinter.getGenerator({
+            models: store.models,
+            order,
+        });
+
+        const commitChanges = async () => {
+            order.updateLastOrderChange();
+            await store.syncAllOrders();
+        };
+
+        // Initial preparation (2 lines added)
+        const initialChanges = generator.generatePreparationData(posCategories, {});
+        await commitChanges();
+
+        expect(initialChanges).toHaveLength(1);
+        expect(initialChanges[0].changes.data).toHaveLength(2);
+        expect(initialChanges[0].changes.title).toBe("NEW");
+
+        // Add new product line
+        const product = store.models["product.template"].get(14);
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 2 }, order);
+
+        const addedLineChanges = generator.generatePreparationData(posCategories, {});
+        await commitChanges();
+
+        expect(addedLineChanges).toHaveLength(1);
+        expect(addedLineChanges[0].changes.data).toHaveLength(1);
+        expect(addedLineChanges[0].changes.title).toBe("NEW");
+
+        // Reprint last change
+        const reprintLast = generator.generatePreparationData(posCategories, {
+            explicitReprint: true,
+        });
+        await commitChanges();
+
+        expect(reprintLast).toHaveLength(1);
+        expect(reprintLast[0].changes.data).toHaveLength(1);
+        expect(reprintLast[0].changes.title).toBe("NEW");
+
+        // Reprint ALL changes
+        const reprintAll = generator.generatePreparationData(posCategories, {
+            orderChange: order.uiState?.lastPrints,
+            reprintAll: true,
+        });
+        await commitChanges();
+
+        expect(reprintAll).toHaveLength(2);
+
+        expect(reprintAll[0].changes.data).toHaveLength(2);
+        expect(reprintAll[0].changes.title).toBe("NEW");
+
+        expect(reprintAll[1].changes.data).toHaveLength(1);
+        expect(reprintAll[1].changes.title).toBe("NEW");
+    });
 });
