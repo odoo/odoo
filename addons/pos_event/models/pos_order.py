@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api
+from collections import defaultdict
 
 
 class PosOrder(models.Model):
@@ -42,6 +43,21 @@ class PosOrder(models.Model):
 
     @api.model
     def _process_order(self, order, existing_order):
+        ticket_qtys = defaultdict(int)
+        for line in order.get('lines', []):
+            if not isinstance(line, (list, tuple)) or len(line) != 3:
+                continue
+            command = line[0]
+            if command in (0, 1) and len(line) > 2:
+                vals = line[2]
+                ticket_id = vals.get('event_ticket_id')
+                if ticket_id:
+                    ticket_qtys[ticket_id] += vals.get('qty', 0)
+
+        if ticket_qtys:
+            tickets = self.env['event.event.ticket'].browse(ticket_qtys.keys())
+            tickets._lock_and_check_availability({t: ticket_qtys[t.id] for t in tickets})
+
         res = super()._process_order(order, existing_order)
         refunded_line_ids = [line[2].get('refunded_orderline_id') for line in order.get('lines') if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         refunded_orderlines = self.env['pos.order.line'].browse(refunded_line_ids)

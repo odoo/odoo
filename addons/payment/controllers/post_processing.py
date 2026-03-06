@@ -5,6 +5,7 @@ import logging
 import psycopg2
 
 from odoo import http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -56,6 +57,14 @@ class PaymentPostProcessing(http.Controller):
             ):  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
                 raise Exception('retry')
+            except psycopg2.errors.InFailedSqlTransaction:
+                request.env.cr.rollback()
+                raise Exception('retry')
+            except ValidationError as e:
+                request.env.cr.rollback()
+                monitored_tx._set_error(
+                    str(e), extra_allowed_states=('done',)
+                )
             except Exception as e:
                 request.env.cr.rollback()
                 _logger.exception(

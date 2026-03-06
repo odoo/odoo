@@ -304,14 +304,23 @@
             <t t-set="status_message" t-value="tx.provider_id.sudo().auth_msg"/>
         </t>
         <t t-elif="tx.state == 'done'">
-            <t t-set="alert_style" t-value="'success'"/>
-            <t t-if="not is_processing" t-set="status_heading">
-                <p>Thank you!</p>
+            <t t-if="is_processing">
+                <t t-set="alert_style" t-value="'info'"/>
+                <t t-set="status_heading" t-value="waiting_heading"/>
+                <t t-set="status_message">
+                    <p>Your payment is being processed</p>
+                </t>
             </t>
-            <t t-if="tx.operation == 'validation'" t-set="status_message">
-                <p>Your payment method has been saved.</p>
+            <t t-else="">
+                <t t-set="alert_style" t-value="'success'"/>
+                <t t-set="status_heading">
+                    <p>Thank you!</p>
+                </t>
+                <t t-if="tx.operation == 'validation'" t-set="status_message">
+                    <p>Your payment method has been saved.</p>
+                </t>
+                <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
             </t>
-            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
         </t>
         <t t-elif="tx.state == 'cancel'">
             <t t-set="alert_style" t-value="'danger'"/>
