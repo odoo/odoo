@@ -15,7 +15,7 @@
                 <group>
                     <group>
                         <field name="date" required="not template_has_dates and date_start" invisible="1"/>
-                        <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}'/>
+                        <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": True}'/>
                         <label for="alias_name" string="Project's Email"/>
                         <div class="o_row">
                             <field name="alias_name" placeholder="e.g. office-party"/>

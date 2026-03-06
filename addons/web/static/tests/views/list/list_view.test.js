@@ -11423,7 +11423,7 @@ test(`list daterange in form: open/close picker`, async () => {
                 <sheet>
                     <field name="foo_o2m">
                         <list editable="bottom">
-                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': '1'}"/>
+                            <field name="date" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': True}"/>
                         </list>
                     </field>
                 </sheet>

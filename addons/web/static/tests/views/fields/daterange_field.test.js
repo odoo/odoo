@@ -1181,7 +1181,7 @@ test("always range: related end date, both start date and end date empty", async
         resModel: "partner",
         arch: /* xml */ `
         <form>
-            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': '1'}"/>
+            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': True}"/>
         </form>`,
         resId: 1,
     });
@@ -1226,8 +1226,8 @@ test("there is no arrow between the dates with option always_range if nothing is
         resModel: "partner",
         arch: /* xml */ `
         <form>
-            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" />
-            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': 'true'}" readonly="true" />
+            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': True}" />
+            <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end', 'always_range': True}" readonly="true" />
         </form>`,
     });
 
@@ -1247,7 +1247,7 @@ test("invalid empty date with optional end date", async () => {
         arch: /* xml */ `
         <form>
             <label for="date" string="Daterange" />
-            <field name="date" widget="daterange" options="{'end_date_field': 'date_end','always_range': '1'}"  string="Planned Date" required="date_end"/>
+            <field name="date" widget="daterange" options="{'end_date_field': 'date_end','always_range': True}"  string="Planned Date" required="date_end"/>
             <field name="date_end" invisible="1" required="date"/>
         </form>`,
         resId: 1,
@@ -1272,7 +1272,7 @@ test("invalid empty date with optional start date", async () => {
         <form>
             <label for="date_end" string="Daterange" />
             <field name="date" invisible="1" required="date_end"/>
-            <field name="date_end" widget="daterange" options="{'start_date_field': 'date','always_range': '1'}" string="Planned Date" required="date"/>
+            <field name="date_end" widget="daterange" options="{'start_date_field': 'date','always_range': True}" string="Planned Date" required="date"/>
         </form>`,
         resId: 1,
     });

@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
-import { exprToBoolean } from "@web/core/utils/strings";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
@@ -439,13 +438,13 @@ export const dateField = {
         endDateField: options[END_DATE_FIELD_OPTION],
         maxDate: options.max_date,
         minDate: options.min_date,
-        alwaysRange: exprToBoolean(options.always_range),
+        alwaysRange: Boolean(options.always_range),
         placeholder,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         numeric: options.numeric,
-        warnFuture: exprToBoolean(options.warn_future),
+        warnFuture: Boolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
     }),
@@ -514,12 +513,12 @@ export const dateTimeField = {
     ],
     extractProps: (fieldInfo, dynamicInfo) => ({
         ...dateField.extractProps(fieldInfo, dynamicInfo),
-        showSeconds: exprToBoolean(fieldInfo.options.show_seconds ?? false),
-        showTime: exprToBoolean(fieldInfo.options.show_time ?? true),
+        showSeconds: fieldInfo.options.show_seconds ?? false,
+        showTime: fieldInfo.options.show_time ?? true,
     }),
     supportedTypes: ["datetime"],
     listViewWidth: ({ options }) => {
-        if (!exprToBoolean(options.show_time ?? true)) {
+        if (!(options.show_time ?? true)) {
             return dateField.listViewWidth({ options });
         }
         return options.numeric ? FIELD_WIDTHS.numeric_datetime : FIELD_WIDTHS.datetime;

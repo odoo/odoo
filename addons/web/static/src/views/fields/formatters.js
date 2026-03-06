@@ -92,7 +92,7 @@ export function formatDate(value, options = {}) {
     }
 }
 formatDate.extractOptions = ({ options }) => ({
-    numeric: exprToBoolean(options.numeric ?? false),
+    numeric: options.numeric ?? false,
 });
 
 export function formatDateTime(value, options = {}) {
@@ -107,9 +107,8 @@ export function formatDateTime(value, options = {}) {
 }
 formatDateTime.extractOptions = ({ attrs, options }) => ({
     ...formatDate.extractOptions({ attrs, options }),
-    showSeconds: exprToBoolean(options.show_seconds ?? false),
-    showTime: exprToBoolean(options.show_time ?? true),
-    showDate: exprToBoolean(options.show_date ?? true),
+    showSeconds: options.show_seconds ?? false,
+    showTime: options.show_time ?? true,
 });
 
 /**
@@ -280,7 +279,7 @@ export function formatFloatTime(value, options = {}) {
         {
             [options.unit]: value,
         },
-        options,
+        options
     );
 }
 formatFloatTime.extractOptions = ({ options }) => ({
