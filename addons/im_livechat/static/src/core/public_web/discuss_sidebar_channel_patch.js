@@ -12,8 +12,8 @@ const discussSidebarChannelPatch = {
         super.setup(...arguments);
         this.helpState = useState({ text: "" });
         useDynamicInterval(
-            (dt, selfMember) => {
-                if (!dt || selfMember) {
+            (dt) => {
+                if (!dt) {
                     return;
                 }
                 const diff = luxon.DateTime.now().diff(dt, ["days", "hours", "minutes", "seconds"]);
@@ -30,7 +30,7 @@ const discussSidebarChannelPatch = {
                     : _t("< 1m");
                 return (diff.minutes + 1 - diff.as("minutes")) * 60 * 1000;
             },
-            () => [this.channel.livechat_looking_for_help_since_dt, this.channel.self_member_id]
+            () => [this.channel.livechat_looking_for_help_since_dt]
         );
     },
 };
