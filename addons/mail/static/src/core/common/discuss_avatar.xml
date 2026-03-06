@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
         <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="this.props.className">
-            <mask t-att-id="this.uniqueId" width="32" height="32">
-                <rect x="0" y="0" height="32" width="32" fill="white"/>
-                <rect t-if="this.showIcon" color="black" t-att-x="this.isTyping ? 15 : 19" y="19" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8"/>
+            <mask t-att-id="this.uniqueId" width="1000" height="1000">
+                <rect x="0" y="0" height="100%" width="100%" fill="white"/>
+                <rect t-if="this.showIcon" color="black" x="0" y="0" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (this.isTyping ? 14 : 19) + ', 19) ' + (this.props.iconExtraTransform ?? '')"/>
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + this.uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTyping ? 16 : 21) + ', 20)'">
+            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTyping ? 16 : 21) + ', 20) ' + (this.props.iconExtraTransform ?? '')">
                 <svg width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
                         <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
