@@ -14,13 +14,6 @@ import { DateTimeOperation } from "@web/model/relational_model/operation";
 
 const { DateTime } = luxon;
 
-function getFormattedPlaceholder(value, type, options) {
-    if (value instanceof luxon.DateTime) {
-        return type === "date" ? formatDate(value, options) : formatDateTime(value, options);
-    }
-    return value || "";
-}
-
 /**
  * @typedef {luxon.DateTime} DateTime
  *
@@ -442,12 +435,12 @@ export const dateField = {
         },
     ],
     supportedTypes: ["date"],
-    extractProps: ({ options, placeholder, type }, dynamicInfo) => ({
+    extractProps: ({ options, placeholder }, dynamicInfo) => ({
         endDateField: options[END_DATE_FIELD_OPTION],
         maxDate: options.max_date,
         minDate: options.min_date,
         alwaysRange: exprToBoolean(options.always_range),
-        placeholder: getFormattedPlaceholder(placeholder, type, { numeric: options.numeric }),
+        placeholder,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
@@ -519,22 +512,11 @@ export const dateTimeField = {
             availableTypes: ["datetime", "char"],
         },
     ],
-    extractProps: ({ attrs, options, placeholder, type }, dynamicInfo) => {
-        const showSeconds = exprToBoolean(options.show_seconds ?? false);
-        const showTime = exprToBoolean(options.show_time ?? true);
-        const numeric = exprToBoolean(options.numeric ?? false);
-        return {
-            ...dateField.extractProps({ attrs, options, placeholder, type }, dynamicInfo),
-            placeholder: getFormattedPlaceholder(placeholder, type, {
-                numeric,
-                showSeconds,
-                showTime,
-            }),
-            numeric,
-            showSeconds,
-            showTime,
-        };
-    },
+    extractProps: (fieldInfo, dynamicInfo) => ({
+        ...dateField.extractProps(fieldInfo, dynamicInfo),
+        showSeconds: exprToBoolean(fieldInfo.options.show_seconds ?? false),
+        showTime: exprToBoolean(fieldInfo.options.show_time ?? true),
+    }),
     supportedTypes: ["datetime"],
     listViewWidth: ({ options }) => {
         if (!exprToBoolean(options.show_time ?? true)) {

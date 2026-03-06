@@ -16,6 +16,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const isSmall = utils.isSmall;
 
+const formatterRegistry = registry.category("formatters");
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
@@ -373,26 +374,32 @@ export class Field extends Component {
             this.field = getFieldFromRegistry(fieldType, this.props.type);
         }
 
-        useLayoutEffect(() => {
-            this.debouncedOverlayPositioning();
-        }, () => [this.props.record.data]);
+        useLayoutEffect(
+            () => {
+                this.debouncedOverlayPositioning();
+            },
+            () => [this.props.record.data]
+        );
 
-        useLayoutEffect((fieldEl) => {
-            if (!fieldEl) {
-                return;
-            }
-            positionInputBoxOverlay(fieldEl);
-            if (hasTouch() && this.props.fieldInfo?.viewType === "form") {
-                const focusIn = () => this.onFieldFocus(true);
-                const focusOut = () => this.onFieldFocus(false);
-                fieldEl.addEventListener("focusin", focusIn);
-                fieldEl.addEventListener("focusout", focusOut);
-                return () => {
-                    fieldEl.removeEventListener("focusin", focusIn);
-                    fieldEl.removeEventListener("focusout", focusOut);
+        useLayoutEffect(
+            (fieldEl) => {
+                if (!fieldEl) {
+                    return;
                 }
-            }
-        }, () => [this.fieldRef.el]);
+                positionInputBoxOverlay(fieldEl);
+                if (hasTouch() && this.props.fieldInfo?.viewType === "form") {
+                    const focusIn = () => this.onFieldFocus(true);
+                    const focusOut = () => this.onFieldFocus(false);
+                    fieldEl.addEventListener("focusin", focusIn);
+                    fieldEl.addEventListener("focusout", focusOut);
+                    return () => {
+                        fieldEl.removeEventListener("focusin", focusIn);
+                        fieldEl.removeEventListener("focusout", focusOut);
+                    };
+                }
+            },
+            () => [this.fieldRef.el]
+        );
     }
 
     get classNames() {
@@ -463,10 +470,12 @@ export class Field extends Component {
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
                 }
-                if (fieldInfo.attrs.placeholder || fieldInfo.options.placeholder_field) {
-                    fieldInfo.placeholder =
-                        record.data[fieldInfo.options.placeholder_field] ||
-                        fieldInfo.attrs.placeholder;
+                if (fieldInfo.options.placeholder_field) {
+                    const placeholderField = fieldInfo.options.placeholder_field;
+                    const formatter = formatterRegistry.get(record.fields[placeholderField].type);
+                    fieldInfo.placeholder = formatter(record.data[placeholderField]);
+                } else if (fieldInfo.attrs.placeholder) {
+                    fieldInfo.placeholder = fieldInfo.attrs.placeholder;
                 }
 
                 const dynamicInfo = {
@@ -519,6 +528,8 @@ export class Field extends Component {
     }
     onFieldFocus(isActive) {
         const formLabelSelector = `.o_cell:has(+ .o_cell .o_field_widget[name=${this.props.name}]) .o_form_label`;
-        document.querySelector(`label[for=${this.fieldComponentProps.id}], ${formLabelSelector}`)?.classList.toggle("o_label_active", isActive);
+        document
+            .querySelector(`label[for=${this.fieldComponentProps.id}], ${formLabelSelector}`)
+            ?.classList.toggle("o_label_active", isActive);
     }
 }
