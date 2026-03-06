@@ -29,7 +29,7 @@
         trigger: 'div[name="subject"]',
         content: markup(_t('Pick the <b>email subject</b>.')),
         tooltipPosition: 'bottom',
-        run: 'click',
+        run: "edit",
     }, {
         isActive: ["auto"],
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
@@ -52,13 +52,13 @@
         run: 'click',
     }, {
         isActive: ["enterprise"],
-        trigger: 'div[name="body_arch"] :iframe div.theme_selection_done div.s_text_block',
+        trigger: 'div[name="body_arch"] :iframe section.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         tooltipPosition: 'top',
         run: 'click',
     }, {
         isActive: ["community"],
-        trigger: 'div[name="body_arch"] :iframe div.o_mail_block_title_text',
+        trigger: 'div[name="body_arch"] :iframe section.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         tooltipPosition: 'top',
         run: 'click',
