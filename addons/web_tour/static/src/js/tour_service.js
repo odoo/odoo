@@ -160,6 +160,9 @@ export class TourService {
      * @param {string} name The name of the tour
      */
     async getTour(name, options) {
+        if (options.mode !== "manual") {
+            await this.waitUntilTourRegistered(name);
+        }
         let tour = tourRegistry.get(name, null);
         if (options.mode === "manual" && options.fromDB) {
             tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
@@ -186,6 +189,26 @@ export class TourService {
                     ? tour.steps
                     : [],
         };
+    }
+
+    /**
+     * Waits up to 5 seconds for a tour to be registered in the client-side
+     * tour registry.
+     *
+     * This is required because after a browser refresh, the tour definition
+     * may not yet be loaded when execution starts. Without this guard,
+     * the tour could abort if it is triggered before being registered.
+     *
+     * @param {string} name - The tour name.
+     * @returns {Promise<boolean>} Resolves to `true` if the tour is found
+     *   within the timeout, otherwise `false`.
+     */
+    async waitUntilTourRegistered(name) {
+        const start = Date.now();
+        while (!tourRegistry.contains(name) && Date.now() - start <= 5000) {
+            await new Promise((r) => setTimeout(r, 50));
+        }
+        return tourRegistry.contains(name);
     }
 
     /**
