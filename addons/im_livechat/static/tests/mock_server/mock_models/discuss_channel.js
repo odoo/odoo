@@ -2,7 +2,7 @@ import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { fields, getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
@@ -195,7 +195,13 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         for (const channel of this._filter([["livechat_status", "=", "need_help"]])) {
             needHelpBefore.push(channel.id);
         }
-        const result = super.write(...arguments);
+        if ("livechat_status" in values) {
+            values.livechat_looking_for_help_since_dt =
+                values.livechat_status === "need_help"
+                    ? serializeDateTime(luxon.DateTime.now())
+                    : false;
+        }
+        const result = super.write(idOrIds, values);
         const needHelpAfter = [];
         for (const channel of this._filter([["livechat_status", "=", "need_help"]])) {
             needHelpAfter.push(channel.id);

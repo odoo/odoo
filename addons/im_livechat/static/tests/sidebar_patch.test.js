@@ -470,7 +470,7 @@ test("show looking for help duration in the sidebar", async () => {
         { guest_id: guestId, channel_id: channelId, livechat_member_type: "visitor" },
     ]);
     await start();
-    await openDiscuss();
+    await openDiscuss(channelId);
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
@@ -493,6 +493,15 @@ test("show looking for help duration in the sidebar", async () => {
     await advanceTime(60_000 * 60 * 24);
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
+    );
+    await click("button[name='join-channel']");
+    await contains(".o-livechat-LivechatStatusSelection .active:text('In Progress')");
+    await waitForNone(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer"
+    );
+    await click(".o-livechat-LivechatStatusSelection button:text('Looking for help')");
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
 });
 
