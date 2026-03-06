@@ -171,6 +171,7 @@ def fill_form_fields_pdf(writer, form_fields):
     # correctly filled until the user click on it, see: https://github.com/py-pdf/pypdf/issues/355
     if hasattr(writer, 'set_need_appearances_writer'):
         writer.set_need_appearances_writer()
+        writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
     else:  # This method was renamed in PyPDF2 2.0
         catalog = writer._root_object
         # get the AcroForm tree
