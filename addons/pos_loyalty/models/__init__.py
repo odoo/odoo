@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import account_move_line
 from . import barcode_rule
 from . import loyalty_card
 from . import loyalty_mail
