@@ -77,3 +77,39 @@ test("should use default_employee_id from context in work entry", async () => {
         work_entry_type_id: workEntryTypeId,
     });
 });
+
+test("calendar multi-selection quick buttons deduplicate favorites", async () => {
+    const { env } = await makeMockServer();
+    const [type] = env["hr.work.entry.type"].create([
+        {
+            name: "MyType",
+        },
+    ]);
+    env["hr.work.entry"].create([
+        {
+            name: "e1",
+            employee_id: 100,
+            work_entry_type_id: type,
+            date: "2025-01-01",
+            create_date: "2025-01-01",
+        },
+        {
+            name: "e2",
+            employee_id: 100,
+            work_entry_type_id: type,
+            date: "2025-01-02",
+            create_date: "2025-01-02",
+        },
+    ]);
+
+    const calendar = await mountView({
+        type: "calendar",
+        resModel: "hr.work.entry",
+    });
+    const controller = getCalendarController(calendar);
+    await controller.model._fetchUserFavoritesWorkEntries();
+    //ensure favorites deduplication happened
+    expect(controller.model.userFavoritesWorkEntries).toHaveLength(1, {
+        message: "calendar model favorites list must contain just one type",
+    });
+});
