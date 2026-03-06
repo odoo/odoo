@@ -618,11 +618,24 @@
         active="False"
         name="Bordered CTA Wrapper"
     >
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+            <t t-set="ptals" t-value="product.valid_product_template_attribute_line_ids"/>
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <t t-set="show_boxed_cta" t-value="
+                not combination_info['prevent_zero_price_sale']
+                or is_view_active('website_sale_wishlist.product_add_to_wishlist')
+                or (
+                    is_view_active('website_sale_comparison.product_add_to_compare')
+                    and product_variant_id and ptals
+                )
+            "/>
+        </xpath>
+
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
             <attribute
                 name="t-att-class"
-                remove="pt-3"
-                add="' o_wsale_cta_wrapper_boxed border rounded p-3'"
+                remove="('pt-3' if show_boxed_cta else '')"
+                add="(' o_wsale_cta_wrapper_boxed border rounded p-3' if show_boxed_cta else '')"
                 separator=" + "
             />
         </xpath>
@@ -633,11 +646,11 @@
             <attribute name="t-att-class" remove="flex-lg-grow-0" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
-            <div class="d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
+            <div t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-flex'}} gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom">
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
                 <div>
                     <t t-call="website_sale.product_price"/>
-                    <small 
+                    <small
                         t-if="combination_info.get('base_unit_price')"
                         class="ms-1 text-muted o_base_unit_price_wrapper d-none"
                     >
