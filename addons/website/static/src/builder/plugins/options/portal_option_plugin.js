@@ -12,6 +12,7 @@ export class PortalOptionPlugin extends Plugin {
             SetStylePortalCardAction,
             CardVisibilityOptionAction,
         },
+        anchor_excluded_selectors: ".o_portal_index_card",
         immutable_link_selectors: [".o_portal_index_card > *"],
     };
 }
