@@ -61,10 +61,15 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.portal_confirmation_pay", readonly=False
     )
     prepayment_percent = fields.Float(related="company_id.prepayment_percent", readonly=False)
+    display_product_images_on_so = fields.Boolean(
+        related="company_id.display_product_images_on_so", readonly=False
+    )
     downpayment_account_id = fields.Many2one(
         related="company_id.downpayment_account_id", readonly=False
     )
-    downpayment_account_active = fields.Boolean(related='downpayment_account_id.active', string="Down payment Account Active")
+    downpayment_account_active = fields.Boolean(
+        related="downpayment_account_id.active", string="Down payment Account Active"
+    )
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")

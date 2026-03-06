@@ -21,6 +21,7 @@ class ResCompany(models.Model):
         default=1.0,
         help="The percentage of the amount needed to be paid to confirm quotations.",
     )
+    display_product_images_on_so = fields.Boolean(string="Display Product Images")
     quotation_validity_days = fields.Integer(
         string="Default Quotation Validity",
         default=30,

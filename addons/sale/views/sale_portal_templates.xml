@@ -844,7 +844,14 @@
                                             name="td_product_name"
                                             t-att-class="padding_class"
                                         >
-                                            <span name="span_product_name" t-field="line.name"/>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <img
+                                                    t-if="sale_order.company_id.display_product_images_on_so and line.product_id.image_128"
+                                                    t-att-src="image_data_uri(line.product_id.image_128)"
+                                                    t-att-alt="line.product_id.display_name" class="o_sale_portal_product_image d-none d-lg-inline me-2 rounded object-fit-cover"
+                                                />
+                                                <span name="span_product_name" t-field="line.name"/>
+                                            </div>
                                         </td>
                                         <td name="td_product_quantity" class="text-end">
                                             <div id="quote_qty">
