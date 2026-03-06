@@ -73,7 +73,9 @@ export class Settings extends Record {
             noiseSuppression: true,
         };
         if (this.audioInputDeviceId) {
-            constraints.deviceId = this.audioInputDeviceId;
+            // The use of `exact` is at least required to make switching device
+            // work while in a VoIP call.
+            constraints.deviceId = { exact: this.audioInputDeviceId };
         }
         return constraints;
     }
