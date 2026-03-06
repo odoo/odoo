@@ -120,6 +120,27 @@ describe("collapsed selection", () => {
         execCommand(editor, "historyUndo");
         expect(getContent(el)).toBe("<p>ab=>&nbsp;[]</p>");
     });
+
+    test("should not replace last chars with symbol", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <div class="o-paragraph">\ufeff
+                    <span class="o_file_box o-contenteditable-false" contenteditable="false">
+                        <span class="d-flex flex-grow-1 align-items-center alert alert-info">
+                            <span class="o_file_image d-flex o_image user-select-none" contenteditable="false">
+                                <br>
+                            </span>
+                            <span class="o_file_name_container mx-2 d-flex flex-grow-1">
+                                <a class="o_link_readonly w-100" contenteditable="false" href="#">odoo_gmail.png</a>
+                            </span>
+                        </span>
+                    </span>\ufeff&nbsp;--> Document (fr&nbsp;[]
+                </div>
+            `)
+        );
+        await insertSpace(editor);
+        expect(getContent(el).includes("→")).toBe(false);
+    });
 });
 
 describe("not collapsed selection", () => {
