@@ -361,6 +361,7 @@ export function forwardToThumbnail(imgEl) {
     }
 }
 
+// TODO: to remove in master (use the one of html_editor instead)
 /**
  * @param {HTMLImageElement} img
  * @returns {Promise<Boolean>}
