@@ -518,47 +518,6 @@ export function clickOnExtraMenuItem(stepOptions, backend = false) {
  * @param {boolean} [options.edition] If the tour starts in edit mode
  * @param {() => TourStep[]} steps The steps of the tour. Has to be a function to avoid direct interpolation of steps.
  */
-export function registerWebsitePreviewTourLegacy(name, options, steps) {
-    if (typeof steps !== "function") {
-        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
-    }
-    registry.category("web_tour.tours").remove(name);
-    return registry.category("web_tour.tours").add(name, {
-        ...omit(options, "edition"),
-        url: getClientActionUrl(options.url, !!options.edition),
-        steps: () => {
-            const tourSteps = [...steps()];
-            // Note: for both non edit mode and edit mode, we set a high timeout for the
-            // first step. Indeed loading both the backend and the frontend (in the
-            // iframe) and potentially starting the edit mode can take a long time in
-            // automatic tests. We'll try and decrease the need for this high timeout
-            // of course.
-            if (options.edition) {
-                tourSteps.unshift({
-                    content: "Wait for the edit mode to be started",
-                    trigger: ".o_builder_sidebar_open",
-                    timeout: 30000,
-                });
-            } else {
-                tourSteps[0].timeout = 20000;
-            }
-            return tourSteps.map((step) => {
-                delete step.noPrepend;
-                return step;
-            });
-        },
-    });
-}
-
-/**
- * Registers a tour that will go in the website client action.
- *
- * @param {string} name The tour's name
- * @param {object} options The tour options
- * @param {string} options.url The page to edit
- * @param {boolean} [options.edition] If the tour starts in edit mode
- * @param {() => TourStep[]} steps The steps of the tour. Has to be a function to avoid direct interpolation of steps.
- */
 export function registerWebsitePreviewTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
@@ -594,11 +553,9 @@ export function registerThemeHomepageTour(name, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    return registerWebsitePreviewTourLegacy(
+    return registerWebsitePreviewTour(
         "homepage", // it overrides the community tour with the associated theme tour
-        {
-            url: "/",
-        },
+        {},
         () => [
             ...clickOnEditAndWaitEditMode(),
             // FIXME(?) this should probably reuse the prepend_trigger function
@@ -615,7 +572,7 @@ export function registerBackendAndFrontendTour(name, options, steps) {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
     if (window.location.pathname === "/odoo") {
-        return registerWebsitePreviewTourLegacy(name, options, () => {
+        return registerWebsitePreviewTour(name, options, () => {
             const newSteps = [];
             for (const step of steps()) {
                 const newStep = Object.assign({}, step);

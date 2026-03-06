@@ -4,13 +4,15 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnEditAndWaitEditModeInTranslatedPage,
     clickOnSave,
+    getClientActionUrl,
     insertSnippet,
-    registerWebsitePreviewTourLegacy,
+    registerWebsitePreviewTour,
     testSwitchWebsite,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
 
-registerWebsitePreviewTourLegacy("snippet_translation", {}, () => [
+registerWebsitePreviewTour("snippet_translation", {}, () => [
+    stepUtils.goToUrl(getClientActionUrl()),
     {
         content: "Wait for website preview and check language",
         trigger: ":iframe html:has(body:contains(welcome to your)):has(.o_top_fixed_element)",
@@ -33,12 +35,13 @@ registerWebsitePreviewTourLegacy("snippet_translation", {}, () => [
         trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
     },
 ]);
-registerWebsitePreviewTourLegacy(
+registerWebsitePreviewTour(
     "snippet_translation_changing_lang",
     {
         undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     },
     () => [
+        stepUtils.goToUrl(getClientActionUrl()),
         stepUtils.waitIframeIsReady(),
         {
             content: "Open dropdown language selector",
@@ -93,7 +96,8 @@ registerWebsitePreviewTourLegacy(
         },
     ]
 );
-registerWebsitePreviewTourLegacy("snippet_translation_switching_website", {}, () => [
+registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
+    stepUtils.goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditModeInTranslatedPage(),
     ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
     {
@@ -109,7 +113,8 @@ registerWebsitePreviewTourLegacy("snippet_translation_switching_website", {}, ()
         trigger: ":iframe .s_cover .btn-outline-secondary:contains('Fake User Lang')",
     },
 ]);
-registerWebsitePreviewTourLegacy("snippet_dialog_rtl", {}, () => [
+registerWebsitePreviewTour("snippet_dialog_rtl", {}, () => [
+    stepUtils.goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditMode(),
     {
         trigger: ".o_builder_sidebar_open",

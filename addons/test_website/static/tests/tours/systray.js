@@ -2,7 +2,7 @@
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    registerWebsitePreviewTourLegacy,
+    registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -209,10 +209,9 @@ const ensureWebsiteSwitcherIsVisible = [
 ];
 
 const register = (title, steps, undeterministicTour_doNotCopy) => {
-    registerWebsitePreviewTourLegacy(
+    registerWebsitePreviewTour(
         title,
         {
-            url: "/test_model/1",
             undeterministicTour_doNotCopy,
         },
         steps

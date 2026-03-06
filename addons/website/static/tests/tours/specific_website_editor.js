@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
-    registerWebsitePreviewTourLegacy,
+    registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTourLegacy(
+registerWebsitePreviewTour(
     "generic_website_editor",
     {
         edition: true,
