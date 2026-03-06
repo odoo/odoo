@@ -972,6 +972,7 @@ class TestExpenses(TestExpenseCommon):
             'payment_method_line_id': sepa_ct_line.id,
             'total_amount_currency': 100.00,
             'currency_id': self.env.ref('base.EUR').id,
+            'vendor_id': self.partner_a.id,
         })
 
         expense.action_submit()
