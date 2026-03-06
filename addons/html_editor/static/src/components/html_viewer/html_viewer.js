@@ -13,6 +13,7 @@ import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
+import { browser } from "@web/core/browser/browser";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -164,10 +165,17 @@ export class HtmlViewer extends Component {
     }
 
     /**
-     * Ensure all links are opened in a new tab.
+     * Retarget links to open in a new tab.
+     * When inside an iframe, all links are retargeted.
+     * Otherwise, only external links (different origin) are retargeted.
      */
     retargetLinks(container) {
-        for (const link of container.querySelectorAll("a")) {
+        const isInsideIframe = container.ownerDocument !== document;
+        const retargetSelector = isInsideIframe
+            ? "a"
+            : `a:not([href^="${browser.location.origin}"]):not([href^="/"])`;
+
+        for (const link of container.querySelectorAll(retargetSelector)) {
             this.retargetLink(link);
         }
     }
