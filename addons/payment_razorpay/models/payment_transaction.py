@@ -65,7 +65,7 @@ class PaymentTransaction(models.Model):
         else:
             phone = ""
         payload = {
-            "name": self.partner_name,
+            "name": self.partner_name.replace(",", " ")[:50],
             "email": self.partner_email or "",
             "contact": phone,
             "fail_existing": "0",  # Don't throw an error if the customer already exists.
