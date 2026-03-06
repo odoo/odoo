@@ -23,7 +23,7 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { hasTouch, isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -1437,6 +1437,7 @@ export class LinkPlugin extends Plugin {
                     },
                     {
                         sequence: 50,
+                        useBottomSheet: this.services.ui.isSmall && hasTouch(),
                     }
                 ),
                 isAvailable: link_popover.isAvailable,
