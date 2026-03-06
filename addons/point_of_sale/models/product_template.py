@@ -307,9 +307,7 @@ class ProductTemplate(models.Model):
         self._check_is_special_product()
 
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
-        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
-        if used_products & self:
+        if any(self.mapped('available_in_pos')) and self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
             raise UserError(_(
                 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
                 "Make sure to close all sessions first to avoid any issues.",
