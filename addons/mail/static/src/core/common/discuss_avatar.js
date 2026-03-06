@@ -12,6 +12,7 @@ export class DiscussAvatar extends Component {
         "member?",
         "persona?",
         "thread?",
+        "iconExtraTransform?",
         "size?",
         "typing?",
         "className?",
