@@ -6,8 +6,8 @@
             <div t-custom-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="member.name" t-att-title="member.name"/>
             </div>
-            <i t-if="member.channel_role === 'owner'" class="ms-2 fa fa-star text-warning" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="member.channel_role === 'admin'" class="ms-2 fa fa-star text-primary" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+            <i t-if="member.channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>
+            <i t-if="member.channel_role === 'admin'" class="ms-1 fa fa-star text-primary lh-sm" role="img" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="ms-auto">
                 <span t-if="member.in(member.channel_id.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
                 <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
@@ -19,7 +19,7 @@
                 'd-flex': showingActions.isOpen or store.useMobileView,
             }">
                 <Dropdown state="showingActions" position="'bottom-end'" menuClass="'my-1 ' + store.discussDropdownMenuClass(this)">
-                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen }" title="Member Actions">
+                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 ms-1 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen }" title="Member Actions">
                         <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                     </button>
                     <t t-set-slot="content">
