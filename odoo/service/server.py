@@ -55,7 +55,8 @@ except ImportError:
     def setproctitle(x):
         return None
 
-from odoo import api, sql_db
+from odoo import sql_db
+from odoo.modules.loading import test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import OrderedSet, config, gc, osutil, profiler
@@ -1597,26 +1598,27 @@ def preload_registries(dbnames):
 
                 registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
 
-                # run post-install tests
                 if config['test_enable']:
-                    from odoo.tests import loader  # noqa: PLC0415
-                    t0 = time.time()
-                    t0_sql = sql_db.sql_counter
+                    # run at-install tests if not update_module from config
+                    if not update_module:
+                        _logger.info("Starting at-install tests after registry loaded")
+                        module_names = sorted(registry._init_modules)
+                        test_time, test_count, test_queries, _ = test_modules(registry, module_names, 'at_install', registry._assertion_report)
+                        if test_count:
+                            _logger.info("%d at-install tests after registry loaded in %.2fs, %s queries",
+                                        test_count,
+                                        test_time,
+                                        test_queries)
+
+                    # run post-install tests
                     module_names = sorted(registry.updated_modules if update_module else
                                     registry._init_modules)
                     _logger.info("Starting post tests")
-                    tests_before = registry._assertion_report.testsRun
-                    post_install_suite = loader.make_suite(module_names, 'post_install')
-                    if post_install_suite.has_http_case():
-                        with registry.cursor() as cr:
-                            env = api.Environment(cr, api.SUPERUSER_ID, {})
-                            env['ir.qweb']._pregenerate_assets_bundles()
-                    result = loader.run_suite(post_install_suite, global_report=registry._assertion_report)
-                    registry._assertion_report.update(result)
+                    test_time, test_count, test_queries, _ = test_modules(registry, module_names, 'post_install', registry._assertion_report)
                     _logger.info("%d post-tests in %.2fs, %s queries",
-                                registry._assertion_report.testsRun - tests_before,
-                                time.time() - t0,
-                                sql_db.sql_counter - t0_sql)
+                                test_count,
+                                test_time,
+                                test_queries)
 
                     registry._assertion_report.log_stats()
                 if registry._assertion_report and not registry._assertion_report.wasSuccessful():
