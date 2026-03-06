@@ -118,6 +118,7 @@
         <field name="view_mode">calendar</field>
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
         <field name="domain">[('employee_id.active','=',True)]</field>
+        <!-- <field name="domain">[('employee_id.leave_manager_id','=',uid)]</field> -->
         <field name="context">{'hide_employee_name': 1, 'search_default_my_team': 1, 'search_default_current_year': 1,
             'search_default_exclude_refused_leaves': 1}</field>
         <field name="help" type="html">
