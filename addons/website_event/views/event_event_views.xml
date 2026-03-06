@@ -36,12 +36,16 @@
                 <field name="is_published" widget="website_redirect_button"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <div name="event_menu_configuration" class="o_event_menu_configuration" groups="base.group_no_one">
-                    <label for="website_menu" string="Website Submenu" class="me-1"/>
-                    <field name="website_menu" class="me-3"/>
+                <div name="event_menu_configuration" class="o_event_menu_configuration d-flex flex-column flex-md-row flex-wrap" groups="base.group_no_one">
+                    <span>
+                        <field name="website_menu" class="w-auto"/>
+                        <label for="website_menu" string="Website Submenu" />
+                    </span>
                     <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
-                    <label for="community_menu" string="Community" class="me-1"/>
-                    <field name="community_menu" invisible="1" class="me-3"/>  <!-- The computation relies on `_origin` for an `onchange` context. Changed from a template that has no community menu to one that has a community menu. -->
+                    <span name="community_menu" invisible="1">
+                        <field name="community_menu" class="w-auto"/>  <!-- The computation relies on `_origin` for an `onchange` context. Changed from a template that has no community menu to one that has a community menu. -->
+                        <label for="community_menu" string="Community" />
+                    </span>
                 </div>
             </xpath>
             <field name="tag_ids" position="attributes">
