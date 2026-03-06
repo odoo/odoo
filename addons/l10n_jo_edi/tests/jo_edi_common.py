@@ -53,6 +53,7 @@ class JoEdiCommon(AccountTestInvoicingCommon):
         })
 
         # The rate of 1 USD = 2 JOD is meant to simplify tests
+        cls.jod = cls.env.ref('base.JOD')
         cls.usd = cls.env.ref('base.USD')
         cls.setup_currency_rate(cls.usd, 0.5)
 
