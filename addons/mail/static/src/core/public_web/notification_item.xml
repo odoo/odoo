@@ -14,7 +14,7 @@
             'o-active': props.isActive,
         }">
             <div class="o-mail-NotificationItem-avatarContainer position-relative flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
-                <DiscussAvatar t-if="props.thread or props.persona" thread="props.thread" persona="props.persona" size="ui.isSmall ? 52 : undefined"/>
+                <DiscussAvatar t-if="props.thread or props.persona" thread="props.thread" persona="props.persona" size="ui.isSmall ? 52 : undefined" iconExtraTransform="ui.isSmall ? 'scale(.75) translate(3, 3)' : undefined"/>
                 <img t-else="" class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': ui.isSmall, 'rounded': !ui.isSmall }" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-if="props.slots and props.slots.icon" t-slot="icon"/>
             </div>
