@@ -3706,3 +3706,7 @@ class AccountMoveLine(models.Model):
         This method is overridden in the sale order module.
         '''
         return self.env['account.move.line']
+
+    def _get_discount_lines(self):
+        ''' Return the discount move lines associated with the move line.'''
+        return self.filtered(lambda line: line.display_type == 'discount')
