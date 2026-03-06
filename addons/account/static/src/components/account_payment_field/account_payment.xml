@@ -24,7 +24,7 @@
                                    class="open_account_move oe_form_field btn btn-link w-100 text-start"
                                    t-on-click="() => this.openMove(line.move_id)"
                                    data-bs-toggle="tooltip"
-                                   t-att-payment-id="account_payment_id"
+                                   t-att-payment-id="this.account_payment_id"
                                    t-out="line.move_name"/>
                             </td>
                             <td class="ps-2">
@@ -76,48 +76,48 @@
 
     <t t-name="account.AccountPaymentPopOver">
         <div class="account_payment_popover">
-            <h3 t-if="props.title" class="popover-header"><t t-out="props.title"/></h3>
+            <h3 t-if="this.props.title" class="popover-header"><t t-out="this.props.title"/></h3>
             <div class="px-2">
                 <div>
                     <table>
                         <tr>
                             <td class="fw-bolder">Amount:</td>
                             <td class="ps-1">
-                                <t t-out="props.amount_company_currency"></t>
-                                <t t-if="props.amount_foreign_currency">
-                                    (<span class="fa fa-money"/> <t t-out="props.amount_foreign_currency"/>)
+                                <t t-out="this.props.amount_company_currency"></t>
+                                <t t-if="this.props.amount_foreign_currency">
+                                    (<span class="fa fa-money"/> <t t-out="this.props.amount_foreign_currency"/>)
                                 </t>
                             </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder align-top">Memo:</td>
                             <td class="ps-1">
-                                <div class="o_memo_content" t-att-data-tooltip="props.ref" data-tooltip-position="left">
-                                    <t t-out="props.ref"/>
+                                <div class="o_memo_content" t-att-data-tooltip="this.props.ref" data-tooltip-position="left">
+                                    <t t-out="this.props.ref"/>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder">Date:</td>
-                            <td class="ps-1"><t t-out="props.date"/></td>
+                            <td class="ps-1"><t t-out="this.props.date"/></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder">Journal:</td>
                             <td class="ps-1">
-                                <t t-out="props.journal_name"/>
-                                <span t-if="props.payment_method_name">
-                                    (<t t-out="props.payment_method_name"/>)
+                                <t t-out="this.props.journal_name"/>
+                                <span t-if="this.props.payment_method_name">
+                                    (<t t-out="this.props.payment_method_name"/>)
                                 </span>
                             </td>
                         </tr>
-                        <tr t-if="props.company_name">
+                        <tr t-if="this.props.company_name">
                             <td class="fw-bolder">Branch:</td>
-                            <td class="ps-1"><t t-out="props.company_name"/></td>
+                            <td class="ps-1"><t t-out="this.props.company_name"/></td>
                         </tr>
                     </table>
                 </div>
-                <button class="btn btn-sm btn-primary js_unreconcile_payment float-start" style="margin-top:5px; margin-bottom:5px;" t-on-click="() => props._onRemoveMoveReconcile(props.move_id, props.partial_id)">Unreconcile</button>
-                <button class="btn btn-sm btn-secondary js_open_payment float-end" style="margin-top:5px; margin-bottom:5px;" t-on-click="() => props._onOpenMove(props.move_id)">View</button>
+                <button class="btn btn-sm btn-primary js_unreconcile_payment float-start" style="margin-top:5px; margin-bottom:5px;" t-on-click="() => this.props._onRemoveMoveReconcile(this.props.move_id, this.props.partial_id)">Unreconcile</button>
+                <button class="btn btn-sm btn-secondary js_open_payment float-end" style="margin-top:5px; margin-bottom:5px;" t-on-click="() => this.props._onOpenMove(this.props.move_id)">View</button>
             </div>
         </div>
     </t>
