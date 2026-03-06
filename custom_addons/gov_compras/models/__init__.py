@@ -1,3 +1,4 @@
+from . import gov_compras_category
 from . import gov_compras_catalog_item
 from . import gov_compras_item_track
 from . import gov_compras_previsao

@@ -7,12 +7,12 @@
             <list string="Catálogo de Itens">
                 <field name="code"/>
                 <field name="name"/>
-                <field name="ug_id"/>
-                <field name="categoria" optional="show"/>
-                <field name="unidade_medida" optional="show"/>
-                <field name="natureza_despesa" optional="show"/>
-                <field name="ativo_previsao"/>
-                <field name="active" optional="show"/>
+                <field name="category_id" optional="show"/>
+                <field name="uom_id" optional="show"/>
+                <field name="natureza_despesa_id" optional="show"/>
+                <field name="ug_ids" widget="many2many_tags" optional="hide"/>
+                <field name="ativo_previsao" optional="show"/>
+                <field name="active" optional="hide"/>
             </list>
         </field>
     </record>
@@ -22,17 +22,20 @@
         <field name="model">gov.compras.catalog.item</field>
         <field name="arch" type="xml">
             <form string="Item de Catálogo">
+                <header>
+                    <button name="action_add_to_my_ug" type="object" string="Adicionar à minha UG" class="oe_highlight" invisible="not id"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="code"/>
                             <field name="name"/>
-                            <field name="ug_id"/>
-                            <field name="categoria"/>
+                            <field name="category_id"/>
+                            <field name="ug_ids" widget="many2many_tags"/>
                         </group>
                         <group>
-                            <field name="unidade_medida"/>
-                            <field name="natureza_despesa"/>
+                            <field name="uom_id"/>
+                            <field name="natureza_despesa_id"/>
                             <field name="ativo_previsao"/>
                             <field name="active"/>
                         </group>
@@ -52,19 +55,26 @@
             <search string="Catálogo de Itens">
                 <field name="code"/>
                 <field name="name"/>
-                <field name="ug_id"/>
-                <field name="categoria"/>
+                <field name="ug_ids"/>
+                <field name="category_id"/>
                 <filter string="Ativos Previsão" name="f_previsao" domain="[('ativo_previsao', '=', True)]"/>
-                <filter name="g_ug" string="UG" context="{'group_by': 'ug_id'}"/>
-                <filter name="g_categoria" string="Categoria" context="{'group_by': 'categoria'}"/>
+                <filter name="g_categoria" string="Categoria" context="{'group_by': 'category_id'}"/>
             </search>
         </field>
     </record>
 
-    <record id="action_gov_compras_catalog_item" model="ir.actions.act_window">
-        <field name="name">Catálogo de Itens</field>
+    <record id="action_gov_compras_catalog_item_general" model="ir.actions.act_window">
+        <field name="name">Catálogo Geral de Itens</field>
         <field name="res_model">gov.compras.catalog.item</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_gov_compras_catalog_item_search"/>
+    </record>
+
+    <record id="action_gov_compras_catalog_item_ug" model="ir.actions.act_window">
+        <field name="name">Meu Catálogo (UG)</field>
+        <field name="res_model">gov.compras.catalog.item</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('ug_ids', 'in', allowed_company_ids[0])]</field>
         <field name="search_view_id" ref="view_gov_compras_catalog_item_search"/>
     </record>
 </odoo>

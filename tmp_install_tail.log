@@ -1,0 +1,52 @@
+2026-03-05 20:31:09,469 17136 INFO ? odoo: Odoo version 19.0 
+2026-03-05 20:31:09,469 17136 INFO ? odoo: Using configuration file at c:\users\ander\onedrive\documentos\github\odoo\kore.conf 
+2026-03-05 20:31:09,469 17136 INFO ? odoo: addons paths: _NamespacePath(['C:\\Users\\ander\\OneDrive\\Documentos\\GitHub\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons', 'c:\\users\\ander\\onedrive\\documentos\\github\\odoo\\custom_addons\\knowledge']) 
+2026-03-05 20:31:09,469 17136 INFO ? odoo: database: atlas@localhost:5433 
+2026-03-05 20:31:10,477 17136 INFO kore odoo.modules.loading: loading 1 modules... 
+2026-03-05 20:31:10,482 17136 INFO kore odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2026-03-05 20:31:10,515 17136 INFO kore odoo.modules.loading: updating modules list 
+2026-03-05 20:31:10,520 17136 INFO kore odoo.addons.base.models.ir_module: ALLOW access to module.update_list on [] to user __system__ #1 via n/a 
+2026-03-05 20:31:11,212 17136 WARNING kore odoo.modules.module: Missing `license` key in manifest for 'knowledge', defaulting to LGPL-3 
+2026-03-05 20:31:11,212 17136 WARNING kore odoo.modules.module: Missing `license` key in manifest for 'knowledge', defaulting to LGPL-3 
+2026-03-05 20:31:12,461 17136 INFO kore odoo.addons.base.models.ir_module: ALLOW access to module.button_install on ['Knowledge (Community Wrapper)'] to user __system__ #1 via n/a 
+2026-03-05 20:31:12,553 17136 INFO kore odoo.modules.loading: loading 81 modules... 
+2026-03-05 20:31:13,389 17136 INFO kore odoo.modules.loading: Loading module document_page_group (72/81) 
+2026-03-05 20:31:13,528 17136 WARNING kore odoo.fields: Field document.page.history_head: unknown parameter 'auto_join', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it 
+2026-03-05 20:31:13,605 17136 INFO kore odoo.registry: module document_page_group: creating or updating database tables 
+2026-03-05 20:31:13,900 17136 INFO kore odoo.modules.loading: loading document_page_group/security/document_page_security.xml 
+2026-03-05 20:31:13,925 17136 WARNING kore odoo.modules.loading: Transient module states were reset 
+2026-03-05 20:31:13,926 17136 ERROR kore odoo.registry: Failed to load registry 
+2026-03-05 20:31:13,926 17136 CRITICAL kore odoo.service.server: Failed to initialize database `kore`. 
+Traceback (most recent call last):
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\service\server.py", line 1510, in preload_registries
+    registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\func.py", line 88, in locked
+    return func(inst, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\orm\registry.py", line 199, in new
+    load_modules(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 456, in load_modules
+    load_module_graph(
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 209, in load_module_graph
+    load_data(env, idref, 'init', kind='data', package=package)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\modules\loading.py", line 59, in load_data
+    convert_file(env, package.name, filename, idref, mode, noupdate=kind == 'demo')
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 693, in convert_file
+    convert_xml_import(env, module, fp, idref, mode, noupdate)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 792, in convert_xml_import
+    obj.parse(doc.getroot())
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 663, in parse
+    self._tag_root(de)
+  File "C:\Users\ander\OneDrive\Documentos\GitHub\odoo\odoo\tools\convert.py", line 616, in _tag_root
+    raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+odoo.tools.convert.ParseError: while parsing file:/c:/users/ander/onedrive/documentos/github/odoo/custom_addons/knowledge/document_page_group/security/document_page_security.xml:3
+Invalid domain: Invalid field res.groups.users in condition ('users', '=', 1)
+
+View error context:
+'-no context-'
+
+2026-03-05 20:31:13,930 17136 INFO kore odoo.service.server: Initiating shutdown 
+2026-03-05 20:31:13,930 17136 INFO kore odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-03-05 20:31:13,930 17136 INFO kore odoo.sql_db: ConnectionPool(read/write;used=0/count=0/max=64): Closed 1 connections  

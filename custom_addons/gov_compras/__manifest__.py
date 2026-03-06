@@ -3,10 +3,12 @@
     "version": "19.0.1.0.0",
     "category": "Government",
     "summary": "Catálogo, banco de preços, trilha de item e previsão orçamentária de compras",
-    "depends": ["gov_processos", "gov_empenho", "mail"],
+    "depends": ["gov_processos", "gov_empenho", "mail", "uom"],
     "data": [
         "security/ir.model.access.csv",
         "data/ir_sequence.xml",
+        "wizard/gov_compras_import_wizard_views.xml",
+        "views/gov_compras_category_views.xml",
         "views/gov_compras_catalog_views.xml",
         "views/gov_compras_previsao_views.xml",
         "views/gov_processo_compras_views.xml",

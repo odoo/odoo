@@ -41,7 +41,7 @@ class GovComprasItemTrack(models.Model):
         "gov.compras.catalog.item",
         string="Item do Catálogo",
         required=True,
-        domain="[('ug_id', '=', ug_id)]",
+        domain="[('ug_ids', 'in', ug_id)]",
     )
     descricao = fields.Text(string="Descrição da Demanda")
     unidade_medida = fields.Char(string="Unidade", default="UN")
@@ -182,7 +182,7 @@ class GovComprasItemTrack(models.Model):
             item = rec.catalog_item_id
             if not item:
                 continue
-            rec.unidade_medida = item.unidade_medida or rec.unidade_medida
+            rec.unidade_medida = item.uom_id.name if item.uom_id else rec.unidade_medida
             rec.descricao = rec.descricao or item.descricao
             if not rec.valor_estimado_ref:
                 metrics = self.get_conservative_metrics(rec.ug_id.id, item.id)

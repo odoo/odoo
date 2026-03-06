@@ -9,16 +9,23 @@ class GovComprasCatalogItem(models.Model):
 
     name = fields.Char(string="Item", required=True)
     code = fields.Char(string="Código Interno", required=True)
-    ug_id = fields.Many2one(
+    ug_ids = fields.Many2many(
         "res.company",
-        string="Unidade Gestora",
-        required=True,
-        default=lambda self: self.env.company,
-        index=True,
+        string="Unidades Gestoras Permitidas",
+        help="UGs que possuem acesso a este item.",
     )
-    categoria = fields.Char(string="Categoria")
-    natureza_despesa = fields.Char(string="Natureza da Despesa")
-    unidade_medida = fields.Char(string="Unidade de Medida", default="UN")
+    category_id = fields.Many2one("gov.compras.category", string="Categoria", index=True)
+    natureza_despesa_id = fields.Many2one(
+        "gov.account.config",
+        string="Natureza da Despesa",
+        required=True,
+    )
+    uom_id = fields.Many2one(
+        "uom.uom",
+        string="Unidade de Medida",
+        required=True,
+        default=lambda self: self.env.ref("uom.product_uom_unit", raise_if_not_found=False).id if self.env.ref("uom.product_uom_unit", raise_if_not_found=False) else False
+    )
     descricao = fields.Text(string="Descrição Técnica")
     ativo_previsao = fields.Boolean(
         string="Ativo para Previsão",
@@ -27,9 +34,9 @@ class GovComprasCatalogItem(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    _code_ug_unique = models.Constraint(
-        "unique(code, ug_id)",
-        "Ja existe item com este codigo para a UG informada.",
+    _code_unique = models.Constraint(
+        "unique(code)",
+        "Ja existe um item no Catálogo Geral com este código.",
     )
 
     @api.constrains("code")
@@ -37,3 +44,7 @@ class GovComprasCatalogItem(models.Model):
         for rec in self:
             if not (rec.code or "").strip():
                 raise ValidationError("Código do item não pode ser vazio.")
+
+    def action_add_to_my_ug(self):
+        for rec in self:
+            rec.ug_ids = [(4, self.env.company.id)]

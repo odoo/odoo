@@ -1,0 +1,77 @@
+# Kodoo.online — Production Docker Compose
+# Arch Linux (WSL) | Odoo 19 | PostgreSQL 16 | Ollama
+#
+# Usage:
+#   docker compose up -d
+#   docker compose logs -f odoo
+
+services:
+  db:
+    image: postgres:16
+    container_name: kodoo-db
+    environment:
+      - POSTGRES_DB=kore
+      - POSTGRES_USER=atlas
+      - POSTGRES_PASSWORD=atlas
+      # Allows Odoo to create additional databases per tenant
+      - POSTGRES_HOST_AUTH_METHOD=md5
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - kodoo-net
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U atlas -d kore" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  odoo:
+    image: odoo:19.0
+    container_name: kodoo-odoo
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+      - ./custom_addons:/mnt/custom-addons
+      - ./kore.prod.conf:/etc/odoo/odoo.conf:ro
+    environment:
+      - HOST=db
+      - USER=atlas
+      - PASSWORD=atlas
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - kodoo-net
+    restart: always
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kodoo-ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - kodoo-net
+    # GPU NVIDIA (descomente se disponível):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    restart: always
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
+  ollama-data:
+
+
+networks:
+  kodoo-net:
+    driver: bridge

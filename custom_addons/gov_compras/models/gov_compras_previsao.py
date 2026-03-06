@@ -73,7 +73,7 @@ class GovComprasPrevisao(models.Model):
             if rec.state != "rascunho":
                 raise UserError("Só é possível gerar linhas em previsão de rascunho.")
             catalog_items = self.env["gov.compras.catalog.item"].search(
-                [("ug_id", "=", rec.ug_id.id), ("ativo_previsao", "=", True)]
+                [("ug_ids", "in", rec.ug_id.id), ("ativo_previsao", "=", True)]
             )
             Track = self.env["gov.compras.item.track"]
             existing_by_item = {line.catalog_item_id.id: line for line in rec.line_ids}
@@ -82,7 +82,7 @@ class GovComprasPrevisao(models.Model):
                 vals = {
                     "quantidade_prevista": metrics.get("avg_qty", 0.0) or 1.0,
                     "valor_unit_previsto": metrics.get("conservative_price", 0.0),
-                    "natureza_despesa": item.natureza_despesa,
+                    "natureza_despesa": item.natureza_despesa_id.natureza_despesa if item.natureza_despesa_id else "",
                 }
                 if item.id in existing_by_item:
                     existing_by_item[item.id].write(vals)
@@ -131,7 +131,7 @@ class GovComprasPrevisaoLine(models.Model):
         "gov.compras.catalog.item",
         string="Item",
         required=True,
-        domain="[('ug_id', '=', ug_id)]",
+        domain="[('ug_ids', 'in', ug_id)]",
     )
     quantidade_prevista = fields.Float(string="Quantidade Prevista", default=1.0)
     valor_unit_previsto = fields.Monetary(

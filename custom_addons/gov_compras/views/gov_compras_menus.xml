@@ -18,12 +18,39 @@
     />
 
     <menuitem
-        id="menu_gov_compras_catalogo"
-        name="Catálogo da UG"
+        id="menu_gov_compras_catalogo_ug"
+        name="Meu Catálogo (UG)"
         parent="gov_compras.menu_gov_compras_root"
-        action="gov_compras.action_gov_compras_catalog_item"
+        action="gov_compras.action_gov_compras_catalog_item_ug"
         sequence="20"
         groups="gov_base.group_gov_gestor,gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_compras_import_wizard"
+        name="Importar Itens em Lote"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_import_wizard"
+        sequence="21"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_compras_catalogo_geral"
+        name="Catálogo Geral"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_catalog_item_general"
+        sequence="21"
+        groups="gov_base.group_gov_admin"
+    />
+
+    <menuitem
+        id="menu_gov_compras_config_categoria"
+        name="Categorias de Itens"
+        parent="gov_compras.menu_gov_compras_root"
+        action="gov_compras.action_gov_compras_category"
+        sequence="100"
+        groups="gov_base.group_gov_admin"
     />
 
     <menuitem
