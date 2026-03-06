@@ -4,6 +4,7 @@ from datetime import timedelta
 from itertools import starmap, zip_longest
 
 from odoo import api, fields, models
+from odoo.fields import Command
 from odoo.tools import is_html_empty
 
 
@@ -78,9 +79,9 @@ class SaleOrder(models.Model):
             lang=self.partner_id.lang
         ).with_company(self.company_id)
 
-        order_lines_data = [fields.Command.clear()]
+        order_lines_data = [Command.clear()]
         order_lines_data += [
-            fields.Command.create(
+            Command.create(
                 line._prepare_order_line_values(self.fiscal_position_id, self.currency_id)
             )
             for line in sale_order_template.sale_order_template_line_ids
@@ -134,3 +135,39 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id.mail_template_id:
                 order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
         return res
+
+    def action_create_quotation_template(self):
+        self.ensure_one()
+
+        template_vals = self._prepare_template_order_values()
+        new_template = self.env["sale.order.template"].create(template_vals)
+
+        # Assign the newly created template to the current SO
+        self.sale_order_template_id = new_template.id
+
+        return new_template.get_record_default_action()
+
+    # === TOOLING METHODS ===#
+
+    def _prepare_template_order_values(self):
+        """Prepare the dictionary of values to create a new quotation template from the current
+        order.
+
+        :return: `sale.order.template` create values
+        :rtype: dict
+        """
+        self.ensure_one()
+        template_lines = [
+            Command.create(line._prepare_template_line_values()) for line in self.order_line
+        ]
+
+        return {
+            "name": self.env._("Template from %s", self.name),
+            "company_id": self.company_id.id,
+            "journal_id": self.journal_id.id,
+            "note": self.note,
+            "require_signature": self.require_signature,
+            "require_payment": self.require_payment,
+            "prepayment_percent": self.prepayment_percent,
+            "sale_order_template_line_ids": template_lines,
+        }
