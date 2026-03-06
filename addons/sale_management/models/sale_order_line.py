@@ -101,12 +101,13 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         vals = {
+            "sequence": self.sequence,
             "name": self.name,
-            "product_uom_qty": self.product_uom_qty,
+            "product_id": self.product_id.id,
             "product_uom_id": self.product_uom_id.id,
+            "product_uom_qty": self.product_uom_qty,
             "display_type": self.display_type,
             "is_optional": self.is_optional,
-            "product_id": self.product_id.id,
             "collapse_composition": self.collapse_composition,
             "collapse_prices": self.collapse_prices,
         }
