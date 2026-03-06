@@ -151,6 +151,8 @@ test("when clearing link URL for an image and clicking outside does not change h
     );
 });
 // TODO: need to check with AGE
+// TODO when removing .todo: create equivalent test for mobile taking bottom sheet into account
+test.tags("desktop");
 test.todo("popover should not open for not editable image", async () => {
     await setupEditor(`<a href="#"><img src="${base64Img}" contenteditable="false"></a>`);
     await click("img");
