@@ -14,4 +14,17 @@
         <field name="state">code</field>
         <field name="code">model.cron_download_incremental()</field>
     </record>
+
+    <!--Generate Absent days daily for past day -->
+    <record id="ir_cron_biometric_absence_detection" model="ir.cron">
+        <field name="name">Biometric: Daily Absence Detection (Yesterday)</field>
+        <field name="model_id" ref="model_biometric_attendance_sync"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_generate_absences()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(hour=1, minute=0, second=0)"/>
+    </record>
+
 </odoo>

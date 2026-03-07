@@ -14,6 +14,7 @@ This module extends the employee model to include fields for managing work sched
         'base',
         'mail',
         'hr',
+        'hr_attendance',
     ],
     'data': [
         # Security

@@ -30,7 +30,7 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': "https://www.cybrosys.com",
-    'depends': ['base_setup', 'hr_attendance',],
+    'depends': ['base_setup', 'hr_attendance', ],
     'data': [
         'security/ir.model.access.csv',
         'security/biometric_device_details_security.xml',
@@ -39,11 +39,18 @@
         'views/biometric_device_details_views.xml',
         'views/hr_employee_views.xml',
         'views/daily_attendance_views.xml',
+        'views/hr_attendance_views.xml',
         'views/biometric_device_attendance_menus.xml',
     ],
     'external_dependencies': {
         'python': ['pyzk'],
     },
+    'assets': {
+        'web.assets_backend': [
+            'hr_biometric_attendance/static/src/css/attendance_list.css',
+        ],
+    },
+
     'images': ['static/description/banner.png'],
     'license': 'AGPL-3',
     'installable': True,
