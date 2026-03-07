@@ -11,8 +11,8 @@ import {
     getPagerValue,
     getPagerLimit,
 } from "@web/../tests/web_test_helpers";
-import { click, queryAny, queryOne, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
@@ -418,16 +418,25 @@ describe("field HTML", () => {
         });
         await click(waitFor(".o_mailing_template_preview_wrapper [data-name='default']"));
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
-        expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
-            "o_default_theme"
+        expect(
+            await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout", { timeout: 3000 })
+        ).toHaveClass("o_default_theme");
+        const section = await waitFor(".o_mass_mailing_iframe_wrapper :iframe section", {
+            timeout: 3000,
+        });
+        await click(section);
+        await waitFor(
+            ".o-snippets-menu:has([data-action-id='dataAttributeChangeAction'].active:contains(Visible))",
+            { timeout: 3000 }
         );
-        await runAllTimers();
-        const section = queryAny(":iframe section");
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
         htmlField.editor.config.onChange({ isPreviewing: false });
-        await click(section);
-        await waitFor(".hb-row .hb-row-label span:contains(Domain)");
-        expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
+        await waitFor(".o-snippets-menu [data-label='Domain']", { timeout: 3000 });
+        expect(
+            queryOne(
+                ".o-snippets-menu [data-label='Domain'] span.fa-filter + span"
+            ).textContent.toLowerCase()
+        ).toBe("id = 1");
         await clickSave();
         await waitFor("table[t-if]");
         expect(queryOne("table[t-if]")).toHaveAttribute(
