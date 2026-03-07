@@ -999,6 +999,54 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
+test("isDirty should not be reset to false if onChange fired between getEditorContent and updateValue", async () => {
+    let htmlField;
+    const { promise: firstStep, resolve: resolveFirst } = Promise.withResolvers();
+    const { promise: secondStep, resolve: resolveSecond } = Promise.withResolvers();
+    const { promise: thirdStep, resolve: resolveThird } = Promise.withResolvers();
+    patchWithCleanup(HtmlField.prototype, {
+        setup() {
+            super.setup();
+            htmlField = this;
+        },
+        async getEditorContent() {
+            const el = await super.getEditorContent();
+            resolveFirst();
+            await secondStep;
+            return el;
+        },
+        async updateValue() {
+            const updated = await super.updateValue(...arguments);
+            resolveThird();
+            return updated;
+        },
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(htmlField.isDirty).toBe(false);
+    expect(`.o_form_button_save`).not.toBeVisible();
+    const p = htmlField.editor.editable.querySelector("p");
+    p.append(htmlField.editor.document.createTextNode("Second"));
+    htmlField.editor.shared.history.addStep();
+    await clickSave();
+    await firstStep;
+    p.append(htmlField.editor.document.createTextNode("Third"));
+    htmlField.editor.shared.history.addStep();
+    resolveSecond();
+    await thirdStep;
+    await animationFrame();
+    expect(htmlField.editor.editable).toHaveInnerHTML(`<p>firstSecondThird</p>`);
+    expect(htmlField.isDirty).toBe(true);
+    expect(`.o_form_button_save`).toBeVisible();
+});
+
 test.tags("desktop");
 test("link preview in Link Popover", async () => {
     Partner._records = [
