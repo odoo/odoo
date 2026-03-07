@@ -165,6 +165,33 @@ def release_test_lock():
             exit(f'Could not re-acquire the registry lock during {tag}, exiting...')
 
 
+@contextmanager
+def flushing_cursor(cr: Cursor):
+    """ Simulate a commit on a cursor (without comitting) and reset on exit.
+
+    Run this on the main cursor when creating test cursors so that they can see
+    changes made on the main cursor. You can still continue using the main
+    cursor inside the block, it will be flushed on exit and then reset.
+    """
+    # simulating a cr.commit()
+    cr.flush()
+    if cr.transaction is None:  # no environment to clear
+        yield
+        return
+
+    registry = cr.transaction.registry
+    if registry.cache_invalidated:
+        registry.signal_changes()
+    cr.transaction.clear()
+
+    yield
+
+    # flush and invalidate changes made by the main cursor
+    cr.transaction.default_env.invalidate_all(flush=True)
+    # then reset it to start fresh
+    cr.transaction.reset()
+
+
 def standalone(*tags):
     """ Decorator for standalone test functions.  This is somewhat dedicated to
     tests that install, upgrade or uninstall some modules, which is currently
@@ -1227,14 +1254,12 @@ class TransactionCase(BaseCase):
         """
         # entering the test mode should flush/invalidate all changes in the
         # current environment because changes happen inside other cursors
-        env = self.env
-        env.flush_all()
-        self.registry_enter_test_mode(register_cleanup=False)
-        try:
-            yield
-        finally:
-            self.registry_leave_test_mode()
-            env.invalidate_all()
+        with flushing_cursor(self.env.cr):
+            self.registry_enter_test_mode(register_cleanup=False)
+            try:
+                yield
+            finally:
+                self.registry_leave_test_mode()
 
     @contextmanager
     def allow_pdf_render(self):
@@ -2207,10 +2232,7 @@ class Opener(requests.Session):
 
     def request(self, *args, **kwargs):
         assert self.test_case.opener == self
-        self.cr.flush()
-        if transaction := self.cr.transaction:
-            transaction.clear()
-        with self.test_case.allow_requests():
+        with flushing_cursor(self.cr), self.test_case.allow_requests():
             res = super().request(*args, **kwargs)
             res.__class__ = Response
             return res
@@ -2270,10 +2292,7 @@ class Transport(xmlrpclib.Transport):
         super().__init__()
 
     def request(self, *args, **kwargs):
-        self.cr.flush()
-        if transaction := self.cr.transaction:
-            transaction.clear()
-        with self.test_case.allow_requests(all_requests=True):
+        with flushing_cursor(self.cr), self.test_case.allow_requests(all_requests=True):
             return super().request(*args, **kwargs)
 
 
@@ -2479,15 +2498,14 @@ class HttpCase(TransactionCase):
             # Flush and clear the current transaction.  This is useful, because
             # the call below opens a test cursor, which uses a different cache
             # than this transaction.
-            self.cr.flush()
-            if transaction := self.cr.transaction:
-                transaction.clear()
+            # In the context of a browser, the flush is already done.
+            flushing = flushing_cursor(self.cr) if browser is None else contextlib.nullcontext()
 
             def patched_check_credentials(self, credential, env):
                 return {'uid': self.id, 'auth_method': 'password', 'mfa': 'default'}
 
             # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
-            with patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._check_credentials', new=patched_check_credentials):
+            with flushing, patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._check_credentials', new=patched_check_credentials):
                 credential = {'login': user, 'password': password, 'type': 'password'}
                 auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
@@ -2591,6 +2609,11 @@ class HttpCase(TransactionCase):
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
         with self.allow_requests(browser=browser), contextlib.ExitStack() as atexit:
+            # Flush and clear the current transaction.  This is useful in case
+            # we make requests to the server, as these requests are made with
+            # test cursors, which uses different caches than this transaction.
+            # Wait for all request before resetting the cursor.
+            atexit.enter_context(flushing_cursor(self.cr))
             atexit.callback(self._wait_remaining_requests)
             atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
@@ -2611,12 +2634,6 @@ class HttpCase(TransactionCase):
                 ))
 
             self.authenticate(login, login, browser=browser)
-            # Flush and clear the current transaction.  This is useful in case
-            # we make requests to the server, as these requests are made with
-            # test cursors, which uses different caches than this transaction.
-            self.cr.flush()
-            if transaction := self.cr.transaction:
-                transaction.clear()
             url = urljoin(self.base_url(), url_path)
             if watch:
                 parsed = urlsplit(url)
