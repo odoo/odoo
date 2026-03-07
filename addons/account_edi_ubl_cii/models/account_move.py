@@ -39,34 +39,26 @@ class AccountMove(models.Model):
         """
         Ungroup lines using the original file, used to import the move
         """
+        self.ensure_one()
         error_message = _("Cannot find the origin file, try by importing it again")
-        attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', self.id),
-        ], order='create_date')
-        if not attachments:
+        if not self.ubl_cii_xml_id:
             raise UserError(error_message)
 
-        success = False
-        for file_data in attachments._unwrap_edi_attachments():
-            if file_data.get('xml_tree') is None:
-                continue
-            ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
-            if ubl_cii_xml_builder is None:
-                continue
-            self.invoice_line_ids = [Command.clear()]
-            res = ubl_cii_xml_builder.with_context(ungroup_lines=True)._import_invoice_ubl_cii(self, file_data)
-            if res:
-                success = True
-                self._message_log(body=_("Ungrouped lines from %s", file_data['attachment'].name))
-                break
-        if not success:
+        file_data = self.ubl_cii_xml_id._unwrap_edi_attachments()[0]
+        ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
+        if ubl_cii_xml_builder is None:
+            raise UserError(_("Cannot decode the origin file, try by importing it again"))
+        self.invoice_line_ids = [Command.clear()]
+        if ubl_cii_xml_builder.with_context(ungroup_lines=True)._import_invoice_ubl_cii(self, file_data):
+            self._message_log(body=_("Ungrouped lines from %s", file_data['attachment'].name))
+        else:
             raise UserError(error_message)
 
     def _group_lines_by_tax(self):
         """
         Group lines by tax, based on the invoice lines
         """
+        self.ensure_one()
         line_vals = self._get_line_vals_group_by_tax(self.partner_id, fields.Date.to_string(self.date))
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids = line_vals
@@ -79,6 +71,7 @@ class AccountMove(models.Model):
         :param partner: partner linked to the move
         :param date: date of the move (string format)
         """
+        self.ensure_one()
         base_lines = [
             line._convert_to_tax_base_line_dict()
             for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
@@ -120,6 +113,7 @@ class AccountMove(models.Model):
         """
         Perform checks to evaluate if a move is eligible to grouping/ungrouping
         """
+        self.ensure_one()
         if self.state != 'draft':
             raise UserError(_("You can only (un)group lines of a draft invoice"))
         # TO REMOVE IN 18.0+ as purchase_edi_ubl_bis module is created
@@ -137,6 +131,36 @@ class AccountMove(models.Model):
             re.match(re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*', line.name)
             for line in self.line_ids.filtered(lambda x: x.display_type == 'product')
         )
+
+    @api.model
+    def _post_process_link_to_purchase_order(self, invoice):
+        # Override account.move
+        try:
+            invoice._check_move_for_group_ungroup_lines_by_tax()
+        except UserError:
+            return
+
+        if (
+            self.env.context.get('ungroup_lines')
+            or not invoice.partner_id
+            or not invoice.ubl_cii_xml_id
+        ):
+            return
+
+        # Group lines
+        if invoice.journal_id.type == 'sale':
+            move_types = invoice.get_sale_types(include_receipts=True)
+        else:
+            move_types = invoice.get_purchase_types(include_receipts=True)
+        last_bill_from_vendor = self.env['account.move'].search([
+            ('move_type', 'in', move_types),
+            ('partner_id', '=', invoice.partner_id.id),
+            ('state', '=', 'posted'),
+            ('id', '!=', invoice.id),
+            *self.env['account.move']._check_company_domain(invoice.company_id),
+        ], order='create_date desc', limit=1)
+        if last_bill_from_vendor and last_bill_from_vendor._has_lines_grouped():
+            invoice._group_lines_by_tax()
 
     # -------------------------------------------------------------------------
     # EDI

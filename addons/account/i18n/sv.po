@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 17:01+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-07 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/account/"
 "sv/>\n"
@@ -51,7 +51,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #. odoo-python
@@ -17054,6 +17054,13 @@ msgstr "Du kan bara ändra period/konto för bokförda verifikat."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can only generate sales documents."
+msgstr "Du kan bara generera försäljningsdokument."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -17225,6 +17232,13 @@ msgstr ""
 "\n"
 "Tänk på det som att skydda dina kunders fordringar; din CFO skulle uppskatta "
 "det :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't generate invoices that are not posted."
+msgstr "Du kan inte generera fakturor som inte bokförs."
 
 #. module: account
 #. odoo-python

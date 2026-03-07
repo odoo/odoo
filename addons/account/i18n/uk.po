@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 17:01+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-07 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-17/"
 "account/uk/>\n"
@@ -24,11 +24,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
-"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
-"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
-" ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #. odoo-python
@@ -3399,7 +3398,7 @@ msgstr "Банк odoo"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank settings"
-msgstr ""
+msgstr "Налаштування банку"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -14466,6 +14465,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Банківський рахунок вашої компанії не є надійним. Будь ласка, зверніться до "
+"адміністратора або особи з правами схвалення, щоб перевірити його."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -14537,6 +14538,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Банківський рахунок компанії (%(account_number)s) привʼязаний до цього "
+"рахунку ненадійний. Перейдіть до налаштувань банку, ще раз перевірте, чи це "
+"ваш номер, або виправте його, і натисніть Надіслати гроші, щоб довіряти йому."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -17048,6 +17052,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can only generate sales documents."
+msgstr "Ви можете лише створювати документи продажу."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -17225,6 +17236,13 @@ msgstr ""
 "\n"
 "Подумайте про це як про захист дебіторської заборгованості клієнтів; ваш "
 "фінансовий директор буде вдячний :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't generate invoices that are not posted."
+msgstr "Ви не можете створювати рахунки-фактури, які не опубліковані."
 
 #. module: account
 #. odoo-python

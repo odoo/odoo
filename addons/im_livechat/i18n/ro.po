@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -530,13 +530,6 @@ msgstr "Contact"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
 msgstr "Conversație"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-#, python-format
-msgid "Conversation ended..."
-msgstr "Conversația s-a încheiat..."
 
 #. module: im_livechat
 #. odoo-python
@@ -1844,6 +1837,13 @@ msgid "This Week"
 msgstr "Săpt. curentă"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#, python-format
+msgid "This conversation has ended."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
 msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
@@ -2117,3 +2117,7 @@ msgstr "secunde"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "{{author_name}}"
 msgstr "{{author_name}}"
+
+#, python-format
+#~ msgid "Conversation ended..."
+#~ msgstr "Conversația s-a încheiat..."

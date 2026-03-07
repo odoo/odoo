@@ -23,18 +23,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-02-25 15:12+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/stock/cs/>"
-"\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-07 08:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/stock/cs/"
+">\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
-"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: stock
 #. odoo-python
@@ -59,6 +59,15 @@ msgid ""
 msgstr ""
 "\n"
 "(%s) existuje v místě %s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -1879,11 +1888,10 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
-"Vypočítejte náklady na dopravu a odešlete zásilku prostřednictvím služby DHL<"
-"br/>\n"
-"                                    <strong>"
-"(přejděte na domovskou stránku&gt;aplikace a nainstalujte si aplikaci)"
-".</strong>"
+"Vypočítejte náklady na dopravu a odešlete zásilku prostřednictvím služby "
+"DHL<br/>\n"
+"                                    <strong>(přejděte na domovskou "
+"stránku&gt;aplikace a nainstalujte si aplikaci).</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1904,9 +1912,8 @@ msgid ""
 msgstr ""
 "Vypočítejte náklady na dopravu a odesílejte zásilky prostřednictvím služby "
 "FedEx<br/>\n"
-"                                    <strong>"
-"(přejděte na domovskou stránku&gt;aplikace a nainstalujte si aplikaci)"
-".</strong>"
+"                                    <strong>(přejděte na domovskou "
+"stránku&gt;aplikace a nainstalujte si aplikaci).</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1931,8 +1938,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Vypočítejte náklady na dopravu a odešlete zásilku pomocí aplikace UPS<br/>\n"
-"                                    <strong>"
-"(přejděte na domovskou stránku&gt;aplikace a nainstalujte aplikaci).</strong>"
+"                                    <strong>(přejděte na domovskou "
+"stránku&gt;aplikace a nainstalujte aplikaci).</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1947,9 +1954,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Vypočítejte náklady na dopravu a odešlete zásilku pomocí služby USPS<br/>\n"
-"                                    <strong>"
-"(přejděte na domovskou stránku&gt;aplikace a nainstalujte si aplikaci)"
-".</strong>"
+"                                    <strong>(přejděte na domovskou "
+"stránku&gt;aplikace a nainstalujte si aplikaci).</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5149,7 +5155,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 msgid "Low on stock? Let's replenish."
-msgstr ""
+msgstr "Máte málo zásob? Doplňme je."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -5465,7 +5471,7 @@ msgstr "Název"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Name Demo"
-msgstr ""
+msgstr "Název Demo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -5630,14 +5636,14 @@ msgstr "Na tomto dílu se neprovádějí žádné operace."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr ""
+msgstr "Nebyly nalezeny žádné operace. Vytvořme převod!"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Nenalezen žádný produkt, pro který lze generovat sériová čísla/šarže."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5882,7 +5888,7 @@ msgstr "Opravu inventury může ověřit pouze vedoucí skladu."
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
-msgstr ""
+msgstr "Provozní množství"
 
 #. module: stock
 #. odoo-python
@@ -6008,7 +6014,7 @@ msgstr "Objednat jednou"
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #, python-format
 msgid "Order To Max"
-msgstr ""
+msgstr "Objednávka pro max"
 
 #. module: stock
 #. odoo-python

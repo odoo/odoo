@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 17:01+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-07 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/"
 "account/vi/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #. odoo-python
@@ -3379,7 +3379,7 @@ msgstr "Ngân hàng Odoo"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank settings"
-msgstr ""
+msgstr "Cài đặt ngân hàng"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -14420,6 +14420,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Tài khoản ngân hàng của công ty bạn không đáng tin cậy. Vui lòng yêu cầu một "
+"quản trị viên hoặc người có quyền phê duyệt kiểm tra tài khoản đó."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -14493,6 +14495,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Tài khoản ngân hàng của công ty (%(account_number)s) liên kết với hóa đơn "
+"này không đáng tin cậy. Vui lòng truy cập vào Cài đặt ngân hàng, kiểm tra "
+"lại xem đó có phải là tài khoản của bạn hay không hoặc sửa lại số tài khoản, "
+"sau đó nhấp vào Gửi tiền để xác nhận đó là tài khoản đáng tin cậy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -17000,6 +17006,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can only generate sales documents."
+msgstr "Bạn chỉ có thể tạo tài liệu bán hàng."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -17173,6 +17186,13 @@ msgstr ""
 "\n"
 "Hãy coi đây là một cách để bảo vệ các khoản phải thu khách hàng; và CFO của "
 "bạn có lẽ sẽ đánh giá cao điều đó. :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't generate invoices that are not posted."
+msgstr "Bạn không thể tạo hóa đơn chưa được ghi sổ."
 
 #. module: account
 #. odoo-python
@@ -17654,7 +17674,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "Bạn không thể thay đổi loại chứng từ khi chứng từ đó đã có số thứ tự."
 
 #. module: account
 #. odoo-python

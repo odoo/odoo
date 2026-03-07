@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* resource
+# * resource
 #
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2023
 # Marta Wacławek, 2025
 #
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"PO-Revision-Date: 2026-03-07 08:22+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/resource/"
+"pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: resource
 #. odoo-python
@@ -29,7 +32,7 @@ msgstr ""
 #: code:addons/resource/models/resource_resource.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kopiuj)"
+msgstr "%s (kopia)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -83,7 +86,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr "Frekwencje nie mogą się pokrywać."
+msgstr "Obecności nie mogą się pokrywać."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -99,7 +102,7 @@ msgstr "Średnia dzienna liczba godzin pracy zasobu w tym kalendarzu."
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
 msgid "Break"
-msgstr "Rozbity"
+msgstr "Przerwa"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -253,7 +256,7 @@ msgstr "Piątek rano"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr "Podaje kolejność tej linii podczas wyświetlania kalendarza zasobów."
+msgstr "Podaje kolejność tej pozycji podczas wyświetlania kalendarza zasobów."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -300,7 +303,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
+"Jeśli pole aktywne jest ustawione na False, umożliwi to ukrycie rekordu "
+"zasobów bez jego usuwania."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
@@ -308,8 +312,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
-"Jeśli aktywne pole jest ustawione na wartość false, umożliwi to ukrycie "
-"Czasu pracy bez jego usuwania."
+"Jeśli pole aktywne jest ustawione na false, umożliwi to ukrycie czasu pracy "
+"bez jego usuwania."
 
 #. module: resource
 #. odoo-python
@@ -372,7 +376,7 @@ msgstr "Poniedziałek rano"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__morning
 msgid "Morning"
-msgstr "Poranek"
+msgstr "Rano"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__name
@@ -401,7 +405,7 @@ msgstr "Przyczyna"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością"
+msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -454,7 +458,7 @@ msgstr "Zasoby"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr "Zasoby Czas wolny"
+msgstr "Czas wolny zasobów"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -481,7 +485,7 @@ msgstr "Szukaj zasobów"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr "Wyszukiwanie Okres pracy Dni wolne"
+msgstr "Wyszukaj czas wolny okresu pracy"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -491,7 +495,7 @@ msgstr "Szukaj czasów pracy"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
 msgid "Second"
-msgstr "Sekunda"
+msgstr "Drugi"
 
 #. module: resource
 #. odoo-python
@@ -559,7 +563,7 @@ msgstr "Przełącz na kalendarz 2-tygodniowy"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
 msgid "Technical field for UX purpose."
-msgstr "Dziedzina techniczna dla celów UX."
+msgstr "Pole techniczne dla celów UX."
 
 #. module: resource
 #. odoo-python
@@ -631,13 +635,13 @@ msgstr "Czwartek rano"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
 msgid "Time Off"
-msgstr "Dni wolne"
+msgstr "Czas wolny"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr "Szczegóły dni wolnych"
+msgstr "Szczegóły czasu wolnego"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type

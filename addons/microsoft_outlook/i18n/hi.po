@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-02-07 08:10+0000\n"
+"PO-Revision-Date: 2026-03-07 08:23+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
 "microsoft_outlook/hi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -32,6 +32,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                         अपने Outlook खाते से कनेक्ट करें"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -41,6 +43,10 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook टोकन मान्य\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -50,25 +56,29 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"                        Outlook टोकन मान्य\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "ऐक्सेस टोकन लाने में कोई गड़बड़ी हुई है. %s"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "के साथ प्रमाणित करें"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "प्रमाणित करने का लिंक"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -85,6 +95,10 @@ msgid ""
 "this server. To extend its use, you should set a \"mail.default.from\" "
 "system parameter."
 msgstr ""
+"अपने Outlook अकाउंट को OAuth प्रमाणीकरण प्रक्रिया के साथ के ज़रिए जोड़ें.  \n"
+"डिफ़ॉल्ट रूप से, सिर्फ़ मेल खाने वाले ईमेल पते वाला उपयोगकर्ता ही इस सर्वर का इस्तेमाल कर "
+"पाएगा. इसका इस्तेमाल बढ़ाने के लिए, आपको \"mail.default.from\" सिस्टम पैरामीटर सेट "
+"करना चाहिए।"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -94,11 +108,13 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"अपने पर्सनल Outlook को OAuth के ज़रिए जोड़ें. \n"
+"अनुमति देने के लिए आपको Outlook लॉगिन पेज पर भेज दिया जाएगा।"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "अपने मेल सर्वर पर वापस जाएं"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -108,7 +124,7 @@ msgstr "आईडी"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "आपके Outlook ऐप्लिकेशन की आईडी"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -129,7 +145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "क्या Outlook क्रेडेंशियल कॉन्फ़िगर किया गया है"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
@@ -139,28 +155,28 @@ msgstr "मेल सर्वर"
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "Microsoft Outlook मिक्सिन"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "सिर्फ़ एडमिन के पास Outlook मेल सर्वर जोड़ने का अधिकार है।"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Outlook ऐक्सेस टोकन"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Outlook टोकन ऐक्सेस टोकन खत्म होने का समय"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
@@ -176,28 +192,28 @@ msgstr "Outlook क्लाइंट सीक्रेट"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Outlook OAuth प्रमाणीकरण"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Outlook रीफ्रेश टोकन"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "कृपया अपने Outlook क्रेडेंशियल कॉन्फ़िगर करें।"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
-msgstr ""
+msgstr "कृपया इसका इस्तेमाल करने से पहले अपने Outlook अकाउंट से कनेक्ट करें।"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -208,6 +224,8 @@ msgid ""
 "(your email address). This should be the same account as the one used for "
 "the Outlook OAuthentication Token."
 msgstr ""
+"कृपया \"यूज़रनेम\" फ़ील्ड में अपना Outlook/Office365 यूज़रनेम (अपना ईमेल पता) भरें. यह वही "
+"अकाउंट होना चाहिए जिसका उपयोग Outlook OAuth टोकन के लिए किया गया है।"
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -238,7 +256,7 @@ msgstr "सीक्रेट"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "आपके Outlook ऐप का सीक्रेट"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
@@ -252,17 +270,18 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook "
 "account."
 msgstr ""
+"Outlook अकाउंट लिंक करने के लिए सामान्य सेटिंग में अपने Outlook API क्रेडेंशियल सेटअप करें।"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "Outlook से प्रमाणीकरण कोड जनरेट करने का यूआरएल"
 
 #. module: microsoft_outlook
 #. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "अनजानी गड़बड़ी।"

@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-02-26 13:40+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-03-07 08:22+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "payment_paypal/pl/>\n"
 "Language: pl\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
@@ -45,7 +45,7 @@ msgstr "Jak konfigurować twoje konto paypal?"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
-msgstr ""
+msgstr "Brakująca wartość dla txn_id (%(txn_id)s) lub txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #. odoo-python
@@ -62,7 +62,7 @@ msgstr "Token tożsamości PDT"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Typ transakcji PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
@@ -84,7 +84,7 @@ msgstr "Paypal"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Otrzymano dane z nieprawidłowym statusem płatnosci: %s"
 
 #. module: payment_paypal
 #. odoo-python
@@ -98,6 +98,8 @@ msgstr "Klient opuścił stronę płatności."
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"Publiczny adres e-mail służbowy używany wyłącznie do identyfikacji konta w "
+"serwisie PayPal"
 
 #. module: payment_paypal
 #. odoo-python
@@ -108,6 +110,9 @@ msgid ""
 "because the 'Payment data transfer' option is not enabled on the PayPal "
 "dashboard."
 msgstr ""
+"Status transakcji z numerem referencyjnym %(ref)s nie został "
+"zsynchronizowany, ponieważ opcja \"Transfer danych płatności\" nie jest "
+"aktywowana w konsoli PayPal."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code

@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 17:01+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
+"PO-Revision-Date: 2026-03-07 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/account/"
 "pl/>\n"
@@ -35,9 +35,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #. odoo-python
@@ -3404,7 +3404,7 @@ msgstr "Bank Odoo"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank settings"
-msgstr ""
+msgstr "Ustawienia banku"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -10279,7 +10279,7 @@ msgstr "Notatki"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Nothing to export."
-msgstr ""
+msgstr "Nic do wyeksportowania."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -14454,6 +14454,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Konto bankowe Twojej firmy nie jest zaufane. Poproś administratora lub osobę "
+"z uprawnieniami do zatwierdzania o sprawdzenie tego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -14527,6 +14529,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Firmowe konto bankowe (%(account_number)s) powiązane z tą fakturą nie jest "
+"zaufane. Przejdź do ustawień bankowych, sprawdź, czy jest to Twoje konto, "
+"lub popraw numer, a następnie kliknij „Wyślij pieniądze”, aby je "
+"uwierzytelnić."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -17047,6 +17053,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can only generate sales documents."
+msgstr "Możesz jedynie generować dokumenty sprzedaży."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -17220,6 +17233,13 @@ msgstr ""
 "\n"
 "Pomyśl o tym jako o zabezpieczaniu należności swojego klienta; Twój dyrektor "
 "finansowy byłby Ci za wdzięczny :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "You can't generate invoices that are not posted."
+msgstr "Nie możesz generować faktur, które nie zostały opublikowane."
 
 #. module: account
 #. odoo-python
