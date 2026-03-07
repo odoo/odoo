@@ -12,20 +12,21 @@
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# MAHAMADASIF ANSARI <maan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-02-25 12:33+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-03-06 13:15+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/base/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -8310,31 +8311,31 @@ msgid ""
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
 "\n"
-"Beheer vakantieaanvragen en toewijzingen\n"
-"=====================================\n"
+"Verlofaanvragen en -toewijzingen beheren\n"
+"========================================\n"
 "\n"
-"Deze applicatie beheerd de vakantieschema's van je bedrijf. Het staat "
-"werknemers toe om verlofaanvragen te doen. Vervolgens kunnen managers "
-"vakantieaanvragen controleren en ze vervolgens goedkeuren of afwijzen. Op "
-"deze manier kun je de algemene vakanties plannen voor je bedrijf of "
-"afdeling.\n"
+"Deze applicatie beheert de verlofschema's van je bedrijf. Werknemers kunnen "
+"verlof aanvragen. Vervolgens kunnen managers verlofaanvragen controleren en "
+"ze goedkeuren of afwijzen. Op deze manier behoud je het overzicht over de "
+"algemene verlofplanning van je bedrijf of afdeling.\n"
 "\n"
 "Je kunt verschillende soorten aanvragen configureren (ziekte, betaalde "
-"dagen, ...) en je kunt vakantie snel toewijzen aan een werknemer of afdeling "
-"door vakantie toewijzingen. Een werknemer kan ook een aanvraag doen voor "
-"meer vakantie toewijzingen. Het verhoogt het aantal beschikbare dagen voor "
-"dat type vakantie (als het verzoek is goedgekeurd).\n"
+"dagen, ...) en je kunt snel verlof toewijzen aan een werknemer of afdeling "
+"door verloftoewijzingen. Een werknemer kan ook meer verlofdagen aanvragen "
+"door een nieuwe verloftoewijzing te maken. Dat verhoogt dan het aantal "
+"beschikbare dagen voor dat type verlof (als het verzoek is goedgekeurd "
+"natuurlijk).\n"
 "\n"
-"Je kunt vakanties opvolgen op verschillende manieren volgen:\n"
+"Je kunt verlof op verschillende manieren tracken met deze rapporten:\n"
 "\n"
-"* Vakantiesamenvattingen\n"
-"* Vakantie op afdeling\n"
-"* Vakantie analyse\n"
+"* Verlofsamenvatting\n"
+"* Verlof per afdeling\n"
+"* Verlofanalyse\n"
 "\n"
-"Een synchronisatie met een interne agenda (Afspraken van de CRM module) is "
-"ook mogelijk om automatisch een afspraak aan te maken wanneer een "
-"vakantieaanvraag is goedgekeurd door een type van afspraak in te stellen op "
-"het type vakantie.\n"
+"Synchronisatie met een interne agenda (Afspraken in de CRM-module) is ook "
+"mogelijk. Dan wordt automatisch een afspraak aangemaakt wanneer een "
+"verlofaanvraag is goedgekeurd. Daarvoor kun je een afspraaktype instellen "
+"als 'verlof'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -15510,8 +15511,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for '%"
 "(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
-"'%(value)s' lijkt geen geldige selectiewaarde te zijn voor '%"
-"(label_property)s' (subveld van '%%(veld)s' veld)."
+"'%(value)s' lijkt geen geldige selectiewaarde te zijn voor '%(label_property)"
+"s' (subveld van '%%(field)s' veld)."
 
 #. module: base
 #. odoo-python
@@ -15521,7 +15522,7 @@ msgid ""
 "(subfield of '%%(field)s' field)."
 msgstr ""
 "'%(value)s' lijkt geen geldige Tag-waarde te zijn voor '%(label_property)s' "
-"(subveld van '%%(veld)s' veld)."
+"(subveld van '%%(field)s' veld)."
 
 #. module: base
 #. odoo-python
@@ -15531,7 +15532,7 @@ msgid ""
 "property (subfield of '%%(field)s' field)."
 msgstr ""
 "'%(value)s' lijkt geen vlotter te zijn voor veld '%(label_property)s' "
-"eigenschap (subveld van '%%(veld)s' veld)."
+"eigenschap (subveld van '%%(field)s' veld)."
 
 #. module: base
 #. odoo-python
@@ -15541,7 +15542,7 @@ msgid ""
 "property (subfield of '%%(field)s' field)."
 msgstr ""
 "'%(value)s' lijkt geen geheel getal te zijn voor veld '%(label_property)s' "
-"eigenschap (subveld van '%%(veld)s' veld)."
+"eigenschap (subveld van '%%(field)s' veld)."
 
 #. module: base
 #. odoo-python
@@ -15631,7 +15632,7 @@ msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
-"- Enkel een hoofdbedrijf kan worden ingesteld op “%(record)s”. Thans "
+"- Enkel een hoofdbedrijf kan worden ingesteld op “%(record)s”. Momenteel "
 "ingesteld op “%(company)s”"
 
 #. module: base
@@ -28212,7 +28213,7 @@ msgstr "Bestandsinhoud (base64)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr "Bestandsinhoud (grof)"
+msgstr "Bestandsinhoud (raw)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -47982,8 +47983,8 @@ msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
 msgstr ""
-"Kan'%%(veld)s' niet importeren Eigenschappenveld als geheel, richt in plaats "
-"daarvan op individuele eigenschap."
+"Kan'%%(field)s' niet importeren Eigenschappenveld als geheel, richt in "
+"plaats daarvan op individuele eigenschap."
 
 #. module: base
 #. odoo-python
@@ -48261,7 +48262,7 @@ msgid ""
 "(subfield of '%%(field)s' field)."
 msgstr ""
 "Onbekende waarde '%(value)s' voor booleaanse '%(label_property)s' eigenschap "
-"(subveld van '%%(veld)s' veld)."
+"(subveld van '%%(field)s' veld)."
 
 #. module: base
 #. odoo-python

@@ -9,13 +9,14 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Jacob Ljungström <jacob.ljungstrom03@gmail.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-15 18:38+0000\n"
-"PO-Revision-Date: 2025-11-19 09:23+0000\n"
-"Last-Translator: Jacob Ljungström <jacob.ljungstrom03@gmail.com>\n"
+"PO-Revision-Date: 2026-03-03 11:59+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_proxy_client/sv/>\n"
 "Language: sv\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -38,17 +39,17 @@ msgstr ""
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr "Konto EDI proxy-användare"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
-msgstr "Konto Edi Proxy Klient"
+msgstr "EDI-överföringar genom en proxy för kunder"
 
 #. module: account_edi_proxy_client
 #: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
 msgid "Account Journal"
-msgstr "Journal"
+msgstr "Verifikationsserie"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -83,7 +84,7 @@ msgstr "Kryptografiska nycklar"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields.selection,name:account_edi_proxy_client.selection__account_edi_proxy_client_user__edi_mode__demo
 msgid "Demo mode"
-msgstr "Demoläge"
+msgstr "Demo-läge"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
@@ -93,12 +94,12 @@ msgstr "Visningsnamn"
 #. module: account_edi_proxy_client
 #: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
 msgid "EDI Proxy User"
-msgstr "EDI Proxy Användare"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
 msgid "EDI Proxy Users"
-msgstr "Användare av EDI-proxy"
+msgstr "EDI-överföringar genom en proxy för användare"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_mode
@@ -108,7 +109,7 @@ msgstr "Driftläge för EDI"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "Edi Identification"
-msgstr "Identifiering av Edi"
+msgstr "Identifiering av EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -118,7 +119,7 @@ msgstr "ID"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id_client
 msgid "Id Client"
-msgstr "Kund-ID"
+msgstr "Kundnummer"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -154,7 +155,7 @@ msgstr "Produktionsläge"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
-msgstr "Typ av fullmakt"
+msgstr "Typ av proxy"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -169,14 +170,14 @@ msgstr "Testläge"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_id
 msgid "The key to encrypt all the user's data"
-msgstr "Nyckel för att kryptera alla användarens data"
+msgstr "Nyckel för att kryptera användarens data"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
 msgid "The unique id that identifies this user, typically the vat"
 msgstr ""
-"Det unika id som identifierar denna användare, vanligtvis "
-"momsregistreringsnummret"
+"Det unika nummer som identifierar användaren, vanligtvis utgörs det av "
+"användarens momsregistreringsnummer"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -185,8 +186,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %(url)s. %(error_message)s"
 msgstr ""
-"Webbadressen som denna tjänst begärde returnerade ett fel. Webbadressen den "
-"försökte kontakta var %(url)s. %(error_message)s"
+"Det uppstod ett problem med URL:en som tjänsten anropade. URL:en som den "
+"försökte anropa var %(url)s. %(error_message)s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -195,8 +196,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
 msgstr ""
-"Den webbadress som denna tjänst begärde returnerade ett fel. Den webbadress "
-"som tjänsten försökte kontakta var %s"
+"Det uppstod ett problem med URL:en som tjänsten anropade. URL:en som "
+"tjänsten försökte anropa var %s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -204,18 +205,18 @@ msgstr ""
 msgid ""
 "The url that this service tried to contact does not exist. The url was “%s”"
 msgstr ""
-"Den webbadress som denna tjänst försökte kontakta finns inte. Webbadressen "
-"var “%s”"
+"URL:en som tjänsten försökte anropa hittades inte. Det gäller alltså "
+"följande URL “%s”"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
-msgstr "Detta företag har redan skapat en aktiv användare för denna EDI-typ"
+msgstr "Företaget har redan en aktiv användare för denna EDI-typ"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr "Denna id_client har redan använts av en annan användare."
+msgstr "Denna id_client används redan."
 
 #~ msgid "This edi identification is already assigned to an active user"
 #~ msgstr "Denna edi-identifiering är redan tilldelad en aktiv användare"
