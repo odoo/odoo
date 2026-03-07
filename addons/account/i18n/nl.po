@@ -10,7 +10,7 @@
 # Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:35+0000\n"
-"PO-Revision-Date: 2026-02-28 13:17+0000\n"
+"PO-Revision-Date: 2026-03-07 12:13+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/account/"
 "nl/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -228,7 +228,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; prijsverschil voor %(product)s"
 
 #. module: account
 #. odoo-python
@@ -5149,7 +5149,7 @@ msgstr "Bank van Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Bankinstellingen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -8537,7 +8537,7 @@ msgid ""
 "between the standard price and the bill price."
 msgstr ""
 "Bij permanente waardering bevat deze rekening het prijsverschil tussen de "
-"standaardprijs en de factuurprijs."
+"standaard kostprijs en de factuurprijs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
@@ -9341,7 +9341,7 @@ msgstr "Fiscale lokalisatie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Periods"
-msgstr "Fiscale perioden"
+msgstr "Boekhoudperiodes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position
@@ -15378,12 +15378,12 @@ msgstr "Reden welke wordt weergegeven op creditfactuur"
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 msgid "Receipt"
-msgstr "Ontvangstbewijs"
+msgstr "Kassabon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Receipts"
-msgstr "Ontvangsten"
+msgstr "Ontvangstbewijzen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
@@ -18351,6 +18351,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"De bankrekening van je bedrijf is niet vertrouwd. Vraag een beheerder of "
+"iemand met goedkeuringsrechten om dit te controleren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18437,6 +18439,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"De bedrijfsbankrekening (%(account_number)s) die aan deze verkoopfactuur is "
+"gekoppeld is niet vertrouwd. Ga naar de bankinstellingen, controleer "
+"nogmaals of het jouw correcte nummer is en klik op 'Geld overmaken' om de "
+"rekening te vertrouwen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -20677,6 +20683,24 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Waarde voor het bedrag van de afschrijvingsregel\n"
+"    * Percentage: Percentage van het saldo, tussen 0 and 100.\n"
+"    * Vast: De vaste waarde van de afschrijving. Het bedrag wordt als debet "
+"geboekt als het negatief is en als credit als het positief is.\n"
+"    * Uit label: Er is geen regex-scheidingsteken nodig, alleen de regex is "
+"nodig. Als je bijvoorbeeld het bedrag wilt extraheren uit\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Dan kan je dit ingeven\n"
+"BRT: ([\\d,]+)\n"
+"    Als het label \"01870912 0009065 00115\" is en je het bedag nodig hebt "
+"in decimalen\n"
+"    (bv. 90,65), dan kun je een regex gebruiken met capturing groups, "
+"bijvoorbeeld:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In dit geval:\n"
+"    • legt de eerste groep het gehele getal vast\n"
+"    • legt de tweede groep het decimale deel vast (de laatste twee cijfers)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals

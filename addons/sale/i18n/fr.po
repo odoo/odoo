@@ -4,7 +4,7 @@
 #
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
-# Camille Dantinne <cmd@odoo.com>, 2022
+# Camille Dantinne <cmd@odoo.com>, 2022, 2026.
 # Jordan D. (Joda), 2023
 # Rémi CAZENAVE, 2023
 # Martin Trigaux, 2023
@@ -17,17 +17,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-02-28 12:58+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2026-03-07 12:10+0000\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/sale/"
 "fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -1142,8 +1142,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
-"('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'devis' if object.state in ('draft', "
+"'sent') else 'commande'\"/>\n"
 "        Bonjour,\n"
 "        <br/><br/>\n"
 "        Votre <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-"
@@ -1155,8 +1155,8 @@ msgstr ""
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
 "€</span> est prêt pour validation.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
