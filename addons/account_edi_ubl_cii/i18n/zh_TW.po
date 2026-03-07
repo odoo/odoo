@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:37+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2026-01-06 08:43+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -40,6 +40,17 @@ msgid ""
 msgstr ""
 "%s 應已在公司識別碼欄位中，設定 KVK 或 OIN 號碼，或已設定為 Peppol 電子地址"
 "（EAS 代碼 0106 或 0190）。"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid "%s should have a valid KBO/BCE number in the Company ID field"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
+msgid "(Un)Group lines by tax"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -178,6 +189,12 @@ msgstr "保加利亞增值稅"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9913
 msgid "Business Registers Network"
 msgstr "商業登記網絡（歐洲）"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Cannot find the origin file, try by importing it again"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -536,6 +553,11 @@ msgid "Germany (XRechnung)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__zugferd
+msgid "Germany (ZUGFeRD)"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0204
 msgid "Germany Leitweg-ID"
 msgstr "德國 Leitweg-ID"
@@ -549,6 +571,12 @@ msgstr "德國增值稅"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9933
 msgid "Greece VAT"
 msgstr "希臘增值稅"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Grouped lines by tax"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9910
@@ -1127,6 +1155,12 @@ msgid "Ubl Cii Requires Exemption Reason"
 msgstr "Ubl Cii 需要豁免原因"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Ungrouped lines from origin file"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid ""
@@ -1141,8 +1175,20 @@ msgstr "英國增值稅"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Unknown partner"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unspported file type via %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Untaxed"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -1789,6 +1835,18 @@ msgstr "若加那利群島一般間接稅(IGIC)適用，每個發票資料行的
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
 msgid "X.400 address for mail text"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "You can only (un)group lines of a draft invoice"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "You can only (un)group lines of a incoming invoice (vendor bill)"
 msgstr ""
 
 #. module: account_edi_ubl_cii

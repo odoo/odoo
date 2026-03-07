@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-03-06 18:37+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -32,6 +32,7 @@ msgid "Could not retrieve the product named: %(name)s"
 msgstr "%(name)s nomli mahsulotni olish imkoni bo‘lmadi"
 
 #. module: purchase_edi_ubl_bis3
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_account_move__display_name
 #: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_order__display_name
 #, fuzzy
@@ -39,11 +40,17 @@ msgid "Display Name"
 msgstr "Ko‘rsatish nomi"
 
 #. module: purchase_edi_ubl_bis3
+#: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_account_move__id
 #: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:purchase_edi_ubl_bis3.field_purchase_order__id
 #, fuzzy
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase_edi_ubl_bis3
+#: model:ir.model,name:purchase_edi_ubl_bis3.model_account_move
+msgid "Journal Entry"
+msgstr ""
 
 #. module: purchase_edi_ubl_bis3
 #: model:ir.model,name:purchase_edi_ubl_bis3.model_purchase_order
@@ -63,3 +70,10 @@ msgstr "UBL BIS 3.5 buyurtma berish standarti"
 #, fuzzy
 msgid "Some information could not be imported:"
 msgstr "Ba'zi ma'lumotlarni import qilib bo‘lmadi:"
+
+#. module: purchase_edi_ubl_bis3
+#. odoo-python
+#: code:addons/purchase_edi_ubl_bis3/models/account_move.py:0
+msgid ""
+"You can only (un)group lines of an invoice not linked to a purchase order"
+msgstr ""

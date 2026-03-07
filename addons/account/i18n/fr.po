@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-26 11:05+0000\n"
+"PO-Revision-Date: 2026-03-06 17:48+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -5162,7 +5162,7 @@ msgstr "Banque d'Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Paramètres bancaires"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -18449,6 +18449,9 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Le compte bancaire de votre entreprise n'est pas fiable. Veuillez demander à "
+"un administrateur ou à une personne disposant des droits d'approbation de le "
+"vérifier."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18541,6 +18544,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Le compte bancaire de l'entreprise (%(account_number)s) associé à cette "
+"facture n'est pas marqué comme fiable. Accédez aux paramètres bancaires, "
+"vérifiez qu'il s'agit bien du vôtre ou corrigez le numéro, puis cliquez sur "
+"''Envoyer de l'argent'' pour le marquer comme fiable."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -20785,6 +20792,25 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valeur du montant de la ligne d'ajustement\n"
+"    * Pourcentage : pourcentage du solde, entre 0 et 100.\n"
+"    * Fixe : valeur fixe de l'ajustement. Le montant sera comptabilisé comme "
+"un débit s'il est négatif, ou comme un crédit s'il est positif.\n"
+"    * À partir du libellé : il n'est pas nécessaire d'utiliser de délimiteur "
+"regex, seule l'expression régulière est requise. Par exemple, si vous "
+"souhaitez extraire le montant à partir de :\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Vous pouvez saisir\n"
+"BRT: ([\\d,]+)\n"
+"    Si le libellé est \"01870912 0009065 00115\" et que vous avez besoin du "
+"montant au format décimal (par ex. 90.65), vous pouvez utiliser une "
+"expression régulière avec des groupes de capture, par exemple :\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    Dans ce cas :\n"
+"    • le premier groupe capture la partie entière\n"
+"    • le second groupe capture la partie décimale (les deux derniers "
+"chiffres)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals

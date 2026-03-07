@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-25 14:49+0000\n"
+"PO-Revision-Date: 2026-03-06 17:48+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/account/"
 "it/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -5143,7 +5143,7 @@ msgstr "Banca di Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Impostazioni banca"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -18382,6 +18382,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Il conto bancario della tua azienda non è sicuro. Chiedi a un amministratore "
+"o a una persona con i diritti di approvazione di verificarlo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18470,6 +18472,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Il conto bancario dell'azienda (%(account_number)s) collegato a questa "
+"fattura non è sicuro. Vai alle impostazioni della banca, verifica che sia il "
+"tuo o correggi il numero e fai clic su Invia denaro per renderlo sicuro."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -20702,6 +20707,24 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valore dell'importo della riga di cancellazione\n"
+"* Percentuale: percentuale del saldo, compresa tra 0 e 100.\n"
+"* Fisso: valore fisso della cancellazione. L'importo verrà considerato come "
+"un debito se è negativo, come un credito se è positivo.\n"
+"    * Da etichetta: non è necessario alcun delimitatore regex, è sufficiente "
+"solo il regex. Ad esempio, se si desidera estrarre l'importo da\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"è possibile inserire\n"
+"BRT: ([\\d,]+)\n"
+"    Se l'etichetta è \"01870912 0009065 00115\" e si desidera l'importo in "
+"formato decimale\n"
+"    (ad esempio 90,65), è possibile utilizzare un'espressione regolare con "
+"gruppi di cattura, ad esempio:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In questo caso:\n"
+"    • il primo gruppo cattura la parte intera\n"
+"• il secondo gruppo cattura la parte decimale (ultime due cifre)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals

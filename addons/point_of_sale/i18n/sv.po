@@ -27,12 +27,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
+# Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-27 14:41+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-06 17:47+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/sv/>\n"
@@ -41,7 +42,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -706,7 +707,7 @@ msgstr "Åtgärd Krävs"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
+msgid "Action cancelled (%(ACTION)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -1132,7 +1133,7 @@ msgstr "Äppelpaj"
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
 msgid "Apply"
-msgstr "Tillämpa"
+msgstr "Verkställ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1810,7 +1811,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
 msgstr ""
 
 #. module: point_of_sale
@@ -2185,8 +2186,26 @@ msgstr "Avslutande session"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "Slutlig skillnad i %(payment_method)s (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3072,7 +3091,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_digest_digest
 msgid "Digest"
-msgstr "Sammanställning"
+msgstr "Sammanfattning"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3095,7 +3114,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr "Rab.%"
+msgstr "Rabatt %"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3276,7 +3295,7 @@ msgstr "Vill du öppna kundlistan för att välja kund?"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
-msgstr "Nedladdningar"
+msgstr "Ladda ner"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4187,7 +4206,7 @@ msgstr "Felaktig adress för leverans"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Info"
-msgstr "Information"
+msgstr "Info"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -4841,7 +4860,7 @@ msgstr "Logga in med anställda"
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Logo"
-msgstr "Logotyp"
+msgstr "Logga"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
@@ -5043,7 +5062,7 @@ msgstr "Metod Namn"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
-msgstr "Övrigt"
+msgstr "Diverse"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5744,6 +5763,24 @@ msgstr "Ingående kassa"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
 msgstr "Öppning av kontrollmeddelande: "
 
@@ -6081,7 +6118,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__paid
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__paid
 msgid "Paid"
-msgstr "Betalad"
+msgstr "Betald"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_pain_au_chocolat_product_template
@@ -6610,7 +6647,7 @@ msgstr "Fakturarapport för försäljningsställe"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_journal_id
 msgid "Point of Sale Journal"
-msgstr "Tidskrift för Point of Sale"
+msgstr "Journal för Point of Sale"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
@@ -7486,7 +7523,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refund"
-msgstr "Kreditfaktura"
+msgstr "Återbetalning"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9407,12 +9444,6 @@ msgstr ""
 "Det finns en skillnad mellan de belopp som ska bokföras och beloppen i "
 "beställningarna, det orsakas förmodligen av skatter eller ändringar i "
 "redovisningskonfigurationer."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "There is already a cash payment line."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -43,8 +43,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-25 14:47+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-06 17:46+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fi/>\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -752,8 +752,8 @@ msgstr "Vaatii toimenpiteitä"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
-msgstr "Toiminto peruutettu (%s)"
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1859,8 +1859,8 @@ msgstr "Laskennan aikana havaittu kassavarojen ero (voitto) - päättäminen"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
-msgstr "Käteiskassa avattu (%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2241,8 +2241,26 @@ msgstr "Istunnon päätös"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "Sulkemisero %(payment_method)s (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2427,7 +2445,7 @@ msgstr "Yhdistä laitteet kassakassaasi ilman IoT Boxia."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect devices using an IoT Box"
-msgstr "Yhdistä laitteet IoT Boxin avulla"
+msgstr "Yhdistä laitteita IoT-boksin avulla"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5835,6 +5853,24 @@ msgstr "Käteisvarat avauksessa"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
 msgstr "Avautuva ohjausviesti: "
 
@@ -6070,7 +6106,7 @@ msgstr "Maksamattomien saatavien tili"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "POS Category"
-msgstr "Kassan kategoria"
+msgstr "Kassajärjestelmän kategoria"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_optional_product_ids
@@ -6626,7 +6662,7 @@ msgstr "kassan tietojen lataus mixin"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
-msgstr "Kassa"
+msgstr "Kassajärjestelmä"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6809,7 +6845,7 @@ msgstr "Kassalle sallittu hinnasto"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__pos_config_ids
 msgid "Pos Config"
-msgstr "Kassan määritykset"
+msgstr "Kassajärjestelmän asetukset"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_order_printer
@@ -6823,24 +6859,24 @@ msgstr "Kassa on tilaustulostin"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr "Kassatilaus"
+msgstr "Kassajärjestelmän tilaus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr "Kassan tilausten määrä"
+msgstr "Kassajärjestelmän tilausten määrä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr "Kassan tilausrivi"
+msgstr "Kassajärjestelmän tilausrivi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_payment_ids
 msgid "Pos Payment"
-msgstr "Kassan maksu"
+msgstr "Kassajärjestelmän maksu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -6851,38 +6887,38 @@ msgstr "Kassajärjestelmän tuoteryhmät"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_refunded_invoice_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_refunded_invoice_ids
 msgid "Pos Refunded Invoice"
-msgstr "Kassa Palautettu lasku"
+msgstr "Kassajärjestelmän palautettu lasku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
 msgid "Pos Selectable Categ"
-msgstr "Kassassa valittava kategoria"
+msgstr "Kassajärjestelmän valittava kategoria"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_daily_sales_reports_wizard__pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr "Kassan istunto"
+msgstr "Kassajärjestelmän istunto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr "Kassan istunnon kesto"
+msgstr "Kassajärjestelmän istunnon kesto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr "Kassan istunnon tila"
+msgstr "Kassajärjestelmän istunnon tila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr "Kassan Istunnon käyttäjätunnus"
+msgstr "Kassajärjestelmän istunnon käyttäjätunnus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "Kassan istunnot"
+msgstr "Kassajärjestelmän istunnot"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -7993,7 +8029,7 @@ msgstr "Skaala"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
 msgid "Scale error"
-msgstr "Vaa'an virhe"
+msgstr "Vaakavirhe"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9520,12 +9556,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "There is already a cash payment line."
-msgstr "Käteismaksurivi on jo olemassa."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "Sähköinen maksu on jo käynnissä."
@@ -10132,7 +10162,7 @@ msgstr "Tuntematon virhe"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
 msgid "Unnamed Product"
-msgstr "Nimetön tuote"
+msgstr "Nimeämätön tuote"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11048,6 +11078,15 @@ msgstr "painikkeiden aktivoimiseksi."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "käyttäen"
+
+#~ msgid "Action cancelled (%s)"
+#~ msgstr "Toiminto peruutettu (%s)"
+
+#~ msgid "Cash drawer opened (%s)"
+#~ msgstr "Käteiskassa avattu (%s)"
+
+#~ msgid "There is already a cash payment line."
+#~ msgstr "Käteismaksurivi on jo olemassa."
 
 #~ msgid "free"
 #~ msgstr "ilmainen"
