@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 19:05+0000\n"
-"PO-Revision-Date: 2026-02-20 19:05+0000\n"
+"POT-Creation-Date: 2026-03-06 19:06+0000\n"
+"PO-Revision-Date: 2026-03-06 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,6 +20,14 @@ msgstr ""
 msgid ""
 "<span>Please note that the kiosk for INR currency only works with Razorpay "
 "terminal</span>"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/app/components/popups/hsn_code_dialog/hsn_code_dialog.xml:0
+msgid ""
+"As POS sales are reported in GSTR-1, HSN/SAC codes must be set on all "
+"taxable products."
 msgstr ""
 
 #. module: l10n_in_pos
@@ -40,9 +48,19 @@ msgid "Coins/Bills"
 msgstr ""
 
 #. module: l10n_in_pos
+#: model:ir.model,name:l10n_in_pos.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_in_pos
 #. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/components/popups/company_state_dialog/company_state_dialog.xml:0
 msgid "Company address is missing"
+msgstr ""
+
+#. module: l10n_in_pos
+#: model_terms:ir.actions.act_window,help:l10n_in_pos.action_missing_hsn_product
+msgid "Create a new product variant"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -54,7 +72,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_session__display_name
+#: model:ir.model.fields,field_description:l10n_in_pos.field_product_product__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_in_pos.field_res_company__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -67,6 +87,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "GST:"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/app/components/popups/hsn_code_dialog/hsn_code_dialog.xml:0
+msgid "Go to Products"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -88,6 +114,11 @@ msgid "HSN Code:"
 msgstr ""
 
 #. module: l10n_in_pos
+#: model:ir.model.fields,field_description:l10n_in_pos.field_product_product__l10n_in_hsn_missing_in_pos
+msgid "HSN Missing in POS"
+msgstr ""
+
+#. module: l10n_in_pos
 #. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/screens/receipt_screen/pos_receipt.xml:0
 msgid "HSN Summary"
@@ -95,6 +126,7 @@ msgstr ""
 
 #. module: l10n_in_pos
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__l10n_in_hsn_code
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.product_tree_hsn_code
 msgid "HSN/SAC Code"
 msgstr ""
 
@@ -107,7 +139,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_session__id
+#: model:ir.model.fields,field_description:l10n_in_pos.field_product_product__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_in_pos.field_res_company__id
 msgid "ID"
 msgstr ""
 
@@ -124,6 +158,14 @@ msgid "INVOICE"
 msgstr ""
 
 #. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/app/components/popups/hsn_code_dialog/hsn_code_dialog.xml:0
+msgid ""
+"If you know the HSN codes, you can go to Products and set the missing ones "
+"there."
+msgstr ""
+
+#. module: l10n_in_pos
 #: model:ir.model,name:l10n_in_pos.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -131,6 +173,17 @@ msgstr ""
 #. module: l10n_in_pos
 #: model:ir.model,name:l10n_in_pos.model_account_move_line
 msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_in_pos
+#: model:ir.actions.act_window,name:l10n_in_pos.action_missing_hsn_product
+msgid "Missing HSN Products"
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/app/components/popups/hsn_code_dialog/hsn_code_dialog.xml:0
+msgid "Missing HSN/SAC Codes"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -171,6 +224,11 @@ msgid "Product"
 msgstr ""
 
 #. module: l10n_in_pos
+#: model:ir.model,name:l10n_in_pos.model_product_product
+msgid "Product Variant"
+msgstr ""
+
+#. module: l10n_in_pos
 #. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/screens/receipt_screen/pos_receipt.xml:0
 msgid "Rate%"
@@ -190,6 +248,14 @@ msgstr ""
 
 #. module: l10n_in_pos
 #. odoo-javascript
+#: code:addons/l10n_in_pos/static/src/app/components/popups/hsn_code_dialog/hsn_code_dialog.xml:0
+msgid ""
+"Some products are missing this information, which prevents the session from "
+"being closed."
+msgstr ""
+
+#. module: l10n_in_pos
+#. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/screens/receipt_screen/pos_receipt.xml:0
 msgid "Tax Invoice"
 msgstr ""
@@ -198,6 +264,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/l10n_in_pos/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total GST:"
+msgstr ""
+
+#. module: l10n_in_pos
+#: model_terms:ir.actions.act_window,help:l10n_in_pos.action_missing_hsn_product
+msgid ""
+"You must define an HSN for every product you sell through\n"
+"                the point of sale interface."
 msgstr ""
 
 #. module: l10n_in_pos
