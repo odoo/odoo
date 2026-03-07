@@ -9,6 +9,13 @@ class DataAttributeChangeAction extends DataAttributeAction {
         super.apply(context);
         this.config.onChange?.(context);
     }
+    isApplied({ editingElement, params: { mainParam: attributeName } = {}, value }) {
+        if (value) {
+            return Boolean(editingElement.dataset[attributeName]) === Boolean(value);
+        } else {
+            return super.isApplied(...arguments);
+        }
+    }
 }
 
 export class SnippetVisibilityPlugin extends Plugin {
