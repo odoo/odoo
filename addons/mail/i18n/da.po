@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-02-28 13:31+0000\n"
+"PO-Revision-Date: 2026-03-07 14:14+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/mail/"
 "da/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -511,8 +511,8 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Skriv en besked</b> til medlemmer af denne her kanal.</p>\n"
-"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med "
-"<i>'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
+"<p>Du kan underrette nogen med <i>'@'</i> eller linke en anden kanal med <i>"
+"'#'</i>. Start din besked med <i>'/'</i> for at få en liste over mulige "
 "kommandoer.</p>"
 
 #. module: mail
@@ -657,8 +657,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"En Python-ordbog, der vil blive evalueret for at angive standardværdier, når "
-"du opretter nye poster til dette alias."
+"En Python-ordbog, der evalueres for at angive standardværdier ved oprettelse "
+"af nye poster via dette alias."
 
 #. module: mail
 #. odoo-python
@@ -1282,7 +1282,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
 msgid "Alias Contact Security"
-msgstr "Alias kontakt sikkerhed"
+msgstr "Aliaskontaktsikkerhed"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain_id
@@ -3282,7 +3282,7 @@ msgstr "Leveret"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
-msgstr "Afsendelse fejlede"
+msgstr "Levering mislykket"
 
 #. module: mail
 #. odoo-javascript
@@ -4186,7 +4186,7 @@ msgstr "Fejl mail"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
-msgstr "Fejlet"
+msgstr "Mislykket"
 
 #. module: mail
 #. odoo-javascript
@@ -5161,8 +5161,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Hvis angivet vil dette indhold automatisk blive sendt ud til uautoriserede "
-"brugere, i stedet for standard beskeden."
+"Hvis angivet, sendes dette indhold automatisk til uautoriserede brugere i "
+"stedet for standardbeskeden."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -5860,7 +5860,7 @@ msgstr "Seneste meningsmåling"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_presence
 msgid "Last Presence"
-msgstr "Sidste fremmøde"
+msgstr "Sidste tilstedeværelse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -7857,8 +7857,8 @@ msgstr ""
 "Oprindelig Diskussion: Besvarelse sendes til den oprindelige dokument "
 "diskussions tråd.\n"
 "Anden Email-adresse: Besvarelser sendes til email adressen nævnt i "
-"sporingens besked-id, i stedet for den oprindelige dokument diskussions tråd."
-"\n"
+"sporingens besked-id, i stedet for den oprindelige dokument diskussions "
+"tråd.\n"
 "Dette har inflydelse på den genererede besked-id."
 
 #. module: mail
@@ -8332,11 +8332,11 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Politik til at oprette en besked på dokumentet ved hjælp af mailgatewayen.\n"
-"- alle: alle kan skrive\n"
-"- partnere: kun godkendte partnere\n"
-"- følgere: kun følgere af det relaterede dokument eller medlemmer af "
-"følgende kanaler\n"
+"Politik for oprettelse af beskeder på dokumentet via mailgatewayen:\n"
+"- Alle: Alle kan skrive.\n"
+"- Partnere: Kun godkendte partnere kan skrive.\n"
+"- Følgere: Kun følgere af det tilknyttede dokument eller medlemmer af de "
+"følgende kanaler kan skrive.\n"
 
 #. module: mail
 #. odoo-javascript
@@ -8430,7 +8430,7 @@ msgstr "Foretrukket respons adresse"
 #: model:ir.model.fields,field_description:mail.field_mail_guest__presence_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__presence_ids
 msgid "Presence"
-msgstr "Fremmøde"
+msgstr "Tilstedeværelse"
 
 #. module: mail
 #. odoo-javascript
@@ -11763,7 +11763,7 @@ msgid ""
 msgstr ""
 "Brug af din egen email server er påkrævet for at sende/modtage emails i "
 "Community og Enterprise udgaverne. Online brugere drager allerede fordel af "
-"en klar-til-brug email server (@mitfirma.odoo.com)."
+"en klar-til-brug email server (@minvirksomhed.odoo.com)."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -12570,8 +12570,8 @@ msgstr "f.eks. \"Velkomstmail\""
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, "
-"{{ object.name }}\""
+"f.eks. \"Velkommen til MinVirksomhed\" eller \"Hyggeligt at møde dig, {{ "
+"object.name }}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12648,7 +12648,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. mycompany.com"
-msgstr "f.eks. mitfirma.com"
+msgstr "f.eks. minvirksomhed.com"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form

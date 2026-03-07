@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-02-21 13:56+0000\n"
+"PO-Revision-Date: 2026-03-07 14:05+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_org_chart/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -30,11 +30,13 @@ msgid ""
 "<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
 "                                <span class=\"fw-bolder\">Zoom</span>"
 msgstr ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">Zoom</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
 msgid "<i style=\"font-size: 0.7rem;\">Zoom</i>"
-msgstr ""
+msgstr "<i style=\"font-size: 0.7rem;\">Zoom</i>"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -44,18 +46,18 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
-"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
-"13px\">Organisationsdiagram</span>"
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">"
+"Organisationsdiagram</span>"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Child All Count"
-msgstr ""
+msgstr "Antal børn i alt"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Child Count"
-msgstr ""
+msgstr "Antal børn"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
@@ -68,8 +70,8 @@ msgstr "Opret en medarbejder."
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Define a manager or subordinates to see this employee in the org chart."
 msgstr ""
-"Angiv en leder eller underordnede, som skal have adgang til at se denne "
-"medarbejder i organisationsdiagrammet."
+"Angiv en leder eller medarbejder under direkte ledelse, der skal have adgang "
+"til at se denne medarbejder i organisationsdiagrammet."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
@@ -80,19 +82,19 @@ msgstr "Afdelingsfarve"
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
 msgid "Direct Subordinates Count"
-msgstr "Antal direkte underordnede"
+msgstr "Antal medarbejdere under direkte ledelse"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr "Direkte og indirekte underordnede"
+msgstr "Medarbejdere under direkte og indirekte ledelse"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Direct subordinates"
-msgstr "Direkte underordnede"
+msgstr "Medarbejder under direkte ledelse"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
@@ -125,19 +127,19 @@ msgstr "ID"
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr "Antal indirekte underordnede"
+msgstr "Antal medarbejdere under indirekte ledelse"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Indirect subordinates"
-msgstr "Indirekte underordnede"
+msgstr "Medarbejdere under indirekte ledelse"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr "er underordnet"
+msgstr "er under ledelse"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -178,7 +180,7 @@ msgstr "Vis alle"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Subordinates"
-msgstr "Underordnede"
+msgstr "Medarbejdere under ledelse"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -196,4 +198,4 @@ msgstr "I alt"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 msgid "people"
-msgstr "mennesker"
+msgstr "personer"

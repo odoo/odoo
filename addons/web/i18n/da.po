@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-06 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 13:42+0000\n"
+"POT-Creation-Date: 2026-03-06 18:38+0000\n"
+"PO-Revision-Date: 2026-03-07 14:19+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/web/da/"
 ">\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -504,18 +504,17 @@ msgid ""
 "merge all samples.<br/>It can lead to partially invalid result in case of "
 "concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
-"                                <option value=\"tabs\">Adskilt "
-"(én pr. tabulator)</option>\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Adskilt (én pr. "
+"tabulator)</option>\n"
 "                                <option value=\"temporal\">Midlertidig "
 "(eksperimentel)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Advarsel:</b> Den "
-"midlertidige tilstand fletter alle prøver.<br/>Dette kan medføre delvist "
-"ugyldige resultater ved samtidige målinger.<br/>Bruges med forsigtighed "
-"</span>"
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Advarsel:</b> Den midlertidige "
+"tilstand fletter alle prøver.<br/>Dette kan medføre delvist ugyldige "
+"resultater ved samtidige målinger.<br/>Bruges med forsigtighed </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2124,7 +2123,7 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
-"Kan ikke angive coverbillede: Ukorrekt felt (\"%s\") angivet i visningen."
+"Kan ikke angive forsidebillede: Ukorrekt felt (\"%s\") angivet i visningen."
 
 #. module: web
 #. odoo-javascript
@@ -2451,7 +2450,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Delay the apparition of the zoomed image with a value in milliseconds"
-msgstr "Forsink fremkomsten af det zoomede billede med en værdi i millisekunder"
+msgstr ""
+"Forsink fremkomsten af det zoomede billede med en værdi i millisekunder"
 
 #. module: web
 #. odoo-javascript
@@ -5205,7 +5205,7 @@ msgid ""
 "have been archived/unarchived."
 msgstr ""
 "Af de %(selectedRecord)s valgte datasæt er kun det første %(firstRecords)s "
-"blevet arkiveret eller arkiveringen er blevet fjernet."
+"blevet arkiveret eller arkiveringen er blevet ophævet."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -5258,8 +5258,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type %"
 "(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s er understøttet for kategori "
-"(fundet type %(field_type)s)"
+"Kun typer %(supported_types)s er understøttet for kategori (fundet type %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-python
@@ -5268,8 +5268,8 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type %"
 "(field_type)s)"
 msgstr ""
-"Kun typer %(supported_types)s understøtter filter (fundet type %(field_type)"
-"s)"
+"Kun typer %(supported_types)s understøtter filter (fundet type %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -5999,7 +5999,7 @@ msgstr "Fjern"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Remove Cover Image"
-msgstr "Fjern coverbillede"
+msgstr "Fjern forsidebillede"
 
 #. module: web
 #. odoo-javascript
@@ -6523,7 +6523,7 @@ msgstr "Angiv standardværdier"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Set a Cover Image"
-msgstr "Angiv et coverbillede"
+msgstr "Angiv et forsidebillede"
 
 #. module: web
 #. odoo-javascript
@@ -7042,6 +7042,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/errors/error_dialogs.js:0
+msgid "The request sent to the server was too large"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid "The resizing of the image failed"
 msgstr "Det er ikke muligt at ændre billedets størrelse"
@@ -7492,7 +7498,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Unarchive"
-msgstr "Fjern arkivering"
+msgstr "Ophæv arkivering"
 
 #. module: web
 #. odoo-javascript
@@ -24621,7 +24627,7 @@ msgstr "afkrydsningsfelt med flueben"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ticket"
-msgstr "billet"
+msgstr "sag"
 
 #. module: web
 #. odoo-javascript
