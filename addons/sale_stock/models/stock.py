@@ -22,6 +22,12 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        if self.sale_line_id.analytic_distribution:
+            res['analytic_distribution'] = self.sale_line_id.analytic_distribution
+        return res
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.

@@ -61,9 +61,9 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -79,12 +79,18 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
 
         return tax_total_keys
 
-    def _add_invoice_header_nodes(self, document_node, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['xrechnung']}
-        if not document_node['cbc:BuyerReference']['_text']:
-            document_node['cbc:BuyerReference']['_text'] = 'N/A'
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0'
+
+    def _ubl_add_buyer_reference_node(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_buyer_reference_node(vals)
+
+        node = vals['document_node']['cbc:BuyerReference']
+        if not node['_text']:
+            node['_text'] = 'N/A'
 
     def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS

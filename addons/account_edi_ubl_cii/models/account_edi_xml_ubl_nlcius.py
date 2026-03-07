@@ -111,9 +111,9 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
         grouping_key['tax_exemption_reason_code'] = None
         return grouping_key
 
-    def _ubl_add_values_tax_currency_code(self, vals):
+    def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE account.edi.xml.ubl_bis3
-        self._ubl_add_values_tax_currency_code_empty(vals)
+        self._ubl_add_tax_currency_code_node_empty(vals)
 
     def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -169,17 +169,15 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
                 },
             }]
 
-    def _add_invoice_header_nodes(self, document_node, vals):
+    def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_header_nodes(document_node, vals)
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_ids()['nlcius']}
+        super()._ubl_add_customization_id_node(vals)
+        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0'
 
-    def _add_invoice_payment_means_nodes(self, document_node, vals):
+    def _ubl_add_payment_means_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        super()._add_invoice_payment_means_nodes(document_node, vals)
-        # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
-        payment_means_node = document_node['cac:PaymentMeans']
-        if 'name' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['name'] = None
-        if 'listID' in payment_means_node['cbc:PaymentMeansCode']:
-            payment_means_node['cbc:PaymentMeansCode']['listID'] = None
+        super()._ubl_add_payment_means_nodes(vals)
+        for node in vals['document_node']['cac:PaymentMeans']:
+            # [BR-NL-29] The use of a payment means text (cac:PaymentMeans/cbc:PaymentMeansCode/@name) is not recommended
+            node['cbc:PaymentMeansCode']['name'] = None
+            node['cbc:PaymentMeansCode']['listID'] = None

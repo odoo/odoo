@@ -821,3 +821,54 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             {'credit': 0.01, 'debit': 0.00},
             {'credit': 0.00, 'debit': 0.01},
         ])
+
+    def test_labor_move_not_duplicated_when_backorder_always(self):
+        """ Ensure labor accounting entry is not duplicated when create backorder is set to always. """
+        # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
+
+        picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        self.assertTrue(picking_type, "Manufacturing operation type not found")
+        picking_type.create_backorder = 'always'
+
+        self.workcenter.write({'costs_hour': 20})
+        self.bom.write({
+            'operation_ids': [
+                Command.create({
+                    'name': 'work',
+                    'workcenter_id': self.workcenter.id,
+                    'time_cycle': 60,
+                    'sequence': 1,
+                }),
+            ],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 100
+        production = production_form.save()
+        production.action_confirm()
+
+        workorder = production.workorder_ids
+        workorder.duration = 1.0
+        workorder.time_ids.write({'duration': 1.0})
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 50
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        labour_moves = self.env['account.move'].search([
+            ('ref', '=', production.name + ' - Labour'),
+            ('state', '=', 'posted'),
+            ('company_id', '=', production.company_id.id),
+        ])
+        self.assertEqual(len(labour_moves), 1, "Labor entry should not be duplicated when backorder=always")
