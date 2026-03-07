@@ -3,12 +3,31 @@
 
     <template id="track_po_line_template">
         <div>
-            <strong>The ordered quantity has been updated.</strong>
+            <strong>
+                <t t-if="product_qty is not None and price_unit is not None">
+                    The ordered quantity and unit price have been updated.
+                </t>
+                <t t-elif="product_qty is not None">
+                    The ordered quantity has been updated.
+                </t>
+                <t t-elif="price_unit is not None">
+                    The unit price has been updated.
+                </t>
+            </strong>
+
             <ul>
                 <li><t t-out="line.product_id.display_name"/>:</li>
-                Ordered Quantity: <t t-out="line.product_qty" /> -&gt; <t t-out="float(product_qty)"/><br/>
-                <t t-if='line.order_id.product_id.type != "consu"'>
-                    Received Quantity: <t t-out="line.qty_received" /><br/>
+                <t t-if="product_qty is not None">
+                    Ordered Quantity: <t t-out="line.product_qty"/> -&gt; <t t-out="product_qty"/><br/>
+                </t>
+                <t t-if="price_unit is not None">
+                    Unit Price:
+                    <t t-out="line.price_unit"
+                        t-options="{'widget': 'monetary', 'display_currency': line.currency_id}"/>
+                    -&gt;
+                    <t t-out="price_unit"
+                        t-options="{'widget': 'monetary', 'display_currency': line.currency_id}"/>
+                    <br/>
                 </t>
                 Billed Quantity: <t t-out="line.qty_invoiced"/>
             </ul>

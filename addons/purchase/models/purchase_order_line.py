@@ -318,16 +318,26 @@ class PurchaseOrderLine(models.Model):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
-        if 'product_qty' in values:
+        if any(field in values for field in ('product_qty', 'price_unit')):
             precision = self.env['decimal.precision'].precision_get('Product Unit')
             for line in self:
+                if line.order_id.state != 'purchase':
+                    continue
+                render_values = {}
                 if (
-                    line.order_id.state == "purchase"
-                    and float_compare(line.product_qty, values["product_qty"], precision_digits=precision) != 0
+                    'product_qty' in values
+                    and float_compare(line.product_qty, values['product_qty'], precision_digits=precision) != 0
                 ):
+                    render_values['product_qty'] = float_round(values['product_qty'], precision_digits=precision)
+                if (
+                    'price_unit' in values
+                    and float_compare(line.price_unit, values['price_unit'], precision_digits=precision) != 0
+                ):
+                    render_values['price_unit'] = values['price_unit']
+                if render_values:
                     line.order_id.message_post_with_source(
                         'purchase.track_po_line_template',
-                        render_values={'line': line, 'product_qty': values['product_qty']},
+                        render_values={**render_values, 'line': line},
                         subtype_xmlid='mail.mt_note',
                     )
 
