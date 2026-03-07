@@ -17,16 +17,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:01+0000\n"
-"PO-Revision-Date: 2026-01-16 05:48+0000\n"
+"PO-Revision-Date: 2026-03-07 14:39+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-1/purchase_stock/zh_Hans/>\n"
+"projects/odoo-s19-2/purchase_stock/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -66,12 +66,12 @@ msgstr "+ %s 天"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted ms-1\"> / month</small>"
-msgstr ""
+msgstr "<small class=\"text-muted ms-1\"> / 月</small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted\">Demand: </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">需求：</small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -157,7 +157,7 @@ msgstr "添加全部"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "After next month last year"
-msgstr ""
+msgstr "去年下个月之后"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -214,12 +214,12 @@ msgstr "购买补给"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the last receipt order."
-msgstr ""
+msgstr "最后一次收单订单的完成日期。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -302,6 +302,11 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"定义是否按预计到货日期对询价单（RFQ）进行分组，直送订单除外。\n"
+"         按订单：补货需求将合并分组，按单生产（MTO）除外。\n"
+"         每日：预计到货日期为同一天时，合并补货需求。\n"
+"         每周：预计到货日期为同一周或同一星期几时，合并补货需求。\n"
+"         始终：始终合并所有补货需求。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -770,7 +775,7 @@ msgstr "产品变体"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__date_promised
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__date_promised
 msgid "Promised Date"
-msgstr ""
+msgstr "承诺日期"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
@@ -858,7 +863,7 @@ msgstr "接收数量方法"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "Received quantity is less than the expected quantity for transfer"
-msgstr ""
+msgstr "接收数量少于预期转移数量"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -906,7 +911,7 @@ msgstr "退回拣货"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Same month last year"
-msgstr ""
+msgstr "去年同月"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -1027,7 +1032,7 @@ msgstr "周日"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__partner_id
 msgid "Supplier"
-msgstr ""
+msgstr "供应商"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id_placeholder

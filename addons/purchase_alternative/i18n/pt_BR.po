@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.2a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 13:56+0000\n"
+"PO-Revision-Date: 2026-03-07 14:53+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-s19-2/purchase_alternative/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s19-2/purchase_alternative/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_warning__alternative_po_ids
@@ -44,22 +44,22 @@ msgstr "Aviso de alternativa"
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_form
 msgid "Alternatives"
-msgstr ""
+msgstr "Alternativos"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_alternative_warning_form
 msgid "Cancel Alternatives"
-msgstr ""
+msgstr "Cancelar alternativos"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
 msgid "Choose"
-msgstr ""
+msgstr "Escolher"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,help:purchase_alternative.field_purchase_alternative_create__partner_ids
 msgid "Choose a vendor for alternative PO"
-msgstr ""
+msgstr "Escolha um fornecedor para PC alternativo"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
@@ -106,7 +106,7 @@ msgstr "Copiar produtos"
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_alternative_create_form
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_form
 msgid "Create Alternative"
-msgstr ""
+msgstr "Criar alternativa"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_form
@@ -118,26 +118,32 @@ msgid ""
 "decide to order some products from one vendor and others from another "
 "vendor."
 msgstr ""
+"Crie um edital de licitação adicionando solicitações de cotação alternativas "
+"para diferentes fornecedores.\n"
+"                            Faça a sua escolha selecionando a melhor "
+"combinação de prazo de entrega, entrega a tempo e/ou valor total.\n"
+"                            Ao comparar linhas de produtos, você também pode "
+"decidir pedir produtos de vários fornecedores diferentes."
 
 #. module: purchase_alternative
 #. odoo-python
 #: code:addons/purchase_alternative/models/purchase.py:0
 msgid "Create alternative"
-msgstr ""
+msgstr "Criar alternativo"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__create_uid
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_warning__create_uid
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_group__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__create_date
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_warning__create_date
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_group__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__display_name
@@ -146,7 +152,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_group__display_name
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome de exibição"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__id
@@ -155,18 +161,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_group__id
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,help:purchase_alternative.field_purchase_alternative_create__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
+"Se estiver marcado, as quantidades de produtos do pedido de compra original "
+"serão copiadas"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_alternative_warning_form
 msgid "Keep Alternatives"
-msgstr ""
+msgstr "Manter alternativas"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__write_uid
@@ -206,84 +214,86 @@ msgstr "PC de origem"
 #. module: purchase_alternative
 #: model:ir.model.fields,help:purchase_alternative.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr ""
+msgstr "Outros pedidos de compra em potencial para comprar produtos"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr ""
+msgstr "PCs a confirmar"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_order__purchase_group_id
 msgid "Purchase Group"
-msgstr ""
+msgstr "Grupo de compra"
 
 #. module: purchase_alternative
 #: model:ir.model,name:purchase_alternative.model_purchase_order
 msgid "Purchase Order"
-msgstr ""
+msgstr "Pedido de Compra"
 
 #. module: purchase_alternative
 #: model:ir.model,name:purchase_alternative.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Linha de pedido de compra"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Linhas do Pedido de Compra"
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_alternative_warning_form
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: purchase_alternative
 #. odoo-python
 #: code:addons/purchase_alternative/models/purchase.py:0
 msgid "Some not cleared"
-msgstr ""
+msgstr "Alguns não foram removidos"
 
 #. module: purchase_alternative
 #. odoo-python
 #: code:addons/purchase_alternative/models/purchase.py:0
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
-msgstr ""
+msgstr "Algumas quantidades não foram removidas porque o status não é de SDC."
 
 #. module: purchase_alternative
 #: model:ir.model,name:purchase_alternative.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "Modelo técnico para agrupar pedidos de compra para editais de licitação"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,help:purchase_alternative.field_purchase_alternative_create__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
 msgstr ""
+"O pedido de compra original para o qual este pedido de compra alternativo "
+"está sendo criado."
 
 #. module: purchase_alternative
 #. odoo-python
 #: code:addons/purchase_alternative/models/purchase.py:0
 msgid "There are no quantities to clear."
-msgstr ""
+msgstr "Não há quantidades a serem removidas."
 
 #. module: purchase_alternative
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__partner_ids
 #: model_terms:ir.ui.view,arch_db:purchase_alternative.purchase_order_line_view_compare_list
 msgid "Vendor"
-msgstr ""
+msgstr "Fornecedor"
 
 #. module: purchase_alternative
 #: model:ir.model.fields,field_description:purchase_alternative.field_purchase_alternative_create__purchase_warn_msg
 msgid "Warning Messages"
-msgstr ""
+msgstr "Mensagens de aviso"
 
 #. module: purchase_alternative
 #. odoo-python
@@ -292,6 +302,8 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"Aviso para %(partner)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_alternative
 #. odoo-python
@@ -300,19 +312,23 @@ msgid ""
 "Warning for %(product)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"Aviso para %(product)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_alternative
 #. odoo-python
 #: code:addons/purchase_alternative/models/purchase.py:0
 msgid "What about the alternative Requests for Quotations?"
-msgstr ""
+msgstr "E quanto às solicitações alternativas de cotação?"
 
 #. module: purchase_alternative
 #: model:ir.model,name:purchase_alternative.model_purchase_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
 msgstr ""
+"Assistente no caso de um pedido de compra ainda ter solicitações de cotação "
+"alternativas em aberto"
 
 #. module: purchase_alternative
 #: model:ir.model,name:purchase_alternative.model_purchase_alternative_create
 msgid "Wizard to preset values for alternative PO"
-msgstr ""
+msgstr "Assistente para resetar valores para pedido de compra alternativo"

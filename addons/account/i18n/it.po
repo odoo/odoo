@@ -20,9 +20,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:24+0000\n"
+"PO-Revision-Date: 2026-03-07 14:35+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -85,6 +85,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Per favore, contatta l'amministratore."
 
 #. module: account
 #. odoo-python
@@ -230,7 +232,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; differenza di prezzo per %(product)s"
 
 #. module: account
 #. odoo-python
@@ -995,6 +997,73 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Ciao\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Di seguito, la tua\n"
+"        <t t-if=\"object.name\">\n"
+"            fattura <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            fattura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (con riferimento: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
+"        </t>\n"
+"        per un importo pari a <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143.750,00 €</span>\n"
+"        da parte di <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+".\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            La fattura è già pagata.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Effettua il pagamento il prima possibile.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Usa la seguente causale per il pagamento: <strong t-"
+"out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    sul conto <strong t-"
+"out=\"object.partner_bank_id.account_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: puoi revisionare i fogli ore <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">nel portale.</a>"
+"\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Non esitare a contattarci se hai domande.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_invoice
@@ -1705,7 +1774,7 @@ msgstr "<span>€ <span class=\"oe_currency_value\">19.250,00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -5100,7 +5169,7 @@ msgstr "Banca di Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Impostazioni banca"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -18533,6 +18602,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Il conto bancario della tua azienda non è sicuro. Chiedi a un amministratore "
+"o a qualcuno con diritti di approvazione di verificarlo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18621,6 +18692,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Il conto bancario dell'azienda (%(account_number)s) collegato a questa "
+"fattura non è sicuro. Vai alle impostazioni della banca, verifica che sia il "
+"tuo oppure correggi il numero e fai clic su Invia denaro per verificarlo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -19189,6 +19263,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"L'azione programmata 'Invia fatture automaticamente' è stata archiviata. Non "
+"potrai inviare fatture in gruppo."
 
 #. module: account
 #. odoo-python
@@ -20443,7 +20519,7 @@ msgstr "Prezzo unitario:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Unità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20891,6 +20967,24 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valore dell'importo della riga di cancellazione\n"
+"* Percentuale: percentuale del saldo, compresa tra 0 e 100.\n"
+"* Fisso: valore fisso della cancellazione. L'importo verrà considerato come "
+"un debito se è negativo, come un credito se è positivo.\n"
+"    * Da etichetta: non è necessario alcun delimitatore regex, è sufficiente "
+"solo il regex. Ad esempio, se si desidera estrarre l'importo da\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"è possibile inserire\n"
+"BRT: ([\\d,]+)\n"
+"    Se l'etichetta è \"01870912 0009065 00115\" e si desidera l'importo in "
+"formato decimale\n"
+"    (ad esempio 90,65), è possibile utilizzare un'espressione regolare con "
+"gruppi di cattura, ad esempio:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    In questo caso:\n"
+"    • il primo gruppo cattura la parte intera\n"
+"• il secondo gruppo cattura la parte decimale (ultime due cifre)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21566,6 +21660,8 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Non è possibile modificare l'importo di un pagamento con più righe di "
+"liquidità."
 
 #. module: account
 #. odoo-python
@@ -21952,6 +22048,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Non è possibile modificare la tipologia di un documento con una sequenza "
+"numerica esistente."
 
 #. module: account
 #. odoo-python

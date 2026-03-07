@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:10+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/hr/"
@@ -1194,13 +1194,13 @@ msgstr "プロジェクトマネジメントの経験"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
 msgstr "バッジ ID"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Account"
 msgstr "銀行口座"
 
@@ -1228,6 +1228,7 @@ msgstr "銀行口座の配分"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
 msgstr "銀行口座"
 
@@ -1237,11 +1238,6 @@ msgstr "銀行口座"
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
 msgstr "従業員の給与振込先として、銀行口座%s が見つかりませんでした"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__barcode
-msgid "Barcode"
-msgstr "バーコード"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -2397,6 +2393,8 @@ msgstr "従業員タイプ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
 msgstr "給与支払い用の従業員銀行口座"
 
@@ -2988,6 +2986,7 @@ msgstr "家と職場の距離"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
 msgstr "家と職場の距離 Km"
 
@@ -3099,6 +3098,7 @@ msgstr "IDカードコピー"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
 msgstr "従業員の識別に使用されるID。"
 
@@ -3401,11 +3401,6 @@ msgstr "7月"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
 msgstr "6月"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home Work"
-msgstr "自宅からの通勤距離(km)"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3734,7 +3729,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
 msgstr "携帯電話"
 
@@ -4121,6 +4115,7 @@ msgstr "採用と雇用プロセスの監督"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
 msgstr "PIN"
 
@@ -4131,6 +4126,7 @@ msgstr "PINコード"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
 "enabled in Configuration) and to change the cashier in the Point of Sale "
@@ -4260,11 +4256,6 @@ msgstr "個人情報更新"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "電話"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__pin
-msgid "Pin"
-msgstr "暗証番号(PIN)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -5755,13 +5746,9 @@ msgstr "ビザと就労許可"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
 msgstr "ビザの有効期限"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire"
-msgstr "ビザの有効期限切れ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -5954,6 +5941,7 @@ msgstr "勤務場所"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -6379,3 +6367,15 @@ msgstr "勤務"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Barcode"
+#~ msgstr "バーコード"
+
+#~ msgid "Km Home Work"
+#~ msgstr "自宅からの通勤距離(km)"
+
+#~ msgid "Pin"
+#~ msgstr "暗証番号(PIN)"
+
+#~ msgid "Visa Expire"
+#~ msgstr "ビザの有効期限切れ"

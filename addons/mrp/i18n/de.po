@@ -17,17 +17,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 14:22+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:36+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/mrp/de/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/mrp/de/"
 ">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -597,7 +597,7 @@ msgstr "<strong class=\"mr8 oe_inline\">zu</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Actual Duration</strong>"
-msgstr ""
+msgstr "<strong>Tatsächliche Dauer</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -617,7 +617,7 @@ msgstr "<strong>Beschreibung:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Duration</strong>"
-msgstr ""
+msgstr "<strong>Dauer</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -784,7 +784,7 @@ msgstr "Tatsächliche Zeit"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
 msgid "Add Work Orders to planning"
-msgstr ""
+msgstr "Arbeitsaufträge zur Planung hinzufügen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -825,12 +825,14 @@ msgstr "Stichwort für den Arbeitsplatz hinzufügen"
 msgid ""
 "Add this note on the manufacturing order to share any additional information"
 msgstr ""
+"Fügen Sie diese Notiz zum Fertigungsauftrag hinzu, um zusätzliche "
+"Informationen zu teilen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__note
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__note
 msgid "Additional Notes"
-msgstr ""
+msgstr "Zusätzliche Notizen"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1432,7 +1434,7 @@ msgstr "Stücklistenübersicht"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_qty
 msgid "BoM Quantity"
-msgstr ""
+msgstr "Menge der Stückliste"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1445,7 +1447,7 @@ msgstr "Stücklistentyp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_uom_id
 msgid "BoM Unit"
-msgstr ""
+msgstr "Einheit der Stückliste"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1720,7 +1722,7 @@ msgstr "Komponente"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Quantity"
-msgstr ""
+msgstr "Menge der Komponente"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -1730,12 +1732,12 @@ msgstr "Komponentenstatus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Unit"
-msgstr ""
+msgstr "Einheit der Komponente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_list
 msgid "Component Variant"
-msgstr ""
+msgstr "Variante der Komponente"
 
 #. module: mrp
 #. odoo-javascript
@@ -2410,6 +2412,7 @@ msgstr "Dokumentation"
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__done
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__done
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2601,11 +2604,6 @@ msgstr "An das Produkt angehängte Dateien."
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
 msgstr "Endgültiger Standort aus Beschaffung"
-
-#. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
-msgid "Finished"
-msgstr "Fertig"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
@@ -7436,6 +7434,9 @@ msgstr "tatsächliche Dauer"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "aufgeteilt"
+
+#~ msgid "Finished"
+#~ msgstr "Fertig"
 
 #~ msgid ""
 #~ "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"

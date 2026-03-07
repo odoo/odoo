@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2026-02-14 12:16+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -877,8 +877,8 @@ msgstr "Wymagane działanie"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Action cancelled (%s)"
-msgstr "Działanie anulowane (%s)"
+msgid "Action cancelled (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2055,8 +2055,8 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Cash drawer opened (%s)"
-msgstr "Otwarta szuflada kasowa (%s)"
+msgid "Cash drawer opened (%(ACTION)s)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2467,8 +2467,26 @@ msgstr "Sesja zamykająca"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
 msgstr "Różnica przy zamknięciu w %(payment_method)s (%(session)s)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Closing expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6095,6 +6113,24 @@ msgstr "Bilans otwarcia zsumowany ze wszystkimi transakcjami gotówkowymi."
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Opening cash"
 msgstr "Gotówka na otwarcie"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash counted: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash difference: %s \n"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Opening cash expected: %s \n"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9959,12 +9995,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "There is already a cash payment line."
-msgstr "Istnieje już linia płatności gotówkowych."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "Płatność elektroniczna jest już w toku."
@@ -11428,11 +11458,6 @@ msgid "forecasted"
 msgstr "prognozowany"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "free"
-msgstr "gratis"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
@@ -11560,3 +11585,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "używając"
+
+#~ msgid "Action cancelled (%s)"
+#~ msgstr "Działanie anulowane (%s)"
+
+#~ msgid "Cash drawer opened (%s)"
+#~ msgstr "Otwarta szuflada kasowa (%s)"
+
+#~ msgid "There is already a cash payment line."
+#~ msgstr "Istnieje już linia płatności gotówkowych."
+
+#~ msgid "free"
+#~ msgstr "gratis"

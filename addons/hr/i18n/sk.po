@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2026-01-15 20:32+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s19-1/hr/sk/"
@@ -1140,13 +1140,13 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
 msgstr "ID dochádzkovej karty"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Account"
 msgstr ""
 
@@ -1174,6 +1174,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
 msgstr ""
 
@@ -1182,11 +1183,6 @@ msgstr ""
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__barcode
-msgid "Barcode"
 msgstr ""
 
 #. module: hr
@@ -2329,6 +2325,8 @@ msgstr "Typ zamestnanca"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
 msgstr ""
 
@@ -2917,6 +2915,7 @@ msgstr "Vzdialenosť domov-práca"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
 msgstr ""
 
@@ -3028,6 +3027,7 @@ msgstr "Kópia občianskeho preukazu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
 msgstr "ID použité na identifikáciu zamestnanca"
 
@@ -3329,11 +3329,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home Work"
 msgstr ""
 
 #. module: hr
@@ -3663,7 +3658,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
 msgstr ""
 
@@ -4052,6 +4046,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
 msgstr "PIN"
 
@@ -4062,6 +4057,7 @@ msgstr "PIN kód"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
 "enabled in Configuration) and to change the cashier in the Point of Sale "
@@ -4191,11 +4187,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Telefón"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__pin
-msgid "Pin"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -5660,12 +5651,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
-msgid "Visa Expiration Date"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire"
+msgid "Visa Expiration Date"
 msgstr ""
 
 #. module: hr
@@ -5850,6 +5837,7 @@ msgstr "Pracovné miesta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences

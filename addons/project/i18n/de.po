@@ -18,16 +18,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-01-16 11:23+0000\n"
+"PO-Revision-Date: 2026-03-07 14:38+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "project/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -62,7 +62,7 @@ msgstr "%(count1)s/%(count2)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Updates"
-msgstr ""
+msgstr "Aktualisierungen von %(name)s"
 
 #. module: project
 #. odoo-python
@@ -473,11 +473,13 @@ msgid ""
 "<i class=\"fa fa-envelope pe-2\" title=\"Email\" invisible=\"not "
 "partner_email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope pe-2\" title=\"E-Mail\" invisible=\"not "
+"partner_email\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-envelope pe-2\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope pe-2\" title=\"E-Mail\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -515,21 +517,23 @@ msgid ""
 "<i class=\"fa fa-phone pe-2\" title=\"Phone\" invisible=\"not "
 "partner_phone\"/>"
 msgstr ""
+"<i class=\"fa fa-phone pe-2\" title=\"Telefonnummer\" invisible=\"not "
+"partner_phone\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-phone pe-2\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone pe-2\" title=\"Telefonnummer\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-tag pe-2\" title=\"Tags\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-tag pe-2\" title=\"Stichwörter\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-user pe-2\" title=\"Customer\" name=\"partner_id\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user pe-2\" title=\"Kunde\" name=\"partner_id\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -545,6 +549,11 @@ msgid ""
 "danger\" invisible=\"next_milestone_status == 'on_track'\" title=\"Off "
 "Track\"/>"
 msgstr ""
+"<i class=\"fa o_button_icon fa-check text-success\" "
+"invisible=\"next_milestone_status == 'off_track'\" title=\"Planmäßig\"/>\n"
+"                            <i class=\"fa o_button_icon fa-check text-"
+"danger\" invisible=\"next_milestone_status == 'on_track'\" "
+"title=\"Außerplanmäßig\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -605,7 +614,7 @@ msgstr "<span class=\"fw-normal\"> Aufgaben</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Average Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Durchschnittliche Bewertung</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -620,7 +629,7 @@ msgstr "<span class=\"o_stat_text\">Letzte Bewertung</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Milestones</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Meilensteine</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1139,7 +1148,7 @@ msgstr "Zuweisungsdatum"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Assignment"
-msgstr ""
+msgstr "Zuweisung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_assign
@@ -2970,7 +2979,7 @@ msgstr "Fertigung"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Map"
-msgstr ""
+msgstr "Karte"
 
 #. module: project
 #. odoo-javascript
@@ -3129,7 +3138,7 @@ msgstr "Name"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of Tasks"
-msgstr ""
+msgstr "Name der Aufgaben"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -3497,7 +3506,7 @@ msgstr "Aufgaben im Verzug"
 #. module: project
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_overview
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #. module: project
 #. odoo-javascript
@@ -3755,7 +3764,7 @@ msgstr "Projektname"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Project Overview"
-msgstr ""
+msgstr "Projektübersicht"
 
 #. module: project
 #: model:ir.model,name:project.model_project_role
@@ -3949,7 +3958,7 @@ msgstr "Projektstatus - {{ object.name }}"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Project's Email"
-msgstr ""
+msgstr "E-Mail des Projekts"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4353,7 +4362,7 @@ msgstr "Auf Projekt zurücksetzen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Role"
-msgstr ""
+msgstr "Rolle"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__role_to_users_ids
@@ -4497,12 +4506,12 @@ msgstr "Übergeordnete Aufgabe anzeigen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Select Customer"
-msgstr ""
+msgstr "Kunden auswählen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Select Tags"
-msgstr ""
+msgstr "Stichwörter auswählen"
 
 #. module: project
 #. odoo-javascript
@@ -4603,6 +4612,7 @@ msgstr "Aufgabe teilen"
 #: code:addons/project/models/project_project.py:0
 msgid "Sharing is not available for this project visibility setting."
 msgstr ""
+"Mit dieser Einstellung zur Projektsichtbarkeit kann es nicht geteilt werden."
 
 #. module: project
 #. odoo-javascript
@@ -5662,7 +5672,7 @@ msgstr "Nicht zugewiesen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 msgid "Undefined"
-msgstr ""
+msgstr "Undefiniert"
 
 #. module: project
 #. odoo-javascript
@@ -5718,7 +5728,7 @@ msgstr "Phase aktualisieren"
 #: model:ir.embedded.actions,name:project.project_embedded_action_project_updates
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Updates"
-msgstr ""
+msgstr "Aktualisierungen"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3

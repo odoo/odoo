@@ -3,22 +3,22 @@
 # * sale_project
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:02+0000\n"
-"PO-Revision-Date: 2025-11-28 10:56+0000\n"
+"PO-Revision-Date: 2026-03-07 14:40+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "sale_project/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: sale_project
 #. odoo-python
@@ -46,7 +46,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Actual Margins"
-msgstr ""
+msgstr "Tatsächliche Margen von %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -56,6 +56,10 @@ msgid ""
 "                    <i class=\"fa fa-fw o_button_icon fa-dollar text-"
 "danger\" invisible=\"actual_margin &gt;= 0\" title=\"Off Track\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-dollar text-success\" "
+"invisible=\"actual_margin &lt; 0\" title=\"Eingehalten\"/>\n"
+"                    <i class=\"fa fa-fw o_button_icon fa-dollar text-"
+"danger\" invisible=\"actual_margin &gt;= 0\" title=\"Nicht eingehalten\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -130,7 +134,7 @@ msgstr "<span class=\"o_stat_text\"> Aufgaben</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Actual Margin</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tatsächliche Marge</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -199,12 +203,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
 #: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
 msgid "Actual Margins"
-msgstr ""
+msgstr "Tatsächliche Margen"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Kostenstellenbuchung"
 
 #. module: sale_project
 #. odoo-python
@@ -228,27 +232,27 @@ msgstr "Abrechenbar"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
 msgid "Billable Type"
-msgstr ""
+msgstr "Abrechenbarer Typ"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__08_billable_manual
 msgid "Billed Manually"
-msgstr ""
+msgstr "Manuell abgerechnet"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__02_billable_fixed
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "Abrechnung zum Festpreis"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__06_billable_milestones
 msgid "Billed on Milestones"
-msgstr ""
+msgstr "Abrechnung nach Meilensteinen"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__04_billable_time
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Abrechnung nach Zeiterfassungen"
 
 #. module: sale_project
 #. odoo-python
@@ -525,7 +529,7 @@ msgstr "Neues Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__09_non_billable
 msgid "Non-Billable"
-msgstr ""
+msgstr "Nicht abrechenbar"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -547,12 +551,12 @@ msgstr "Büromöbelsatz (Aufgabe)"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__12_other_costs
 msgid "Other Costs"
-msgstr ""
+msgstr "Andere Kosten"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__11_other_revenues
 msgid "Other Revenues"
-msgstr ""
+msgstr "Sonstige Einnahmen"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
@@ -678,22 +682,22 @@ msgstr "Angebotsvorlagenzeile"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__01_revenues_fixed
 msgid "Revenues Fixed Price"
-msgstr ""
+msgstr "Umsatz aus Festpreisen"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__07_revenues_manual
 msgid "Revenues Manual"
-msgstr ""
+msgstr "Umsatz manuell"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__05_revenues_milestones
 msgid "Revenues Milestones"
-msgstr ""
+msgstr "Umsatz aus Meilensteinen"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__03_timesheet_revenues
 msgid "Revenues Timesheets"
-msgstr ""
+msgstr "Umsatz aus Zeiterfassungen"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
@@ -835,7 +839,7 @@ msgstr "Abrechnungspolitik für Dienstleistungen"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__billable_type__10_service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "Umsätze aus Dienstleistungen"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state

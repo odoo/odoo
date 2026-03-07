@@ -20,18 +20,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:16+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:40+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-1/mail/pt_BR/>\n"
+"s19-2/mail/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -115,7 +115,7 @@ msgstr "%(activity)s, atribuído a %(name)s, prazo final em %(deadline)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "%(amount)s items marked as read"
-msgstr ""
+msgstr "%(amount)s itens marcados como lidos"
 
 #. module: mail
 #. odoo-javascript
@@ -285,19 +285,19 @@ msgstr "%(name)s <%(email)s>"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name)s is presenting"
-msgstr ""
+msgstr "%(name)s está apresentando"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name_1)s and %(name_2)s are presenting"
-msgstr ""
+msgstr "%(name_1)s e %(name_2)s estão apresentando"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_presentation_bar.js:0
 msgid "%(name_1)s, %(name_2)s and %(count)s more are presenting"
-msgstr ""
+msgstr "%(name_1)s %(name_2)s, e outros %(count)s estão apresentando"
 
 #. module: mail
 #. odoo-python
@@ -310,6 +310,13 @@ msgid ""
 "(bold_start)s::shortcut%(bold_end)s to insert a canned response%(new_line)s%"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji"
 msgstr ""
+"%(new_line)s%(new_line)s%(bold_start)s@nomedeusuario%(bold_end)s para "
+"mencionar alguém%(new_line)s%(bold_start)s@role%(bold_end)s para notificar "
+"várias pessoas%(new_line)s%(bold_start)s#channel%(bold_end)s para vincular "
+"um canal%(new_line)s%(bold_start)s/command%(bold_end)s para executar um "
+"comando%(new_line)s%(bold_start)s::shortcut%(bold_end)s para inserir uma "
+"resposta pré-definida%(new_line)s%(bold_start)s:emoji:%(bold_end)s para "
+"inserir um emoji"
 
 #. module: mail
 #. odoo-javascript
@@ -496,6 +503,8 @@ msgid ""
 ") added you as a follower.\n"
 "                        <br/>You'll now receive updates for this"
 msgstr ""
+") adicionou você como seguidor. <br/>Agora você receberá atualizações sobre "
+"isso"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_multi_invite
@@ -503,6 +512,8 @@ msgid ""
 ") added you as a follower.\n"
 "                    <br/>You'll now receive updates for the following"
 msgstr ""
+") adicionou você como seguidor. <br/>Agora você receberá atualizações sobre "
+"o seguinte"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -546,7 +557,7 @@ msgstr "1 hora"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "1 item marked as read"
-msgstr ""
+msgstr "1 item marcado como lido"
 
 #. module: mail
 #. odoo-javascript
@@ -632,6 +643,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
 "title=\"to\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-right mx-2\" invisible=\"not out_of_office_from\" "
+"title=\"to\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -732,11 +745,14 @@ msgstr "<span class=\"d-block w-75 py-2\">Texto do botão</span>"
 msgid ""
 "<span class=\"fst-italic\" invisible=\"recipient_names\">Unspecified</span>"
 msgstr ""
+"<span class=\"fst-italic\" invisible=\"recipient_names\">Não especificado</"
+"span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "<span class=\"fst-italic\" invisible=\"subject\">Unspecified</span>"
 msgstr ""
+"<span class=\"fst-italic\" invisible=\"subject\">Não especificado</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
@@ -992,7 +1008,7 @@ msgstr "Não foi possível enviar uma mensagem agendada"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_poll_unique_start_message_id
 msgid "A start message can only be linked to one poll."
-msgstr ""
+msgstr "Uma mensagem inicial só pode ser vinculada a uma enquete."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
@@ -1011,7 +1027,7 @@ msgstr "Uma configuração de volume deve ter um usuário ou um visitante."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "API Key:"
-msgstr ""
+msgstr "Chave de API:"
 
 #. module: mail
 #. odoo-python
@@ -1051,7 +1067,7 @@ msgstr "Acesso restrito ao grupo “%(groupFullName)s”"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
 msgid "Accessible to anyone with the link"
-msgstr ""
+msgstr "Acessível a qualquer pessoa com o link"
 
 #. module: mail
 #. odoo-python
@@ -1275,7 +1291,7 @@ msgstr "Tipo de atividade"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_type_available_ids
 msgid "Activity Type Available"
-msgstr ""
+msgstr "Tipo de atividade disponível"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_type_icon
@@ -9729,6 +9745,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/poll.xml:0
 msgid "Poll closed"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/poll.js:0
+msgid "Poll ends on %(date)s"
 msgstr ""
 
 #. module: mail

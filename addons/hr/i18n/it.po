@@ -17,10 +17,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-01-24 12:20+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/hr/it/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/hr/it/"
 ">\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_do_archive_user
@@ -41,6 +41,11 @@ msgid ""
 "employee in any other company after this departure.\n"
 "        "
 msgstr ""
+"\n"
+"            Se selezionato, l'utente correlato verrà rimosso dal sistema.\n"
+"Tuttavia, l'utente non verrà rimosso se dopo questa uscita ha ancora un "
+"dipendente in qualsiasi altra azienda.\n"
+"        "
 
 #. module: hr
 #. odoo-python
@@ -1202,13 +1207,13 @@ msgstr "Esperienza nella gestione di progetti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
 msgstr "ID tesserino"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Account"
 msgstr "Conto bancario"
 
@@ -1236,6 +1241,7 @@ msgstr "Assegnazioni conti correnti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
 msgstr "Conti bancari"
 
@@ -1247,11 +1253,6 @@ msgid ""
 msgstr ""
 "Il conto corrente %s non è stato trovato nell'ambito della retribuzione del "
 "dipendente"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__barcode
-msgid "Barcode"
-msgstr "Codice a barre"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -2415,6 +2416,8 @@ msgstr "Tipo di dipendente"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
 msgstr "Conti correnti dipendenti per il pagamento degli stipendi"
 
@@ -3012,6 +3015,7 @@ msgstr "Distanza casa-lavoro"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
 msgstr "Distanza casa-lavoro in km"
 
@@ -3123,6 +3127,7 @@ msgstr "Copia della carta d'identità"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
 msgstr "ID utilizzato per identificare il dipendente."
 
@@ -3425,11 +3430,6 @@ msgstr "Luglio"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
 msgstr "Giugno"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home Work"
-msgstr "Km Lavoro da casa"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3758,7 +3758,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
 msgstr "Cellulare"
 
@@ -4157,6 +4156,7 @@ msgstr "Supervisionare i processi di assunzione"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
 msgstr "PIN"
 
@@ -4167,6 +4167,7 @@ msgstr "Codice PIN"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
 "enabled in Configuration) and to change the cashier in the Point of Sale "
@@ -4296,11 +4297,6 @@ msgstr "Informazioni personali aggiornate."
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Telefono"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__pin
-msgid "Pin"
-msgstr "Pin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -5804,13 +5800,9 @@ msgstr "Visa e permesso di lavoro"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
 msgstr "Data di scadenza Visa"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire"
-msgstr "Scadenza del visto"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -6006,6 +5998,7 @@ msgstr "Luoghi di lavoro"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -6436,3 +6429,15 @@ msgstr "lavoro"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Barcode"
+#~ msgstr "Codice a barre"
+
+#~ msgid "Km Home Work"
+#~ msgstr "Km Lavoro da casa"
+
+#~ msgid "Pin"
+#~ msgstr "Pin"
+
+#~ msgid "Visa Expire"
+#~ msgstr "Scadenza del visto"

@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2026-01-15 20:32+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/hr/tr/"
@@ -1205,13 +1205,13 @@ msgstr "Proje Yönetimi'nde geçmiş"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
 msgstr "Rozet ID"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Account"
 msgstr "Banka Hesabı"
 
@@ -1239,6 +1239,7 @@ msgstr "Banka Hesap Tahsisleri"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
 msgstr "Banka Hesapları"
 
@@ -1248,11 +1249,6 @@ msgstr "Banka Hesapları"
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
 msgstr "Çalışanın maaş dağılımında bulunmayan banka hesabı %s"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__barcode
-msgid "Barcode"
-msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -2412,6 +2408,8 @@ msgstr "Personel Türü"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
 msgstr "Maaş ödemeleri için çalışan banka hesapları"
 
@@ -3007,6 +3005,7 @@ msgstr "Ev-İş Mesafesi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
 msgstr "Km bazında Ev-İş Arası Mesafe"
 
@@ -3118,6 +3117,7 @@ msgstr "Kimlik Kartı Kopyası"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
 msgstr "Personel kimliği için kullanılan ID."
 
@@ -3419,11 +3419,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home Work"
 msgstr ""
 
 #. module: hr
@@ -3753,7 +3748,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
 msgstr "Cep Telefonu"
 
@@ -4146,6 +4140,7 @@ msgstr "İşe alım ve işe yerleştirme süreçlerini denetlemek"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
 msgstr "PIN"
 
@@ -4156,6 +4151,7 @@ msgstr "PIN Kodu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
 "enabled in Configuration) and to change the cashier in the Point of Sale "
@@ -4285,11 +4281,6 @@ msgstr "Kişisel bilgi güncelleme."
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Telefon"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__pin
-msgid "Pin"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -5787,13 +5778,9 @@ msgstr "Vize ve Çalışma İzni"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
 msgstr "Vize Son Geçerlilik Tarihi"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -5987,6 +5974,7 @@ msgstr "İş Yerleri"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences

@@ -14,17 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-14 12:11+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_holidays/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -84,7 +84,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr "# 祝祭日"
+msgstr "# 祝日"
 
 #. module: hr_holidays
 #. odoo-python
@@ -292,13 +292,13 @@ msgid ""
 "                    <p>I'm requesting a Time Off. I would appreciate if you "
 "could approve it whenever possible!</p>\n"
 "                    <ul>\n"
-"                        <li>Time Off Type: <t t-out=\"object."
-"work_entry_type_id.name\"/></li>\n"
+"                        <li>Time Off Type: <t t-"
+"out=\"object.work_entry_type_id.name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Reason: <t t-out=\"object."
-"name\"/></li>\n"
+"                        <li t-if=\"object.name\">Reason: <t t-"
+"out=\"object.name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
@@ -575,8 +575,8 @@ msgstr "本日不在"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "According to your working schedule you are expected to work %(days)s days in "
-"this period, but %(nb_days)s days will be used because this leave "
-"%(work_entry_type_name)s can only be taken by days."
+"this period, but %(nb_days)s days will be used because this leave %"
+"(work_entry_type_name)s can only be taken by days."
 msgstr ""
 
 #. module: hr_holidays
@@ -626,7 +626,7 @@ msgstr "休暇累積プランの従業員"
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_accrual_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_tree
 msgid "Accrual Plans"
-msgstr "休暇累積プラン"
+msgstr "休暇累積(付与ルール)"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
@@ -1914,8 +1914,8 @@ msgstr "終了日"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee_departure.py:0
 msgid ""
-"End date has been updated because the employee will leave the company on "
-"%(departure_date)s."
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
 msgstr ""
 "従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
 
@@ -2163,8 +2163,9 @@ msgstr "時間アイコン表示"
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.new_timeoff_request_template
 msgid ""
-"I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id."
-"name }} from {{ object.request_date_from }} to {{ object.request_date_to }}"
+"I'm requesting {{ object.duration_display }} of "
+"{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
+"{{ object.request_date_to }}"
 msgstr ""
 
 #. module: hr_holidays
@@ -2269,7 +2270,7 @@ msgstr "日数を変更したい場合は、'期間'モードを使用する必�
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__include_public_holidays_in_duration
 msgid "Ignore Public Holidays"
-msgstr "祝祭日を無視"
+msgstr "祝日を無視"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2393,7 +2394,6 @@ msgstr "退出"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__leave_date_to
-#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
 msgid "Leave Date To"
 msgstr "休暇終了日"
@@ -2699,8 +2699,8 @@ msgstr "新規割当申請"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %"
+"(allocation_type)s"
 msgstr ""
 "%(user)sによって作成された新しい割当申請：%(count)s%(allocation_type)sの日数"
 
@@ -2775,7 +2775,7 @@ msgstr "制限なし"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.open_view_public_holiday
 msgid "No Public Holidays yet!"
-msgstr "まだ祝祭日がありません!"
+msgstr "まだ祝日がありません!"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
@@ -3026,11 +3026,6 @@ msgid "Overview"
 msgstr "概要"
 
 #. module: hr_holidays
-#: model:hr.work.entry.type,name:hr_holidays.hr_work_entry_type_dv
-msgid "Parental Leaves"
-msgstr "育児休暇"
-
-#. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "Pending Requests"
@@ -3086,13 +3081,13 @@ msgstr "公開従業員"
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Holidays"
-msgstr "祝祭日"
+msgstr "祝日"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.open_view_public_holiday
 msgid ""
 "Public Holidays are non-working days that don't impact employees' balances"
-msgstr "祝祭日は、従業員の給与に影響を与えない非労働日です。"
+msgstr "祝日は、従業員の給与に影響を与えない非労働日です。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_work_entry_type__include_public_holidays_in_duration
@@ -4103,6 +4098,7 @@ msgstr "承認待ちまたは承認済の割当"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 msgid "To Date"
 msgstr "終了日"
 
@@ -4135,11 +4131,6 @@ msgid "Total number of days allocated."
 msgstr "割り当てられた合計日数。"
 
 #. module: hr_holidays
-#: model:hr.work.entry.type,name:hr_holidays.work_entry_type_training
-msgid "Training Time Off"
-msgstr "研修休暇"
-
-#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
 msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
@@ -4168,7 +4159,7 @@ msgstr "年に２回"
 #: code:addons/hr_holidays/models/resource.py:0
 msgid ""
 "Two public holidays cannot overlap each other for the same working hours."
-msgstr "2つの祝祭日が同じ労働時間で重なることはありません。"
+msgstr "2つの祝日が同じ労働時間で重なることはありません。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_report_filter
@@ -4931,7 +4922,6 @@ msgstr "割当の開始から"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "hours"
 msgstr "時間"
 
@@ -5074,3 +5064,9 @@ msgstr "有効期限"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "検証"
+
+#~ msgid "Parental Leaves"
+#~ msgstr "育児休暇"
+
+#~ msgid "Training Time Off"
+#~ msgstr "研修休暇"

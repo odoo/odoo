@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-28 13:35+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/hr/es_419/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__departure_do_archive_user
@@ -33,6 +33,12 @@ msgid ""
 "employee in any other company after this departure.\n"
 "        "
 msgstr ""
+"\n"
+"            Si está seleccionada, el usuario relacionado será eliminado del "
+"sistema.\n"
+"            Sin embargo, el usuario no será eliminado si aún tiene un "
+"empleado en otra empresa después de esta salida.\n"
+"        "
 
 #. module: hr
 #. odoo-python
@@ -1207,13 +1213,13 @@ msgstr "Experiencia en gestión de proyectos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
 msgstr "ID de credencial"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner_bank
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__bank_account_id
-#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Account"
 msgstr "Cuenta bancaria"
 
@@ -1241,6 +1247,7 @@ msgstr "Asignaciones de cuenta bancaria"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__bank_account_ids
 msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
 
@@ -1252,11 +1259,6 @@ msgid ""
 msgstr ""
 "No encontramos la cuenta bancaria %s dentro de la distribución salarial del "
 "empleado"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__barcode
-msgid "Barcode"
-msgstr "Código de barras"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -2423,6 +2425,8 @@ msgstr "Tipo de empleado"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
 msgstr "Cuentas bancarias del empleado para pagar su sueldo"
 
@@ -2527,7 +2531,7 @@ msgstr "Fecha de finalización"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__departure_reason_id
 msgid "End Reason"
-msgstr ""
+msgstr "Motivo de finalización"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
@@ -3023,6 +3027,7 @@ msgstr "Distancia de la casa al trabajo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_hr_version__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
 msgstr "Distancia de la casa al trabajo en kilómetros"
 
@@ -3134,6 +3139,7 @@ msgstr "Copia de la identificación"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
 msgstr "ID usado para identificar al empleado."
 
@@ -3436,11 +3442,6 @@ msgstr "Julio"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
 msgstr "Junio"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
-msgid "Km Home Work"
-msgstr "KM de la casa al trabajo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3769,7 +3770,6 @@ msgstr "Campo de fecha mínima"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
-#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 msgid "Mobile Phone"
 msgstr "Teléfono celular"
 
@@ -4169,6 +4169,7 @@ msgstr "Supervisar los procesos de reclutamiento y contratación"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
 msgstr "NIP"
 
@@ -4179,6 +4180,7 @@ msgstr "Código NIP"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
 msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if "
 "enabled in Configuration) and to change the cashier in the Point of Sale "
@@ -4308,11 +4310,6 @@ msgstr "Actualización de la información personal"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
 msgstr "Teléfono"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__pin
-msgid "Pin"
-msgstr "Fijar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -4852,7 +4849,7 @@ msgstr "Escuela"
 #. odoo-javascript
 #: code:addons/hr/static/src/views/fields/many2many_avatar_employee_field/many2many_avatar_employee_field.js:0
 msgid "Search employee..."
-msgstr ""
+msgstr "Buscar empleado..."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
@@ -4888,7 +4885,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_partner_mass_mail
 msgid "Send Email"
-msgstr ""
+msgstr "Enviar correo"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
@@ -4930,6 +4927,8 @@ msgid ""
 "Set the departure date as the contract end date and delete all future "
 "versions."
 msgstr ""
+"Establece la fecha de salida como la fecha de finalización del contrato y "
+"elimina todas las versiones futuras."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -5260,7 +5259,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "The apply date isn't reached yet for the departure of %(emp)s."
-msgstr ""
+msgstr "Aún no se ha alcanzado la fecha límite para la salida de %(emp)s."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
@@ -5301,6 +5300,8 @@ msgstr ""
 msgid ""
 "The employee's official name as per government-issued or legal documents."
 msgstr ""
+"El nombre oficial del empleado según los documentos legales o emitidos por "
+"el gobierno."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -5388,6 +5389,7 @@ msgstr "El permiso de trabajo de %(employee_name)s está a punto de vencer."
 #: code:addons/hr/models/hr_employee_departure.py:0
 msgid "There is no valid version starting before the departure date for %s."
 msgstr ""
+"No existe una versión válida que inicie antes de la fecha de salida de %s."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
@@ -5400,6 +5402,7 @@ msgid ""
 "This action will delete the departure entirely. Are you sure you want to "
 "proceed?"
 msgstr ""
+"Esta acción eliminará la salida por completo. ¿De verdad quieres continuar?"
 
 #. module: hr
 #. odoo-python
@@ -5425,7 +5428,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__exceptional_location_id
 msgid "This is the exceptional, non-weekly, location set for today."
-msgstr ""
+msgstr "Esta es la ubicación excepcional no semanal establecida para hoy."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
@@ -5811,7 +5814,7 @@ msgstr "Horario variable"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #. module: hr
 #. odoo-javascript
@@ -5826,13 +5829,9 @@ msgstr "Visa y permiso de trabajo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
 msgstr "Fecha de vencimiento de la visa"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire"
-msgstr "Vencimiento de la visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -6029,6 +6028,7 @@ msgstr "Ubicaciones de trabajo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -6458,3 +6458,15 @@ msgstr "trabajo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Barcode"
+#~ msgstr "Código de barras"
+
+#~ msgid "Km Home Work"
+#~ msgstr "KM de la casa al trabajo"
+
+#~ msgid "Pin"
+#~ msgstr "Fijar"
+
+#~ msgid "Visa Expire"
+#~ msgstr "Vencimiento de la visa"

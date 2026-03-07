@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 09:00+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
 "PO-Revision-Date: 2025-11-19 09:34+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
@@ -304,13 +304,13 @@ msgid ""
 "                    <p>I'm requesting a Time Off. I would appreciate if you "
 "could approve it whenever possible!</p>\n"
 "                    <ul>\n"
-"                        <li>Time Off Type: <t t-out=\"object."
-"work_entry_type_id.name\"/></li>\n"
+"                        <li>Time Off Type: <t t-"
+"out=\"object.work_entry_type_id.name\"/></li>\n"
 "                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
 "out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
 "li>\n"
-"                        <li t-if=\"object.name\">Reason: <t t-out=\"object."
-"name\"/></li>\n"
+"                        <li t-if=\"object.name\">Reason: <t t-"
+"out=\"object.name\"/></li>\n"
 "                    </ul>\n"
 "                </div>\n"
 "            "
@@ -566,8 +566,8 @@ msgstr "Frånvarande idag"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "According to your working schedule you are expected to work %(days)s days in "
-"this period, but %(nb_days)s days will be used because this leave "
-"%(work_entry_type_name)s can only be taken by days."
+"this period, but %(nb_days)s days will be used because this leave %"
+"(work_entry_type_name)s can only be taken by days."
 msgstr ""
 
 #. module: hr_holidays
@@ -1910,8 +1910,8 @@ msgstr "Slutdatum"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee_departure.py:0
 msgid ""
-"End date has been updated because the employee will leave the company on "
-"%(departure_date)s."
+"End date has been updated because the employee will leave the company on %"
+"(departure_date)s."
 msgstr ""
 
 #. module: hr_holidays
@@ -2159,8 +2159,9 @@ msgstr "HR visningsikon"
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.new_timeoff_request_template
 msgid ""
-"I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id."
-"name }} from {{ object.request_date_from }} to {{ object.request_date_to }}"
+"I'm requesting {{ object.duration_display }} of "
+"{{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to "
+"{{ object.request_date_to }}"
 msgstr ""
 
 #. module: hr_holidays
@@ -2387,7 +2388,6 @@ msgstr "Lämna"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__leave_date_to
-#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__leave_date_to
 msgid "Leave Date To"
 msgstr ""
@@ -2693,11 +2693,11 @@ msgstr "Ny begäran om tilldelning"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
-"%(allocation_type)s"
+"New Allocation Request created by %(user)s: %(count)s Days of %"
+"(allocation_type)s"
 msgstr ""
-"Ny tilldelningsförfrågan skapad av %(user)s: %(count)s dagar av "
-"%(allocation_type)s"
+"Ny tilldelningsförfrågan skapad av %(user)s: %(count)s dagar av %"
+"(allocation_type)s"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
@@ -3017,11 +3017,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Overview"
 msgstr "Översikt"
-
-#. module: hr_holidays
-#: model:hr.work.entry.type,name:hr_holidays.hr_work_entry_type_dv
-msgid "Parental Leaves"
-msgstr "Föräldraledigheter"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4115,6 +4110,7 @@ msgstr "Andra månad dag visas"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
 msgid "To Date"
 msgstr "Till datum"
 
@@ -4145,11 +4141,6 @@ msgstr "Välj den begäran du precis skapat"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
 msgid "Total number of days allocated."
 msgstr "Totalt antal dagar tilldelade."
-
-#. module: hr_holidays
-#: model:hr.work.entry.type,name:hr_holidays.work_entry_type_training
-msgid "Training Time Off"
-msgstr "Frånvaro för träning"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4935,7 +4926,6 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
-#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "hours"
 msgstr "timmar"
 
@@ -5077,3 +5067,9 @@ msgstr "giltig till"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validera"
+
+#~ msgid "Parental Leaves"
+#~ msgstr "Föräldraledigheter"
+
+#~ msgid "Training Time Off"
+#~ msgstr "Frånvaro för träning"

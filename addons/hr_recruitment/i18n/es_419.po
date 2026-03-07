@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 09:00+0000\n"
-"PO-Revision-Date: 2026-02-28 13:44+0000\n"
+"PO-Revision-Date: 2026-03-07 14:35+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/hr_recruitment/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -363,6 +363,34 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Hola,<br/><br/>\n"
+"        Queremos agradecerte por tu interés y tu tiempo.<br/>\n"
+"        Te deseamos mucho éxito en tus futuros proyectos.\n"
+"        <br/><br/>\n"
+"        Saludos,<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.recruiter_id and object.recruiter_id.user_id\">"
+"\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.recruiter_id.name or ''\">Marc Demo</"
+"strong><br/>\n"
+"                Correo: <t t-out=\"object.recruiter_id.work_email or ''\">"
+"mark.brown23@ejemplo.com</t><br/>\n"
+"                Teléfono: <t t-out=\"object.recruiter_id.work_phone or ''\">"
+"+1 650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">TuEmpresa</t><br/>"
+"\n"
+"                El equipo de RR. HH.<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -1063,7 +1091,7 @@ msgstr "Postúlate"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 msgid "Apply to Jobs"
-msgstr ""
+msgstr "Postular a empleos"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3647,7 +3675,7 @@ msgstr "Talentos"
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/talent_pool_add_applicants.py:0
 msgid "Talents Added To Talent Pool(s)"
-msgstr ""
+msgstr "Talentos agregados a las bases de talentos"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq

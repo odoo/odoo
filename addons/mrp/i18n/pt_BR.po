@@ -17,18 +17,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-14 12:15+0000\n"
+"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"PO-Revision-Date: 2026-03-07 14:37+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-1/mrp/pt_BR/>\n"
+"s19-2/mrp/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -531,7 +531,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span invisible=\"time_mode == 'manual'\"> / last </span>"
-msgstr ""
+msgstr "<span invisible=\"time_mode == 'manual'\"> / último </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -599,7 +599,7 @@ msgstr "<strong class=\"mr8 oe_inline\">para</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Actual Duration</strong>"
-msgstr ""
+msgstr "<strong>Duração real</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -619,7 +619,7 @@ msgstr "<strong>Descrição:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Duration</strong>"
-msgstr ""
+msgstr "<strong>Duração</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -783,7 +783,7 @@ msgstr "Hora real"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
 msgid "Add Work Orders to planning"
-msgstr ""
+msgstr "Adicionar ordens de serviço ao planejamento"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -824,12 +824,14 @@ msgstr "Adicionar marcador para o centro de trabalho"
 msgid ""
 "Add this note on the manufacturing order to share any additional information"
 msgstr ""
+"Adicione esta nota na ordem de produção para compartilhar informações "
+"adicionais"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__note
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__note
 msgid "Additional Notes"
-msgstr ""
+msgstr "Notas adicionais"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -992,6 +994,8 @@ msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
 "This action cannot be undone."
 msgstr ""
+"Tem certeza de que quer cancelar essas ordens de produção?\n"
+"Esta ação não pode ser desfeita."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -999,6 +1003,8 @@ msgid ""
 "Are you sure you want to cancel this manufacturing order?\n"
 "This action cannot be undone."
 msgstr ""
+"Tem certeza de que quer cancelar este pedido de produção?\n"
+"Esta ação não pode ser desfeita."
 
 #. module: mrp
 #. odoo-python
@@ -2388,6 +2394,7 @@ msgstr "Documentação"
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__done
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__done
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2574,11 +2581,6 @@ msgstr "Arquivos anexados ao produto."
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
 msgid "Final Location from procurement"
 msgstr "Local final da aquisição"
-
-#. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__done
-msgid "Finished"
-msgstr "Concluído"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
@@ -7353,6 +7355,9 @@ msgstr "duração real"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divididas"
+
+#~ msgid "Finished"
+#~ msgstr "Concluído"
 
 #~ msgid ""
 #~ "<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
