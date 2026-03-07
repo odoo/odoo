@@ -22,6 +22,7 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
 import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -287,19 +288,39 @@ export class MassMailingHtmlField extends HtmlField {
 
     getThemeSelectorConfig() {
         return {
-            setThemeHTML: (html) =>
-                this.mutex.exec(() =>
+            setThemeHTML: (html) => {
+                this.onChange();
+                const changeId = this.lastChangeId;
+                const record = this.props.record;
+                return this.mutex.exec(() => {
+                    if (this.props.record !== record) {
+                        return;
+                    }
                     // The inlineField can not be updated to its final value at
                     // this point since the editor is needed to process the
                     // theme template. (i.e. applying the default style).
                     // It will be updated onEditorReady since it has become empty.
-                    this.props.record
+                    return record
                         .update({
                             [this.props.name]: html,
                             [this.props.inlineField]: "",
                         })
-                        .catch(() => {})
-                ),
+                        .then(
+                            () => {
+                                this.state.key++;
+                                this.lastValue = normalizeHTML(
+                                    fixInvalidHTML(record.data[this.props.name]),
+                                    this.clearElementToCompare.bind(this)
+                                );
+                                record.model.bus.trigger(
+                                    "FIELD_IS_DIRTY",
+                                    this.lastChangeId !== changeId
+                                );
+                            },
+                            () => {}
+                        );
+                });
+            },
             filterTemplates: this.props.filterTemplates,
             mailingModelId: this.props.record.data.mailing_model_id.id,
             mailingModelName: this.props.record.data.mailing_model_id.display_name || "",
@@ -381,7 +402,12 @@ export class MassMailingHtmlField extends HtmlField {
             this.props.record.data[this.props.name].toString() !== "" &&
             this.props.record.data[this.props.inlineField].toString() === ""
         ) {
-            this.isDirty = true;
+            if (!this.isDirty) {
+                // Fields values are desynchronized and the inlineField
+                // has to be computed, even if the user made no change. In
+                // this specific case, onChange is forced.
+                this.onChange();
+            }
             this.lastValue = undefined;
         }
         return super._commitChanges({ urgent });
@@ -393,7 +419,7 @@ export class MassMailingHtmlField extends HtmlField {
      * the style of the inlineField.
      * @override
      */
-    async updateValue(value) {
+    async updateValue(value, { changeId } = { changeId: this.lastChangeId }) {
         const record = this.props.record;
         // Ensure the edited value is updated immediately to avoid data loss,
         // and reset the inline field (need async computation) to avoid
@@ -405,9 +431,12 @@ export class MassMailingHtmlField extends HtmlField {
                 [this.props.name]: value,
                 [this.props.inlineField]: "",
             })
-            .then(() => {
-                record.model.bus.trigger("FIELD_IS_DIRTY", false);
-            });
+            .then(
+                () => {
+                    record.model.bus.trigger("FIELD_IS_DIRTY", this.lastChangeId !== changeId);
+                },
+                () => {}
+            );
         this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         const valueFragment = parseHTML(document, value);
         let inlineValue;
@@ -425,10 +454,14 @@ export class MassMailingHtmlField extends HtmlField {
         if (record.resId !== this.props.record?.resId || inlineValue === null) {
             return;
         }
-        this.isDirty = false;
-        await record
-            .update({ [this.props.inlineField]: inlineValue })
-            .catch(() => (this.isDirty = true));
+        await record.update({ [this.props.inlineField]: inlineValue }).then(
+            () => {
+                if (this.lastChangeId === changeId) {
+                    this.isDirty = false;
+                }
+            },
+            () => {}
+        );
         record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
     }
     /**
