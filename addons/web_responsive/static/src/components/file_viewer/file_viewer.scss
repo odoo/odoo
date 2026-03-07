@@ -1,0 +1,58 @@
+/* Copyright 2019 Tecnativa - Alexandre Díaz
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+.o-FileViewerContainer {
+    --o-FileViewerContainer-width: #{$o-mail-Chatter-minWidth};
+    --o-FileViewerContainer-height: var(--100vh, calc(100vh - #{$o-navbar-height}));
+    --o-FileViewerContainer-left: unset;
+    --o-FileViewerContainer-right: 0;
+
+    position: fixed;
+    right: 0;
+    z-index: $zindex-fixed;
+
+    &__maximized {
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    &__minimized {
+        width: 100%;
+        max-width: var(--o-FileViewerContainer-width, #{$o-mail-Chatter-minWidth});
+        height: var(--o-FileViewerContainer-height);
+        top: unset;
+        right: var(--o-FileViewerContainer-right, 0);
+        left: var(--o-FileViewerContainer-left, unset);
+        bottom: 0;
+
+        .o-FileViewer-main {
+            padding: $o-navbar-height 0 0 0;
+        }
+
+        .o-FileViewer-viewPdf {
+            width: 100% !important;
+        }
+    }
+
+    .o-FileViewer-navigation {
+        background-color: rgba(255, 255, 255, 0.2);
+        text-shadow: 0 0 rgba(30, 30, 30, 0.8);
+        box-shadow: 0 0 1px 0 rgba(30, 30, 30, 0.4);
+        transition:
+            background-color 0.2s,
+            box-shadow 0.2s;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 black;
+            box-shadow: 0 0 2px 0 rgba(30, 30, 30, 0.8);
+        }
+    }
+}
+
+.o_apps_menu_opened .o-FileViewerContainer {
+    display: none !important;
+}

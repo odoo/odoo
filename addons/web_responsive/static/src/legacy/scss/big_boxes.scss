@@ -1,0 +1,95 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Onestein - Anjeel Haria
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+$big-checkbox-size: 1.5em;
+
+// Big checkboxes
+.o_list_view,
+.o_setting_container .o_setting_box {
+    .o_setting_right_pane {
+        margin-left: 34px;
+    }
+
+    .o-checkbox:not(.o_boolean_toggle) {
+        margin-right: 10px;
+        margin-top: -6px;
+
+        &.d-inline-block {
+            display: block !important;
+        }
+
+        .form-check-input {
+            height: $big-checkbox-size;
+            width: $big-checkbox-size;
+        }
+    }
+
+    .o_optional_columns_dropdown {
+        .o-dropdown--menu {
+            display: flex !important;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .o-checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .form-check-input {
+            margin-bottom: 2px;
+        }
+    }
+}
+
+.o_add_favorite + .o_accordion_values {
+    .o_add_favorite_props {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .o_add_favorite_name {
+        margin-bottom: 0.5rem;
+        max-width: 100%;
+    }
+
+    .form-check-input {
+        height: $big-checkbox-size;
+        width: $big-checkbox-size;
+    }
+
+    .form-check-label {
+        line-height: normal;
+    }
+
+    .o-checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+}
+
+.o_setting_container .o_setting_box {
+    .o-checkbox:not(.o_boolean_toggle) {
+        .form-check-label {
+            &::after {
+                width: 24px;
+                height: 24px;
+            }
+
+            &::before {
+                outline: none !important;
+                border: 1px solid #4c4c4c;
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}

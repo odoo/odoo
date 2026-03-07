@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <!-- Search bar -->
+    <t t-name="web_responsive.AppsMenuCanonicalSearchBar">
+        <div class="search-container" t-att-class="{'has-results': state.hasResults}">
+            <div class="search-input">
+                <i class="fa fa-search search-icon fs-4 my-auto d-none d-sm-flex" />
+                <input
+                    type="search"
+                    t-ref="SearchBarInput"
+                    t-on-input="_searchMenus"
+                    t-on-keydown="_onKeyDown"
+                    autocomplete="off"
+                    placeholder="Search menus..."
+                    class="form-control"
+                />
+            </div>
+            <ul
+                t-if="hasItemsToDisplay"
+                class="list-unstyled search-list"
+                t-ref="searchItems"
+            >
+                <t t-foreach="state.rootItems" t-as="menu" t-key="menu.id">
+                    <li t-attf-class="search-item {{highlighted(menu_index)}}">
+                        <a
+                            t-attf-class="search-item__link"
+                            t-att-href="menu.path"
+                            t-att-data-menu-id="menu.id"
+                            t-att-data-action-id="menu.actionID"
+                            draggable="false"
+                            tabindex="-1"
+                        >
+                            <img
+                                class="search-item__image"
+                                t-att-src="menu.webIconData"
+                                alt="App Icon"
+                            />
+                            <span class="search-item__name" t-att-title="menu.name">
+                                <t
+                                    t-foreach="_splitName(menu.displayName)"
+                                    t-as="name"
+                                    t-key="name_index"
+                                >
+                                    <b t-if="name_index % 2" t-out="name" />
+                                    <t t-else="" t-out="name" />
+                                </t>
+                            </span>
+                        </a>
+                    </li>
+                </t>
+                <li
+                    class="search-item-divider"
+                    t-if="state.rootItems.length and state.subItems.length"
+                >
+                    <hr class="w-100" />
+                </li>
+                <t t-foreach="state.subItems" t-as="menu" t-key="menu.id">
+                    <li t-attf-class="search-item {{highlighted(menu_index, true)}}">
+                        <a
+                            t-attf-class="search-item__link"
+                            t-att-href="menu.path"
+                            t-att-data-menu-id="menu.id"
+                            t-att-data-action-id="menu.actionID"
+                            draggable="false"
+                            tabindex="-1"
+                        >
+                            <span
+                                class="search-item__name px-2 py-1"
+                                t-att-title="menu.name"
+                            >
+                                <t
+                                    t-foreach="_splitName(menu.displayName)"
+                                    t-as="name"
+                                    t-key="name_index"
+                                >
+                                    <b t-if="name_index % 2" t-out="name" />
+                                    <t t-else="" t-out="name" />
+                                </t>
+                            </span>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+            <ul
+                t-if="!hasItemsToDisplay and inputValue"
+                class="list-unstyled search-list"
+            >
+                <li class="empty-search-item">
+                    <strong>Nothing to show</strong>
+                </li>
+            </ul>
+        </div>
+    </t>
+</templates>

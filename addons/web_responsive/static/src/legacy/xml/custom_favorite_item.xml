@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t
+        t-name="web_responsive.CustomFavoriteItem"
+        t-inherit="web.CustomFavoriteItem"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//AccordionItem/div[1]" position="attributes">
+            <attribute name="class" add="o_add_favorite_props" separator=" " />
+        </xpath>
+        <xpath
+            expr="//AccordionItem/div[1]/input[hasclass('o_input')]"
+            position="attributes"
+        >
+            <attribute name="class" add="o_add_favorite_name" separator=" " />
+        </xpath>
+    </t>
+</templates>

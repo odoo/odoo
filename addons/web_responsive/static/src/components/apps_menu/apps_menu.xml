@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <!-- odoo 18 has created a left sidebar where the button of all apps
+        and the dropdown for the user where can logout
+        we had to disable the lef sidebar to keep our web_resposive toggle button working
+        and to keep the user dropdown in its original place -->
+        <xpath expr="//t[@t-if='env.isSmall']" position="attributes">
+            <attribute name="t-if">false</attribute>
+        </xpath>
+        <!-- The kanban dropdown is replaced with the odoo default one
+        as the default one took physical place in the DOM -->
+        <xpath expr="//Dropdown" position="replace">
+            <t t-if="env.isSmall">
+                <t t-call="web.NavBar.AppsMenu.Sidebar" />
+            </t>
+            <t t-else="" />
+            <AppsMenu>
+                <t t-set-slot="search_bar">
+                    <AppsMenuSearchBar />
+                </t>
+                <AppMenuItem
+                    t-foreach="apps"
+                    t-as="app"
+                    t-key="app.id"
+                    app="app"
+                    currentApp="currentApp"
+                    href="getMenuItemHref(app)"
+                    onClick="onNavBarDropdownItemSelection.bind(this)"
+                />
+            </AppsMenu>
+        </xpath>
+    </t>
+
+    <!-- Apps menu -->
+    <t t-name="web_responsive.AppsMenu">
+        <div class="o_grid_apps_menu" t-att-data-theme="theme">
+            <button
+                class="o_grid_apps_menu__button"
+                title="Home Menu"
+                data-hotkey="h"
+                t-on-click.stop="onMenuClick"
+            >
+                <i class="oi oi-apps fs-4" />
+            </button>
+            <div t-if="state.open" class="app-menu-container">
+                <t t-slot="search_bar" />
+                <div class="o-app-menu-list">
+                    <t t-slot="default" />
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Apps Menu Sidebar -->
+    <t t-inherit="web.NavBar.AppsMenu.Sidebar" t-inherit-mode="extension">
+        <xpath expr="//i[hasclass('fa fa-bars')]" position="replace">
+            <!-- Remove the burger menu icon -->
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_app_menu_sidebar')]" position="attributes">
+            <attribute
+                name="class"
+            >o_app_menu_sidebar position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap</attribute>
+        </xpath>
+    </t>
+
+    <!-- Section Menu Items -->
+    <t t-inherit="web.SectionMenu" t-inherit-mode="extension">
+        <!-- Add cursor pointer to menu items -->
+        <xpath expr="//li[@t-on-click]" position="attributes">
+            <attribute name="class">cursor-pointer</attribute>
+        </xpath>
+    </t>
+
+    <!-- Burger Menu -->
+    <t t-inherit="web.BurgerMenu" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_mobile_menu_toggle')]" position="after">
+            <button
+                class="o_mobile_menu_toggle o_nav_entry o-no-caret d-md-none border-0 pe-3"
+                t-on-click.prevent="_openAppMenuSidebarMobile"
+            >
+                <i class="oi oi-panel-right" />
+            </button>
+        </xpath>
+    </t>
+</templates>

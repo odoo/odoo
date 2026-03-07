@@ -1,0 +1,28 @@
+.o_command_palette {
+    .o_command_palette_exit {
+        display: none;
+    }
+
+    @include media-breakpoint-down(sm) {
+        .o_command_palette_root {
+            display: flex;
+            max-height: 100vh;
+            max-height: 100dvh;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+        .o_command_palette_exit {
+            display: block;
+        }
+        .o_command_palette_search {
+            flex-shrink: 0;
+        }
+        .o_command_palette_listbox {
+            max-height: unset;
+        }
+        .o_command_palette_footer {
+            flex-shrink: 0;
+        }
+    }
+}

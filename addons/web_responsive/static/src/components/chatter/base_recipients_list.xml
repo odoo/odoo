@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t
+        t-name="web_responsive.BaseRecipientsList"
+        t-inherit="mail.BaseRecipientsList"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//button/.." position="attributes">
+            <attribute name="style" />
+            <attribute name="class" add="o-mail-Chatter-recipientList" separator=" " />
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2023 Taras Shabaranskyi
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<templates>
+    <t
+        t-name="web_responsive.StatusBarButtons"
+        t-inherit="web.StatusBarDropdownItems"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//DropdownItem" position="attributes">
+            <attribute name="hotkey">'shift+a'</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,26 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Onestein - Anjeel Haria
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+.o_mobile_sticky {
+    transition: top 0.5s;
+}
+
+// Sticky Header & Footer in List View
+.o_list_view {
+    .o_list_table {
+        thead {
+            box-shadow: 0 1px 0 0 var(--ListRenderer-thead-border-end-color);
+        }
+
+        .o_list_footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
+            background-color: var(--ListRenderer-thead-bg-color);
+            box-shadow: 0 -1px 0 -1px var(--ListRenderer-thead-border-end-color);
+        }
+    }
+}

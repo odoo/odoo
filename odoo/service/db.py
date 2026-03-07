@@ -119,7 +119,7 @@ def _create_empty_database(name):
             cr.execute(SQL(
                 "CREATE DATABASE %s ENCODING 'unicode' %s TEMPLATE %s",
                 database_identifier(cr, name),
-                SQL("LC_COLLATE 'C'") if chosen_template == 'template0' else SQL(""),
+                SQL("LC_COLLATE 'C' LC_CTYPE 'C'") if chosen_template == 'template0' else SQL(""),
                 database_identifier(cr, chosen_template),
             ))
 
