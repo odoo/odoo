@@ -22,7 +22,7 @@ describe("OdooClient", () => {
 
     const client = new OdooClient({
       baseUrl: "http://odoo.local",
-      db: "atlas",
+      db: "kodoo",
       user: "admin",
       password: "admin",
       timeoutMs: 5000

@@ -1,0 +1,13 @@
+# Optional GPU override for Ollama.
+# Use with: docker compose -f docker-compose.yml -f deploy/ollama/docker-compose.gpu.yml up -d ollama
+services:
+  ollama:
+    environment:
+      - OLLAMA_LLM_LIBRARY=
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

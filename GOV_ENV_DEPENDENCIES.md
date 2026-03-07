@@ -75,3 +75,17 @@ Lexoid parser params (optional):
 - `lnav` is available on this host and can display the live Odoo log.
 - Run `scripts\\start-with-lnav.ps1` to launch Odoo with `logs/odoo-lnav.log` and open `lnav` in a separate window.
   * Edit the `$Config`/`$Db` parameters at the top of the script if you need another configuration or database name.
+
+## 7) Docker environment (this repository)
+
+The Docker setup includes a custom Odoo image with GOV system dependencies:
+
+- Dockerfile: `docker/odoo/Dockerfile`
+- Compose service: `docker-compose.yml` (`odoo` service uses `build`)
+
+Build and start:
+
+```bash
+docker compose build odoo
+docker compose up -d
+```

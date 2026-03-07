@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>kodoo</title>
+    <style>
+      :root {
+        --bg-1: #07111d;
+        --bg-2: #11233a;
+        --line: rgba(125, 211, 252, 0.28);
+        --text: #ecf7ff;
+        --muted: #9bb6cb;
+        --accent: #21d4fd;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at top left, rgba(33, 212, 253, 0.18), transparent 32%),
+          linear-gradient(145deg, var(--bg-1), var(--bg-2));
+        color: var(--text);
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(92vw, 34rem);
+        padding: 2rem;
+        border: 1px solid var(--line);
+        border-radius: 1.25rem;
+        background: rgba(6, 16, 28, 0.68);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1 {
+        margin: 0 0 0.75rem;
+        font-size: clamp(2rem, 6vw, 3.25rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+      }
+
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+        padding: 0.9rem 1.15rem;
+        border-radius: 999px;
+        text-decoration: none;
+        color: #03111b;
+        background: linear-gradient(90deg, #67e8f9, var(--accent));
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>kodoo</h1>
+      <p>O app mobile carrega o ambiente seguro de <strong>kodoo.online</strong>.</p>
+      <p>Se esta tela apareceu, o shell nativo abriu antes da origem remota responder ou o app ainda nao foi sincronizado.</p>
+      <a href="https://kodoo.online">Abrir kodoo.online</a>
+    </main>
+  </body>
+</html>

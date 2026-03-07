@@ -1,0 +1,8 @@
+# Local development override (localhost-only) with nginx proxy.
+# This keeps websocket routing correct (/websocket -> evented port 8072).
+services:
+  odoo:
+    ports: []
+  nginx:
+    ports:
+      - "127.0.0.1:8069:80"

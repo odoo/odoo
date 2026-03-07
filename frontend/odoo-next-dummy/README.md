@@ -36,7 +36,7 @@ cp .env.example .env.local
 
 ```env
 ODOO_BASE_URL=http://localhost:8069
-ODOO_DB=atlas
+ODOO_DB=kodoo
 ODOO_USER=admin
 ODOO_PASSWORD=admin
 ODOO_TIMEOUT_MS=15000
@@ -60,7 +60,7 @@ ODOO_AI_MEMORY_MODEL=gov.ai.memory
 ```
 
 Esses defaults foram alinhados com os modelos encontrados em `custom_addons/gov_processos`.
-Se `.env.local` nao existir, o GRP usa fallback local: `http://localhost:8069`, DB `kore`, user `admin`, password `admin`.
+Se `.env.local` nao existir, o GRP usa fallback local: `http://localhost:8069`, DB `kodoo`, user `admin`, password `admin`.
 
 4. Rode em dev:
 

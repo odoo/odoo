@@ -1,0 +1,12 @@
+# Cloudflare Tunnel mode (for CGNAT / dynamic IP).
+# Keep nginx as internal reverse proxy target for stable websocket/file upload behavior.
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: kodoo-cloudflared
+    command: tunnel --no-autoupdate --protocol http2 run --token ${CLOUDFLARED_TOKEN}
+    depends_on:
+      - nginx
+    networks:
+      - kodoo-net
+    restart: always

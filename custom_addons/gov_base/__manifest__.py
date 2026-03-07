@@ -10,9 +10,16 @@
         "views/res_company_views.xml",
         "views/account_account_views.xml",
     ],
+    "assets": {
+        "web._assets_primary_variables": [
+            "gov_base/static/src/scss/gov_variables.scss",
+        ],
+        "web.assets_backend": [
+            "gov_base/static/src/scss/gov_dark_theme.scss",
+        ],
+    },
     "installable": True,
     "application": False,
     "license": "LGPL-3",
     "author": "GRP",
 }
-

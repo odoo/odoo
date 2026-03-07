@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Knowledge (Community Wrapper)",
+    "name": "Knowledge",
     "version": "19.0.1.0.0",
     "category": "Knowledge",
-    "summary": "Wrapper module that installs all OCA knowledge modules to emulate the Enterprise version.",
-    "description": "This module acts as a bridge so other apps requesting 'knowledge' receive the OCA alternatives.",
-    "author": "Anderson Clayton",
+    "summary": "Community compatibility wrapper for the standard Odoo Knowledge app.",
+    "description": "This module provides a compatibility bridge so dependencies on technical module 'knowledge' work with the community knowledge stack.",
+    "author": "Kodoo",
     "depends": [
         "attachment_preview",
         "attachment_zipped_download",
@@ -20,8 +20,10 @@
         "document_page_tag",
         "document_url"
     ],
-    "data": [],
+    "data": [
+        "views/knowledge_branding.xml",
+    ],
     "installable": True,
-    "application": False,
+    "application": True,
     "auto_install": False,
 }

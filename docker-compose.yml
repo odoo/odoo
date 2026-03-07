@@ -10,9 +10,9 @@ services:
     image: postgres:16
     container_name: kodoo-db
     environment:
-      - POSTGRES_DB=kore
-      - POSTGRES_USER=atlas
-      - POSTGRES_PASSWORD=atlas
+      - POSTGRES_DB=kodoo
+      - POSTGRES_USER=kodoo
+      - POSTGRES_PASSWORD=kodoo
       # Allows Odoo to create additional databases per tenant
       - POSTGRES_HOST_AUTH_METHOD=md5
     volumes:
@@ -21,37 +21,73 @@ services:
       - kodoo-net
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U atlas -d kore" ]
+      test: [ "CMD-SHELL", "pg_isready -U kodoo -d kodoo" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   odoo:
-    image: odoo:19.0
+    build:
+      context: .
+      dockerfile: docker/odoo/Dockerfile
+    image: kodoo-odoo:19.0-gov
     container_name: kodoo-odoo
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8069:8069"
-      - "8072:8072"
+    expose:
+      - "8069"
+      - "8072"
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
       - ./custom_addons:/mnt/custom-addons
-      - ./kore.prod.conf:/etc/odoo/odoo.conf:ro
+      - ./deploy/odoo/kodoo.prod.conf:/etc/odoo/odoo.conf:ro
     environment:
       - HOST=db
-      - USER=atlas
-      - PASSWORD=atlas
+      - USER=kodoo
+      - PASSWORD=kodoo
       - OLLAMA_HOST=http://ollama:11434
     networks:
       - kodoo-net
     restart: always
 
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: kodoo-nginx
+    depends_on:
+      - odoo
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/start-nginx.sh:/etc/nginx/start-nginx.sh:ro
+      - ./deploy/nginx/kodoo.http.conf:/etc/nginx/templates/kodoo.http.conf:ro
+      - ./deploy/nginx/kodoo.https.conf:/etc/nginx/templates/kodoo.https.conf:ro
+      - letsencrypt:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    command: ["/bin/sh", "/etc/nginx/start-nginx.sh"]
+    networks:
+      - kodoo-net
+    restart: always
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: kodoo-certbot
+    profiles:
+      - certbot
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    networks:
+      - kodoo-net
+
   ollama:
     image: ollama/ollama:latest
     container_name: kodoo-ollama
+    environment:
+      # Default to CPU mode to avoid GPU/CUDA runtime requirements on non-GPU hosts.
+      - OLLAMA_LLM_LIBRARY=cpu
     volumes:
       - ollama-data:/root/.ollama
     networks:
@@ -70,6 +106,8 @@ volumes:
   odoo-db-data:
   odoo-web-data:
   ollama-data:
+  letsencrypt:
+  certbot-www:
 
 
 networks:

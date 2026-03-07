@@ -1,6 +1,6 @@
 param(
-    [string]$Config = "kore.conf",
-    [string]$Db = "kore",
+    [string]$Config = "kodoo.conf",
+    [string]$Db = "kodoo",
     [string]$LogPath = "logs/odoo-lnav.log"
 )
 

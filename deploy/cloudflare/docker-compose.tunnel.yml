@@ -1,0 +1,7 @@
+# Tunnel mode nginx overlay.
+# Removes host port bindings so nginx is only reachable via the internal Docker
+# network (kodoo-net). The cloudflared container contacts nginx directly on
+# http://nginx:80 — no host exposure needed.
+services:
+  nginx:
+    ports: []

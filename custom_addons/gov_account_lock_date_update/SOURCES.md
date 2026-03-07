@@ -12,7 +12,7 @@ No source code was copied.
 
 ## Method attribution
 All methods below are classified:
-`kore-original - informed by OCA/account-financial-tools architecture`
+`kodoo-original - informed by OCA/account-financial-tools architecture`
 
 | Method |
 |--------|

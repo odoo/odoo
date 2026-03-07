@@ -1,0 +1,10 @@
+# Insecure quick-test override.
+# Exposes Odoo directly to the internet (no reverse proxy, no TLS, no hardening).
+services:
+  odoo:
+    # Quick-test mode: avoid local custom build and use upstream image directly.
+    image: odoo:19.0
+    build: null
+    ports:
+      - "8069:8069"
+      - "8072:8072"

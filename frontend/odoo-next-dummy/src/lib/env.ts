@@ -17,7 +17,7 @@ function withDefault(name: string, fallback: string): string {
 export const env = {
   // Defaults keep o GRP funcional em ambiente local mesmo sem .env.local.
   odooBaseUrl: withDefault("ODOO_BASE_URL", "http://localhost:8069"),
-  odooDb: withDefault("ODOO_DB", "kore"),
+  odooDb: withDefault("ODOO_DB", "kodoo"),
   odooUser: withDefault("ODOO_USER", "admin"),
   odooPassword: withDefault("ODOO_PASSWORD", "admin"),
   odooTimeoutMs: toInt(process.env.ODOO_TIMEOUT_MS, 15000),

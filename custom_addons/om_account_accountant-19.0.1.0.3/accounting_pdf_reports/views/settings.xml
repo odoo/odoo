@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <app name="account" position="inside">
+                <h2>Enhanced Financial Reports</h2>
+                <div>
+                    <div class="row mt16 o_settings_container" name="report_setting_container">
+                        <div class="col-6 col-lg-6 o_setting_box" id="enhanced_reports">
+                            <div>
+                                Preview financial reports without downloading
+                            </div>
+                             <div class="content-group">
+                                 <a target="_blank" href="https://apps.odoo.com/apps/modules/19.0/om_accounting_reports/"
+                                    style="text-decoration: underline;">Enhanced Financial Reports</a>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-6 o_setting_box" id="excel_reports">
+                            <div>
+                                Financial Reports in Excel
+                            </div>
+                             <div class="content-group">
+                                 <a target="_blank" href="https://apps.odoo.com/apps/modules/19.0/accounting_excel_reports/"
+                                    style="text-decoration: underline;">Excel Reports</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app>
+        </field>
+    </record>
+
+</odoo>

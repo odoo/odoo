@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-const { Component, useState, onWillStart } = owl;
-const { registry } = require("@web/core/registry");
-const { useService } = require("@web/core/utils/hooks");
+import { Component, useState, onWillStart } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
-class GovDashboard extends Component {
+export class GovDashboard extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");

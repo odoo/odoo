@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Keep Knowledge root app/menu aligned with standard naming -->
+    <record id="document_knowledge.menu_document_root" model="ir.ui.menu">
+        <field name="name">Knowledge</field>
+        <field name="web_icon">document_knowledge,static/description/icon.png</field>
+    </record>
+
+    <!-- Align settings card label in case inherited views change -->
+    <record id="view_res_config_settings_knowledge_branding" model="ir.ui.view">
+        <field name="name">res.config.settings.knowledge.branding</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="document_knowledge.view_knowledge_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='document_knowledge']" position="attributes">
+                <attribute name="data-string">Knowledge</attribute>
+                <attribute name="string">Knowledge</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

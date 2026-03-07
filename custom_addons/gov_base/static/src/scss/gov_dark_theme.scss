@@ -1,0 +1,179 @@
+/* GOV Dark Theme (Professional Refined version) */
+
+.o_web_client {
+  /* Core Variables */
+  --bs-body-bg: #030810;
+  --bs-body-color: #e2e8f0;
+  --bs-emphasis-color: #ffffff;
+  --bs-secondary-color: #94a3b8;
+  --bs-secondary-bg: #0f172a;
+  --bs-tertiary-bg: #1e293b;
+  --bs-border-color: rgba(148, 163, 184, 0.28);
+  --bs-link-color: #22d3ee;
+  --bs-link-hover-color: #67e8f9;
+
+  /* Odoo Variables */
+  --o-view-background-color: #030810;
+  --o-main-text-color: #e2e8f0;
+  --o-webclient-background-color: #030810;
+  --o-form-sheet-background: #0f172a;
+  --o-control-panel-background: rgba(3, 8, 16, 0.85);
+  --o-navbar-background: linear-gradient(90deg, #071426 0%, #0b2743 55%, #213862 100%);
+  --o-navbar-color: #f1f5f9;
+  --o-navbar-active-background: rgba(34, 211, 238, 0.15);
+
+  background:
+    radial-gradient(circle at 20% -10%, rgba(14, 165, 183, 0.15), transparent 45%),
+    radial-gradient(circle at 85% -15%, rgba(30, 64, 175, 0.12), transparent 40%),
+    #030810;
+  color: var(--bs-body-color);
+}
+
+/* Navbar Harmonization */
+.o_web_client .o_main_navbar {
+  background: var(--o-navbar-background) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.o_web_client .o_main_navbar a,
+.o_web_client .o_main_navbar button,
+.o_web_client .o_main_navbar .dropdown-toggle,
+.o_web_client .o_main_navbar .o_menu_entry_lvl_1 {
+  color: var(--o-navbar-color) !important;
+}
+
+.o_web_client .o_main_navbar .active,
+.o_web_client .o_main_navbar .show > .dropdown-toggle {
+  background: var(--o-navbar-active-background) !important;
+  color: #ffffff !important;
+}
+
+/* Control Panel */
+.o_web_client .o_control_panel {
+  background: var(--o-control-panel-background) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.o_web_client .o_control_panel .breadcrumb-item a,
+.o_web_client .o_control_panel .o_breadcrumb .active {
+  color: var(--bs-body-color);
+}
+
+/* Form Views */
+.o_web_client .o_form_view .o_form_sheet {
+  background: var(--o-form-sheet-background) !important;
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+
+.o_web_client .o_form_view .o_form_label,
+.o_web_client .o_form_view label {
+  color: var(--bs-secondary-color) !important;
+  font-weight: 500;
+  opacity: 1 !important;
+}
+
+/* Inputs Refinement */
+.o_web_client .o_input,
+.o_web_client .form-control,
+.o_web_client select,
+.o_web_client textarea {
+  background: rgba(2, 6, 23, 0.6) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(148, 163, 184, 0.4) !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease;
+}
+
+.o_web_client .o_input:focus,
+.o_web_client .form-control:focus {
+  border-color: #22d3ee !important;
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2) !important;
+}
+
+/* List Views */
+.o_web_client .o_list_table {
+  background: transparent !important;
+}
+
+.o_web_client .o_list_table thead th {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-bottom: 2px solid var(--bs-border-color) !important;
+}
+
+.o_web_client .o_list_table tbody tr:hover {
+  background: rgba(30, 41, 59, 0.5) !important;
+}
+
+/* Buttons Styling */
+.o_web_client .btn-primary {
+  background: #0ea5b7 !important;
+  border-color: #0ea5b7 !important;
+  color: #ffffff !important;
+  border-radius: 6px;
+}
+
+.o_web_client .btn-primary:hover {
+  background: #0d94a6 !important;
+  border-color: #0d94a6 !important;
+}
+
+.o_web_client .btn-secondary {
+  background: #1e293b !important;
+  border-color: var(--bs-border-color) !important;
+  color: #f1f5f9 !important;
+  border-radius: 6px;
+}
+
+.o_web_client .btn-secondary:hover {
+  background: #334155 !important;
+}
+
+/* Modal and Dropdowns */
+.o_web_client .modal-content,
+.o_web_client .dropdown-menu {
+  background: #0f172a !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  color: var(--bs-body-color);
+}
+
+.o_web_client .dropdown-item {
+  color: var(--bs-body-color);
+}
+
+.o_web_client .dropdown-item:hover {
+  background: rgba(34, 211, 238, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Chatter Styling */
+.o_web_client .o-mail-Chatter {
+  background: #020617 !important;
+  border-left: 1px solid var(--bs-border-color);
+}
+
+.o_web_client .o-mail-Message {
+  background: #0f172a !important;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+/* Tabs */
+.o_web_client .nav-tabs .nav-link {
+  color: var(--bs-secondary-color) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+}
+
+.o_web_client .nav-tabs .nav-link.active {
+  color: #22d3ee !important;
+  background: transparent !important;
+  border-bottom: 2px solid #22d3ee !important;
+}
