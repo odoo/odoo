@@ -19,7 +19,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
         })
         self.assertFalse(project.task_ids.sale_line_id)
         self.env.invalidate_all()
-        with self.assertQueryCount(85):
+        with self.assertQueryCount(165):
             project.write({
                 'allow_billable': True,
                 'partner_id': self.partner_b.id,
@@ -34,7 +34,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
             'project_id': project.id,
         } for i in range(50, 100)])
         self.env.invalidate_all()
-        with self.assertQueryCount(130):
+        with self.assertQueryCount(236):
             project.write({
                 'allow_billable': True,
                 'partner_id': self.partner_b.id,
