@@ -35,7 +35,7 @@
             background: #{color_primary};
             background-color: #{color_primary};">
             <div class="o_profile">
-                <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128}" alt="" t-if="o.image_128"/>
+                <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128.to_base64()}" alt="" t-if="o.image_128"/>
                 <h1 class="o_profile_name mt-2" t-field="o.name">Marc Demo</h1>
                 <h3 class="o_profile_job mb-2" t-field="o.job_id">Software Developer</h3>
             </div>

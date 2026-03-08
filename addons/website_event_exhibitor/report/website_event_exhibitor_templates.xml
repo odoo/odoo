@@ -9,7 +9,7 @@
                         <div class="h-100 p-2 pb-0">
                             <!-- Has to be base64-ified otherwise the reporting engine will sometimes load images
                             and sometimes not before printing, resulting in random results. -->
-                            <img class="img img-fluid" t-attf-src="data:images/png;base64,#{sponsor.image_128}"/>
+                            <img class="img img-fluid" t-attf-src="data:images/png;base64,#{sponsor.image_128.to_base64()}"/>
                         </div>
                     </div>
                 </t>
