@@ -821,7 +821,6 @@ class BaseCase(case.TestCase):
             return Cursor_execute(self, query, params, log_exceptions)
 
         if flush:
-            self.env.flush_all()
             self.env.cr.flush()
 
         with (
@@ -830,7 +829,6 @@ class BaseCase(case.TestCase):
         ):
             yield actual_queries
             if flush:
-                self.env.flush_all()
                 self.env.cr.flush()
 
     @contextmanager
@@ -875,19 +873,16 @@ class BaseCase(case.TestCase):
 
             The second form is convenient when used with :func:`users`.
         """
+        flush_func = self.env.cr.flush if flush else lambda: None
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
                 login = self.env.user.login
                 expected = counters.get(login, default)
-                if flush:
-                    self.env.flush_all()
-                    self.env.cr.flush()
+                flush_func()
                 count0 = self.cr.sql_log_count
                 yield
-                if flush:
-                    self.env.flush_all()
-                    self.env.cr.flush()
+                flush_func()
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
@@ -907,13 +902,9 @@ class BaseCase(case.TestCase):
         else:
             # flush before and after during warmup, in order to reproduce the
             # same operations, otherwise the caches might not be ready!
-            if flush:
-                self.env.flush_all()
-                self.env.cr.flush()
+            flush_func()
             yield
-            if flush:
-                self.env.flush_all()
-                self.env.cr.flush()
+            flush_func()
 
     def assertRecordValues(
             self,
