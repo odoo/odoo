@@ -259,7 +259,7 @@ class Binary(Controller):
         dbname = request.db
 
         if not dbname:
-            response = Stream.from_path(file_path('web/static/img/logo.png')).get_response()
+            response = Stream.from_path('web/static/img/logo.png').get_response()
         else:
             try:
                 attachment = request.env(user=request.session.uid or api.SUPERUSER_ID, su=True)['ir.attachment']
@@ -280,10 +280,10 @@ class Binary(Controller):
                     stream.public = True
                     response = stream.get_response()
                 else:
-                    response = Stream.from_path(file_path('web/static/img/nologo.png')).get_response()
+                    response = Stream.from_path('web/static/img/nologo.png').get_response()
             except Exception:  # noqa: BLE001
                 _logger.warning("While retrieving the company logo, using the Odoo logo instead", exc_info=True)
-                response = Stream.from_path(file_path(f'web/static/img/{imgname}{imgext}')).get_response()
+                response = Stream.from_path(f'web/static/img/{imgname}{imgext}').get_response()
 
         return response
 

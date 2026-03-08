@@ -76,10 +76,9 @@ class IrBinary(models.AbstractModel):
         if record._name == 'ir.attachment' and field_name in ('raw', 'db_datas'):
             return record._to_http_stream()
 
-        field = record._fields[field_name]
-        record.check_field_access(field, 'read')
+        value = record[field_name]
 
-        if field.attachment:
+        if value and record._fields[field_name].attachment:
             field_attachment = self.env['ir.attachment'].sudo().search(
                 domain=[('res_model', '=', record._name),
                         ('res_id', '=', record.id),
@@ -89,7 +88,15 @@ class IrBinary(models.AbstractModel):
                 raise MissingError(self.env._("The related attachment does not exist."))
             return field_attachment._to_http_stream()
 
-        return Stream.from_binary_field(record, field_name)
+        data = value.content
+        return Stream(
+            type='data',
+            data=data,
+            etag=record.env['ir.attachment']._compute_checksum(data),
+            last_modified=record.write_date if record._log_access else None,
+            size=len(data),
+            public=record.env.user._is_public(),  # good enough
+        )
 
     def _get_stream_from(
         self,
@@ -243,7 +250,7 @@ class IrBinary(models.AbstractModel):
         modified = werkzeug.http.is_resource_modified(
             request.httprequest.environ,
             etag=stream.etag if isinstance(stream.etag, str) else None,
-            last_modified=stream.last_modified
+            last_modified=stream.last_modified,
         )
 
         if modified and (width or height or crop):

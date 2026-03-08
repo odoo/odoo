@@ -18,8 +18,6 @@ if typing.TYPE_CHECKING:
     from datetime import datetime
     from typing import Self
 
-    from odoo.models import BaseModel
-
     from .response import Response
 
 STATIC_CACHE = 60 * 60 * 24 * 7  # 1 week
@@ -58,9 +56,8 @@ class Stream:
     This utility is safe, cache-aware and uses the best available
     streaming strategy. Works best with the --x-sendfile cli option.
 
-    Create a Stream via one of the constructors: :meth:`~from_path`:, or
-    :meth:`~from_binary_field`:, generate the corresponding HTTP response
-    object via :meth:`~get_response`:.
+    Create a Stream via: :meth:`~from_path`:, or via "ir.binary" model, generate
+    the corresponding HTTP response object via :meth:`~get_response`:.
 
     Instantiating a Stream object manually without using one of the
     dedicated constructors is discouraged.
@@ -84,7 +81,7 @@ class Stream:
 
     def __init__(self, **kwargs):
         # Remove class methods from the instances
-        self.from_path = self.from_attachment = self.from_binary_field = None
+        self.from_path = None
         self.__dict__.update(kwargs)
         assert self.type in ('data', 'path', 'url'), f"Invalid type {self.type!r} in Stream"
         assert getattr(self, self.type, None) is not None, f"Missing attribute {self.type!r} to Stream"
@@ -125,19 +122,6 @@ class Stream:
             last_modified=stat.st_mtime,
             size=stat.st_size,
             public=public,
-        )
-
-    @classmethod
-    def from_binary_field(cls, record: BaseModel, field_name: str) -> Self:
-        """ Create a :class:`~Stream`: from a binary field. """
-        data = record[field_name].content
-        return cls(
-            type='data',
-            data=data,
-            etag=request.env['ir.attachment']._compute_checksum(data),
-            last_modified=record.write_date if record._log_access else None,
-            size=len(data),
-            public=record.env.user._is_public()  # good enough
         )
 
     def read(self) -> bytes:
