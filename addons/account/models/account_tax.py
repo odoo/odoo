@@ -491,6 +491,8 @@ class AccountTax(models.Model):
                     self._message_log_repartition_lines(tracked_value_id[2]['old_value_char'], tracked_value_id[2]['new_value_char'])
 
             return super()._message_log(**kwargs)
+        kwargs.pop('tracking_value_ids', None)  # do not allow tracking values on unused taxes
+        return super()._message_log(**kwargs)
 
     @api.depends('company_id')
     def _compute_invoice_repartition_line_ids(self):

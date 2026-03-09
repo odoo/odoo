@@ -303,6 +303,24 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             previews
         )
 
+    def test_message_log(self):
+        """ Somehow assert people did not break primitives of mail.thread """
+        new_tax = self.env['account.tax'].create({
+            'name': 'default_tax',
+            'amount_type': 'fixed',
+            'amount': 10.0,
+        })
+        self.flush_tracking()
+        self.assertFalse(new_tax.is_used)
+        message = new_tax._message_log(body='A note for future usage')
+        self.assertMessageFields(message, {'body': '<p>A note for future usage</p>'})
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            new_tax.write({'name': 'New name, do not track'})
+            self.flush_tracking()
+        self.assertEqual(len(self._new_msgs), 1)
+        self.assertMessageFields(self._new_msgs, {'body': '', 'tracking_values': []})
+
     def test_tax_is_used_when_in_transactions(self):
         ''' Ensures that a tax is set to used when it is part of some transactions '''
 
