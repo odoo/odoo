@@ -11,7 +11,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "@html_editor/plugin";
-import { BlockTab } from "@html_builder/sidebar/block_tab";
+import { BlockTabPlugin } from "@html_builder/plugins/block_tab_plugin";
 
 defineWebsiteModels();
 
@@ -94,10 +94,12 @@ test("Check that all the `on_snippet_dropped_handlers` work with the correct sni
             }),
         };
     }
-    patchWithCleanup(BlockTab.prototype, {
-        async processDroppedSnippet(snippetEl) {
-            await super.processDroppedSnippet(snippetEl);
-            expect(this.dragState.draggedEl).toHaveClass("snippet-added");
+    patchWithCleanup(BlockTabPlugin.prototype, {
+        async processDroppedSnippet(snippetEl, cancelInsertion, dragState) {
+            await super.processDroppedSnippet(snippetEl, cancelInsertion, dragState);
+            expect.step(
+                dragState.draggedEl.classList.contains("snippet-added") ? "snippet-added" : ""
+            );
         },
     });
     addBuilderPlugin(AddClassOnSnippetDroppedPlugin);
@@ -121,5 +123,6 @@ test("Check that all the `on_snippet_dropped_handlers` work with the correct sni
     await new Promise((resolve) => setTimeout(resolve, 600));
     await contains(".o_select_media_dialog .o_button_area[aria-label='logo']").click();
     await waitSidebarUpdated();
+    await expect.waitForSteps(["snippet-added"]);
     expect(":iframe img").toHaveClass("snippet-added");
 });
