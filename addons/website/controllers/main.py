@@ -704,10 +704,13 @@ class Website(Home):
                     html_tree = html.fromstring(View.with_context(inherit_branding=False)._render_template(
                         page.key,
                     ))
-                    wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
+                    wrap_el = html_tree.xpath('//div[@id="wrap"]')
+                    if not wrap_el:
+                        logger.warning("The template %s is marked as a new page template but does not contain a div with id='wrap'. Skipping it.", page.key)
+                        continue
                     group['templates'].append({
                         'key': page.key,
-                        'template': html.tostring(wrap_el),
+                        'template': html.tostring(wrap_el[0]),
                         'name': page.name,
                     })
                 group['is_custom'] = True

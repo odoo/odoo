@@ -601,6 +601,18 @@ class WithContext(HttpCase):
         r = self.url_open(generic_page.url)
         self.assertEqual(r.status_code, 404, "Generic should not be reachable")
 
+    @mute_logger('odoo.addons.website.controllers.main')
+    def test_custom_page_template_without_wrap(self):
+        self.page.is_new_page_template = True
+        self.authenticate('admin', 'admin')
+
+        r = self.url_open(
+            '/website/get_new_page_templates',
+            data='{}',
+            headers={'Content-Type': 'application/json'}
+        )
+        self.assertEqual(r.status_code, 200)
+
 
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
