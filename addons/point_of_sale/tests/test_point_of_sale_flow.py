@@ -3316,3 +3316,53 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         used_accounts = current_session.move_id.line_ids.mapped('account_id')
         self.assertIn(mapped_expense, used_accounts)
         self.assertNotIn(default_expense, used_accounts)
+
+    def test_deleted_combo_choice(self):
+        """
+        Test that ordering a PoS order with a deleted combo choice raises an error
+        """
+        setup_product_combo_items(self)
+        self.pos_config.open_ui()
+        combo_item_to_delete = self.desk_accessories_combo.combo_item_ids[0]
+
+        order_data = {
+            'amount_paid': 40,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 40,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [
+                Command.create({
+                    'id': 1,
+                    'uuid': '12345-123-1235',
+                    'product_id': self.office_combo.id,
+                    'qty': 1,
+                    'price_unit': 40.0,
+                    'price_subtotal': 40.0,
+                    'price_subtotal_incl': 40.0,
+                    'combo_line_ids': [2],
+                }),
+                Command.create({
+                    'id': 2,
+                    'uuid': '12345-123-1236',
+                    'product_id': combo_item_to_delete.product_id.id,
+                    'qty': 1,
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
+                    'price_subtotal_incl': 0.0,
+                })
+            ],
+            'name': 'Order 12345-123-1234',
+            'session_id': self.pos_config.current_session_id.id,
+            'payment_ids': [Command.create({
+                'amount': 40,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            })],
+            'uuid': '12345-123-1234',
+        }
+
+        combo_item_to_delete.unlink()
+        with self.assertRaises(UserError):
+            self.PosOrder.sync_from_ui([order_data])
