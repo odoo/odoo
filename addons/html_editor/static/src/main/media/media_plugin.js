@@ -148,7 +148,6 @@ export class MediaPlugin extends Plugin {
         const node = targetedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
-            this.dependencies.history.addStep();
         }
     }
 
