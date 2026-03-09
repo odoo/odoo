@@ -571,3 +571,19 @@ export function doubleClickOrder(name) {
         },
     ];
 }
+
+export function saveOrder() {
+    return inLeftSide(
+        [
+            {
+                content: "click more button",
+                trigger: ".mobile-more-button",
+                mobile: true,
+            },
+            {
+                content: "click save button",
+                trigger: '.control-buttons .control-button:contains("Save")',
+            },
+        ].flat()
+    );
+}

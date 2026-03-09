@@ -1433,6 +1433,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_products_variants_attribute_value_filtering', login="pos_user")
 
+    def test_only_unpaid_orders_are_loaded(self):
+        other_pos = self.main_pos_config.copy({"name": "shop2"})
+        self.main_pos_config.trusted_config_ids += other_pos
+        other_pos.trusted_config_ids += self.main_pos_config
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_only_unpaid_orders_are_loaded', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
