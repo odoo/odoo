@@ -58,7 +58,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-25 14:49+0000\n"
+"PO-Revision-Date: 2026-03-06 17:48+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/account/"
 "pl/>\n"
@@ -69,7 +69,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -5132,7 +5132,7 @@ msgstr "Bank Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Ustawienia banku"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -18295,6 +18295,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Konto bankowe Twojej firmy nie jest zaufane. Poproś administratora lub osobę "
+"z uprawnieniami do zatwierdzania o sprawdzenie tego."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18384,6 +18386,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Firmowe konto bankowe (%(account_number)s) powiązane z tą fakturą nie jest "
+"zaufane. Przejdź do ustawień bankowych, sprawdź, czy jest to Twoje konto, "
+"lub popraw numer, a następnie kliknij „Wyślij pieniądze”, aby je "
+"uwierzytelnić."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -20596,6 +20602,25 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Wartość kwoty pozycji odpisanej\n"
+"* Procent: Procent salda, od 0 do 100.\n"
+"* Stała: Stała wartość odpisu. Kwota zostanie zaksięgowana jako debet, jeśli "
+"jest ujemna, lub jako kredyt, jeśli jest dodatnia.\n"
+"* Z etykiety: Nie ma potrzeby stosowania ogranicznika wyrażenia regularnego, "
+"potrzebne jest tylko wyrażenie regularne. Na przykład, jeśli chcesz "
+"wyodrębnić kwotę z\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Możesz wprowadzić\n"
+"BRT: ([\\d,]+)\n"
+"Jeśli etykieta to „01870912 0009065 00115” i potrzebujesz kwoty w formacie "
+"dziesiętnym\n"
+"(np. 90,65), możesz użyć wyrażenia regularnego z grupami przechwytującymi, "
+"na przykład:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"W tym przypadku:\n"
+"• pierwsza grupa przechwytuje część całkowitą\n"
+"• druga grupa przechwytuje część dziesiętną (ostatnie dwie cyfry)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals

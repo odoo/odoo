@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-02-26 16:05+0000\n"
+"PO-Revision-Date: 2026-03-06 17:49+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_proxy_client/sv/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -119,6 +119,12 @@ msgid ""
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
+"Lyckades inte ansluta till en Odoo Åtkomstpunkt för servern. Detta kan vara "
+"på grund av en annan befintlig anslutning till åtkomstpunkten. Detta sker "
+"ibland på grund av en duplicerad databas. \n"
+"\n"
+"Om du inte är säker på hur du ska åtgärda problemet, vänligen kontakta vår "
+"kundtjänst."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -186,8 +192,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %(url)s. %(error_message)s"
 msgstr ""
-"Webbadressen som denna tjänst begärde returnerade ett fel. Webbadressen den "
-"försökte kontakta var %(url)s. %(error_message)s"
+"Det uppstod ett problem med URL:en som tjänsten anropade. URL:en som den "
+"försökte anropa var %(url)s. %(error_message)s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -196,8 +202,8 @@ msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
 msgstr ""
-"Den webbadress som denna tjänst begärde returnerade ett fel. Den webbadress "
-"som tjänsten försökte kontakta var %s"
+"Det uppstod ett problem med URL:en som tjänsten anropade. URL:en som "
+"tjänsten försökte anropa var %s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -205,13 +211,13 @@ msgstr ""
 msgid ""
 "The url that this service tried to contact does not exist. The url was “%s”"
 msgstr ""
-"Den webbadress som denna tjänst försökte kontakta finns inte. Webbadressen "
-"var “%s”"
+"URL:en som tjänsten försökte anropa hittades inte. Det gäller alltså "
+"följande URL “%s”"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
 msgid "This company has an active user already created for this EDI type"
-msgstr "Detta företag har redan skapat en aktiv användare för denna EDI-typ"
+msgstr "Företaget har redan en aktiv användare för denna EDI-typ"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
@@ -220,24 +226,24 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
-"Det här fältet används för att ange att edi-användarens token inte är "
-"synkroniserad med proxyservern. Det sätts till True när token behöver "
-"uppdateras eller uppdateras."
+"Fältet används för att ange att EDI-användarens token inte är synkroniserad "
+"med proxyservern. Det anges som True när den relaterade token behöver laddas "
+"om eller uppdateras."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
-msgstr "Denna id_client har redan använts av en annan användare."
+msgstr "Denna id_client används redan."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
 msgid "Token Out of Sync"
-msgstr "Token inte synkroniserad"
+msgstr "Token synkroniseras inte"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__token_sync_version
 msgid "Token Sync Version"
-msgstr ""
+msgstr "Synkroniserad version av token"
 
 #~ msgid "This edi identification is already assigned to an active user"
 #~ msgstr "Denna edi-identifiering är redan tilldelad en aktiv användare"

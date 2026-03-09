@@ -23,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-27 18:36+0000\n"
-"PO-Revision-Date: 2026-02-19 21:39+0000\n"
+"PO-Revision-Date: 2026-03-06 17:51+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/account/"
 "sk/>\n"
@@ -31,9 +31,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2934,8 +2934,7 @@ msgstr "Výpis by mal obsahovať riadky len z toho istého denníka."
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
 msgid ""
 "A tag with the same name and applicability already exists in this country."
-msgstr ""
-"Značka s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
+msgstr "Štítok s rovnakým názvom a použiteľnosťou pre tuto krajinu už existuje."
 
 #. module: account
 #. odoo-python
@@ -3247,13 +3246,13 @@ msgstr "Štatistiky účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Tag účtu"
+msgstr "Štítok účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
 msgid "Account Tags"
-msgstr "Tagy účtu"
+msgstr "Štítky účtov"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -6559,7 +6558,7 @@ msgstr "Názov krajiny"
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
 msgstr ""
-"Krajina, pre ktorú je tento tag k dispozícii, keď je použitá pri daniach."
+"Krajina, pre ktorú je tento štítok k dispozícii, keď je použitá na dane."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -8492,7 +8491,7 @@ msgstr "Dynamické reporty"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr "Dynamická doména používaná pre značku, ktorú je možné nastaviť na daň"
+msgstr "Dynamická doména používaná pre tag, ktorý je možné nastaviť na daň"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -13799,7 +13798,7 @@ msgstr "Voliteľné"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr "Voliteľné tagy, ktoré môžete chcieť priradiť pre vlastné prehľady"
+msgstr "Voliteľné štítky, ktoré môžete chcieť priradiť pre vlastné prehľady"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_send_wizard__lang
@@ -17293,7 +17292,7 @@ msgstr "Zmeniť na faktúru/dobropis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 msgid "Tag Name"
-msgstr "Názov tagu"
+msgstr "Názov štítku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -17301,7 +17300,7 @@ msgstr "Názov tagu"
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_tree
 msgid "Tags"
-msgstr "Tagy"
+msgstr "Štítky"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_tag_ids
@@ -17309,7 +17308,7 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its "
 "impact on financial reports."
 msgstr ""
-"Značky priradené k tomuto riadku daňou, ktorá ho vytvára, ak existuje. "
+"Štítky priradené k tomuto riadku daňou, ktorá ho vytvára, ak existuje. "
 "Určuje jeho vplyv na finančné reporty."
 
 #. module: account
@@ -17318,7 +17317,7 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"Tagy, ktoré sa majú nastaviť na základ dane a na položky dane vytvorených "
+"Štítky, ktoré sa majú nastaviť na základ dane a na položky dane vytvorených "
 "pre tento produkt."
 
 #. module: account
@@ -17704,7 +17703,7 @@ msgstr "Daňový reťazec"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr "Daňový tag"
+msgstr "Daňový štítok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
@@ -17826,7 +17825,7 @@ msgid ""
 "item if they share some tag."
 msgstr ""
 "Dane splatné pri platbe a na faktúre nemožno zmiešať v tej istej položke "
-"denníka, ak majú spoločnú značku (tag)."
+"denníka, ak majú spoločný štítok (tag)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -21281,7 +21280,7 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
-"Nemôžete odstrániť túto značku (tag) účtu (%s), pretože sa používa v "
+"Nemôžete odstrániť tento štítok (tag) účtu (%s), pretože sa používa v "
 "definícii účtovnej osnovy."
 
 #. module: account
@@ -22236,7 +22235,7 @@ msgstr "stornované"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "tag domain"
-msgstr "doména značky (tagu)"
+msgstr "doména štítku (tagu)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
