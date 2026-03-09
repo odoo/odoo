@@ -449,7 +449,7 @@ class ProjectProject(models.Model):
     def get_panel_data(self):
         panel_data = super().get_panel_data()
         foldable_sections = self._get_foldable_section()
-        if self._show_profitability() and 'revenues' in panel_data['profitability_items']:
+        if panel_data and self._show_profitability() and 'revenues' in panel_data['profitability_items']:
             for section in panel_data['profitability_items']['revenues']['data']:
                 if section['id'] in foldable_sections:
                     section['isSectionFoldable'] = True
