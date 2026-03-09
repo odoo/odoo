@@ -2,43 +2,45 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ProgressBarField">
-        <div class="o_progressbar d-flex align-items-center gap-2" t-custom-ref="numpadDecimal">
+        <div class="o_progressbar d-flex align-items-center gap-2 w-100 px-2" t-custom-ref="numpadDecimal">
             <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="props.title"/></div>
             <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="onProgressClick" t-att-style="isEditable ? 'cursor: pointer' : ''">
                 <div t-attf-class="{{ progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
             </div>
-            <div class="o_progressbar_value d-flex gap-1 flex-shrink-0 text-nowrap">
+            <div class="o_progressbar_value o_input_box w-25">
                 <t t-if="isPercentage">
                     <input
                         t-if="isEditable"
                         t-custom-ref="currentValue"
-                        class="o_input h-100 text-center"
+                        class="o_input h-100"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
                         t-att-required="props.required"
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
-                        t-on-input="onInputChange"
                     />
-                    <span t-else="" t-out="formatCurrentValue(true)"/>
-                    <span>%</span>
+                    <div t-attf-class="d-flex {{ isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                        <t t-if="!isEditable" t-out="formatCurrentValue(true)"/>
+                        %
+                    </div>
                 </t>
                 <t t-else="">
                     <input
                         t-if="isEditable"
                         t-custom-ref="currentValue"
-                        class="o_input h-100 text-center"
+                        class="o_input h-100"
                         type="text"
                         inputmode="decimal"
                         autocomplete="off"
                         t-on-focus="onInputFocus"
                         t-on-blur="onInputBlur"
-                        t-on-input="onInputChange"
                     />
-                    <span t-else="" t-out="formatCurrentValue(true)"/>
-                    /
-                    <span t-out="formatMaxValue(true)"/>
+                    <div t-attf-class="d-flex {{ isEditable ? 'o_input_box_overlay_inline o_input_box_overlay_end w-auto' : '' }} ">
+                        <span t-if="!isEditable" t-out="formatCurrentValue(true)"/>
+                        /
+                        <span t-out="formatMaxValue(true)"/>
+                    </div>
                 </t>
             </div>
         </div>

@@ -416,4 +416,3 @@ test("ProgressBarField: decoration with field comparison", async () => {
         message: "Decoration should support field comparisons in expressions",
     });
 });
-
