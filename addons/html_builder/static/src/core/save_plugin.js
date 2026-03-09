@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
+import { isZWS } from "@html_editor/utils/dom_info";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -47,7 +48,19 @@ export class SavePlugin extends Plugin {
         // Do not change the sequence of this resource, it must stay the first
         // one to avoid marking dirty when not needed during the drag and drop.
         on_prepare_drag_handlers: withSequence(0, this.ignoreDirty.bind(this)),
+        on_will_save_handlers: this.removeZWSPFromEmbeddedFields.bind(this),
     };
+
+    removeZWSPFromEmbeddedFields(editableEl) {
+        // Remove zero-width spaces left by DeletePlugin.fillEmptyInlines on
+        // embedded fields to prevent saving blank model fields.
+        const selector = '[data-oe-model]:not([data-oe-model="ir.ui.view"])';
+        for (const el of editableEl.querySelectorAll(selector)) {
+            if (isZWS(el)) {
+                el.innerHTML = "";
+            }
+        }
+    }
 
     setup() {
         this.canObserve = false;
