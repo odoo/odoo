@@ -28,7 +28,7 @@
     </t>
 
    <t t-name="project.MobileCombinedActionsDropdown">
-        <t t-if="env.isSmall and state.embeddedInfos.embeddedActions?.length">
+        <t t-if="this.env.isSmall and this.state.embeddedInfos.embeddedActions?.length">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
                 <button class="btn btn-secondary">
                     <i class="fa fa-sliders" />
@@ -36,13 +36,13 @@
                 <t t-set-slot="content">
                     <DropdownItem
                         onSelected="() => this.onClickShowSubtasks()"
-                        class="state.showSubtasks ? 'selected' : ''"
+                        class="this.state.showSubtasks ? 'selected' : ''"
                     >
                         Show Sub-Tasks
                     </DropdownItem>
                     <div role="separator" class="dropdown-divider"/>
-                    <t t-if="state.embeddedInfos.embeddedActions?.length">
-                        <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                    <t t-if="this.state.embeddedInfos.embeddedActions?.length">
+                        <t t-foreach="this.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
                             <DropdownItem
                                 class="this.getDropdownClass(action)"
                                 onSelected="() => this.onEmbeddedActionClick(action)"
