@@ -2,7 +2,6 @@ import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
-import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
@@ -62,6 +61,7 @@ import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
  * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
+ * @property { BuilderOptionsPlugin['isClonable'] } isClonable
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
  * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
@@ -145,6 +145,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "setNextTarget",
         "getBuilderOptionContext",
         "getBuilderOptions",
+        "isClonable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -231,6 +232,11 @@ export class BuilderOptionsPlugin extends Plugin {
             ".transfo-container",
             ".o_datetime_picker",
         ].join(", ");
+        const unclonableButtonSelector = [
+            ".oe_unremovable",
+            ...this.getResource("submit_button_selectors"),
+        ].join(", ");
+        this.clonableSelector = `a.btn:not(${unclonableButtonSelector})`;
     }
     /**
      * Checks if the given element is a valid builder option target.
@@ -426,7 +432,7 @@ export class BuilderOptionsPlugin extends Plugin {
                     hasOverlayOptions: this.hasOverlayOptions(element),
                     isRemovable: isRemovable(element),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
-                    isClonable: isClonable(element),
+                    isClonable: this.isClonable(element),
                     cloneDisabledReason: this.getCloneDisabledReason(element),
                     optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
                 }))
@@ -612,6 +618,17 @@ export class BuilderOptionsPlugin extends Plugin {
                 .filter(Boolean)
                 .join(" ") || undefined
         );
+    }
+
+    /**
+     * Checks if the given element can be cloned.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isClonable(el) {
+        // TODO and isDraggable
+        return el.matches(this.clonableSelector) || isRemovable(el);
     }
 
     /**

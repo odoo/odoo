@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
-import { isRemovable } from "./remove_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
@@ -17,14 +16,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef {((arg: { originalEl: HTMLElement }) => void)[]} on_will_clone_handlers
  * Called on the original element before clone.
  */
-
-const clonableSelector =
-    "a.btn:not(.oe_unremovable, .js_subscribe_btn, .s_website_form_send, .s_website_form_submit)";
-
-export function isClonable(el) {
-    // TODO and isDraggable
-    return el.matches(clonableSelector) || isRemovable(el);
-}
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
@@ -47,7 +38,7 @@ export class ClonePlugin extends Plugin {
     }
 
     getActiveOverlayButtons(target) {
-        if (!isClonable(target)) {
+        if (!this.dependencies.builderOptions.isClonable(target)) {
             this.overlayTarget = null;
             return [];
         }
