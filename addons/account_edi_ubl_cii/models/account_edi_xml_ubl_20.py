@@ -420,13 +420,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 charge_reason_code = 'CAV'
             else:
                 charge_reason_code = 'AEO'
+            is_charge = tax_details['tax_amount_currency'] >= 0
             fixed_tax_charge_vals_list.append({
                 'currency_name': line.currency_id.name,
                 'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                'charge_indicator': 'true',
-                'allowance_charge_reason_code': charge_reason_code,
+                'charge_indicator': 'true' if is_charge else 'false',
+                'allowance_charge_reason_code': charge_reason_code if is_charge else '100',
                 'allowance_charge_reason': tax_details['tax_name'],
-                'amount': tax_details['tax_amount_currency'],
+                'amount': abs(tax_details['tax_amount_currency']),
+                'from_fixed_tax': True,
             })
 
         if not line.discount:
@@ -511,9 +513,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         uom = super()._get_uom_unece_code(line)
         total_fixed_tax_amount = sum(
-            vals['amount']
+            vals['amount'] if vals.get('charge_indicator') == 'true' else -vals['amount']
             for vals in allowance_charge_vals_list
-            if vals.get('charge_indicator') == 'true'
+            if vals.get('from_fixed_tax')
         )
         period_vals = {}
         # deferred_start_date & deferred_end_date are enterprise-only fields
