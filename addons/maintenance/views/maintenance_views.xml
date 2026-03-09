@@ -683,6 +683,7 @@
             <list string="Maintenance Request Stage" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="maintenance_team_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="All Maintenance Teams"/>
                 <field name="fold"/>
             </list>
         </field>
@@ -698,6 +699,27 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="hr_equipment_stage_view_form" model="ir.ui.view">
+        <field name="name">equipment.stage.form</field>
+        <field name="model">maintenance.stage</field>
+        <field name="arch" type="xml">
+            <form string="Maintenance Stage">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. In Progress"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="fold"/>
+                        <field name="maintenance_team_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" placeholder="All Maintenance Teams"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 

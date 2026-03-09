@@ -17,6 +17,7 @@ class MaintenanceStage(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=20)
     fold = fields.Boolean('Folded in Maintenance Pipe')
+    maintenance_team_ids = fields.Many2many('maintenance.team', string='Maintenance Teams', copy=False)
 
 
 class MaintenanceEquipmentCategory(models.Model):
