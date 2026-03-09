@@ -118,7 +118,7 @@
                 <h4 class="me-3 align-middle" t-att-style="logo and 'margin-top:25px' or ''" t-out="name"/>
             </div>
             <div t-if="logo" class="col-sm-2 p-0 text-center text-md-end order-first order-md-last">
-                <img t-attf-src="data:image/png;base64, {{logo}}" alt="" style="max-width: 80px;"/>
+                <img t-attf-src="data:image/png;base64, {{logo.to_base64()}}" alt="" style="max-width: 80px;"/>
             </div>
             </div>
             <hr/>
