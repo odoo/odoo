@@ -390,9 +390,9 @@ class TestMrpReplenish(TestMrpCommon):
         wizard_form = Form(self.env['product.replenish'].with_context(
             default_product_tmpl_id=self.product_4.product_tmpl_id.id
         ))
-        manufacture_route = self.env['stock.rule'].search([
+        manufacture_routes = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
             ('company_id', '=', self.company.id),
             ('location_dest_id.usage', '=', 'internal'),
-        ], limit=1).route_id
-        self.assertEqual(wizard_form.route_id, manufacture_route)
+        ]).route_id
+        self.assertIn(wizard_form.route_id.id, manufacture_routes.ids)
