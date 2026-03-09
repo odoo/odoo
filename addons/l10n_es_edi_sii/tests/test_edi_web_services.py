@@ -67,3 +67,12 @@ class TestEdiWebServices(TestEsEdiCommon):
         self.assertTrue(generated_files)
         self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
         self.assertRecordValues(self.in_invoice, [{'edi_state': 'sent'}])
+
+    def test_edi_navarra(self):
+        self.env.company.l10n_es_sii_tax_agency = 'navarra'
+
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {'es_sii'})
+        self.assertTrue(generated_files)
+        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
+        self.assertRecordValues(self.in_invoice, [{'edi_state': 'sent'}])

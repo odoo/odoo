@@ -408,6 +408,12 @@ class AccountEdiFormat(models.Model):
                 'url': 'https://egoitza.gipuzkoa.eus/ogasuna/sii/ficheros/v1.1/SuministroFactRecibidas.wsdl',
                 'test_url': 'https://sii-prep.egoitza.gipuzkoa.eus/JBS/HACI/SSII-FACT/ws/fr/SiiFactFRV1SOAP',
             }
+    
+    def _l10n_es_edi_web_service_navarra_vals(self, invoices):
+        return {
+            'url': 'https://siihacienda.navarra.es/SII_PRODUCCION.proxy/SiiMensajesXsdHandlet.ashx',
+            'test_url': 'https://siihacienda.navarra.es/SII_PRUEBAS.proxy/SiiMensajesXsdHandlet.ashx',
+        }
 
     def _l10n_es_edi_call_web_service_sign(self, invoices, info_list):
         return self._l10n_es_edi_call_web_service_sign_common(invoices, info_list)
