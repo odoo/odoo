@@ -6927,7 +6927,3 @@ class AccountMove(models.Model):
         :returns: True if commit is acceptable, False otherwise.
         """
         return not modules.module.current_test
-
-    @api.model
-    def require_tax_ids_on_invoice_lines(self):
-        return False
