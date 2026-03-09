@@ -1117,7 +1117,7 @@
                                     t-if="c.image_128"
                                     name="o_wsale_filmstrip_image"
                                     class="o_wsale_filmstrip_image oe_img_bg o_bg_img_center rounded"
-                                    t-attf-style="background-image:url('data:image/png;base64, #{c.image_128}')"
+                                    t-attf-style="background-image:url('data:image/png;base64, #{c.image_128.to_base64()}')"
                                     t-att-alt="c.name"
                                     role="img"
                                     aria-label="Category image"
@@ -1205,7 +1205,9 @@
             <attribute name="class" remove="o_wsale_filmstrip_placeholder" add="o_wsale_filmstrip_no_image" separator=" "/>
         </div>
         <div name="o_wsale_filmstrip_image" position="attributes">
-            <attribute name="t-attf-style">background-image:url('data:image/png;base64, #{c.image_512 if c.image_512 else c.image_128}')</attribute>
+            <attribute name="t-attf-style">
+                background-image:url('data:image/png;base64, #{c.image_512.to_base64() if c.image_512 else c.image_128.to_base64()}')
+            </attribute>
         </div>
     </template>
 
