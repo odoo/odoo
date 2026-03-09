@@ -282,6 +282,8 @@ class AccountMove(models.Model):
         so_lines = self.invoice_line_ids.sale_line_ids.filtered(
             lambda line: line._is_line_reinvoicable()
         )
+        if not so_lines:
+            return self.env['account.analytic.line']
 
         return (
             self
