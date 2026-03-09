@@ -2,6 +2,8 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { hasTouch, isBrowserFirefox } from '@web/core/browser/feature_detection';
 import { redirect } from '@web/core/utils/urls';
+import { setElementContent } from "@web/core/utils/html";
+import { _t } from "@web/core/l10n/translation";
 
 export class ShopPage extends Interaction {
     static selector = '.o_wsale_products_page';
@@ -163,7 +165,7 @@ export class ShopPage extends Interaction {
         const button = ev.target;
         const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
-        button.innerHTML = isExpanded ? "View Less" : "View More";
+        setElementContent(button, isExpanded ? _t("View Less") : _t("View More"));
     }
 }
 
