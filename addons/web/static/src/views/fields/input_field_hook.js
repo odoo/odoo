@@ -132,11 +132,13 @@ export function useInputField(params) {
         // the corresponding value in the record. Otherwise, in some cases,
         // if the value in the record change the useEffect isn't triggered.
         const value = params.getValue();
-        if (
-            inputRef.el &&
-            !isDirty &&
-            !component.props.record.isFieldInvalid(fieldName)
-        ) {
+        if (!inputRef.el) {
+            return;
+        }
+        if (inputRef.el.value === value) {
+            isDirty = false;
+        }
+        if (!isDirty && !component.props.record.isFieldInvalid(fieldName)) {
             inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
         }
