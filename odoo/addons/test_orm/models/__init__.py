@@ -6,4 +6,5 @@ from . import (
     test_check_access,
     test_company_checks,
     test_config_settings,
+    test_convert,
 )
