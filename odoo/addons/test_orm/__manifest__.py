@@ -22,6 +22,8 @@
         'security/test_access_feedback/ir.model.access.csv',
         'security/test_action_bindings/ir.model.access.csv',
         'security/test_autovacuum/ir.model.access.csv',
+        'security/test_check_access/ir.model.access.csv',
+        'security/test_check_access/test_check_access.xml',
 
         # VIEWS
     ],

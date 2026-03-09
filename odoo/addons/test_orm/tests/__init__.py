@@ -7,4 +7,5 @@ from . import (
     test_api,
     test_autovacuum,
     test_cache,
+    test_check_access,
 )
