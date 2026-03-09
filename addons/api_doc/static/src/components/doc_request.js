@@ -1,6 +1,7 @@
 import { Component, useState } from "@odoo/owl";
 import { LANGUAGES, createRequestCode } from "@api_doc/utils/doc_code_gen";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { browser } from "@web/core/browser/browser";
 
 class CopyableCodeEditor extends CodeEditor {
     static template = "web.DocRequest.CodeEditor";
@@ -38,6 +39,7 @@ export class DocRequest extends Component {
             requestCode: this.createRequestCode(LANGUAGES.json),
             response: {},
             requestTab: 0,
+            showTraceback: false
         });
         this.selectLanguage(localStorage.getItem("doc/code-lang") || LANGUAGES.json);
     }
@@ -75,5 +77,15 @@ export class DocRequest extends Component {
         if (result) {
             this.state.response = result;
         }
+    }
+
+    toggleTraceback() {
+        this.state.showTraceback = !this.state.showTraceback;
+    }
+
+    onClickClipboard() {
+        browser.navigator.clipboard.writeText(
+            `Error ${this.state.response.status}:\n\n${this.responseText.title}\n\n${this.responseText.traceback}`
+        );
     }
 }
