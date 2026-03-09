@@ -4,6 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { browser } from "@web/core/browser/browser";
 import { Component } from "@odoo/owl";
+import { getVisibleElements } from "../utils/ui";
 
 function _positionInputBoxOverlay(target) {
     const _hasTouch = hasTouch();
@@ -13,8 +14,8 @@ function _positionInputBoxOverlay(target) {
     if (!closestInputBox) {
         return;
     }
-    const startOverlays = closestInputBox.querySelectorAll(`.o_input_box_overlay_start:is(:not(.d-none),${_hasTouch ? '[class*="d-touch-"]:not(.d-touch-none)' : ''})`);
-    const endOverlays = closestInputBox.querySelectorAll(`.o_input_box_overlay_end:is(:not(.d-none),${_hasTouch ? '[class*="d-touch-"]:not(.d-touch-none)' : ''})`);
+    const startOverlays = getVisibleElements(closestInputBox, `.o_input_box_overlay_start`);
+    const endOverlays = getVisibleElements(closestInputBox, `.o_input_box_overlay_end`);
     if (!startOverlays.length && !endOverlays.length) {
         return;
     }
