@@ -19,7 +19,7 @@ export class EmbeddedCaptionComponent extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            caption: "",
+            caption: this.props.image.getAttribute("data-caption") || "",
             host: this.props.host,
         });
         this.captionInput = useRef("captionInput");
@@ -28,12 +28,16 @@ export class EmbeddedCaptionComponent extends Component {
                 this.captionInput.el.focus();
             });
         }
+        this._appliedNativeHistory = true;
         // Ensure the state, the attribute and the placeholder are in sync.
         this.updateCaption();
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === "attributes" && mutation.attributeName === "data-caption") {
-                    this.updateCaption();
+                    const incomingValue = mutation.target.getAttribute("data-caption");
+                    if (incomingValue !== this.state.caption) {
+                        this.updateCaption();
+                    }
                 }
             }
         });
@@ -44,10 +48,8 @@ export class EmbeddedCaptionComponent extends Component {
     }
 
     updateCaption(caption = this.props.image.getAttribute("data-caption")) {
-        if (caption !== this.state.caption) {
-            this.state.caption = caption;
-            this.props.onUpdateCaption(caption);
-        }
+        this.state.caption = caption;
+        this.props.onUpdateCaption(caption);
     }
 
     onInputBlur() {
