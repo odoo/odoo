@@ -62,6 +62,11 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger('odoo.http')
 
 
+HTTP_PROFILE_ALL = None
+if os.environ.get('ODOO_PROFILE_HTTP'):
+    HTTP_PROFILE_ALL = profiler.make_session('')
+
+
 def db_list(force: bool = False, host: str | None = None) -> list[str]:
     """
     Get the list of available databases.
@@ -452,20 +457,23 @@ def serve_db(request: Request) -> Response:
             cr.close()
 
 
-def _get_profiler_context_manager(request: Request) -> typing.ContextManager:
+def _get_profiler_context_manager(self):
     """
     Get a profiler when the profiling is enabled and the requested
     URL is profile-safe. Otherwise, get a context-manager that does
     nothing.
     """
-    if request.session.get('profile_session') and request.db:
-        if request.session['profile_expiration'] < str(dt.datetime.now()):
+    db = self.db
+    if HTTP_PROFILE_ALL and not db:
+        db = config['db_name'][0]
+    if (HTTP_PROFILE_ALL or self.session.get('profile_session')) and db:
+        if not HTTP_PROFILE_ALL and (self.session['profile_expiration'] < str(datetime.now())):
             # avoid having session profiling for too long if user forgets to disable profiling
-            request.session['profile_session'] = None
+            self.session['profile_session'] = None
             _logger.warning("Profiling expiration reached, disabling profiling")
-        elif 'set_profiling' in request.httprequest.path:
+        elif 'set_profiling' in self.httprequest.path:
             _logger.debug("Profiling disabled on set_profiling route")
-        elif request.httprequest.path.startswith('/websocket'):
+        elif self.httprequest.path.startswith('/websocket'):
             _logger.debug("Profiling disabled for websocket")
         elif odoo.evented:
             # only longpolling should be in a evented server, but this is an additional safety
@@ -473,15 +481,15 @@ def _get_profiler_context_manager(request: Request) -> typing.ContextManager:
         else:
             try:
                 return profiler.Profiler(
-                    db=request.db,
-                    description=request.httprequest.full_path,
-                    profile_session=request.session['profile_session'],
-                    collectors=request.session['profile_collectors'],
-                    params=request.session['profile_params'],
+                    db=self.db,
+                    description=self.httprequest.full_path,
+                    profile_session=self.session.get('profile_session', HTTP_PROFILE_ALL),
+                    collectors=self.session.get('profile_collectors'),
+                    params=self.session.get('profile_params'),
                 )._get_cm_proxy()
             except Exception:
                 _logger.exception("Failure during Profiler creation")
-                request.session['profile_session'] = None
+                self.session['profile_session'] = None
 
     return nullcontext()
 
