@@ -96,7 +96,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ],
                         "res.partner": self._filter_partners_fields(partner_data),
                         "res.users": self._filter_users_fields(
-                            {"id": self.user_employee.id, "employee_ids": []},
+                            {
+                                "id": self.user_employee.id,
+                                "employee_ids": [],
+                                "partner_id": self.partner_employee.id,
+                            },
                         ),
                     },
                 },
@@ -134,7 +138,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                 ],
                 "res.partner": self._filter_partners_fields(partner_data),
                 "res.users": self._filter_users_fields(
-                    {"id": self.user_employee.id, "employee_ids": []},
+                    {
+                        "id": self.user_employee.id,
+                        "employee_ids": [],
+                        "partner_id": self.partner_employee.id,
+                    },
                 ),
                 "Rtc": {
                     "iceServers": False,
@@ -210,7 +218,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": self.user_employee.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": self.user_employee.id,
+                                "partner_id": self.partner_employee.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -243,7 +256,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
             ],
@@ -325,7 +343,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": self.user_employee.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": self.user_employee.id,
+                                "partner_id": self.partner_employee.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -370,7 +393,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": self.user_employee.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": self.user_employee.id,
+                                "partner_id": self.partner_employee.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -425,7 +453,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
             ],
@@ -496,7 +529,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -535,7 +573,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
             ],
@@ -694,7 +737,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
             ],
@@ -860,7 +908,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -972,7 +1025,11 @@ class TestChannelRTC(MailCommon, HttpCase):
                             },
                         ),
                         "res.users": self._filter_users_fields(
-                            {"id": self.user_employee.id, "employee_ids": []},
+                            {
+                                "id": self.user_employee.id,
+                                "employee_ids": [],
+                                "partner_id": self.partner_employee.id,
+                            },
                         ),
                     },
                 },
@@ -1016,7 +1073,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": self.user_employee.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": self.user_employee.id,
+                                "partner_id": self.user_employee.partner_id.id,
+                            },
+                        ),
                     },
                 },
                 {
@@ -1071,7 +1133,12 @@ class TestChannelRTC(MailCommon, HttpCase):
                                 ),
                             },
                         ),
-                        "res.users": [{"id": test_user.id}],
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": test_user.id,
+                                "partner_id": test_user.partner_id.id,
+                            },
+                        ),
                     },
                 },
             ],

@@ -154,7 +154,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     },
                                 ),
                                 "res.users": self._filter_users_fields(
-                                    {"id": self.env.user.id, "share": False},
+                                    {
+                                        "id": self.env.user.id,
+                                        "partner_id": self.env.user.partner_id.id,
+                                        "share": False,
+                                    },
                                 ),
                             },
                             "id": test_group.id,
@@ -190,7 +194,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
@@ -237,7 +245,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "employee_ids": [], "share": False},
+                                {
+                                    "id": self.test_user.id,
+                                    "employee_ids": [],
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
                             ),
                         },
                     },
@@ -443,7 +456,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self._reset_bus()
 
         def get_mark_as_read_notifs(for_internal_user):
-            user_data = {"id": self.test_user.id}
+            user_data = {"id": self.test_user.id, "partner_id": self.test_partner.id}
             if for_internal_user:
                 user_data["employee_ids"] = []
             return [
