@@ -776,7 +776,7 @@
                 <xpath expr="//field[@name='parent_id']" position="after">
                     <field invisible="project_id == context.get('active_id', False)" class="mt-1" name="project_id" options="{'no_open': True}"/>
                 </xpath>
-                <xpath expr="//field[@name='parent_id']" position="replace"/>
+                <xpath expr="//a[hasclass('o_kanban_parent')]" position="replace"/>
             </field>
         </record>
 
