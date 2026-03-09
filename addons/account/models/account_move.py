@@ -6872,24 +6872,20 @@ class AccountMove(models.Model):
                     or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
             )
 
-        def is_right_company(partner):
-            if company:
-                return partner.company_id.id in [False, company.id]
-            return True
+        def filter_found(partner):
+            return not company or partner.company_id.id in [False, company.id] or partner.partner_share
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
-        partners = self._partner_find_from_emails_single(
-            from_mail_addresses, filter_found=lambda p: is_right_company(p) or not p.partner_share, no_create=True,
-        )
+        partners = self._partner_find_from_emails_single(from_mail_addresses, filter_found=filter_found, no_create=True)
         # if we are in the case when an internal user forwarded the mail manually
         # search for partners in mail's body
-        if partners and is_internal_partner(partners[0]):
+        if partners and is_internal_partner(partners[0]) and (body_mail_addresses := set(email_re.findall(msg_dict.get('body') or ''))):
             # Search for partners in the mail's body.
-            body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-            partners = self._partner_find_from_emails_single(
-                body_mail_addresses, filter_found=lambda p: is_right_company(p) and p.partner_share, no_create=True,
-            ) if body_mail_addresses else self.env['res.partner']
+            partners = self._partner_find_from_emails_single(body_mail_addresses, filter_found=filter_found, no_create=True)
+
+        # Never return an internal partner
+        partners = partners.filtered(lambda p: not is_internal_partner(p))
 
         # Little hack: Inject the mail's subject in the body.
         if msg_dict.get('subject') and msg_dict.get('body'):
