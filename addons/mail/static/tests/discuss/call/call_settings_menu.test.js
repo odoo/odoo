@@ -60,7 +60,7 @@ test("Renders the call settings", async () => {
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
     await contains("label[aria-label='Speakers']");
-    await contains(".o-mail-DeviceSelect-button:has(:text('Permission Needed'))", { count: 3 });
+    await contains(".o-mail-DeviceSelect-button:has(:text('Click to activate'))", { count: 3 });
     rtc.microphonePermission = "granted";
     const browserDefaultLabel = isBrowserChrome() ? "Default" : "Browser Default";
     await click(".o-mail-DeviceSelect-button[data-kind='audioinput']:has(:text('Default'))");

@@ -29,7 +29,7 @@
                 <span
                     class="text-truncate flex-grow-1"
                     t-attf-class="{{ this.props.icon ? 'ps-2' : '' }}"
-                    t-out="this.PERMISSION_NEEDED"/>
+                    t-out="this.CLICK_TO_ACTIVATE"/>
             </button>
             <t t-set-slot="content">
                 <DropdownItem t-if="!this.isBrowserChrome or this.props.kind === 'videoinput'" class="{ 'active': this.isSelected() }" onSelected="this.onSelectAudioDevice.bind(this)" closingMode="'closest'">

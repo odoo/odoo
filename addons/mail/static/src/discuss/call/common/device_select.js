@@ -31,7 +31,7 @@ export class DeviceSelect extends Component {
     };
     static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
-    PERMISSION_NEEDED = _t("Permission Needed");
+    CLICK_TO_ACTIVATE = _t("Click to Activate");
     BROWSER_DEFAULT = isBrowserChrome() ? _t("Default") : _t("Browser Default");
 
     setup() {

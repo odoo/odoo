@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.CallPreview">
         <div class="o-mail-CallPreview ratio ratio-16x9">
-            <div t-att-class="{'bg-dark': this.env.inWelcomePage}">
+            <div t-att-class="{'bg-dark rounded': this.env.inWelcomePage}">
                 <video t-if="this.state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-custom-ref="video"/>
                 <div t-else="" class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column align-items-center justify-content-center text-center px-3 z-1" t-att-class="{'text-white': this.env.inWelcomePage}">
                     <t t-if="this.env.inWelcomePage and this.rtc.cameraPermission !== 'granted'">
@@ -26,21 +26,19 @@
             </div>
             <audio autoplay="" t-custom-ref="audio"/>
         </div>
-        <div t-if="this.props.hasSettingsAtBottom" class="d-flex flex-row justify-content-between mt-2 w-100 mw-100 flex-nowrap px-3">
-            <div class="px-2" style="width: 30%">
+        <div t-if="this.props.hasSettingsAtBottom" class="d-flex justify-content-center gap-2 flex-wrap flex-lg-nowrap w-100 mw-100 mt-2">
+            <div class="o-mail-CallPreview-deviceSelect">
                 <DeviceSelect icon="'fa fa-fw fa-microphone'" kind="'audioinput'"/>
             </div>
-            <div class="px-2" style="width: 30%">
+            <div class="o-mail-CallPreview-deviceSelect">
                 <DeviceSelect icon="'fa fa-fw fa-volume-up'" kind="'audiooutput'"/>
             </div>
-            <div class="px-2" style="width: 30%">
+            <div class="o-mail-CallPreview-deviceSelect">
                 <DeviceSelect icon="'fa fa-fw fa-video-camera'" kind="'videoinput'"/>
             </div>
-            <div class="d-flex align-items-center flex-grow-0 flex-shrink-0 px-2 text-muted">
-                <a role="button" t-on-click="this.onClickSettings" title="Advanced Settings">
-                    <i class="fa fa-fw fa-gear"/>
-                </a>
-            </div>
+            <a role="button" class="btn btn-secondary" t-on-click="this.onClickSettings" title="Advanced Settings">
+                <i class="fa fa-fw fa-gear"/>
+            </a>
         </div>
     </t>
 </templates>

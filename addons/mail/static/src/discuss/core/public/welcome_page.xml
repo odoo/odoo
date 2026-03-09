@@ -2,34 +2,40 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.WelcomePage">
-    <div class="o-mail-WelcomePage w-100 d-flex flex-column justify-content-md-center align-items-center bg-light p-3" style="min-height: 100dvh;">
-        <h1 class="fw-light text-center">
-            <span t-if="this.showCallPreview">You've been invited to a meeting!</span>
-            <span t-else="">You've been invited to a chat!</span>
-        </h1>
-        <h2 class="m-3 m-md-5" t-out="this.store.companyName"/>
-        <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': this.ui.isSmall}">
-            <div t-if="this.showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
-                <CallPreview activateCamera="this.state.activateCamera" activateMicrophone="this.state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
+    <div class="o-mail-WelcomePage container d-flex flex-column justify-content-md-center p-3" style="min-height: 100dvh;">
+        <div class="row row-gap-3 flex-lg-row-reverse justify-content-center">
+            <div class="col-12 col-lg-4">
+                <div class="d-flex flex-column justify-content-center h-100 rounded p-4 p-lg-5 bg-white">
+                    <div class="text-center mb-4">
+                        <i class="oi oi-users oi-2x mb-3 p-2 rounded text-bg-primary"/>
+                        <h1 class="h2">
+                            <span t-if="this.showCallPreview">You've been invited to a meeting!</span>
+                            <span t-else="">You've been invited to a chat!</span>
+                        </h1>
+                        <span t-out="this.subtitle"/>
+                    </div>
+                    <div class="mb-3" t-if="this.store.self_guest and !this.store.self_user">
+                        <label class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Enter your name</span>
+                            <small class="text-muted" t-att-class="{'text-danger': this.state.userName.length > 60}"><t t-out="this.state.userName.length"/>/60</small>
+                        </label>
+                        <input class="form-control form-control-lg rounded bg-white" type="text" name="guest_name" placeholder="E.g: John Doe" t-custom-model="this.state.userName" t-on-keydown="this.onKeydownInput"/>
+                    </div>
+                    <div t-if="this.store.self_user" class="mt-2 mb-4 text-center">
+                        <img t-attf-src="/web/image/res.users/{{this.store.self_user.id}}/avatar_128/32x32" class="rounded me-2" alt="User avatar"/>
+                        <span><t t-out="this.store.self_user.name"/></span>
+                    </div>
+                    <button class="btn btn-primary btn-lg" title="Join Channel" t-att-disabled="!this.canJoin" t-on-click="this.joinChannel">
+                        <t t-if="this.showCallPreview" t-set="joinText">Join call</t>
+                        <t t-else="" t-set="joinText">Join</t>
+                        <span t-out="joinText"/>
+                        <i class="oi oi-arrow-right ms-2"/>
+                    </button>
+                    <small t-if="this.store.self_user and this.showCallPreview and this.noActiveParticipants" class="mt-2 text-center text-muted">No one else is here.</small>
+                </div>
             </div>
-            <div class="d-flex flex-column text-center justify-content-center">
-                <div class="d-flex flex-column" t-if="this.store.self_guest and !this.store.self_user">
-                    <label class="fs-4 mb-2">What's your name?</label>
-                    <input class="form-control bg-white rounded" type="text" name="guest_name" placeholder="Your name" t-custom-model="this.state.userName" t-on-keydown="this.onKeydownInput"/>
-                    <small class="form-text text-end" t-att-class="{'text-danger': this.state.userName.length > 60}"><t t-out="this.state.userName.length"/>/60</small>
-                </div>
-                <div t-if="this.store.self_user">
-                    <p class="fs-3">Ready to join?</p>
-                    <p t-if="this.showCallPreview and this.noActiveParticipants" class="fs-4 mt-n3 text-muted">No one else is here.</p>
-                </div>
-                <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-att-disabled="!this.canJoin" t-on-click="this.joinChannel">
-                    <t t-if="this.showCallPreview" t-set="joinText">Join call</t>
-                    <t t-else="" t-set="joinText">Join</t>
-                    <span class="mb-0 text-success" t-out="joinText"/>
-                    <span class="rounded-circle bg-success d-flex align-items-center justify-content-center p-2">
-                        <i class="oi oi-arrow-right text-white"/>
-                    </span>
-                </button>
+            <div t-if="this.showCallPreview" class="col-12 col-lg-8">
+                <CallPreview activateCamera="this.state.activateCamera" activateMicrophone="this.state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
             </div>
         </div>
     </div>
