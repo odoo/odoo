@@ -57,7 +57,9 @@ export class ColorList extends Component {
             ev.preventDefault();
             ev.stopPropagation();
             this.state.isExpanded = !this.state.isExpanded;
-            this.colorlistRef.el.firstElementChild.focus();
+            setTimeout(() => {
+                this.colorlistRef.el.querySelector("button").focus();
+            });
         }
     }
 }

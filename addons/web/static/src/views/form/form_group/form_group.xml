@@ -40,7 +40,7 @@
 </t>
 
 <t t-name="web.Form.InnerGroup.ItemComponent">
-    <t t-if="cell.props.fieldInfo.type !== 'boolean' and !['color_picker', 'priority'].includes(cell.props.fieldInfo.widget)">
+    <t t-if="cell.props.fieldInfo.type !== 'boolean' and !['priority'].includes(cell.props.fieldInfo.widget)">
         <div class="o_cell o_wrap_label text-break text-900">
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
         </div>
