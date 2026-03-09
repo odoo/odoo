@@ -6,7 +6,7 @@ import odoo.tests
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.exceptions import UserError
 from odoo.http import root
-from odoo.tests import tagged
+from odoo.tests import tagged, TransactionCase
 
 from odoo.tools import mute_logger
 
@@ -141,3 +141,21 @@ class TestReports(odoo.tests.HttpCase):
             self.assertIn('report.footer.tmp', deleted_files)
             self.assertIn('report.body.tmp', deleted_files)
             self.assertIn('report.tmp', deleted_files)
+
+
+@tagged('post_install', '-at_install')
+class TestBaseDocumentLayout(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+    def test_company_vat_appears_in_documents(self):
+        self.env.company.vat = 'BE987654321'
+        rendered = self.env['ir.ui.view']._render_template(
+            'web.company_address_list',
+            {
+                'company': self.env.company,
+                'forced_vat': False,
+            },
+        )
+        self.assertIn('BE987654321', rendered)
