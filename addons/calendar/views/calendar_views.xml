@@ -81,15 +81,15 @@
                 <field name="name" string="Subject" decoration-bf="1" readonly="recurrency"/>
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" readonly="recurrency" optional="hide"/>
-                <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show"/>
+                <field name="duration" widget="float_time" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="recurrency"/>
+                <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show" width="250px"/>
                 <field name="alarm_ids" widget="many2many_tags" optional="hide" readonly="recurrency"/>
                 <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="recurrency" optional="hide" readonly="1"/>
                 <field name="privacy" optional="hide" readonly="recurrency"/>
                 <field name="show_as" optional="hide" readonly="recurrency"/>
-                <field name="location" optional="show" readonly="recurrency"/>
-                <field name="duration" widget="float_time" readonly="1"/>
+                <field name="location" optional="show" readonly="recurrency" width="250px"/>
                 <field name="description" optional="hide" readonly="recurrency"/>
                 <field name="allday" column_invisible="True"/>
                 <field name="message_needaction" column_invisible="True"/>
