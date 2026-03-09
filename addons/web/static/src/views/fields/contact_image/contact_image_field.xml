@@ -8,6 +8,12 @@
                 add="{{containsValidImage ? 'bottom-0' : 'top-50 start-50 translate-middle z-1'}}"
                 separator=" "/>
         </xpath>
+        <xpath expr="//img" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="{{ env.isSmall ? 'rounded-circle' : 'rounded' }}"
+                separator=" "/>
+        </xpath>
         <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">
             <attribute name="t-if">containsValidImage</attribute>
         </xpath>
