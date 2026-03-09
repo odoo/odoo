@@ -118,7 +118,8 @@ class ProjectProject(models.Model):
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
                                domain="[('is_closed', '=', False)]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
-    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
+    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True,
+                              domain=lambda self: [('share', '=', False), ('all_group_ids', 'in', self.env.ref('project.group_project_user').id)], falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([

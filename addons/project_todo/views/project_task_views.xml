@@ -65,7 +65,7 @@
                   js_class="todo_list">
                 <field name="state" widget="todo_done_checkmark" nolabel="1" width="20px"/>
                 <field name="name"/>
-                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user"/>
+                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                 <field name="priority" widget="priority" optional="hidden" width="70px"/>
                 <field name="date_deadline" optional="show" widget="relative_date"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
@@ -113,7 +113,8 @@
                             <field name="user_ids"
                                 widget="many2many_avatar_user"
                                 required="1"
-                                placeholder="Assignees"/>
+                                placeholder="Assignees"
+                                domain="[('share', '=', False), ('active', '=', True)]"/>
                         </group>
                         <group>
                             <field name="tag_ids"
@@ -335,7 +336,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="context">{'dialog_size': 'medium'}</field>
+        <field name="context">{'dialog_size': 'medium', 'is_todo_conversion': True}</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="project_task_action_convert_todo_to_task_form_view">

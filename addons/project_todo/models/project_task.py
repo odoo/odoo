@@ -21,6 +21,14 @@ class ProjectTask(models.Model):
                     vals['name'] = self.env._('Untitled to-do')
         return super().create(vals_list)
 
+    def read(self, fields=None, load='_classic_read'):
+        result = super().read(fields=fields, load=load)
+        if fields and 'user_ids' in fields and self.env.context.get('is_todo_conversion'):
+            for record_read in result:
+                record_read['user_ids'] = []
+
+        return result
+
     def action_convert_to_task(self):
         self.ensure_one()
         self.company_id = self.project_id.company_id
