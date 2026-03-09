@@ -54,14 +54,14 @@
                 </div>
             </div>
         </xpath>
-        <xpath expr="//div[contains(text(), 'Request sent')]" position="replace">
-            <div class="electronic_status d-flex gap-2">
-                <span class="flex-grow-1">Request sent</span>
-                <t t-if="line.payment_method_id.payment_method_type === 'glory_cash'">
-                    <strong>Cash inserted:</strong>
-                    <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
-                </t>
-            </div>
+        <xpath expr="//div[hasclass('electronic_status') and contains(text(), 'Request sent')]" position="attributes">
+            <attribute name="class">electronic_status d-flex gap-2</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('electronic_status') and contains(text(), 'Request sent')]" position="inside">
+            <t t-if="line.payment_method_id.payment_method_type === 'glory_cash'">
+                <strong>Cash inserted:</strong>
+                <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
+            </t>
         </xpath>
     </t>
 </templates>
