@@ -508,3 +508,15 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
                 'payment_account_id': outstanding_payment_account.id if index == 0 else False,
             } for index, name in enumerate(outbound_method_lines_names)
         ])
+
+    def test_new_purchase_journal_gets_default_account(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Purchase',
+            'type': 'purchase',
+            'code': 'TPUR',
+        })
+        ProductCategory = self.env['product.category'].with_company(journal.company_id)
+        self.assertEqual(
+            journal.default_account_id,
+            ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory),
+        )
