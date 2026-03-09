@@ -169,6 +169,13 @@ class MappingDB:
         )
         self.con.commit()
 
+    def list_dynamics_ids_by_odoo_id(self, entity: str, odoo_id: int) -> List[str]:
+        cur = self.con.execute(
+            "SELECT dynamics_id FROM mapping WHERE entity=? AND odoo_id=? ORDER BY dynamics_id",
+            (entity, int(odoo_id)),
+        )
+        return [str(r[0]) for r in cur.fetchall()]
+
 
 def build_payload_comment(row: Dict[str, str]) -> str:
     return "<p>" + json.dumps(row, ensure_ascii=False) + "</p>"
@@ -255,8 +262,7 @@ def build_partner_vals_from_account(row: Dict[str, str], conn: OdooConn) -> Dict
             # No forzamos selections desconocidas: lo guardamos en el custom
             vals["billing_payment_method_custom"] = pm_raw
 
-    # SEPA firmado: tu Odoo exige documento adjunto. Como aquí no importamos documentos,
-    # NO marcamos firmado aunque venga True en Dynamics (dejamos warning).
+    # SEPA firmado: Odoo exige documento adjunto
     dyn_sepa_signed = norm_bool(row.get("contel_sepafirmado"))
     dyn_sepa_doc = norm_str(row.get("contel_documentosepa"))
     if dyn_sepa_signed:
@@ -335,18 +341,63 @@ def build_partner_vals_from_contact(row: Dict[str, str], conn: OdooConn) -> Dict
     return vals
 
 
-def upsert_partner(conn: OdooConn, mapping: MappingDB, entity: str, dynamics_id: str, vals: Dict[str, Any], dry_run: bool) -> int:
+def upsert_partner(
+    conn: OdooConn,
+    mapping: MappingDB,
+    entity: str,
+    dynamics_id: str,
+    vals: Dict[str, Any],
+    dry_run: bool,
+    *,
+    link_accounts_by_email: bool = False,
+    fix_account_mapping_collisions: bool = False,
+) -> int:
     mapped_id = mapping.get(entity, dynamics_id)
     if mapped_id:
+        if entity == "account" and fix_account_mapping_collisions:
+            # If several Dynamics accounts are mapped to the same partner (typically due to an
+            # earlier email-link heuristic), keep the partner that matches and split the others.
+            dynamics_ids = mapping.list_dynamics_ids_by_odoo_id(entity, mapped_id)
+            if len(dynamics_ids) > 1:
+                expected_vat = vals.get("vat") or False
+                expected_name = (vals.get("name") or "").strip()
+                current = conn.search_read(
+                    "res.partner",
+                    [("id", "=", mapped_id)],
+                    fields=["name", "vat", "email"],
+                    limit=1,
+                )
+                current_rec = current[0] if current else {}
+                current_vat = current_rec.get("vat") or False
+                current_name = (current_rec.get("name") or "").strip()
+
+                vat_matches = bool(expected_vat) and (current_vat == expected_vat)
+                name_matches = bool(expected_name) and (current_name.lower() == expected_name.lower())
+
+                if not (vat_matches or name_matches):
+                    if dry_run:
+                        print(
+                            f"[DRY] SPLIT mapping collision: account dynamics_id={dynamics_id} "
+                            f"currently mapped to res.partner id={mapped_id} ({current_name!r}/{current_vat!r}); "
+                            f"would create a new partner for {expected_name!r}/{expected_vat!r}"
+                        )
+                        return mapped_id
+
+                    new_pid = conn.create("res.partner", vals)
+                    mapping.set(entity, dynamics_id, "res.partner", new_pid)
+                    return new_pid
+
         if dry_run:
             print(f"[DRY] UPDATE res.partner id={mapped_id} entity={entity} dynamics_id={dynamics_id}")
             return mapped_id
         conn.write("res.partner", [mapped_id], vals)
         return mapped_id
 
-    # heurística: link por email SOLO para accounts
+    # heurística (OPT-IN): link por email SOLO para accounts.
+    # Por defecto está desactivada porque en Dynamics puede haber varias cuentas distintas
+    # compartiendo el mismo email (p.ej. grupos), y eso provoca que se fusionen en un solo partner.
     email = vals.get("email")
-    if entity == "account" and email:
+    if entity == "account" and email and link_accounts_by_email:
         found = conn.search("res.partner", [("email", "=", email)], limit=1)
         if found:
             pid = found[0]
@@ -400,6 +451,26 @@ def main() -> int:
     ap.add_argument("--mapping-db", default="dynamics_odoo_map.sqlite3")
     ap.add_argument("--dry-run", action="store_true")
 
+    ap.add_argument(
+        "--link-accounts-by-email",
+        action="store_true",
+        help=(
+            "(No recomendado) Si una cuenta (account) no existe aún en el mapping, "
+            "intenta enlazarla con un res.partner existente por el mismo email. "
+            "Puede fusionar cuentas distintas que comparten email."
+        ),
+    )
+
+    ap.add_argument(
+        "--fix-account-mapping-collisions",
+        action="store_true",
+        help=(
+            "Si detecta que varios accounts (GUID distintos) apuntan al mismo res.partner en el mapping, "
+            "intentará separar creando un partner nuevo cuando el nombre/IVA no coincide. "
+            "Útil para corregir importaciones previas donde se fusionaron cuentas por email."
+        ),
+    )
+
     ap.add_argument("--skip-bank-accounts", action="store_true", help="No importar cuentas bancarias (evita validación IBAN)")
 
     args = ap.parse_args()
@@ -416,7 +487,16 @@ def main() -> int:
             continue
 
         vals = build_partner_vals_from_account(row, conn)
-        partner_id = upsert_partner(conn, mapping, "account", dyn_id, vals, args.dry_run)
+        partner_id = upsert_partner(
+            conn,
+            mapping,
+            "account",
+            dyn_id,
+            vals,
+            args.dry_run,
+            link_accounts_by_email=args.link_accounts_by_email,
+            fix_account_mapping_collisions=args.fix_account_mapping_collisions,
+        )
 
         if not args.skip_bank_accounts:
             iban = norm_str(row.get("contel_iban") or row.get("new_numerodecuentabancaria"))
