@@ -436,65 +436,49 @@ class AccountTax(models.Model):
         for (document_type, sequence), old_value, new_value in modified_lines:
             diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
             if diff_keys:
-                # TDE FIXME: change to real tracking
-                body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
+                self._track_add(
+                    {self.id: {fname: old_value[fname] for fname in diff_keys}},
+                    end_values={self.id: {fname: new_value[fname] for fname in diff_keys}},
+                    fields_info={fname: {'type': 'char', 'string': fname} for fname in diff_keys},
+                    body=Markup("<b>{type}</b> {rep} {seq}").format(
+                        type=document_type.capitalize(),
+                        rep=_('repartition line'),
+                        seq=sequence,
+                    )
+                )
+                self._track_finalize()
+
+        for (document_type, sequence), operation, value in added_and_deleted_lines:
+            self._track_add(
+                {self.id: {fname: False for fname in value}},
+                end_values={self.id: {fname: value[fname] for fname in value}},
+                fields_info={fname: {'type': 'char', 'string': fname} for fname in value},
+                body=Markup("<b>{op} {type}</b> {rep} {seq}").format(
+                    op=operation,
                     type=document_type.capitalize(),
                     rep=_('repartition line'),
                     seq=sequence,
-                    changes=Markup().join(
-                        [Markup("""
-                            <li>
-                                <span class='o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold'>{old}</span>
-                                <i class='o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600'/>
-                                <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{new}</span>
-                                <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
-                            </li>
-                        """).format(old=old_value[diff_key], new=new_value[diff_key], diff=diff_key)
-                        for diff_key in diff_keys]
-                    )
-                )
-                super()._message_log(body=body)
-
-        for (document_type, sequence), operation, value in added_and_deleted_lines:
-            body = Markup("<b>{op} {type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
-                op=operation,
-                type=document_type.capitalize(),
-                rep=_('repartition line'),
-                seq=sequence,
-                changes=Markup().join(
-                    [Markup("""
-                        <li>
-                            <span class='o-mail-Message-trackingNew me-1 fw-bold text-info'>{value}</span>
-                            <span class='o-mail-Message-trackingField ms-1 fst-italic text-muted'>({diff})</span>
-                        </li>
-                    """).format(value=value[key], diff=key)
-                    for key in value]
                 )
             )
-            super()._message_log(body=body)
+            self._track_finalize()
         return
 
-    def _message_log(self, **kwargs):
-        # OVERRIDE _message_log
-        # We only log the modification of the tracked fields if the tax is
-        # currently used in transactions. We remove the `repartition_lines_str`
-        # from tracked value to avoid having it logged twice (once in the raw
-        # string format and one in the nice formatted way thanks to
-        # `_message_log_repartition_lines`)
-
-        self.ensure_one()
-
-        if self.is_used:
-            # TDE NOTE: remove and replace by filter display
-            repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
-            for tracked_value_id in kwargs['tracking_value_ids']:
-                if tracked_value_id[2]['field_id'] == repartition_line_str_field_id:
-                    kwargs['tracking_value_ids'].remove(tracked_value_id)
-                    self._message_log_repartition_lines(tracked_value_id[2]['old_value_char'], tracked_value_id[2]['new_value_char'])
-
-            return super()._message_log(**kwargs)
-        kwargs.pop('tracking_value_ids', None)  # do not allow tracking values on unused taxes
-        return super()._message_log(**kwargs)
+    def _track_execute(self, track_init_values, trackings, track_records=None):
+        to_update, old_values, new_values = self.browse(), [], []
+        super_trackings = {}
+        for record in self:
+            changes, tracking_values = trackings.get(record.id, (None, None))
+            if changes and 'repartition_lines_str' in changes:
+                to_update |= record
+                repartition_lines_str_track = next((value for value in tracking_values if value.get('field_name') == 'repartition_lines_str'), {})
+                old_values.append(repartition_lines_str_track.get('old_value_char'))
+                new_values.append(repartition_lines_str_track.get('new_value_char'))
+            super_changes = [fname for fname in changes if fname != 'repartition_lines_str']
+            super_trackings[record.id] = (super_changes, tracking_values)
+        res = super()._track_execute(track_init_values, super_trackings, track_records=track_records)
+        for record, old_value, new_value in zip(to_update, old_values, new_values):
+            record._message_log_repartition_lines(old_value, new_value)
+        return res
 
     @api.depends('company_id')
     def _compute_invoice_repartition_line_ids(self):
@@ -670,8 +654,7 @@ class AccountTax(models.Model):
             'mail_auto_subscribe_no_notify': True, # Do no notify users set as followers of the mail thread
             'mail_create_nolog': True, # At create, do not log the automatic ‘<Document> created’ message
         })
-        taxes = super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
-        return taxes
+        return super(AccountTax, self.with_context(context)).create([self._sanitize_vals(vals) for vals in vals_list])
 
     def write(self, vals):
         return super().write(self._sanitize_vals(vals))

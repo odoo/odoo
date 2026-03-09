@@ -128,15 +128,25 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        self.assertEqual(len(self._new_msgs), 3)
+        # tracking done using _track_add
+        self.assertEqual(len(self._new_msgs), 2)
         for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             {
-                'body': '',
-            }, {
                 'body_content': '<b>New Invoice</b> repartition line 4',
+                'tracking_values': [
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', False, '-100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Tax Grids', 'desc': 'Tax Grids', 'type': 'char'}}),
+                    (False, 'char', False, 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>New Refund</b> repartition line 4',
+                'tracking_values': [
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', False, '-100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Tax Grids', 'desc': 'Tax Grids', 'type': 'char'}}),
+                    (False, 'char', False, 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             },
         ], strict=True):
             self.assertMessageFields(msg, {
@@ -146,15 +156,6 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                 'tracking_values': [],
                 **exp_values,
             })
-        previews = self._new_msgs.mapped('preview')
-        self.assertIn(
-            "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
-            previews
-        )
-        self.assertIn(
-            "New Refund repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
-            previews
-        )
 
     def test_logging_of_repartition_lines_update_when_tax_is_used(self):
         """ Updating repartition lines in a used tax should be logged. """
@@ -183,15 +184,22 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        self.assertEqual(len(self._new_msgs), 3)
+        # tracking done using _track_add
+        self.assertEqual(len(self._new_msgs), 2)
         for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             {
-                'body': '',
-            }, {
                 'body_content': '<b>Invoice</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', '0.0', '-100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', 'None', "['TaxTag12345']", {'field_info': {'name': 'Tax Grids', 'desc': 'Tax Grids', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>Refund</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', 'None', '131000 Tax Paid', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', '0.0', '-100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', 'False', 'True', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             },
         ], strict=True):
             self.assertMessageFields(msg, {
@@ -201,9 +209,6 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                 'tracking_values': [],
                 **exp_values,
             })
-        previews = self._new_msgs.mapped('preview')
-        self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
-        self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
         """ Reordering repartition lines in a used tax should be logged. """
@@ -226,23 +231,45 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             })
             self.flush_tracking()
 
-        # manual log, no tracking
-        self.assertEqual(len(self._new_msgs), 7)
+        # tracking done using _track_add
+        self.assertEqual(len(self._new_msgs), 6)
         for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             {
-                'body': '',
-            }, {
                 'body_content': '<b>Invoice</b> repartition line 1',
+                'tracking_values': [
+                    (False, 'char', '100.0', '0.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>Invoice</b> repartition line 2',
-            },  {
+                'tracking_values': [
+                    (False, 'char', '251000 Tax Received', 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', 'True', 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
+            }, {
                 'body_content': '<b>Invoice</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', 'None', '251000 Tax Received', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', '0.0', '100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', 'False', 'True', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>Refund</b> repartition line 1',
+                'tracking_values': [
+                    (False, 'char', '100.0', '0.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>Refund</b> repartition line 2',
-            },  {
+                'tracking_values': [
+                    (False, 'char', '251000 Tax Received', 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', 'True', 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
+            }, {
                 'body_content': '<b>Refund</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', 'None', '251000 Tax Received', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', '0.0', '100.0', {'field_info': {'name': 'Factor Percent', 'desc': 'Factor Percent', 'type': 'char'}}),
+                    (False, 'char', 'False', 'True', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             },
         ], strict=True):
             self.assertMessageFields(msg, {
@@ -252,9 +279,6 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                 'tracking_values': [],
                 **exp_values,
             })
-        previews = self._new_msgs.mapped('preview')
-        self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
-        self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
         """ Deleting repartition lines in a used tax should be logged. """
@@ -276,14 +300,22 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
 
         # manual log, no tracking
-        self.assertEqual(len(self._new_msgs), 3)
+        self.assertEqual(len(self._new_msgs), 2)
         for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             {
-                'body': '',
-            }, {
                 'body_content': '<b>Removed Invoice</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Tax Grids', 'desc': 'Tax Grids', 'type': 'char'}}),
+                    (False, 'char', False, 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             }, {
                 'body_content': '<b>Removed Refund</b> repartition line 3',
+                'tracking_values': [
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Account', 'desc': 'Account', 'type': 'char'}}),
+                    (False, 'char', False, 'None', {'field_info': {'name': 'Tax Grids', 'desc': 'Tax Grids', 'type': 'char'}}),
+                    (False, 'char', False, 'False', {'field_info': {'name': 'Use in tax closing', 'desc': 'Use in tax closing', 'type': 'char'}}),
+                ],
             },
         ], strict=True):
             self.assertMessageFields(msg, {
@@ -293,15 +325,6 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
                 'tracking_values': [],
                 **exp_values,
             })
-        previews = self._new_msgs.mapped('preview')
-        self.assertIn(
-            "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
-            previews
-        )
-        self.assertIn(
-            "Removed Refund repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
-            previews
-        )
 
     def test_message_log(self):
         """ Somehow assert people did not break primitives of mail.thread """
@@ -319,7 +342,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             new_tax.write({'name': 'New name, do not track'})
             self.flush_tracking()
         self.assertEqual(len(self._new_msgs), 1)
-        self.assertMessageFields(self._new_msgs, {'body': '', 'tracking_values': []})
+        self.assertMessageFields(self._new_msgs, {'body': '', 'tracking_values': [('name', 'char', 'default_tax', 'New name, do not track')]})
 
     def test_tax_is_used_when_in_transactions(self):
         ''' Ensures that a tax is set to used when it is part of some transactions '''
