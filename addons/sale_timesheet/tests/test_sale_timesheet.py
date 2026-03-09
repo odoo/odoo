@@ -1201,6 +1201,9 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
     def test_invoice_with_already_invoiced_timesheets(self):
         """Checks that when an invoice is created, the hours that have already been invoiced aren't taken into
         account."""
+        if not self.env['ir.module.module'].search([('name', '=', 'account_accountant'), ('state', '=', 'installed')]):
+            self.skipTest("This test requires the installation of the account_account module")
+
         product = self.env['product.product'].create({
             'name': "Service delivered, create task in global project",
             'standard_price': 30,
