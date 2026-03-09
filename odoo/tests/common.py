@@ -1195,8 +1195,12 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         cr = self.cr
         if self.savepoint is None:
-            self.savepoint = self.cr.savepoint(flush=True)
-            self.addClassCleanup(self.savepoint.close)
+            # create savepoint, and close it at class cleanup
+            sp = self.cr.savepoint(flush=True)
+            self.addClassCleanup(sp.close, rollback=False)
+            # store savepoint on the class (to be shared across all test instances)
+            self.__class__.savepoint = sp
+            self.addClassCleanup(setattr, self.__class__, 'savepoint', None)
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
