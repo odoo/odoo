@@ -947,8 +947,7 @@ test("Show start message of conversation", async () => {
         },
     ]);
     await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await openDiscuss(channelId);
     await contains(".o-mail-Thread:has(:text('Welcome to #General!'))");
     await contains(".o-mail-Thread:has(:text('This is the start of the #General channel'))");
     await click(".o-mail-DiscussSidebarChannel-subChannel:text('ThreadOne')");
