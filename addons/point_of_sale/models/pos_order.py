@@ -91,6 +91,7 @@ class PosOrder(models.Model):
 
         pos_order = False
         combo_child_uuids_by_parent_uuid = self._prepare_combo_line_uuids(order)
+        self._check_combo_item_available(order, combo_child_uuids_by_parent_uuid)
 
         if not existing_order:
             pos_order = self.create({
@@ -148,6 +149,41 @@ class PosOrder(models.Model):
             if not parent_line:
                 continue
             parent_line.combo_line_ids = [(6, 0, self.lines.filtered(lambda line: line.uuid in child_uuids).ids)]
+
+    def _check_combo_item_available(self, order, combo_child_uuids_by_parent_uuid):
+        if not combo_child_uuids_by_parent_uuid:
+            return
+
+        product_by_uuid = {}
+        for line in order.get('lines', []):
+            if len(line) > 2 and isinstance(vals := line[2], dict) and vals.get('uuid'):
+                product_by_uuid[vals['uuid']] = vals['product_id']
+
+        parent_product_ids = {
+            pid
+            for parent_uuid in combo_child_uuids_by_parent_uuid
+            if (pid := product_by_uuid.get(parent_uuid))
+        }
+        parents = self.env['product.product'].browse(parent_product_ids)
+        # Warm the cache for the whole batch: a handful of queries instead of one
+        # set per parent line.
+        parents.product_tmpl_id.combo_ids.combo_item_ids.product_id
+
+        available_ids_by_parent = {
+            parent.id: set(parent.product_tmpl_id.combo_ids.combo_item_ids.product_id.ids)
+            for parent in parents
+        }
+
+        for parent_uuid, children_uuids in combo_child_uuids_by_parent_uuid.items():
+            available_ids = available_ids_by_parent.get(product_by_uuid.get(parent_uuid)) or set()
+            for child_uuid in children_uuids:
+                product_id = product_by_uuid.get(child_uuid)
+                if product_id not in available_ids:
+                    raise UserError(_(
+                        "The combo choice '%s' is no longer available in this combo. "
+                        "Please reload your data.",
+                        self.env['product.product'].browse(product_id).display_name,
+                    ))
 
     def _process_saved_order(self, draft):
         self.ensure_one()
