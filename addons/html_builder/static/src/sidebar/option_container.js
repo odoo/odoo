@@ -13,7 +13,6 @@ import {
     useVisibilityObserver,
 } from "../core/utils";
 import { isRemovable } from "@html_builder/core/remove_plugin";
-import { isClonable } from "@html_builder/core/clone_plugin";
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
@@ -54,7 +53,7 @@ export class OptionsContainer extends BaseOptionComponent {
             isRemovable: isRemovable(editingElement),
             removeDisabledReason:
                 this.dependencies.builderOptions.getRemoveDisabledReason(editingElement),
-            isClonable: isClonable(editingElement),
+            isClonable: this.dependencies.builderOptions.isClonable(editingElement),
             cloneDisabledReason:
                 this.dependencies.builderOptions.getCloneDisabledReason(editingElement),
         }));
