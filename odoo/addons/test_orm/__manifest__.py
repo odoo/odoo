@@ -13,11 +13,14 @@
         # 'security/test_access_rights_security.xml',
         # 'security/test_orm_security.xml',
         # 'views/test_orm_views.xml',
+
         # DATA
         'data/test_access_feedback_data.xml',
+        'data/test_action_bindings.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
+        'security/test_action_bindings/ir.model.access.csv',
 
         # VIEWS
     ],
