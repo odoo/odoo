@@ -4,15 +4,10 @@ import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
-const savableSelector = "[data-snippet], a.btn";
-// TODO `so_submit_button_selector` ?
-const savableExclude =
-    ".o_no_save, .s_donation_donate_btn, .s_website_form_send, .js_subscribe_btn";
-
-// Checks if the element can be saved as a custom snippet.
-function isSavable(el) {
-    return el.matches(savableSelector) && !el.matches(savableExclude);
-}
+/**
+ * @typedef {CSSSelector[]} submit_button_selectors
+ * CSS selectors matching different kinds of submit buttons.
+ */
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
@@ -24,8 +19,26 @@ export class SaveSnippetPlugin extends Plugin {
         ),
     };
 
+    setup() {
+        this.savableSelector = "[data-snippet], a.btn";
+        this.unsavableSelector = [
+            ".o_no_save",
+            ...this.getResource("submit_button_selectors"),
+        ].join(", ");
+    }
+
+    /**
+     * Checks if the element can be saved as a custom snippet.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isSavable(el) {
+        return el.matches(this.savableSelector) && !el.matches(this.unsavableSelector);
+    }
+
     getOptionsContainerTopButtons(el) {
-        if (!isSavable(el)) {
+        if (!this.isSavable(el)) {
             return [];
         }
 
