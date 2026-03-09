@@ -78,34 +78,6 @@ export async function renderMedia({
             if (style) {
                 element.setAttribute("style", style);
             }
-            if (activeTab === TABS.IMAGES.id) {
-                if (oldMediaNode.dataset.shape) {
-                    element.dataset.shape = oldMediaNode.dataset.shape;
-                }
-                if (oldMediaNode.dataset.shapeColors) {
-                    element.dataset.shapeColors = oldMediaNode.dataset.shapeColors;
-                }
-                if (oldMediaNode.dataset.shapeFlip) {
-                    element.dataset.shapeFlip = oldMediaNode.dataset.shapeFlip;
-                }
-                if (oldMediaNode.dataset.shapeRotate) {
-                    element.dataset.shapeRotate = oldMediaNode.dataset.shapeRotate;
-                }
-                if (oldMediaNode.dataset.hoverEffect) {
-                    element.dataset.hoverEffect = oldMediaNode.dataset.hoverEffect;
-                }
-                if (oldMediaNode.dataset.hoverEffectColor) {
-                    element.dataset.hoverEffectColor = oldMediaNode.dataset.hoverEffectColor;
-                }
-                if (oldMediaNode.dataset.hoverEffectStrokeWidth) {
-                    element.dataset.hoverEffectStrokeWidth =
-                        oldMediaNode.dataset.hoverEffectStrokeWidth;
-                }
-                if (oldMediaNode.dataset.hoverEffectIntensity) {
-                    element.dataset.hoverEffectIntensity =
-                        oldMediaNode.dataset.hoverEffectIntensity;
-                }
-            }
         }
         if (aiChannelId) {
             element.dataset.aiChannelId = aiChannelId;

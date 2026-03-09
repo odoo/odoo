@@ -9,6 +9,7 @@ import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
+import { handleImagesIfDataset } from "@html_builder/utils/image";
 
 /**
  * @typedef { Object } AnimateOptionShared
@@ -22,6 +23,11 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
  * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} on_hover_animation_mode_applied_handlers
  */
 
+/**
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
+ * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
+ */
+
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
@@ -30,6 +36,7 @@ export class AnimateOptionPlugin extends Plugin {
         "getDirectionsItems",
         "getEffectsItems",
         "hasAnimationEffect",
+        "canHaveHoverEffect",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -71,10 +78,41 @@ export class AnimateOptionPlugin extends Plugin {
             }
         },
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
+        on_will_save_media_dialog_handlers: withSequence(
+            5,
+            this.onWillSaveMediaDialogHandlers.bind(this)
+        ),
     };
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
+    }
+
+    async canHaveHoverEffect(el) {
+        const proms = this.getResource("hover_effect_image_dataset_providers").map((p) => p(el));
+        const datasets = await Promise.all(proms);
+        const dataset = Object.assign({}, ...datasets);
+        return this.checkPredicates("can_have_hover_effect_predicates", el, dataset) ?? false;
+    }
+
+    async onWillSaveMediaDialogHandlers(elements, { node }) {
+        const callback = async (toProcessEl, nodeEl) => {
+            const canImgHaveHoverEffect = await this.canHaveHoverEffect(toProcessEl);
+            if (!canImgHaveHoverEffect) {
+                return;
+            }
+            toProcessEl.dataset.hoverEffect = nodeEl.dataset.hoverEffect;
+            for (const hoverEffectInfo of [
+                "hoverEffectColor",
+                "hoverEffectStrokeWidth",
+                "hoverEffectIntensity",
+            ]) {
+                if (nodeEl.dataset[hoverEffectInfo]) {
+                    toProcessEl.dataset[hoverEffectInfo] = nodeEl.dataset[hoverEffectInfo];
+                }
+            }
+        };
+        await handleImagesIfDataset(elements, node, "hoverEffect", callback);
     }
 
     getEffectsItems(isActiveItem) {

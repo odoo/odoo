@@ -21,6 +21,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import { deepCopy, deepMerge } from "@web/core/utils/objects";
+import { handleImagesIfDataset } from "@html_builder/utils/image";
 
 /**
  * @typedef {Object.<string, {
@@ -91,6 +92,10 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         on_will_process_image_handlers: this.processImageWarmup.bind(this),
         on_image_processed_handlers: this.processImagePost.bind(this),
+        on_will_save_media_dialog_handlers: withSequence(
+            5,
+            this.onWillSaveMediaDialogHandlers.bind(this)
+        ),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
         hover_effect_image_dataset_providers: this.hoverEffectImageDatasetProviders.bind(this),
     };
@@ -102,6 +107,21 @@ export class ImageShapeOptionPlugin extends Plugin {
             const oldShapeId = shapeId.replace("html_builder", "web_editor");
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
         }
+    }
+    async onWillSaveMediaDialogHandlers(elements, { node }) {
+        const callback = async function (toProcessEl, nodeEl) {
+            const data = await loadImageInfo(toProcessEl);
+            if (!data.originalSrc) {
+                return;
+            }
+            toProcessEl.dataset.shape = nodeEl.dataset.shape;
+            for (const shapeInfo of ["shapeColors", "shapeFlip", "shapeRotate"]) {
+                if (nodeEl.dataset[shapeInfo]) {
+                    toProcessEl.dataset[shapeInfo] = nodeEl.dataset[shapeInfo];
+                }
+            }
+        };
+        await handleImagesIfDataset(elements, node, "shape", callback);
     }
     getShapeCategory(img) {
         const shapeName = img.dataset.shape;

@@ -3,10 +3,6 @@ import { useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
- */
-
 export class AnimateOption extends BaseOptionComponent {
     static id = "animate_option";
     static template = "website.AnimateOption";
@@ -31,7 +27,7 @@ export class AnimateOption extends BaseOptionComponent {
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: await this.canHaveHoverEffect(editingElement),
+                canHover: await this.dependencies.animateOption.canHaveHoverEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),
@@ -80,12 +76,6 @@ export class AnimateOption extends BaseOptionComponent {
         );
 
         return hasDirection;
-    }
-    async canHaveHoverEffect(el) {
-        const proms = this.getResource("hover_effect_image_dataset_providers").map((p) => p(el));
-        const datasets = await Promise.all(proms);
-        const dataset = Object.assign({}, ...datasets);
-        return this.checkPredicates("can_have_hover_effect_predicates", el, dataset) ?? false;
     }
 }
 

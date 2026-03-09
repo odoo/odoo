@@ -8,3 +8,23 @@ export async function getMimetypeBeforeShape(imageEl) {
         : await loadImageInfo(imageEl);
     return formatMimetype || mimetypeBeforeConversion || getMimetype(imageEl, data);
 }
+
+/**
+ * Executes a callback for each <img> element in a collection if the given node
+ * contains a specific data-* attribute.
+ * @param {Array<HTMLElement>} toProcessEls
+ * @param {HTMLElement} nodeEl
+ * @param {String} dataInfo
+ * @param {Function} callback
+ */
+export async function handleImagesIfDataset(toProcessEls, nodeEl, dataInfo, callback) {
+    if (!nodeEl || !nodeEl.dataset[dataInfo]) {
+        return;
+    }
+    for (const toProcessEl of toProcessEls) {
+        if (!toProcessEl || !toProcessEl.tagName === "IMG") {
+            continue;
+        }
+        await callback(toProcessEl, nodeEl);
+    }
+}
