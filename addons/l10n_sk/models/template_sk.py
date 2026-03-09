@@ -46,4 +46,44 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'chart_sk_568000',
                 'account_stock_variation_id': 'chart_sk_501000',
             },
+            'chart_sk_012000': {
+                'asset_depreciation_account_id': 'chart_sk_072000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_013000': {
+                'asset_depreciation_account_id': 'chart_sk_073000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_014000': {
+                'asset_depreciation_account_id': 'chart_sk_074000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_015000': {
+                'asset_depreciation_account_id': 'chart_sk_075000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_019000': {
+                'asset_depreciation_account_id': 'chart_sk_079000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_021000': {
+                'asset_depreciation_account_id': 'chart_sk_081000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_022000': {
+                'asset_depreciation_account_id': 'chart_sk_082000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_025000': {
+                'asset_depreciation_account_id': 'chart_sk_085000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_026000': {
+                'asset_depreciation_account_id': 'chart_sk_086000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
+            'chart_sk_029000': {
+                'asset_depreciation_account_id': 'chart_sk_089000',
+                'asset_expense_account_id': 'chart_sk_551000',
+            },
         }
