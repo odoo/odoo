@@ -18,4 +18,10 @@ class IrAttachment(models.Model):
         '''
         Returns the moves to check whether they can be unlinked.
         '''
-        return self.env['account.move'].browse(self.filtered(lambda rec: rec.res_model == 'account.move' and rec.res_field == 'invoice_pdf_report_file').mapped('res_id'))
+        res_ids = [
+            att.res_id
+            for att in self
+            if att.res_model == 'account.move' and att.res_field == 'invoice_pdf_report_file'
+        ]
+        # the corresponding moves may have been deleted already
+        return self.env['account.move'].browse(res_ids).exists()
