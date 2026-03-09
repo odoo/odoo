@@ -4,7 +4,7 @@ from lxml import etree
 from collections import defaultdict
 
 from odoo import models, _
-from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.tools import frozendict, html2plaintext, cleanup_xml_node
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
@@ -210,7 +210,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 }
                 if epd_tax_to_discount:
                     # early payment discounts: need to recompute the tax/taxable amounts
-                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_tax_to_discount.get(subtotal['percent'], 0)
+                    epd_key = self._get_epd_grouping_key(subtotal['percent'], subtotal['tax_category_vals']['id'])
+                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_tax_to_discount.get(epd_key, 0)
                     tax_amount_after_epd = taxable_amount_after_epd * subtotal['tax_category_vals']['percent'] / 100
                     subtotal.update({
                         'taxable_amount': taxable_amount_after_epd,
@@ -268,7 +269,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         if epd_tax_to_discount:
             # One Allowance per tax rate (VAT included)
-            for tax_amount, discount_amount in epd_tax_to_discount.items():
+            for grouping_key, discount_amount in epd_tax_to_discount.items():
+                tax_amount, tax_category_code = grouping_key.values()
                 vals_list.append({
                     'charge_indicator': 'false',
                     'allowance_charge_reason_code': '66',
@@ -277,7 +279,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency_dp': 2,
                     'currency_name': invoice.currency_id.name,
                     'tax_category_vals': [{
-                        'id': 'S',
+                        'id': tax_category_code,
                         'percent': tax_amount,
                         'tax_scheme_id': 'VAT',
                     }],
@@ -424,10 +426,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return True
 
+    @staticmethod
+    def _get_epd_grouping_key(tax_amount=None, tax_code=False):
+        return frozendict({
+            'tax_amount': tax_amount,
+            'tax_code': tax_code,
+        })
+
     def _get_early_payment_discount_grouped_by_tax_rate(self, invoice):
         """
         Get the early payment discounts grouped by the tax rate of the product it is linked to
-        :returns {float: float}: mapping tax amounts to early payment discount amounts
+        :returns {(float, string): float}: mapping tax amounts to early payment discount amounts
         """
         if invoice.company_id.early_pay_discount_computation != 'mixed':
             return {}
@@ -442,7 +451,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # - https://docs.peppol.eu/poacc/billing/3.0/2024-Q2/rules/ubl-tc434/BR-CO-12/
         for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd' and not currency.is_zero(l.amount_currency)):
             for tax in line.tax_ids:
-                tax_to_discount[tax.amount] += line.amount_currency
+                grouping_key = self._get_epd_grouping_key(tax.amount, self._get_tax_unece_codes(invoice, tax).get('tax_category_code', 'S'))
+                tax_to_discount[grouping_key] += line.amount_currency
         return tax_to_discount
 
     def _export_invoice_vals(self, invoice):
