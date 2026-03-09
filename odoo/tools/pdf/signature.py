@@ -122,20 +122,20 @@ class PdfSigner:
             pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
 
         # 2. Prepare the Signature Field Structure
-        self._setup_form(pdf_reader, True, field_name, incremented_objects, signer_identifier)
+        self._setup_form(pdf_reader, visible_signature, field_name, incremented_objects, signer_identifier)
 
-        # 3. Write the Incremental Update (with empty signature placeholders)
+        # 3. Write the Incremental Updated PDF (with empty signature placeholders)
         xref = pdf_merger._write_incremented_pdf(pdf_reader, incremented_objects)
 
+        # 4. Get the signature object offset
         sig_obj_start = None
         for obj_key, obj_data in incremented_objects.items():
             if "/Type" in obj_data and obj_data["/Type"] == "/Sig":
                 sig_obj_start = xref[obj_key]
                 break
 
+        # 5. Sign the Document (fill the signature placeholders)
         final_output = pdf_merger.get_output_stream_value()
-
-        # 4. Sign the Document (fill the placeholders)
         signed_pdf_bytes = self._perform_signature(final_output, sig_obj_start)
         return signed_pdf_bytes
 
@@ -190,8 +190,11 @@ class PdfSigner:
         :type visible_signature: bool
         :param field_name: The name of the acro_form field.
         :type field_name: str
+        :param incremented_objects: A dictionary mapping ``(object_id, generation)`` tuples
+        to modified or newly created PDF objects.
+        :type incremented_objects: dict[tuple[int, int], Any]
         :param signed_by: Text identifier of the user who is signing this document.
-        :type signer: str or None
+        :type signed_by: str
         """
         writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
@@ -283,7 +286,6 @@ class PdfSigner:
 
             # 5. Deterministic text layout (NO T*)
             text_y_top = calc_height - padding - font_size
-            text_y_bottom = text_y_top - (font_size + 2)
 
             pdf_ops = (
                 "q 1 0 0 1 0 0 cm "
@@ -522,15 +524,18 @@ class PdfSigner:
 
         :param pdf_data: The complete PDF file bytes containing the empty signature fields.
         :type pdf_data: bytes
+        :param sig_obj_start: The absolute byte offset where the new signature dictionary
+        begins within the ``pdf_data``.
+        :type sig_obj_start: int
         :return: The final signed PDF bytes.
         :rtype: bytes
-        :raises ValueError: If placeholders cannot be found or if the generated signature
-                            is too large for the reserved buffer.
+        :raises ValueError: If ``sig_obj_start`` is falsy (indicating no placeholder was
+            found in the update), if the byte placeholders cannot be located within the
+            stream, or if the generated CMS signature is too large for the reserved buffer.
         """
         pdf_buffer = bytearray(pdf_data)
 
         # 1. FIND THE TARGET SIGNATURE OBJECT (Last /Type /Sig in file)
-        # sig_obj_start = pdf_buffer.rfind(b"/Type /Sig")
         if not sig_obj_start:
             raise ValueError("No signature placeholder found in the incremental update.")
 
@@ -538,14 +543,11 @@ class PdfSigner:
         # Search forward from the object start to find the specific keys belonging to it
         br_key_pos = pdf_buffer.find(b"/ByteRange", sig_obj_start)
         array_start = pdf_buffer.find(b"[", br_key_pos)
-        # array_start = pdf_buffer.find(b"[ 0 9999999999 9999999999 9999999999 ]", sig_obj_start)
         array_end = pdf_buffer.find(b"]", array_start) + 1
         placeholder_len = array_end - array_start
 
         # Locate Contents hex string < ... >
-        # c_key_pos = pdf_buffer.find(b"/Contents", sig_obj_start)
-        # hex_start = pdf_buffer.find(b"<", c_key_pos) + 1  # First byte of hex data
-        hex_start = pdf_buffer.find(b"<" + b"00" * 8192 + b">", sig_obj_start) + 1
+        hex_start = pdf_buffer.find(b"<0000", sig_obj_start) + 1
         hex_end = pdf_buffer.find(b">", hex_start)  # Byte after hex data
 
         # 3. CALCULATE OFFSETS (The "Hole")
@@ -558,24 +560,15 @@ class PdfSigner:
         val3 = hex_end + 1  # The index after the '>'
         val4 = len(pdf_buffer) - val3
 
-        # # 4. UPDATE BYTERANGE
-        # # We format the array and pad with spaces to maintain the exact byte count
-        # new_range_str = f"[{val1} {val2} {val3} {val4}]".encode('ascii')
-        # if len(new_range_str) > placeholder_len:
-        #     raise ValueError("ByteRange string exceeds reserved placeholder space.")
-        #
-        # # Pad with spaces to fit exact placeholder size
-        # pdf_buffer[array_start:array_end] = new_range_str.ljust(placeholder_len, b" ")
-        # 4. UPDATE BYTERANGE (Zero-Padding Strategy)
-        # Goal: Transform "[0 999...]" into "[0 123 456 0000000789]"
+        # 4. UPDATE BYTERANGE (Space-Padding Strategy)
+        # Goal: Transform "[0 999...]" into "[0 123 456 789     ]"
         # This keeps the total length IDENTICAL and valid.
 
-        # 1. Create the first part of the array string: "[0 123 456 "
-        # We purposely leave a trailing space after val3 so val4 is separated.
+        # Create the first part of the array string: "[0 123 456 "
         prefix = f"[{val1} {val2} {val3} ".encode('ascii')
         suffix = b"]"
 
-        # 2. Calculate how much room is left for the last number
+        # Calculate how much room is left for the last number
         # Total Available - Prefix length - Suffix length
         # e.g., 40 - 15 - 1 = 24 bytes available for val4
         available_len_for_val4 = placeholder_len - len(prefix) - len(suffix)
@@ -583,16 +576,13 @@ class PdfSigner:
         if available_len_for_val4 < len(str(val4)):
             raise ValueError(f"Not enough space! Need {len(str(val4))}, have {available_len_for_val4}")
 
-        # 3. Format val4 with trailing spaces to fill that space EXACTLY
-        # Padding with spaces instead of zeros prevents PDF strict parsers (Adobe)
-        # from interpreting the number as an invalid octal representation.
+        # Format val4 with leading spaces
         s_val4 = str(val4).ljust(available_len_for_val4).encode('ascii')
 
-        # 4. Combine them
+        # Combine the new byte range
         new_range_str = prefix + s_val4 + suffix
 
-        # 5. Overwrite the buffer
-        # This is now guaranteed to match placeholder_len exactly.
+        # Overwrite the buffer
         pdf_buffer[array_start:array_end] = new_range_str
 
         # 5. HASH THE DOCUMENT

@@ -62,19 +62,18 @@ from .constants import TrailerKeys as TK, Resources as RES, PageAttributes as PG
 
 _logger = logging.getLogger(__name__)
 
-_B_CACHE = {}
 def b_(s: str | bytes) -> bytes:
     """
-    Encodes a string into bytes using Latin-1 (standard PDF encoding), with a fallback to UTF-8.
+    Converts a string or bytes object into raw bytes.
 
-    This utility includes a micro-cache (``_B_CACHE``) for short strings (length < 2)
-    to optimize repeated encoding of common PDF delimiters like ``(``, ``)``, or ``/``.
+    If the input is already a bytes object, it is returned unchanged.
+    Strings are encoded using Latin-1 (the standard encoding for basic PDF
+    structures and operators), with a fallback to UTF-8 if the string
+    contains characters outside the Latin-1 range.
 
-    :param s: The input string or bytes.
-    :return: The encoded byte string.
+    :param s: The input string or bytes to encode.
+    :return: The resulting encoded byte string.
     """
-    if s in _B_CACHE:
-        return _B_CACHE[s]
 
     if isinstance(s, bytes):
         return s
@@ -83,9 +82,6 @@ def b_(s: str | bytes) -> bytes:
         r = s.encode("latin-1")
     except Exception:
         r = s.encode("utf-8")
-
-    if isinstance(s, str) and len(s) < 2:
-        _B_CACHE[s] = r
 
     return r
 
@@ -107,7 +103,7 @@ class IncrementalPdfMerge:
     * **Cross-Reference (XRef) Table:** To index the new objects.
     * **Trailer Dictionary:** To link the new update to the previous file version.
 
-    (Ref: ISO 32000-1 / https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf)
+    (Ref: Adobe PDF Reference (v1.7) / https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf)
 
     :param pdf_raw: The binary content of the original PDF file.
     :type pdf_raw: bytes
@@ -157,15 +153,23 @@ class IncrementalPdfMerge:
         """
         Merges the content of an overlay PDF onto the current PDF output stream.
 
-        This method orchestrates the incremental update process by:
-        1. Loading the current PDF state.
-        2. Merging page content from the ``overlay_pdf``.
-        3. Identifying modified objects.
-        4. Writing the incremental update to the output stream.
+        This method orchestrates an incremental update (Adobe PDF Reference, Sixth Edition,
+        version 1.7 (2006), Section 3.4.5) to apply the overlay without rewriting the
+        entire original file. The process involves:
 
-        :param overlay_pdf: A reader object containing the content to be overlayed.
-                            Must have the same number of pages as the current PDF.
+        1. Loading the current PDF state from the active output stream.
+        2. Merging the visual page content from the ``overlay_pdf`` onto the existing pages.
+        3. Identifying all newly created or modified objects (e.g., updated page dictionaries).
+        4. Writing the new objects and the updated XRef stream to the end of the file.
+
+        :param overlay_pdf: A reader object containing the content to be overlaid.
+            It must contain the same number of pages as the current PDF.
         :type overlay_pdf: PdfFileReader
+        :param merge_res_as_annotation: If ``True``, merges the overlay resources
+            as a PDF annotation rather than directly modifying the base page's
+            content stream. This is particularly useful for watermarks, signatures,
+            or ensuring the overlay remains logically distinct from the base content.
+        :type merge_res_as_annotation: bool
         :return: None
         """
         if merge_res_as_annotation:
@@ -175,8 +179,42 @@ class IncrementalPdfMerge:
 
         self._write_incremented_pdf(pdf_reader, incremented_objects)
 
-    def _merge_pdf_pages_as_annotation(self, overlay_pdf: PdfFileReader, annotations_title="OverlayPage") -> tuple[Any, dict[tuple[int, int], Any]]:
-        """ Merges two PDFs as if the second PDF is a stamp of the first one """
+    def _merge_pdf_pages_as_annotation(self, overlay_pdf: PdfFileReader, annotations_title="overlay") \
+            -> tuple[PdfFileReader, dict[tuple[int, int], Any]]:
+        """
+        Merges an overlay PDF onto the current PDF by embedding the overlay content
+        as a locked Stamp Annotation.
+
+        Instead of destructively merging the overlay directly into the base page's
+        ``/Contents`` stream, this method uses a non-destructive approach
+        (Adobe PDF Reference 1.7 (2006), Section 8.4). It encapsulates the overlay
+        graphics into a discrete, locked layer. The structural process is as follows:
+
+        1. Form XObject Creation (Section 4.9): Extracts the raw content stream and
+           resources from the overlay page and wraps them in a Form XObject.
+        2. Appearance Stream (Section 8.4.4): Assigns the Form XObject to the
+           normal appearance state (``/AP << /N ... >>``) of a new annotation.
+        3. Stamp Annotation (Section 8.4.5): Creates a ``/Stamp`` annotation
+           dictionary locked via ``/F 196`` (Print, NoZoom, NoRotate, ReadOnly),
+           ``/Locked``, and ``/LockedContents`` flags. It also injects essential
+           tracking metadata (``/NM`` UUID, ``/M`` modification date).
+        4. Page Attachment: Appends the annotation reference to the base page's
+           ``/Annots`` array and flags the modified page (or ``/Annots`` array itself)
+           for the incremental update writer.
+
+        :param overlay_pdf: A reader object containing the visual content to be stamped.
+            It must contain the same number of pages as the current PDF.
+        :type overlay_pdf: PdfFileReader
+        :param annotations_title: The text title (``/T``) assigned to the stamp
+            annotation, useful for identifying the overlay layer in PDF viewer UI.
+            Defaults to "overlay".
+        :type annotations_title: str
+        :return: A tuple containing the updated state:
+            - The ``PdfFileReader`` instance representing the base document.
+            - A dictionary of ``incremented_objects`` mapping ``(object_id, generation)``
+              tuples to the modified PDF objects.
+        :rtype: tuple[PdfFileReader, dict[tuple[int, int], Any]]
+        """
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
         writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
         incremented_objects = {}
@@ -212,7 +250,7 @@ class IncrementalPdfMerge:
             annot_dict.update({
                 NameObject("/Type"): NameObject("/Annot"),
                 NameObject("/Subtype"): NameObject("/Stamp"),
-                NameObject("/T"): TextStringObject(f"{annotations_title}_{page_index}"),
+                NameObject("/T"): TextStringObject(f"{annotations_title}_page_{page_index}"),
                 NameObject("/Rect"): ArrayObject([
                     NumberObject(media_box.left), NumberObject(media_box.bottom),
                     NumberObject(media_box.right), NumberObject(media_box.top)
@@ -223,7 +261,6 @@ class IncrementalPdfMerge:
                 NameObject("/AP"): DictionaryObject({
                     NameObject("/N"): appearance_stream_ref
                 }),
-                # Missing essential metadata for compliant annotations
                 NameObject("/P"): page.indirect_reference,  # Anchor to the specific exact page reference
                 NameObject("/NM"): TextStringObject(str(uuid.uuid4())), # Unique UUID name to prevent orphaned detached states
                 NameObject("/M"): TextStringObject(datetime.datetime.now(datetime.timezone.utc).strftime("D:%Y%m%d%H%M%SZ"))
@@ -498,7 +535,7 @@ class IncrementalPdfMerge:
         :type pdf: PdfReader or Any
         :return: The processed content stream with updated resource names.
         :rtype: ContentStream
-        :raises KeyError: If the operands of an operator are not of type ``list`` or ``dict``.
+        :raises TypeError: If the operands of an operator are not of type ``list`` or ``dict``.
         """
         if not rename:
             return stream
@@ -515,7 +552,7 @@ class IncrementalPdfMerge:
                     if isinstance(op, NameObject):
                         operands[i] = rename.get(op, op)
             else:
-                raise KeyError(f"type of operands is {type(operands)}")
+                raise TypeError(f"type of operands is {type(operands)}")
         return stream
 
     def _push_pop_gs(self, contents: Any, pdf: Any) -> ContentStream:
@@ -641,50 +678,53 @@ class IncrementalPdfMerge:
         if incremented_objects is None or len(incremented_objects) == 0:
             return
 
-        # 1. Trust the trailer first (Standard behavior)
+        # Get xref start offset
+        original_startxref = self._find_last_startxref(self.get_output_stream_value())
+
+        # Check if the original PDF uses an XRef stream
+        # PyPDF strips /Type /XRef from the trailer dict.
+        # Check the raw bytes at original_startxref: if it does not start with 'xref',
+        # it is an object representing an XRef stream
+        is_xref_stream = pdf_reader.trailer.get(TK.TYPE) == "/XRef"
+        if not is_xref_stream:
+            raw_data = self.get_output_stream_value()
+            target_bytes = raw_data[original_startxref:original_startxref + 20].lstrip()
+            if target_bytes and not target_bytes.startswith(b"xref"):
+                is_xref_stream = True
+
+        # Trust that the trailer contain a size first (Standard behavior)
         size = pdf_reader.trailer.get(TK.SIZE)
 
-        # 2. If missing, calculate safely (Fall back for PDF 1.5+)
-        if size is None:
+        # If size is missing, it's a xref stream PDF, we need calculate size (Fall back for PDF 1.5+)
+        if not size:
             # Gather IDs, defaulting to {0} to prevent max() crash on empty files
             all_ids = set(pdf_reader.xref_objStm.keys()) | {0}
             for gen in pdf_reader.xref.values():
                 all_ids.update(gen.keys())
             size = max(all_ids) + 1
-        start_id = size
-        original_startxref = self._find_last_startxref(self.get_output_stream_value())
 
-        # 3. We perform a recursive traversal starting from the Catalog (/Root) to
+        # We perform a recursive traversal starting from the Catalog (/Root) to
         # detect any newly created objects injected during the merge. These objects
         # are assigned valid, contiguous Object IDs to ensure they are correctly
         # indexed in the upcoming incremental XRef update. Additionally, this step
         # resolves circular references (e.g., objects pointing back to their parent
         # Pages), ensuring the integrity of the object graph.
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
-        new_objects = self._sweep_indirect_references(pdf_reader, catalog, start_id)
+        new_objects = self._sweep_indirect_references(pdf_reader, catalog, size)
         for key, val in new_objects.items():
             incremented_objects[key] = val
 
-        # 4. Write all objects to the output stream
+        # Write all objects to the output stream
         new_xref_entries = self._write_objects(incremented_objects)
 
-        # Check if the original PDF uses an XRef stream
-        # PyPDF2 strips /Type /XRef from the trailer dict.
-        # Check the raw bytes at original_startxref: if it does NOT start with 'xref',
-        # it is an object representing an XRef stream!
-        is_xref_stream = pdf_reader.trailer.get("/Type") == "/XRef"
-        if not is_xref_stream:
-            raw_data = self.get_output_stream_value()
-            target_bytes = raw_data[original_startxref:original_startxref+20].lstrip()
-            if target_bytes and not target_bytes.startswith(b"xref"):
-                is_xref_stream = True
-
-        # 5. construct the end of the PDF
+        # construct the end of the PDF
         if is_xref_stream:
-            self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref)
+            self._write_xref_stream(pdf_reader, new_xref_entries, original_startxref, size)
         else:
             # Generate Xref table
-            xref_start, new_size = self._write_xref_table(new_xref_entries)
+            xref_start, max_entry_id = self._write_xref_table(new_xref_entries)
+            new_size = max(size - 1, max_entry_id) + 1
+
             # Construct the PDF trailer
             self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
 
@@ -707,138 +747,160 @@ class IncrementalPdfMerge:
         """
         output = self.output_stream
         output.write(b"\n")
-        new_xref_entries = {}
+        xref_entries = {}
         for (obj_id, obj_gen), obj_data in sorted(incremented_objects.items()):
-            new_xref_entries[(obj_id, obj_gen)] = output.tell()
-            output.write(b_(str(obj_id)) + b" " + b_(str(obj_gen)) + b" obj\n")
+            xref_entries[(obj_id, obj_gen)] = output.tell()
+            output.write(b_(f"{str(obj_id)} {str(obj_gen)} obj"))
             obj_data.write_to_stream(output, None)
             output.write(b"\nendobj\n")
 
-        return new_xref_entries
+        return xref_entries
 
-    def _write_xref_stream(self, pdf_reader, new_xref_entries, original_startxref):
+    def _write_xref_stream(self, pdf_reader, xref_entries, original_startxref, original_size):
         """
-        Writes a fully compliant XRef Stream that indexes itself to satisfy
+        Writes a fully compliant Cross-Reference (XRef) Stream to the output.
+
+        As defined in the Adobe PDF Reference, Sixth Edition, version 1.7 (2006), Section 3.4.7,
+        an XRef Stream replaces the older plain-text ``xref`` tables and trailer dictionary
+        with a single binary stream object. This method handles the structural
+        requirements of constructing this stream by:
+
+        1. Grouping modified objects into contiguous chunks for the ``/Index`` array.
+        2. Packing the byte offsets into a strictly formatted binary payload using a
+           ``/W [1 4 2]`` layout (1-byte Type, 4-byte Offset, 2-byte Generation).
+        3. Self-referencing the stream's own object ID and absolute byte offset.
+        4. Merging standard trailer entries (like ``/Root`` and ``/Info``) into the
+           stream dictionary and linking to the previous XRef section via the
+           ``/Prev`` key to maintain the incremental update chain (Section 3.4.5).
+
+        :param pdf_reader: The reader object of the original PDF. Used to extract
+            essential trailer dictionary entries (e.g., ``/Root``, ``/Info``, ``/ID``)
+            to carry them forward into this stream's dictionary.
+        :type pdf_reader: PdfReader
+        :param xref_entries: A dictionary mapping ``(object_id, generation)`` tuples
+            to their absolute byte offsets in the newly appended data.
+        :type xref_entries: dict[tuple[int, int], int]
+        :param original_startxref: The absolute byte offset of the previous cross-reference
+            section. This establishes the ``/Prev`` chain, allowing PDF parsers to
+            safely traverse multiple incremental updates sequentially.
+        :type original_startxref: int
+        :param original_size: The ``/Size`` value from the original PDF's trailer. Used
+            to determine the next available Object ID for this XRef stream and to
+            update the total document size limit.
+        :type original_size: int
+        :return: None
         """
         output = self.output_stream
 
-        # 1. Capture the start offset of this new object immediately
         xref_start_offset = output.tell()
 
-        # Object 0 (Sentinel Entry)
-        if (0, 65535) not in new_xref_entries:
-            new_xref_entries[(0, 65535)] = 0
+        # Object 0 (Sentinel Entry):
+        if (0, 65535) not in xref_entries:
+            xref_entries[(0, 65535)] = 0
 
-        # 2. Determine the new Object ID
-        original_size = int(pdf_reader.trailer.get("/Size", 0))
-        # FIX: Extract just the Object ID (index 0) from the tuples to find the max
-        max_updated_id = max([k[0] for k in new_xref_entries.keys()])
+        # Get maximum object ID from the new xref entries
+        max_obj_id = max([k[0] for k in xref_entries.keys()])
 
-        # Calculate the ID for this XRef stream (next available ID)
-        current_highest_id = max(original_size - 1, max_updated_id)
+        # Calculate the ID for this XRef stream as it will be written as a new object (next available ID)
+        current_highest_id = max(original_size - 1, max_obj_id)
         xref_stream_obj_id = current_highest_id + 1
 
-        # 3. [CRITICAL FIX] Add the XRef Stream itself to the index using the Tuple key!
+        # Add the XRef Stream itself to the xref entries
         # XRef streams always have a generation of 0
-        new_xref_entries[(xref_stream_obj_id, 0)] = xref_start_offset
+        xref_entries[(xref_stream_obj_id, 0)] = xref_start_offset
 
-        # 4. Prepare the Stream Data (Hex Encoded)
-        sorted_ids = sorted(new_xref_entries.keys())
+        # Prepare the Stream Data (Hex Encoded)
+        sorted_ids = sorted(xref_entries.keys())
         index_array = []
         stream_data_hex = []
 
         i = 0
         while i < len(sorted_ids):
             start_j = i
-            # FIX: Check contiguous chunks using the Object ID (index 0)
+            # Check contiguous chunks using the Object ID
             while i + 1 < len(sorted_ids) and sorted_ids[i + 1][0] == sorted_ids[i][0] + 1:
                 i += 1
 
             chunk_ids = sorted_ids[start_j: i + 1]
 
-            # FIX: Add to /Index array: [First Object ID, Count]
-            # Must extract the ID integer from the first tuple
+            # Add to /Index array: [First Object ID, Count]
             index_array.append(chunk_ids[0][0])
             index_array.append(len(chunk_ids))
 
             # Generate Data for this chunk
             for oid_tuple in chunk_ids:
-                oid, ogen = oid_tuple  # Unpack the tuple
+                oid, ogen = oid_tuple
 
+                # Append the object entry to the xref stream data.
+                # Format ">B I H" packs 7 bytes in Big-Endian order (required for PDF streams):
+                #  > : Big-endian byte order
+                #  B : Unsigned char (1 byte)   -> Entry Type (0, 1, or 2)
+                #  I : Unsigned int (4 bytes)   -> Byte Offset (or Next Free Object ID)
+                #  H : Unsigned short (2 bytes) -> Generation Number
                 if oid == 0:
-                    # Free Object: Type 0, Gen 65535 (FFFF)
+                    # Required sentinel entry (Object 0) for the free object linked list.
+                    # Packs: [Type=0 (Free), Next_Free_Obj=0 (End of list), Max_Generation=65535]
                     stream_data_hex.append(struct.pack(">B I H", 0, 0, 65535))
                 else:
-                    # Normal Object: Type 1, Offset, Gen
-                    offset = new_xref_entries[oid_tuple]
+                    offset = xref_entries[oid_tuple]
 
-                    # 1 = Type 1
-                    # offset = Offset
-                    # ogen = Generation
+                    # Type 1 entries define objects that are in use but are not compressed
+                    # Packs: [Type=1, Absolute_Byte_Offset, Generation_Number]
                     stream_data_hex.append(struct.pack(">B I H", 1, offset, ogen))
             i += 1
 
         # Join data as raw bytes
         stream_content_bytes = b"".join(stream_data_hex)
 
-        # 5. Calculate exact stream length
         stream_length = len(stream_content_bytes)
 
-        # 6. Construct the Stream Dictionary
-        xref_dict = DictionaryObject()
-        xref_dict.update({
-            NameObject("/Type"): NameObject("/XRef"),
-            NameObject("/Size"): NumberObject(xref_stream_obj_id + 1),
+        xref_stream_object = StreamObject()
+        xref_stream_object._data = stream_content_bytes
+        xref_stream_object.update({
+            NameObject(TK.TYPE): NameObject("/XRef"),
+            NameObject(TK.SIZE): NumberObject(xref_stream_obj_id + 1),
+            NameObject(TK.ROOT): pdf_reader.trailer.raw_get(TK.ROOT),
+            NameObject(TK.PREV): NumberObject(original_startxref),
 
-            # /W defines the byte sizes of the 3 fields in the stream:
-            # [1 byte for Type, 4 bytes for Offset, 2 bytes for Generation]
+            # /W defines the byte widths for the 3 columns in the XRef stream: [Type, Offset, Generation]
+            # - 1 byte for Type: The PDF spec only uses types 0, 1, and 2, which fit in one byte.
+            # - 4 bytes for Offset: Supports byte offsets for PDFs up to ~4.29 GB.
+            # - 2 bytes for Generation: Perfectly fits 65,535, the maximum allowed generation number.
             NameObject("/W"): ArrayObject([NumberObject(1), NumberObject(4), NumberObject(2)]),
 
-            NameObject("/Root"): pdf_reader.trailer.raw_get("/Root"),
-            NameObject("/Prev"): NumberObject(original_startxref),
             NameObject("/Index"): ArrayObject([NumberObject(x) for x in index_array]),
             NameObject("/Length"): NumberObject(stream_length)
         })
+        if TK.INFO in pdf_reader.trailer:
+            xref_stream_object[NameObject(TK.INFO)] = pdf_reader.trailer.raw_get(TK.INFO)
+        if TK.ID in pdf_reader.trailer:
+            xref_stream_object[NameObject(TK.ID)] = pdf_reader.trailer.raw_get(TK.ID)
+        if TK.ENCRYPT in pdf_reader.trailer:
+            xref_stream_object[NameObject(TK.ENCRYPT)] = pdf_reader.trailer.raw_get(TK.ENCRYPT)
 
-        # Copy Info/ID/Encrypt if present
-        if "/Info" in pdf_reader.trailer:
-            xref_dict[NameObject("/Info")] = pdf_reader.trailer.raw_get("/Info")
-        if "/ID" in pdf_reader.trailer:
-            xref_dict[NameObject("/ID")] = pdf_reader.trailer.raw_get("/ID")
-        if "/Encrypt" in pdf_reader.trailer:
-            xref_dict[NameObject("/Encrypt")] = pdf_reader.trailer.raw_get("/Encrypt")
-
-        # 7. Write everything to the file
-        # Header
         output.write(b_(f"{xref_stream_obj_id} 0 obj\n"))
-
-        # Dictionary
-        xref_dict.write_to_stream(output, None)
-
-        # Stream Content
-        output.write(b"\nstream\n")
-        output.write(stream_content_bytes)
-        output.write(b"\nendstream\nendobj\n")
+        xref_stream_object.write_to_stream(output, None)
+        output.write(b"\nendobj\n")
 
         # Trailer / EOF
         output.write(b_(f"startxref\n{xref_start_offset}\n%%EOF\n"))
 
-    def _write_xref_table(self, new_xref_entries):
+    def _write_xref_table(self, xref_entries):
         """
         Writes the Cross-Reference (XRef) table to the output stream.
 
         This method formats the table according to ISO 32000-1, creating subsections
         as needed for the provided object entries.
 
-        :param new_xref_entries: A dictionary mapping Object IDs to their byte offsets.
+        :param xref_entries: A dictionary mapping Object IDs to their byte offsets.
         :return: A tuple containing the byte offset of the 'xref' keyword and the
-                 calculated size of the PDF (max_id + 1).
+                 maximum written object ID.
         :rtype: tuple[int, int]
         """
         output = self.output_stream
 
         # ----------------------------------------------------------------------
-        # XRef CONSTRUCTIONS (ISO 32000-1, Section 7.5.4)
+        # XRef CONSTRUCTIONS (Adobe PDF Reference, Sixth Edition, version 1.7 (2006), Section 7.5.4)
         # ----------------------------------------------------------------------
         # The PDF specification allows the cross-reference table to be split
         # into multiple subsections to support "sparse" Object ID ranges.
@@ -856,10 +918,10 @@ class IncrementalPdfMerge:
         # - Offset 0000000000: Points to the next free object index (0 if none).
         # - Generation 65535: Max integer ensures Object 0 is never reused/allocated.
         # - Type 'f': Marks this entry as 'Free'.
-        if (0, 65535) not in new_xref_entries:
-            new_xref_entries[(0, 65535)] = 0
+        if (0, 65535) not in xref_entries:
+            xref_entries[(0, 65535)] = 0
 
-        sorted_ids = sorted(new_xref_entries.keys())
+        sorted_ids = sorted(xref_entries.keys())
         i = 0
         while i < len(sorted_ids):
             start_j = i
@@ -874,14 +936,12 @@ class IncrementalPdfMerge:
                 if oid == 0:
                     output.write(b_(f"{0:0>10} {65535:0>5} f \n"))
                 else:
-                    offset = new_xref_entries[obj_tuple]
+                    offset = xref_entries[obj_tuple]
                     output.write(b_(f"{offset:0>10} {ogen:0>5} n \n"))
 
             i += 1
 
-        max_id = sorted_ids[-1][0]
-
-        return xref_start, max_id + 1
+        return xref_start, sorted_ids[-1][0]
 
     def _write_trailer(self, pdf_reader, original_startxref, xref_start, size):
         """
@@ -899,9 +959,9 @@ class IncrementalPdfMerge:
         """
         output = self.output_stream
 
-        # ----------------------------------------------------------------------
-        # TRAILER CONSTRUCTION (ISO 32000-1, Section 7.5.5)
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------
+        # TRAILER CONSTRUCTION (Adobe PDF Reference, Sixth Edition, version 1.7 (2006), Section 7.5.5)
+        # --------------------------------------------------------------------------------------------
         # The trailer dictionary allows the PDF reader to quickly locate key
         # document structures. For an Incremental Update, it must:
         # 1. Point to the Catalog (/Root) and Metadata (/Info) of the original file.
@@ -910,7 +970,7 @@ class IncrementalPdfMerge:
         #    the document's revision history.
         # 4. Replicate critical security identifiers (/ID and /Encrypt) to maintain
         #    file integrity and access permissions.
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------------------------------------
         output.write(b"trailer\n")
         trailer = DictionaryObject()
         trailer.update(
@@ -922,10 +982,11 @@ class IncrementalPdfMerge:
         )
         if TK.INFO in pdf_reader.trailer:
             trailer[NameObject(TK.INFO)] = pdf_reader.trailer.raw_get(TK.INFO)
-        if "/ID" in pdf_reader.trailer:
-            trailer[NameObject(TK.ID)] = pdf_reader.trailer.raw_get("/ID")
-        # if hasattr(pdf_reader, "_encrypt"):
-        #     trailer[NameObject(TK.ENCRYPT)] = pdf_reader._encrypt
+        if TK.ID in pdf_reader.trailer:
+            trailer[NameObject(TK.ID)] = pdf_reader.trailer.raw_get(TK.ID)
+        if TK.ENCRYPT in pdf_reader.trailer:
+            trailer[NameObject(TK.ENCRYPT)] = pdf_reader.trailer.raw_get(TK.ENCRYPT)
+
         trailer.write_to_stream(output, None)
         output.write(b_(f"\nstartxref\n{xref_start}\n%%EOF\n"))  # EOF
 
@@ -991,7 +1052,7 @@ class IncrementalPdfMerge:
 
         idnum_hash = {}
         stack = deque()
-        discovered = []
+        discovered = set()
         parent = None
         grant_parents = []
         key_or_id = None
@@ -1028,7 +1089,7 @@ class IncrementalPdfMerge:
                 data, next_id = self._resolve_indirect_object(pdf_reader, writer, data, idnum_hash, incremented_objects, next_id)
 
                 if str(data) not in discovered:
-                    discovered.append(str(data))
+                    discovered.add(str(data))
                     stack.append((data.get_object(), None, None, []))
 
             # Check if data has a parent and if it is a dict or an array update the value

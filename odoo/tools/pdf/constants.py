@@ -11,6 +11,7 @@ class TrailerKeys:
     INFO = "/Info"  # Points to the Information Dictionary (Metadata: Author, Title...)
     SIZE = "/Size"  # Total number of objects in the document's XRef table
     PREV = "/Prev"  # Byte offset to the previous XRef table (essential for incremental updates)
+    TYPE = "/Type" # Type of the trailer
 
 class Resources:
     """TABLE 3.30 Entries in a resource dictionary."""
