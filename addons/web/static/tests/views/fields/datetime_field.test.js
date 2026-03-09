@@ -706,3 +706,17 @@ test("list datetime: column widths (numeric format)", async () => {
     ]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 144, 616]);
 });
+test("DateTimeField contains a calendar icon on touch devices", async () => {
+    // The icon is only visible on touch devices, using css rules
+    document.body.classList.add("o_touch_device");
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form>
+            <field name="datetime"/>
+        </form>`,
+    });
+    expect(".fa-calendar").toHaveCount(1);
+    expect(".fa-calendar").toBeVisible();
+});

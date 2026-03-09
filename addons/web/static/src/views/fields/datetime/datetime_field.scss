@@ -1,3 +1,7 @@
-.o_field_daterange .o_input_box button:nth-of-type(2) {
+
+.o_field_daterange:has(.o_daterange_end) .o_daterange_start  {
+    --inputbox-inner-padding-end: 0;
+}
+.o_field_daterange:has(.o_daterange_start) .o_daterange_end {
     --inputbox-inner-padding-start: 0;
 }

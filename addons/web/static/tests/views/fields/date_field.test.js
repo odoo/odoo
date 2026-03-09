@@ -630,3 +630,11 @@ test("DateField with onchange forcing a specific date", async () => {
     await contains(getPickerCell("22")).click(); // 22 May 2009
     expect(".o_field_date").toHaveText("May 4"); // value forced by the onchange
 });
+
+test("DateField contains a calendar icon on touch devices", async () => {
+    // The icon is only visible on touch devices, using css rules
+    document.body.classList.add("o_touch_device");
+    await mountView({ type: "form", resModel: "res.partner", resId: 1 });
+    expect(".fa-calendar").toHaveCount(1);
+    expect(".fa-calendar").toBeVisible();
+});
