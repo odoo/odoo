@@ -15,7 +15,7 @@ class TestAccess(odoo.tests.HttpCase):
         # a partner that can't be read by the portal user, would typically be a user's
         self.internal_user_partner = self.env['res.partner'].create({'name': 'I'})
 
-        self.document = self.env['test_access_right.ticket'].create({
+        self.document = self.env['test_check_access.ticket'].create({
             'name': 'Need help here',
             'message_partner_ids': [Command.set([self.portal_user.partner_id.id,
                                             self.internal_user_partner.id])],
@@ -46,6 +46,6 @@ class TestAccess(odoo.tests.HttpCase):
             'name': 'no_access',
             'group_ids': [Command.clear()],
         })
-        document = self.env['test_access_right.ticket'].with_user(no_access_user)
+        document = self.env['test_check_access.ticket'].with_user(no_access_user)
         res = document.sudo().name_search('Need help here')
         self.assertEqual(res[0][1], "Need help here")
