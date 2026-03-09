@@ -477,10 +477,6 @@
                 margin-bottom: calc(1.5 * var(--fieldWidget-margin-bottom));
             }
         }
-
-        div[role='radiogroup'] {
-            padding-inline-start: calc(1.5 * var(--inputbox-spacing-unit));
-        }
     }
 
     .o_checkbox_optional_field {
@@ -1248,6 +1244,10 @@
                 .o_input, textarea, select, [contenteditable] {
                     border: none;
                 }
+            }
+
+            div[role='radiogroup'] {
+                padding-inline-start: calc(1.5 * var(--inputbox-spacing-unit));
             }
         }
 
