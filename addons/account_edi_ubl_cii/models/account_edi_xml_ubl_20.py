@@ -312,13 +312,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         fixed_tax_charge_vals_list = []
         for grouping_key, tax_details in tax_values_list['tax_details'].items():
             if grouping_key['tax_amount_type'] == 'fixed':
+                is_charge = tax_details['tax_amount_currency'] >= 0
                 fixed_tax_charge_vals_list.append({
                     'currency_name': line.currency_id.name,
                     'currency_dp': line.currency_id.decimal_places,
-                    'charge_indicator': 'true',
-                    'allowance_charge_reason_code': 'AEO',
+                    'charge_indicator': 'true' if is_charge else 'false',
+                    'allowance_charge_reason_code': 'AEO' if is_charge else '100',
                     'allowance_charge_reason': tax_details['tax_name'],
-                    'amount': tax_details['tax_amount_currency'],
+                    'amount': abs(tax_details['tax_amount_currency']),
                 })
 
         if not line.discount:
@@ -394,9 +395,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         uom = super()._get_uom_unece_code(line)
         total_fixed_tax_amount = sum(
-            vals['amount']
-            for vals in allowance_charge_vals_list
-            if vals.get('charge_indicator') == 'true'
+            tax_details['tax_amount_currency']
+            for grouping_key, tax_details in taxes_vals['tax_details'].items()
+            if grouping_key['tax_amount_type'] == 'fixed'
         )
         return {
             'currency': line.currency_id,

@@ -511,6 +511,36 @@ class TestUBLBE(TestUBLCommon):
         self.assertEqual(invoice.amount_total, 218.042)
         self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_ecotaxes_case4.xml')
 
+    def test_export_with_fixed_taxes_case5(self):
+        """ CASE 5: simple invoice with a recupel tax, with one negative line.
+        1) Subtotal (price without taxes): (10+1) * 5 + (10+1) * -3 = 22.00
+        2) Taxes:
+            - recupel = 5 - 3 = 2
+            - VAT = (20 + 2) * 0.21 = 4.62
+        3) Total = 20 + 2 + 4.62 = 26.62
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'price_unit': 10,
+                    'tax_ids': [Command.set([self.recupel.id, self.tax_21.id])],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': -3,
+                    'price_unit': 10,
+                    'tax_ids': [Command.set([self.recupel.id, self.tax_21.id])],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 26.62)
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_ecotaxes_case5.xml')
+
     def test_export_payment_terms(self):
         """
         Tests the early payment discount using the example case from the VBO/FEB.
