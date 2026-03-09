@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_bank_form_inherit_account"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='acc_number']" position="after">
-                <field name="l10n_mx_edi_clabe" optional="hide"/>
+                <field name="l10n_mx_edi_clabe" invisible="1"/>  <!-- TODO: remove this inherited view in master -->
             </xpath>
         </field>
     </record>
