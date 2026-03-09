@@ -386,3 +386,38 @@ test("Partner autocomplete : onChange should not disturb option selection", asyn
         });
     }
 });
+
+test("Partner autocomplete: select a value, then empty the input and save", async () => {
+    class OtherModel extends models.Model {
+        _name = "other.model";
+        name = fields.Char();
+        email = fields.Char();
+    }
+    defineModels([OtherModel]);
+
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1]);
+    });
+    await mountView({
+        resModel: "other.model",
+        type: "form",
+        arch: `
+            <form>
+                <field name="name" widget="field_partner_autocomplete"/>
+                <field name="email"/>
+            </form>`,
+        });
+
+    await editAutocomplete("[name=name] .dropdown input", "company");
+    expect("[name=name] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(4);
+    await contains("[name=name] .o-autocomplete ul li").click();
+    expect("[name=name] input").toHaveValue("First Company");
+    expect("[name=email] input").toHaveValue("hello@odoo.com");
+
+    await contains("[name=name] input").edit("");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([{
+        email: "hello@odoo.com",
+        name: false,
+    }]);
+});
