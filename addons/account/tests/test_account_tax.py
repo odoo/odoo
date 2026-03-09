@@ -79,6 +79,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
         """ Modifications of a used tax should be logged. """
         self.set_up_and_use_tax()
         self.flush_tracking()
+
         old_amount = self.company_data['default_tax_sale'].amount
         old_name = self.company_data['default_tax_sale'].name
 
@@ -113,8 +114,8 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_addition_when_tax_is_used(self):
         """ Adding repartition lines in a used tax should be logged. """
-
         self.set_up_and_use_tax()
+        self.flush_tracking()
 
         with self.mock_mail_gateway(), self.mock_mail_app():
             self.company_data['default_tax_sale'].write({
@@ -128,8 +129,23 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
 
         # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
+        self.assertEqual(len(self._new_msgs), 3)
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+            {
+                'body': '',
+            }, {
+                'body_content': '<b>New Invoice</b> repartition line 4',
+            }, {
+                'body_content': '<b>New Refund</b> repartition line 4',
+            },
+        ], strict=True):
+            self.assertMessageFields(msg, {
+                'body_content': '',
+                'model': 'account.tax',
+                'res_id': self.company_data['default_tax_sale'].id,
+                'tracking_values': [],
+                **exp_values,
+            })
         previews = self._new_msgs.mapped('preview')
         self.assertIn(
             "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
@@ -142,8 +158,8 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_update_when_tax_is_used(self):
         """ Updating repartition lines in a used tax should be logged. """
-
         self.set_up_and_use_tax()
+        self.flush_tracking()
 
         last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
             .filtered(lambda tax_rep: not tax_rep.factor_percent)
@@ -168,16 +184,31 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
 
         # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
+        self.assertEqual(len(self._new_msgs), 3)
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+            {
+                'body': '',
+            }, {
+                'body_content': '<b>Invoice</b> repartition line 3',
+            }, {
+                'body_content': '<b>Refund</b> repartition line 3',
+            },
+        ], strict=True):
+            self.assertMessageFields(msg, {
+                'body_content': '',
+                'model': 'account.tax',
+                'res_id': self.company_data['default_tax_sale'].id,
+                'tracking_values': [],
+                **exp_values,
+            })
         previews = self._new_msgs.mapped('preview')
         self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
         self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
         """ Reordering repartition lines in a used tax should be logged. """
-
         self.set_up_and_use_tax()
+        self.flush_tracking()
 
         last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
             .filtered(lambda tax_rep: not tax_rep.factor_percent)
@@ -196,16 +227,39 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
 
         # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
+        self.assertEqual(len(self._new_msgs), 7)
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+            {
+                'body': '',
+            }, {
+                'body_content': '<b>Invoice</b> repartition line 1',
+            }, {
+                'body_content': '<b>Invoice</b> repartition line 2',
+            },  {
+                'body_content': '<b>Invoice</b> repartition line 3',
+            }, {
+                'body_content': '<b>Refund</b> repartition line 1',
+            }, {
+                'body_content': '<b>Refund</b> repartition line 2',
+            },  {
+                'body_content': '<b>Refund</b> repartition line 3',
+            },
+        ], strict=True):
+            self.assertMessageFields(msg, {
+                'body_content': '',
+                'model': 'account.tax',
+                'res_id': self.company_data['default_tax_sale'].id,
+                'tracking_values': [],
+                **exp_values,
+            })
         previews = self._new_msgs.mapped('preview')
         self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
         self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
 
     def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
         """ Deleting repartition lines in a used tax should be logged. """
-
         self.set_up_and_use_tax()
+        self.flush_tracking()
 
         last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
         last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
@@ -222,10 +276,24 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
 
         # manual log, no tracking
-        for msg in self._new_msgs:
-            self.assertMessageFields(msg, {'tracking_values': []})
+        self.assertEqual(len(self._new_msgs), 3)
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
+            {
+                'body': '',
+            }, {
+                'body_content': '<b>Removed Invoice</b> repartition line 3',
+            }, {
+                'body_content': '<b>Removed Refund</b> repartition line 3',
+            },
+        ], strict=True):
+            self.assertMessageFields(msg, {
+                'body_content': '',
+                'model': 'account.tax',
+                'res_id': self.company_data['default_tax_sale'].id,
+                'tracking_values': [],
+                **exp_values,
+            })
         previews = self._new_msgs.mapped('preview')
-        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
         self.assertIn(
             "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
