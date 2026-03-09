@@ -617,8 +617,8 @@ function useOperationWithReload(callApply, reload) {
     const env = useEnv();
     return async (...args) => {
         const { editingElement } = args[0][0];
-        env.services.ui.block();
         await callApply(...args);
+        env.services.ui.block();
         env.editor.shared.history.addStep();
         await env.editor.shared.savePlugin.save();
         const target = env.editor.shared.builderOptions.getReloadSelector(editingElement);
