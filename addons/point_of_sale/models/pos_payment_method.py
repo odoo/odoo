@@ -123,6 +123,7 @@ class PosPaymentMethod(models.Model):
             {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
             {"type": "cash_machine", "provider": "glory", "module": "pos_glory_cash", "name": "Glory"},
             {"type": "cash_machine", "provider": "cashdro", "module": "pos_cashdro", "name": "Cashdro"},
+            {"type": "cash_machine", "provider": "cashmatic", "module": "pos_cashmatic", "name": "Cashmatic"},
         ]
 
     @api.model
