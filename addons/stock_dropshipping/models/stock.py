@@ -3,6 +3,7 @@
 
 from odoo import api, models, fields
 from odoo.osv import expression
+from odoo.tools import OrderedSet
 
 
 class StockRule(models.Model):
@@ -103,3 +104,17 @@ class StockMove(models.Model):
         elif self._is_dropshipped_returned():
             layer_candidates = layer_candidates.filtered(lambda svl: svl.quantity > 0)
         return layer_candidates
+
+    def _get_price_diff_valuation_layers(self, line):
+        layers_ids = OrderedSet()
+        for move in self :
+            # for classic dropshipped product we only want the incoming svl, we don't try to be
+            # to smart with returns or trickier use cases
+            move_layers = super(StockMove, move)._get_price_diff_valuation_layers(line)
+            if move._is_dropshipped() and len(move_layers) == 2 and \
+                sum(move_layers.mapped('value')) == 0:
+                incoming_layer = move_layers.filtered(lambda l: l.value >= 0)
+                layers_ids.update(incoming_layer.ids)
+            else:
+                layers_ids.update(move_layers.ids)
+            return self.env['stock.valuation.layer'].browse(layers_ids)

@@ -325,3 +325,6 @@ class StockMove(models.Model):
                 [move for move in current_move.move_orig_ids if move not in moves_to_check and move not in seen_moves]
             )
         return None, None
+
+    def _get_price_diff_valuation_layers(self,line):
+        return self.stock_valuation_layer_ids.filtered(lambda svl: svl.product_id == line.product_id and not svl.stock_valuation_layer_id)
