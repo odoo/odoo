@@ -149,7 +149,7 @@ class IncrementalPdfMerge:
         """
         return self.output_stream.getvalue()
 
-    def merge_pdf(self, overlay_pdf: PdfFileReader, merge_res_as_annotation=False) -> None:
+    def merge_pdf(self, overlay_pdf: PdfFileReader, overlay_pages: set[int] = None, merge_res_as_annotation=False) -> None:
         """
         Merges the content of an overlay PDF onto the current PDF output stream.
 
@@ -165,6 +165,9 @@ class IncrementalPdfMerge:
         :param overlay_pdf: A reader object containing the content to be overlaid.
             It must contain the same number of pages as the current PDF.
         :type overlay_pdf: PdfFileReader
+        :param overlay_pages: Optional set of PDF page indices indicating which
+            pages should receive the overlay.
+        :type overlay_pages: set[int] or None
         :param merge_res_as_annotation: If ``True``, merges the overlay resources
             as a PDF annotation rather than directly modifying the base page's
             content stream. This is particularly useful for watermarks, signatures,
@@ -173,14 +176,18 @@ class IncrementalPdfMerge:
         :return: None
         """
         if merge_res_as_annotation:
-            pdf_reader, incremented_objects = self._merge_pdf_pages_as_annotation(overlay_pdf)
+            pdf_reader, incremented_objects = self._merge_pdf_pages_as_annotation(overlay_pdf, overlay_pages)
         else:
-            pdf_reader, incremented_objects = self._merge_pdf_pages(overlay_pdf)
+            pdf_reader, incremented_objects = self._merge_pdf_pages(overlay_pdf, overlay_pages)
 
         self._write_incremented_pdf(pdf_reader, incremented_objects)
 
-    def _merge_pdf_pages_as_annotation(self, overlay_pdf: PdfFileReader, annotations_title="overlay") \
-            -> tuple[PdfFileReader, dict[tuple[int, int], Any]]:
+    def _merge_pdf_pages_as_annotation(
+            self,
+            overlay_pdf: PdfFileReader,
+            overlay_pages: set[int] = None,
+            annotations_title="overlay"
+    ) -> tuple[PdfFileReader, dict[tuple[int, int], Any]]:
         """
         Merges an overlay PDF onto the current PDF by embedding the overlay content
         as a locked Stamp Annotation.
@@ -205,6 +212,9 @@ class IncrementalPdfMerge:
         :param overlay_pdf: A reader object containing the visual content to be stamped.
             It must contain the same number of pages as the current PDF.
         :type overlay_pdf: PdfFileReader
+        :param overlay_pages: Optional set of PDF page indices indicating which
+            pages should receive the overlay.
+        :type overlay_pages: set[int] or None
         :param annotations_title: The text title (``/T``) assigned to the stamp
             annotation, useful for identifying the overlay layer in PDF viewer UI.
             Defaults to "overlay".
@@ -221,6 +231,16 @@ class IncrementalPdfMerge:
 
         for page_index in range(len(pdf_reader.pages)):
             page = pdf_reader.pages[page_index]
+            if overlay_pages and page_index not in overlay_pages:
+                # Still include skipped pages in the incremental update unchanged.
+                # This ensures their XRef entries are "owned" by this update,
+                # preventing subsequent signings from overriding objects sealed
+                # by this signature's ByteRange.
+                page_ref_id = page.indirect_reference.idnum
+                page_ref_gen = page.indirect_reference.generation
+                if (page_ref_id, page_ref_gen) not in incremented_objects:
+                    incremented_objects[(page_ref_id, page_ref_gen)] = page
+                continue
             overlay_page = overlay_pdf.pages[page_index]
 
             content_stream = overlay_page.get_contents()
@@ -294,7 +314,7 @@ class IncrementalPdfMerge:
 
         return pdf_reader, incremented_objects
 
-    def _merge_pdf_pages(self, overlay_pdf: PdfFileReader) -> tuple[PdfFileReader, dict[int, Any]]:
+    def _merge_pdf_pages(self, overlay_pdf: PdfFileReader, overlay_pages: set[int] = None) -> tuple[PdfFileReader, dict[int, Any]]:
         """
         Internal helper to merge page content while preserving Object IDs.
 
@@ -311,6 +331,9 @@ class IncrementalPdfMerge:
 
         :param overlay_pdf: The source PDF containing the overlay content.
         :type overlay_pdf: PdfFileReader
+        :param overlay_pages: Optional set of PDF page indices indicating which
+            pages should receive the overlay.
+        :type overlay_pages: set[int] or None
         :return: A tuple containing:
                  1. The ``PdfFileReader`` instance of the current stream.
                  2. A dictionary mapping Object IDs (int) to the modified Page objects.
@@ -328,6 +351,9 @@ class IncrementalPdfMerge:
         # the subsequent incremental update sweep.
         incremented_objects = {}
         for page_index in range(0, len(pdf_reader.pages)):
+            if overlay_pages and page_index not in overlay_pages:
+                continue
+
             page = pdf_reader.pages[page_index]
             self._merge_page(page, overlay_pdf.pages[page_index])
             page_ref_id = page.indirect_reference.idnum

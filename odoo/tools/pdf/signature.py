@@ -81,7 +81,8 @@ class PdfSigner:
 
     def sign_pdf(
             self,
-            overlay_items: bytes = None,
+            overlay_pdf: bytes = None,
+            overlay_pages: set[int] = None,
             visible_signature: bool = False,
             field_name: str = "Odoo Signature",
             signer: Optional[ResUsers] = None
@@ -94,8 +95,11 @@ class PdfSigner:
         incremental update, and then physically injects the cryptographic signature
         into the reserved placeholder.
 
-        :param overlay_items: Optional PDF bytes to overlay (e.g., a background or stamp).
-        :type overlay_items: bytes or None
+        :param overlay_pdf: Optional PDF bytes to overlay (e.g., a background or stamp).
+        :type overlay_pdf: bytes or None
+        :param overlay_pages: Optional set of PDF page indices indicating which
+                              pages should receive the overlay.
+        :type overlay_pages: set[int] or None
         :param visible_signature: If True, generates a visual representation (Widget)
                                   of the signature on the first page.
         :type visible_signature: bool
@@ -115,9 +119,9 @@ class PdfSigner:
         signer_identifier = f"{signer.name} <{signer.email}>"
 
         # 1. Merge Overlay (if provided) or Load Original
-        if overlay_items:
-            overlay_pdf = PdfFileReader(overlay_items, strict=False)
-            pdf_reader, incremented_objects = pdf_merger._merge_pdf_pages_as_annotation(overlay_pdf, signer_identifier)
+        if overlay_pdf:
+            overlay_pdf = PdfFileReader(overlay_pdf, strict=False)
+            pdf_reader, incremented_objects = pdf_merger._merge_pdf_pages_as_annotation(overlay_pdf, overlay_pages, signer_identifier)
         else:
             pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
 
