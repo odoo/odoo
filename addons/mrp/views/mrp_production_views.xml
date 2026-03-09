@@ -485,15 +485,12 @@
                                     <field name="forecast_expected_date" column_invisible="True"/>
                                     <field name="quantity" string="Consumed"
                                         decoration-success="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
-                                        decoration-warning="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
+                                        decoration-danger="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0)"
+                                        decoration-warning="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &lt; 0)"
                                         column_invisible="parent.state == 'draft'"
-                                        decoration-info="manual_consumption"
-                                        decoration-muted="not manual_consumption"
-                                        decoration-bf="manual_consumption"
                                         force_save="1"/>
                                     <field name="uom_id" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                                    <field name="picked" column_invisible="True"/>
-                                    <field name="manual_consumption" column_invisible="True" force_save="1"/>
+                                    <field name="picked" optional="hide"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"

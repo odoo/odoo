@@ -57,10 +57,6 @@ class StockMove(models.Model):
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available', depends=['product_id'])
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available', depends=['product_id'])
-    manual_consumption = fields.Boolean(
-        'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
-        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-             "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
 
     @api.depends('product_id.bom_ids', 'product_id.bom_ids.uom_id')
     def _compute_allowed_uom_ids(self):
@@ -74,15 +70,6 @@ class StockMove(models.Model):
         for move in self:
             if move.production_id:
                 move.packaging_uom_id = move.production_id.uom_id
-
-    @api.depends('product_id')
-    def _compute_manual_consumption(self):
-        for move in self:
-            # when computed for new_id in onchange, use value from _origin
-            if move != move._origin:
-                move.manual_consumption = move._origin.manual_consumption
-            elif not move.manual_consumption:
-                move.manual_consumption = move._is_manual_consumption()
 
     @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id')
     def _compute_location_id(self):
@@ -215,16 +202,17 @@ class StockMove(models.Model):
     def _onchange_product_uom_qty(self):
         if self.uom_id and self.raw_material_production_id \
             and (self.has_tracking not in ['lot', 'serial']) \
-            and self.state not in ('draft', 'cancel', 'done'):
+            and self.state not in ('draft', 'cancel', 'done') and not self.picked:
             mo = self.raw_material_production_id
             new_qty = self.uom_id.round((mo.qty_producing - mo.qty_produced) * self.unit_factor)
+            self.env = self.env(context=dict(self.env.context, skip_mark_picked=True))
             self.quantity = new_qty
 
-    @api.onchange('quantity', 'uom_id', 'picked')
+    @api.onchange('quantity')
     def _onchange_quantity(self):
         if self.raw_material_production_id and self.uom_id and \
-            not self.uom_id.is_zero(self.quantity) and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
-            self.manual_consumption = True
+            not self.env.context.get('skip_mark_picked') \
+            and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
             self.picked = True
 
     @api.constrains('quantity', 'raw_material_production_id')
@@ -240,10 +228,8 @@ class StockMove(models.Model):
         - Moves from a copied MO
         - Backorders
         """
-        if self.env.context.get('force_manual_consumption'):
+        if self.env.context.get('force_move_picked'):
             for vals in vals_list:
-                if 'quantity' in vals:
-                    vals['manual_consumption'] = True
                 vals['picked'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
@@ -282,7 +268,7 @@ class StockMove(models.Model):
 
     def write(self, vals):
         moves_to_update = False
-        if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
+        if self.env.context.get('force_move_picked') and 'quantity' in vals:
             moves_to_update = self.filtered(lambda move: move.product_uom_qty != vals['quantity'])
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
@@ -292,7 +278,7 @@ class StockMove(models.Model):
         old_demand = {move.id: move.product_uom_qty for move in self}
         res = super().write(vals)
         if moves_to_update:
-            moves_to_update.write({'manual_consumption': True, 'picked': True})
+            moves_to_update.write({'picked': True})
         if 'product_uom_qty' in vals and not self.env.context.get('no_procurement', False):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
@@ -328,8 +314,34 @@ class StockMove(models.Model):
         if procurements:
             self.env['stock.rule'].run(procurements)
 
+    def _do_unreserve(self):
+        # Moves with a quantity should be protected from unreservation (similar to picked).
+        # This override is to do that for moves which got updated from updating qty_producing as
+        # they are not marked as picked any more
+        if not self.env.context.get('skip_mo_check'):
+            protected = self.filtered(
+                lambda m: m.raw_material_production_id
+                and not m.picked
+                and m.quantity
+                and m.raw_material_production_id.qty_producing > 0
+            )
+            return super(StockMove, self - protected)._do_unreserve()
+        return super()._do_unreserve()
+
     def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
+        # Moves with a quantity should be protected from re-assignation (similar to picked).
+        # This override is to do that for moves which got updated from updating qty_producing as
+        # they are not marked as picked any more
+        if not self.env.context.get('skip_mo_check'):
+            protected = self.filtered(
+                lambda m: m.raw_material_production_id
+                and not m.picked
+                and m.quantity
+                and m.raw_material_production_id.qty_producing > 0
+            )
+            res = super(StockMove, self - protected)._action_assign(force_qty=force_qty)
+        else:
+            res = super()._action_assign(force_qty=force_qty)
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
@@ -394,7 +406,7 @@ class StockMove(models.Model):
             action['name'] = _("Components")
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
-            action['context']['force_manual_consumption'] = True
+            action['context']['force_move_picked'] = True
             action['context']['active_mo_id'] = self.raw_material_production_id.id
         elif self.production_id:
             action['name'] = _("Move Byproduct")
@@ -499,7 +511,6 @@ class StockMove(models.Model):
             'state': 'draft' if self.state == 'draft' else 'confirmed',
             'reservation_date': self.reservation_date,
             'date_deadline': self.date_deadline,
-            'manual_consumption': self._is_manual_consumption(),
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
             'procure_method': self.procure_method,
@@ -647,20 +658,12 @@ class StockMove(models.Model):
             }
         return res
 
-    def _is_manual_consumption(self):
-        self.ensure_one()
-        return self._determine_is_manual_consumption(self.bom_line_id)
-
-    @api.model
-    def _determine_is_manual_consumption(self, bom_line):
-        return bom_line and bom_line.operation_id
-
     def _get_relevant_state_among_moves(self):
         res = super()._get_relevant_state_among_moves()
         if res == 'partially_available'\
                 and self.raw_material_production_id\
                 and all(move.should_consume_qty and move.uom_id.compare(move.quantity, move.should_consume_qty) >= 0
-                        or (move.uom_id.compare(move.quantity, move.product_uom_qty) >= 0 or (move.manual_consumption and move.picked))
+                        or (move.uom_id.compare(move.quantity, move.product_uom_qty) >= 0 or move.picked)
                         for move in self):
             res = 'assigned'
         return res

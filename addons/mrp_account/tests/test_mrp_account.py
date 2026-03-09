@@ -222,6 +222,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         """
         self.glass.qty_available = 2
         mo = self._create_mo(self.bom_1, 1, confirm=False)
+        mo.move_raw_ids.workorder_id = mo.workorder_ids[0]
 
         # post a WIP for an invalid MO, i.e. draft/cancelled/done results in a "Manual Entry"
         wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
@@ -441,7 +442,6 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(mo.workorder_ids._cal_cost(), 600)
 
         # Cost should stay the same for a done MO if nothing else is changed
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.workcenter.costs_hour = 333
         self.assertEqual(mo.workorder_ids._cal_cost(), 600)
@@ -454,8 +454,6 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(workorder._cal_cost(), 600)
         # Simulate missing finished moves
         mo.move_finished_ids.unlink()
-        # Post inventory and complete MO
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 

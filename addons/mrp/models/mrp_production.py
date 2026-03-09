@@ -1433,7 +1433,6 @@ class MrpProduction(models.Model):
             'warehouse_id': source_location.warehouse_id.id,
             'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
-            'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(bom_line),
         }
         return data
 
@@ -1447,7 +1446,7 @@ class MrpProduction(models.Model):
     def _mark_byproducts_as_produced(self):
         self.move_byproduct_ids.picked = True
 
-    def _set_qty_producing(self, pick_manual_consumption_moves=True):
+    def _set_qty_producing(self, mark_moves_picked=True):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
             qty_production_uom = self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id, rounding_method='HALF-UP')
@@ -1463,17 +1462,14 @@ class MrpProduction(models.Model):
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
             is_byproduct = move in self.move_byproduct_ids
-            # Never update already produced by-product moves.
-            if move.picked and (is_byproduct or move.manual_consumption):
-                continue
-
+            # Never update already picked moves.
             # sudo needed for portal users
-            if move.sudo()._should_bypass_set_qty_producing():
+            if move.picked or move.sudo()._should_bypass_set_qty_producing():
                 continue
 
             new_qty = move.uom_id.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             move._set_quantity_done(new_qty)
-            if (not move.manual_consumption or pick_manual_consumption_moves) \
+            if mark_moves_picked \
                     and move.quantity \
                     and not is_byproduct \
                     and (move.raw_material_production_id or move.product_id.tracking != 'serial'):
@@ -1869,7 +1865,8 @@ class MrpProduction(models.Model):
                 elif line := move.bom_line_id:
                     expected_qty = line.uom_id._compute_quantity(
                         line.product_qty * bom_factors[line.bom_id.id], move.uom_id)
-                picked_qty = move._get_picked_quantity()
+                picked_qty = sum(ml.uom_id._compute_quantity(ml.quantity, move.uom_id, round=False)
+                    for ml in move.move_line_ids)
                 if move.uom_id.compare(picked_qty, expected_qty):
                     issues.append((order, move.product_id, move.uom_id, move, picked_qty, expected_qty))
             # Once we've matched every orphaned BoM line we could match with orphaned moves, we consider
@@ -2304,6 +2301,9 @@ class MrpProduction(models.Model):
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
 
+        for production in self.filtered(lambda p: not p.uom_id.is_zero(production.qty_producing)):
+            production.move_raw_ids.filtered(lambda m: not m.picked).picked = True
+
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=True)
 
@@ -2413,12 +2413,7 @@ class MrpProduction(models.Model):
         self._button_mark_done_sanity_checks()
         production_auto_ids = set()
         for production in self:
-            if not production.uom_id.is_zero(production.qty_producing):
-                production.move_raw_ids.filtered(
-                    lambda move: move.manual_consumption and not move.picked
-                ).picked = True
-                continue
-            if production._auto_production_checks():
+            if production.uom_id.is_zero(production.qty_producing) and production._auto_production_checks():
                 production_auto_ids.add(production.id)
 
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
@@ -2790,7 +2785,6 @@ class MrpProduction(models.Model):
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
                     move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
-                move_raw.manual_consumption = move_raw._determine_is_manual_consumption(bom_line)
             elif not bom_line:
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.
@@ -3019,9 +3013,9 @@ class MrpProduction(models.Model):
         for move in self.move_raw_ids:
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
-            if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
-                    missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+            if move.picked and move.has_tracking in ('serial', 'lot') and \
+                any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked):
+                missing_lot_id_products += "\n  - %s" % move.product_id.display_name
         if missing_lot_id_products:
             error_msg = _(
                 "You need to supply Lot/Serial Number for products and 'consume' them: %(missing_products)s",

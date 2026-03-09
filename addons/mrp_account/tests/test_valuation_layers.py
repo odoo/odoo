@@ -146,14 +146,13 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_in_move(self.glass, 1, 20)
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
-        mo._post_inventory()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 20)
         self.assertEqual(self.dining_table.total_value, 8.8)
-        self._produce(mo)
-        warning = Form.from_action(self.env, mo.button_mark_done()).save()
-        for warning_line in warning.mrp_consumption_warning_line_ids:
-            self.assertEqual(warning_line.product_expected_qty_uom, 2 * warning_line.product_consumed_qty_uom)
-        warning.action_confirm()
+        mo.button_mark_done()
         self.assertEqual(self.glass.total_value, 0)
         self.assertEqual(self.dining_table.total_value, 8.8 * 2)
 
@@ -180,14 +179,14 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_in_move(self.glass, 1)
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
-        mo._post_inventory()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 100)
         self.assertEqual(self.dining_table.total_value, PRICE + 100)
         self._produce(mo)
-        warning = Form.from_action(self.env, mo.button_mark_done()).save()
-        for warning_line in warning.mrp_consumption_warning_line_ids:
-            self.assertEqual(warning_line.product_expected_qty_uom, 2 * warning_line.product_consumed_qty_uom)
-        warning.action_confirm()
+        mo.button_mark_done()
         self.assertEqual(self.glass.total_value, 0)
         self.assertEqual(self.dining_table.total_value, 2 * (PRICE + 100))
 
@@ -225,14 +224,14 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_in_move(self.glass, 1)
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
-        mo._post_inventory()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 100)
         self.assertEqual(self.dining_table.total_value, 1000)
         self._produce(mo)
-        warning = Form.from_action(self.env, mo.button_mark_done()).save()
-        for warning_line in warning.mrp_consumption_warning_line_ids:
-            self.assertEqual(warning_line.product_expected_qty_uom, 2 * warning_line.product_consumed_qty_uom)
-        warning.action_confirm()
+        mo.button_mark_done()
         self.assertEqual(self.glass.total_value, 0)
         self.assertEqual(self.dining_table.total_value, 2000)
 
@@ -258,14 +257,14 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_in_move(self.glass, 1, 20)
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
-        mo._post_inventory()
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 15)
         self.assertEqual(self.dining_table.total_value, PRICE + 15)
         self._produce(mo)
-        warning = Form.from_action(self.env, mo.button_mark_done()).save()
-        for warning_line in warning.mrp_consumption_warning_line_ids:
-            self.assertEqual(warning_line.product_expected_qty_uom, 2 * warning_line.product_consumed_qty_uom)
-        warning.action_confirm()
+        mo.button_mark_done()
         self.assertEqual(self.glass.total_value, 0)
         self.assertEqual(self.dining_table.total_value, 2 * PRICE + 30)
 

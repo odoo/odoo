@@ -78,7 +78,7 @@ class ChangeProductionQty(models.TransientModel):
             production.write({'product_qty': new_production_qty})
             if not production.uom_id.is_zero(production.qty_producing) and not production.workorder_ids:
                 production.qty_producing = new_production_qty
-                production._set_qty_producing()
+                production._set_qty_producing(False)
 
             for wo in production.workorder_ids:
                 quantity = wo.qty_production - wo.qty_produced

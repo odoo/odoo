@@ -2297,8 +2297,6 @@ class TestBoM(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        move_consumed_in_op = mo.move_raw_ids.filtered(lambda m: m.bom_line_id == self.bom_2.bom_line_ids[0])
-        self.assertTrue(move_consumed_in_op.manual_consumption)
         self.bom_2.write({
             'bom_line_ids': [
                 Command.update(self.bom_2.bom_line_ids[0].id, {'operation_id': self.env['mrp.routing.workcenter'].id}),
@@ -2306,7 +2304,6 @@ class TestBoM(TestMrpCommon):
         })
         self.assertTrue(mo.is_outdated_bom)
         mo.action_update_bom()
-        self.assertFalse(move_consumed_in_op.manual_consumption)
 
         self.bom_2.operation_ids.write({
             'name': 'Painting',

@@ -83,6 +83,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
@@ -90,6 +94,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 10.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         mo.workorder_ids.button_finish()
         self.assertEqual(mo.state, 'to_close')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -100.0)
@@ -117,6 +125,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
@@ -360,6 +372,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.qty_producing = 5.0
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         aal = mo.move_raw_ids.analytic_account_line_ids
         self.assertEqual(len(aal), 1)
         self.assertEqual(sum(aal.mapped('amount')), -50.00)
@@ -368,6 +384,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 10.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         mo.workorder_ids.button_finish()
         aal = mo.move_raw_ids.analytic_account_line_ids
 
@@ -416,6 +436,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 5.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        # setting it to False again to enable changing move.quantity when changing mo.qty_producing
+        mo.move_raw_ids.picked = True
+        mo.move_raw_ids.picked = False
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(self.analytic_account.balance, -50.0)
 
@@ -423,6 +447,8 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form = Form(mo)
         mo_form.qty_producing = 0.0
         mo_form.save()
+        # Setting the move as picked to trigger analytic account lines calculations and
+        mo.move_raw_ids.picked = True
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(self.analytic_account.balance, 0.0)
 

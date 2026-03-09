@@ -40,14 +40,12 @@ class TestTourManualConsumption(HttpCase):
 
         self.assertEqual(mo.state, 'confirmed')
         move_nt = mo.move_raw_ids
-        self.assertEqual(move_nt.manual_consumption, False)
         self.assertEqual(move_nt.quantity, 0)
         self.assertFalse(move_nt.picked)
 
         url = f"/odoo/action-mrp.mrp_production_action/{mo.id}"
         self.start_tour(url, "test_mrp_manual_consumption_02", login="admin", timeout=100)
 
-        self.assertEqual(move_nt.manual_consumption, True)
         self.assertEqual(move_nt.picked, True)
         self.assertEqual(move_nt.quantity, 16.0)
 
@@ -84,7 +82,6 @@ class TestManualConsumption(TestMrpCommon):
         component.standard_price = 20
         mo.move_raw_ids.quantity = 2.0
         mo.move_raw_ids.picked = True
-        mo.move_raw_ids.manual_consumption = True
         self.assertEqual(mo.state, 'progress')
         action = mo.button_mark_done()
         consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
@@ -94,9 +91,9 @@ class TestManualConsumption(TestMrpCommon):
 
     def test_manual_consumption_quantity_change(self):
         """Test manual consumption mechanism.
-        1. Test when a move is manual consumption but NOT picked, quantity will be updated automatically.
-        2. Test when a move is manual consumption but IS picked, quantity will not be updated automatically.
-        3. Test when create backorder, the manual consumption should be set according to the bom.
+        1. Test when a move is NOT picked, quantity will be updated automatically.
+        2. Test when a move is picked, quantity will not be updated automatically.
+        3. Test when create backorder, the moves are not picked (auto updated normally).
         """
         Product = self.env['product.product']
         product_finish = Product.create({
@@ -135,28 +132,29 @@ class TestManualConsumption(TestMrpCommon):
         mo.action_confirm()
         mo.action_assign()
 
-        # After updating qty_producing, quantity changes for both moves, but manual move will remain not picked
+        # After updating qty_producing, None of the moves are picked
         mo_form = Form(mo)
         mo_form.qty_producing = 5
         mo = mo_form.save()
         move_auto, move_manual = get_moves(mo)
-        self.assertEqual(move_auto.manual_consumption, False)
         self.assertEqual(move_auto.quantity, 5)
-        self.assertTrue(move_auto.picked)
-        self.assertEqual(move_manual.manual_consumption, False)
+        self.assertFalse(move_auto.picked)
         self.assertEqual(move_manual.quantity, 5)
-        self.assertTrue(move_manual.picked)
+        self.assertFalse(move_manual.picked)
 
         move_manual.quantity = 6
         move_manual._onchange_quantity()
 
-        # Now we change quantity to 7. Automatic move will change quantity, but manual move will still be 5 because it has been already picked.
+        # Now we change quantity to 7. Automatic move (not picked) will change quantity,
+        # but manual move (picked) will still be 6 because it has been already picked.
         mo_form = Form(mo)
         mo_form.qty_producing = 7
         mo = mo_form.save()
 
         self.assertEqual(move_auto.quantity, 7)
+        self.assertFalse(move_auto.picked)
         self.assertEqual(move_manual.quantity, 6)
+        self.assertTrue(move_manual.picked)
 
         # Bypass consumption issues wizard and create backorders
         action = mo.button_mark_done()
@@ -167,14 +165,14 @@ class TestManualConsumption(TestMrpCommon):
         backorder_form.save().action_backorder()
         backorder = mo.production_group_id.production_ids - mo
 
-        # Check that backorders move have the same manual consumption values as BoM
+        # Check that backorder moves are not picked (not yet consumed)
         move_auto, move_manual = get_moves(backorder)
-        self.assertEqual(move_auto.manual_consumption, False)
-        self.assertEqual(move_manual.manual_consumption, False)
+        self.assertFalse(move_auto.picked)
+        self.assertFalse(move_manual.picked)
 
     def test_update_manual_consumption_00(self):
         """
-        Check that the manual consumption is set to true when the quantity is manualy set.
+        Check that move.picked is set to true when the quantity is manualy set.
         """
         bom = self.bom_1
         components = bom.bom_line_ids.product_id
@@ -184,13 +182,11 @@ class TestManualConsumption(TestMrpCommon):
         mo_form.product_qty = 4
         mo = mo_form.save()
         mo.action_confirm()
-        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [False, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
         with Form(mo) as fmo:
             with fmo.move_raw_ids.edit(0) as line_0:
                 line_0.quantity = 3.0
                 line_0.picked = True
-        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
         mo.button_mark_done()
         self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 4.0, 'picked': True}])
@@ -208,16 +204,14 @@ class TestManualConsumption(TestMrpCommon):
         mo_form.product_qty = 4
         mo = mo_form.save()
         mo.action_confirm()
-        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [False, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
         with Form(mo) as fmo:
             with fmo.move_raw_ids.edit(0) as line_0:
                 line_0.quantity = 3.0
                 line_0.picked = True
             fmo.qty_producing = 2.0
-        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
-        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': True}])
+        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': False}])
 
     def test_reservation_state_with_manual_consumption(self):
         """
@@ -251,7 +245,7 @@ class TestManualConsumption(TestMrpCommon):
         of a component move line/quant (without changing the quantity) does not mark it as consumed.
 
         The wizard (opened via 'action_show_details' on move) should only set
-        'manual_consumption' and 'picked' to True when the done quantity(quantity)
+        'picked' to True when the done quantity(quantity)
         differs from the demanded quantity(product_uom_qty).
         """
         bom = self.bom_4
@@ -279,7 +273,7 @@ class TestManualConsumption(TestMrpCommon):
 
         # Initially: not consumed.
         self.assertRecordValues(mo.move_raw_ids, [
-            {"manual_consumption": False, "picked": False, "lot_ids": lots[0].ids},
+            {"picked": False, "lot_ids": lots[0].ids},
         ])
 
         # Change only the lot in the 'Details' wizard, keep quantity unchanged.
@@ -288,9 +282,9 @@ class TestManualConsumption(TestMrpCommon):
                 move_line.lot_id = lots[1]
             wiz_form.save()
 
-        # Still it should not consumed.
+        # Still not consumed since quantity unchanged.
         self.assertRecordValues(mo.move_raw_ids, [
-            {"manual_consumption": False, "picked": False, "lot_ids": lots[1].ids},
+            {"picked": False, "lot_ids": lots[1].ids},
         ])
 
         # Change the quantity in the 'Details' wizard.
@@ -301,7 +295,7 @@ class TestManualConsumption(TestMrpCommon):
 
         # Now it should be marked as consumed, since the done quantity differs from the demand.
         self.assertRecordValues(mo.move_raw_ids, [
-            {"manual_consumption": True, "picked": True, "lot_ids": lots[1].ids},
+            {"picked": True, "lot_ids": lots[1].ids},
         ])
 
     def test_consumption_on_new_move_lines(self):
@@ -323,7 +317,7 @@ class TestManualConsumption(TestMrpCommon):
         mo.action_confirm()
 
         self.assertRecordValues(mo.move_raw_ids, [
-            {"manual_consumption": False, "picked": False},
+            {"picked": False},
         ])
 
         with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
@@ -333,12 +327,12 @@ class TestManualConsumption(TestMrpCommon):
             wiz_form.save()
 
         self.assertRecordValues(mo.move_raw_ids, [
-            {"manual_consumption": True, "picked": True},
+            {"picked": True},
         ])
 
     def test_manual_consumption_is_false_if_quantity_was_unchanged(self):
         """
-        Check that a move's `manual_consumption` field is only set if the
+        Check that a move is only marked as picked if the
         quantity of the move line was modified.
         """
         product_lot = self.env['product.product'].create({
@@ -374,13 +368,13 @@ class TestManualConsumption(TestMrpCommon):
         with details_form.move_line_ids.edit(0) as move_line:
             move_line.lot_id = lot_2
         move = details_form.save()
-        # Since quantity was unchanged, `manual_consumption` should not be set
-        self.assertFalse(move.manual_consumption)
+        # Since quantity was unchanged, the move should not be picked
+        self.assertFalse(move.picked)
 
         # Use the form again, this time changing the lot and the quantity
         with details_form.move_line_ids.edit(0) as move_line:
             move_line.lot_id = lot_1
             move_line.quantity = 1
         move = details_form.save()
-        # Quantity was modified, so `manual_consumption` should be set
-        self.assertTrue(move.manual_consumption)
+        # Quantity was modified, so the move should be picked
+        self.assertTrue(move.picked)
