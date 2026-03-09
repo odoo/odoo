@@ -773,6 +773,7 @@ class AccountJournal(models.Model):
         )
         digits = len(random_account.code) if random_account else 6
 
+        Property = self.env['ir.property'].with_company(company)
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
             has_profit_account = vals.get('profit_account_id')
@@ -803,6 +804,12 @@ class AccountJournal(models.Model):
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type in ('cash', 'bank') and not has_loss_account:
                 vals['loss_account_id'] = company.default_cash_difference_expense_account_id.id
+        elif journal_type == 'purchase':
+            if account := Property._get('property_account_expense_categ_id', 'product.category'):
+                vals.setdefault('default_account_id', account.id)
+        elif journal_type == 'sale':
+            if account := Property._get('property_account_income_categ_id', 'product.category'):
+                vals.setdefault('default_account_id', account.id)
 
         if is_import and not vals.get('code'):
             code = vals['name'][:5]
