@@ -38,9 +38,7 @@
     "assets": {
         "web.assets_backend": [
             "gov_processos/static/src/css/gov_dashboard.css",
-            "gov_processos/static/src/css/gov_processo_wizard.css",
             "gov_processos/static/src/js/gov_dashboard.js",
-            "gov_processos/static/src/js/gov_processo_form_ui.js",
             "gov_processos/static/src/xml/gov_dashboard.xml",
         ],
     },
@@ -49,4 +47,3 @@
     "author": "GRP",
     "license": "LGPL-3",
 }
-

@@ -1,0 +1,52 @@
+$glass-bg-light: rgba(255, 255, 255, 0.15);
+$glass-bg-medium: rgba(255, 255, 255, 0.10);
+$glass-bg-dark: rgba(255, 255, 255, 0.08);
+$glass-bg-darker: rgba(255, 255, 255, 0.05);
+$glass-dropdown: rgba(70, 80, 90, 0.85);
+$glass-border: rgba(255, 255, 255, 0.18);
+$glass-border-light: rgba(255, 255, 255, 0.25);
+
+$blur-light: 30px;
+$blur-medium: 35px;
+$blur-heavy: 40px;
+
+$primary-color: rgba(6, 190, 160, 1);
+$primary-gradient: linear-gradient(90deg, rgba(6, 190, 160, 0.6), rgba(10, 160, 140, 0.5));
+$hover-bg: rgba(255, 255, 255, 0.18);
+
+$text-white: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.65);
+
+$radius-sm: 12px;
+$radius-md: 18px;
+$radius-lg: 22px;
+$radius-xl: 26px;
+$radius-pill: 999px;
+
+$shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
+$shadow-heavy: 0 20px 70px rgba(0, 0, 0, 0.5);
+
+$transition-base: all 0.25s ease;
+
+@mixin glass-effect($bg, $blur) {
+    background: $bg !important;
+    backdrop-filter: blur($blur) saturate(180%) !important;
+}
+
+@mixin glass-border($color: $glass-border) {
+    border: 1px solid $color !important;
+}
+
+@mixin glass-card($bg: $glass-bg-light, $blur: $blur-medium) {
+    @include glass-effect($bg, $blur);
+    @include glass-border;
+    border-radius: $radius-xl;
+}
+
+@mixin transparent-bg {
+    background: transparent !important;
+}
+
+@mixin text-white-color {
+    color: $text-white !important;
+}

@@ -1,0 +1,85 @@
+.o_content {
+    margin: 30px;
+}
+
+.o_form_statusbar {
+    background: rgba(70, 80, 90, 0.85) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+
+    .o_arrow_button.btn-secondary {
+        @include transparent-bg;
+        backdrop-filter: none !important;
+        color: $text-muted !important;
+    }
+
+    .o_arrow_button.btn-    primary,
+    .o_arrow_button.o_arrow_button_current {
+        background: $primary-gradient !important;
+        @include text-white-color;
+    }
+}
+
+.o_form_sheet_bg {
+    @include glass-effect($glass-bg-dark, $blur-heavy);
+    border: 2px solid $glass-border !important;
+    border-radius: $radius-xl;
+
+    .o_form_sheet {
+        @include glass-effect($glass-bg-medium, $blur-medium);
+        border: 2px solid $glass-border !important;
+        border-radius: $radius-xl;
+        margin: 20px;
+    }
+}
+
+.o_form_renderer {
+    @include glass-effect($glass-bg-dark, $blur-medium);
+    border-radius: $radius-sm;
+}
+
+.form-control {
+    border: $glass-border !important;
+    @include text-white-color;
+}
+
+.o_cell {
+    background: $glass-bg-dark !important;
+    @include glass-border;
+    border-radius: $radius-sm;
+    padding: 10px;
+
+    &:hover {
+        background: $glass-bg-light !important;
+        border: 1px solid $glass-border-light !important;
+    }
+}
+
+.o_notebook {
+    .nav-tabs {
+        @include transparent-bg;
+        border-bottom: transparent !important;
+
+        .nav-link {
+            color: $text-muted !important;
+            background: $glass-bg-light !important;
+            border-radius: $radius-sm;
+            margin-bottom: 18px;
+            margin-right: 18px;
+
+            &:hover {
+                @include text-white-color;
+                @include glass-effect($glass-bg-dark, $blur-medium);
+                @include glass-border;
+            }
+
+            &.active {
+                @include text-white-color;
+                @include glass-effect($glass-bg-medium, $blur-medium);
+            }
+        }
+    }
+}
+
+.o_form_uri {
+    color: $primary-color !important;
+}

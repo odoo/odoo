@@ -10,9 +10,9 @@ services:
     image: postgres:16
     container_name: kodoo-db
     environment:
-      - POSTGRES_DB=kodoo
-      - POSTGRES_USER=kodoo
-      - POSTGRES_PASSWORD=kodoo
+      - POSTGRES_DB=${PROD_DB_NAME}
+      - POSTGRES_USER=${PROD_DB_USER}
+      - POSTGRES_PASSWORD=${PROD_DB_PASSWORD}
       # Allows Odoo to create additional databases per tenant
       - POSTGRES_HOST_AUTH_METHOD=md5
     volumes:
@@ -21,7 +21,7 @@ services:
       - kodoo-net
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U kodoo -d kodoo" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${PROD_DB_USER} -d ${PROD_DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,6 +32,10 @@ services:
       dockerfile: docker/odoo/Dockerfile
     image: kodoo-odoo:19.0-gov
     container_name: kodoo-odoo
+    command:
+      - odoo
+      - -c
+      - /etc/odoo/odoo.conf
     depends_on:
       db:
         condition: service_healthy
@@ -42,11 +46,11 @@ services:
       - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
       - ./custom_addons:/mnt/custom-addons
-      - ./deploy/odoo/kodoo.prod.conf:/etc/odoo/odoo.conf:ro
+      - ./deploy/odoo/kodoo.prod.local.conf:/etc/odoo/odoo.conf:ro
     environment:
       - HOST=db
-      - USER=kodoo
-      - PASSWORD=kodoo
+      - USER=${PROD_DB_USER}
+      - PASSWORD=${PROD_DB_PASSWORD}
       - OLLAMA_HOST=http://ollama:11434
     networks:
       - kodoo-net
@@ -58,8 +62,8 @@ services:
     depends_on:
       - odoo
     ports:
-      - "80:80"
-      - "443:443"
+      - "${PUBLIC_HTTP_PORT:-80}:80"
+      - "${PUBLIC_HTTPS_PORT:-443}:443"
     volumes:
       - ./deploy/nginx/start-nginx.sh:/etc/nginx/start-nginx.sh:ro
       - ./deploy/nginx/kodoo.http.conf:/etc/nginx/templates/kodoo.http.conf:ro

@@ -4,11 +4,11 @@
         <field name="name">gov.processo.fase.wizard.form</field>
         <field name="model">gov.processo.fase.wizard</field>
         <field name="arch" type="xml">
-            <form string="Confirmar transição de fase" class="gov-proc-fase-wizard">
+            <form string="Confirmar transição de fase">
                 <group>
                     <field name="processo_id" readonly="1"/>
                     <field name="direction" readonly="1"/>
-                    <field name="warning_message" nolabel="1" readonly="1" class="gov-proc-fase-warning"/>
+                    <field name="warning_message" nolabel="1" readonly="1"/>
                 </group>
                 <group invisible="direction != 'retroceder'">
                     <field

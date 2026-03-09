@@ -11,6 +11,9 @@ const config: CapacitorConfig = {
   server: {
     url: appUrl,
     cleartext,
+    // Setting a custom UserAgent allows Odoo to detect it's running inside the mobile app
+    // and enable mobile-specific features like the barcode button in the search bar.
+    userAgent: "Kodoo Mobile Android",
     allowNavigation: [
       "kodoo.online",
       "*.kodoo.online"
@@ -29,7 +32,8 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchAutoHide: true,
       backgroundColor: "#081320",
-      showSpinner: false
+      showSpinner: false,
+      androidScaleType: "CENTER_CROP"
     },
     StatusBar: {
       style: "DARK",

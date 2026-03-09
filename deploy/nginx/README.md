@@ -49,4 +49,4 @@ docker compose exec nginx nginx -s reload
 
 - Keep host firewall open only for `80`, `443`, and restricted `22` (SSH).
 - Do not expose `8069`, `8072`, `5432`, or `11434` publicly.
-- Update `deploy/odoo/kodoo.prod.conf` and set a strong `admin_passwd`.
+- Fill `.env.make`, then run `make prod-config` to generate `deploy/odoo/kodoo.prod.local.conf` with a strong `admin_passwd`.

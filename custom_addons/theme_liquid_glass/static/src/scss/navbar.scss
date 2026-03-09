@@ -1,0 +1,28 @@
+.o_navbar {
+    @include glass-effect($glass-bg-light, $blur-heavy);
+    @include glass-border;
+    border-radius: $radius-pill;
+    margin: 14px;
+    padding: 12px;
+
+    &:hover {
+        background: $glass-bg-dark !important;
+        @include glass-border;
+    }
+}
+
+.o_main_navbar {
+    @include transparent-bg;
+    border-bottom: transparent !important;
+
+    .o_menu_sections {
+        .o-dropdown,
+        .o_nav_entry {
+            @include transparent-bg;
+
+            &:hover {
+                @include transparent-bg;
+            }
+        }
+    }
+}

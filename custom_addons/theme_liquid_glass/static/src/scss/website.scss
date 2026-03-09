@@ -1,0 +1,183 @@
+main {
+    background: url("/theme_liquid_glass/static/src/img/bg-img.svg") no-repeat center center fixed;
+    background-size: cover;
+    color: #ffff;
+}
+
+.o_header_standard {
+    background: transparent;
+    .o_main_nav {
+        background: transparent;
+    }
+}
+
+//input starts
+.oe_login_form {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(35px);
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 26px;
+}
+.oe_login_form input {
+    display: block;
+    width: 100%;
+    height: 40px !important;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(6, 190, 160, 1);
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    margin-bottom:10px !important;
+}
+form label {
+    font-weight: 400 !important;
+}
+.oe_login_form a.btn.btn-secondary {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0.75rem;
+    background: #ffff;
+    color: black;
+}
+.oe_login_form a.btn.btn-secondary i.fa.fa-database {
+    margin-left: 5px;
+}
+
+.btn-primary {
+    background: rgba(6, 190, 160, 1);
+    border-color: transparent !important;
+    --btn-active-bg: rgba(6, 190, 160, 1) !important;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.btn-fill-light, .btn-light {
+    color: #ffff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.18);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+}
+
+.btn-link {
+    color: rgba(6, 190, 160, 1);
+
+    &:hover {
+        color: #ffff;;
+
+    }
+}
+
+.text-primary {
+    color: rgba(6, 190, 160, 1) !important;
+}
+
+.alert-primary {
+    --alert-bg: rgba(255, 255, 255, 0.2);
+    --alert-color: #ffff;
+    --alert-border-color: rgba(255, 255, 255, 0.18);
+    --alert-link-color: #ffff;
+}
+
+.bg-100{
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    color: #ffff;
+}
+
+a, ul ,li, .nav-link {
+    color: rgba(6, 190, 160, 1);
+}
+
+.text-muted {
+    color: rgba(6, 190, 160, 1) !important;
+}
+
+.o_footer a:not(.btn) {
+    color: rgba(6, 190, 160, 1);
+}
+
+.form-control {
+    background-color: rgba(255, 255, 255, 0.18) !important;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    color: #ffff;
+}
+
+.dropdown-menu {
+    background-color: rgba(255, 255, 255, 0.10) !important;
+    backdrop-filter: blur(35px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 18px;
+    .dropdown-item,
+    a,
+    button {
+        color: #ffff !important;
+        background: transparent !important;
+
+        &:hover,
+        &:focus {
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #ffff !important;
+        }
+    }
+
+    .dropdown-header {
+        color: rgba(255, 255, 255, 0.65) !important;
+    }
+}
+
+
+.navbar {
+    background-color: #{rgba(255, 255, 255, 0.18)} !important;
+    backdrop-filter: blur(40px);
+
+    .input-group {
+        margin-bottom: 5px;
+     }
+}
+
+.navbar-light a.nav-link, .navbar-nav {
+    color: #ffff;
+    --nav-link-disabled-color: #ffff;
+ }
+
+.form-check-input, .form-select {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffff;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+form-check:hover, .form-check:hover .form-check-input:not(:disabled), .form-select:where(:not(:disabled)):hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.accordion-button:not(.collapsed), .accordion-button {
+    color: #ffff;
+}
+
+.page-link.active, .active > .page-link {
+    background-color: rgba(6, 190, 160, 1);
+    border-color: rgba(6, 190, 160, 1);
+}
+
+.card-body {
+    color: #ffff;
+}
+
+.badge.bg-primary {
+    --bg-light: #{rgba(6, 190, 160, 1)} !important;
+}

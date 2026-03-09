@@ -1,0 +1,736 @@
+.o_web_client {
+    background: url("/theme_liquid_glass/static/src/img/bg-img.svg") no-repeat center center fixed;
+    background-size: cover;
+    color: $text-white;
+}
+
+.o_action_manager,
+.o_content {
+    @include transparent-bg;
+}
+
+body,
+.o_web_client,
+label,
+.o_form_label,
+.o_field_widget,
+.text-muted,
+.o_animated_number,
+h1, h2, h3, h4, h5,
+span, div, p {
+    @include text-white-color;
+}
+
+a {
+    color: $text-white;
+    &:hover {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+table {
+    @include transparent-bg;
+    thead, tbody, tfoot, tr, th, td {
+        @include transparent-bg;
+    }
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.o_searchview,
+.o_searchview_dropdown_toggler {
+    background: $glass-bg-light !important;
+    @include glass-border;
+    border-radius: $radius-md;
+
+    .o_searchview_input_container {
+        .o_searchview_facet {
+            @include glass-effect($hover-bg, $blur-light);
+            @include text-white-color;
+
+            &:hover {
+                @include transparent-bg;
+            }
+        }
+
+        .o_searchview_input {
+            @include text-white-color;
+        }
+    }
+}
+
+.o_control_panel {
+    border: none !important;
+    background: $glass-bg-darker !important;
+
+    .o_breadcrumb,
+    .breadcrumb {
+        @include transparent-bg;
+
+        .breadcrumb-item,
+        .breadcrumb_item.background,
+        li {
+            @include text-white-color;
+            font-size: 15px;
+
+            a {
+                color: $text-muted !important;
+
+                &:hover {
+                    @include text-white-color;
+                }
+            }
+        }
+    }
+
+    .o_cp_switch_buttons {
+        .btn,
+        button {
+            @include transparent-bg;
+
+            &:hover {
+                background: $hover-bg !important;
+            }
+
+            &.active {
+                @include glass-effect($glass-bg-light, $blur-light);
+                @include glass-border;
+                color: $text-white;
+            }
+        }
+    }
+}
+
+.o_cp_action_menus div .o-dropdown,
+.o-mail-Message-actions button:hover {
+    color: $text-white !important;
+}
+
+.o_pager {
+    button {
+        @include transparent-bg;
+        border: none !important;
+
+        &:hover:not(:disabled) {
+            @include glass-effect($hover-bg, $blur-light);
+        }
+    }
+}
+
+.btn-group {
+    .o_graph_button {
+        @include transparent-bg;
+        color: $text-white;
+
+        &:hover,
+        &.active {
+            @include glass-effect($glass-bg-light, $blur-light);
+        }
+    }
+}
+
+.o_search_panel_section {
+    @include glass-effect($glass-bg-medium, $blur-medium);
+    @include glass-border;
+    border-radius: $radius-md;
+    margin-bottom: 5px;
+    padding: 18px;
+
+    .o_search_panel_category_value {
+        @include transparent-bg;
+        @include text-white-color;
+
+        &:hover {
+            background: $hover-bg !important;
+        }
+    }
+}
+
+.o_search_panel,
+.border-end {
+    border-right: transparent !important;
+}
+
+.dropdown-menu,
+.o_popover,
+.o-tooltip {
+    background: $glass-dropdown !important;
+    @include glass-border;
+    border-radius: $radius-md;
+
+    .dropdown-item,
+    a,
+    button {
+        @include text-white-color;
+        @include transparent-bg;
+
+        &:hover,
+        &:focus {
+            background: $hover-bg !important;
+            @include text-white-color;
+        }
+    }
+
+    .dropdown-header {
+        color: $text-muted !important;
+    }
+}
+
+.bs-popover-bottom > .popover-arrow::after {
+    border-bottom-color: $glass-bg-medium !important;
+}
+
+.ui-autocomplete {
+    backdrop-filter: blur($blur-light) saturate(180%) !important;
+}
+
+.settings_tab {
+    @include glass-effect($glass-bg-medium, $blur-medium);
+    @include glass-border;
+    border-radius: $radius-md;
+    margin-right: 5px;
+    border-right: transparent !important;
+
+    .tab {
+        @include glass-effect($glass-bg-dark, $blur-light);
+        box-shadow: $shadow-medium;
+    }
+}
+
+.settings {
+    @include glass-card($glass-bg-light, $blur-medium);
+
+    h2 {
+        @include glass-effect($glass-bg-darker, $blur-light);
+    }
+}
+
+.o_base_settings_view .o_form_renderer .o_setting_container .settings .settingSearchHeader {
+    @include glass-effect($glass-bg-darker, $blur-light);
+}
+
+.form-check {
+    &:hover {
+        border-color: $primary-color !important;
+
+        .form-check-input:not(:disabled) {
+            border-color: $primary-color !important;
+        }
+    }
+}
+
+.form-check-input:checked,
+input[type="radio"]:checked {
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
+
+.o_required_modifier,
+.o_field_widget:focus-within {
+    --o-input-border-color: #{$text-muted};
+    --o-caret-color: #{$text-muted};
+}
+
+.o-mail-ChatterContainer, .o-mail-Form-chatter {
+    @include transparent-bg;
+    .bg-inherit {
+        background-color: transparent !important;
+     }
+}
+
+.o-mail-Chatter {
+    @include glass-card($glass-bg-light, $blur-medium);
+    border: 2px solid $glass-border !important;
+    margin-left: 30px;
+
+    .o-mail-Chatter-top {
+        margin: 10px;
+        @include transparent-bg;
+    }
+
+    .o-mail-Message {
+        padding: 20px;
+        margin: 10px;
+        @include glass-effect($glass-bg-medium, $blur-light);
+        @include glass-border;
+        border-radius: $radius-xl !important;
+
+        &:hover {
+            @include glass-effect($glass-bg-light, $blur-medium);
+        }
+    }
+}
+
+.o-mail-Message-core {
+    align-items: center !important;
+    padding-top: 15px !important;
+}
+
+.o-mail-Message-date {
+    color: $text-white !important;
+}
+
+.o-mail-Message-bubble.o-blue,
+.o-mail-Message-bubble.o-green {
+    @include glass-effect($glass-bg-darker, $blur-heavy);
+    border-color: $glass-border !important;
+}
+
+.o-mail-Message-bubble.o-blue.o-muted {
+    @include glass-effect($glass-bg-light, $blur-medium);
+    @include glass-border;
+}
+
+.o-mail-AutoresizeInput {
+    color:  $text-white !important;
+}
+
+.o_odoobot_command {
+    @include transparent-bg;
+}
+
+.o-mail-Composer-bg {
+    @include transparent-bg;
+
+    &:has(textarea:focus) {
+        border-color: $primary-color !important;
+    }
+}
+
+.o-mail-MessagingMenu,
+.o-mail-MessagingMenu-list  {
+    background-color: transparent !important;
+}
+
+.o-mail-NotificationItem:hover.o-important {
+    background-color: $glass-bg-dark !important;
+}
+
+.o-mail-Discuss {
+        border-top: transparent !important;
+}
+
+.o-mail-DiscussSidebar {
+    @include glass-card($glass-bg-light, $blur-medium);
+    margin-right: 5px;
+
+    .o-mail-DiscussSidebar-top,
+    .o-mail-DiscussSidebar-item,
+    .o-mail-discussSidebarBgColor,
+    .o-mail-DiscussSidebarCategory {
+        @include transparent-bg;
+        &.active {
+            background-color: $glass-bg-light !important;
+        }
+        &:hover {
+            background-color: $glass-bg-light !important;
+        }
+    }
+}
+
+.o-mail-DiscussContent {
+    @include glass-card($glass-bg-light, $blur-medium);
+    border: 2px solid $glass-border;
+
+    .o-mail-DiscussContent-header,
+    .o-mail-DiscussContent-core {
+        @include transparent-bg;
+        border-bottom: 1px solid $glass-border !important;
+     }
+}
+
+.o-mail-Discuss-core,
+.o-mail-ActionPanel {
+    @include transparent-bg;
+}
+
+.o_calendar_renderer,
+.o_calendar_sidebar {
+    background: $glass-bg-light !important;
+    @include glass-border;
+    --o-cw-border-color: #{$glass-border};
+    margin: 3px;
+    border-radius: $radius-xl;
+    padding: 10px;
+}
+
+.fc-event {
+    padding: 5px !important;
+}
+
+.o_calendar_renderer .fc-event.o_past_event::after {
+    background: $glass-bg-light !important;
+}
+
+.o_event_title, .purchase-dashboard-card div, .card-header {
+    span {
+        color: black !important;
+    }
+}
+
+.o_content {
+    .o_activity_view_table, .o_pivot table {
+        background: $glass-bg-light !important;
+        @include glass-border;
+        margin: 3px;
+        padding: 10px;
+     }
+}
+
+.o_calendar_header,
+.o_sidebar_toggler,
+select > option {
+    border-bottom: transparent !important;
+}
+
+.fc-scroller-harness,
+.o-scrollbar,
+.o-scrollbar.corner,
+.o_spreadsheet_dashboard_action {
+    @include transparent-bg;
+}
+
+.o_graph_canvas_container {
+    background: $glass-bg-light !important;
+    @include glass-border;
+    border-radius: $radius-xl;
+    padding: 12px;
+}
+
+.o_tooltip_legend,
+.o_graph_custom_tooltip {
+    @include transparent-bg;
+    backdrop-filter: blur($blur-light);
+    @include text-white-color;
+    border-radius: $radius-sm;
+    @include glass-border;
+}
+
+.bg-100,
+.text-bg-100,
+.bg-200 {
+    background-color: $glass-bg-light !important;
+    backdrop-filter: blur($blur-heavy) !important;
+}
+
+.bg-view,
+.o_switch_company_menu_items .o_switch_company_item.focus > *,
+.bg-primary-subtle,
+.text-700,
+.bg-secondary,
+.oe_subtotal_footer {
+    @include transparent-bg;
+    background-color: transparent !important;
+    @include text-white-color;
+}
+
+.text-primary {
+    outline: $primary-color !important;
+    @include text-white-color;
+}
+
+a.text-primary:hover,
+.o_loading_indicator,
+.bg-primary,
+.o-we-table-menu {
+    background: $primary-gradient !important;
+    @include text-white-color;
+}
+
+.border-primary,
+.o_field_res_user_group_ids_privilege .o_is_implied:not(.o_is_disjoint) .o-checkbox > input{
+    border-color: $primary-color !important;
+}
+
+.o_tag.o_tag_color_0,
+.text-bg-action {
+    background-color: $primary-color !important;
+}
+
+.o_tag_badge_text, .o_event_title {
+    color: black !important;
+}
+
+.text-action, .btn-link.text-action:hover {
+    color: $primary-color !important;
+}
+
+.o_notification {
+    @include glass-effect($glass-bg-light, $blur-heavy);
+    @include glass-border;
+    border-radius: 14px;
+    color: $text-white;
+}
+
+.alert-info {
+    background: $glass-bg-light !important;
+    border-left: $glass-border;
+    border-radius: 14px;
+    color: $text-white;
+}
+
+pre {
+    background-color: $glass-bg-light !important;
+    border-radius: $radius-xl;
+    @include text-white-color;
+}
+
+select.date_filter_values,
+.date_filter_values.o_input {
+    color: $text-muted !important;
+
+    option {
+        background: rgba(20, 25, 35, 0.98) !important;
+        border-radius: $radius-xl !important;
+
+        &:hover {
+            background: $hover-bg !important;
+            @include text-white-color;
+        }
+    }
+}
+
+.o-grid {
+    background-color: $glass-bg-light !important;
+    border: 1px solid $glass-bg-light !important;
+    margin: 10px;
+    border-radius: $radius-xl;
+}
+
+.o_tour_pointer {
+    .o_tour_pointer_content {
+        @include glass-effect($glass-bg-medium, $blur-medium);
+        @include glass-border;
+        border-radius: $radius-sm !important;
+    }
+
+    .o_tour_pointer_tip {
+        background-image: $primary-gradient !important;
+    }
+
+    &.o_open {
+        @include glass-effect($glass-bg-medium, $blur-medium);
+        @include glass-border;
+        border-radius: $radius-sm !important;
+    }
+}
+
+.oe_subtotal_footer {
+    border-top: transparent !important;
+}
+
+.text-bg-primary {
+    background-color: $primary-color !important;
+}
+
+.alert p, .alert {
+    margin-top: 15px;
+    color: black !important;
+}
+
+.o_sale_optional_products {
+    @include transparent-bg;
+}
+
+.o_app_menu_sidebar .o_burger_menu_content.o_burger_menu_app, .o_sidebar_topbar, .o-mail-Message.o-card,
+.o_burger_menu .o_burger_menu_content.o_burger_menu_app {
+    @include glass-effect($glass-bg-medium, $blur-medium);
+    @include glass-border;
+    border-radius: $radius-sm !important;
+    gap: 5px;
+    box-shadow: none !important;
+
+    &:hover {
+        background-color: $hover-bg !important;
+    }
+
+    .text-body {
+        color: $text-white !important;
+     }
+}
+
+.o_burger_menu_content li,
+.text-900,
+.o_input,
+.o-mail-ActionList button.o-inline:where(:has(i:first-child:last-child)){
+    color: $text-white !important;
+}
+
+.o-mail-MessagingMenu-navbar button.o-active,
+.o-mail-DiscussSidebar-item:hover .o-mail-DiscussSidebarChannel-commands .btn-group .btn:hover,
+.o-mail-DiscussSidebarChannel-container.o-bordered,
+.o-mail-DiscussSidebarChannel-container.o-bordered.o-selfInCall,
+.o-discuss-CallMenu-buttonContent,
+.o_button_more.btn:hover,
+.o-dropdown.btn-outline-secondary.show,
+.o_dashboard_bottom_block,
+.o_form_nosheet,
+.list-group-item {
+    @include transparent-bg;
+}
+
+.o-discuss-ChannelMember:hover,
+.o-mail-Discuss-headerActions button:hover:has(.fa-video-camera),
+.o-mail-Discuss-headerActions button:hover:has(.fa-phone),
+.o-discuss-NotificationSettings button:hover,
+.form-control:disabled {
+    background-color: $hover-bg !important;
+}
+
+.o-mail-Composer-actions button {
+    backdrop-filter: none !important;
+    color: $text-white !important;
+}
+
+.bg-white,
+.bg-300,
+.o-mail-MessageCardList .card-body,
+.o-mail-DiscussNotificationSettings button.o-selected {
+    @include glass-effect($glass-bg-medium, $blur-medium);
+}
+
+.o-mail-SearchMessageInput {
+    .o_searchview_input, .btn {
+        @include glass-effect($glass-bg-medium, $blur-medium);
+     }
+}
+
+.card {
+    --card-bg: $glass-bg-light !important;
+}
+
+.o-mail-NavigableList {
+    @include glass-card($glass-bg-light, $blur-medium);
+    @include glass-border;
+    border-radius: $radius-sm !important;
+
+    .o-mail-NavigableList-active, .o-mail-NavigableList-item:hover {
+        @include glass-effect($glass-bg-dark, $blur-medium);
+    }
+}
+
+.border {
+   @include glass-border;
+}
+
+.form-select {
+    border-color: $primary-color !important;
+    &:hover{
+        border-color: $primary-color;
+    }
+    &:focus{
+        box-shadow: none !important;
+    }
+}
+
+.o_model_field_selector > .o_model_field_selector_value > .o_model_field_selector_chain_part,
+.o_model_field_selector_popover .o_model_field_selector_popover_body .o_model_field_selector_popover_page > .o_model_field_selector_popover_item,
+.o-mail-SubChannelPreview,
+.o-discuss-ChannelInvitation-selectable.o-selected {
+    border: none !important;
+    @include transparent-bg;
+
+    &:hover {
+        background: $hover-bg !important;
+    }
+}
+
+.o_datetime_button,
+.o-tag-undefined,
+.o_previous.btn,
+.o_next.btn,
+.company_label.text-body,
+.o_facet_remove.btn-link.text-danger,
+.o_searchview_icon {
+    color: $text-white !important;
+}
+
+.btn-light {
+    --btn-bg: transparent !important;
+}
+
+tr.bg-light,
+.bg-inherit,
+.o-we-command-img,
+.o-mail-DiscussSearch-inputContainer {
+    background-color: transparent !important;
+}
+
+.o_pivot.o_pivot table .o_pivot_measure_row:hover,
+.o_pivot.o_pivot table .o_pivot_origin_row:hover,
+.o_pivot.o_pivot table .o_pivot_header_cell_closed:hover,
+.o_pivot.o_pivot table .o_pivot_header_cell_opened:hover,
+.o-mail-DiscussSidebarCallParticipants-participant.o-active:hover,
+.o-discuss-ChannelInvitation-selectable:hover {
+    background-color: $hover-bg !important;
+}
+
+.o-mail-ActionList-button.btn-secondary{
+    background: transparent !important;
+    backdrop-filter: none !important;
+}
+
+// .rounded-circle {
+//     padding: 5px;
+// }
+//
+// .o-mail-ImStatus {
+//     padding: 0px !important;
+// }
+
+.o_priority_star.fa-star-o,
+a.o_todo_done_button,
+.text-600 {
+    color: $text-muted !important;
+}
+
+[data-oe-local-overlay-id=oe-power-buttons-overlay] .power_button:hover {
+    background-color: $hover-bg !important;
+}
+
+.bg-light, .o-we-toolbar {
+    background-color: $glass-bg-light !important;
+    backdrop-filter: blur($blur-light) saturate(180%) !important;
+    border-radius: $radius-xl !important;
+}
+
+select {
+    color: $text-muted !important;
+
+    option {
+        background: rgba(73, 70, 70, 0.58) !important;
+    }
+}
+
+.o-mail-Composer-suggestionList {
+    background: $glass-dropdown !important;
+}
+
+.o_nocontent_help p {
+    color: black !important;
+}
+
+.popover {
+    --popover-bg: transparent !important;
+    --popover-border-color: transparent !important;
+}
+
+[data-embedded="tableOfContent"],
+[data-embedded="tableOfContent"] .o_embedded_toc_content,
+.o-mail-discussSidebarBgColor,
+.o_bottom_sheet .o_bottom_sheet_sheet,
+.o-mail-DiscussSearch-inputContainer:has(.o-mail-DiscussSearch-inputClickable:hover),
+.o-mail-DiscussSearch-inputContainer:has(.o-mail-DiscussSearch-inputClickable:hover) input {
+    background-color: transparent !important;
+}
+
+.o-dropdown--menu {
+    margin-bottom: 0px;
+}
+
+.offcanvas .dropdown-menu {
+    border-radius: 0px;
+}

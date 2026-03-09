@@ -6,5 +6,5 @@ services:
     image: odoo:19.0
     build: null
     ports:
-      - "8069:8069"
-      - "8072:8072"
+      - "${INSECURE_HTTP_PORT:-8069}:8069"
+      - "${INSECURE_EVENTED_PORT:-8072}:8072"

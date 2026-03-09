@@ -16,10 +16,27 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
+    signingConfigs {
+        release {
+            // These will be loaded from gradle.properties for security
+            if (project.hasProperty('KODOO_RELEASE_STORE_FILE')) {
+                storeFile file(KODOO_RELEASE_STORE_FILE)
+                storePassword KODOO_RELEASE_STORE_PASSWORD
+                keyAlias KODOO_RELEASE_KEY_ALIAS
+                keyPassword KODOO_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (project.hasProperty('KODOO_RELEASE_STORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

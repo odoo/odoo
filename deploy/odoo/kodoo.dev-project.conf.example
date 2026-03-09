@@ -1,0 +1,22 @@
+[options]
+; Generated locally for host-backend + Docker PostgreSQL mode.
+; Copy to kodoo.dev-project.local.conf only if you really need a manual file.
+admin_passwd = troque-este-admin-projeto
+
+db_host = 127.0.0.1
+db_port = 5433
+db_user = kodoo
+db_password = troque-esta-senha-postgres-docker
+
+addons_path = addons,custom_addons,custom_addons/knowledge,custom_addons/om_account_accountant-19.0.1.0.3
+
+proxy_mode = False
+list_db = True
+
+http_port = 8069
+http_interface = 127.0.0.1
+
+workers = 0
+max_cron_threads = 1
+
+log_level = info

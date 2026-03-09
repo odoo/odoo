@@ -5,4 +5,4 @@ services:
     ports: []
   nginx:
     ports:
-      - "127.0.0.1:8069:80"
+      - "${LOCAL_BIND_HOST:-127.0.0.1}:${LOCAL_HTTP_PORT:-8069}:80"

@@ -1,0 +1,49 @@
+.o_kanban_view {
+    @include transparent-bg;
+
+    .o_kanban_renderer {
+        @include transparent-bg;
+        border-top: 1px solid $glass-border !important;
+
+        .o_kanban_record {
+            @include glass-effect($glass-bg-light, $blur-medium);
+            border-radius: $radius-md;
+            margin-bottom: 10px !important;
+        }
+
+        .o_kanban_quick_create {
+            @include transparent-bg;
+            backdrop-filter: blur($blur-light) saturate(180%) !important;
+            border: 3px solid $glass-border;
+            border-radius: $radius-xl;
+        }
+    }
+
+    .o_kanban_group {
+        @include transparent-bg;
+
+        .o_kanban_record {
+            @include glass-effect($glass-bg-light, $blur-medium);
+            border: $glass-bg-light !important;
+            margin-bottom: 5px;
+
+            &:hover {
+                @include glass-effect($glass-bg-light, $blur-heavy);
+                transform: translateY(-2px);
+                box-shadow: $shadow-medium;
+            }
+        }
+    }
+
+    .o_kanban_ungrouped {
+        .o_kanban_record {
+            @include glass-effect($glass-bg-light, $blur-light);
+            border: transparent !important;
+            margin-top: 5px;
+
+            &:hover {
+                @include glass-effect($hover-bg, $blur-light);
+            }
+        }
+    }
+}

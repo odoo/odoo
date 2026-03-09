@@ -1,0 +1,76 @@
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+.o_button {
+    border: none !important;
+    border-radius: $radius-sm;
+    padding: 10px 18px;
+    font-weight: 500;
+    outline: none !important;
+    transition: $transition-base;
+}
+
+.btn-primary {
+    background: $primary-gradient !important;
+    backdrop-filter: blur($blur-light) saturate(180%) !important;
+    border: none !important;
+
+    &:hover {
+        background: $primary-color !important;
+    }
+}
+
+.btn-secondary,
+.o_form_button_edit {
+    @include glass-effect($glass-bg-light, $blur-light);
+    @include text-white-color;
+
+    &:hover {
+        @include glass-effect($glass-bg-darker, $blur-medium);
+        color: $text-muted !important;
+    }
+}
+
+.btn-link {
+    @include transparent-bg;
+    border: none !important;
+    @include text-white-color;
+}
+
+.btn-light {
+    @include transparent-bg;
+    @include text-white-color;
+
+    &:hover {
+        color: $text-muted !important;
+    }
+}
+
+.o_form_button_create {
+    @include glass-effect($glass-bg-light, $blur-light);
+    @include text-white-color;
+
+    &:hover {
+        background: $primary-gradient !important;
+        backdrop-filter: blur($blur-medium) saturate(180%) !important;
+    }
+}
+
+.oe_stat_button {
+    @include transparent-bg;
+    border: 2px solid $glass-border !important;
+    border-radius: $radius-xl;
+
+    &:hover {
+        @include glass-effect($hover-bg, $blur-light);
+    }
+}
+
+.o-form-buttonbox .oe_stat_button .o_button_icon {
+    color: $primary-color;
+}
+
+.o-form-buttonbox .oe_stat_button {
+    padding: 20px !important
+}

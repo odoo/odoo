@@ -4,7 +4,7 @@
         <field name="name">gov.processo.wizard.form</field>
         <field name="model">gov.processo.wizard</field>
         <field name="arch" type="xml">
-            <form string="Novo Processo" class="gov-proc-wizard">
+            <form string="Novo Processo">
                 <group>
                     <field name="subject"/>
                     <field name="origin_type"/>
@@ -13,14 +13,14 @@
                     <field name="ug_id"/>
                     <field name="responsible_id"/>
                 </group>
-                <group string="Modelos e Checklists para o Tipo Selecionado" class="gov-proc-wizard-recommendations">
+                <group string="Modelos e Checklists para o Tipo Selecionado">
                     <field
                         name="recommended_template_ids"
                         widget="many2many_tags"
                         readonly="1"
                         options="{'no_create': True}"
                     />
-                    <div class="text-muted gov-proc-wizard-muted" invisible="recommended_template_ids">
+                    <div class="text-muted" invisible="recommended_template_ids">
                         Nenhum modelo/checklist cadastrado para este tipo de processo.
                     </div>
                 </group>

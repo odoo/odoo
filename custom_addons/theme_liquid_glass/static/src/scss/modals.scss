@@ -1,0 +1,84 @@
+.modal {
+    .modal-dialog {
+        .modal-content {
+            .o_notebook_content {
+                * {
+                    color: inherit !important;
+                 }
+            }
+
+            backdrop-filter: blur($blur-heavy) saturate(180%) !important;
+            @include glass-border;
+            border-radius: $radius-lg;
+            box-shadow: $shadow-heavy;
+
+            .modal-header {
+                @include transparent-bg;
+                border-bottom: 1px solid $glass-border !important;
+
+                .modal-title {
+                    @include text-white-color;
+                }
+
+                .btn-close {
+                    filter: invert(1);
+                    opacity: 0.7;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .modal-body {
+                @include transparent-bg;
+                @include text-white-color;
+
+                .o_form_sheet, .o_form_sheet_bg {
+                    @include transparent-bg;
+                    backdrop-filter: none !important;
+                    border: none !important;
+                    margin: 0px;
+
+                    .o_cell {
+                        margin: 10px;
+                    }
+                 }
+            }
+
+            .modal-footer {
+                @include transparent-bg;
+                border-top: 1px solid $glass-border !important;
+
+                .btn-outline-primary {
+                       --btn-color: $primary-color !important;
+                       &:hover {
+                        background-color: $primary-color !important;
+                       }
+                 }
+            }
+        }
+    }
+
+    &.show {
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+    }
+}
+
+.o_dialog {
+    .modal-content {
+        @include glass-effect($glass-bg-medium, $blur-heavy);
+        @include glass-border;
+
+        .modal-body {
+            @include text-white-color;
+        }
+    }
+}
+
+.modal .o_select_media_dialog .o_we_file_selector_control_panel {
+    @include transparent-bg;
+}

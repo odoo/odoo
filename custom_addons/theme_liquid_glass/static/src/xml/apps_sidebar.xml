@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+        <xpath expr="//header" position="after">
+            <div class="o_apps_sidebar">
+                <t t-foreach="env.services.menu.getApps()"
+                   t-as="app"
+                   t-key="app.id">
+                    <a t-att-href="app.actionID"
+                       class="o_apps_sidebar_item">
+                        <span t-esc="app.name"/>
+                    </a>
+
+</t>
+
+            </div>
+        </xpath>
+    </t>
+
+</templates>

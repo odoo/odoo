@@ -1,0 +1,4 @@
+services:
+  db:
+    ports:
+      - "${DOCKER_DB_BIND_HOST:-127.0.0.1}:${DOCKER_DB_HOST_PORT:-5433}:5432"
