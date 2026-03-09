@@ -40,7 +40,8 @@ class Im_LivechatReportChannel(models.Model):
     nbr_message = fields.Integer("Messages per Session", readonly=True, aggregator="avg", help="Number of message in the conversation")
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
     lang_id = fields.Many2one("res.lang", related="channel_id.livechat_lang_id", string="Language", readonly=True)
-    rating = fields.Integer('Rating', aggregator="avg", readonly=True)
+    rating = fields.Integer('Rating', readonly=True)
+    rating_percentage = fields.Float("Rating (%)", aggregator="avg", digits=(16, 1), readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
     partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
@@ -126,6 +127,10 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN C.rating_last_value = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
+                CASE
+                    WHEN C.rating_last_value >= 1 THEN ROUND((C.rating_last_value - 1) * 100.0 / 4.0)
+                    ELSE NULL
+                END AS rating_percentage,
                 COALESCE(livechat_agent.partner_id, livechat_bot.partner_id) as partner_id,
                 CASE WHEN livechat_agent.partner_id IS NOT NULL THEN 1 ELSE 0 END as handled_by_agent,
                 CASE WHEN livechat_bot.partner_id IS NOT NULL AND livechat_agent.partner_id IS NULL THEN 1 ELSE 0 END as handled_by_bot,
