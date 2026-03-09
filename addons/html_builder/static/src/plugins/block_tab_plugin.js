@@ -16,7 +16,7 @@ class BlockTabPlugin extends Plugin {
     onSnippetGroupClick(snippet, state) {
         this.dependencies.operation.next(
             async () => {
-                this.cancelDragAndDrop = this.dependencies.history.makeSavePoint();
+                state.cancelDragAndDrop = this.dependencies.history.makeSavePoint();
                 this.dragState = {};
                 let snippetEl;
                 const baseSectionEl = snippet.content.cloneNode(true);
@@ -69,10 +69,14 @@ class BlockTabPlugin extends Plugin {
 
                 if (snippetEl) {
                     await this.scrollToDroppedSnippet(snippetEl);
-                    await this.processDroppedSnippet(snippetEl, this.dragState);
+                    await this.processDroppedSnippet(
+                        snippetEl,
+                        this.dragState,
+                        state.cancelDragAndDrop
+                    );
                 }
                 state.ongoingInsertion = false;
-                delete this.cancelDragAndDrop;
+                delete state.cancelDragAndDrop;
             },
             {
                 withLoadingEffect: false,
@@ -105,14 +109,14 @@ class BlockTabPlugin extends Plugin {
      *
      * @param {HTMLElement} snippetEl
      */
-    async processDroppedSnippet(snippetEl, dragState) {
+    async processDroppedSnippet(snippetEl, dragState, cancelDragAndDrop) {
         this.updateDroppedSnippet(snippetEl);
         // Build the snippet.
         for (const onSnippetDropped of this.getResource("on_snippet_dropped_handlers")) {
             const cancel = await onSnippetDropped({ snippetEl, dragState: dragState });
             // Cancel everything if the resource asked to.
             if (cancel) {
-                this.cancelDragAndDrop();
+                cancelDragAndDrop();
                 return;
             }
             // Update `snippetEl` (and `draggedEl` of `dragState`) if it was
