@@ -166,5 +166,18 @@ class AccountMove(models.Model):
         """
         return self.env.context
 
+<<<<<<< 9df6436f8f9a8d58c431806af7bc6587bc26c995
+||||||| 1f70b81eeebcc62b64c18772915e2f4696e189e7
+    def _get_related_stock_moves(self):
+        return self.env['stock.move']
+
+=======
+    def _stock_account_get_last_step_stock_moves(self):
+        """ To be overridden for customer invoices and vendor bills in order to
+        return the stock moves related to the invoices in self.
+        """
+        return self.env['stock.move']
+
+>>>>>>> ed6fbddd0c11a425156e72833a0bc69258c713d5
     def _get_invoiced_lot_values(self):
         return []
