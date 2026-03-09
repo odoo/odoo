@@ -390,3 +390,14 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             journal_form.default_account_id = default_account
             journal_2 = journal_form.save()
         self.assertNotEqual(journal_1.alias_id.alias_name, journal_2.alias_id.alias_name)
+
+    def test_new_purchase_journal_gets_default_account(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Purchase',
+            'type': 'purchase',
+            'code': 'TPUR',
+        })
+        self.assertEqual(
+            journal.default_account_id,
+            self.env['ir.property'].with_company(journal.company_id)._get('property_account_expense_categ_id', 'product.category'),
+        )
