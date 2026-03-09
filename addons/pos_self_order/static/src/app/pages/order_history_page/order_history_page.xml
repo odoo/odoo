@@ -7,14 +7,14 @@
                 <h1 t-if="orders.length > 0" class="mb-3">My Orders</h1>
                 <t t-foreach="orders" t-as="order" t-key="order.access_token">
                     <div class="o_so_order mx-auto d-flex flex-column mb-2 mb-md-3 bg-white rounded-4 shadow-sm p-3">
-                        <div class="o_so_order_header pb-2" t-on-click="() => this.editOrder(order)">
+                        <div class="o_so_order_header pb-2" role="button" t-on-click="() => this.editOrder(order)">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex flex-column">
                                     <h4 class="mb-1" t-esc="order.pos_reference"/>
                                     <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" /></span>
                                 </div>
                                 <div class="d-flex justify-content-around gap-1 align-items-center">
-                                    <div t-if="selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" t-on-click="() => this.selfOrder.downloadReceipt(order)">
+                                    <div t-if="selfOrder.showDownloadButton(order)" class=" cursor-pointer p-2" role="button" t-on-click="() => this.selfOrder.downloadReceipt(order)">
                                         <i  class="fa fa-download" aria-hidden="true" />
                                     </div>
                                     <span class="badge py-2 rounded-pill text-capitalize"

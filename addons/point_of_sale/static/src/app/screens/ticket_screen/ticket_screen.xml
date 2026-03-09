@@ -21,7 +21,7 @@
                             </button>
                         </div>
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
-                            <span class="page me-2" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
+                            <span class="page me-2" role="button" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
@@ -37,7 +37,7 @@
                             <table t-if="!ui.isSmall"  class="table table-striped table-hover">
                                 <tbody>
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
-                                        <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}" t-att-orderUuid="order.uuid"
+                                        <tr role="button" class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}" t-att-orderUuid="order.uuid"
                                             t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => this.onDblClickOrder(order)" >
                                             <td>
                                                 <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
@@ -91,7 +91,7 @@
 
                             </table>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
-                                <div class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
+                                <div role="button" class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => this.onDblClickOrder(order)" >
                                     <div class="p-2">
                                             <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
@@ -115,7 +115,7 @@
                                                 </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="fa fa-trash" aria-hidden="true"/>
                                             </div>

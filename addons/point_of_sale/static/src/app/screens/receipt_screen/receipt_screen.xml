@@ -15,7 +15,7 @@
                                 </span>
                                 <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
                                     <span t-esc="orderAmountPlusTip" />
-                                    <span t-if="this.pos.canEditPayment(currentOrder)" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
+                                    <span t-if="this.pos.canEditPayment(currentOrder)" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" role="button" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
                                 </div>
                             </div>
                             <div class="receipt-options d-flex flex-column gap-2">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex gap-2 p-2">
-                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 flex-fill lh-lg" t-att-class="{ highlight: !locked }" t-on-click="() => this.pos.orderDone(this.currentOrder)" name="done">
+                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 flex-fill lh-lg" role="button" t-att-class="{ highlight: !locked }" t-on-click="() => this.pos.orderDone(this.currentOrder)" name="done">
                                 New Order
                     </div>
                 </div>

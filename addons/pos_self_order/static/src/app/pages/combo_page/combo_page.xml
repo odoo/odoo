@@ -53,6 +53,7 @@
                                     <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
                                     <t t-set="extraPrice" t-value="comboItem.extra_price"/>
                                     <div t-on-click="() => this.selectItem(comboItem)"
+                                            role="button"
                                             class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"
                                             t-att-class="{'border-primary': itemSelected, 'border-transparent': !itemSelected, 'opacity-50': isOutOfStock }">
                                         <div class="o_self_product_image w-25 w-sm-100 ratio ratio-1x1 flex-shrink-0 ms-2 ms-sm-0">
@@ -120,7 +121,7 @@
                         <div class="confirmation_box d-flex flex-column p-3 rounded-4 bg-white  shadow-sm ">
                             <t t-foreach="getSelection()" t-as="selection" t-key="selection.combo_choice_id.id">
                                 <t t-foreach="selection.combo_items" t-as="combo_item" t-key="combo_item.combo_item_id.id">
-                                    <div t-attf-class="d-flex align-items-center cursor-pointer  {{!combo_item_last || !selection_last ? ' pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}" t-on-click="()=>this.onChoiceClicked(selection_index)" >
+                                    <div role="button" t-attf-class="d-flex align-items-center cursor-pointer  {{!combo_item_last || !selection_last ? ' pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}" t-on-click="()=>this.onChoiceClicked(selection_index)" >
                                         <t t-set="product" t-value="combo_item.product_id"/>
                                         <t t-set="item_qty" t-value="combo_item.qty"/>
                                         <t t-set="attributes" t-value="combo_item.attributes"/>
