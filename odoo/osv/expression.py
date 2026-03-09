@@ -1392,12 +1392,14 @@ class expression(object):
 
             elif field.type == 'binary' and field.attachment:
                 if operator in ('=', '!=') and not right:
-                    sub_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    sql = SQL(
-                        "(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
-                        model._name, left,
-                    )
-                    push(('id', sub_op, sql), model, alias)
+                    sql_not = SQL() if operator in NEGATIVE_TERM_OPERATORS else SQL("NOT ")
+                    push_result(SQL(
+                        "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
+                        sql_not,
+                        model._name,
+                        left,
+                        model._field_to_sql(alias, 'id', self.query),
+                    ))
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
                                   field.string, left, operator, reprlib.repr(right))

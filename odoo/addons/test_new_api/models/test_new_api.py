@@ -1025,6 +1025,16 @@ class BinarySvg(models.Model):
         store=True, attachment=False,
     )
 
+
+class BinarySvgRelated(models.Model):
+    _name = 'test_new_api.binary_svg_related'
+    _description = 'Test SVG upload related'
+
+    svg_id = fields.Many2one('test_new_api.binary_svg', ondelete='cascade')
+    image_attachment = fields.Binary(related='svg_id.image_attachment')
+    image_wo_attachment = fields.Binary(related='svg_id.image_wo_attachment')
+
+
 class MonetaryBase(models.Model):
     _name = 'test_new_api.monetary_base'
     _description = 'Monetary Base'

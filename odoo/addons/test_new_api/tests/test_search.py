@@ -795,6 +795,80 @@ class TestSubqueries(TransactionCase):
         """]):
             model.search([('foo_bar_name', '=', 'a')])
 
+    def test_binary_attachment(self):
+        model = self.env['test_new_api.binary_svg'].with_user(self.env.ref('base.user_admin'))
+
+        # Warmup
+        model.search([('image_attachment', '=', False)])
+        model.search([('image_attachment', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_binary_svg"."id"
+            FROM "test_new_api_binary_svg"
+            WHERE NOT EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_new_api_binary_svg"."id"
+            )
+            ORDER BY "test_new_api_binary_svg"."id"
+        """]):
+            model.search([('image_attachment', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_binary_svg"."id"
+            FROM "test_new_api_binary_svg"
+            WHERE EXISTS (
+                SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s
+                AND res_id = "test_new_api_binary_svg"."id"
+            )
+            ORDER BY "test_new_api_binary_svg"."id"
+        """]):
+            model.search([('image_attachment', '!=', False)])
+
+    def test_binary_attachment_related(self):
+        model = self.env['test_new_api.binary_svg_related'].with_user(self.env.ref('base.user_admin'))
+
+        # Warmup
+        model.search([('image_attachment', '=', False)])
+        model.search([('image_attachment', '!=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_binary_svg_related"."id"
+            FROM "test_new_api_binary_svg_related"
+            WHERE (
+                ("test_new_api_binary_svg_related"."svg_id" IN (
+                    SELECT "test_new_api_binary_svg"."id"
+                    FROM "test_new_api_binary_svg"
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM ir_attachment
+                        WHERE res_model = %s
+                        AND res_field = %s
+                        AND res_id = "test_new_api_binary_svg"."id"
+                        )
+                    )
+                 )
+                OR "test_new_api_binary_svg_related"."svg_id" IS NULL
+            )
+            ORDER BY "test_new_api_binary_svg_related"."id"
+        """]):
+            model.search([('image_attachment', '=', False)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_binary_svg_related"."id"
+            FROM "test_new_api_binary_svg_related"
+            WHERE ("test_new_api_binary_svg_related"."svg_id" IN (
+                SELECT "test_new_api_binary_svg"."id"
+                FROM "test_new_api_binary_svg"
+                WHERE EXISTS (
+                    SELECT 1 FROM ir_attachment
+                    WHERE res_model = %s
+                    AND res_field = %s
+                    AND res_id = "test_new_api_binary_svg"."id"
+                )
+            ))
+            ORDER BY "test_new_api_binary_svg_related"."id"
+        """]):
+            model.search([('image_attachment', '!=', False)])
+
 
 class TestFlushSearch(TransactionCase):
 
