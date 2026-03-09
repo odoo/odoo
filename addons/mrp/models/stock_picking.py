@@ -134,7 +134,8 @@ class StockPicking(models.Model):
 
     production_ids = fields.One2many(
         'mrp.production',
-        related='move_ids.production_group_id.production_ids',
+        compute='_compute_production_ids',
+        string="Manufacturing Orders",
         groups='mrp.group_mrp_user')
     production_group_id = fields.Many2one(
         'mrp.production.group',
@@ -146,6 +147,11 @@ class StockPicking(models.Model):
     def _compute_has_kits(self):
         for picking in self:
             picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
+
+    @api.depends('reference_ids.production_ids')
+    def _compute_production_ids(self):
+        for picking in self:
+            picking.production_ids = picking.move_ids.production_group_id.production_ids
 
     @api.depends('production_ids')
     def _compute_mrp_production_ids(self):
