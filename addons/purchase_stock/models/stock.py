@@ -66,6 +66,7 @@ class StockWarehouse(models.Model):
                 buy_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
+                buy_route.product_selectable = False
 
     def _create_or_update_route(self):
         purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))

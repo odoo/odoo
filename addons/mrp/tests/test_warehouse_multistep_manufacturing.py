@@ -889,6 +889,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     def test_manufacture_to_resupply_unchecks_and_unlinks_warehouse(self):
         """Unchecking Manufacture to Resupply should keep manufacture_to_resupply disabled."""
         manufacture_route = self.warehouse.manufacture_pull_id.route_id
-        self.warehouse.manufacture_to_resupply = False
-        self.assertFalse(self.warehouse.manufacture_to_resupply)
-        self.assertNotIn(self.warehouse, manufacture_route.warehouse_ids)
+        manufacture_route.product_selectable = True
+        warehouse_form = Form(self.warehouse)
+        warehouse_form.manufacture_to_resupply = False
+        warehouse = warehouse_form.save()
+        self.assertFalse(warehouse.manufacture_to_resupply)
+        self.assertNotIn(warehouse, manufacture_route.warehouse_ids)
