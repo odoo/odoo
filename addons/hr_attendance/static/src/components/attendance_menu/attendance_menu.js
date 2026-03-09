@@ -7,6 +7,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { formatFloatTime } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -27,7 +28,6 @@ export class ActivityMenu extends Component {
             isDisplayed: false,
         });
 
-        this.date_formatter = registry.category("formatters").get("float_time");
         this.dropdown = useDropdownState();
 
         onWillStart(() => {
@@ -55,7 +55,7 @@ export class ActivityMenu extends Component {
         this.state.isDisplayed = this.employee.display_systray;
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
 
-        this.hoursToday = this.date_formatter(this.employee.hours_today);
+        this.hoursToday = formatFloatTime(this.employee.hours_today, { numeric: true });
 
         this.attendancesToday = (this.employee.today_attendance_ids || []).map((att) => {
             const checkIn = deserializeDateTime(att.check_in).toLocaleString({
@@ -75,7 +75,7 @@ export class ActivityMenu extends Component {
                 id: att.id,
                 start: checkIn,
                 end: checkOut,
-                duration: this.date_formatter(duration),
+                duration: formatFloatTime(duration, { numeric: true }),
             };
         });
         this.hasCheckedInToday = this.attendancesToday.length > 0;
