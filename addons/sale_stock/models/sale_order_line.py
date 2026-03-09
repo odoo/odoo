@@ -277,7 +277,7 @@ class SaleOrderLine(models.Model):
             'route_ids': self.route_ids,
             'warehouse_id': self.warehouse_id,
             'partner_id': self.order_id.partner_shipping_id.id,
-            'location_final_id': self._get_location_final(),
+            'forecasted_location_id': self._get_location_final(),
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants().strip(),
             'company_id': self.order_id.company_id,
             'sequence': self.sequence,
@@ -330,14 +330,14 @@ class SaleOrderLine(models.Model):
             if not move._is_dropshipped_returned() and (
                 (strict and move.location_dest_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
-                (move.location_final_id or move.location_dest_id)._is_outgoing()
+                (move.forecasted_location_id or move.location_dest_id)._is_outgoing()
             )):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
             elif move.to_refund and (
                 (strict and move._is_incoming() or move.location_id._is_outgoing()) or (
                 not strict and move.rule_id.id in triggering_rule_ids and
-                (move.location_final_id or move.location_dest_id).usage == 'internal'
+                (move.forecasted_location_id or move.location_dest_id).usage == 'internal'
             )):
                 incoming_moves_ids.add(move.id)
 

@@ -416,8 +416,8 @@ class ProductProduct(models.Model):
             dest_loc_domain_done = Domain('location_dest_id', 'in', paths_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
-                    '&', ('location_final_id', '!=', False), ('location_final_id', 'in', paths_query),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', paths_query),
+                    '&', ('forecasted_location_id', '!=', False), ('forecasted_location_id', 'in', paths_query),
+                    '&', ('forecasted_location_id', '=', False), ('location_dest_id', 'in', paths_query),
             ])
             dest_loc_domain = Domain([
                 '|',

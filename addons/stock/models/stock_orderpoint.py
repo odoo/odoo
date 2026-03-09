@@ -542,7 +542,7 @@ class StockWarehouseOrderpoint(models.Model):
         domain_move_out = Domain.AND((domain_product, domain_state, domain_move_out_loc))
 
         moves_in = defaultdict(list)
-        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
+        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'forecasted_location_id'], ['product_qty:sum']):
             moves_in[item[0]].append((item[1], item[2], item[3]))
 
         moves_out = defaultdict(list)

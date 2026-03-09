@@ -36,8 +36,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             '|',
             ('location_dest_id', 'not in', wh_location_ids),
             '&',
-            ('location_final_id', '!=', False),
-            ('location_final_id', 'not in', wh_location_ids),
+            ('forecasted_location_id', '!=', False),
+            ('forecasted_location_id', 'not in', wh_location_ids),
         ]
         in_domain = move_domain + [
             '&',

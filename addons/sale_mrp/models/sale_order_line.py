@@ -121,7 +121,7 @@ class SaleOrderLine(models.Model):
             'incoming_moves': lambda m: (
                 m.state != 'cancel' and m.location_dest_usage != 'inventory'
                 and m.rule_id.id in triggering_rule_ids
-                and m.location_final_id.usage == 'customer'
+                and m.forecasted_location_id.usage == 'customer'
                 and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)
             )),
             'outgoing_moves': lambda m: (

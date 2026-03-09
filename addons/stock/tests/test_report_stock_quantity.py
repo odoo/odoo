@@ -262,7 +262,7 @@ class TestReportStockQuantity(tests.TransactionCase):
                 'picking_type_id': warehouse.in_type_id.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': transit_loc.id,
-                'location_final_id': warehouse.lot_stock_id.id,
+                'forecasted_location_id': warehouse.lot_stock_id.id,
                 'route_ids': [Command.set(warehouse.resupply_route_ids.ids)],
                 'product_id': product.id,
                 'product_uom_qty': 150.0,
@@ -287,7 +287,7 @@ class TestReportStockQuantity(tests.TransactionCase):
                 'picking_type_id': warehouse.pick_type_id.id,
                 'location_id': warehouse.lot_stock_id.id,
                 'location_dest_id': warehouse.wh_output_stock_loc_id.id,
-                'location_final_id': self.customer_location.id,
+                'forecasted_location_id': self.customer_location.id,
                 'product_id': product.id,
                 'product_uom_qty': 60.0,
             })
