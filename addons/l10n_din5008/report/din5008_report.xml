@@ -97,7 +97,7 @@
                             <t t-if="din5008_document_title">
                                 <t t-out="din5008_document_title"/>
                             </t>
-                            <span t-elif="'name' in o" t-field="o.name"/>
+                            <span t-elif="o and o.exists() and 'name' in o" t-field="o.name"/>
                         </span>
                     </h2>
                     <t t-out="0"/>
