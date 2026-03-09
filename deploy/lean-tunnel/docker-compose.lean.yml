@@ -1,0 +1,12 @@
+# Lean Tunnel mode overlay
+# Exposes Odoo for local development (http://localhost:8069)
+# while allowing cloudflared to route internet traffic through nginx (http://nginx:80)
+# or directly to Odoo. This setup relies on Cloudflare's edge security.
+services:
+  odoo:
+    ports:
+      - "${LOCAL_BIND_HOST:-127.0.0.1}:8069:8069"
+      - "${LOCAL_BIND_HOST:-127.0.0.1}:8072:8072"
+  nginx:
+    ports:
+      - "${LOCAL_BIND_HOST:-127.0.0.1}:80:80"

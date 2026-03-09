@@ -1,0 +1,1145 @@
+SHELL := /bin/bash
+
+-include .env.make
+.EXPORT_ALL_VARIABLES:
+
+# Context defaults for local Linux/WSL and deploy stack.
+ENV_FILE_OPT := $(if $(wildcard .env.make),--env-file .env.make,)
+COMPOSE ?= docker compose $(ENV_FILE_OPT)
+PYTHON_CANDIDATES := $(wildcard .venv/bin/python3 .venv/bin/python venv/bin/python3 venv/bin/python)
+PYTHON ?= $(if $(PYTHON_CANDIDATES),$(firstword $(PYTHON_CANDIDATES)),python3)
+ODOO_BIN ?= ./odoo-bin
+LOG_PATH ?= logs/odoo-lnav.log
+DOMAIN ?= kodoo.online
+EMAIL ?= [EMAIL_ADDRESS]
+OLLAMA_MODEL ?= qwen3.5:0.8b
+CLOUDFLARED_TOKEN ?=
+SMOKE_PUBLIC ?= 1
+MOBILE_DIR ?= mobile/kodoo-capacitor
+TUI_PYTHON ?= python3
+TUI_VENV ?= .venv-tui
+TUI_REQUIREMENTS ?= requirements-tui.txt
+TUI_REFRESH_SECONDS ?= 3
+TUI_LOG_LINES ?= 20
+PUBLIC_HTTP_PORT ?= 80
+PUBLIC_HTTPS_PORT ?= 443
+LOCAL_BIND_HOST ?= 127.0.0.1
+LOCAL_HTTP_PORT ?= 8069
+INSECURE_HTTP_PORT ?= 8069
+INSECURE_EVENTED_PORT ?= 8072
+STOP_PORTS ?= $(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT) $(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)
+PROD_CONFIG ?= deploy/odoo/kodoo.prod.local.conf
+PROD_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.prod.conf.example
+PROD_DB_NAME ?= kodoo
+PROD_DB_USER ?= kodoo
+PROD_DB_PASSWORD ?=
+PROD_ADMIN_PASSWORD ?=
+DB ?= $(PROD_DB_NAME)
+DEV_HOST_CONFIG ?= deploy/odoo/kodoo.dev-host.local.conf
+DEV_HOST_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-host.conf.example
+DEV_HOST_DB ?= kodoo
+DEV_HOST_TEST_DB ?= ktest
+DEV_HOST_LOG_PATH ?= logs/odoo-dev-host.log
+DEV_HOST_PID_FILE ?= logs/odoo-dev-host.pid
+DEV_HOST_ADMIN_PASSWORD ?=
+DEV_PROJECT_CONFIG ?= deploy/odoo/kodoo.dev-project.local.conf
+DEV_PROJECT_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-project.conf.example
+DEV_PROJECT_DB ?= ktest
+DEV_PROJECT_LOG_PATH ?= logs/odoo-dev-project.log
+DEV_PROJECT_PID_FILE ?= logs/odoo-dev-project.pid
+DEV_PROJECT_ADMIN_PASSWORD ?=
+DOCKER_DB_BIND_HOST ?= 127.0.0.1
+DOCKER_DB_HOST_PORT ?= 5433
+PG_LOCAL_SERVICE ?= postgresql
+PG_LOCAL_SUPERUSER ?= postgres
+PG_LOCAL_HOST ?= 127.0.0.1
+PG_LOCAL_PORT ?= 5432
+PG_LOCAL_USER ?= kodoo
+PG_LOCAL_PASSWORD ?=
+BACKUP_DIR ?= backups/postgres
+CONFIG ?= $(DEV_HOST_CONFIG)
+COMPOSE_LOCAL := $(COMPOSE) -f docker-compose.yml -f deploy/local/docker-compose.local.yml
+COMPOSE_INSECURE := $(COMPOSE) -f docker-compose.yml -f deploy/insecure/docker-compose.insecure.yml
+COMPOSE_GPU := $(COMPOSE) -f docker-compose.yml -f deploy/ollama/docker-compose.gpu.yml
+COMPOSE_TUNNEL := $(COMPOSE) -f docker-compose.yml -f deploy/cloudflare/docker-compose.tunnel.yml -f deploy/local/docker-compose.local.yml -f deploy/cloudflare/docker-compose.cloudflare.yml
+COMPOSE_LEAN_TUNNEL := $(COMPOSE) -f docker-compose.yml -f deploy/cloudflare/docker-compose.tunnel.yml -f deploy/cloudflare/docker-compose.cloudflare.yml -f deploy/lean-tunnel/docker-compose.lean.yml
+COMPOSE_PROJECT_DB := $(COMPOSE) -f docker-compose.yml -f deploy/dev-project/docker-compose.db-only.yml
+CONFIG_FIND_CMD = find . \
+	\( -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' \) -prune -o \
+	-type f \( -name '*.conf' -o -name '*.env' -o -name '*.env.*' -o -name '.env' -o -name '.env.*' \) -print | \
+	LC_ALL=C sort | sed 's|^\./||'
+
+.PHONY: help doctor deps-install clean clean-all \
+	odoo-lnav build up up-cpu up-gpu down logs status \
+	probe certbot certbot-renew \
+	db-init db-check \
+	stop ports-clean \
+	env-init config-list config-view config-view-all config-edit config-create prod-config \
+	dev-host-config \
+	up-home down-home logs-home smoke-home troubleshoot-home \
+	up-cowork down-cowork logs-cowork smoke-cowork troubleshoot-cowork \
+	up-dev down-dev logs-dev smoke-dev troubleshoot-dev \
+	up-project down-project logs-project smoke-project troubleshoot-project \
+	tui tui-live tui-install tui-menu tui-doctor \
+	odoo-tui odoo-shell odoo-fix-url \
+	dev-host-db-setup dev-host-db-init dev-host-test-init \
+	dev-host-up dev-host-stop dev-host-logs dev-host-status \
+	dev-project-config dev-project-db-setup dev-project-db-init \
+	dev-project-up dev-project-stop dev-project-logs dev-project-status \
+	dev-host-backup dev-host-restore-ktest \
+	assets-rebuild \
+	smoke troubleshoot up-smoke \
+	mobile-install mobile-doctor mobile-add-android mobile-add-ios \
+	mobile-sync mobile-open-android mobile-open-ios \
+	ollama-pull ollama-list \
+	up-local logs-local down-local \
+	up-insecure down-insecure \
+	up-cloudflare logs-cloudflare down-cloudflare \
+	up-tunnel logs-tunnel down-tunnel \
+	up-lean-tunnel logs-lean-tunnel down-lean-tunnel
+help:
+	@echo "Targets:"
+	@echo "Modes:"
+	@echo "  make up-home        # Switch to the normal home stack (same as up, after down-tunnel)"
+	@echo "  make up-cowork      # Switch to cowork stack (tunnel + local URL)"
+	@echo "  make up-dev         # Switch to localhost-only dev stack"
+	@echo "  make up-project     # Switch to host-backend + Docker DB mode"
+	@echo "  make down-home      # Stop the normal home stack"
+	@echo "  make down-cowork    # Stop the cowork/tunnel stack"
+	@echo "  make down-dev       # Stop the localhost-only dev stack"
+	@echo "  make down-project   # Stop the host-backend + Docker DB mode"
+	@echo "  make logs-home      # Tail logs for the normal home stack"
+	@echo "  make logs-cowork    # Tail logs for the cowork/tunnel stack"
+	@echo "  make logs-dev       # Tail logs for the localhost-only dev stack"
+	@echo "  make logs-project   # Tail logs for the host-backend + Docker DB mode"
+	@echo ""
+	@echo "Stacks:"
+	@echo "  make up             # Start secure stack (db/odoo/nginx/ollama)"
+	@echo "  make up-cpu         # Same as up (CPU mode default for Ollama)"
+	@echo "  make up-gpu         # Start stack with optional Ollama GPU override"
+	@echo "  make up-local       # Local dev via nginx on $(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT) (websocket-safe)"
+	@echo "  make down-local     # Stop local-dev stack"
+	@echo "  make logs-local     # Tail local-dev logs (nginx + odoo + db + ollama)"
+	@echo "  make up-cloudflare  # Cloudflare DNS proxy mode (no tunnel, uses nginx 80/443)"
+	@echo "  make down-cloudflare# Stop Cloudflare DNS proxy mode stack"
+	@echo "  make logs-cloudflare# Tail nginx + odoo logs for Cloudflare DNS proxy mode"
+	@echo "  make up-insecure    # Quick test: expose Odoo 8069/8072 (UNSAFE)"
+	@echo "  make down-insecure  # Stop insecure stack"
+	@echo "  make up-tunnel      # Cloudflare Tunnel mode + local URL ($(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT))"
+	@echo "  make down-tunnel    # Stop Cloudflare Tunnel mode stack"
+	@echo "  make logs-tunnel    # Tail cloudflared + nginx + odoo logs"
+	@echo "  make up-lean-tunnel # Lean Tunnel: local HTTP (80/8069) + CF Tunnel Internet"
+	@echo "  make down-lean-tunnel # Stop Lean Tunnel mode"
+	@echo "  make logs-lean-tunnel # Tail Lean Tunnel logs"
+
+	@echo ""
+	@echo "Health:"
+	@echo "  make smoke-home     # Smoke check for normal local/home mode"
+	@echo "  make smoke-cowork   # Smoke check for cowork/tunnel mode"
+	@echo "  make smoke-dev      # Smoke check for localhost-only dev mode"
+	@echo "  make smoke-project  # Smoke check for host-backend + Docker DB mode"
+	@echo "  make troubleshoot-home # Diagnose normal local/home mode"
+	@echo "  make troubleshoot-cowork # Diagnose cowork/tunnel mode"
+	@echo "  make troubleshoot-dev # Diagnose localhost-only dev mode"
+	@echo "  make troubleshoot-project # Diagnose host-backend + Docker DB mode"
+	@echo "  make smoke          # Quick health check (local/websocket/public)"
+	@echo "  make troubleshoot   # Diagnose env, services, local/public HTTP and websocket"
+	@echo "                      # Use SMOKE_PUBLIC=0 to skip public domain check"
+	@echo ""
+	@echo "Config:"
+	@echo "  make env-init       # Create .env.make from .env.make.example if missing"
+	@echo "  make config-list    # List every .conf/.env-style file in the repo"
+	@echo "  make config-view FILE=path # View one config file (or choose interactively)"
+	@echo "  make config-view-all # Print all config files with section headers"
+	@echo "  make config-edit FILE=path # Edit one config file (or choose interactively)"
+	@echo "  make config-create FILE=path [FROM=template] # Create a config file and open it"
+	@echo "  make clean          # Remove python cache and logs"
+	@echo "  make clean-all      # Deep clean: caches, logs, node_modules, and build artifacts"
+	@echo "  make prod-config    # Generate $(PROD_CONFIG) from local secrets"
+
+	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
+	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
+	@echo "  make certbot        # Issue cert (only for direct public IP mode)"
+	@echo "  make certbot-renew  # Renew certs and reload nginx"
+	@echo "  make odoo-fix-url   # Force Odoo base URL to https://$(DOMAIN)"
+	@echo ""
+	@echo "Database:"
+	@echo "  make db-init        # Initialize Odoo schema in DB ($(DB))"
+	@echo "  make db-check       # Check if base module exists in DB"
+	@echo ""
+	@echo "Containers:"
+	@echo "  make build          # Build Docker images"
+	@echo "  make status         # Show compose status"
+	@echo "  make logs           # Tail odoo + nginx logs"
+	@echo "  make stop           # Stop all modes and free service ports ($(STOP_PORTS))"
+	@echo "  make odoo-tui       # Open interactive terminal inside Odoo container"
+	@echo "  make odoo-shell     # Open Odoo interactive shell (DB=$(DB))"
+	@echo "  make probe          # Probe nginx ACME webroot locally"
+	@echo ""
+	@echo "Dev Host:"
+	@echo "  make dev-host-db-setup # Prepare local PostgreSQL with $(DEV_HOST_DB) and $(DEV_HOST_TEST_DB)"
+	@echo "  make dev-host-db-init  # Initialize local Odoo schema in $(DEV_HOST_DB)"
+	@echo "  make dev-host-test-init # Initialize local Odoo schema in $(DEV_HOST_TEST_DB)"
+	@echo "  make dev-host-up    # Run Odoo on host using local PostgreSQL"
+	@echo "  make dev-host-stop  # Stop local host-run Odoo"
+	@echo "  make dev-host-logs  # Tail local host-run Odoo log"
+	@echo "  make dev-host-status # Check local host-run Odoo status"
+	@echo "  make dev-project-db-setup # Start Docker PostgreSQL and ensure $(DEV_PROJECT_DB) exists"
+	@echo "  make dev-project-db-init # Initialize local Odoo schema in $(DEV_PROJECT_DB)"
+	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL"
+	@echo "  make dev-project-stop # Stop host-run Odoo and Docker PostgreSQL"
+	@echo "  make dev-project-logs # Tail host-run Odoo log for project mode"
+	@echo "  make dev-project-status # Check host-run Odoo and Docker PostgreSQL status"
+	@echo "  make dev-host-backup # Dump $(DEV_HOST_DB) to $(BACKUP_DIR)"
+	@echo "  make dev-host-restore-ktest # Restore latest backup into $(DEV_HOST_TEST_DB)"
+	@echo ""
+	@echo "Assets:"
+	@echo "  make assets-rebuild # Clear and rebuild Odoo web assets"
+	@echo "  make assets-reset   # Hard reset assets (DB + force 'web' module upgrade)"
+	@echo ""
+	@echo "Utility:"
+	@echo "  make doctor         # Check OS/WSL/GPU/Docker status"
+	@echo "  make deps-install   # Install only required host deps (OS-aware, GPU-aware)"
+	@echo "  make up-smoke       # Start default stack and run smoke checks"
+	@echo "  make odoo-lnav      # Run local Odoo and tail logs with lnav or tail"
+	@echo "  make tui            # Open the live diagnostics TUI (fallback: shell menu)"
+	@echo "  make tui-live       # Open the Textual diagnostics dashboard"
+	@echo "  make tui-install    # Create $(TUI_VENV) and install Textual deps"
+	@echo "  make tui-menu       # Open the shell-based Make menu"
+	@echo "  make tui-doctor     # Check TUI runtime prerequisites"
+	@echo ""
+	@echo "Mobile:"
+	@echo "  make mobile-install # Install mobile app dependencies in $(MOBILE_DIR)"
+	@echo "  make mobile-doctor  # Run Capacitor doctor for the mobile app"
+	@echo "  make mobile-add-android # Generate Android shell"
+	@echo "  make mobile-add-ios # Generate iOS shell"
+	@echo "  make mobile-sync    # Sync Capacitor config and web assets"
+	@echo "  make mobile-open-android # Open Android Studio project"
+	@echo "  make mobile-open-ios # Open Xcode project"
+	@echo ""
+	@echo "Ollama:"
+	@echo "  make ollama-pull    # Pull default model in Ollama ($(OLLAMA_MODEL))"
+	@echo "  make ollama-list    # List local Ollama models"
+	@echo ""
+	@echo "Examples:"
+	@echo "  cp .env.make.example .env.make"
+	@echo "  make config-list"
+	@echo "  make config-view FILE=.env.make"
+	@echo "  make config-edit"
+	@echo "  make config-create FILE=deploy/odoo/custom.local.conf"
+	@echo "  edit .env.make, then make prod-config"
+	@echo "  edit .env.make, then make certbot"
+	@echo "  make up-cloudflare"
+	@echo "  edit .env.make, then make up-tunnel"
+	@echo "  edit .env.make, then make dev-host-config"
+	@echo "  make dev-host-db-setup dev-host-up"
+	@echo "  edit .env.make, then make dev-project-up"
+	@echo "  make tui-install && make tui-live"
+	@echo "  make mobile-install mobile-add-android mobile-open-android"
+
+doctor:
+	@echo "== Host =="
+	@echo "OS: $$(uname -s)"
+	@echo "Kernel: $$(uname -r)"
+	@if grep -qi microsoft /proc/version 2>/dev/null; then echo "WSL: yes"; else echo "WSL: no"; fi
+	@echo ""
+	@echo "== Tools =="
+	@if command -v docker >/dev/null 2>&1; then docker --version; else echo "docker: missing"; fi
+	@if command -v docker >/dev/null 2>&1; then $(COMPOSE) version; else true; fi
+	@if command -v nvidia-smi >/dev/null 2>&1; then echo "GPU: NVIDIA detected"; nvidia-smi -L; else echo "GPU: not detected (CPU mode recommended)"; fi
+
+deps-install:
+	@set -e; \
+	OS="$$(uname -s)"; \
+	echo "Installing minimal dependencies for $$OS ..."; \
+	if [ "$$OS" = "Linux" ]; then \
+	  if command -v apt-get >/dev/null 2>&1; then \
+	    sudo apt-get update; \
+	    sudo apt-get install -y ca-certificates curl make jq; \
+	    if command -v nvidia-smi >/dev/null 2>&1; then \
+	      echo "NVIDIA GPU detected: installing nvidia-container-toolkit"; \
+	      sudo apt-get install -y nvidia-container-toolkit || true; \
+	    else \
+	      echo "No NVIDIA GPU detected: skipping nvidia-container-toolkit."; \
+	    fi; \
+	  elif command -v pacman >/dev/null 2>&1; then \
+	    sudo pacman -Syu --noconfirm ca-certificates curl make jq; \
+	    if command -v nvidia-smi >/dev/null 2>&1; then \
+	      echo "NVIDIA GPU detected: install nvidia-container-toolkit manually if needed."; \
+	    fi; \
+	  elif command -v dnf >/dev/null 2>&1; then \
+	    sudo dnf install -y ca-certificates curl make jq; \
+	  else \
+	    echo "Unsupported Linux package manager. Install: ca-certificates curl make jq"; \
+	  fi; \
+	else \
+		echo "Non-Linux host: install Docker Desktop + make + curl manually."; \
+	fi
+
+env-init:
+	@if [ -f .env.make ]; then \
+	  echo ".env.make already exists."; \
+	else \
+	  cp .env.make.example .env.make; \
+	  echo "Created .env.make from .env.make.example."; \
+	fi
+
+config-list:
+	@set -e; \
+	mapfile -t files < <($(CONFIG_FIND_CMD)); \
+	if [ "$${#files[@]}" -eq 0 ]; then \
+	  echo "No .conf/.env-style files found."; \
+	  exit 0; \
+	fi; \
+	printf "Config files found (%s):\n" "$${#files[@]}"; \
+	for file in "$${files[@]}"; do \
+	  printf "  %s\n" "$$file"; \
+	done
+
+config-view:
+	@set -e; \
+	file="$(FILE)"; \
+	if [ -z "$$file" ]; then \
+	  mapfile -t files < <($(CONFIG_FIND_CMD)); \
+	  if [ "$${#files[@]}" -eq 0 ]; then \
+	    echo "No .conf/.env-style files found."; \
+	    exit 1; \
+	  fi; \
+	  printf "Select a config file to view:\n"; \
+	  for i in "$${!files[@]}"; do \
+	    printf "  [%s] %s\n" "$$((i + 1))" "$${files[$$i]}"; \
+	  done; \
+	  printf "Number: "; \
+	  read -r choice; \
+	  case "$$choice" in \
+	    ''|*[!0-9]*) echo "ERROR: enter a numeric selection."; exit 1 ;; \
+	  esac; \
+	  if [ "$$choice" -lt 1 ] || [ "$$choice" -gt "$${#files[@]}" ]; then \
+	    echo "ERROR: selection out of range."; \
+	    exit 1; \
+	  fi; \
+	  file="$${files[$$((choice - 1))]}"; \
+	fi; \
+	if [ ! -f "$$file" ]; then \
+	  echo "ERROR: file '$$file' not found."; \
+	  exit 1; \
+	fi; \
+	if command -v less >/dev/null 2>&1 && [ -t 1 ]; then \
+	  less "$$file"; \
+	else \
+	  cat "$$file"; \
+	fi
+
+config-view-all:
+	@set -e; \
+	mapfile -t files < <($(CONFIG_FIND_CMD)); \
+	if [ "$${#files[@]}" -eq 0 ]; then \
+	  echo "No .conf/.env-style files found."; \
+	  exit 0; \
+	fi; \
+	if command -v less >/dev/null 2>&1 && [ -t 1 ]; then \
+	  { \
+	    for file in "$${files[@]}"; do \
+	      printf "\n===== %s =====\n" "$$file"; \
+	      cat "$$file"; \
+	    done; \
+	  } | less; \
+	else \
+	  for file in "$${files[@]}"; do \
+	    printf "\n===== %s =====\n" "$$file"; \
+	    cat "$$file"; \
+	  done; \
+	fi
+
+config-edit:
+	@set -e; \
+	file="$(FILE)"; \
+	if [ -z "$$file" ]; then \
+	  mapfile -t files < <($(CONFIG_FIND_CMD)); \
+	  if [ "$${#files[@]}" -eq 0 ]; then \
+	    echo "No .conf/.env-style files found."; \
+	    exit 1; \
+	  fi; \
+	  printf "Select a config file to edit:\n"; \
+	  for i in "$${!files[@]}"; do \
+	    printf "  [%s] %s\n" "$$((i + 1))" "$${files[$$i]}"; \
+	  done; \
+	  printf "Number: "; \
+	  read -r choice; \
+	  case "$$choice" in \
+	    ''|*[!0-9]*) echo "ERROR: enter a numeric selection."; exit 1 ;; \
+	  esac; \
+	  if [ "$$choice" -lt 1 ] || [ "$$choice" -gt "$${#files[@]}" ]; then \
+	    echo "ERROR: selection out of range."; \
+	    exit 1; \
+	  fi; \
+	  file="$${files[$$((choice - 1))]}"; \
+	fi; \
+	if [ ! -f "$$file" ]; then \
+	  echo "ERROR: file '$$file' not found."; \
+	  exit 1; \
+	fi; \
+	editor="$(CONFIG_EDITOR)"; \
+	if [ -z "$$editor" ]; then \
+	  if [ -n "$$VISUAL" ]; then \
+	    editor="$$VISUAL"; \
+	  elif [ -n "$$EDITOR" ]; then \
+	    editor="$$EDITOR"; \
+	  elif command -v nano >/dev/null 2>&1; then \
+	    editor="nano"; \
+	  elif command -v vi >/dev/null 2>&1; then \
+	    editor="vi"; \
+	  else \
+	    echo "ERROR: no editor found. Set EDITOR, VISUAL, or CONFIG_EDITOR."; \
+	    exit 1; \
+	  fi; \
+	fi; \
+	eval "$$editor \"$$file\""
+
+config-create:
+	@set -e; \
+	file="$(FILE)"; \
+	template="$(FROM)"; \
+	if [ -z "$$file" ]; then \
+	  printf "Enter the new config file path (.conf, .env, .env.*): "; \
+	  read -r file; \
+	fi; \
+	case "$$file" in \
+	  *.conf|*.env|*.env.*|.env|.env.*) ;; \
+	  *) \
+	    echo "ERROR: FILE must end with .conf, .env, or .env.*"; \
+	    exit 1 ;; \
+	esac; \
+	if [ -e "$$file" ]; then \
+	  echo "Config file '$$file' already exists."; \
+	  $(MAKE) config-edit FILE="$$file"; \
+	  exit 0; \
+	fi; \
+	mkdir -p "$$(dirname "$$file")"; \
+	if [ -z "$$template" ] && [ -f "$$file.example" ]; then \
+	  template="$$file.example"; \
+	fi; \
+	if [ -z "$$template" ] && [[ "$$file" == *.local.conf ]]; then \
+	  inferred_template="$${file%.local.conf}.conf.example"; \
+	  if [ -f "$$inferred_template" ]; then \
+	    template="$$inferred_template"; \
+	  fi; \
+	fi; \
+	if [ -n "$$template" ]; then \
+	  if [ ! -f "$$template" ]; then \
+	    echo "ERROR: template '$$template' not found."; \
+	    exit 1; \
+	  fi; \
+	  cp "$$template" "$$file"; \
+	  echo "Created '$$file' from '$$template'."; \
+	else \
+	  : > "$$file"; \
+	  echo "Created empty config file '$$file'."; \
+	fi; \
+	$(MAKE) config-edit FILE="$$file"
+
+prod-config:
+	@CONFIG_OUTPUT="$(PROD_CONFIG)" \
+	PROD_ADMIN_PASSWORD="$(PROD_ADMIN_PASSWORD)" \
+	PROD_DB_HOST="db" \
+	PROD_DB_PORT="5432" \
+	PROD_DB_USER="$(PROD_DB_USER)" \
+	PROD_DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	./scripts/render-prod-config.sh
+	@chmod 644 "$(PROD_CONFIG)"
+	@echo "Generated $(PROD_CONFIG) from .env.make (chmod 644)."
+
+dev-host-config:
+	@CONFIG_OUTPUT="$(DEV_HOST_CONFIG)" \
+	DEV_HOST_ADMIN_PASSWORD="$(DEV_HOST_ADMIN_PASSWORD)" \
+	APP_DB_HOST="$(PG_LOCAL_HOST)" \
+	APP_DB_PORT="$(PG_LOCAL_PORT)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	./scripts/render-dev-host-config.sh
+	@chmod 644 "$(DEV_HOST_CONFIG)"
+	@echo "Generated $(DEV_HOST_CONFIG) from .env.make (chmod 644)."
+
+dev-project-config:
+	@CONFIG_OUTPUT="$(DEV_PROJECT_CONFIG)" \
+	DEV_HOST_ADMIN_PASSWORD="$(if $(DEV_PROJECT_ADMIN_PASSWORD),$(DEV_PROJECT_ADMIN_PASSWORD),$(if $(DEV_HOST_ADMIN_PASSWORD),$(DEV_HOST_ADMIN_PASSWORD),$(PROD_ADMIN_PASSWORD)))" \
+	APP_DB_HOST="$(DOCKER_DB_BIND_HOST)" \
+	APP_DB_PORT="$(DOCKER_DB_HOST_PORT)" \
+	APP_DB_USER="$(PROD_DB_USER)" \
+	APP_DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	./scripts/render-dev-host-config.sh
+	@chmod 644 "$(DEV_PROJECT_CONFIG)"
+	@echo "Generated $(DEV_PROJECT_CONFIG) from .env.make (chmod 644)."
+# Equivalent to scripts/start-with-lnav.ps1 for Linux/WSL environments.
+odoo-lnav:
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@mkdir -p "$$(dirname "$(LOG_PATH)")"
+	@echo "Starting Odoo ($(DB)) -> $(LOG_PATH)"
+	@nohup $(PYTHON) $(ODOO_BIN) -c $(CONFIG) -d $(DB) --logfile="$(LOG_PATH)" --log-level=info >/dev/null 2>&1 &
+	@echo "Odoo started in background. PID: $$!"
+	@if command -v lnav >/dev/null 2>&1; then \
+		echo "Launching lnav on $(LOG_PATH)"; \
+		lnav "$(LOG_PATH)"; \
+	else \
+		echo "lnav not found. Falling back to tail -f"; \
+		tail -f "$(LOG_PATH)"; \
+	fi
+
+build:
+	@$(MAKE) prod-config
+	@$(COMPOSE) build
+
+stop:
+	@echo "Stopping all compose modes..."
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-project-stop >/dev/null 2>&1 || true
+	@$(COMPOSE) down --remove-orphans >/dev/null 2>&1 || true
+	@$(COMPOSE_LOCAL) down --remove-orphans >/dev/null 2>&1 || true
+	@$(COMPOSE_INSECURE) down --remove-orphans >/dev/null 2>&1 || true
+	@$(COMPOSE_TUNNEL) down --remove-orphans >/dev/null 2>&1 || true
+	@$(COMPOSE_GPU) down --remove-orphans >/dev/null 2>&1 || true
+	@$(COMPOSE_PROJECT_DB) down --remove-orphans >/dev/null 2>&1 || true
+	@$(MAKE) ports-clean PORTS="$(STOP_PORTS)"
+	@echo "Stop complete."
+
+ports-clean:
+	@set -e; \
+	PORTS="$(PORTS)"; \
+	if [ -z "$$PORTS" ]; then echo "No ports requested for cleanup."; exit 0; fi; \
+	for p in $$PORTS; do \
+	  echo "Checking port $$p..."; \
+	  pids=$$( (ss -ltnp "sport = :$$p" 2>/dev/null | grep -oP 'pid=\K[0-9]+' || \
+	            lsof -ti:$$p 2>/dev/null || \
+	            fuser $$p/tcp 2>/dev/null | awk '{print $$1}') | sort -u | tr '\n' ' ' ); \
+	  if [ -n "$$pids" ]; then \
+	    echo "  Releasing port $$p (PIDs: $$pids)"; \
+	    kill -TERM $$pids 2>/dev/null || true; \
+	    sleep 1; \
+	    remaining=$$( (ss -ltnp "sport = :$$p" 2>/dev/null | grep -oP 'pid=\K[0-9]+' || \
+	                   lsof -ti:$$p 2>/dev/null) | sort -u | tr '\n' ' ' ); \
+	    if [ -n "$$remaining" ]; then \
+	      kill -KILL $$remaining 2>/dev/null || true; \
+	    fi; \
+	  else \
+	    echo "  Port $$p already free."; \
+	  fi; \
+	done
+
+up: up-cpu
+
+up-home:
+	@$(MAKE) down-tunnel >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-project-stop >/dev/null 2>&1 || true
+	@$(MAKE) up
+
+down-home:
+	@$(MAKE) down
+
+logs-home:
+	@$(MAKE) logs
+
+smoke-home:
+	@$(MAKE) smoke SMOKE_PUBLIC=0
+
+troubleshoot-home:
+	@$(MAKE) troubleshoot SMOKE_PUBLIC=0
+
+up-cowork:
+	@$(MAKE) down >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-project-stop >/dev/null 2>&1 || true
+	@$(MAKE) up-tunnel
+
+down-cowork:
+	@$(MAKE) down-tunnel
+
+logs-cowork:
+	@$(MAKE) logs-tunnel
+
+smoke-cowork:
+	@$(MAKE) smoke
+
+troubleshoot-cowork:
+	@$(MAKE) troubleshoot
+
+up-dev:
+	@$(MAKE) down >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-project-stop >/dev/null 2>&1 || true
+	@$(MAKE) up-local
+
+down-dev:
+	@$(MAKE) down-local
+
+logs-dev:
+	@$(MAKE) logs-local
+
+smoke-dev:
+	@$(MAKE) smoke SMOKE_PUBLIC=0
+
+troubleshoot-dev:
+	@$(MAKE) troubleshoot SMOKE_PUBLIC=0
+
+up-project:
+	@$(MAKE) down >/dev/null 2>&1 || true
+	@$(MAKE) down-local >/dev/null 2>&1 || true
+	@$(MAKE) down-tunnel >/dev/null 2>&1 || true
+	@$(MAKE) dev-host-stop >/dev/null 2>&1 || true
+	@$(MAKE) dev-project-up
+
+down-project:
+	@$(MAKE) dev-project-stop
+
+logs-project:
+	@$(MAKE) dev-project-logs
+
+smoke-project:
+	@set -e; \
+	echo "== Smoke check (project mode / $(DEV_PROJECT_DB)) =="; \
+	db_running="$$(docker inspect -f '{{.State.Running}}' kodoo-db 2>/dev/null || true)"; \
+	if [ "$$db_running" != "true" ]; then \
+	  echo "FAIL: Docker PostgreSQL container 'kodoo-db' is not running."; \
+	  exit 1; \
+	fi; \
+	if [ ! -f "$(DEV_PROJECT_PID_FILE)" ] || ! kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)" 2>/dev/null)" 2>/dev/null; then \
+	  echo "FAIL: host Odoo process for project mode is not running."; \
+	  exit 1; \
+	fi; \
+	code="$$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo" || true)"; \
+	if [ "$$code" != "200" ] && [ "$$code" != "303" ]; then \
+	  echo "FAIL: local endpoint returned HTTP $$code."; \
+	  exit 1; \
+	fi; \
+	echo "OK: Docker PostgreSQL is running."; \
+	echo "OK: host Odoo is running."; \
+	echo "OK: local endpoint http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo HTTP $$code."
+
+troubleshoot-project:
+	@set +e; \
+	rc=0; \
+	echo "== Troubleshoot (project mode / $(DEV_PROJECT_DB)) =="; \
+	echo ""; \
+	echo "== Files =="; \
+	if [ -f .env.make ]; then echo "OK: .env.make found."; else echo "FAIL: .env.make missing."; rc=1; fi; \
+	if [ -f "$(DEV_PROJECT_CONFIG)" ]; then echo "OK: $(DEV_PROJECT_CONFIG) found."; else echo "WARN: $(DEV_PROJECT_CONFIG) missing. Run: make dev-project-config"; rc=1; fi; \
+	echo ""; \
+	echo "== Docker DB =="; \
+	$(COMPOSE_PROJECT_DB) ps db || rc=1; \
+	echo ""; \
+	echo "== Host Odoo =="; \
+	if [ -f "$(DEV_PROJECT_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)")" 2>/dev/null; then \
+	  echo "OK: host Odoo running with PID $$(cat "$(DEV_PROJECT_PID_FILE)")"; \
+	else \
+	  echo "FAIL: host Odoo is not running."; \
+	  rc=1; \
+	fi; \
+	echo "Docker PostgreSQL host binding: $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"; \
+	echo ""; \
+	echo "== Local HTTP =="; \
+	code="$$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo" || true)"; \
+	echo "http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo -> $$code"; \
+	if [ "$$code" != "200" ] && [ "$$code" != "303" ]; then rc=1; fi; \
+	echo ""; \
+	echo "== Hints =="; \
+	echo "make dev-project-up"; \
+	echo "make dev-project-db-init"; \
+	echo "make dev-project-logs"; \
+	exit $$rc
+
+up-cpu:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(COMPOSE) up -d db odoo nginx ollama
+	@$(MAKE) ollama-pull
+
+up-gpu:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@if ! command -v nvidia-smi >/dev/null 2>&1; then echo "NVIDIA GPU not detected. Use 'make up-cpu'."; exit 1; fi
+	@$(COMPOSE_GPU) up -d db odoo nginx ollama
+	@$(MAKE) ollama-pull
+
+up-local:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
+	@echo "Starting local-dev mode via nginx on localhost (websocket enabled)."
+	@$(COMPOSE_LOCAL) up -d db odoo nginx ollama
+	@$(MAKE) ollama-pull
+	@echo "Local Odoo: http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
+
+logs-local:
+	@$(COMPOSE_LOCAL) logs -f --tail=120 nginx odoo db ollama
+
+down-local:
+	@$(COMPOSE_LOCAL) down --remove-orphans
+
+down:
+	@$(COMPOSE) down --remove-orphans
+
+status:
+	@$(COMPOSE) ps
+
+logs:
+	@$(COMPOSE) logs -f --tail=120 odoo nginx
+
+probe:
+	@$(COMPOSE) exec nginx sh -c 'mkdir -p /var/www/certbot/.well-known/acme-challenge && printf ok >/var/www/certbot/.well-known/acme-challenge/probe'
+	@curl -i "http://127.0.0.1:$(PUBLIC_HTTP_PORT)/.well-known/acme-challenge/probe"
+
+certbot:
+	@if [ "$(EMAIL)" = "[EMAIL_ADDRESS]" ]; then \
+	        echo "ERROR: EMAIL is not set in .env.make. Certbot requires a valid email."; \
+	        exit 1; \
+	fi
+	@$(COMPOSE) --profile certbot run --rm certbot certonly --webroot -w /var/www/certbot -d "$(DOMAIN)" -d "www.$(DOMAIN)" --email "$(EMAIL)" --agree-tos --no-eff-email
+	@$(COMPOSE) restart nginx
+certbot-renew:
+	@$(COMPOSE) --profile certbot run --rm certbot renew --webroot -w /var/www/certbot
+	@$(COMPOSE) exec nginx nginx -s reload
+
+db-init:
+	@$(MAKE) prod-config
+	@echo "Initializing Odoo database '$(DB)' (this may take a few minutes)..."
+	@$(COMPOSE) run --rm odoo odoo -c /etc/odoo/odoo.conf -d "$(DB)" -i base --without-demo=all --stop-after-init
+	@echo "Database '$(DB)' initialized."
+
+db-check:
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "SELECT name, state FROM ir_module_module WHERE name='base';" || true
+
+odoo-tui:
+	@$(MAKE) prod-config
+	@$(COMPOSE) up -d odoo
+	@$(COMPOSE) exec odoo bash
+
+odoo-shell:
+	@$(COMPOSE) exec odoo odoo shell -c /etc/odoo/odoo.conf -d "$(DB)"
+
+odoo-fix-url:
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url','https://$(DOMAIN)',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "INSERT INTO ir_config_parameter (key,value,create_uid,write_uid,create_date,write_date) VALUES ('web.base.url.freeze','True',1,1,now(),now()) ON CONFLICT (key) DO UPDATE SET value=excluded.value, write_uid=1, write_date=now();"
+	@echo "Odoo base URL fixed to https://$(DOMAIN)."
+
+dev-host-db-setup:
+	@PG_SERVICE="$(PG_LOCAL_SERVICE)" \
+	PG_SUPERUSER="$(PG_LOCAL_SUPERUSER)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	APP_DB_NAME="$(DEV_HOST_DB)" \
+	TEST_DB_NAME="$(DEV_HOST_TEST_DB)" \
+	./scripts/dev-host-db-setup.sh
+
+dev-host-db-init:
+	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-config
+	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_HOST_DB)" -i base --without-demo=all --stop-after-init
+
+dev-host-test-init:
+	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-config
+	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_HOST_TEST_DB)" -i base --without-demo=all --stop-after-init
+
+dev-host-up:
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-config
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(DEV_HOST_CONFIG)" \
+	ODOO_DEV_DB="$(DEV_HOST_DB)" \
+	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
+	./scripts/dev-host-start.sh
+
+dev-host-stop:
+	@ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" ./scripts/dev-host-stop.sh
+
+dev-host-logs:
+	@mkdir -p "$$(dirname "$(DEV_HOST_LOG_PATH)")"
+	@touch "$(DEV_HOST_LOG_PATH)"
+	@tail -f "$(DEV_HOST_LOG_PATH)"
+
+dev-host-status:
+	@set -e; \
+	if [ -f "$(DEV_HOST_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_HOST_PID_FILE)")" 2>/dev/null; then \
+	  echo "Odoo host dev is running with PID $$(cat "$(DEV_HOST_PID_FILE)")"; \
+	else \
+	  echo "Odoo host dev is not running."; \
+	fi; \
+	if command -v systemctl >/dev/null 2>&1; then \
+	  systemctl is-active "$(PG_LOCAL_SERVICE)" >/dev/null 2>&1 && echo "PostgreSQL service $(PG_LOCAL_SERVICE): active" || echo "PostgreSQL service $(PG_LOCAL_SERVICE): inactive"; \
+	fi
+
+dev-project-db-setup:
+	@COMPOSE_BIN='$(COMPOSE_PROJECT_DB)' \
+	DB_USER="$(PROD_DB_USER)" \
+	DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	DB_NAME="$(DEV_PROJECT_DB)" \
+	./scripts/dev-project-db-setup.sh
+
+dev-project-db-init:
+	@$(MAKE) dev-project-db-setup
+	@$(MAKE) dev-project-config
+	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_PROJECT_CONFIG)" -d "$(DEV_PROJECT_DB)" -i base --without-demo=all --stop-after-init
+
+dev-project-up:
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
+	@$(MAKE) dev-project-db-setup
+	@$(MAKE) dev-project-config
+	@PYTHON_BIN="$(PYTHON)" \
+	ODOO_DEV_CONFIG="$(DEV_PROJECT_CONFIG)" \
+	ODOO_DEV_DB="$(DEV_PROJECT_DB)" \
+	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
+	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
+	./scripts/dev-host-start.sh
+
+dev-project-stop:
+	@ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" ./scripts/dev-host-stop.sh >/dev/null 2>&1 || true
+	@$(COMPOSE_PROJECT_DB) stop db >/dev/null 2>&1 || true
+
+dev-project-logs:
+	@mkdir -p "$$(dirname "$(DEV_PROJECT_LOG_PATH)")"
+	@touch "$(DEV_PROJECT_LOG_PATH)"
+	@tail -f "$(DEV_PROJECT_LOG_PATH)"
+
+dev-project-status:
+	@set -e; \
+	if [ -f "$(DEV_PROJECT_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)")" 2>/dev/null; then \
+	  echo "Project mode Odoo is running with PID $$(cat "$(DEV_PROJECT_PID_FILE)")"; \
+	else \
+	  echo "Project mode Odoo is not running."; \
+	fi; \
+	docker inspect -f '{{.State.Status}}' kodoo-db 2>/dev/null | sed 's/^/Docker PostgreSQL: /' || echo "Docker PostgreSQL: not running"; \
+	echo "Database: $(DEV_PROJECT_DB) via $(DOCKER_DB_BIND_HOST):$(DOCKER_DB_HOST_PORT)"
+
+dev-host-backup:
+	@BACKUP_DIR="$(BACKUP_DIR)" \
+	DB_HOST="$(PG_LOCAL_HOST)" \
+	DB_PORT="$(PG_LOCAL_PORT)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	APP_DB_NAME="$(DEV_HOST_DB)" \
+	./scripts/dev-host-backup.sh
+
+dev-host-restore-ktest:
+	@$(MAKE) dev-host-db-setup
+	@BACKUP_DIR="$(BACKUP_DIR)" \
+	DB_HOST="$(PG_LOCAL_HOST)" \
+	DB_PORT="$(PG_LOCAL_PORT)" \
+	APP_DB_USER="$(PG_LOCAL_USER)" \
+	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	TEST_DB_NAME="$(DEV_HOST_TEST_DB)" \
+	./scripts/dev-host-restore-ktest.sh
+
+assets-rebuild:
+	@echo "Clearing cached web assets from database ($(DB))..."
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%';"
+	@echo "Restarting Odoo to regenerate bundles..."
+	@$(COMPOSE) restart odoo
+	@echo "Assets reset complete. Do a hard refresh in browser (Ctrl+F5)."
+
+assets-reset:
+	@echo "Hard resetting Odoo assets (DB + Upgrade force)..."
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "DELETE FROM ir_attachment WHERE url LIKE '/web/assets/%' OR name LIKE 'web.assets_%';"
+	@echo "Marking 'web' module for upgrade to force total bundle regeneration..."
+	@$(COMPOSE) exec -T db psql -U "$(PROD_DB_USER)" -d "$(DB)" -c "UPDATE ir_module_module SET state='to upgrade' WHERE name='web';"
+	@echo "Restarting Odoo..."
+	@$(COMPOSE) restart odoo
+	@echo "Assets hard reset complete. The next page load will take longer while bundles are regenerated."
+	@echo "Assets reset complete. Do a hard refresh in browser (Ctrl+F5)."
+
+smoke:
+	@set -e; \
+	echo "== Smoke check ($(DOMAIN)) =="; \
+	$(COMPOSE) ps >/dev/null; \
+	for svc in db odoo nginx; do \
+	  running="$$(docker inspect -f '{{.State.Running}}' kodoo-$$svc 2>/dev/null || true)"; \
+	  if [ "$$running" != "true" ]; then \
+	    echo "FAIL: service '$$svc' is not running."; \
+	    exit 1; \
+	  fi; \
+	done; \
+	echo "OK: required services are running."; \
+	local_base=""; \
+	local_code=""; \
+	for base in "http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)" "http://127.0.0.1" "https://127.0.0.1"; do \
+	  curl_flags=""; \
+	  case "$$base" in https://*) curl_flags="-k" ;; esac; \
+	  code="$$(curl $$curl_flags -sS -o /dev/null -w '%{http_code}' "$$base/odoo" || true)"; \
+	  if [ "$$code" = "200" ] || [ "$$code" = "303" ]; then \
+	    local_base="$$base"; \
+	    local_code="$$code"; \
+	    break; \
+	  fi; \
+	done; \
+	if [ -z "$$local_base" ]; then \
+	  echo "FAIL: local endpoint unreachable. Tried: http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)/odoo, http://127.0.0.1/odoo, https://127.0.0.1/odoo"; \
+	  exit 1; \
+	fi; \
+	echo "OK: local endpoint $$local_base/odoo HTTP $$local_code."; \
+	ws_curl_flags=""; \
+	case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
+	ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	  -H 'Connection: Upgrade' \
+	  -H 'Upgrade: websocket' \
+	  -H 'Sec-WebSocket-Version: 13' \
+	  -H 'Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==' \
+	  "$$local_base/websocket?version=19.0-2" || true)"; \
+	if [ "$$ws_code" != "101" ] && [ "$$ws_code" != "400" ]; then \
+	  echo "FAIL: websocket endpoint ($$local_base/websocket) returned HTTP $$ws_code (expected 101/400)."; \
+	  exit 1; \
+	fi; \
+	echo "OK: websocket endpoint HTTP $$ws_code."; \
+	if [ "$(SMOKE_PUBLIC)" = "1" ]; then \
+	  public_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://$(DOMAIN) || true)"; \
+	  if [ "$$public_code" != "200" ] && [ "$$public_code" != "301" ] && [ "$$public_code" != "302" ] && [ "$$public_code" != "303" ]; then \
+	    cloudflared_running="$$(docker inspect -f '{{.State.Running}}' kodoo-cloudflared 2>/dev/null || true)"; \
+	    echo "FAIL: public endpoint https://$(DOMAIN) returned HTTP $$public_code."; \
+	    if [ "$$cloudflared_running" != "true" ]; then \
+	      echo "Hint: domain may be pointing to Cloudflare Tunnel, but 'kodoo-cloudflared' is not running."; \
+	      echo "Run: fill CLOUDFLARED_TOKEN in .env.make, then use make up-tunnel  (or switch DNS to direct server mode and use make up-cloudflare)."; \
+	    fi; \
+	    exit 1; \
+	  fi; \
+	  echo "OK: public endpoint HTTP $$public_code."; \
+	else \
+		echo "Skipping public endpoint check (SMOKE_PUBLIC=0)."; \
+	fi; \
+	echo "Smoke check passed."
+
+troubleshoot:
+	@set +e; \
+	rc=0; \
+	echo "== Troubleshoot ($(DOMAIN)) =="; \
+	echo ""; \
+	echo "== Files =="; \
+	if [ -f .env.make ]; then echo "OK: .env.make found."; else echo "FAIL: .env.make missing."; rc=1; fi; \
+	if [ -f "$(PROD_CONFIG)" ]; then echo "OK: $(PROD_CONFIG) found."; else echo "WARN: $(PROD_CONFIG) missing. Run: make prod-config"; fi; \
+	if [ -f "$(DEV_HOST_CONFIG)" ]; then echo "OK: $(DEV_HOST_CONFIG) found."; else echo "INFO: $(DEV_HOST_CONFIG) not present."; fi; \
+	echo ""; \
+	echo "== Services =="; \
+	$(COMPOSE) ps || rc=1; \
+	echo ""; \
+	echo "== Local HTTP =="; \
+	local_base=""; \
+	local_code=""; \
+	for base in "http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)" "http://127.0.0.1" "https://127.0.0.1"; do \
+	  curl_flags=""; \
+	  case "$$base" in https://*) curl_flags="-k" ;; esac; \
+	  code="$$(curl $$curl_flags -sS -o /dev/null -w '%{http_code}' "$$base/odoo" || true)"; \
+	  echo "$$base/odoo -> $$code"; \
+	  if [ "$$code" = "200" ] || [ "$$code" = "303" ]; then \
+	    local_base="$$base"; \
+	    local_code="$$code"; \
+	  fi; \
+	done; \
+	if [ -z "$$local_base" ]; then \
+	  echo "FAIL: no local endpoint answered with 200/303."; \
+	  rc=1; \
+	else \
+	  echo "OK: using local base $$local_base (HTTP $$local_code)."; \
+	fi; \
+	echo ""; \
+	echo "== Websocket =="; \
+	if [ -n "$$local_base" ]; then \
+	  ws_curl_flags=""; \
+	  case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
+	  ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	    -H 'Connection: Upgrade' \
+	    -H 'Upgrade: websocket' \
+	    -H 'Sec-WebSocket-Version: 13' \
+	    -H 'Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==' \
+	    "$$local_base/websocket?version=19.0-2" || true)"; \
+	  echo "$$local_base/websocket?version=19.0-2 -> $$ws_code"; \
+	  if [ "$$ws_code" != "101" ] && [ "$$ws_code" != "400" ]; then \
+	    echo "FAIL: websocket probe returned $$ws_code."; \
+	    rc=1; \
+	  fi; \
+	else \
+	  echo "SKIP: websocket probe skipped because no local endpoint passed."; \
+	fi; \
+	echo ""; \
+	if [ "$(SMOKE_PUBLIC)" = "1" ]; then \
+	  echo "== Public HTTP =="; \
+	  public_code="$$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 https://$(DOMAIN) || true)"; \
+	  echo "https://$(DOMAIN) -> $$public_code"; \
+	  if [ "$$public_code" != "200" ] && [ "$$public_code" != "301" ] && [ "$$public_code" != "302" ] && [ "$$public_code" != "303" ]; then \
+	    echo "FAIL: public endpoint check failed."; \
+	    rc=1; \
+	  fi; \
+	  cloudflared_running="$$(docker inspect -f '{{.State.Running}}' kodoo-cloudflared 2>/dev/null || true)"; \
+	  if [ "$$cloudflared_running" = "true" ]; then \
+	    echo "INFO: cloudflared container is running."; \
+	  else \
+	    echo "INFO: cloudflared container is not running."; \
+	  fi; \
+	  echo ""; \
+	fi; \
+	echo "== Hints =="; \
+	echo "make logs"; \
+	echo "make logs-local"; \
+	echo "make logs-tunnel"; \
+	echo "make down && make up"; \
+	echo "make down-tunnel && make up-tunnel"; \
+	exit $$rc
+
+tui:
+	@if [ -x "$(TUI_VENV)/bin/python" ]; then \
+	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_VENV)/bin/python" ./scripts/kodoo_tui.py; \
+	elif "$(TUI_PYTHON)" -c "import textual" >/dev/null 2>&1; then \
+	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_PYTHON)" ./scripts/kodoo_tui.py; \
+	else \
+	  echo "Textual is not installed. Falling back to the shell menu."; \
+	  echo "Run 'make tui-install' to enable the live diagnostics dashboard."; \
+	  ./scripts/make-tui.sh; \
+	fi
+
+tui-live:
+	@if [ -x "$(TUI_VENV)/bin/python" ]; then \
+	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_VENV)/bin/python" ./scripts/kodoo_tui.py; \
+	elif "$(TUI_PYTHON)" -c "import textual" >/dev/null 2>&1; then \
+	  TUI_REFRESH_SECONDS="$(TUI_REFRESH_SECONDS)" TUI_LOG_LINES="$(TUI_LOG_LINES)" "$(TUI_PYTHON)" ./scripts/kodoo_tui.py; \
+	else \
+	  echo "Textual is not installed."; \
+	  echo "Run 'make tui-install' or install dependencies from $(TUI_REQUIREMENTS)."; \
+	  exit 1; \
+	fi
+
+tui-install:
+	@if ! command -v "$(TUI_PYTHON)" >/dev/null 2>&1; then \
+	  echo "Missing Python interpreter: $(TUI_PYTHON)"; \
+	  echo "Override with: make tui-install TUI_PYTHON=python3.12"; \
+	  exit 1; \
+	fi
+	@"$(TUI_PYTHON)" -m venv "$(TUI_VENV)"
+	@"$(TUI_VENV)/bin/python" -m pip install --upgrade pip
+	@"$(TUI_VENV)/bin/pip" install -r "$(TUI_REQUIREMENTS)"
+	@echo "TUI environment ready in $(TUI_VENV)."
+	@echo "Run: make tui-live"
+
+tui-menu:
+	@./scripts/make-tui.sh
+
+tui-doctor:
+	@echo "== TUI runtime =="; \
+	if [ -x "$(TUI_VENV)/bin/python" ]; then \
+	  echo "venv: $(TUI_VENV)"; \
+	  "$(TUI_VENV)/bin/python" -c "import sys; print(sys.version); import textual; print('textual', textual.__version__)" 2>/dev/null || \
+	  "$(TUI_VENV)/bin/python" -c "import sys; print(sys.version); print('textual-missing')" ; \
+	else \
+	  echo "venv: not created"; \
+	fi; \
+	if command -v "$(TUI_PYTHON)" >/dev/null 2>&1; then \
+	  echo "python: $$("$(TUI_PYTHON)" --version 2>/dev/null)"; \
+	else \
+	  echo "python: missing ($(TUI_PYTHON))"; \
+	fi; \
+	if command -v docker >/dev/null 2>&1; then echo "docker: ok"; else echo "docker: missing"; fi; \
+	if command -v curl >/dev/null 2>&1; then echo "curl: ok"; else echo "curl: missing"; fi
+
+up-smoke:
+	@$(MAKE) up
+	@$(MAKE) smoke
+
+mobile-install:
+	@cd "$(MOBILE_DIR)" && npm install
+
+mobile-doctor:
+	@cd "$(MOBILE_DIR)" && npm run doctor
+
+mobile-add-android:
+	@cd "$(MOBILE_DIR)" && npm run add:android
+
+mobile-add-ios:
+	@cd "$(MOBILE_DIR)" && npm run add:ios
+
+mobile-sync:
+	@cd "$(MOBILE_DIR)" && npm run sync
+
+mobile-open-android:
+	@cd "$(MOBILE_DIR)" && npm run open:android
+
+mobile-open-ios:
+	@cd "$(MOBILE_DIR)" && npm run open:ios
+
+ollama-pull:
+	@$(COMPOSE) up -d ollama
+	@$(COMPOSE) exec -e OLLAMA_MODEL="$(OLLAMA_MODEL)" ollama sh -c 'until ollama list >/dev/null 2>&1; do sleep 2; done; echo "Pulling $$OLLAMA_MODEL"; ollama pull "$$OLLAMA_MODEL"'
+
+ollama-list:
+	@$(COMPOSE) exec ollama ollama list
+
+up-insecure:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(INSECURE_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@echo "WARNING: insecure mode enabled (no TLS/reverse-proxy protections)."
+	@$(COMPOSE) stop nginx >/dev/null 2>&1 || true
+	@$(COMPOSE_INSECURE) up -d db odoo ollama
+	@$(MAKE) ollama-pull
+	@echo "Odoo exposed on port $(INSECURE_HTTP_PORT) (evented: $(INSECURE_EVENTED_PORT))."
+
+down-insecure:
+	@$(COMPOSE_INSECURE) down --remove-orphans
+
+up-cloudflare:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
+	@$(COMPOSE) up -d db odoo nginx ollama
+	@$(MAKE) ollama-pull
+	@echo "Cloudflare DNS proxy mode started (orange cloud DNS pointing to this server)."
+
+logs-cloudflare:
+	@$(COMPOSE) logs -f --tail=120 nginx odoo
+
+down-cloudflare:
+	@$(COMPOSE) down --remove-orphans
+
+up-tunnel:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
+	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)
+	@$(COMPOSE_TUNNEL) up -d db odoo nginx ollama cloudflared
+	@$(MAKE) ollama-pull
+	@echo "Cloudflare tunnel mode started."
+	@echo "Local:  http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
+	@echo "Public: https://$(DOMAIN)"
+
+logs-tunnel:
+	@$(COMPOSE_TUNNEL) logs -f --tail=120 cloudflared nginx odoo
+
+down-tunnel:
+	@$(COMPOSE_TUNNEL) down --remove-orphans
+
+up-lean-tunnel:
+	@$(MAKE) prod-config
+	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) 80"
+	@test -n "$(CLOUDFLARED_TOKEN)" || (echo "Set CLOUDFLARED_TOKEN in .env.make first."; exit 1)
+	@$(COMPOSE_LEAN_TUNNEL) up -d db odoo nginx ollama cloudflared
+	@$(MAKE) ollama-pull
+	@echo "Lean Tunnel mode started."
+	@echo "Local Odoo:  http://$(LOCAL_BIND_HOST):8069"
+	@echo "Local Nginx: http://$(LOCAL_BIND_HOST):80"
+	@echo "Public:      https://$(DOMAIN)"
+
+logs-lean-tunnel:
+	@$(COMPOSE_LEAN_TUNNEL) logs -f --tail=120 cloudflared nginx odoo
+
+down-lean-tunnel:
+	@$(COMPOSE_LEAN_TUNNEL) down --remove-orphans
+
+clean:
+	@echo "Cleaning Python cache and logs..."
+	@find . -name "__pycache__" -type d -exec rm -rf {} +
+	@find . -name "*.pyc" -delete
+	@rm -rf logs/*.log logs/*.pid
+	@echo "Basic clean complete."
+
+clean-all: clean
+	@echo "Performing deep clean..."
+	@rm -rf node_modules/
+	@rm -rf .venv-tui/
+	@rm -rf mobile/kodoo-capacitor/node_modules/
+	@rm -rf mobile/kodoo-capacitor/android/.gradle/
+	@rm -rf mobile/kodoo-capacitor/android/app/build/
+	@rm -rf mobile/kodoo-capacitor/android/build/
+	@rm -rf mobile/kodoo-capacitor/ios/App/App/public/
+	@echo "Deep clean complete. Reinstall dependencies with 'make deps-install' or 'make tui-install'."
