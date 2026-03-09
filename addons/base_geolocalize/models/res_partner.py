@@ -36,6 +36,7 @@ class ResPartner(models.Model):
             self.env.context.get('import_file')
             or modules.module.current_test
             or not self.env.registry.ready
+            or self.env.context.get('install_demo')
         ):
             return False
         partners_not_geo_localized = self.env['res.partner']
