@@ -2,39 +2,39 @@ from odoo import api, fields, models
 
 
 class Test_Access_RightSome_Obj(models.Model):
-    _name = 'test_access_right.some_obj'
+    _name = 'test_access_feedback.some_obj'
     _description = 'Object For Test Access Right'
 
     val = fields.Integer()
-    categ_id = fields.Many2one('test_access_right.obj_categ')
-    parent_id = fields.Many2one('test_access_right.some_obj')
+    categ_id = fields.Many2one('test_access_feedback.obj_categ')
+    parent_id = fields.Many2one('test_access_feedback.some_obj')
     company_id = fields.Many2one('res.company')
     forbidden = fields.Integer(
-        groups='test_orm.test_group,base.group_portal',
+        groups='test_orm.test_access_feedback_group,base.group_portal',
         default=5,
     )
-    forbidden2 = fields.Integer(groups='test_orm.test_group')
+    forbidden2 = fields.Integer(groups='test_orm.test_access_feedback_group')
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
 
 class Test_Access_RightInherits(models.Model):
-    _name = 'test_access_right.inherits'
+    _name = 'test_access_feedback.inherits'
     _description = 'Object for testing related access rights'
 
-    _inherits = {'test_access_right.some_obj': 'some_id'}
+    _inherits = {'test_access_feedback.some_obj': 'some_id'}
 
-    some_id = fields.Many2one('test_access_right.some_obj', required=True, ondelete='restrict')
+    some_id = fields.Many2one('test_access_feedback.some_obj', required=True, ondelete='restrict')
 
 
 class Test_Access_RightChild(models.Model):
-    _name = 'test_access_right.child'
+    _name = 'test_access_feedback.child'
     _description = 'Object for testing company ir rule'
 
-    parent_id = fields.Many2one('test_access_right.some_obj')
+    parent_id = fields.Many2one('test_access_feedback.some_obj')
 
 
 class Test_Access_RightObj_Categ(models.Model):
-    _name = 'test_access_right.obj_categ'
+    _name = 'test_access_feedback.obj_categ'
     _description = "Context dependent searchable model"
 
     name = fields.Char(required=True)
