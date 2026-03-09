@@ -36,6 +36,7 @@ from requests import Session
 from ..web_push import push_to_end_point, DeviceUnreachableError, ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
 
 MAX_DIRECT_PUSH = 5
+BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain')  # replaced by application/octet-stream
 
 _logger = logging.getLogger(__name__)
 
@@ -1569,11 +1570,8 @@ class MailThread(models.AbstractModel):
                     # the parent email that might be added at the end
                     # (e.g. for outlook / yahoo bounce email)
                     break
-                if part.get_content_type() == 'binary/octet-stream':
-                    _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
-                    part.replace_header('Content-Type', 'application/octet-stream')
-                if part.get_content_type() == '*/*':
-                    _logger.warning("Message containing an unexpected Content-Type '*/*', assuming 'application/octet-stream'")
+                if (bad_content_type := part.get_content_type()) in BAD_CONTENT_TYPES:
+                    _logger.warning("Message containing an unexpected Content-Type %r, assuming 'application/octet-stream'", bad_content_type)
                     part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True

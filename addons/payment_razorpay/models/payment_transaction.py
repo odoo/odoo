@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         payload = {
-            'name': self.partner_name,
+            'name': self.partner_name.replace(',', ' ')[:50],
             'email': self.partner_email or '',
             'contact': self.partner_phone and self._validate_phone_number(self.partner_phone) or '',
             'fail_existing': '0',  # Don't throw an error if the customer already exists.
