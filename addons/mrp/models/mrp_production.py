@@ -146,7 +146,7 @@ class MrpProduction(models.Model):
         readonly=False, required=True, precompute=True,
         domain="[('usage','=','internal')]",
         help="Location where the system will stock the finished products.")
-    location_final_id = fields.Many2one('stock.location', 'Final Location from procurement')
+    forecasted_location_id = fields.Many2one('stock.location', 'Forecasted Location', help='Location used in the computation of the forecast.')
     date_deadline = fields.Datetime(
         'Deadline', copy=False, store=True, readonly=False, compute='_compute_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
@@ -1350,9 +1350,9 @@ class MrpProduction(models.Model):
         moves = []
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
-                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
+                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", production.product_id.name))
             finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.uom_id.id)
-            finished_move_values['location_final_id'] = self.location_final_id.id
+            finished_move_values['forecasted_location_id'] = production.forecasted_location_id.id
             moves.append(finished_move_values)
             for byproduct in production.bom_id.byproduct_ids:
                 if byproduct._skip_byproduct_line(production.product_id, production.never_product_template_attribute_value_ids):
@@ -2630,7 +2630,7 @@ class MrpProduction(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'product_qty': sum(production.product_uom_qty for production in self),
             'uom_id': product_id.uom_id.id,
-            'location_final_id': all(mo.location_final_id for mo in self) and len(self.location_final_id) == 1 and self.location_final_id.id,
+            'forecasted_location_id': all(mo.forecasted_location_id for mo in self) and len(self.forecasted_location_id) == 1 and self.forecasted_location_id.id,
             'user_id': user_id.id,
             'reference_ids': [Command.link(r.id) for r in self.reference_ids],
             'origin': ",".join(sorted([production.name for production in self])),

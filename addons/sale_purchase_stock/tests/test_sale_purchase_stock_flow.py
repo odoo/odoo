@@ -310,7 +310,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         """ When a product is moved with 2-step delivery, the first of the two pickings associated
         with that delivery (upon completion) should have the actual physical location to which the
         product was delivered as its destination in `report.stock.quantity`: prior, irrespective of
-        the move's state, it would have its location_dest_id and location_final_id coalesced. This
+        the move's state, it would have its location_dest_id and forecasted_location_id coalesced. This
         meant that the location that the StockMove had actually moved product to was not
         necessarily the destination location reflected in the generated report row, which lead to
         an incorrect forecast.

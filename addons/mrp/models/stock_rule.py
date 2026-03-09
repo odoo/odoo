@@ -179,7 +179,7 @@ class StockRule(models.Model):
             'uom_id': bom.uom_id.id if bom else product_uom.id,
             'location_src_id': picking_type.default_location_src_id.id,
             'location_dest_id': picking_type.default_location_dest_id.id or location_dest_id.id,
-            'location_final_id': location_dest_id.id,
+            'forecasted_location_id': location_dest_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_start': date_planned,

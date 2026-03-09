@@ -1356,7 +1356,7 @@ class StockPicking(models.Model):
             'date': fields.Datetime.now(),
             'location_id': self.location_id.id or move_id.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id or move_id.location_id.id,
-            'location_final_id': False,
+            'forecasted_location_id': False,
             'picking_type_id': self.picking_type_id.id,
             'warehouse_id': self.picking_type_id.warehouse_id.id,
             'origin_returned_move_id': move_id.id,

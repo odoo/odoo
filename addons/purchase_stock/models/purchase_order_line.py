@@ -32,7 +32,7 @@ class PurchaseOrderLine(models.Model):
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     is_storable = fields.Boolean(related='product_id.is_storable')
-    location_final_id = fields.Many2one('stock.location', 'Location from procurement')
+    forecasted_location_id = fields.Many2one('stock.location', 'Forecasted Location', help='Location used in the computation of the forecast.')
     date_promised = fields.Datetime('Promised Date', help="Delivery Date promised by the vendor. If the vendor delivers products after this date, their On-Time rate will be negatively impacted.")
 
     def _compute_qty_received_method(self):
@@ -220,7 +220,7 @@ class PurchaseOrderLine(models.Model):
                 if diff_qty < 0 and move.location_dest_id.usage == 'supplier':
                     move.product_uom_qty *= -1
                     move.location_id = picking.location_id
-                    move.location_dest_id = move.location_final_id = picking.location_dest_id
+                    move.location_dest_id = move.forecasted_location_id = picking.location_dest_id
                 move._action_confirm()._action_assign()
 
     def _get_move_dests_initial_demand(self, move_dests):
@@ -314,7 +314,7 @@ class PurchaseOrderLine(models.Model):
         if not self.order_id.partner_id.property_stock_supplier.id:
             raise UserError(_("You must set a Vendor Location for partner %(partner_name)s", partner_name=self.partner_id.name))
         location_dest = picking.location_dest_id if picking else self.env['stock.location'].browse(self.order_id._get_destination_location())
-        location_final = self.location_final_id or self.order_id._get_final_location_record()
+        location_final = self.forecasted_location_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
         date_planned = self.date_planned or self.order_id.date_planned
@@ -324,7 +324,7 @@ class PurchaseOrderLine(models.Model):
             'date_deadline': date_planned,
             'location_id': picking.location_id.id if picking else self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': location_dest.id,
-            'location_final_id': location_final.id,
+            'forecasted_location_id': location_final.id,
             'picking_id': picking.id if picking else False,
             'partner_id': self.order_id.dest_address_id.id or self.order_id.partner_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
@@ -384,7 +384,7 @@ class PurchaseOrderLine(models.Model):
                 # shifted, we also need to shift the date_order.
                 po.date_order = fields.Datetime.to_datetime(po.date_order) + relativedelta(days=delta_days)
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
-        res['location_final_id'] = location_dest_id.id
+        res['forecasted_location_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')

@@ -82,11 +82,10 @@ class StockMove(models.Model):
         'stock.location', 'Intermediate Location', required=True,
         help='The operations brings product to this location', readonly=False,
         index=True, store=True, compute='_compute_location_dest_id', precompute=True, inverse='_set_location_dest_id')
-    location_final_id = fields.Many2one(
-        'stock.location', 'Final Location',
+    forecasted_location_id = fields.Many2one(
+        'stock.location', 'Forecasted Location',
         readonly=False, store=True,
-        help="The operation brings the products to the intermediate location."
-        "But this operation is part of a chain of operations targeting the final location.",
+        help="Location used in the computation of the forecast.",
         bypass_search_access=True, index=True, check_company=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
@@ -244,12 +243,12 @@ class StockMove(models.Model):
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
             if location_dest:
-                is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.location_final_id == inter_comp_location
-            if location_dest and move.location_final_id and (move.location_final_id._child_of(location_dest) or is_move_to_interco_transit):
+                is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.forecasted_location_id == inter_comp_location
+            if location_dest and move.forecasted_location_id and (move.forecasted_location_id._child_of(location_dest) or is_move_to_interco_transit):
                 # Force the location_final as dest in the following cases:
                 # - The location_final is a sublocation of destination -> Means we reached the end
                 # - The location dest is an out location (i.e. Customers) but the final dest is different (e.g. Inter-Company transfers)
-                location_dest = move.location_final_id
+                location_dest = move.forecasted_location_id
             move.location_dest_id = location_dest
 
     @api.depends('quantity', 'uom_id')
@@ -1212,7 +1211,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         fields = [
-            'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'location_final_id',
+            'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id', 'forecasted_location_id',
             'uom_id', 'restrict_partner_id', 'origin_returned_move_id',
             'propagate_cancel', 'description_picking', 'never_product_template_attribute_value_ids',
         ]
@@ -1629,14 +1628,14 @@ Please change the quantity done or the rounding precision in your settings.""",
         neg_r_moves = moves.filtered(lambda move: move.uom_id.compare(move.product_uom_qty, 0) < 0)
 
         # Push remaining quantities to next step
-        neg_to_push = neg_r_moves.filtered(lambda move: move.location_final_id and move.location_dest_id != move.location_final_id)
+        neg_to_push = neg_r_moves.filtered(lambda move: move.forecasted_location_id and move.location_dest_id != move.forecasted_location_id)
         new_push_moves = self.env['stock.move']
         if neg_to_push:
             new_push_moves = neg_to_push._push_apply()
 
         # Transform remaining move in returns in case of negative initial demand
         for move in neg_r_moves:
-            move.location_id, move.location_dest_id, move.location_final_id = move.location_dest_id, move.location_id, move.location_id
+            move.location_id, move.location_dest_id, move.forecasted_location_id = move.location_dest_id, move.location_id, move.location_id
             orig_move_ids, dest_move_ids = [], []
             for m in move.move_orig_ids | move.move_dest_ids:
                 from_loc, to_loc = m.location_id, m.location_dest_id

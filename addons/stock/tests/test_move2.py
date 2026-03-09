@@ -2817,7 +2817,7 @@ class TestRoutes(TestStockCommon):
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product1.id,
             'product_uom_qty': 1,
-            'location_final_id': subloc.id,
+            'forecasted_location_id': subloc.id,
         })
         pick_move._action_confirm()
         self.assertEqual(pick_move.location_dest_id, self.warehouse_1.wh_output_stock_loc_id)
@@ -2974,9 +2974,9 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
         self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
 
-    def test_location_final_id_in_push(self):
+    def test_location_for_forecast_in_push(self):
         """
-        Check that the location_final_id is propagated as location_dest_id
+        Check that the forecasted_location_id is propagated as location_dest_id
         at the end of a push chain.
         """
         warehouse = self.warehouse_1
@@ -2993,7 +2993,7 @@ class TestRoutes(TestStockCommon):
             'move_ids': [Command.create({
                 'location_id': warehouse.lot_stock_id.id,
                 'location_dest_id': warehouse.wh_output_stock_loc_id.id,
-                'location_final_id': final_location.id,
+                'forecasted_location_id': final_location.id,
                 'product_id': self.product.id,
                 'uom_id': self.product.uom_id.id,
                 'product_uom_qty': 1.0,
