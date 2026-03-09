@@ -70,13 +70,27 @@ html:has(.o_layout, .o_basic_theme) {
 
 html:has(.o_layout) {
     .editor_enable .o_mail_wrapper_td.oe_empty:empty {
+        cursor: pointer;
+        background-color: rgba(1, 186, 210, 0.5) !important;
+        &:not(:focus) {
+            &:before {
+                content: attr(data-editor-message);
+                pointer-events: none;
+                color: white;
+            }
+        }
+        &:hover {
+            background-color: rgba(1, 186, 210, 0.7) !important;
+        }
         width: 100% - 2 * $-editor-messages-margin-x;
+        text-align: center;
+        font-size: 20px;
+        display: block;
         padding: 12px 0;
         margin: 20px $-editor-messages-margin-x;
 
         &:not(:focus) {
             @include o-editor-messages;
-            background: $o-we-dropzone-bg-color !important;
 
             &:before {
                 pointer-events: none;

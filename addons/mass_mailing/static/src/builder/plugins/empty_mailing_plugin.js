@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 export class EmptyMailingPlugin extends Plugin {
@@ -10,34 +9,25 @@ export class EmptyMailingPlugin extends Plugin {
         "disableSnippets",
         "history",
         "selection",
+        "blockTab",
     ];
 
-    resources = {
-        on_beforeinput_handlers: withSequence(1, this.ensureTextBlock.bind(this)),
-    };
+    setup() {
+        this.addDomListener(this.editable, "pointerdown", this.onMailWrapperClick.bind(this));
+    }
 
-    ensureTextBlock() {
-        const wrapperTd = this.editable.querySelector(".o_mail_wrapper_td");
-        if (!wrapperTd) {
+    onMailWrapperClick(ev) {
+        const wrapperId = ev.target.matches(".o_mail_wrapper_td:empty") ? ev.target : null;
+        if (!wrapperId) {
             return;
         }
-        const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        if (anchorNode === wrapperTd && !wrapperTd.firstChild) {
-            const textSnippet = this.config.snippetModel
-                .getSnippetByName("snippet_structure", "s_text_block")
-                .content.cloneNode(true);
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            const container = textSnippet.querySelector(".container");
-            container.replaceChildren(baseContainer);
-            wrapperTd.replaceChildren(textSnippet);
-            this.dependencies.selection.setSelection({
-                anchorNode: baseContainer,
-                anchorOffset: 0,
-            });
-            this.dependencies.history.addStep();
-            this.dependencies.builderOptions.updateContainers(textSnippet);
-            this.dependencies.disableSnippets.disableUndroppableSnippets();
-        }
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const snippet = this.config.snippetModel.snippetGroups.find(
+            (group) => group.groupName === "text"
+        );
+        this.dependencies.blockTab.insertSnippetGroup(snippet);
     }
 }
 
