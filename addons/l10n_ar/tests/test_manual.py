@@ -309,6 +309,17 @@ class TestArManual(common.TestArCommon):
             'subtotals': [],
         })
 
+    def test_l10n_ar_is_company(self):
+        """Check that `is_company` is computed correctly for AR and non-AR partners."""
+        foreign_partner = self.env['res.partner'].create({
+            'name': "Foreign Partner",
+            'country_id': self.env.ref('base.us').id,
+            'l10n_latam_identification_type_id': self.env.ref('l10n_latam_base.it_fid').id,
+            'vat': '1234567890',
+        })
+        self.assertTrue(self.res_partner_adhoc.is_company, "AR partners with company CUIT should be companies.")
+        self.assertTrue(foreign_partner.is_company, "Foreign partners should not be computed based on AR CUIT rules.")
+
     def test_l10n_ar_prices_and_taxes(self):
         invoice = self.env['account.move'].create({
             "move_type": 'out_invoice',
