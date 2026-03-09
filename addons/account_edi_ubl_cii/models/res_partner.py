@@ -124,6 +124,7 @@ class ResPartner(models.Model):
             ('9948', "9948 - Serbia VAT number"),
             ('9949', "9949 - Slovenia VAT number"),
             ('9950', "9950 - Slovakia VAT number"),
+            ('0245', '0245 - Slovakia Tax identification number (DIČ)'),
             ('9951', "9951 - San Marino VAT number"),
             ('9952', "9952 - Türkiye VAT number"),
             ('9953', "9953 - Holy See (Vatican City State) VAT number"),
