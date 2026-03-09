@@ -8,6 +8,24 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
+<<<<<<< 83c4d4c2e677130b76cf95eb57ca6042ab8a0ea0
+||||||| 2c48b583572f2f8c7e09ddde78e559ffc070e9da
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
+=======
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('version_ids.job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
+>>>>>>> 13882d7eeea43d84a80e0d631e10c8c0b37dbd96
             </xpath>
         </field>
     </record>
@@ -19,6 +37,24 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
+<<<<<<< 83c4d4c2e677130b76cf95eb57ca6042ab8a0ea0
+||||||| 2c48b583572f2f8c7e09ddde78e559ffc070e9da
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
+=======
+                <field name="resume_line_ids" string="Resume" filter_domain="
+                    ['|',
+                        ('version_ids.job_title', 'ilike', self),
+                        '|',
+                            ('resume_line_ids.name', 'ilike', self),
+                            ('resume_line_ids.description', 'ilike', self),
+                    ]"/>
+>>>>>>> 13882d7eeea43d84a80e0d631e10c8c0b37dbd96
             </xpath>
         </field>
     </record>
