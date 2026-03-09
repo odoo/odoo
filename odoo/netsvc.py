@@ -95,7 +95,9 @@ class PostgreSQLHandler(logging.Handler):
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
 
-BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, HIGH_INTENSITY, DEFAULT = range(10)
+HI_BLACK, HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE = range(
+    BLACK + HIGH_INTENSITY, WHITE + HIGH_INTENSITY + 1)
 #The background is set with 40 plus the number of the color, and the foreground with 30
 #These are the sequences needed to get colored output
 RESET_SEQ = "\033[0m"
@@ -110,8 +112,12 @@ LEVEL_COLOR_MAPPING = {
     logging.ERROR: (RED, DEFAULT),
     logging.CRITICAL: (WHITE, RED),
 }
-# all colors but black, grey and silver; length must be prime.
-PID_COLORS = (1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15)
+# all colors but black, grey, silver, WARNING and ERROR; length must be prime.
+PID_COLORS = (
+    GREEN, BLUE, MAGENTA, CYAN,
+    HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE,
+)
+
 
 class PerfFilter(logging.Filter):
 
