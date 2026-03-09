@@ -29,7 +29,7 @@ export class HrPresenceCogMenu extends FormCogMenu {
         return result[0];
     }
 
-    get PresenceActionItems() {
+    get presenceControlActions() {
         return this.presenceActionItems;
     }
 }
