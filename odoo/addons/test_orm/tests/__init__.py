@@ -8,4 +8,5 @@ from . import (
     test_autovacuum,
     test_cache,
     test_check_access,
+    test_company_checks,
 )
