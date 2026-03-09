@@ -4726,6 +4726,8 @@ class MailThread(models.AbstractModel):
             return
         if not self.env.registry.ready:  # Don't send notification during install
             return
+        if self.env.context.get('install_demo'):
+            return
 
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name
