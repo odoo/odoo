@@ -1051,7 +1051,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             tax = tax_data['tax']
             allowance_charge_nodes.append({
                 'cbc:ChargeIndicator': {'_text': 'true' if tax_data[f'tax_amount{currency_suffix}'] > 0 else 'false'},
-                'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+                'cbc:AllowanceChargeReasonCode': {'_text': 'AEO' if tax_data[f'tax_amount{currency_suffix}'] > 0 else '100'},
                 'cbc:AllowanceChargeReason': {'_text': tax.name},
                 'cbc:Amount': {
                     '_text': self.format_float(
