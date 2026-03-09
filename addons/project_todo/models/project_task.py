@@ -21,16 +21,6 @@ class ProjectTask(models.Model):
                     vals['name'] = self.env._('Untitled to-do')
         return super().create(vals_list)
 
-    def action_convert_to_task(self):
-        self.ensure_one()
-        self.company_id = self.project_id.company_id
-        return {
-            'view_mode': 'form',
-            'res_model': 'project.task',
-            'res_id': self.id,
-            'type': 'ir.actions.act_window',
-        }
-
     @api.model
     def get_todo_views_id(self):
         """ Returns the ids of the main views used in the To-Do app.
