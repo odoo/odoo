@@ -35,8 +35,8 @@
                 <div id="allocated_hours_container" class="o_input_box" invisible="not allow_timesheets">
                     <field name="allocated_hours" widget="float_time" readonly="1"/>
                     <span invisible="subtask_count == 0" class="o_input_box_overlay_end">
-                        incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
-                        <span class="fw-bold text-dark"> Sub-tasks</span>
+                        incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline mx-1"/> on
+                        <span class="fw-bold ms-1">Sub-tasks</span>
                     </span>
                     <field name="progress" invisible="not project_id" class="o_input_box_overlay_end" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>
                 </div>
