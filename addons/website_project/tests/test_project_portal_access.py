@@ -45,7 +45,6 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
             'name': 'FIX',
             'partner_name': 'Not Jean Michel',
             'email_from': 'jean@michel.com',
-            'partner_phone': '+1234567',
             'partner_company_name': 'foo',
             'description': 'Fix this',
             'project_id': self.project_portal.id,
@@ -55,3 +54,6 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         task = self.env['project.task'].browse(response.json().get('id'))
         self.assertTrue(task.exists())
         self.assertEqual(partner.name, 'Jean Michel')
+        # The description should not contain the partner_phone since it was not provided
+        self.assertEqual(str(task.description), ('<p>Fix this</p><h4>Other Information</h4>Email : jean@michel.com<br>\n'
+            'partner_name : Not Jean Michel<br>\npartner_company_name : foo'))
