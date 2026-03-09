@@ -12,29 +12,17 @@ class MailComposeMessage(models.TransientModel):
 
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
     campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign', ondelete='set null')
-    mass_mailing_create = fields.Boolean('Create Mass Mailing',
-                                         help='If set, a mass mailing will be created so that you can track its results in the Email Marketing app.')
     mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
-
-    def _action_send_mail(self, auto_commit=False):
-        """ Override to generate the mass mailing in case only the name was
-        given. It is used afterwards for traces generation. """
-        if self.composition_mode == 'mass_mail' and \
-                self.mass_mailing_create and not self.mass_mailing_id and \
-                self.model_is_thread:
-            mass_mailing = self.env['mailing.mailing'].create(self._prepare_mailing_values())
-            self.mass_mailing_id = mass_mailing.id
-        return super()._action_send_mail(auto_commit=auto_commit)
 
     def _invalid_email_state(self):
         """Always cancel invalid emails for mailings due to likely untractable number of failures."""
-        if self.mass_mailing_create or self.mass_mailing_id:
+        if self.mass_mailing_id:
             return 'cancel'
         return super()._invalid_email_state()
 
     def _generate_mail_notification_values(self, mails):
         """Prevent notification creation as traces are generated."""
-        if self.mass_mailing_create or self.mass_mailing_id:
+        if self.mass_mailing_id:
             return []
         return super()._generate_mail_notification_values(mails)
 

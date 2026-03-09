@@ -1,0 +1,16 @@
+<odoo>
+    <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <record id="crm_case_tree_view_oppor_mass_mailing_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.list.opportunity.mass_mailing.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(crm.action_lead_mass_mail)d']" position="replace">
+                <button name="%(mass_mailing.action_client_toolbar_mass_mailing)d" type="action" string="Email"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

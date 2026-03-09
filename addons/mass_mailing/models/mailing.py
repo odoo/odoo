@@ -61,6 +61,10 @@ class MailingMailing(models.Model):
                 'schedule_date': default_calendar_date
             })
 
+        default_mailing_model_name = self.env.context.get('default_mailing_model_name')
+        if default_mailing_model_name and 'mailing_model_id' in fields:
+            vals['mailing_model_id'] = self.env['ir.model']._get_id(default_mailing_model_name)
+
         if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
             if vals.get('mailing_model_id') == self.env['ir.model']._get_id('mailing.list'):
                 mailing_list = self.env['mailing.list'].search([], limit=2)
@@ -82,7 +86,7 @@ class MailingMailing(models.Model):
     email_from = fields.Char(
         string='Send From',
         compute='_compute_email_from', readonly=False, store=True, precompute=True)
-    favorite = fields.Boolean('Favorite', copy=False, tracking=True)
+    favorite = fields.Boolean('Favorite', copy=False)
     favorite_date = fields.Datetime(
         'Favorite Date',
         compute='_compute_favorite_date', store=True,

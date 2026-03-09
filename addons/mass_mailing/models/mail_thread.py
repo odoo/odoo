@@ -32,7 +32,6 @@ class MailThread(models.AbstractModel):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
         return super(MailThread, self.with_context(
-            default_mass_mailing_create=False,
             default_mass_mailing_id=False,
         )).message_mail_with_source(source_ref, **kwargs)
 
@@ -40,7 +39,6 @@ class MailThread(models.AbstractModel):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
         return super(MailThread, self.with_context(
-            default_mass_mailing_create=False,
             default_mass_mailing_id=False,
         )).message_post_with_source(source_ref, **kwargs)
 
