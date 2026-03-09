@@ -5,4 +5,5 @@ from . import (
     test_action_bindings,
     test_all_models,
     test_api,
+    test_autovacuum,
 )
