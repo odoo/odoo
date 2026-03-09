@@ -2892,6 +2892,7 @@ class MrpProduction(models.Model):
     def _set_quantities(self):
         self.ensure_one()
         missing_lot_id_products = ""
+        unpicked_products = ""
         if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
             self.action_generate_serial()
 
@@ -2905,14 +2906,20 @@ class MrpProduction(models.Model):
             if move.state in ('done', 'cancel') or not move.product_uom_qty:
                 continue
             if move.manual_consumption:
-                if move.has_tracking in ('serial', 'lot') and (not move.picked or any(not line.lot_id for line in move.move_line_ids if line.quantity and line.picked)):
-                    missing_lot_id_products += "\n  - %s" % move.product_id.display_name
-        if missing_lot_id_products:
-            error_msg = _(
-                "You need to supply Lot/Serial Number for products and 'consume' them: %(missing_products)s",
-                missing_products=missing_lot_id_products,
-            )
-            raise UserError(error_msg)
+                if move.has_tracking in ('serial', 'lot'):
+                    if not move.picked:
+                        unpicked_products += "\n  - %s" % move.product_id.display_name
+                    if any(not line.lot_id for line in move.move_line_ids if line.quantity):
+                        missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+        if missing_lot_id_products or unpicked_products:
+            error_msg = []
+            if unpicked_products:
+                error_msg.append(_("The following products must be consumed: %s\n", unpicked_products))
+            if missing_lot_id_products:
+                error_msg.append(_("The following products are missing a Lot/Serial Number: %s", missing_lot_id_products))
+            if error_msg:
+                final_msg = "\n".join(error_msg)
+                raise UserError(final_msg)
 
     def _get_autoprint_done_report_actions(self):
         """ Reports to auto-print when MO is marked as done
