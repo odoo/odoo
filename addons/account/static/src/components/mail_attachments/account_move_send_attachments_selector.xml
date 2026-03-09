@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="account.AccountMoveSendAttachmentsSelector">
+        <FileUploader multiUpload="true" onUploaded.bind="onFileUploaded">
+            <t t-set-slot="toggler">
+                <span class="d-none" t-custom-ref="fileUploadTrigger"/>
+            </t>
+            <Dropdown menuClass="'account-move-send-attachments-selector-dropdown d-flex flex-column'" disabled="this.dropdownAttachments.length == 0">
+                <button class="btn btn-light w-auto" data-hotkey="a" title="Add Attachment" t-on-click="() => this.triggerFileUpload(this.dropdownAttachments.length == 0)">
+                    <i class="fa fa-fw fa-paperclip"/>
+                </button>
+                <t t-set-slot="content">
+                    <div class="overflow-y-auto">
+                        <t t-foreach="this.dropdownAttachments" t-as="attachment" t-key="attachment_index">
+                            <DropdownItem class="'text-truncate px-3'" onSelected="() => this.deleteSkip(attachment)">
+                                <t t-out="attachment.name"/>
+                            </DropdownItem>
+                        </t>
+                        <DropdownItem class="'px-3'" onSelected="() => this.triggerFileUpload()">
+                            <a href="#">Add...</a>
+                        </DropdownItem>
+                    </div>
+                </t>
+            </Dropdown>
+        </FileUploader>
+    </t>
+</templates>
