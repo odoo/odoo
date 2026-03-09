@@ -216,3 +216,30 @@ test("support field mapping in options", async () => {
         expect(`.o_field_widget[name='${field}'] input`).toHaveValue(value);
     }
 });
+
+test("select a value, then empty the input and save", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step(args[1]);
+    });
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
+            <form>
+                <field name="street" widget="google_address_autocomplete"/>
+            </form>`,
+        resId: 1,
+    });
+
+    await contains(".o_field_widget[name=street] input").edit("odoo farm 2", {
+        confirm: false,
+    });
+    await runAllTimers();
+    await contains(
+        ".o_field_widget[name=street] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
+    ).click();
+    expect(".o_field_widget[name=street] input").toHaveValue("rue des Bourlottes 9");
+    await contains(".o_field_widget[name=street] input").edit("");
+    await contains(".o_form_button_save").click();
+    expect.verifySteps([{ street: false }]);
+});
