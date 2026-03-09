@@ -416,7 +416,7 @@ class AccountMove(models.Model):
             # Revert back to the sent state as the status is up-to-date.
             invoice.l10n_vn_edi_invoice_state = 'sent'
 
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
 
     def _l10n_vn_need_cancel_request(self):
@@ -524,7 +524,7 @@ class AccountMove(models.Model):
             'l10n_vn_edi_invoice_state': 'sent',
         })
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     def _l10n_vn_edi_cancel_invoice(self, reason, agreement_document_name, agreement_document_date):
@@ -577,7 +577,7 @@ class AccountMove(models.Model):
                        'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
             )
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
     def button_draft(self):

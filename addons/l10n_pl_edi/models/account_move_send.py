@@ -84,7 +84,7 @@ class AccountMoveSend(models.AbstractModel):
                 except Exception as errors:  # noqa: BLE001
                     set_error(move, str(errors))
 
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
 
         # Check the status already

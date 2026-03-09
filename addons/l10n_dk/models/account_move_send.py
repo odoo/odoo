@@ -131,5 +131,5 @@ class AccountMoveSend(models.AbstractModel):
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
                 self.env.ref('l10n_dk.ir_cron_nemhandel_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
-        if self._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()

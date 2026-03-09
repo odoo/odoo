@@ -44,7 +44,7 @@ class AccountMoveSend(models.AbstractModel):
                 continue
             invoice_data['l10n_rs_edi_attachment_values'] = invoice._l10n_rs_edi_get_attachment_values(xml)
 
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
 
     @api.model

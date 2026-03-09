@@ -108,7 +108,7 @@ class AccountMoveSend(models.AbstractModel):
                     'errors': [_("See the 'Veri*Factu' tab for more information.")],
                 }
 
-        if created_document and self._can_commit():
+        if created_document and self.env._can_commit():
             self.env.cr.commit()
 
     def _hook_if_errors(self, moves_data, allow_raising=True):

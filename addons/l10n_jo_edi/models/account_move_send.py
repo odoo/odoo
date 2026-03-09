@@ -77,5 +77,5 @@ class AccountMoveSend(models.AbstractModel):
                         "errors": [error_message],
                     }
 
-                if self._can_commit():
+                if self.env._can_commit():
                     self.env.cr.commit()

@@ -92,7 +92,7 @@ class PosOrder(models.Model):
 
                 if chain_head_doc and chain_head_order and chain_head_order != self and chain_head_doc.state != 'accepted':
                     chain_head_order._l10n_es_tbai_post()
-                    if self.env['account.move.send']._can_commit():
+                    if self.env._can_commit():
                         self.env.cr.commit()
                     self._l10n_es_tbai_post()
 

@@ -1113,9 +1113,7 @@ class MailingMailing(models.Model):
                 **mailing._get_mass_mailing_context()
             ).create(composer_values)
 
-            # auto-commit except in testing mode
-            auto_commit = not modules.module.current_test
-            composer._action_send_mail(auto_commit=auto_commit)
+            composer._action_send_mail(auto_commit=self.env._can_commit())
 
             mailing.write({
                 'state': 'done',
@@ -1125,7 +1123,7 @@ class MailingMailing(models.Model):
             })
 
             # ensure mailing state update after auto-commit
-            if auto_commit is True:
+            if self.env._can_commit():
                 self.env.cr.commit()
 
         return True

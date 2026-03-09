@@ -41,7 +41,7 @@ class L10n_Hu_EdiCancellation(models.TransientModel):
         formatted_message = self.env['account.move.send']._format_error_html(self.invoice_id.l10n_hu_edi_messages)
         self.invoice_id.message_post(body=formatted_message)
 
-        if self.env['account.move.send']._can_commit():
+        if self.env._can_commit():
             self.env.cr.commit()
 
         if self.invoice_id.l10n_hu_edi_messages.get('blocking_level') == 'error':

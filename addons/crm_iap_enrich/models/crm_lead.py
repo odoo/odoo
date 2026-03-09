@@ -140,17 +140,17 @@ class CrmLead(models.Model):
             else:
                 # Commit processed batch to avoid complete rollbacks and therefore losing credits.
                 try:
-                    if modules.module.current_test:
-                        with self.env.cr.savepoint():
-                            process_leads(leads)
-                    else:
+                    if self.env._can_commit():
                         process_leads(leads)
                         self.env.cr.commit()
+                    else:
+                        with self.env.cr.savepoint():
+                            process_leads(leads)
                 except iap_tools.InsufficientCreditError:
                     # Since there are no credits left, there is no point to process the other batches
                     break
                 except Exception:
-                    if not modules.module.current_test:
+                    if self.env._can_commit():
                         self.env.cr.rollback()
                     _logger.error('A batch of leads could not be enriched: %s', repr(leads))
 

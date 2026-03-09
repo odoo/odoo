@@ -3,7 +3,7 @@
 import logging
 from datetime import timedelta
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -63,13 +63,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     'account_peppol_migration_key': False,
                 })
                 # commit the above changes before raising below
-                if not modules.module.current_test:
+                if self.env._can_commit():
                     self.env.cr.commit()
                 raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
 
             elif e.code == 'invalid_signature':
                 self._mark_connection_out_of_sync()
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if self.env._can_commit():
                     self.env.cr.commit()
                 raise UserError(token_out_of_sync_error_message)
             raise UserError(e.message)
@@ -98,7 +98,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         except AccountEdiProxyError as e:
             if e.code == 'connection_superseded':
                 self._peppol_out_of_sync_disconnect_this_database()
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if self.env._can_commit():
                     self.env.cr.commit()
                 raise UserError(_('This connection has been superseded by another database. Register again.'))
             raise
@@ -115,7 +115,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if response.get('error'):
             if response['error'].get('code') == 'connection_superseded':
                 self._peppol_out_of_sync_disconnect_this_database()
-                if not tools.config['test_enable'] and not modules.module.current_test:
+                if self.env._can_commit():
                     self.env.cr.commit()
             raise AccountEdiProxyError(
                 response['error'].get('code', 'unknown_error'),
@@ -304,7 +304,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 except Exception as e:  # noqa: BLE001
                     _logger.error('Error while processing the Peppol document with uuid %s: %s', uuid, e)
 
-            if not (modules.module.current_test or tools.config['test_enable']):
+            if self.env._can_commit():
                 self.env.cr.commit()
             if uuids_to_ack:
                 edi_user._call_peppol_proxy(
@@ -465,7 +465,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
-            if not modules.module.current_test:
+            if self.env._can_commit():
                 self.env.cr.commit()
 
             self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
@@ -481,7 +481,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
-            if not modules.module.current_test:
+            if self.env._can_commit():
                 self.env.cr.commit()
 
         self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')

@@ -135,7 +135,7 @@ class EventMail(models.Model):
           communication (iterative, ...) but information is specific to each
           slot (last registration, scheduled datetime, ...)
         """
-        auto_commit = not modules.module.current_test
+        auto_commit = self.env._can_commit()
         batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
         cron_limit = self.env['ir.config_parameter'].sudo().get_int('mail.render.cron.limit') or 1000  # be sure to not have 0, as otherwise we will loop
         scheduler_record = mail_slot or self
@@ -221,7 +221,7 @@ class EventMail(models.Model):
         self.ensure_one()
         context_registrations = self.env.context.get('event_mail_registration_ids')
 
-        auto_commit = not modules.module.current_test
+        auto_commit = self.env._can_commit()
         batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 50  # be sure to not have 0, as otherwise no iteration is done
         cron_limit = self.env['ir.config_parameter'].sudo().get_int('mail.render.cron.limit') or 1000  # be sure to not have 0, as otherwise we will loop
 
@@ -481,6 +481,6 @@ class EventMail(models.Model):
                 self.env.invalidate_all()
                 scheduler._warn_error(e)
             else:
-                if autocommit and not modules.module.current_test:
+                if autocommit and self.env._can_commit():
                     self.env.cr.commit()
         return True

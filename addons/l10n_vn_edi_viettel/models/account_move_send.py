@@ -114,7 +114,7 @@ class AccountMoveSend(models.AbstractModel):
                         'errors': errors,
                     }
 
-                if self._can_commit():
+                if self.env._can_commit():
                     self.env.cr.commit()
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
@@ -138,5 +138,5 @@ class AccountMoveSend(models.AbstractModel):
             if error:
                 invoice_data['error'] = error
 
-            if self._can_commit():
+            if self.env._can_commit():
                 self.env.cr.commit()
