@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="portal.chatter_message_count">
-        <t t-set="count" t-value="widget._messageCount"/>
+        <t t-set="count" t-value="this.widget._messageCount"/>
         <div class="o_message_counter"/>
     </t>
 
@@ -74,17 +74,17 @@
 
     <t t-name="portal.pager">
         <div class="o_portal_chatter_pager">
-            <t t-if="Object.keys(widget._pagerData).length > 0">
-                <ul class="pagination" t-if="widget._pagerData['pages'].length &gt; 1">
-                    <li t-if="widget._pagerData['page'] != widget._pagerData['page_previous']" t-att-data-page="widget._pagerData['page_previous']" class="page-item o_portal_chatter_pager_btn">
+            <t t-if="Object.keys(this.widget._pagerData).length > 0">
+                <ul class="pagination" t-if="this.widget._pagerData['pages'].length &gt; 1">
+                    <li t-if="this.widget._pagerData['page'] != this.widget._pagerData['page_previous']" t-att-data-page="this.widget._pagerData['page_previous']" class="page-item o_portal_chatter_pager_btn">
                         <a href="#" class="page-link"><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
                     </li>
-                    <t t-foreach="widget._pagerData['pages']" t-as="page" t-key="page_index">
-                        <li t-att-data-page="page" t-attf-class="page-item #{page == widget._pagerData['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
+                    <t t-foreach="this.widget._pagerData['pages']" t-as="page" t-key="page_index">
+                        <li t-att-data-page="page" t-attf-class="page-item #{page == this.widget._pagerData['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
                             <a href="#" class="page-link"><t t-out="page"/></a>
                         </li>
                     </t>
-                    <li t-if="widget._pagerData['page'] != widget._pagerData['page_next']" t-att-data-page="widget._pagerData['page_next']" class="page-item o_portal_chatter_pager_btn">
+                    <li t-if="this.widget._pagerData['page'] != this.widget._pagerData['page_next']" t-att-data-page="this.widget._pagerData['page_next']" class="page-item o_portal_chatter_pager_btn">
                         <a href="#" class="page-link"><i class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/></a>
                     </li>
                 </ul>
