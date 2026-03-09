@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.CategoryListPopup">
-        <div class="o_dialog" t-att-id="id">
+        <div class="o_dialog" t-att-id="this.id">
             <div role="dialog" class="modal d-block" tabindex="-1"  >
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down" role="document" >
                     <div class="modal-content" t-on-click.stop="" >
@@ -20,7 +20,7 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="modal-footer d-none d-sm-flex justify-content-center"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom }">
+                        <div class="modal-footer d-none d-sm-flex justify-content-center"  t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom }">
                             <button type="button" class="btn btn-primary" t-on-click.stop="() => this.props.close()">Close</button>
                         </div>
 
