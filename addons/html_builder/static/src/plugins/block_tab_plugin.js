@@ -69,7 +69,7 @@ class BlockTabPlugin extends Plugin {
 
                 if (snippetEl) {
                     await this.scrollToDroppedSnippet(snippetEl);
-                    await this.processDroppedSnippet(snippetEl);
+                    await this.processDroppedSnippet(snippetEl, this.dragState);
                 }
                 state.ongoingInsertion = false;
                 delete this.cancelDragAndDrop;
@@ -105,11 +105,11 @@ class BlockTabPlugin extends Plugin {
      *
      * @param {HTMLElement} snippetEl
      */
-    async processDroppedSnippet(snippetEl) {
+    async processDroppedSnippet(snippetEl, dragState) {
         this.updateDroppedSnippet(snippetEl);
         // Build the snippet.
         for (const onSnippetDropped of this.getResource("on_snippet_dropped_handlers")) {
-            const cancel = await onSnippetDropped({ snippetEl, dragState: this.dragState });
+            const cancel = await onSnippetDropped({ snippetEl, dragState: dragState });
             // Cancel everything if the resource asked to.
             if (cancel) {
                 this.cancelDragAndDrop();
@@ -117,12 +117,12 @@ class BlockTabPlugin extends Plugin {
             }
             // Update `snippetEl` (and `draggedEl` of `dragState`) if it was
             // replaced in the handler.
-            if (this.dragState.replacedSnippetEl) {
-                if (this.dragState.draggedEl === snippetEl) {
-                    this.dragState.draggedEl = this.dragState.replacedSnippetEl;
+            if (dragState.replacedSnippetEl) {
+                if (dragState.draggedEl === snippetEl) {
+                    dragState.draggedEl = dragState.replacedSnippetEl;
                 }
-                snippetEl = this.dragState.replacedSnippetEl;
-                delete this.dragState.replacedSnippetEl;
+                snippetEl = dragState.replacedSnippetEl;
+                delete dragState.replacedSnippetEl;
             }
         }
         this.config.updateInvisibleElementsPanel();
