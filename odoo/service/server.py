@@ -1520,7 +1520,7 @@ def preload_registries(dbnames):
 
                 # run post-install tests
                 if config['test_enable']:
-                    from odoo.tests import loader  # noqa: PLC0415
+                    from odoo.tests import loader, common  # noqa: PLC0415
                     t0 = time.time()
                     t0_sql = sql_db.sql_counter
                     module_names = sorted(registry.updated_modules if update_module else
@@ -1533,6 +1533,9 @@ def preload_registries(dbnames):
                             env = api.Environment(cr, api.SUPERUSER_ID, {})
                             env.registry._assertion_report = registry._assertion_report
                             env['ir.qweb']._pregenerate_assets_bundles()
+                    _logger.info('Starting test warmup')
+                    common.warmup_tests(post_install_suite, registry)
+                    _logger.info('Starting test suite')
                     result = loader.run_suite(post_install_suite, global_report=registry._assertion_report)
                     registry._assertion_report.update(result)
                     _logger.info("%d post-tests in %.2fs, %s queries",
@@ -1541,7 +1544,7 @@ def preload_registries(dbnames):
                                 sql_db.sql_counter - t0_sql)
 
                     registry._assertion_report.log_stats()
-                    if os.environ.get('CI'):  # too noisy in console
+                    if os.getenv('ODOO_RUNBOT'):
                         log_ormcache_stats(signal.SIGUSR1)
                 if registry._assertion_report and not registry._assertion_report.wasSuccessful():
                     rc += 1

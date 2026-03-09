@@ -72,6 +72,7 @@ from odoo.orm.environments import CacheLayer
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
+from odoo.tools.lru import LRU
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, real_time, str2bool
@@ -1290,6 +1291,17 @@ class TransactionCase(BaseCase):
         with cls.registry.cursor() as cr:
             gc_env = api.Environment(cr, api.SUPERUSER_ID, {})
             gc_env['ir.attachment']._gc_file_store_unsafe()
+
+    @classmethod
+    def _postSetUpClass(cls):
+        # _postSetUpClass is call after setupClass ensuring that all super calls are done
+        cls._saved__cache = {k: lru._values.copy() for k, lru in cls.env.registry._Registry__caches.items()}
+
+    def _preSetUp(self):
+        # restore the class cache before each test
+        for key, lru in self.registry._Registry__caches.items():
+            if key != 'template_code':
+                self.registry._Registry__caches[key] = LRU(lru.count, self._saved__cache[key].items())
 
     @classmethod
     def setUpClass(cls):
@@ -2527,12 +2539,10 @@ class HttpCase(TransactionCase):
         super().setUpClass()
         cls.enterClassContext(cls.registry_test_mode())
 
-        ICP = cls.env['ir.config_parameter']
-        ICP.set_str('web.base.url', cls.base_url())
-        ICP.env.flush_all()
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+
 
     @classmethod
     def base_url(cls):
@@ -3113,3 +3123,36 @@ safe_whitelist.add_instance('odoo.sql_db.TestCursor')
 safe_whitelist.add_instance('odoo.tests.*')
 safe_whitelist.add_instance('unittest.mock.MagicMock')
 safe_whitelist.add_instance('unittest.mock.Mock')
+
+
+def warmup_tests(suite, registry):
+    _logger.info('Warmup tests caches')
+    warmups = []
+    for module in sorted(registry._init_modules):
+        try:
+            mod = importlib.import_module(f'odoo.addons.{module}.tests')
+            warmups.append(mod.warmup_cache)
+        except (ImportError, AttributeError):
+            continue
+    if suite.countTestCases() == 0:
+        return
+    with registry.cursor() as cr:
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
+        # set common ICP from the beginning to avoid invalidating the stable cache in all httpcase
+        # This will be commited to the database
+        # an alternative solution could be to use a single transaction for all tests
+        # another alternative would be to patch the corresponding values
+        ICP = env['ir.config_parameter']
+        ICP.set_str('web.base.url', HttpCase.base_url())
+        ICP.set_int("auth_password_policy.minlength", 4)
+        env.flush_all()
+
+        # avoid to have a populated cache before starting the test and making the populated cache snapshot.
+        env.registry.clear_all_caches()
+        env.registry.cache_invalidated.clear()
+        for warmup_cache in warmups:
+            warmup_cache(env, suite, _logger)
+
+
+        _logger.info('Snapshoting common caches')
+        env.registry._saved__cache = {k: lru._values.copy() for k, lru in env.registry._Registry__caches.items()}

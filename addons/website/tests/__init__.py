@@ -43,3 +43,16 @@ from . import test_website_reset_password
 from . import test_website_visitor
 from . import test_website_technical_page
 from . import test_website_website_builder_assets_bundle
+
+
+def warmup_cache(env, suite, _logger):
+    website_id = env['website'].get_current_website().id
+    _logger.info('Populating website routing cache')
+    env['ir.http'].routing_map(website_id)
+
+    _logger.info('Populating website %s assets_path cache', website_id)
+    js_bundles, css_bundles, binary_bundles = env['ir.qweb']._get_bundles_to_pregenarate()
+    links = []
+    for bundle in sorted(js_bundles | css_bundles| binary_bundles):
+        links += env['ir.qweb']._get_asset_content(bundle)
+        links += env['ir.qweb']._get_asset_content(bundle, assets_params={'website_id': website_id})

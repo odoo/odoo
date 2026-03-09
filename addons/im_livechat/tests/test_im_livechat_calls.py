@@ -21,6 +21,7 @@ class TestImLivechatCalls(TestImLivechatCommon):
                 agent.sudo()._rtc_join_call()
             return result
 
+        self.env.registry.clear_cache('routing')
         with patch.object(LivechatController, "get_session", wraps(og_get_session)(_patched_get_session)):
             self.start_tour(
                 f"/im_livechat/support/{self.livechat_channel.id}",
