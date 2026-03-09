@@ -6,4 +6,5 @@ from . import (
     test_all_models,
     test_api,
     test_autovacuum,
+    test_cache,
 )
