@@ -314,9 +314,11 @@ export class PaymentScreen extends Component {
             line.setPaymentStatus("waitingCancel");
             line.payment_method_id.payment_terminal
                 .sendPaymentCancel(this.currentOrder, uuid)
-                .then(() => {
-                    this.currentOrder.removePaymentline(line);
-                    this.numberBuffer.reset();
+                .then((success) => {
+                    if (success) {
+                        this.currentOrder.removePaymentline(line);
+                        this.numberBuffer.reset();
+                    }
                 });
         } else if (line.getPaymentStatus() !== "waitingCancel") {
             this.currentOrder.removePaymentline(line);
