@@ -1,10 +1,6 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
 
-/**
- * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
- */
-
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];
@@ -78,9 +74,9 @@ export class AnimateOption extends BaseOptionComponent {
 
         return hasDirection;
     }
+    // This is done as a stable fix
+    // TODO: remove in master
     async canHaveHoverEffect(el) {
-        const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-        const settledProms = await Promise.all(proms);
-        return settledProms.length && settledProms.every(Boolean);
+        return this.dependencies.animateOption.canHaveHoverEffect(el);
     }
 }
