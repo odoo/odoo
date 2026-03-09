@@ -14,6 +14,7 @@ declare module "plugins" {
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
     import { default_shape_providers, image_shape_groups_providers, on_shape_computed_handlers } from "@html_builder/plugins/image/image_shape_option_plugin";
@@ -156,5 +157,6 @@ declare module "plugins" {
         snippet_preview_dialog_bundles: snippet_preview_dialog_bundles;
         builder_options_render_context: builder_options_render_context;
         uncrossable_element_selector: uncrossable_element_selector;
+        submit_button_selectors: submit_button_selectors;
     }
 }
