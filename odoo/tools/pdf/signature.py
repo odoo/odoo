@@ -200,7 +200,7 @@ class PdfSigner:
         :param signed_by: Text identifier of the user who is signing this document.
         :type signed_by: str
         """
-        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
+        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects not to write them
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
 
         # --- 1. SETUP ACROFORM ---

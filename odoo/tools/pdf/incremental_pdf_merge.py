@@ -226,7 +226,7 @@ class IncrementalPdfMerge:
         :rtype: tuple[PdfFileReader, dict[tuple[int, int], Any]]
         """
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
-        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
+        writer = PdfFileWriter()  #A temporary PdfFileWriter used to wrap new objects not to write them
         incremented_objects = {}
 
         for page_index in range(len(pdf_reader.pages)):
@@ -1074,7 +1074,6 @@ class IncrementalPdfMerge:
         :rtype: dict[tuple[int, int], Any]
         """
         incremented_objects = {}
-        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects
 
         idnum_hash = {}
         stack = deque()
@@ -1112,11 +1111,12 @@ class IncrementalPdfMerge:
                         )
                     )
             elif isinstance(data, IndirectObject):
-                data, next_id = self._resolve_indirect_object(pdf_reader, writer, data, idnum_hash, incremented_objects, next_id)
+                data, next_id = self._resolve_indirect_object(pdf_reader, data, idnum_hash, incremented_objects, next_id)
 
                 if str(data) not in discovered:
                     discovered.add(str(data))
-                    stack.append((data.get_object(), None, None, []))
+                    real_obj = self._get_indirect_object_data(data, incremented_objects)
+                    stack.append((real_obj, None, None, []))
 
             # Check if data has a parent and if it is a dict or an array update the value
             if isinstance(parent, (DictionaryObject, ArrayObject)):
@@ -1125,8 +1125,7 @@ class IncrementalPdfMerge:
                     # objects, so we need to change this value.
                     incremented_objects[(next_id, 0)] = data
                     data_hash = data.hash_value()
-                    idnum_hash[data_hash] = IndirectObject(next_id, 0, writer)
-                    self._pdf_writer_append_obj(writer, data, next_id)
+                    idnum_hash[data_hash] = IndirectObject(next_id, 0, None)
                     next_id += 1
                     data = idnum_hash[data_hash]
 
@@ -1145,7 +1144,7 @@ class IncrementalPdfMerge:
                     indirect_reference = idnum_hash.pop(old_hash, None)
 
                     if indirect_reference is not None:
-                        indirect_reference_obj = indirect_reference.get_object()
+                        indirect_reference_obj = self._get_indirect_object_data(indirect_reference, incremented_objects)
 
                         if indirect_reference_obj is not None:
                             idnum_hash[
@@ -1157,7 +1156,6 @@ class IncrementalPdfMerge:
     def _resolve_indirect_object(
             self,
             pdf_reader: PdfFileReader,
-            writer: PdfFileWriter,
             data: IndirectObject,
             idnum_hash: dict[bytes, Any],
             incremented_objects: dict[tuple[int, int], Any],
@@ -1179,7 +1177,6 @@ class IncrementalPdfMerge:
         :param data: The indirect reference to resolve.
         :type data: IndirectObject
         :param pdf_reader: The reader for the original PDF.
-        :param writer: A temporary PdfFileWriter used to wrap new objects.
         :param idnum_hash: A cache dictionary mapping object hashes to their resolved IndirectObjects.
         :param incremented_objects: The registry of new objects for the incremental update.
         :param next_id: The next available Object ID.
@@ -1190,8 +1187,7 @@ class IncrementalPdfMerge:
         if hasattr(data.pdf, "stream") and data.pdf.stream.closed:
             raise ValueError(f"I/O operation on closed file: {data.pdf.stream.name}")
 
-        # Get real object from the indirect object
-        real_obj = data.pdf.get_object(data)
+        real_obj = self._get_indirect_object_data(data, incremented_objects)
 
         if real_obj is None:
             _logger.warning(
@@ -1209,28 +1205,37 @@ class IncrementalPdfMerge:
 
         if data.pdf == pdf_reader:
             idnum_hash[hash_value] = IndirectObject(data.idnum, 0, pdf_reader)
-        # This is new incremented object in this pdf
-        else:
+        else:  # This is new incremented object in this PDF
             incremented_objects[(next_id, 0)] = real_obj
-            idnum_hash[hash_value] = IndirectObject(next_id, 0, writer)
-            self._pdf_writer_append_obj(writer, real_obj, next_id)
+            idnum_hash[hash_value] = IndirectObject(next_id, 0, None)
             next_id += 1
 
         return idnum_hash[hash_value], next_id
 
-    def _pdf_writer_append_obj(self, writer, obj, obj_id) -> None:
+    def _get_indirect_object_data(self, indirect_obj, incremented_objects):
         """
-        Internal helper to register an object at a specific ID index within the writer.
+        Resolves an indirect reference into its actual underlying PDF object.
 
-        Since PDF Object IDs are 1-based indices, this method ensures the writer's
-        internal list is large enough to hold ``obj_id``. It pads the list with
-        ``NullObject``s if necessary to fill gaps before placing the target object.
+        This helper method retrieves the real data behind the reference by checking two distinct locations:
 
-        :param writer: The PdfFileWriter instance (used as a container).
-        :param obj: The concrete object to store.
-        :param obj_id: The target Object ID (integer).
-        :return: None
+        1. **Original PDF**: If the reference is tied to an existing, loaded document
+           (i.e., ``indirect_obj.pdf`` is not None), it fetches the original object
+           directly from that reader or writer.
+        2. **Incremental Update Dictionary**: If the reference lacks a PDF reader attribute,
+           it means it's a newly created or modified object. The method then retrieves
+           the actual data from the ``incremented_objects`` tracking dictionary using
+           the object's ID and generation number.
+
+        :param indirect_obj: The indirect reference object that needs to be resolved.
+        :type indirect_obj: IndirectObject
+        :param incremented_objects: A dictionary mapping ``(object_id, generation)``
+            tuples to newly created or modified objects waiting to be written to the pdf.
+        :type incremented_objects: dict[tuple[int, int], Any]
+        :return: The resolved PDF object (e.g., ``DictionaryObject``,
+            ``StreamObject``, ``ArrayObject``, etc.).
+        :rtype: Any
         """
-        while len(writer._objects) < obj_id:
-            writer._objects.append(NullObject())
-        writer._objects[obj_id - 1] = obj
+        if indirect_obj.pdf:
+            return indirect_obj.pdf.get_object(indirect_obj)
+        else:
+            return incremented_objects[(indirect_obj.idnum, indirect_obj.generation)]
