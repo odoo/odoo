@@ -1335,6 +1335,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vat = commercial_partner.vat
             if country_code in GST_COUNTRY_CODES:
                 tax_scheme_id = 'GST'
+            elif country_code == 'HU' and not vat.upper().startswith('HU'):
+                tax_scheme_id = 'HU_TAX_NUMBER'
             else:
                 tax_scheme_id = 'VAT'
 
