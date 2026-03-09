@@ -245,6 +245,8 @@ class AccountMove(models.Model):
         # from invoice lines at once, certain implementations need to search analytic lines
         # per invoice line individually. See the override in `sale_subscription_timesheet`.
         so_lines = self.invoice_line_ids.sale_line_ids.filtered(lambda line: line._is_line_reinvoicable())
+        if not so_lines:
+            return self.env['account.analytic.line']
 
         return self.env['account.analytic.line'].sudo().search(
             self._analytic_line_domain_get_invoiced_lines(so_lines)
