@@ -28,7 +28,7 @@
                                 <t t-call="product_matrix.extra_price"/>
                             </div>
                         </th>
-                        <td t-else="" 
+                        <td t-else=""
                             class="o_matrix_input_td text-end"
                             t-attf-class="{{cell_last?'o_matrix_pe':''}}">
                             <div t-if="cell.is_possible_combination" class="input-group">
@@ -61,7 +61,7 @@
             accurate to display it.
             -->
         <span class="variant_price_extra" style="white-space: nowrap;">
-            <t t-out="this.format(cell)"/>
+            <t t-out="format(cell)"/>
         </span>
     </span>
 </template>
