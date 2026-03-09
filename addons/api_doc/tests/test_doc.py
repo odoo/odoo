@@ -5,10 +5,15 @@ from http import HTTPStatus
 from unittest.mock import patch
 
 from odoo.fields import Command
+from odoo.models import Model
 from odoo.tests import new_test_user, tagged
 
 from .dummy_methods import DummyMethods
-from odoo.addons.api_doc.controllers.api_doc import DocController, parse_signature
+from odoo.addons.api_doc.controllers.api_doc import (
+    DocController,
+    is_public_method,
+    parse_signature,
+)
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -238,7 +243,7 @@ class TestDoc(HttpCaseWithUserDemo):
 
         methods = inspect.getmembers(DummyMethods, predicate=inspect.isroutine)
         for name, method in methods:
-            if name.startswith('__'):
+            if name.startswith('__') or not hasattr(method, 'expected'):
                 continue
             with self.subTest(method=name):
                 self.assertEqual(
@@ -262,3 +267,22 @@ class TestDoc(HttpCaseWithUserDemo):
         self.authenticate('demo', 'demo')
         res = self.url_open('/doc/index.json')
         res.raise_for_status()
+
+    def test_private_methods(self):
+        FakeCls = type('ModelDummyMethods', (DummyMethods, Model), {
+            '_name': 'model.dummy.methods',
+            '_register': False,
+            '__module__': 'odoo.addons.api_doc',
+        })
+        FakeModel = FakeCls(self.env, (), ())
+        assert is_public_method(FakeModel, 'one_arg')
+
+        for method_name in (
+            'class_method',
+            'static_method',
+            'private_method',
+            '_underscope_method',
+        ):
+            with self.subTest(method_name=method_name):
+                assert hasattr(FakeModel, method_name)
+                self.assertFalse(is_public_method(FakeModel, method_name))

@@ -58,6 +58,9 @@ def get_public_method(model: BaseModel, name: str):
     method = getattr(cls, name, None)
     if not callable(method):
         raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+    if method == getattr(model, name, None):  # classmethod, staticmethod
+        e = f"The method '{model._name}.{name}' cannot be called remotely."
+        raise AccessError(e)
 
     for mro_cls in cls.mro():
         if not (cla_method := getattr(mro_cls, name, None)):
