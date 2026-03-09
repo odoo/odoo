@@ -182,14 +182,14 @@ class AccountPayment(models.Model):
             line_vals = []
             for check in check_ids:
                 if check == self.l10n_latam_new_check_ids[-1]:
-                    liquidity_amount_currency = self.currency_id.round(abs(default_values['balance']) - liquidity_balance_total)
+                    liquidity_balance = self.currency_id.round(abs(default_values['balance']) - liquidity_balance_total)
                 else:
-                    liquidity_amount_currency = self.currency_id.round(check.amount)
-                    liquidity_balance_total += liquidity_amount_currency
+                    liquidity_balance = self.currency_id.round(check.amount)
+                    liquidity_balance_total += liquidity_balance
 
-                liquidity_balance = self.currency_id._convert(
-                    liquidity_amount_currency,
-                    self.company_id.currency_id,
+                liquidity_amount_currency = self.company_id.currency_id._convert(
+                    liquidity_balance,
+                    self.currency_id,
                     self.company_id,
                     self.date
                 )

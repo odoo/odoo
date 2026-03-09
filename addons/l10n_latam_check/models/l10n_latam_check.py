@@ -171,10 +171,6 @@ class l10nLatamAccountPaymentCheck(models.Model):
         move = self._get_reconciled_move()
         return move._get_records_action()
 
-    def action_show_journal_entry(self):
-        self.ensure_one()
-        return self.outstanding_line_id.move_id._get_records_action()
-
     def _get_reconciled_move(self):
         reconciled_line = self.outstanding_line_id.full_reconcile_id.reconciled_line_ids - self.outstanding_line_id
         return (reconciled_line.move_id.line_ids - reconciled_line).mapped('move_id')
