@@ -17,6 +17,7 @@
         # DATA
         'data/test_access_feedback_data.xml',
         'data/test_action_bindings.xml',
+        'data/test_translated_field/test_model_data.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
@@ -25,6 +26,7 @@
         'security/test_check_access/ir.model.access.csv',
         'security/test_check_access/test_check_access.xml',
         'security/test_company_checks/ir.model.access.csv',
+        'security/test_convert/ir.model.access.csv',
 
         # VIEWS
     ],
