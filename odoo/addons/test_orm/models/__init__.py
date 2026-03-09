@@ -9,4 +9,5 @@ from . import (
     test_convert,
     test_convert_env,
     test_create,
+    test_domain,
 )
