@@ -8,7 +8,7 @@
             <field name="category_id" position="after">
                 <field name="l10n_my_edi_industrial_classification" invisible="not is_company or 'MY' not in fiscal_country_codes"/>
             </field>
-            <field name="vat" position="after">
+            <field name="parent_vat" position="after">
                 <label for="l10n_my_identification_type" string="Identification" invisible="'MY' not in fiscal_country_codes"/>
                 <div class="d-flex gap-2" invisible="'MY' not in fiscal_country_codes">
                     <field name="l10n_my_identification_type" readonly="parent_id"/>
