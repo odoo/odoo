@@ -28,6 +28,7 @@
         'security/test_company_checks/ir.model.access.csv',
         'security/test_convert/ir.model.access.csv',
         'security/test_convert_env/ir.model.access.csv',
+        'security/test_create/ir.model.access.csv',
 
         # VIEWS
     ],

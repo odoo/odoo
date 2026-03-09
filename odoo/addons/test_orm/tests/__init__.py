@@ -12,4 +12,5 @@ from . import (
     test_config_settings,
     test_convert,
     test_convert_env,
+    test_create,
 )
