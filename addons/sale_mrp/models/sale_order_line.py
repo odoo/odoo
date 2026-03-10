@@ -167,3 +167,8 @@ class SaleOrderLine(models.Model):
         elif bom and previous_product_uom_qty:
             return previous_product_uom_qty.get(self.id)
         return super()._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+
+    def _get_valid_moves_for_incoming_outgoing(self):
+        """Exclude production-linked moves before processing incoming and outgoing
+        sales order moves to ensure delivery quantities remain correct after SO reconfirmation."""
+        return super()._get_valid_moves_for_incoming_outgoing().filtered(lambda move: not move.production_id)

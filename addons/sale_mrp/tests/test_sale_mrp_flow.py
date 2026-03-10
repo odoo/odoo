@@ -2795,3 +2795,35 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             {'user_id': self.env.user.id, 'display_name': 'Exception'}
         ])
         self.assertRegex(production_2.activity_ids.note, fr"Exception\(s\) occurred on the sale order\(s\).*\n.*{sale_order_to_cancel.name}.*\n.*Manual actions may be needed")
+
+    def test_mto_delivery_quantity_on_SO_reconfirmation(self):
+        """
+        Test that the delivery quantity is correctly updated when a Sale Order
+        with an MTO product is cancelled, updated, and reconfirmed.
+        """
+        self.product_a.route_ids = self.env.ref('stock.route_warehouse0_mto').ids
+        self.env["mrp.bom"].create([{
+            "product_tmpl_id": self.product_a.product_tmpl_id.id,
+            "bom_line_ids": [Command.create({"product_id": self.product.id, "product_qty": 1})]},
+        ])
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": self.product_a.id, "product_uom_qty": 1})],
+        })
+        so.action_confirm()
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 1)
+        so.action_cancel()
+        so.action_draft()
+        so.order_line.product_uom_qty = 2
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 2)
+        self.assertEqual(so.picking_ids[0].state, 'cancel')
+        new_picking = so.picking_ids[1]
+        self.assertEqual(new_picking.move_ids.product_uom_qty, 2)
+        # Test that a new manufacturing order created after reconfirming
+        self.assertEqual(len(so.mrp_production_ids), 2)
+        self.assertRecordValues(so.mrp_production_ids, [{'product_uom_qty': 1}, {'product_uom_qty': 2}])
+        so.order_line.product_uom_qty = 3
+        # After updating quantity values on picking and manufacturing order should be reflected correctly.
+        self.assertEqual(so.mrp_production_ids[1].product_uom_qty, 3)
+        self.assertRecordValues(new_picking.move_ids, [{'product_uom_qty': 2}, {'product_uom_qty': 1}])

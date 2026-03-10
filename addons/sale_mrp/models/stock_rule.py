@@ -23,3 +23,12 @@ class StockRule(models.Model):
                 if bom_line_id:
                     move_values['bom_line_id'] = bom_line_id
         return move_values
+
+    def _make_mo_get_domain(self, procurement, bom):
+        """Extend MO search domain to exclude cancelled moves when linked to a sale line,
+        ensuring correct quantities after order reconfirmation."""
+        domain = super()._make_mo_get_domain(procurement, bom)
+        sale_line_id = procurement.values.get('sale_line_id')
+        if sale_line_id:
+            domain += (('move_dest_ids.state', '!=', 'cancel'),)
+        return domain

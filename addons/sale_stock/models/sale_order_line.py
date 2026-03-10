@@ -319,6 +319,10 @@ class SaleOrderLine(models.Model):
             qty -= move.product_uom._compute_quantity(qty_to_compute, self.product_uom_id, rounding_method='HALF-UP')
         return qty
 
+    def _get_valid_moves_for_incoming_outgoing(self):
+        """Overridable method that returns the valid moves for both incoming and outgoing processing."""
+        return self.move_ids.filtered(lambda m: m.state != 'cancel' and m.location_dest_usage != 'inventory' and self.product_id == m.product_id)
+
     def _get_outgoing_incoming_moves(self, strict=True):
         """ Return the outgoing and incoming moves of the sale order line.
             @param strict: If True, only consider the moves that are strictly delivered to the customer (old behavior).
@@ -328,7 +332,7 @@ class SaleOrderLine(models.Model):
         outgoing_moves_ids = set()
         incoming_moves_ids = set()
 
-        moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory' and self.product_id == r.product_id)
+        moves = self._get_valid_moves_for_incoming_outgoing()
         if moves and not strict:
             # The first move created was the one created from the intial rule that started it all.
             sorted_moves = moves.sorted('id')
