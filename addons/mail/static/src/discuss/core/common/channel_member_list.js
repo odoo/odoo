@@ -41,7 +41,7 @@ export class ChannelMemberList extends Component {
         });
     }
 
-    openInviteDialog() {
+    onClickInviteButton() {
         if (this.env.inMeetingView) {
             this.props.openChannelInvitePanel?.({ keepPrevious: true });
         } else {

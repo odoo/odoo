@@ -222,7 +222,6 @@ registerThreadAction("member-list", {
     },
     actionPanelComponent: ChannelMemberList,
     actionPanelComponentProps: ({ actions, channel }) => ({
-        /** @deprecated */
         openChannelInvitePanel({ keepPrevious } = {}) {
             actions.actions
                 .find(({ id }) => id === "invite-people")
