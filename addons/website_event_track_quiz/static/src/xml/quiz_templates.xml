@@ -3,8 +3,8 @@
     <t t-name="quiz.main">
         <div class="h-100 w-100 overflow-auto px-2 py-2">
             <div class="container">
-                <div t-foreach="widget.quiz.questions" t-as="question" t-key="question_index"
-                     t-attf-class="o_quiz_js_quiz_question mt-3 mb-4 #{widget.track.completed ? 'completed-disabled' : ''}"
+                <div t-foreach="this.widget.quiz.questions" t-as="question" t-key="question_index"
+                     t-attf-class="o_quiz_js_quiz_question mt-3 mb-4 #{this.widget.track.completed ? 'completed-disabled' : ''}"
                      t-att-data-question-id="question.id" t-att-data-title="question.question">
                     <div class="h4">
                         <small class="text-muted"><span t-out="question_index+1"/>. </small> <span t-out="question.question"/>
@@ -13,16 +13,16 @@
                         <t t-foreach="question.answer_ids" t-as="answer" t-key="answer_index">
                             <a t-att-data-answer-id="answer.id" href="#"
                                 t-att-data-text="answer.text_value"
-                                t-attf-class="o_quiz_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{widget.track.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
+                                t-attf-class="o_quiz_quiz_answer list-group-item d-flex align-items-center list-group-item-action #{this.widget.track.completed  &amp;&amp; answer.is_correct ? 'list-group-item-success' : '' }">
 
                                 <label class="my-0 d-flex align-items-center justify-content-center me-2">
                                     <input type="radio"
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i t-att-class="'fa fa-circle text-400' + (!(widget.track.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
+                                    <i t-att-class="'fa fa-circle text-400' + (!(this.widget.track.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')"></i>
                                     <i class="fa fa-times-circle text-danger d-none"></i>
-                                    <i t-att-class="'fa fa-check-circle text-success' + (widget.track.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
+                                    <i t-att-class="'fa fa-check-circle text-success' + (this.widget.track.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')"></i>
                                 </label>
                                 <span t-out="answer.text_value"/>
                             </a>

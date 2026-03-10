@@ -53,7 +53,7 @@
         </BuilderRow>
     </BuilderContext>
 
-    <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="isActiveItem('next_article_opt')">
+    <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="this.isActiveItem('next_article_opt')">
         <BuilderMany2One
             action="'setRecommendedNextPost'"
             applyTo="'#o_wblog_post_footer'"
@@ -63,7 +63,7 @@
                 ['id', '!=', this.services.website.currentWebsite.metadata.mainObject.id],
                 ['website_id', 'in', [false, this.services.website.currentWebsite.id]],
             ]"
-            allowUnselect="state.isNextPostRecommended"
+            allowUnselect="this.state.isNextPostRecommended"
             unselectBtnTitle.translate="Reset to default post"
         />
     </BuilderRow>
