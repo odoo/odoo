@@ -23,4 +23,5 @@ from . import (
     test_json_field,
     test_many2many,
     test_models,
+    test_modules_db,
 )
