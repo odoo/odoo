@@ -1,7 +1,13 @@
+// ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
+
 import { afterEach } from "@odoo/hoot";
 
-export function mockIndexedDB(_name, { fn }) {
-    return (requireModule, ...args) => {
+/**
+ * @param {string} name
+ * @param {OdooModuleFactory} factory
+ */
+export function mockIndexedDBFactory(name, { fn }) {
+    return function mockIndexedDB(requireModule, ...args) {
         const indexedDBModule = fn(requireModule, ...args);
 
         const { IndexedDB } = indexedDBModule;

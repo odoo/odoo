@@ -68,7 +68,7 @@ const makeSession = ({
 //-----------------------------------------------------------------------------
 
 export function mockSessionFactory() {
-    return () => {
+    return function mockSession() {
         const session = makeSession(serverState);
 
         onServerStateChange(session, makeSession);

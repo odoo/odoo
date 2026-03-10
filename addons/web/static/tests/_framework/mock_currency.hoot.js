@@ -23,7 +23,7 @@ const makeCurrencies = ({ currencies }) =>
  * @param {OdooModuleFactory} factory
  */
 export function mockCurrencyFactory(name, { fn }) {
-    return (requireModule, ...args) => {
+    return function mockCurrency(requireModule, ...args) {
         const currencyModule = fn(requireModule, ...args);
 
         onServerStateChange(currencyModule.currencies, makeCurrencies);
