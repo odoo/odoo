@@ -2231,10 +2231,13 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
     def test_kit_return_and_decrease_sol_qty_to_zero(self):
         """
         Create and confirm a SO with a kit product.
-        Deliver & Return the components
+        Deliver in two steps & Return the components
         Set the SOL qty to 0
+
+        Check that the move chain is adapted accordingly.
         """
         stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.company_data['default_warehouse'].delivery_steps = 'pick_ship'
 
         grp_uom = self.env.ref('uom.group_uom')
         self.env.user.write({'groups_id': [(4, grp_uom.id)]})
@@ -2252,11 +2255,15 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         so = so_form.save()
         so.action_confirm()
 
-        delivery = so.picking_ids
+        pick = so.picking_ids
+        for m in pick.move_ids:
+            m.write({'quantity': m.product_uom_qty, 'picked': True})
+        pick.button_validate()
+        self.assertEqual(pick.state, 'done')
+        delivery = so.picking_ids - pick
         for m in delivery.move_ids:
             m.write({'quantity': m.product_uom_qty, 'picked': True})
         delivery.button_validate()
-
         self.assertEqual(delivery.state, 'done')
         self.assertEqual(so.order_line.qty_delivered, 2)
 
@@ -2276,7 +2283,15 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 0
 
-        self.assertEqual(so.picking_ids, delivery | return_picking)
+        self.assertEqual(so.picking_ids, pick | delivery | return_picking)
+        self.assertRecordValues(so.picking_ids.move_ids.sorted(lambda m: (m.picking_id.id, m.product_id.id)), [
+            {'picking_id': pick.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': pick.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+            {'picking_id': delivery.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': delivery.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+            {'picking_id': return_picking.id, 'product_id': self.component_f.id, 'quantity': 20.0},
+            {'picking_id': return_picking.id, 'product_id': self.component_g.id, 'quantity': 40.0},
+        ])
 
     def test_fifo_reverse_and_create_new_invoice(self):
         """
