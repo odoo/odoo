@@ -6,11 +6,11 @@
             <div class="pos-receipt-container text-center" t-custom-ref="pos-receipt-container"/>
             <div class="screen-content d-flex flex-column h-100">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
-                    <button class="button btn btn-lg btn-outline-primary" t-on-click="goPreviousScreen">
+                    <button class="button btn btn-lg btn-outline-primary" t-on-click="this.goPreviousScreen">
                         <i class="fa fa-angle-double-left me-2"/>
                         <span>Back</span>
                     </button>
-                    <button class="button btn btn-lg btn-outline-primary" t-if="this.pos.config.default_receipt_printer_id" t-on-click="printTipReceipt">
+                    <button class="button btn btn-lg btn-outline-primary" t-if="this.pos.config.default_receipt_printer_id" t-on-click="this.printTipReceipt">
                         <i class="fa fa-print"></i>
                         <span> </span>
                         <span>Reprint receipts</span>
@@ -18,18 +18,18 @@
                     <div class="top-content-center flex-grow-1">
                         <h2 class="mb-0">Add a tip</h2>
                     </div>
-                    <div class="button highlight next btn btn-lg btn-primary" t-on-click="validateTip">
+                    <div class="button highlight next btn btn-lg btn-primary" t-on-click="this.validateTip">
                         Settle <i class="fa fa-angle-double-right"></i>
                     </div>
                 </div>
                 <div class="tip-options">
                     <div class="total-amount my-4 fs-2 text-center">
-                        <t t-out="overallAmountStr" />
+                        <t t-out="this.overallAmountStr" />
                     </div>
                     <div class="tip-amount-options d-flex flex-column gap-2 mx-4 p-3 rounded bg-view">
                         <div class="percentage-amounts d-flex gap-2">
-                            <t t-foreach="percentageTips" t-as="tip" t-key="tip_index">
-                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.inputTipAmount,false); }">
+                            <t t-foreach="this.percentageTips" t-as="tip" t-key="tip_index">
+                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { this.state.inputTipAmount = this.env.utils.formatCurrency(tip.inputTipAmount,false); }">
                                     <div class="percentage fs-1 text-primary text-center">
                                         <t t-out="tip.percentage"></t>
                                     </div>
@@ -40,15 +40,15 @@
                             </t>
                         </div>
                         <div class="no-tip d-grid">
-                            <button class="button btn btn-lg btn-secondary flex-fill py-5 fs-1 text-primary"  t-on-click="() => { state.inputTipAmount = '0'; }">No Tip</button>
+                            <button class="button btn btn-lg btn-secondary flex-fill py-5 fs-1 text-primary"  t-on-click="() => { this.state.inputTipAmount = '0'; }">No Tip</button>
                         </div>
                         <div class="custom-amount-form d-flex">
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text bg-secondary">Tip Amount</span>
-                                <input type="text" class="item form-control fs-1" aria-label="Username" t-custom-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
+                                <input type="text" class="item form-control fs-1" aria-label="Username" t-custom-model="this.state.inputTipAmount" t-att-data-amount="this.state.inputTipAmount"/>
                                 <span class="input-group-text">
                                     <div class="currency">
-                                        <t t-out="pos.currency.symbol" />
+                                        <t t-out="this.pos.currency.symbol" />
                                     </div>
                                 </span>
                             </div>

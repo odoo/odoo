@@ -1,6 +1,6 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDetailsDialog">
-        <Dialog size="'md'" title="title">
+        <Dialog size="'md'" title="this.title">
             <div class="d-flex flex-column gap-3 rounded-2">
                 <t t-foreach="this.orderDetails" t-as="card" t-key="card.title">
                     <div class="card border rounded-2">
@@ -71,7 +71,7 @@
 
             <!-- Footer -->
             <t t-set-slot="footer">
-                <button class="btn btn-secondary" t-on-click="props.close">
+                <button class="btn btn-secondary" t-on-click="this.props.close">
                     Discard
                 </button>
             </t>

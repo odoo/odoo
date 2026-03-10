@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenPaymentLines">
-        <div t-if="props.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
-            <t t-foreach="props.paymentLines" t-as="line" t-key="line.uuid">
+        <div t-if="this.props.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
+            <t t-foreach="this.props.paymentLines" t-as="line" t-key="line.uuid">
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
                     <!-- Show QR Code -->
                     <t t-if="line.useQr">
@@ -16,7 +16,7 @@
                     <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                         <span class="payment-name" t-out="line.payment_method_id.name"/>
                         <div class="payment-amount px-3">
-                            <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
+                            <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
                         </div>
                     </div>
 
