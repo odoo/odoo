@@ -193,6 +193,8 @@ class BaseDocumentLayout(models.TransientModel):
         except Exception:
             return False, False
 
+        if not image:
+            return False, False
         base_w, base_h = image.size
         w = ceil(50 * base_w / base_h)
         h = 50
