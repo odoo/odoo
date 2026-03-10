@@ -78,6 +78,7 @@ class Base(models.AbstractModel):
         """ Globally reverse result of '_mail_get_operation_for_mail_message_operation'
         aka return documents for a given access to check on them. """
         document_operations = self._mail_get_operation_for_mail_message_operation(message_operation)
+<<<<<<< a16a24fa68b026817602bdfe5358ccbdbadfa063
         operation_documents_ids = defaultdict(OrderedSet)
         for record, record_operation in document_operations.items():
             operation_documents_ids[record_operation].update(record.ids)
@@ -85,6 +86,20 @@ class Base(models.AbstractModel):
             operation: self.browse(ids).with_prefetch(self._prefetch_ids)
             for operation, ids in operation_documents_ids.items()
         }
+||||||| 049321aa5e0d4271050b406477bac5fb788b410b
+        operation_documents = defaultdict(lambda: self.env[self._name])
+        for record, record_operation in document_operations.items():
+            operation_documents[record_operation] += record
+        # force prefetch in a post-loop as recordset concatenation may lose it
+        for operation, records in operation_documents.items():
+            records = records.with_prefetch(self.ids)
+        return operation_documents
+=======
+        documents = self.browse(record.id for record in document_operations).with_prefetch(self._prefetch_ids)
+        operation_documents = documents.grouped(document_operations.__getitem__)
+        operation_documents.pop(None, None)  # discard documents without a permission
+        return operation_documents
+>>>>>>> eb3294726ad7d1eb9018e7fec4f7a5900e155150
 
     # ------------------------------------------------------------
     # FIELDS HELPERS
