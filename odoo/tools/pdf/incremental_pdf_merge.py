@@ -40,11 +40,12 @@ from typing import (
     Dict,
     Tuple,
     cast,
+    Union
 )
 
 from odoo.tools.pdf import (
     PdfFileReader,
-    PdfFileWriter,
+    PdfObject,
     IndirectObject,
     NullObject,
     ArrayObject,
@@ -84,6 +85,67 @@ def b_(s: str | bytes) -> bytes:
         r = s.encode("utf-8")
 
     return r
+
+class IndirectObjectsWrapper:
+    """
+    A lightweight registry for managing new PDF objects and their indirect references.
+
+    This wrapper acts as a safe, standalone mock reader/writer.
+    It assigns non-colliding IDs and allows ``IndirectObject`` instances to
+    dynamically resolve their underlying data.
+    """
+
+    def __init__(self, start_id=1) -> None:
+        """
+        Initializes the indirect object wrapper.
+
+        :param start_id: The starting object ID number. To prevent collisions
+            during incremental updates, this should explicitly be set to the
+            original PDF's ``/Size`` (highest existing ID + 1). Defaults to 1.
+        :type start_id: int
+        """
+        self.objects_map = {}
+        self.next_id = start_id
+
+    def add_object(self, obj: PdfObject) -> IndirectObject:
+        """
+        Registers a new PDF object and assigns it a unique indirect reference.
+
+        The object is stored internally, and its ``indirect_reference`` attribute
+        is updated to point back to the newly created reference.
+
+        :param obj: The PDF object (e.g., ``DictionaryObject``, ``StreamObject``) to register.
+        :type obj: PdfObject
+        :return: A new indirect reference pointing to the registered object.
+        :rtype: IndirectObject
+        """
+        self.objects_map[self.next_id] = obj
+        obj.indirect_reference = IndirectObject(self.next_id, 0, self)
+        self.next_id += 1
+
+        return obj.indirect_reference
+
+    def get_object(self, indirect_reference: Union[int, IndirectObject]) -> PdfObject:
+        """
+        Resolves an indirect reference back to its underlying PDF raw object.
+
+        When an ``IndirectObject`` needs to evaluate its actual data (e.g., during
+        serialization or graph sweeping), it calls this method on its parent PDF/wrapper.
+
+        :param indirect_reference: The ID number or the ``IndirectObject`` instance to resolve.
+        :type indirect_reference: Union[int, IndirectObject]
+        :raises ValueError: If the provided ``IndirectObject`` belongs to a different wrapper or reader.
+        :return: The underlying PDF raw object stored in this wrapper.
+        :rtype: PdfObject
+        """
+        if isinstance(indirect_reference, int):
+            obj = self.objects_map[indirect_reference]
+        elif indirect_reference.pdf != self:
+            raise ValueError("Wrapper must be self")
+        else:
+            obj = self.objects_map[indirect_reference.idnum]
+        assert obj is not None, "mypy"
+        return obj
 
 class IncrementalPdfMerge:
     """
@@ -246,7 +308,7 @@ class IncrementalPdfMerge:
            tracking metadata (``/NM`` UUID, ``/M`` modification date).
         4. Page Attachment: Appends the annotation reference to the base page's
            ``/Annots`` array and flags the modified page (or ``/Annots`` array itself)
-           for the incremental update writer.
+           for the incremental update writing.
 
         :param overlay_pdf: A reader object containing the visual content to be stamped.
             It must contain the same number of pages as the current PDF.
@@ -265,7 +327,7 @@ class IncrementalPdfMerge:
         :rtype: tuple[PdfFileReader, dict[tuple[int, int], Any]]
         """
         pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
-        writer = PdfFileWriter()  #A temporary PdfFileWriter used to wrap new objects not to write them
+        indirect_obj_wrapper = IndirectObjectsWrapper()  # A temporary Wrapper for new objects, useful for the indirect sweep
         incremented_objects = {}
 
         for page_index in range(len(pdf_reader.pages)):
@@ -282,7 +344,7 @@ class IncrementalPdfMerge:
             overlay_resources = overlay_page.get(PG.RESOURCES, DictionaryObject())
             media_box = page.mediabox
 
-            # Create the Appearance Stream (The ReportLab Graphics)
+            # Create the Appearance Stream (The Overlay Graphics)
             appearance_stream = StreamObject()
             appearance_stream._data = content_stream.get_data()
             appearance_stream.update({
@@ -297,7 +359,7 @@ class IncrementalPdfMerge:
             })
 
             # Create the Annotation
-            appearance_stream_ref = writer._add_object(appearance_stream)
+            appearance_stream_ref = indirect_obj_wrapper.add_object(appearance_stream)
             annot_dict = DictionaryObject()
             annot_dict.update({
                 NameObject("/Type"): NameObject("/Annot"),
@@ -319,7 +381,7 @@ class IncrementalPdfMerge:
             })
 
             # Attach the Annotation to the Original Page
-            annot_ref = writer._add_object(annot_dict)
+            annot_ref = indirect_obj_wrapper.add_object(annot_dict)
             try:
                 raw_annots = page.raw_get(PG.ANNOTS)
             except KeyError:
@@ -1278,7 +1340,7 @@ class IncrementalPdfMerge:
 
         1. **Original PDF**: If the reference is tied to an existing, loaded document
            (i.e., ``indirect_obj.pdf`` is not None), it fetches the original object
-           directly from that reader or writer.
+           directly from that reader or wrapper.
         2. **Incremental Update Dictionary**: If the reference lacks a PDF reader attribute,
            it means it's a newly created or modified object. The method then retrieves
            the actual data from the ``incremented_objects`` tracking dictionary using

@@ -27,7 +27,6 @@ from odoo.addons.base.models.res_company import ResCompany
 from odoo.addons.base.models.res_users import ResUsers
 from odoo.tools.pdf import (
     PdfFileReader,
-    PdfFileWriter,
     IndirectObject,
     ArrayObject,
     DictionaryObject,
@@ -39,7 +38,7 @@ from odoo.tools.pdf import (
     create_string_object
 )
 
-from .incremental_pdf_merge import IncrementalPdfMerge, b_
+from .incremental_pdf_merge import IncrementalPdfMerge, IndirectObjectsWrapper, b_
 from .constants import TrailerKeys as TK, PageAttributes as PG, CatalogDictionary as CD, InteractiveFormDictEntries as IF
 
 _logger = logging.getLogger(__name__)
@@ -200,7 +199,7 @@ class PdfSigner:
         :param signed_by: Text identifier of the user who is signing this document.
         :type signed_by: str
         """
-        writer = PdfFileWriter()  # A temporary PdfFileWriter used to wrap new objects not to write them
+        indirect_obj_wrapper = IndirectObjectsWrapper()  # A temporary Wrapper for new objects, useful for the indirect sweep
         catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
 
         # --- 1. SETUP ACROFORM ---
@@ -210,7 +209,7 @@ class PdfSigner:
             acro_form.update({
                 NameObject(IF.SigFlags): NumberObject(3)
             })
-            catalog[NameObject(CD.ACRO_FORM)] = writer._add_object(acro_form)
+            catalog[NameObject(CD.ACRO_FORM)] = indirect_obj_wrapper.add_object(acro_form)
         else:
             acro_form_originally_exist = True
             acro_form = catalog[CD.ACRO_FORM].get_object()
@@ -341,9 +340,9 @@ class PdfSigner:
             NameObject("/M"): create_string_object(self.signing_time.strftime("D:%Y%m%d%H%M%SZ")),
         })
 
-        # Register objects with the temporary writer to get references
-        signature_annotation_ref = writer._add_object(signature_annotation)
-        signature_object_ref = writer._add_object(signature_object)
+        # Register objects with the temporary wrapper to get references
+        signature_annotation_ref = indirect_obj_wrapper.add_object(signature_annotation)
+        signature_object_ref = indirect_obj_wrapper.add_object(signature_object)
 
         # Link signature value dict to the field dict
         signature_annotation.update({
