@@ -11,4 +11,5 @@ from . import (
     test_create,
     test_domain,
     test_fields,
+    test_html_converter,
 )
