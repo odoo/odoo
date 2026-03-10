@@ -30,6 +30,7 @@ export class MOListViewDropdown extends BadgeField {
     }
 
     async reload(){
+        await this.props.record.load();
         await this.env.model.root.load();
         this.env.model.notify();
     }
@@ -44,7 +45,7 @@ export class MOListViewDropdown extends BadgeField {
         if (!selectedWorkorders || selectedWorkorders.length == 0) {
             selectedWorkorders = [this.props.record];
         }
-        let ids = selectedWorkorders.filter((wo) => !([state, 'done'].includes(wo.data.state) || wo.data.production_state == 'done')).map((wo) => wo.resId)
+        let ids = selectedWorkorders.filter((wo) => wo.data.production_state != 'done').map((wo) => wo.resId)
         if (ids && ids.length > 0) {
             await this.callOrm("set_state", [state], ids);
         }

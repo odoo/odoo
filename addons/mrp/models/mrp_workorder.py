@@ -76,7 +76,7 @@ class MrpWorkorder(models.Model):
         help='Slot into workcenter calendar once planned',
         check_company=True, copy=False)
     date_start = fields.Datetime(
-        'Start',
+        'Planned Date',
         compute='_compute_dates',
         inverse='_set_dates',
         store=True, copy=False)
@@ -163,7 +163,7 @@ class MrpWorkorder(models.Model):
     def set_state(self, state):
         ids_to_update = []
         for wo in self:
-            if wo.state == state or 'done' in (wo.state, wo.production_state):
+            if wo.state == state or wo.production_state == 'done':
                 continue
             if wo.state == 'progress':
                 wo.button_pending()
@@ -172,6 +172,9 @@ class MrpWorkorder(models.Model):
             ids_to_update.append(wo.id)
 
         wo_to_update = self.browse(ids_to_update)
+        if wo.state == 'done' and state != 'done':
+            wo_to_update.qty_produced = 0
+
         if state == 'cancel':
             wo_to_update.action_cancel()
         elif state == 'done':
