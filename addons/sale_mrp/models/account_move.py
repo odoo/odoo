@@ -28,7 +28,7 @@ class AccountMoveLine(models.Model):
                 reversal_cogs = posted_invoice_lines.move_id.reversal_move_ids.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
                 qty_invoiced -= sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in reversal_cogs])
 
-                moves = so_line.move_ids
+                moves = so_line.move_ids.filtered(lambda m: m.state == 'done')
                 average_price_unit = 0
                 # Components quantities for 1 'unit' in the product's base uom
                 components_qty = so_line._get_bom_component_qty(bom)
