@@ -8,7 +8,7 @@ from odoo import models
 from odoo.exceptions import MissingError, UserError
 from odoo.http import request
 from odoo.http.stream import Stream
-from odoo.tools import file_open, replace_exceptions
+from odoo.tools import file_open
 from odoo.tools.image import image_guess_size_from_field_name, image_process
 from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, get_extension, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
@@ -52,7 +52,9 @@ class IrBinary(models.AbstractModel):
         else:
             record = None
         if not record:
-            raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")  # pylint: disable=missing-gettext
+            raise MissingError(self.env._(
+                "No record found for xmlid=%(xmlid)s, res_model=%(res_model)s, id=%(res_id)s",
+                xmlid=xmlid, res_model=res_model, res_id=id))
         if access_token and verify_limited_field_access_token(record, field, access_token, scope="binary"):
             return record.sudo()
         if record._can_return_content(field, access_token):
@@ -115,18 +117,20 @@ class IrBinary(models.AbstractModel):
             couldn't be determined. By default it is
             ``application/octet-stream``.
         """
-        with replace_exceptions(ValueError, by=UserError(f'Expected singleton: {record}')):  # pylint: disable=missing-gettext
+        try:
             record.ensure_one()
-
+        except ValueError as exc:
+            raise UserError(self.env._(
+                "Expected singleton: %(record)s", record=record)) from exc
         try:
             field_def = record._fields[field_name]
         except KeyError:
-            raise UserError(f"Record has no field {field_name!r}.")  # pylint: disable=missing-gettext
+            raise UserError(self.env._("Record has no field “%s”", field_name))
         if field_def.type != 'binary':
-            raise UserError(  # pylint: disable=missing-gettext
-                f"Field {field_def!r} is type {field_def.type!r} but "
-                f"it is only possible to stream Binary or Image fields."
-            )
+            raise UserError(self.env._(
+                "Field “%(field)s” is type “%(field_type)s” but "
+                "it is only possible to stream Binary or Image fields.",
+                field=field_def, field_type=field_def.type))
 
         stream = self._record_to_stream(record, field_name)
 
