@@ -37,6 +37,13 @@ class TestWebsiteSaveXml(HttpCase):
             delayed_translation,
         )
 
+    def test_save_xml_draft(self):
+        live_arch = self.view.arch
+        with MockRequest(self.env, website=self.website):
+            self.WebsiteController.save_xml(self.view.id, '<div>DraftEN</div>', draft=True)
+        self.assertEqual(self.view.arch, live_arch)
+        self.assertIn('DraftEN', self.view.with_context(draft_preview=True).arch)
+
     def test_save_xml_disabled_delay_translations(self):
         """Test that disable_delay_translations disable delayed translation on save_xml call"""
         self.env['ir.config_parameter'].sudo().set_bool('website.disable_delay_translations', True)
