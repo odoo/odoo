@@ -138,6 +138,7 @@ class StockPickingType(models.Model):
              " * Always: a backorder is automatically created for the remaining products\n"
              " * Never: remaining products are cancelled")
     show_picking_type = fields.Boolean(compute='_compute_show_picking_type')
+    show_return_picking_type = fields.Boolean(compute='_compute_show_return_picking_type')
 
     picking_properties_definition = fields.PropertiesDefinition("Picking Properties")
     favorite_user_ids = fields.Many2many(
@@ -356,6 +357,11 @@ class StockPickingType(models.Model):
     def _compute_show_picking_type(self):
         for record in self:
             record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
+
+    @api.depends('code')
+    def _compute_show_return_picking_type(self):
+        for picking_type in self:
+            picking_type.show_return_picking_type = picking_type.code in ['incoming', 'outgoing', 'internal']
 
     def _compute_kanban_dashboard_graph(self):
         grouped_records = self._get_aggregated_records_by_date()

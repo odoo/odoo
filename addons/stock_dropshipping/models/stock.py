@@ -77,6 +77,10 @@ class StockPickingType(models.Model):
             if record.code == "dropship":
                 record.show_picking_type = True
 
+    def _compute_show_return_picking_type(self):
+        super()._compute_show_return_picking_type()
+        self.filtered(lambda pt: pt.code == 'dropship').show_return_picking_type = True
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'

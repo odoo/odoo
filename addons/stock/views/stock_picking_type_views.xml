@@ -102,7 +102,7 @@
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field invisible="code not in ['incoming', 'outgoing', 'internal']" name="return_picking_type_id" string="Returns Type"/>
+                                    <field invisible="not show_return_picking_type" name="return_picking_type_id" string="Returns Type"/>
                                     <field name="create_backorder"/>
                                     <field name="move_type" help="Unless previously specified by the source document, this will be the default shipping policy for this operation type." invisible="code != 'internal'"/>
                                 </group>
