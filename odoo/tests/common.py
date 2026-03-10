@@ -2637,9 +2637,7 @@ class HttpCase(TransactionCase):
         `browser_js` can be passed as keyword arguments."""
         options = {
             'stepDelay': step_delay or 0,
-            'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
-            'startUrl': url_path,
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")

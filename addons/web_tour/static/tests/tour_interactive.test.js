@@ -20,6 +20,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");
 
@@ -43,7 +44,7 @@ class Product extends models.Model {
     _records = [{ name: "A" }, { name: "B" }];
 }
 
-defineModels([Partner, Product]);
+defineModels([Partner, Product, Tour, TourStep]);
 
 class Counter extends Component {
     static props = ["*"];
@@ -85,13 +86,6 @@ beforeEach(() => {
         return (nextTour && { name: nextTour.at(0) }) || false;
     });
     onRpc("res.users", "switch_tour_enabled", () => true);
-    onRpc("web_tour.tour", "get_tour_json_by_name", () => ({
-        name: "tour1",
-        steps: [
-            { trigger: "button.foo", run: "click" },
-            { trigger: "button.bar", run: "click" },
-        ],
-    }));
 });
 
 after(() => {
@@ -99,6 +93,7 @@ after(() => {
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
+    Tour._records = [{ name: "tour1" }];
     patchWithCleanup(session, { tour_enabled: true });
     class Root extends Component {
         static components = { Counter };
@@ -126,6 +121,7 @@ test("registering test tour after service is started doesn't auto-start the tour
 });
 
 test("perform edit on next step", async () => {
+    Tour._records = [{ name: "giro_d_italia" }];
     registry.category("web_tour.tours").add("giro_d_italia", {
         steps: () => [
             {
@@ -162,6 +158,7 @@ test("perform edit on next step", async () => {
 });
 
 test("manual tour with inactive steps", async () => {
+    Tour._records = [{ name: "tour_de_wallonie" }];
     registry.category("web_tour.tours").add("tour_de_wallonie", {
         steps: () => [
             {
@@ -229,26 +226,34 @@ test("manual tour with alternative trigger", async () => {
             !s.includes("═") ? expect.step(s) : "";
         },
     });
-    registry.category("web_tour.tours").add("tour_des_flandres_2", {
-        steps: () => [
-            {
-                trigger: ".button1, .button2",
-                run: "click",
-            },
-            {
-                trigger: "body:not(:visible), .button4, .button3",
-                run: "click",
-            },
-            {
-                trigger: ".interval1, .interval2, .button5",
-                run: "click",
-            },
-            {
-                trigger: "button:contains(0, hello):enabled, button:contains(2, youpi)",
-                run: "click",
-            },
-        ],
-    });
+    TourStep._records = [
+        {
+            tour_id: 1,
+            trigger: ".button1, .button2",
+            run: "click",
+        },
+        {
+            tour_id: 1,
+            trigger: "body:not(:visible), .button4, .button3",
+            run: "click",
+        },
+        {
+            tour_id: 1,
+            trigger: ".interval1, .interval2, .button5",
+            run: "click",
+        },
+        {
+            tour_id: 1,
+            trigger: "button:contains(0, hello):enabled, button:contains(2, youpi)",
+            run: "click",
+        },
+    ];
+    Tour._records = [
+        {
+            id: 1,
+            name: "tour_des_flandres_2",
+        },
+    ];
     class Root extends Component {
         static components = {};
         static template = xml/*html*/ `
@@ -275,6 +280,7 @@ test("manual tour with alternative trigger", async () => {
 });
 
 test("Tour backward when the pointed element disappear", async () => {
+    Tour._records = [{ name: "tour1" }];
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: "button.foo", run: "click" },
@@ -317,6 +323,17 @@ test("Tour backward when the pointed element disappear", async () => {
 });
 
 test("Tour backward when the pointed element disappear and ignore warn step", async () => {
+    Tour._records = [
+        {
+            id: 1,
+            name: "tour1",
+        },
+    ];
+    TourStep._records = [
+        { trigger: "button.foo", run: "click", tour_id: 1 },
+        { trigger: "button.foo", tour_id: 1 },
+        { trigger: "button.bar", run: "click", tour_id: 1 },
+    ];
     patchWithCleanup(console, {
         warn: (msg) => expect.step(msg),
     });
@@ -365,6 +382,17 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
 });
 
 test("Tour started by the URL", async () => {
+    Tour._records = [
+        {
+            id: 1,
+            name: "tour1",
+        },
+    ];
+    TourStep._records = [
+        { trigger: "button.foo", run: "click", tour_id: 1 },
+        { trigger: "button.foo", tour_id: 1 },
+        { trigger: "button.bar", run: "click", tour_id: 1 },
+    ];
     browser.location.href = `${browser.location.origin}?tour=tour1`;
 
     class Dummy extends Component {
@@ -392,10 +420,10 @@ test("Tour started by the URL", async () => {
 });
 
 test("Log a warning if step ignored", async () => {
+    Tour._records = [{ name: "tour1" }];
     patchWithCleanup(console, {
         warn: (msg) => expect.step(msg),
     });
-
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: "button.foo", run: "click" },
@@ -432,6 +460,7 @@ test("Log a warning if step ignored", async () => {
 });
 
 test("check alternative trigger that appear after the initial trigger", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
@@ -464,6 +493,7 @@ test("check alternative trigger that appear after the initial trigger", async ()
 });
 
 test("validating edit step on autocomplete by selecting autocomplete item", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
@@ -498,6 +528,7 @@ test("validating edit step on autocomplete by selecting autocomplete item", asyn
 });
 
 test("validating edit step on autocomplete by selecting autocomplete item (validate automatically autocomplete item step)", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
@@ -536,6 +567,7 @@ test("validating edit step on autocomplete by selecting autocomplete item (valid
 });
 
 test("validating click on autocomplete item by pressing Enter", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
@@ -575,6 +607,7 @@ test("validating click on autocomplete item by pressing Enter", async () => {
 });
 
 test("Tour don't backward when dropdown loading", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     Product._records = [{ name: "Harry test 1" }, { name: "Harry test 2" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
@@ -636,6 +669,7 @@ test("Tour don't backward when dropdown loading", async () => {
 });
 
 test("Don't backward when action manager is busy", async () => {
+    Tour._records = [{ name: "tour1" }];
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: "button.foo", run: "click" },
@@ -692,6 +726,7 @@ test("Don't backward when action manager is busy", async () => {
 });
 
 test("check rainbowManMessage", async () => {
+    Tour._records = [{ name: "rainbow_tour" }];
     registry.category("web_tour.tours").add("rainbow_tour", {
         steps: () => [
             {
@@ -736,6 +771,7 @@ test("check rainbowManMessage", async () => {
 });
 
 test("pointer hidden when trigger is behind overlay", async () => {
+    Tour._records = [{ name: "tour1" }];
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [{ trigger: "button.foo", run: "click" }],
     });

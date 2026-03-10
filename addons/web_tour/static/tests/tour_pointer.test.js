@@ -11,6 +11,7 @@ import {
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
+    defineModels,
     getService,
     mountWithCleanup,
     onRpc,
@@ -19,6 +20,7 @@ import {
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");
 
@@ -68,9 +70,11 @@ after(() => {
     TourInteractive.observer.disconnect();
 });
 
+defineModels([Tour, TourStep]);
+
 test("scrolling to next step should update the pointer's height", async (assert) => {
     disableAnimations();
-
+    Tour._records = [{ name: "tour_de_france" }];
     const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
         steps: () => [
@@ -144,6 +148,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
 });
 
 test("should show only 1 pointer at a time", async () => {
+    Tour._records = [{ name: "milan_sanremo" }, { name: "paris_roubaix" }];
     registry.category("web_tour.tours").add("milan_sanremo", {
         steps: () => [
             {
@@ -184,6 +189,7 @@ test("should show only 1 pointer at a time", async () => {
 });
 
 test("hovering to the anchor element should show the content and not when content empty", async () => {
+    Tour._records = [{ name: "la_vuelta" }];
     registry.category("web_tour.tours").add("la_vuelta", {
         steps: () => [
             {
@@ -232,12 +238,19 @@ test("hovering to the anchor element should show the content and not when conten
 });
 
 test("pointer is added on top of overlay's stack", async () => {
-    registry.category("web_tour.tours").add("tour1", {
-        steps: () => [
-            { trigger: ".modal .a", run: "click" },
-            { trigger: ".modal .btn-close", run: "click" },
-        ],
-    });
+    TourStep._records = [
+        {
+            tour_id: 1,
+            trigger: ".modal .a",
+            run: "click",
+        },
+        {
+            tour_id: 1,
+            trigger: ".modal .btn-close",
+            run: "click",
+        },
+    ];
+    Tour._records = [{ name: "tour1" }];
     class DummyDialog extends Component {
         static props = ["*"];
         static components = { Dialog };
@@ -275,6 +288,7 @@ test("pointer is added on top of overlay's stack", async () => {
 });
 
 test("next step with new anchor at same position", async () => {
+    Tour._records = [{ name: "tour1" }];
     tourRegistry.add("tour1", {
         steps: () => [
             { trigger: "button.foo", run: "click" },
@@ -332,6 +346,7 @@ test("next step with new anchor at same position", async () => {
 });
 
 test("points to next step", async () => {
+    Tour._records = [{ name: "tour1" }];
     tourRegistry.add("tour1", {
         steps: () => [
             {
@@ -359,6 +374,7 @@ test("points to next step", async () => {
 });
 
 test("scroller pointer to reach next step", async () => {
+    Tour._records = [{ name: "tour_des_flandres" }];
     disableAnimations();
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
@@ -411,6 +427,7 @@ test("scroller pointer to reach next step", async () => {
 });
 
 test("scroller pointer to reach next step (X axis)", async () => {
+    Tour._records = [{ name: "tour_des_flandres" }];
     disableAnimations();
     patchWithCleanup(Element.prototype, {
         scrollIntoView(options) {
@@ -467,6 +484,7 @@ test("scroller pointer to reach next step (X axis)", async () => {
 });
 
 test("check tooltip position", async () => {
+    Tour._records = [{ name: "tour_des_tooltip" }];
     registry.category("web_tour.tours").add("tour_des_tooltip", {
         steps: () => [
             {
@@ -564,6 +582,7 @@ test("check tooltip position", async () => {
 });
 
 test("check drop zone", async () => {
+    Tour._records = [{ name: "tour_des_drag_and_drop" }];
     registry.category("web_tour.tours").add("tour_des_drag_and_drop", {
         steps: () => [
             {

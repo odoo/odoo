@@ -81,7 +81,7 @@ export class TourService {
 
         const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
         if (paramsTourName) {
-            this.startTour(paramsTourName, { mode: "manual", fromDB: true });
+            this.startTour(paramsTourName, { mode: "manual" });
         }
 
         if (tourState.getCurrentTour()) {
@@ -159,35 +159,38 @@ export class TourService {
      * @param {string} name The name of the tour
      */
     async getTour(name, options) {
-        if (options.mode !== "manual") {
-            await this.waitUntilTourRegistered(name);
-        }
-        let tour = tourRegistry.get(name, null);
-        if (options.mode === "manual" && options.fromDB) {
-            tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+        // Onboarding tour (come from database (.xml files))
+        if (options.mode === "manual") {
+            const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
             if (!tour) {
                 throw new Error(`Tour '${name}' is not found in the database.`);
             }
-
             if (!tour.steps.length && tourRegistry.contains(tour.name)) {
                 tour.steps = tourRegistry.get(tour.name).steps;
             }
+            return {
+                ...tour,
+                steps:
+                    typeof tour.steps === "function"
+                        ? tour.steps()
+                        : Array.isArray(tour.steps)
+                        ? tour.steps
+                        : [],
+            };
         }
-        if (!tour) {
-            return undefined;
+        // Automatic tour (come from registry)
+        else {
+            await this.waitUntilTourRegistered(name);
+            const tour = tourRegistry.get(name, null);
+            if (!tour) {
+                throw new Error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
+            }
+            return {
+                ...tour,
+                name,
+                steps: tour.steps(),
+            };
         }
-        const url = options.fromDB ? options.url : tour.url;
-        return {
-            ...tour,
-            name,
-            url,
-            steps:
-                typeof tour.steps === "function"
-                    ? tour.steps()
-                    : Array.isArray(tour.steps)
-                    ? tour.steps
-                    : [],
-        };
     }
 
     /**
@@ -222,9 +225,6 @@ export class TourService {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
         const tour = await this.getTour(tourName, tourConfig);
-        if (!tour) {
-            return;
-        }
 
         tour.steps.forEach((step) => this.validateStep(step));
 
@@ -245,7 +245,6 @@ export class TourService {
                 TourPointer,
                 {
                     pointerState,
-                    bounce: !(tourConfig.mode === "auto" && tourConfig.keepWatchBrowser),
                 },
                 {
                     sequence: 1100, // sequence based on bootstrap z-index values.
@@ -281,16 +280,11 @@ export class TourService {
 
     /**
      * Starts manual or automatic tour.
-     * This retrieves a tour from the internal registry or from the database
-     * if `options.fromDB` is set.
-     *
      * @param {string} name - The name of the tour to start.
      * @param {Object} [options={}] - Options to customize the tour start.
-     * @param {boolean} [options.fromDB=false] - Whether the tour should be loaded from the database.
      * @param {string} [options.url] - URL to start the tour.
      * @param {"auto"|"manual"} [options.mode="auto"] - Tour start mode ("auto" or "manual").
      * @param {number} [options.stepDelay=0] - Delay between each tour step.
-     * @param {boolean} [options.keepWatchBrowser=false] - Whether to keep watching the browser continuously.
      * @param {number} [options.showPointerDuration=0] - Duration to show the pointer on each step.
      * @param {boolean} [options.debug=false] - Enables debug mode for the tour.
      * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
@@ -299,9 +293,7 @@ export class TourService {
         this.removePointer();
         this.removeTourRecorder();
         const tour = await this.getTour(name, options);
-        if (!tour) {
-            return;
-        }
+
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
                 !this.toursEnabled,
@@ -310,7 +302,6 @@ export class TourService {
 
         const tourConfig = {
             stepDelay: 0,
-            keepWatchBrowser: false,
             mode: "auto",
             showPointerDuration: 0,
             debug: false,
@@ -323,7 +314,7 @@ export class TourService {
         tourState.setCurrentTour(name);
         tourState.setCurrentIndex(0);
 
-        if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
+        if (tourConfig.mode === "manual" && tour.url && tourConfig.redirect) {
             redirect(tour.url);
         } else {
             await this.resumeTour();

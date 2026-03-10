@@ -40,6 +40,7 @@ Odoo Web tours.
             ('include', 'web_tour.recorder'),
             ('include', 'web_tour.automatic'),
             ('include', 'web_tour.interactive'),
+            'web_tour/static/tests/tour_models.js',
             'web_tour/static/tests/*.test.js',
         ],
         "web.assets_tests": [
