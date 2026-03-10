@@ -6,7 +6,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="props.model"/>`;
@@ -42,7 +42,15 @@ export async function mountSpreadsheet(model) {
  * Mount public spreadsheet component with the given data
  * @returns {Promise<HTMLElement>}
  */
+<<<<<<< d1bcf1a103097533072ac59b6dd5aac8a244f445
 export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "downloadUrl") {
+||||||| 8e9fcb72d3bb8b385a02653a5e3fd2f2b3b79f21
+export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "") {
+=======
+export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "") {
+    const env = getMockEnv();
+    env.isFrozenSpreadsheet = () => true;
+>>>>>>> 67738201e0fdae338c6b6cb7820bc8cd098f124b
     mountWithCleanup(PublicReadonlySpreadsheet, {
         props: {
             dataUrl,
@@ -50,6 +58,7 @@ export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "
             mode,
         },
         noMainContainer: true,
+        env,
     });
     await animationFrame();
     return getFixture();
