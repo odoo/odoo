@@ -60,7 +60,7 @@
         </t>
     </BuilderRow>
 
-    <BuilderRow t-if="isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
         <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
             <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
@@ -196,7 +196,7 @@
     </BuilderRow>
 
     <BuilderContext
-            t-if="isActiveItem('attributes_opt') or isActiveItem('attributes_opt_top')"
+            t-if="this.isActiveItem('attributes_opt') or this.isActiveItem('attributes_opt_top')"
             action="'websiteConfig'"
     >
         <BuilderRow label.translate="Price" level="1">
@@ -210,7 +210,7 @@
 
     <t t-set="CollapsibleSidebarViews" t-value="['website_sale.products_categories_list_collapsible', 'website_sale.products_attributes_collapsible']"/>
     <BuilderRow
-            t-if="isActiveItem('attributes_opt') or isActiveItem('categories_opt')"
+            t-if="this.isActiveItem('attributes_opt') or this.isActiveItem('categories_opt')"
             label.translate="Collapse sidebar sections"
     >
         <BuilderCheckbox
@@ -226,7 +226,7 @@
     </BuilderRow>
 
     <BuilderRow
-            t-if="isActiveItem('attributes_opt_top') or isActiveItem('search_top_opt') or isActiveItem('sort_top_opt')"
+            t-if="this.isActiveItem('attributes_opt_top') or this.isActiveItem('search_top_opt') or this.isActiveItem('sort_top_opt')"
             label.translate="Floating"
             tooltip.translate="Floating sticky Toolbar"
             level="1"
@@ -245,7 +245,7 @@
 
     <BuilderRow label.translate="Default Sort" level="1">
         <BuilderSelect action="'setDefaultSort'">
-            <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
+            <t t-foreach="this.products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
                 <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
             </t>
         </BuilderSelect>
