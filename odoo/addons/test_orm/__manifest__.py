@@ -19,6 +19,7 @@
         'data/test_action_bindings.xml',
         'data/test_translated_field/test_model_data.xml',
         'data/test_domain.xml',
+        'data/test_fields.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
@@ -31,6 +32,7 @@
         'security/test_convert_env/ir.model.access.csv',
         'security/test_create/ir.model.access.csv',
         'security/test_domain/ir.model.access.csv',
+        'security/test_fields/ir.model.access.csv',
 
         # VIEWS
     ],

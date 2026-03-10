@@ -1,34 +1,34 @@
 <odoo>
     <data>
-        <record id="category_0" model="test_domain.category">
+        <record id="test_domain_category_0" model="test_domain.category">
             <field name="name">Chat</field>
         </record>
-        <record id="category_0_0" model="test_domain.category">
+        <record id="test_domain_category_0_0" model="test_domain.category">
             <field name="name">Foolish</field>
-            <field name="parent" ref="category_0"/>
+            <field name="parent" ref="test_domain_category_0"/>
         </record>
 
-        <record id="discussion_0" model="test_domain.discussion">
+        <record id="test_domain_discussion_0" model="test_domain.discussion">
             <field name="name">Stuff</field>
             <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
         </record>
 
-        <record id="message_0_0" model="test_domain.message">
-            <field name="discussion" ref="discussion_0"/>
+        <record id="test_domain_message_0_0" model="test_domain.message">
+            <field name="discussion" ref="test_domain_discussion_0"/>
             <field name="body">Hey dude!</field>
             <field name="label">hello</field>
         </record>
-        <record id="message_0_1" model="test_domain.message">
-            <field name="discussion" ref="discussion_0"/>
+        <record id="test_domain_message_0_1" model="test_domain.message">
+            <field name="discussion" ref="test_domain_discussion_0"/>
             <field name="body">What's up?</field>
         </record>
-        <record id="message_0_2" model="test_domain.message">
-            <field name="discussion" ref="discussion_0"/>
+        <record id="test_domain_message_0_2" model="test_domain.message">
+            <field name="discussion" ref="test_domain_discussion_0"/>
             <field name="body">This is a much longer message</field>
         </record>
 
-        <record id="emailmessage_0_0" model="test_domain.emailmessage">
-            <field name="message" ref="message_0_0"/>
+        <record id="test_domain_emailmessage_0_0" model="test_domain.emailmessage">
+            <field name="message" ref="test_domain_message_0_0"/>
             <field name="email_to">first@example.localhost</field>
         </record>
         
