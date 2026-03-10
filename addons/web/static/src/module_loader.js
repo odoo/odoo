@@ -206,6 +206,13 @@
             }
         }
 
+        /**
+         * @param {string} dependency
+         */
+        require(dependency) {
+            return this.modules.get(dependency);
+        }
+
         /** @type {OdooModuleLoader["startModules"]} */
         startModules() {
             let job;
@@ -216,14 +223,12 @@
 
         /** @type {OdooModuleLoader["startModule"]} */
         startModule(name) {
-            /** @type {(dependency: string) => OdooModule} */
-            const require = (dependency) => this.modules.get(dependency);
             this.jobs.delete(name);
             const factory = this.factories.get(name);
             /** @type {OdooModule | null} */
             let module = null;
             try {
-                module = factory.fn(require);
+                module = factory.fn(this.require.bind(this));
             } catch (error) {
                 this.failed.add(name);
                 throw new Error(`Error while loading "${name}":\n${error}`);
