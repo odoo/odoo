@@ -10,6 +10,7 @@ APP_DB_HOST="${APP_DB_HOST:-127.0.0.1}"
 APP_DB_PORT="${APP_DB_PORT:-5432}"
 APP_DB_USER="${APP_DB_USER:-kodoo}"
 APP_DB_PASSWORD="${APP_DB_PASSWORD:-}"
+APP_HTTP_PORT="${APP_HTTP_PORT:-8070}"
 
 require_value() {
     local name="$1"
@@ -46,7 +47,7 @@ addons_path = addons,custom_addons,custom_addons/knowledge,custom_addons/om_acco
 proxy_mode = False
 list_db = True
 
-http_port = 8069
+http_port = $APP_HTTP_PORT
 http_interface = 127.0.0.1
 
 workers = 0

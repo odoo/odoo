@@ -21,6 +21,7 @@ TUI_VENV ?= .venv-tui
 TUI_REQUIREMENTS ?= requirements-tui.txt
 TUI_REFRESH_SECONDS ?= 3
 TUI_LOG_LINES ?= 20
+WEBSOCKET_TEST_KEY ?= dGhlIHNhbXBsZSBub25jZQ==
 PUBLIC_HTTP_PORT ?= 80
 PUBLIC_HTTPS_PORT ?= 443
 LOCAL_BIND_HOST ?= 127.0.0.1
@@ -39,15 +40,19 @@ DEV_HOST_CONFIG ?= deploy/odoo/kodoo.dev-host.local.conf
 DEV_HOST_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-host.conf.example
 DEV_HOST_DB ?= kodoo
 DEV_HOST_TEST_DB ?= ktest
+DEV_HOST_HTTP_PORT ?= 8070
 DEV_HOST_LOG_PATH ?= logs/odoo-dev-host.log
 DEV_HOST_PID_FILE ?= logs/odoo-dev-host.pid
 DEV_HOST_ADMIN_PASSWORD ?=
 DEV_PROJECT_CONFIG ?= deploy/odoo/kodoo.dev-project.local.conf
 DEV_PROJECT_CONFIG_EXAMPLE ?= deploy/odoo/kodoo.dev-project.conf.example
 DEV_PROJECT_DB ?= ktest
+DEV_PROJECT_HTTP_PORT ?= 8071
 DEV_PROJECT_LOG_PATH ?= logs/odoo-dev-project.log
 DEV_PROJECT_PID_FILE ?= logs/odoo-dev-project.pid
 DEV_PROJECT_ADMIN_PASSWORD ?=
+DEV_UPGRADE_DB ?= $(DEV_HOST_TEST_DB)
+DEV_MODULES ?= gov_compras
 DOCKER_DB_BIND_HOST ?= 127.0.0.1
 DOCKER_DB_HOST_PORT ?= 5433
 PG_LOCAL_SERVICE ?= postgresql
@@ -83,7 +88,7 @@ CONFIG_FIND_CMD = find . \
 	tui tui-live tui-install tui-menu tui-doctor \
 	odoo-tui odoo-shell odoo-fix-url \
 	dev-host-db-setup dev-host-db-init dev-host-test-init \
-	dev-host-up dev-host-stop dev-host-logs dev-host-status \
+	dev-host-up dev-host-stop dev-host-logs dev-host-status dev-host-upgrade \
 	dev-project-config dev-project-db-setup dev-project-db-init \
 	dev-project-up dev-project-stop dev-project-logs dev-project-status \
 	dev-host-backup dev-host-restore-ktest \
@@ -114,18 +119,15 @@ help:
 	@echo "  make logs-project   # Tail logs for the host-backend + Docker DB mode"
 	@echo ""
 	@echo "Stacks:"
-	@echo "  make up             # Start secure stack (db/odoo/nginx/ollama)"
-	@echo "  make up-cpu         # Same as up (CPU mode default for Ollama)"
-	@echo "  make up-gpu         # Start stack with optional Ollama GPU override"
+	@echo "  make up             # Start the local/home stack (not the public internet path)"
+	@echo "  make up-cpu         # Same as up (CPU mode default for Ollama; local/home)"
+	@echo "  make up-gpu         # Start local/home stack with optional Ollama GPU override"
 	@echo "  make up-local       # Local dev via nginx on $(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT) (websocket-safe)"
 	@echo "  make down-local     # Stop local-dev stack"
 	@echo "  make logs-local     # Tail local-dev logs (nginx + odoo + db + ollama)"
-	@echo "  make up-cloudflare  # Cloudflare DNS proxy mode (no tunnel, uses nginx 80/443)"
-	@echo "  make down-cloudflare# Stop Cloudflare DNS proxy mode stack"
-	@echo "  make logs-cloudflare# Tail nginx + odoo logs for Cloudflare DNS proxy mode"
 	@echo "  make up-insecure    # Quick test: expose Odoo 8069/8072 (UNSAFE)"
 	@echo "  make down-insecure  # Stop insecure stack"
-	@echo "  make up-tunnel      # Cloudflare Tunnel mode + local URL ($(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT))"
+	@echo "  make up-tunnel      # Default internet publishing path via Cloudflare Tunnel"
 	@echo "  make down-tunnel    # Stop Cloudflare Tunnel mode stack"
 	@echo "  make logs-tunnel    # Tail cloudflared + nginx + odoo logs"
 	@echo "  make up-lean-tunnel # Lean Tunnel: local HTTP (80/8069) + CF Tunnel Internet"
@@ -159,8 +161,6 @@ help:
 
 	@echo "  make dev-host-config # Generate $(DEV_HOST_CONFIG) from local secrets"
 	@echo "  make dev-project-config # Generate $(DEV_PROJECT_CONFIG) from local secrets"
-	@echo "  make certbot        # Issue cert (only for direct public IP mode)"
-	@echo "  make certbot-renew  # Renew certs and reload nginx"
 	@echo "  make odoo-fix-url   # Force Odoo base URL to https://$(DOMAIN)"
 	@echo ""
 	@echo "Database:"
@@ -174,19 +174,19 @@ help:
 	@echo "  make stop           # Stop all modes and free service ports ($(STOP_PORTS))"
 	@echo "  make odoo-tui       # Open interactive terminal inside Odoo container"
 	@echo "  make odoo-shell     # Open Odoo interactive shell (DB=$(DB))"
-	@echo "  make probe          # Probe nginx ACME webroot locally"
 	@echo ""
 	@echo "Dev Host:"
 	@echo "  make dev-host-db-setup # Prepare local PostgreSQL with $(DEV_HOST_DB) and $(DEV_HOST_TEST_DB)"
 	@echo "  make dev-host-db-init  # Initialize local Odoo schema in $(DEV_HOST_DB)"
 	@echo "  make dev-host-test-init # Initialize local Odoo schema in $(DEV_HOST_TEST_DB)"
-	@echo "  make dev-host-up    # Run Odoo on host using local PostgreSQL"
+	@echo "  make dev-host-up    # Run Odoo on host using local PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"
+	@echo "  make dev-host-upgrade # Upgrade $(DEV_MODULES) on $(DEV_UPGRADE_DB) without opening HTTP"
 	@echo "  make dev-host-stop  # Stop local host-run Odoo"
 	@echo "  make dev-host-logs  # Tail local host-run Odoo log"
 	@echo "  make dev-host-status # Check local host-run Odoo status"
-	@echo "  make dev-project-db-setup # Start Docker PostgreSQL and ensure $(DEV_PROJECT_DB) exists"
+	@echo "  make dev-project-db-setup # Start Docker PostgreSQL and ensure $(DEV_PROJECT_DB) exists (shares Docker DB service)"
 	@echo "  make dev-project-db-init # Initialize local Odoo schema in $(DEV_PROJECT_DB)"
-	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL"
+	@echo "  make dev-project-up # Run Odoo on host against Docker PostgreSQL on $(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT) (maintenance path)"
 	@echo "  make dev-project-stop # Stop host-run Odoo and Docker PostgreSQL"
 	@echo "  make dev-project-logs # Tail host-run Odoo log for project mode"
 	@echo "  make dev-project-status # Check host-run Odoo and Docker PostgreSQL status"
@@ -200,7 +200,7 @@ help:
 	@echo "Utility:"
 	@echo "  make doctor         # Check OS/WSL/GPU/Docker status"
 	@echo "  make deps-install   # Install only required host deps (OS-aware, GPU-aware)"
-	@echo "  make up-smoke       # Start default stack and run smoke checks"
+	@echo "  make up-smoke       # Start tunnel/public stack and run smoke checks"
 	@echo "  make odoo-lnav      # Run local Odoo and tail logs with lnav or tail"
 	@echo "  make tui            # Open the live diagnostics TUI (fallback: shell menu)"
 	@echo "  make tui-live       # Open the Textual diagnostics dashboard"
@@ -227,12 +227,12 @@ help:
 	@echo "  make config-view FILE=.env.make"
 	@echo "  make config-edit"
 	@echo "  make config-create FILE=deploy/odoo/custom.local.conf"
-	@echo "  edit .env.make, then make prod-config"
-	@echo "  edit .env.make, then make certbot"
-	@echo "  make up-cloudflare"
 	@echo "  edit .env.make, then make up-tunnel"
+	@echo "  make logs-tunnel"
+	@echo "  edit .env.make, then make prod-config"
 	@echo "  edit .env.make, then make dev-host-config"
 	@echo "  make dev-host-db-setup dev-host-up"
+	@echo "  make dev-host-upgrade DEV_MODULES=gov_compras DEV_UPGRADE_DB=ktest"
 	@echo "  edit .env.make, then make dev-project-up"
 	@echo "  make tui-install && make tui-live"
 	@echo "  make mobile-install mobile-add-android mobile-open-android"
@@ -456,6 +456,7 @@ dev-host-config:
 	APP_DB_PORT="$(PG_LOCAL_PORT)" \
 	APP_DB_USER="$(PG_LOCAL_USER)" \
 	APP_DB_PASSWORD="$(PG_LOCAL_PASSWORD)" \
+	APP_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
 	./scripts/render-dev-host-config.sh
 	@chmod 644 "$(DEV_HOST_CONFIG)"
 	@echo "Generated $(DEV_HOST_CONFIG) from .env.make (chmod 644)."
@@ -467,12 +468,13 @@ dev-project-config:
 	APP_DB_PORT="$(DOCKER_DB_HOST_PORT)" \
 	APP_DB_USER="$(PROD_DB_USER)" \
 	APP_DB_PASSWORD="$(PROD_DB_PASSWORD)" \
+	APP_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
 	./scripts/render-dev-host-config.sh
 	@chmod 644 "$(DEV_PROJECT_CONFIG)"
 	@echo "Generated $(DEV_PROJECT_CONFIG) from .env.make (chmod 644)."
 # Equivalent to scripts/start-with-lnav.ps1 for Linux/WSL environments.
 odoo-lnav:
-	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
 	@mkdir -p "$$(dirname "$(LOG_PATH)")"
 	@echo "Starting Odoo ($(DB)) -> $(LOG_PATH)"
 	@nohup $(PYTHON) $(ODOO_BIN) -c $(CONFIG) -d $(DB) --logfile="$(LOG_PATH)" --log-level=info >/dev/null 2>&1 &
@@ -606,14 +608,14 @@ smoke-project:
 	  echo "FAIL: host Odoo process for project mode is not running."; \
 	  exit 1; \
 	fi; \
-	code="$$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo" || true)"; \
+	code="$$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$(DEV_PROJECT_HTTP_PORT)/odoo" || true)"; \
 	if [ "$$code" != "200" ] && [ "$$code" != "303" ]; then \
 	  echo "FAIL: local endpoint returned HTTP $$code."; \
 	  exit 1; \
 	fi; \
 	echo "OK: Docker PostgreSQL is running."; \
 	echo "OK: host Odoo is running."; \
-	echo "OK: local endpoint http://127.0.0.1:$(LOCAL_HTTP_PORT)/odoo HTTP $$code."
+	echo "OK: local endpoint http://127.0.0.1:$(DEV_PROJECT_HTTP_PORT)/odoo HTTP $$code."
 
 troubleshoot-project:
 	@set +e; \
@@ -684,19 +686,18 @@ logs:
 	@$(COMPOSE) logs -f --tail=120 odoo nginx
 
 probe:
-	@$(COMPOSE) exec nginx sh -c 'mkdir -p /var/www/certbot/.well-known/acme-challenge && printf ok >/var/www/certbot/.well-known/acme-challenge/probe'
-	@curl -i "http://127.0.0.1:$(PUBLIC_HTTP_PORT)/.well-known/acme-challenge/probe"
+	@echo "ACME/certbot probe is disabled for now."
+	@echo "Public publishing uses Cloudflare Tunnel: make up-tunnel"
+	@exit 1
 
 certbot:
-	@if [ "$(EMAIL)" = "[EMAIL_ADDRESS]" ]; then \
-	        echo "ERROR: EMAIL is not set in .env.make. Certbot requires a valid email."; \
-	        exit 1; \
-	fi
-	@$(COMPOSE) --profile certbot run --rm certbot certonly --webroot -w /var/www/certbot -d "$(DOMAIN)" -d "www.$(DOMAIN)" --email "$(EMAIL)" --agree-tos --no-eff-email
-	@$(COMPOSE) restart nginx
+	@echo "Certbot/direct TLS mode is disabled for now."
+	@echo "Supported public publish path: make up-tunnel"
+	@exit 1
 certbot-renew:
-	@$(COMPOSE) --profile certbot run --rm certbot renew --webroot -w /var/www/certbot
-	@$(COMPOSE) exec nginx nginx -s reload
+	@echo "Certbot renewal is disabled because certbot is not in use right now."
+	@echo "Supported public publish path: make up-tunnel"
+	@exit 1
 
 db-init:
 	@$(MAKE) prod-config
@@ -740,7 +741,7 @@ dev-host-test-init:
 	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_HOST_TEST_DB)" -i base --without-demo=all --stop-after-init
 
 dev-host-up:
-	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT) $(INSECURE_EVENTED_PORT)"
+	@$(MAKE) ports-clean PORTS="$(DEV_HOST_HTTP_PORT)"
 	@$(MAKE) dev-host-db-setup
 	@$(MAKE) dev-host-config
 	@PYTHON_BIN="$(PYTHON)" \
@@ -748,6 +749,7 @@ dev-host-up:
 	ODOO_DEV_DB="$(DEV_HOST_DB)" \
 	ODOO_DEV_LOG_PATH="$(DEV_HOST_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_HOST_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(DEV_HOST_HTTP_PORT)" \
 	./scripts/dev-host-start.sh
 
 dev-host-stop:
@@ -762,6 +764,7 @@ dev-host-status:
 	@set -e; \
 	if [ -f "$(DEV_HOST_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_HOST_PID_FILE)")" 2>/dev/null; then \
 	  echo "Odoo host dev is running with PID $$(cat "$(DEV_HOST_PID_FILE)")"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_HOST_HTTP_PORT)"; \
 	else \
 	  echo "Odoo host dev is not running."; \
 	fi; \
@@ -769,7 +772,13 @@ dev-host-status:
 	  systemctl is-active "$(PG_LOCAL_SERVICE)" >/dev/null 2>&1 && echo "PostgreSQL service $(PG_LOCAL_SERVICE): active" || echo "PostgreSQL service $(PG_LOCAL_SERVICE): inactive"; \
 	fi
 
+dev-host-upgrade:
+	@$(MAKE) dev-host-db-setup
+	@$(MAKE) dev-host-config
+	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_HOST_CONFIG)" -d "$(DEV_UPGRADE_DB)" -u "$(DEV_MODULES)" --stop-after-init
+
 dev-project-db-setup:
+	@echo "WARNING: dev-project-db-setup shares the Docker DB service from the compose stack."
 	@COMPOSE_BIN='$(COMPOSE_PROJECT_DB)' \
 	DB_USER="$(PROD_DB_USER)" \
 	DB_PASSWORD="$(PROD_DB_PASSWORD)" \
@@ -782,7 +791,8 @@ dev-project-db-init:
 	@$(PYTHON) $(ODOO_BIN) -c "$(DEV_PROJECT_CONFIG)" -d "$(DEV_PROJECT_DB)" -i base --without-demo=all --stop-after-init
 
 dev-project-up:
-	@$(MAKE) ports-clean PORTS="$(LOCAL_HTTP_PORT)"
+	@echo "WARNING: dev-project-up shares the Docker DB service. Avoid while the public tunnel stack is serving traffic."
+	@$(MAKE) ports-clean PORTS="$(DEV_PROJECT_HTTP_PORT)"
 	@$(MAKE) dev-project-db-setup
 	@$(MAKE) dev-project-config
 	@PYTHON_BIN="$(PYTHON)" \
@@ -790,6 +800,7 @@ dev-project-up:
 	ODOO_DEV_DB="$(DEV_PROJECT_DB)" \
 	ODOO_DEV_LOG_PATH="$(DEV_PROJECT_LOG_PATH)" \
 	ODOO_DEV_PID_FILE="$(DEV_PROJECT_PID_FILE)" \
+	ODOO_DEV_HTTP_PORT="$(DEV_PROJECT_HTTP_PORT)" \
 	./scripts/dev-host-start.sh
 
 dev-project-stop:
@@ -805,6 +816,7 @@ dev-project-status:
 	@set -e; \
 	if [ -f "$(DEV_PROJECT_PID_FILE)" ] && kill -0 "$$(cat "$(DEV_PROJECT_PID_FILE)")" 2>/dev/null; then \
 	  echo "Project mode Odoo is running with PID $$(cat "$(DEV_PROJECT_PID_FILE)")"; \
+	  echo "URL: http://$(LOCAL_BIND_HOST):$(DEV_PROJECT_HTTP_PORT)"; \
 	else \
 	  echo "Project mode Odoo is not running."; \
 	fi; \
@@ -878,14 +890,25 @@ smoke:
 	echo "OK: local endpoint $$local_base/odoo HTTP $$local_code."; \
 	ws_curl_flags=""; \
 	case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
+	ws_health_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	  -H 'X-Odoo-Database: $(DB)' \
+	  "$$local_base/websocket/health" || true)"; \
+	if [ "$$ws_health_code" != "200" ]; then \
+	  echo "FAIL: websocket health endpoint ($$local_base/websocket/health) returned HTTP $$ws_health_code (expected 200)."; \
+	  exit 1; \
+	fi; \
+	echo "OK: websocket health endpoint HTTP $$ws_health_code."; \
 	ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	  --max-time 3 \
+	  -H 'X-Odoo-Database: $(DB)' \
+	  -H "Origin: $$local_base" \
 	  -H 'Connection: Upgrade' \
 	  -H 'Upgrade: websocket' \
 	  -H 'Sec-WebSocket-Version: 13' \
-	  -H 'Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==' \
+	  -H 'Sec-WebSocket-Key: $(WEBSOCKET_TEST_KEY)' \
 	  "$$local_base/websocket?version=19.0-2" || true)"; \
-	if [ "$$ws_code" != "101" ] && [ "$$ws_code" != "400" ]; then \
-	  echo "FAIL: websocket endpoint ($$local_base/websocket) returned HTTP $$ws_code (expected 101/400)."; \
+	if [ "$$ws_code" != "101" ]; then \
+	  echo "FAIL: websocket endpoint ($$local_base/websocket) returned HTTP $$ws_code (expected 101)."; \
 	  exit 1; \
 	fi; \
 	echo "OK: websocket endpoint HTTP $$ws_code."; \
@@ -896,7 +919,15 @@ smoke:
 	    echo "FAIL: public endpoint https://$(DOMAIN) returned HTTP $$public_code."; \
 	    if [ "$$cloudflared_running" != "true" ]; then \
 	      echo "Hint: domain may be pointing to Cloudflare Tunnel, but 'kodoo-cloudflared' is not running."; \
-	      echo "Run: fill CLOUDFLARED_TOKEN in .env.make, then use make up-tunnel  (or switch DNS to direct server mode and use make up-cloudflare)."; \
+	      echo "Run: fill CLOUDFLARED_TOKEN in .env.make, then use make up-tunnel."; \
+	    else \
+	      public_body="$$(curl -sS --max-time 20 https://$(DOMAIN) || true)"; \
+	      if printf '%s' "$$public_body" | grep -q 'error code: 1016'; then \
+	        echo "Hint: Cloudflare returned error 1016 (origin/tunnel resolution failure)."; \
+	        echo "Check Cloudflare Zero Trust > Tunnels > Public Hostnames:"; \
+	        echo "  $(DOMAIN) -> http://nginx:80"; \
+	        echo "Also remove conflicting direct A/AAAA/CNAME records for $(DOMAIN) in Cloudflare DNS."; \
+	      fi; \
 	    fi; \
 	    exit 1; \
 	  fi; \
@@ -943,14 +974,25 @@ troubleshoot:
 	if [ -n "$$local_base" ]; then \
 	  ws_curl_flags=""; \
 	  case "$$local_base" in https://*) ws_curl_flags="-k" ;; esac; \
+	  ws_health_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	    -H 'X-Odoo-Database: $(DB)' \
+	    "$$local_base/websocket/health" || true)"; \
+	  echo "$$local_base/websocket/health -> $$ws_health_code"; \
+	  if [ "$$ws_health_code" != "200" ]; then \
+	    echo "FAIL: websocket health probe returned $$ws_health_code."; \
+	    rc=1; \
+	  fi; \
 	  ws_code="$$(curl $$ws_curl_flags -sS -o /dev/null -w '%{http_code}' \
+	    --max-time 3 \
+	    -H 'X-Odoo-Database: $(DB)' \
+	    -H "Origin: $$local_base" \
 	    -H 'Connection: Upgrade' \
 	    -H 'Upgrade: websocket' \
 	    -H 'Sec-WebSocket-Version: 13' \
-	    -H 'Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==' \
+	    -H 'Sec-WebSocket-Key: $(WEBSOCKET_TEST_KEY)' \
 	    "$$local_base/websocket?version=19.0-2" || true)"; \
 	  echo "$$local_base/websocket?version=19.0-2 -> $$ws_code"; \
-	  if [ "$$ws_code" != "101" ] && [ "$$ws_code" != "400" ]; then \
+	  if [ "$$ws_code" != "101" ]; then \
 	    echo "FAIL: websocket probe returned $$ws_code."; \
 	    rc=1; \
 	  fi; \
@@ -972,14 +1014,22 @@ troubleshoot:
 	  else \
 	    echo "INFO: cloudflared container is not running."; \
 	  fi; \
+	  if [ "$$public_code" != "200" ] && [ "$$public_code" != "301" ] && [ "$$public_code" != "302" ] && [ "$$public_code" != "303" ]; then \
+	    public_body="$$(curl -sS --max-time 20 https://$(DOMAIN) || true)"; \
+	    if printf '%s' "$$public_body" | grep -q 'error code: 1016'; then \
+	      echo "INFO: Cloudflare error 1016 detected."; \
+	      echo "INFO: Check Zero Trust Public Hostname $(DOMAIN) -> http://nginx:80"; \
+	      echo "INFO: Remove conflicting direct DNS records for $(DOMAIN)."; \
+	    fi; \
+	  fi; \
 	  echo ""; \
 	fi; \
 	echo "== Hints =="; \
 	echo "make logs"; \
 	echo "make logs-local"; \
 	echo "make logs-tunnel"; \
-	echo "make down && make up"; \
-	echo "make down-tunnel && make up-tunnel"; \
+	echo "make down && make up          # local/home stack"; \
+	echo "make down-tunnel && make up-tunnel   # public internet path"; \
 	exit $$rc
 
 tui:
@@ -1037,7 +1087,7 @@ tui-doctor:
 	if command -v curl >/dev/null 2>&1; then echo "curl: ok"; else echo "curl: missing"; fi
 
 up-smoke:
-	@$(MAKE) up
+	@$(MAKE) up-tunnel
 	@$(MAKE) smoke
 
 mobile-install:
@@ -1081,16 +1131,17 @@ down-insecure:
 	@$(COMPOSE_INSECURE) down --remove-orphans
 
 up-cloudflare:
-	@$(MAKE) prod-config
-	@$(MAKE) ports-clean PORTS="$(PUBLIC_HTTP_PORT) $(PUBLIC_HTTPS_PORT)"
-	@$(COMPOSE) up -d db odoo nginx ollama
-	@$(MAKE) ollama-pull
-	@echo "Cloudflare DNS proxy mode started (orange cloud DNS pointing to this server)."
+	@echo "Cloudflare DNS proxy / full-connection mode is disabled for now."
+	@echo "Use Cloudflare Tunnel instead: make up-tunnel"
+	@exit 1
 
 logs-cloudflare:
-	@$(COMPOSE) logs -f --tail=120 nginx odoo
+	@echo "Legacy direct Cloudflare mode is disabled."
+	@echo "Use make logs-tunnel for the supported public path."
+	@exit 1
 
 down-cloudflare:
+	@echo "Stopping any legacy direct Cloudflare stack if it exists."
 	@$(COMPOSE) down --remove-orphans
 
 up-tunnel:
@@ -1100,6 +1151,7 @@ up-tunnel:
 	@$(COMPOSE_TUNNEL) up -d db odoo nginx ollama cloudflared
 	@$(MAKE) ollama-pull
 	@echo "Cloudflare tunnel mode started."
+	@echo "This is the default public internet publishing path."
 	@echo "Local:  http://$(LOCAL_BIND_HOST):$(LOCAL_HTTP_PORT)"
 	@echo "Public: https://$(DOMAIN)"
 

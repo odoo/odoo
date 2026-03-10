@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <list string="Catálogo de Itens">
                 <field name="code"/>
+                <field name="external_code" optional="show"/>
                 <field name="name"/>
                 <field name="category_id" optional="show"/>
                 <field name="uom_id" optional="show"/>
@@ -28,7 +29,8 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="code"/>
+                            <field name="code" readonly="1"/>
+                            <field name="external_code"/>
                             <field name="name"/>
                             <field name="category_id"/>
                             <field name="ug_ids" widget="many2many_tags"/>
@@ -54,6 +56,7 @@
         <field name="arch" type="xml">
             <search string="Catálogo de Itens">
                 <field name="code"/>
+                <field name="external_code"/>
                 <field name="name"/>
                 <field name="ug_ids"/>
                 <field name="category_id"/>
@@ -78,4 +81,3 @@
         <field name="search_view_id" ref="view_gov_compras_catalog_item_search"/>
     </record>
 </odoo>
-

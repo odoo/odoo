@@ -10,6 +10,7 @@ ODOO_DEV_CONFIG="${ODOO_DEV_CONFIG:-deploy/odoo/kodoo.dev-host.local.conf}"
 ODOO_DEV_DB="${ODOO_DEV_DB:-kodoo}"
 ODOO_DEV_LOG_PATH="${ODOO_DEV_LOG_PATH:-logs/odoo-dev-host.log}"
 ODOO_DEV_PID_FILE="${ODOO_DEV_PID_FILE:-logs/odoo-dev-host.pid}"
+ODOO_DEV_HTTP_PORT="${ODOO_DEV_HTTP_PORT:-8070}"
 
 mkdir -p "$(dirname "$ODOO_DEV_LOG_PATH")"
 
@@ -47,4 +48,4 @@ if ! kill -0 "$odoo_pid" 2>/dev/null; then
 fi
 
 echo "[dev-host-start] Odoo running with PID $odoo_pid."
-echo "[dev-host-start] Local URL: http://127.0.0.1:8069"
+echo "[dev-host-start] Local URL: http://127.0.0.1:$ODOO_DEV_HTTP_PORT"

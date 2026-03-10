@@ -1,4 +1,4 @@
-# Cloudflare Tunnel Mode (No Certbot / No Public Ports)
+# Cloudflare Tunnel Mode (Supported Public Publishing Path)
 
 Use this mode when your ISP is behind CGNAT or your IPv4 changes often.
 
@@ -10,36 +10,36 @@ Use this mode when your ISP is behind CGNAT or your IPv4 changes often.
 4. Add a Public Hostname in the tunnel:
    - Hostname: `kodoo.online` (and optionally `www.kodoo.online`)
    - Service type: `HTTP`
-   - URL: `http://odoo:8069`
+   - URL: `http://nginx:80`
 
 ## 2) Local side
 
-Set the tunnel token in shell:
+Set the tunnel token in `.env.make` (preferred) or export it in shell:
 
 ```bash
-export CLOUDFLARED_TOKEN='PASTE_YOUR_TUNNEL_TOKEN'
+CLOUDFLARED_TOKEN='PASTE_YOUR_TUNNEL_TOKEN'
 ```
 
-Start stack in Cloudflare mode:
+Start the supported public stack:
 
 ```bash
-make up-cloudflare
+make up-tunnel
 ```
 
 View tunnel logs:
 
 ```bash
-make logs-cloudflare
+make logs-tunnel
 ```
 
 Stop Cloudflare mode:
 
 ```bash
-make down-cloudflare
+make down-tunnel
 ```
 
 ## Notes
 
-- In this mode, do not run `make certbot`.
+- `certbot` and direct/public-IP TLS flow are disabled for now.
 - Public TLS is handled by Cloudflare.
-- Keep host firewall without opening 80/443 to internet unless you still need local nginx for other reasons.
+- Keep host firewall without opening 80/443 to the internet for this mode.
