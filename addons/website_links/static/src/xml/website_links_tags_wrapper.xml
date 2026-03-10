@@ -8,7 +8,7 @@
         togglerClass="'form-control'"
         onInput.bind="this.loadChoice"
         onSelect.bind="this.onSelect">
-        <t t-if="this.showCreateOption" t-set-slot="bottomArea" t-slot-scope="select">
+        <t t-if="this.showCreateOption(select.data.searchValue)" t-set-slot="bottomArea" t-slot-scope="select">
             <DropdownItem
                 onSelected="() => this.onCreateOption(select.data.searchValue)"
                 class="'o_select_menu_item p-2'"

@@ -30,10 +30,10 @@ export class WebsiteLinksTagsWrapper extends Component {
         });
     }
 
-    get showCreateOption() {
+    showCreateOption(searchValue) {
         return (
-            this.select.data.searchValue &&
-            !this.state.choices.some((c) => c.label === this.select.data.searchValue) &&
+            searchValue &&
+            !this.state.choices.some((c) => c.label === searchValue) &&
             this.canCreateLinkTracker
         );
     }
