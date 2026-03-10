@@ -253,7 +253,14 @@ class TestAccountInvoiceImportMixin:
                 case _:
                     raise ValueError(f"Unknown origin: {origin}")
 
-        return attachment_capturer.records, message_capturer.records, move_capturer.records
+        attachments_created = attachment_capturer.records
+        moves = move_capturer.records
+        # if account_edi_ubl_cii is installed and used as decoder, an attachment is linked to the imported bill with res_field = ubl_cii_xml_file
+        # Therefore it is not detected in the attachment_capturer (because res_field is not specified in domain used to search, see `_search` method override in ir.attachment)
+        # So we need to catch it as some tests check that it has been created
+        if 'ubl_cii_xml_id' in moves._fields:
+            attachments_created |= moves.ubl_cii_xml_id
+        return attachments_created, message_capturer.records, moves
 
     def _get_raw_mail_message_str(self, attachments_vals, email_to, message_id=None):
         """
