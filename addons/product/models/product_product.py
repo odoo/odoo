@@ -463,7 +463,7 @@ class ProductProduct(models.Model):
 
         # Check if products still exists, in case they've been unlinked by unlinking their template
         existing_products = self.exists()
-        product_ids_by_template_id = {template.id: set(ids) for template, ids in self._read_group(
+        product_ids_by_template_id = {template.id: set(ids) for template, ids in self.with_context(active_test=False)._read_group(
             domain=[('product_tmpl_id', 'in', existing_products.product_tmpl_id.ids)],
             groupby=['product_tmpl_id'],
             aggregates=['id:array_agg'],
