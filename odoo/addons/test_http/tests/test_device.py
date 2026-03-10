@@ -7,7 +7,12 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.http._facade import HTTPRequest
-from odoo.http.session import SESSION_LIFETIME, session_store, update_device_fingerprint
+from odoo.http.session import (
+    DEVICE_ACTIVITY_UPDATE_FREQUENCY,
+    SESSION_LIFETIME,
+    session_store,
+    update_device_fingerprint,
+)
 from odoo.http.requestlib import Request
 from odoo.tests import tagged
 from odoo.tools import config, mute_logger
@@ -556,6 +561,74 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
+
+    def test_ensure_session_information(self):
+        # Scenario:
+        # ---------
+        # - device A detected at time T0: info A in session + new log A
+        # - device B detected at time T1: info B in session + new log B
+        # - log B is unlink (or marked as revoked)
+        # - device B detected at time T2: nothing ==> `web_read` on `res_users` (see explanation)
+        # T2 < T1 + `DEVICE_ACTIVITY_UPDATE_FREQUENCY`
+        # - device B detected at time T3: info B updated in session + new log B
+        # T3 > T1 + `DEVICE_ACTIVITY_UPDATE_FREQUENCY`
+
+        # Explanation:
+        # ------------
+        # At this moment, T2, because log A exists, a `res.session` record exists.
+        # When we compute information for the `res.session` record, as this record
+        # is the current session, we must get the current device.
+        # To retrieve the current device, we use the `res.device` model.
+        # Unfortunately, no current device is present (because log B has been deleted)
+        # and `DEVICE_ACTIVITY_UPDATE_FREQUENCY` has not been exceeded.
+        # In this case, we have a current session without current device.
+
+        # Note:
+        # -----
+        # However, we are certain that there is at least one device for this session record
+        # because session records are built with device records.
+
+        self.authenticate(self.user_internal.login, self.user_internal.login)
+        self.hit(datetime.now(), '/test_http/greeting-public', headers={'User-Agent': USER_AGENT_linux_chrome})
+        self.hit(datetime.now(), '/test_http/greeting-public', headers={'User-Agent': USER_AGENT_linux_firefox})
+
+        sessions, devices, logs = self.get_devices(self.user_internal)
+        self.assertEqual(len(sessions), 1)
+        self.assertEqual(len(devices), 2)
+        self.assertEqual(len(logs), 2)
+
+        logs.filtered(lambda log: log.user_agent == USER_AGENT_linux_firefox).unlink()
+
+        sessions, devices, logs = self.get_devices(self.user_internal)
+        self.assertEqual(len(sessions), 1)
+        self.assertEqual(len(devices), 1)
+        self.assertEqual(len(logs), 1)
+
+        spec = {
+            'session_ids': {
+                'fields': {
+                    # A field which must compute information from user_agent
+                    'device_type': {},
+                },
+            }
+        }
+
+        with freeze_time(
+            datetime.now() + timedelta(seconds=DEVICE_ACTIVITY_UPDATE_FREQUENCY - 1)
+        ):
+            res = self.url_open(url='/web/dataset/call_kw',
+                json={
+                    'params': {
+                        'model': 'res.users',
+                        'method': 'web_read',
+                        'args': [self.user_internal.ids],
+                        'kwargs': {'specification': spec},
+                    },
+                },
+                cookies={'session_id': self.opener.cookies['session_id']},
+                headers={'User-Agent': USER_AGENT_linux_firefox},
+            )
+            self.assertNotIn('error', res.json())
 
     # --------------------
     # FINGERPRINT
