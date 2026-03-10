@@ -10,7 +10,7 @@ class PortalEntryPayment(models.Model):
     def should_show_portal_card(self):
         res = super().should_show_portal_card()
         external_id = self.get_external_id().get(self.id, "")
-        if external_id == "payment.portal_payment_orders":
+        if external_id == "payment.payment_methods_portal_entry":
             partner_sudo = request.env.user.partner_id.sudo()
             providers_sudo = (
                 request
