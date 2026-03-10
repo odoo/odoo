@@ -78,7 +78,7 @@ class PaymentTransaction(models.Model):
             ("pending", "Pending"),
             ("authorized", "Authorized"),
             ("done", "Confirmed"),
-            ("cancel", "Canceled"),
+            ("cancel", "Cancelled"),
             ("error", "Error"),
         ],
         default="draft",
@@ -1292,7 +1292,7 @@ class PaymentTransaction(models.Model):
                 )
             case "cancel":
                 received_message = _(
-                    "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled.",
+                    "The %(tx_label)s %(ref)s of %(formatted_amount)s has been cancelled.",
                     **msg_values,
                 )
             case "error":

@@ -212,7 +212,7 @@ class MailingMailing(models.Model):
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
-    canceled = fields.Integer(compute="_compute_statistics")
+    canceled = fields.Integer(compute="_compute_statistics", string="Cancelled")
     sent = fields.Integer(compute="_compute_statistics")
     process = fields.Integer(compute="_compute_statistics")
     pending = fields.Integer(compute="_compute_statistics")  # used with SMS when not yet 'delivered'

@@ -68,7 +68,7 @@ class GelatoController(Controller):
 
                 # Log a message on the order.
                 log_message = _(
-                    "Gelato has canceled order %(reference)s.", reference=order_sudo.display_name
+                    "Gelato has cancelled order %(reference)s.", reference=order_sudo.display_name
                 )
                 order_sudo.message_post(
                     body=log_message, author_id=request.env.ref("base.partner_root").id

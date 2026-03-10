@@ -38,7 +38,7 @@ class AccountPayment(models.Model):
             ('draft', "Draft"),
             ('paid', "Paid"),
             ('reconciled', "Reconciled"),
-            ('canceled', "Canceled"),
+            ('canceled', "Cancelled"),
             ('rejected', "Rejected"),
         ],
         string="Status",

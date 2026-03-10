@@ -12,7 +12,7 @@ class PaymentToken(models.Model):
         selection=[
             ("pending", "Pending"),
             ("done", "Confirmed"),
-            ("cancel", "Canceled"),
+            ("cancel", "Cancelled"),
             ("error", "Error"),
         ],
     )

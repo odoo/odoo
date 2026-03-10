@@ -74,7 +74,7 @@ class L10nHrEdiAddendum(models.Model):
             ('20', 'In validation'),
             ('30', 'Sent'),
             ('40', 'Delivered'),
-            ('45', 'Canceled'),
+            ('45', 'Cancelled'),
             ('50', 'Unsuccessful'),
             ('70', 'Delivered (eReporting)'),
         ],

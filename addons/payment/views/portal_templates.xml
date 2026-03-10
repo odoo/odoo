@@ -301,7 +301,7 @@
         <t t-elif="tx.state == 'cancel'">
             <t t-set="alert_style" t-value="'danger'"/>
             <t t-if="tx.operation == 'validation'" t-set="status_message">
-                <p>The saving of your payment method has been canceled.</p>
+                <p>The saving of your payment method has been cancelled.</p>
             </t>
             <t t-else="" t-set="status_message" t-value="tx_status_message"/>
         </t>

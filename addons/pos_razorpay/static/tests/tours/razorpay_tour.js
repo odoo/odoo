@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("PosRazorpayCancelTour", {
             PaymentScreen.clickPaymentMethod("RazorPay"),
             PaymentScreen.clickCancelButton(),
             Dialog.is({ title: "Razorpay Error" }),
-            Dialog.bodyIs("Razorpay POS transaction canceled successfully"),
+            Dialog.bodyIs("Razorpay POS transaction cancelled successfully"),
             Dialog.confirm(),
             PaymentScreen.isShown(),
             PaymentScreen.clickRetryButton(),

@@ -226,7 +226,7 @@ class AccountMove(models.Model):
             except UserError as e:
                 move.with_context(no_new_invoice=True).message_post(
                     body=self.env._(
-                        'The invoice has been canceled on MyInvois, '
+                        'The invoice has been cancelled on MyInvois, '
                         'But the cancellation in Odoo failed with error: %(error)s\n'
                         'Please resolve the problem manually, and then cancel the invoice.',
                         error=e,
