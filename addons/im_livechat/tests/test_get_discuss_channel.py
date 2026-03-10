@@ -175,6 +175,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "employee_ids": [],
+                    "should_display_in_call_im_status": False,
                     "id": test_user.id,
                     "im_status": "offline",
                     "im_status_access_token": test_user._get_im_status_access_token(),
@@ -187,6 +188,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "share": False,
                 },
                 {
+                    "should_display_in_call_im_status": False,
                     "id": operator.id,
                     "im_status": "offline",
                     "im_status_access_token": operator._get_im_status_access_token(),
@@ -313,6 +315,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "employee_ids": [],
+                    "should_display_in_call_im_status": False,
                     "id": operator.id,
                     "im_status": "offline",
                     "im_status_access_token": operator._get_im_status_access_token(),

@@ -2,7 +2,7 @@
 
 from odoo import _, http
 
-from odoo.addons.mail.tools.discuss import Store, mail_route
+from odoo.addons.mail.tools.discuss import mail_route, Store
 
 
 class ImStatusController(http.Controller):
@@ -13,5 +13,5 @@ class ImStatusController(http.Controller):
         self.env.user.manual_im_status = False if status == "online" else status
         Store(bus_channel=self.env.user, bus_subchannel="presence").add(
             self.env.user,
-            ["im_status"],
+            "_store_manual_im_status_fields",
         ).bus_send()

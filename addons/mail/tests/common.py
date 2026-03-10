@@ -2013,6 +2013,9 @@ class MailCommon(MailCase):
         if "hr.employee" not in self.env:
             for data in users_data:
                 data.pop("employee_ids", None)
+        if "has_active_call" not in self.env["res.users"]._fields:
+            for data in users_data:
+                data.pop("has_active_call", None)
         return list(users_data)
 
     def _filter_threads_fields(self, /, *threads_data):

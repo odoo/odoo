@@ -275,6 +275,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ),
                 "res.users": self._filter_users_fields(
                     {
+                        "should_display_in_call_im_status": False,
                         "id": self.operator.id,
                         "im_status": "online",
                         "im_status_access_token": self.operator._get_im_status_access_token(),

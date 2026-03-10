@@ -462,6 +462,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                 },
                 {
+                    "should_display_in_call_im_status": False,
                     "id": user_0.id,
                     "im_status": "online",
                     "im_status_access_token": user_0._get_im_status_access_token(),
@@ -1993,6 +1994,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "online",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2002,6 +2004,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2015,6 +2018,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "im_status": "offline",
                     "im_status_access_token": user._get_im_status_access_token(),
                     "employee_ids": user.employee_ids.ids,
+                    "should_display_in_call_im_status": False,
                     "partner_id": partner.id,
                 }
             return {
@@ -2023,6 +2027,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2033,6 +2038,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2043,6 +2049,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2053,6 +2060,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }
@@ -2063,6 +2071,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
                 "employee_ids": user.employee_ids.ids,
+                "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
             }

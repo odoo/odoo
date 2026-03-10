@@ -434,6 +434,9 @@ class ResUsers(models.Model):
         res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
         res.one("partner_id", "_store_im_status_fields")
 
+    def _store_manual_im_status_fields(self, res: Store.FieldList):
+        res.attr("im_status")
+
     def _store_bookmark_box_global_fields(self, res: Store.FieldList, bus_last_id=None):
         """ Update the bookmark box info in the given store."""
         self.ensure_one()

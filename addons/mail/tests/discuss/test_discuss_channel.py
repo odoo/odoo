@@ -214,6 +214,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             {
+                                "should_display_in_call_im_status": False,
                                 "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": "offline",
@@ -266,6 +267,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "res.users": self._filter_users_fields(
                             {
                                 "active": True,
+                                "should_display_in_call_im_status": False,
                                 "id": self.test_user.id,
                                 "im_status": "offline",
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),
@@ -512,6 +514,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             {
+                                "should_display_in_call_im_status": False,
                                 "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": self.test_user.im_status,
@@ -567,6 +570,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             {
+                                "should_display_in_call_im_status": False,
                                 "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": self.test_user.im_status,
