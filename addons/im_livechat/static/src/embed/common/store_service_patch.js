@@ -12,6 +12,9 @@ const StorePatch = {
         this.activeLivechats = fields.Many("discuss.channel", {
             inverse: "storeAsActiveLivechats",
         });
+        this.activeVisitorLivechats = fields.Many("discuss.channel", {
+            inverse: "storeAsActiveVisitorLivechats",
+        });
         expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
         this.guest_token = fields.Attr(null, {
             compute() {
