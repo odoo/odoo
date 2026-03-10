@@ -69,7 +69,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             supplier = vals['supplier']
             vals['supplier'] = customer
             vals['customer'] = supplier
-            vals['delivery'] = supplier
+            vals['delivery'] = supplier.child_ids.filtered(lambda p: p.type == 'delivery')[:1] or supplier
 
     def _can_export_selfbilling(self):
         return bool(self._get_customization_id(process_type='selfbilling'))
