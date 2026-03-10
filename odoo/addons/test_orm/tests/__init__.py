@@ -19,4 +19,5 @@ from . import (
     test_html_converter,
     test_indexed_translation,
     test_inherits,
+    test_ir_rules,
 )
