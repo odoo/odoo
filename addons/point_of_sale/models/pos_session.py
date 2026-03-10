@@ -1819,6 +1819,260 @@ class PosSession(models.Model):
 
         return res
 
+<<<<<<< 4c91eb3b2469cd04718005162b4572e9e3d07e72
+||||||| 16245530f0e3e9be21c8b96baaecd3a679420cac
+    def _pos_data_process(self, loaded_data):
+        """
+        This is where we need to process the data if we can't do it in the loader/getter
+        """
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.company_id
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
+        loaded_data['version'] = exp_version()
+
+        loaded_data['units_by_id'] = {unit['id']: unit for unit in loaded_data['uom.uom']}
+
+        loaded_data['taxes_by_id'] = {tax['id']: tax for tax in loaded_data['account.tax']}
+        for tax in loaded_data['taxes_by_id'].values():
+            tax['children_tax_ids'] = [loaded_data['taxes_by_id'][id] for id in tax['children_tax_ids']]
+
+        taxes_by_company = defaultdict(set)
+        # If the current company is a branch company, the taxes of the products can come
+        # from the branch and its parents.
+        # We have to make sure to not mix them together and only use the taxes from the
+        # parent if there is no tax from the branch.
+        if self.company_id.parent_id:
+            # group all taxes by company in a dict where:
+            # - key: ID of the company
+            # - values: list of tax ids
+            key_company_id = itemgetter('company_id')
+            key_id = itemgetter('id')
+            for key, group in groupby(loaded_data['account.tax'], key=key_company_id):
+                taxes_by_company[key[0]] = list(map(key_id, group))
+        if len(taxes_by_company) > 1:
+            for product in loaded_data['product.product']:
+                if len(product['taxes_id']) > 1:
+                    product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
+
+        if self.config_id.use_pricelist:
+            default_pricelist = next(
+                (pl for pl in loaded_data['product.pricelist'] if pl['id'] == self.config_id.pricelist_id.id),
+                False
+            )
+            if default_pricelist:
+                loaded_data['default_pricelist'] = default_pricelist
+
+        fiscal_position_by_id = {fpt['id']: fpt for fpt in self._get_pos_ui_account_fiscal_position_tax(
+            self._loader_params_account_fiscal_position_tax())}
+        for fiscal_position in loaded_data['account.fiscal.position']:
+            fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
+
+        loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
+        loaded_data['base_url'] = self.get_base_url()
+        loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
+        loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+        loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
+        loaded_data['show_product_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_product_images', 'yes')
+        loaded_data['show_category_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_category_images', 'yes')
+
+    @api.model
+    def _pos_ui_models_to_load(self):
+        models_to_load = [
+            'res.company',
+            'decimal.precision',
+            'uom.uom',
+            'res.country.state',
+            'res.country',
+            'res.lang',
+            'account.tax',
+            'pos.session',
+            'pos.config',
+            'pos.printer',
+            'pos.bill',
+            'res.partner',
+            'stock.picking.type',
+            'res.users',
+            'product.product',
+            'product.pricelist',
+            'res.currency',
+            'pos.category',
+            'pos.combo',
+            'pos.combo.line',
+            'product.packaging',
+            'product.tag',
+            'account.cash.rounding',
+            'pos.payment.method',
+            'account.fiscal.position',
+        ]
+
+        return models_to_load
+
+    def _loader_params_res_company(self):
+        return {
+            'search_params': {
+                'domain': [('id', '=', self.company_id.id)],
+                'fields': [
+                    'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
+                    'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
+                    'point_of_sale_ticket_unique_code', 'account_fiscal_country_id',
+                ],
+            }
+        }
+
+    def _get_pos_ui_res_company(self, params):
+        company = self.env['res.company'].search_read(**params['search_params'])[0]
+        params_country = self._loader_params_res_country()
+        if company['country_id']:
+            # TODO: this is redundant we have country_id and country
+            params_country['search_params']['domain'] = [('id', '=', company['country_id'][0])]
+            company['country'] = self.env['res.country'].search_read(**params_country['search_params'])[0]
+        else:
+            company['country'] = None
+
+        company['account_fiscal_country_id'] = self.env['res.country'].search_read(
+            domain=[('id', '=', company['account_fiscal_country_id'][0])],
+            fields=['code'],
+        )[0]
+
+        return company
+
+=======
+    def _pos_data_process(self, loaded_data):
+        """
+        This is where we need to process the data if we can't do it in the loader/getter
+        """
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.company_id
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
+        loaded_data['version'] = exp_version()
+
+        loaded_data['units_by_id'] = {unit['id']: unit for unit in loaded_data['uom.uom']}
+
+        loaded_data['taxes_by_id'] = {tax['id']: tax for tax in loaded_data['account.tax']}
+        for tax in loaded_data['taxes_by_id'].values():
+            tax['children_tax_ids'] = [loaded_data['taxes_by_id'][id] for id in tax['children_tax_ids']]
+
+        taxes_by_company = defaultdict(set)
+        # If the current company is a branch company, the taxes of the products can come
+        # from the branch and its parents.
+        # We have to make sure to not mix them together and only use the taxes from the
+        # parent if there is no tax from the branch.
+        if self.company_id.parent_id:
+            # group all taxes by company in a dict where:
+            # - key: ID of the company
+            # - values: list of tax ids
+            key_company_id = itemgetter('company_id')
+            key_id = itemgetter('id')
+            for key, group in groupby(sorted(loaded_data['account.tax'], key=key_company_id), key=key_company_id):
+                taxes_by_company[key[0]] = list(map(key_id, group))
+        if len(taxes_by_company) > 1:
+            for product in loaded_data['product.product']:
+                if len(product['taxes_id']) > 1:
+                    product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
+
+        if self.config_id.use_pricelist:
+            default_pricelist = next(
+                (pl for pl in loaded_data['product.pricelist'] if pl['id'] == self.config_id.pricelist_id.id),
+                False
+            )
+            if default_pricelist:
+                loaded_data['default_pricelist'] = default_pricelist
+
+        fiscal_position_by_id = {fpt['id']: fpt for fpt in self._get_pos_ui_account_fiscal_position_tax(
+            self._loader_params_account_fiscal_position_tax())}
+        for fiscal_position in loaded_data['account.fiscal.position']:
+            fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
+
+        loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
+        loaded_data['base_url'] = self.get_base_url()
+        loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
+        loaded_data['pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+        loaded_data['partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
+        loaded_data['show_product_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_product_images', 'yes')
+        loaded_data['show_category_images'] = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.show_category_images', 'yes')
+
+    @api.model
+    def _pos_ui_models_to_load(self):
+        models_to_load = [
+            'res.company',
+            'decimal.precision',
+            'uom.uom',
+            'res.country.state',
+            'res.country',
+            'res.lang',
+            'account.tax',
+            'pos.session',
+            'pos.config',
+            'pos.printer',
+            'pos.bill',
+            'res.partner',
+            'stock.picking.type',
+            'res.users',
+            'product.product',
+            'product.pricelist',
+            'res.currency',
+            'pos.category',
+            'pos.combo',
+            'pos.combo.line',
+            'product.packaging',
+            'product.tag',
+            'account.cash.rounding',
+            'pos.payment.method',
+            'account.fiscal.position',
+        ]
+
+        return models_to_load
+
+    def _loader_params_res_company(self):
+        return {
+            'search_params': {
+                'domain': [('id', '=', self.company_id.id)],
+                'fields': [
+                    'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
+                    'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
+                    'point_of_sale_ticket_unique_code', 'account_fiscal_country_id',
+                ],
+            }
+        }
+
+    def _get_pos_ui_res_company(self, params):
+        company = self.env['res.company'].search_read(**params['search_params'])[0]
+        params_country = self._loader_params_res_country()
+        if company['country_id']:
+            # TODO: this is redundant we have country_id and country
+            params_country['search_params']['domain'] = [('id', '=', company['country_id'][0])]
+            company['country'] = self.env['res.country'].search_read(**params_country['search_params'])[0]
+        else:
+            company['country'] = None
+
+        company['account_fiscal_country_id'] = self.env['res.country'].search_read(
+            domain=[('id', '=', company['account_fiscal_country_id'][0])],
+            fields=['code'],
+        )[0]
+
+        return company
+
+>>>>>>> 465d619f1f4c9a4f420a8be5c81151cc3ecceb9d
     def _get_pos_fallback_nomenclature_id(self):
         """
         Retrieve the fallback barcode nomenclature.
