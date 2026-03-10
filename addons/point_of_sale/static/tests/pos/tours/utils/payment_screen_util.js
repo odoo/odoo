@@ -116,6 +116,12 @@ export function clickInvoiceButton() {
         },
     ];
 }
+export function checkInvoiceIsChecked() {
+    return {
+        content: "check invoice button is checked",
+        trigger: ".payment-buttons .js_invoice i.fa-check-square",
+    };
+}
 export function clickValidate() {
     return [
         {
