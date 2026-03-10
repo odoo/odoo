@@ -20,4 +20,5 @@ from . import (
     test_one2many,
     test_performance,
     test_properties,
+    test_qweb_float,
 )
