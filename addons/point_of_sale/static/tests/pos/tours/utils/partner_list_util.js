@@ -133,6 +133,14 @@ export function searchCustomerValue(val, pressEnter = false) {
 
     if (pressEnter) {
         steps.push({
+            trigger: "body",
+            run: () =>
+                // wait 200ms so state.query can be updated with the new value before triggering keydown
+                new Promise((resolve) => {
+                    setTimeout(resolve, 200);
+                }),
+        });
+        steps.push({
             content: `Manually trigger keyup event`,
             trigger: ".modal-header:has(.modal-title:contains(choose customer)) .input-group input",
             run: function () {
