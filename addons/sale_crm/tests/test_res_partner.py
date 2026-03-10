@@ -102,9 +102,9 @@ class TestResPartner(TestCrmCommon):
             (contact_company_1, contact_1, contact_1_1, contact_1_2),
             (
                 [{'iconClass': 'fa-star', 'label': 'Opportunities', 'value': 4},
-                 {'iconClass': 'fa-usd', 'label': 'Sale Orders', 'value': 2}],
+                 {'iconClass': 'fa-shopping-cart', 'label': 'Sale Orders', 'value': 2}],
                 [{'iconClass': 'fa-star', 'label': 'Opportunities', 'value': 3},
-                 {'iconClass': 'fa-usd', 'label': 'Sale Orders', 'value': 1}],
+                 {'iconClass': 'fa-shopping-cart', 'label': 'Sale Orders', 'value': 1}],
                 [{'iconClass': 'fa-star', 'label': 'Opportunities', 'value': 2}],
                 False,
             ),

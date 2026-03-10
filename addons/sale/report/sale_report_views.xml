@@ -65,9 +65,19 @@
                 <field name="price_subtotal" optional="hide" sum="Sum of Untaxed Total"/>
                 <field name="price_unit" widget="monetary" avg="Average"/>
                 <field name="price_total" optional="show" sum="Sum of Total"/>
-                <field name="state" optional="hide"/>
+                <field name="state"
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="state == 'sale'"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'sent'"/>
                 <field name="pricelist_id" optional="hide"/>
-                <field name="line_invoice_status" optional="hide"/>
+                <field name="line_invoice_status"
+                       optional="hide"
+                       widget="badge"
+                       decoration-success="line_invoice_status == 'invoiced'"
+                       decoration-info="line_invoice_status == 'to invoice'"
+                       decoration-warning="line_invoice_status == 'upselling'"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
         </field>
@@ -82,6 +92,7 @@
                 <filter string="Date" name="year" invisible="1" date="date" default_period="year"/>
                 <filter string="Quotations" name="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter string="Sales Orders" name="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <filter string="Not Cancelled" name="filter_not_cancelled" domain="[('state', '!=', 'cancel')]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="month"/>
                 <filter name="filter_order_date" invisible="1" string="Order Date: Last 365 Days" domain="[('date', '&gt;=', '-365d')]"/>

@@ -15,7 +15,7 @@
                 <t t-else="">
                     <t t-set="crm_lead_count_label">Opportunities</t>
                 </t>
-                <a t-if="record.crm_lead_count" href="#" t-att-title="crm_lead_count_label" role="button"
+                <a t-if="record.crm_lead_count.raw_value !== 0" href="#" t-att-title="crm_lead_count_label" role="button"
                     groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_leads_opportunities"
                     class="btn-outline-primary rounded-pill me-1 order-3">
                     <span class="badge">
@@ -35,7 +35,7 @@
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="action_redirect_to_leads_opportunities"
                     type="object"
-                    class="oe_stat_button order-3"
+                    class="oe_stat_button"
                     icon="fa-star"
                     groups="sales_team.group_sale_salesman">
                     <div class="o_field_widget o_stat_info">
