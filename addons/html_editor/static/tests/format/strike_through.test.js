@@ -12,6 +12,8 @@ import {
     undo,
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should make a few characters strikeThrough", async () => {
     await testEditor({
@@ -107,7 +109,8 @@ test("should make qweb tag strikeThrough", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: strikeThrough,
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="text-decoration-line: line-through;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 

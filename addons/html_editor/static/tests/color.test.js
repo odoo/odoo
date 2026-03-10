@@ -4,6 +4,8 @@ import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -21,7 +23,8 @@ test("should apply a color to the qweb tag (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -29,7 +32,8 @@ test("should apply a color to the qweb tag (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-field="record.display_name" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -206,6 +210,7 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
                 </t>
             </p>
         ]`),
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 

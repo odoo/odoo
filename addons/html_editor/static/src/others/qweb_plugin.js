@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
+import { formatsSpecs } from "@html_editor/utils/formatting";
 
 const isUnsplittableQWebElement = (node) =>
     isElement(node) &&
@@ -34,11 +35,15 @@ export const isUnremovableQWebElement = (node) =>
 
 export class QWebPlugin extends Plugin {
     static id = "qweb";
-    static dependencies = ["overlay", "protectedNode", "selection"];
+    static dependencies = ["color", "overlay", "protectedNode", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
+
+        /** Overrides */
+        apply_color_overrides: this.applyColorToFieldNodes.bind(this),
+        format_selection_overrides: this.applyFormatToFieldNodes.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -68,6 +73,9 @@ export class QWebPlugin extends Plugin {
             }
         },
 
+        /** Providers */
+        color_target_providers: (node) => closestElement(node, "*[t-field],*[t-out],*[t-esc]"),
+
         system_attributes: QWEB_DATA_ATTRIBUTES,
     };
 
@@ -78,6 +86,37 @@ export class QWebPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "click", this.onClick);
         this.groupIndex = 0;
+    }
+
+    applyColorToFieldNodes(color, mode, coloredNodes) {
+        const fieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .filter(Boolean)
+        );
+        for (const fieldNode of fieldNodes) {
+            this.dependencies.color.colorElement(fieldNode, color, mode);
+            [fieldNode, ...descendants(fieldNode)].forEach((n) => coloredNodes.add(n));
+        }
+    }
+
+    applyFormatToFieldNodes(formatName, formattedNodes, { formatProps, applyStyle } = {}) {
+        const fieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .filter(Boolean)
+        );
+        const formatSpec = formatsSpecs[formatName];
+        for (const fieldNode of fieldNodes) {
+            if (applyStyle) {
+                formatSpec.addStyle(fieldNode, formatProps);
+            } else {
+                formatSpec.removeStyle(fieldNode);
+            }
+            [fieldNode, ...descendants(fieldNode)].forEach((n) => formattedNodes.add(n));
+        }
     }
 
     isValidTargetForDomListener(ev) {

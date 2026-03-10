@@ -9,7 +9,7 @@ declare module "plugins" {
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
-    import { is_format_class_predicates, on_will_format_selection_handlers, FormatShared, has_format_predicates, on_all_formats_removed_handlers } from "@html_editor/core/format_plugin";
+    import { is_format_class_predicates, format_selection_overrides, FormatShared, has_format_predicates, on_all_formats_removed_handlers } from "@html_editor/core/format_plugin";
     import { on_attribute_changed_handlers, attribute_change_processors, on_will_add_step_handlers, on_will_filter_mutation_record_handlers, on_content_updated_handlers, on_external_step_added_handlers, on_new_records_handled_handlers, on_history_cleaned_handlers, on_history_reset_from_steps_handlers, on_history_reset_handlers, history_step_processors, HistoryShared, on_redone_handlers, on_undone_handlers, on_savepoint_restored_handlers, is_mutation_record_savable_predicates, serializable_descendants_processors, set_attribute_overrides, on_step_added_handlers, is_step_reversible_predicates } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
@@ -25,7 +25,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
-    import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_providers, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
+    import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_items } from "@html_editor/main/font/font_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
@@ -161,7 +161,6 @@ declare module "plugins" {
         on_will_break_line_handlers: on_will_break_line_handlers;
         on_will_delete_handlers: on_will_delete_handlers;
         on_will_filter_mutation_record_handlers: on_will_filter_mutation_record_handlers;
-        on_will_format_selection_handlers: on_will_format_selection_handlers;
         on_will_mount_component_handlers: on_will_mount_component_handlers;
         on_will_paste_handlers: on_will_paste_handlers;
         on_will_process_image_handlers: on_will_process_image_handlers;
@@ -172,7 +171,7 @@ declare module "plugins" {
 
         // Overrides
         apply_color_style_overrides: apply_color_style_overrides;
-        color_apply_overrides: color_apply_overrides;
+        apply_color_overrides: apply_color_overrides;
         delete_backward_line_overrides: delete_backward_line_overrides;
         delete_backward_overrides: delete_backward_overrides;
         delete_backward_word_overrides: delete_backward_word_overrides;
@@ -183,6 +182,7 @@ declare module "plugins" {
         delete_range_overrides: delete_range_overrides;
         double_click_overrides: double_click_overrides;
         fix_selection_on_editable_root_overrides: fix_selection_on_editable_root_overrides;
+        format_selection_overrides: format_selection_overrides;
         insert_line_break_element_overrides: insert_line_break_element_overrides;
         paste_text_overrides: paste_text_overrides;
         paste_url_overrides: paste_url_overrides;

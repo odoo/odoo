@@ -123,6 +123,7 @@ export class TablePlugin extends Plugin {
                     closestElement(editableSelection.anchorNode, ".o_selected_td") && "compact"
             ),
         ],
+        color_target_providers: (node) => closestElement(node, ".o_selected_td"),
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
 
         /** Handlers */
@@ -149,7 +150,7 @@ export class TablePlugin extends Plugin {
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
-        color_apply_overrides: this.applyTableColor.bind(this),
+        apply_color_overrides: this.applyTableColor.bind(this),
         paste_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
         paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
@@ -1724,7 +1725,7 @@ export class TablePlugin extends Plugin {
         return didDeselectTable;
     }
 
-    applyTableColor(color, mode, previewMode) {
+    applyTableColor(color, mode, coloredNodes, previewMode) {
         const selectedTds = [...this.editable.querySelectorAll(".o_selected_td")].filter(
             (node) => node.isContentEditable
         );
@@ -1735,10 +1736,9 @@ export class TablePlugin extends Plugin {
             );
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
-                if (color) {
-                    td.style["color"] = getComputedStyle(td).color;
-                } else {
-                    td.style["color"] = "";
+                td.style["color"] = color ? getComputedStyle(td).color : "";
+                if (mode === "backgroundColor" && color) {
+                    [td, ...descendants(td)].forEach((n) => coloredNodes.add(n));
                 }
             }
         }

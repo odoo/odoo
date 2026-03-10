@@ -70,7 +70,7 @@ export class HighlightPlugin extends Plugin {
             // we rely on the normalize handler to start it again
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
-        on_will_format_selection_handlers: () => {
+        format_selection_overrides: () => {
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
         },
         on_will_save_handlers: () => {

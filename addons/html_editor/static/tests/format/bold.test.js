@@ -14,6 +14,8 @@ import {
     tripleClick,
     undo,
 } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -53,7 +55,8 @@ test("should make qweb tag bold (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="font-weight: bolder;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
@@ -61,18 +64,20 @@ test("should make qweb tag bold (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
-        contentAfter: `<div>[<p t-field="record.name" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
 test("should make qweb tag bold and create a step even with partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(
-        `<div><p t-out="'Test'" contenteditable="false">T[e]st</p></div>`
+        `<div><p t-out="'Test'" contenteditable="false">T[e]st</p></div>`,
+        { config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] } }
     );
     bold(editor);
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div>[<p t-out="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>` +
+            `<div>[<p t-out="'Test'" contenteditable="false" data-oe-protected="true" style="font-weight: bolder;">Test</p>]</div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);

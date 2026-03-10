@@ -52,7 +52,7 @@ function isFormatted(formatPlugin, format) {
  * @typedef {((formatName: string, options: {
  *      formatProps: object,
  *      applyStyle: boolean,
- * }) => void | boolean)[]} on_will_format_selection_handlers
+ * }) => void | boolean)[]} format_selection_overrides
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  *
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
@@ -305,7 +305,6 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, options) {
-        this.trigger("on_will_format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
         }
@@ -318,6 +317,16 @@ export class FormatPlugin extends Plugin {
         const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
             applyStyle = !this.isSelectionFormat(formatName);
+        }
+
+        const formattedNodes = new Set();
+        if (
+            this.delegateTo("format_selection_overrides", formatName, formattedNodes, {
+                applyStyle,
+                formatProps,
+            })
+        ) {
+            return;
         }
 
         let zws;
@@ -350,24 +359,7 @@ export class FormatPlugin extends Plugin {
                         isContentEditable(n)
                 )
         );
-        const unformattedTextNodes = selectedTextNodes.filter((n) => {
-            const listItem = closestElement(n, "li");
-            if (listItem && this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
-                const hasFontSizeStyle =
-                    formatName === "setFontSizeClassName"
-                        ? listItem.classList.contains(formatProps?.className)
-                        : listItem.style.fontSize;
-                return !hasFontSizeStyle;
-            }
-            return true;
-        });
-
-        const tagetedFieldNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
-                .filter(Boolean)
-        );
+        const unformattedTextNodes = selectedTextNodes.filter((n) => !formattedNodes.has(n));
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
             const inlineAncestors = [];
@@ -461,14 +453,6 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        for (const targetedFieldNode of tagetedFieldNodes) {
-            if (applyStyle) {
-                formatSpec.addStyle(targetedFieldNode, formatProps);
-            } else {
-                formatSpec.removeStyle(targetedFieldNode);
-            }
-        }
-
         if (zws) {
             const siblings = [...zws.parentElement.childNodes];
             if (
@@ -513,9 +497,9 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
-        if (tagetedFieldNodes.size > 0) {
-            return true;
-        }
+        // To ensure history step is added when overrides apply formatting.
+        // @see formatSelection
+        return !!formattedNodes.size;
     }
 
     normalize(root) {

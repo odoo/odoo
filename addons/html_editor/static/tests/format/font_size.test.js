@@ -8,6 +8,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { press } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -21,7 +22,8 @@ test("should change the font size the qweb tag", async () => {
     await testEditor({
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setFontSize("36px"),
-        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="font-size: 36px;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" style="font-size: 36px;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
 
