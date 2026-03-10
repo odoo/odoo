@@ -10,7 +10,7 @@ from odoo.http import request
 from odoo.http.stream import Stream
 from odoo.tools import file_open
 from odoo.tools.image import image_guess_size_from_field_name, image_process
-from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, get_extension, guess_mimetype
+from odoo.tools.mimetypes import get_extension, guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
@@ -138,12 +138,11 @@ class IrBinary(models.AbstractModel):
             if mimetype:
                 stream.mimetype = mimetype
             elif not stream.mimetype:
-                if stream.type == 'data':
-                    head = stream.data[:MIMETYPE_HEAD_SIZE]
-                else:
-                    with open(stream.path, 'rb') as file:
-                        head = file.read(MIMETYPE_HEAD_SIZE)
-                stream.mimetype = guess_mimetype(head, default=default_mimetype)
+                stream.mimetype = (
+                    guess_mimetype(stream.data, default=default_mimetype)
+                    if stream.type == 'data' else
+                    guess_file_mimetype(stream.path, default=default_mimetype)
+                )
 
             if filename:
                 stream.download_name = filename
