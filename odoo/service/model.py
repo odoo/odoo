@@ -14,8 +14,6 @@ from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
-from .server import thread_local
-
 _logger = logging.getLogger(__name__)
 
 
@@ -104,7 +102,7 @@ def execute_cr(cr, uid, obj, method, args, kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
-    thread_local.rpc_model_method = f'{obj}.{method}'
+    threading.current_thread().rpc_model_method = f'{obj}.{method}'
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
