@@ -185,7 +185,7 @@
                                         <t t-if="partner.implemented_partner_count > 1" t-set='reflabel'>references</t>
                                         <t t-else="" t-set='reflabel'>reference</t>
                                         <t t-out="partner.implemented_partner_count"/> <t t-out='reflabel'/> » </b>
-                                    <span t-field="partner.website_short_description"/>
+                                    <span t-field="partner.website_short_description" placeholder="Edit to add a short description"/>
                                 </small>
                                 <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                     Edit to add a short description
