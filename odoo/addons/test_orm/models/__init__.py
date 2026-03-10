@@ -12,4 +12,5 @@ from . import (
     test_domain,
     test_fields,
     test_html_converter,
+    test_indexed_translation,
 )
