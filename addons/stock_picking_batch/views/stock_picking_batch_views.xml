@@ -243,6 +243,7 @@
         <field name="arch" type="xml">
             <search string="Search Batch Transfer">
                 <field name="name" string="Batch Transfer"/>
+                <field name="description"/>
                 <field name="picking_type_id" invisible="1"/>
                 <field name="user_id"/>
                 <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
