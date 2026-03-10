@@ -29,4 +29,5 @@ from . import (
     test_performance,
     test_properties,
     test_query,
+    test_qweb_float,
 )
