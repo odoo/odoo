@@ -541,6 +541,9 @@ class WebsitePublishedMixin(models.AbstractModel):
             'published_date': fields.Datetime.now(),
             'publish_on': False,
         })
+        # Invalidate the ORM cache for website_published so hooks that read it
+        # during this method see the fresh "True" value instead of an old cache.
+        records.invalidate_recordset(['website_published'])
 
     @api.depends_context('uid')
     def _compute_can_publish(self):
