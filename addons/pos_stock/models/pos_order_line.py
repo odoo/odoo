@@ -88,7 +88,6 @@ class PosOrderLine(models.Model):
             'route_ids': self.order_id.config_id.route_id,
             'warehouse_id': self.order_id.config_id.warehouse_id or False,
             'partner_id': self.order_id.partner_id.id,
-            'product_description_variants': self.full_product_name,
             'company_id': self.order_id.company_id,
             'reference_ids': self.order_id.stock_reference_ids,
         }
