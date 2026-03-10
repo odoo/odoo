@@ -145,7 +145,6 @@ class ResConfigSettings(models.TransientModel):
             "type": "ir.actions.act_window",
             "res_model": "product.feed",
             "views": [(False, "list")],
-            "target": "new",
             "context": {"default_website_id": self.website_id.id, "hide_website_column": True},
             "domain": [("website_id", "=", self.website_id.id)],
         }
