@@ -3,6 +3,7 @@ import { click, edit, press, queryAllValues, queryFirst, select } from "@odoo/ho
 import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
+    contains,
     defineModels,
     fields,
     mockService,
@@ -984,4 +985,22 @@ test("reference char with list view pager navigation", async () => {
     await click(".o_pager_next");
     await animationFrame();
     expect(".o_field_reference").toHaveText("xpad");
+});
+
+test("ReferenceField preserves the original model even if emptied", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form><field name="reference" options="{'hide_model': True}"/></form>`,
+    });
+    expect(".o_field_reference input").toHaveValue("xphone");
+    // remove the value, to make the field use the initial value of the model
+    await contains(".o_field_reference input").clear();
+    expect(".o_field_reference input").toBeVisible();
+    await click(".o_field_reference input");
+    await animationFrame();
+    await click(".ui-autocomplete .ui-menu-item:nth-child(2)");
+    await animationFrame();
+    expect(".o_field_reference input").toHaveValue("xpad");
 });
