@@ -34,7 +34,17 @@ class TestUblExportBis3SelfbillingBE(TestUblBis3Common, TestUblCiiBECommon):
     def subfolder(self):
         return super().subfolder().replace('export', 'export/bis3/invoice_selfbilling')
 
-    def test_invoice_selfbilling(self):
+    def test_export_selfbilling(self):
+        self.env['res.partner'].create({
+            'name': 'custom delivery address',
+            'parent_id': self.company.partner_id.id,
+            'type': 'delivery',
+            'street': 'Chaussée de Namur 40',
+            'city': 'Ramillies',
+            'zip': '1367',
+            'global_location_number': '0123456789',
+            'country_id': self.ref('base.be'),
+        })
         tax_21 = self.percent_tax(21.0, type_tax_use='purchase')
         product = self._create_product(standard_price=100.0, supplier_taxes_id=tax_21.ids)
         invoice = self._create_invoice_one_line(
