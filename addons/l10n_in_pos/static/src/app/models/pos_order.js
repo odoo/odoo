@@ -7,6 +7,24 @@ patch(PosOrder.prototype, {
     get isInCompany() {
         return this.company.country_id?.code === "IN";
     },
+    setPartner(partner) {
+        super.setPartner(partner);
+
+        if (!this.isInCompany) {
+            return;
+        }
+
+        const l10n_in_gst_treatment = partner?.l10n_in_gst_treatment;
+        if (
+            !partner?.vat ||
+            !l10n_in_gst_treatment ||
+            ["unregistered", "consumer", "overseas"].includes(l10n_in_gst_treatment)
+        ) {
+            this.setToInvoice(false);
+        } else {
+            this.setToInvoice(true);
+        }
+    },
     _prepareL10nInHsnSummary() {
         const company = this.company;
         const orderLines = this.lines;
