@@ -1,4 +1,4 @@
-import os
+import tempfile
 from unittest.mock import Mock, patch
 
 import odoo.tests
@@ -117,7 +117,7 @@ class TestReports(odoo.tests.HttpCase):
         with (MockRequest(report.env) as mock_request,
             patch('subprocess.run') as mock_popen,
             patch.object(session_store(), 'delete') as mock_delete,
-            patch.object(os, 'unlink') as mock_unlink):
+            patch('tempfile._TemporaryFileCloser.cleanup', autospec=True, wraps=tempfile._TemporaryFileCloser.cleanup) as mock_unlink):
 
             mock_request.session = self.authenticate(admin.login, admin.login)
 
@@ -134,7 +134,7 @@ class TestReports(odoo.tests.HttpCase):
             self.assertNotEqual(mock_delete.call_args.args[0].sid, mock_request.session.sid)
 
             # Check if temporary files have been deleted
-            deleted_files = ''.join([call.args[0] for call in mock_unlink.call_args_list])
+            deleted_files = ''.join([call.args[0].name for call in mock_unlink.call_args_list])
             self.assertIn('report.cookie_jar.tmp', deleted_files)
             self.assertIn('report.header.tmp', deleted_files)
             self.assertIn('report.footer.tmp', deleted_files)
