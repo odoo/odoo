@@ -355,6 +355,7 @@ test("Inset card is hidden when sidebar is open", async () => {
 test("join/leave sounds are only played on main tab", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    listenStoreFetch("channels_as_member");
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
     patchWithCleanup(env1.services["mail.sound_effects"], {
@@ -368,7 +369,9 @@ test("join/leave sounds are only played on main tab", async () => {
         },
     });
     await openDiscuss(channelId, { target: env1 });
+    await waitStoreFetch("channels_as_member");
     await openDiscuss(channelId, { target: env2 });
+    await waitStoreFetch("channels_as_member");
     await click(`${env1.selector} [title='Start Call']`);
     await contains(`${env1.selector} .o-discuss-Call`);
     await contains(`${env2.selector} .o-discuss-Call`);
