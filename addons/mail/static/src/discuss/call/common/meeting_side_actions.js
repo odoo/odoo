@@ -21,8 +21,12 @@ export class MeetingSideActions extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.callActions = useCallActions({ channel: () => this.store.rtc.channel });
+        this.callActions = useCallActions(this.callActionsParams);
         useSubEnv({ inMeetingSideActions: true });
+    }
+
+    get callActionsParams() {
+        return { channel: () => this.store.rtc.channel };
     }
 
     computeActions() {
@@ -46,7 +50,7 @@ export class MeetingSideActions extends Component {
             quickThreadActionIds.includes(action.id)
         );
         actions.push(
-            threadActions.more({
+            threadActions.more(this.callActionsParams, {
                 actions: [
                     partitionedActions.quick,
                     partitionedActions.other,

@@ -26,6 +26,10 @@ export const ACTION_TAGS = Object.freeze({
  */
 
 /**
+ * @typedef {{quick: Action[], group: Array<Action[]>, other: Action[]}} PartitionedActions
+ */
+
+/**
  * @typedef {Object} ActionDefinition
  * @property {(params: Action & ActionPanelCloseSpecificParams) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
@@ -280,7 +284,9 @@ export class Action {
     get disabledCondition() {
         return Boolean(
             this._disabledCondition(this.params) ??
-                this.definition.disabledCondition?.call(this, this.params)
+                (typeof this.definition.disabledCondition === "function"
+                    ? this.definition.disabledCondition.call(this, this.params)
+                    : this.definition.disabledCondition)
         );
     }
 
@@ -578,13 +584,14 @@ export class UseActions extends Reactive {
      */
     /** @typedef {ActionDefinition & MoreActionSpecificDefinition} MoreActionDefinition */
     /** @param {MoreActionDefinition} [data] */
-    more(data = {}, id) {
+    more(actionsParams = {}, data = {}, id) {
         let moreAction = toRaw(this).moreActions.get(id);
         if (moreAction) {
             moreAction = this.moreActions.get(id);
             moreAction.definition.actions = data.actions;
         } else {
             moreAction = new this.ActionClass({
+                ...actionsParams,
                 owner: this.component,
                 id: `more-action:${id}`,
                 definition: {
@@ -610,6 +617,7 @@ export class UseActions extends Reactive {
         return actions;
     }
 
+    /** @return {PartitionedActions} */
     get partition() {
         const actions = this.transformedActions.filter((action) => action.condition);
         const quick = actions

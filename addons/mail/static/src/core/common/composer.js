@@ -127,7 +127,7 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
-        this.composerActions = useComposerActions({ composer: () => this.props.composer });
+        this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
             send_keybind: htmlJoin(
@@ -330,6 +330,25 @@ export class Composer extends Component {
 
     get areAllActionsDisabled() {
         return this.props.disabled;
+    }
+
+    get composerActionsParams() {
+        return { composer: () => this.props.composer };
+    }
+
+    /** @param {import("@mail/core/common/action").PartitionedActions} partitionedActions */
+    computeMoreActions(partitionedActions) {
+        if (this.props.mode === "extended" || partitionedActions.other.length === 0) {
+            this.moreActions = undefined;
+            return;
+        }
+        this.moreActions = this.composerActions.more(this.composerActionsParams, {
+            actions: partitionedActions.other,
+            disabledCondition: this.areAllActionsDisabled,
+            dropdownPosition: "top-start",
+            icon: "fa fa-plus-circle",
+            name: _t("More Actions"),
+        });
     }
 
     get isMultiUpload() {

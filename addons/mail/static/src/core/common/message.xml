@@ -162,7 +162,7 @@
     <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing and !this.env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': this.isAlignedRight,
-            'mt-1': this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
+            'o-mt-0_5': this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
             'my-n2': !this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
             'gap-1': this.isMobileOS,
             'mx-1': !this.isMobileOS,

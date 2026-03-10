@@ -43,7 +43,7 @@
 </t>
 
 <t t-name="mail.Action.main">
-    <t t-set="isInlineCircleButton" t-value="this.env.inComposer or (this.action.tags.includes('JOIN_LEAVE_CALL') and this.action.icon and !this.action.inlineName)"/>
+    <t t-set="isInlineCircleButton" t-value="this.env.inComposer or this.env.inMessage or (this.action.tags.includes('JOIN_LEAVE_CALL') and this.action.icon and !this.action.inlineName)"/>
     <!-- core-->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         'o-mail-ActionList-button btn btn-group-item position-relative': true,
@@ -53,6 +53,7 @@
         'o-odooControlPanelSwitchStyle': this.props.odooControlPanelSwitchStyle,
         'o-hasBtnBg': this.hasBtnBg,
         'o-inline': this.props.inline,
+        'bg-secondary': this.action.isActive and !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
         'btn-secondary': !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
         'btn-primary': this.action.tags.includes('PRIMARY'),
         'btn-danger': this.action.tags.includes('DANGER'),
@@ -91,7 +92,8 @@
         'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
         'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
         'p-1':           this.props.inline   and  this.hasBtnBg and isInlineCircleButton and this.env.inChatWindow,
-        'o-p-0_5':       this.props.inline   and  ((!this.env.inMeetingView and !this.hasBtnBg and !this.env.inComposer) or this.env.inMessage),
+        'o-p-0_5':       this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.env.inComposer,
+        'o-px-0_5 py-0': this.props.inline   and  this.env.inMessage,
         'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
         'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,
     })"/>

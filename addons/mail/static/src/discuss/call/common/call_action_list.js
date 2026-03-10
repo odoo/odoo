@@ -20,7 +20,7 @@ export class CallActionList extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
-        this.callActions = useCallActions({ channel: () => this.props.channel });
+        this.callActions = useCallActions(this.callActionsParams);
         this.more = useRef("more");
         this.root = useRef("root");
         this.popover = usePopover(Tooltip, {
@@ -44,6 +44,7 @@ export class CallActionList extends Component {
                     ? [
                           ...quickActions,
                           this.callActions.more(
+                              this.callActionsParams,
                               {
                                   actions: moreActions,
                                   dropdownMenuClass: "m-0 mb-1 overflow-x-hidden",
@@ -58,6 +59,10 @@ export class CallActionList extends Component {
             }
             this.actions = [...group2, other];
         });
+    }
+
+    get callActionsParams() {
+        return { channel: () => this.props.channel };
     }
 
     get MORE() {

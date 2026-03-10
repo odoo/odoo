@@ -4,6 +4,7 @@
 <t t-name="mail.Composer">
     <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="partitionedActions" t-value="this.composerActions.partition"/>
+    <t t-set="dummy" t-value="this.computeMoreActions(partitionedActions)"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
     <div t-custom-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
@@ -56,12 +57,7 @@
                     t-custom-ref="input-container"
                 >
                     <div t-if="!this.extended" t-attf-class="{{ actionsContainerClass }}">
-                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="this.store.discussDropdownMenuClass(this)">
-                            <t t-call="mail.Composer.moreActions"/>
-                            <t t-set-slot="content">
-                                <ActionList actions="partitionedActions.other" dropdown="true"/>
-                            </t>
-                        </Dropdown>
+                        <t t-if="this.moreActions" t-call="mail.Composer.moreActions"/>
                     </div>
                     <div class="position-relative flex-grow-1">
                         <t t-set="inputClasses" t-value="{
@@ -161,18 +157,11 @@
 </t>
 
 <t t-name="mail.Composer.moreActions">
-    <button class="btn btn-link p-0 d-flex border-0" t-att-disabled="this.areAllActionsDisabled" t-custom-ref="more-actions">
+    <div class="o-mail-Composer-moreActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-custom-ref="more-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <t t-set="moreName">More Actions</t>
-            <ActionList inline="true" actions="[{
-                'disabledCondition': this.areAllActionsDisabled,
-                'icon': 'fa fa-plus-circle',
-                'id': 'more-actions',
-                'name': moreName,
-                'tags': [],
-            }]"/>
+            <ActionList actions="[this.moreActions]" inline="true"/>
         </div>
-    </button>
+    </div>
 </t>
 
 <t t-name="mail.Composer.extraActions">

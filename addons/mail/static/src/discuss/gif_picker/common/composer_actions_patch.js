@@ -3,7 +3,7 @@ import {
     pickerOnClick,
     pickerSetup,
 } from "@mail/core/common/composer_actions";
-import { markup } from "@odoo/owl";
+import { markup, toRaw } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { markEventHandled } from "@web/core/utils/misc";
 import { useGifPicker } from "./gif_picker";
@@ -13,6 +13,7 @@ registerComposerAction("add-gif", {
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
         !owner.env.inChatter &&
         !composer.message,
+    isActive: ({ action, owner }) => toRaw(owner.getActivePicker()) === toRaw(action.picker),
     isPicker: true,
     pickerName: _t("GIF"),
     icon: "oi oi-gif-picker",

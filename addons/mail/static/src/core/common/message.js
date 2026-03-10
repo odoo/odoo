@@ -119,10 +119,7 @@ export class Message extends Component {
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.root);
         this.messageBody = useRef("body");
-        this.messageActions = useMessageActions({
-            message: () => this.message,
-            thread: () => this.props.thread,
-        });
+        this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
@@ -218,6 +215,13 @@ export class Message extends Component {
         );
     }
 
+    get messageActionsParams() {
+        return {
+            message: () => this.message,
+            thread: () => this.props.thread,
+        };
+    }
+
     computeActions() {
         const allActions = this.messageActions.actions;
         const quickActions = allActions.slice(
@@ -231,7 +235,7 @@ export class Message extends Component {
                 ? allActions.slice(this.quickActionCount - 1)
                 : false;
         const moreAction = moreActions?.length
-            ? this.messageActions.more({
+            ? this.messageActions.more(this.messageActionsParams, {
                   actions: moreActions,
                   dropdownMenuClass: "o-mail-Message-moreMenu",
                   dropdownPosition: this.isAlignedRight

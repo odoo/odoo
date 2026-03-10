@@ -89,10 +89,12 @@ registerComposerAction("send-message", {
         );
     },
     sequenceQuick: 30,
+    tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
     disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     icon: "fa fa-smile-o",
+    isActive: ({ action, owner }) => toRaw(owner.getActivePicker()) === toRaw(action.picker),
     isPicker: true,
     pickerName: _t("Emoji"),
     name: _t("Add Emojis"),
