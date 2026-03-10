@@ -2,7 +2,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
-    let trigger = `.floor-map .table${withClass}`;
+    let trigger = `.floor-map .table${withClass}:not(.syncing)`;
     if (withoutClass) {
         trigger += `:not(${withoutClass})`;
     }

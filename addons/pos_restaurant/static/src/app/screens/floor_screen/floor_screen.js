@@ -688,6 +688,13 @@ export class FloorScreen extends Component {
             return;
         }
         if (!this.pos.isOrderTransferMode) {
+            const isSyncing = this.getTableIsSyncing(table);
+            if (isSyncing) {
+                this.pos.notification.add(
+                    _t("This table is currently syncing, please wait a moment before selecting it.")
+                );
+                return;
+            }
             await this.pos.setTableFromUi(table);
         }
     }
@@ -923,6 +930,14 @@ export class FloorScreen extends Component {
     }
     getLighterShade(color) {
         return this.formatColor([...this._getColors()[color], 0.75]);
+    }
+    getTableIsSyncing(table) {
+        const order = table.getOrder();
+        if (!order) {
+            return false;
+        }
+
+        return this.pos.syncingOrders.has(order?.uuid);
     }
     async deleteFloor() {
         const confirmed = await ask(this.dialog, {

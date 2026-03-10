@@ -552,10 +552,15 @@ patch(PosStore.prototype, {
     },
     async submitOrder() {
         const order = this.getOrder();
+        this.showDefault();
+
+        // We need to launch the sync here before mounting floor_screen
+        // to ensure the syncingStatus is only managed from this method
+        // and not the floor screen mounting which can cause some race condition
+        await this.syncAllOrders();
         await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
-        this.showDefault();
     },
     async reprintOrder() {
         const order = this.getOrder();
