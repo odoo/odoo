@@ -12,7 +12,8 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { LazyComponent, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
+import { LazyComponent } from "@web/core/lazy_component";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
