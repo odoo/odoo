@@ -56,6 +56,9 @@ export class PublicReadonlySpreadsheet extends Component {
             this.data,
             {
                 mode: this.props.mode === "dashboard" ? "dashboard" : "readonly",
+                custom: {
+                    isFrozenSpreadsheet: true,
+                },
             },
             this.data.revisions || []
         );
