@@ -1,17 +1,17 @@
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { Editor } from "@html_editor/editor";
+import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 import { Component, onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
-import { LazyComponent } from "@web/core/assets";
+import { LazyComponent } from "@web/core/lazy_component";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
-import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { Editor } from "@html_editor/editor";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { closestScrollableY } from "@web/core/utils/scrolling";
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
-import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 

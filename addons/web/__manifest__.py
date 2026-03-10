@@ -482,6 +482,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
+            'web/static/src/core/lazy_component.js',
             'web/static/src/core/user.js',
             'web/static/src/core/transition.js',
             'web/static/src/core/currency.js',

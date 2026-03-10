@@ -1,6 +1,5 @@
-import { Component, onWillStart, whenReady, xml } from "@odoo/owl";
+import { whenReady } from "@odoo/owl";
 import { session } from "@web/session";
-import { registry } from "./registry";
 
 /**
  * @typedef {{
@@ -85,28 +84,6 @@ export function loadCSS() {
 }
 
 export class AssetsLoadingError extends Error {}
-
-/**
- * Utility component that loads an asset bundle before instanciating a component
- */
-export class LazyComponent extends Component {
-    static template = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
-    static props = {
-        Component: String,
-        bundle: String,
-        props: { type: [Object, Function], optional: true },
-    };
-    setup() {
-        onWillStart(async () => {
-            await loadBundle(this.props.bundle);
-            this.Component = registry.category("lazy_components").get(this.props.Component);
-        });
-    }
-
-    get componentProps() {
-        return typeof this.props.props === "function" ? this.props.props() : this.props.props;
-    }
-}
 
 /**
  * This export is done only in order to modify the behavior of the exported
