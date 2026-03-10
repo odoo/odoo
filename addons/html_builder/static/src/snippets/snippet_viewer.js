@@ -110,20 +110,13 @@ export class SnippetViewer extends Component {
 
     getSnippetColumns() {
         const snippets = this.getSelectedSnippets();
+        const nbColumns = this.props.state.isMobilePreviewMode ? 3 : 2;
+        const columns = new Array(nbColumns).fill().map(() => []);
 
-        const columns = [[], []];
-        for (const index in snippets) {
-            if (index % 2 === 0) {
-                columns[0].push(snippets[index]);
-            } else {
-                columns[1].push(snippets[index]);
-            }
+        for (const [index, snippet] of snippets.entries()) {
+            columns[index % nbColumns].push(snippet);
         }
-        let numResults = 0;
-        for (const column of columns) {
-            numResults += column.length;
-        }
-        this.props.hasSearchResults(numResults > 0);
+        this.props.hasSearchResults(snippets.length > 0);
         return columns;
     }
 

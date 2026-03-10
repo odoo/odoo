@@ -12,12 +12,12 @@
 
             .s_ecomm_categories_showcase_block {
                 transition: flex 0.35s ease;
-                flex: 1;
+                flex: 1 0 auto;
                 min-height: auto;
                 height: 650px;
 
                 &:first-child {
-                    flex: 2;
+                    flex: 2 0 auto;
                 }
             }
         }
@@ -26,10 +26,10 @@
     &:is(:hover, :focus-visible) [data-snippet="s_ecomm_categories_showcase"] {
         .s_ecomm_categories_showcase_wrapper {
             .s_ecomm_categories_showcase_block {
-                flex: 1;
+                flex: 1 0 auto;
 
                 &:nth-child(2) {
-                    flex: 3;
+                    flex: 3 0 auto;
                 }
             }
         }
