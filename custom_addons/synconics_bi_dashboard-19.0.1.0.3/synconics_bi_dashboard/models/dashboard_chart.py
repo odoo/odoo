@@ -2,7 +2,6 @@ import io
 import csv
 import base64
 import xlsxwriter
-import imgkit
 import logging
 
 from math import gcd
@@ -16,6 +15,11 @@ from odoo import models, fields, api, _
 from odoo.tools import groupby, format_amount
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import ValidationError
+
+try:
+    import imgkit
+except ImportError:
+    imgkit = None
 
 _logger = logging.getLogger(__name__)
 
@@ -1627,6 +1631,10 @@ class DashboardChart(models.Model):
             "encoding": "UTF-8",
             "zoom": "1",
         }
+        if imgkit is None:
+            raise ValidationError(
+                _("Install the Python package 'imgkit' to export dashboard cards as images.")
+            )
         img_binary = imgkit.from_string(full_html, False, options=options)
         img_base64 = base64.b64encode(img_binary).decode("UTF-8")
         img_data_url = f"data:image/jpeg;base64,{img_base64}"

@@ -41,8 +41,6 @@
         'views/db_backup_configure_views.xml',
         'wizard/dropbox_auth_code_views.xml',
     ],
-    'external_dependencies': {
-        'python': ['dropbox', 'pyncclient', 'boto3', 'nextcloud-api-wrapper','paramiko']},
     'images': ['static/description/banner.gif'],
     'license': 'LGPL-3',
     'installable': True,

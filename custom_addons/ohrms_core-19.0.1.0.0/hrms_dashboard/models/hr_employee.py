@@ -20,7 +20,6 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-import pandas as pd
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 from dateutil.relativedelta import relativedelta
@@ -332,18 +331,18 @@ class HrEmployee(models.Model):
             }
             leave_lines.append(vals)
         if leave_lines:
-            df = pd.DataFrame(leave_lines)
-            rf = df.groupby(['l_month', 'department']).sum()
-            result_lines = rf.to_dict('index')
+            result_lines = defaultdict(float)
+            for leave_line in leave_lines:
+                result_lines[(leave_line['l_month'], leave_line['department'])] += leave_line['days']
             for month in month_list:
-                for line in result_lines:
-                    if month.replace(' ', '') == line[0].replace(' ', ''):
+                for line_key, total_days in result_lines.items():
+                    if month.replace(' ', '') == line_key[0].replace(' ', ''):
                         match = list(filter(lambda d: d['l_month'] in [month],
                                             graph_result))[0]['leave']
                         dept_name = self.env['hr.department'].browse(
-                            line[1]).name
+                            line_key[1]).name
                         if match:
-                            match[dept_name] = result_lines[line]['days']
+                            match[dept_name] = total_days
         for result in graph_result:
             result['l_month'] = result['l_month'].split(' ')[:1][0].strip()[
                                 :3] + " " + \
@@ -433,16 +432,16 @@ class HrEmployee(models.Model):
             }
             leave_lines.append(vals)
         if leave_lines:
-            df = pd.DataFrame(leave_lines)
-            rf = df.groupby(['l_month']).sum()
-            result_lines = rf.to_dict('index')
+            result_lines = defaultdict(float)
+            for leave_line in leave_lines:
+                result_lines[leave_line['l_month']] += leave_line['days']
             for line in result_lines:
                 match = list(filter(
                     lambda d: d['l_month'].replace(' ', '') == line.replace(' ',
                                                                             ''),
                     graph_result))
                 if match:
-                    match[0]['leave'] = result_lines[line]['days']
+                    match[0]['leave'] = result_lines[line]
         for result in graph_result:
             result['l_month'] = result['l_month'].split(' ')[:1][0].strip()[
                                 :3] + " " + \
@@ -593,4 +592,3 @@ class HrEmployee(models.Model):
                 'stage_name': task.stage_id.name if task.stage_id else 'No Stage',
             })
         return task_data
-

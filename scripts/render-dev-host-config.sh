@@ -32,6 +32,12 @@ require_value "APP_DB_PASSWORD" "$APP_DB_PASSWORD"
 
 mkdir -p "$(dirname "$CONFIG_OUTPUT")"
 
+EXTRA_ADDONS_PATHS="$(scripts/build-custom-addon-paths.sh custom_addons)"
+ADDONS_PATH="addons,custom_addons"
+if [ -n "$EXTRA_ADDONS_PATHS" ]; then
+    ADDONS_PATH="$ADDONS_PATH,$EXTRA_ADDONS_PATHS"
+fi
+
 cat > "$CONFIG_OUTPUT" <<EOF
 [options]
 ; Generated locally by scripts/render-dev-host-config.sh. Do not commit.
@@ -42,7 +48,7 @@ db_port = $APP_DB_PORT
 db_user = $APP_DB_USER
 db_password = $APP_DB_PASSWORD
 
-addons_path = addons,custom_addons,custom_addons/knowledge,custom_addons/om_account_accountant-19.0.1.0.3
+addons_path = $ADDONS_PATH
 
 proxy_mode = False
 list_db = True

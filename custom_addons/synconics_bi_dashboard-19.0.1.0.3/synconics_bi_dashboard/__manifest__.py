@@ -103,7 +103,6 @@ Overview Dashboard
     "category": "web",
     "version": "1.0.3",
     "depends": ["web", "mail"],
-    "external_dependencies": {"python": ["imgkit"]},
     "assets": {
         "web.assets_backend": [
             "synconics_bi_dashboard/static/src/lib/html2canvas.js",

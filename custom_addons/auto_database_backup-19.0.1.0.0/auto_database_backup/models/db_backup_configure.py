@@ -21,22 +21,17 @@
 ###############################################################################
 from email.policy import default
 
-import boto3
-import dropbox
 import errno
 import ftplib
 import json
 import logging
-import nextcloud_client
 import os
-import paramiko
 import requests
 import shutil
 import subprocess
 import tempfile
 import odoo
 from datetime import datetime, timedelta
-from nextcloud import NextCloud
 from requests.auth import HTTPBasicAuth
 from werkzeug import urls
 from odoo import api, fields, models, _
@@ -44,6 +39,31 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import find_pg_tool, exec_pg_environ
 from odoo.http import request
 from odoo.service import db
+
+try:
+    import boto3
+except ImportError:
+    boto3 = None
+
+try:
+    import dropbox
+except ImportError:
+    dropbox = None
+
+try:
+    import nextcloud_client
+except ImportError:
+    nextcloud_client = None
+
+try:
+    import paramiko
+except ImportError:
+    paramiko = None
+
+try:
+    from nextcloud import NextCloud
+except ImportError:
+    NextCloud = None
 
 _logger = logging.getLogger(__name__)
 ONEDRIVE_SCOPE = ['offline_access openid Files.ReadWrite.All']
@@ -211,10 +231,20 @@ class DbBackupConfigure(models.Model):
                                   help="field used to store the name of a"
                                        " folder in an Amazon S3 bucket.")
 
+    def _ensure_optional_package(self, package, package_name, feature_label):
+        if package is None:
+            raise UserError(
+                _("Install the Python package '%(package)s' to use %(feature)s.") % {
+                    'package': package_name,
+                    'feature': feature_label,
+                }
+            )
+
     def action_s3cloud(self):
         """If it has aws_secret_access_key, which will perform s3cloud
          operations for connection test"""
         if self.aws_access_key and self.aws_secret_access_key:
+            self._ensure_optional_package(boto3, 'boto3', _('Amazon S3 backups'))
             try:
                 s3_client = boto3.client(
                     's3',
@@ -257,6 +287,11 @@ class DbBackupConfigure(models.Model):
          which will perform an action for nextcloud connection test"""
         if self.domain and self.next_cloud_password and \
                 self.next_cloud_user_name:
+            self._ensure_optional_package(
+                NextCloud,
+                'nextcloud-api-wrapper',
+                _('Nextcloud backups'),
+            )
             try:
                 ncx = NextCloud(self.domain,
                                 auth=HTTPBasicAuth(self.next_cloud_user_name,
@@ -509,6 +544,7 @@ class DbBackupConfigure(models.Model):
 
     def get_dropbox_auth_url(self):
         """Return dropbox authorization url"""
+        self._ensure_optional_package(dropbox, 'dropbox', _('Dropbox backups'))
         dbx_auth = dropbox.oauth.DropboxOAuth2FlowNoRedirect(
             self.dropbox_client_key,
             self.dropbox_client_secret,
@@ -517,6 +553,7 @@ class DbBackupConfigure(models.Model):
 
     def set_dropbox_refresh_token(self, auth_code):
         """Generate and set the dropbox refresh token from authorization code"""
+        self._ensure_optional_package(dropbox, 'dropbox', _('Dropbox backups'))
         dbx_auth = dropbox.oauth.DropboxOAuth2FlowNoRedirect(
             self.dropbox_client_key,
             self.dropbox_client_secret,
@@ -538,6 +575,7 @@ class DbBackupConfigure(models.Model):
     def action_sftp_connection(self):
         """Test the sftp and ftp connection using entered credentials"""
         if self.backup_destination == 'sftp':
+            self._ensure_optional_package(paramiko, 'paramiko', _('SFTP backups'))
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             try:
@@ -764,6 +802,7 @@ class DbBackupConfigure(models.Model):
                         raise ValidationError('Please check connection')
             # Dropbox backup
             elif rec.backup_destination == 'dropbox':
+                self._ensure_optional_package(dropbox, 'dropbox', _('Dropbox backups'))
                 temp = tempfile.NamedTemporaryFile(
                     suffix='.%s' % rec.backup_format)
                 with open(temp.name, "wb+") as tmp:
@@ -877,6 +916,16 @@ class DbBackupConfigure(models.Model):
                     if rec.notify_user:
                         mail_template_failed.send_mail(rec.id, force_send=True)
             elif rec.backup_destination == 'next_cloud':
+                self._ensure_optional_package(
+                    NextCloud,
+                    'nextcloud-api-wrapper',
+                    _('Nextcloud backups'),
+                )
+                self._ensure_optional_package(
+                    nextcloud_client,
+                    'pyncclient',
+                    _('Nextcloud backups'),
+                )
                 try:
                     if rec.domain and rec.next_cloud_password and \
                             rec.next_cloud_user_name:
@@ -957,6 +1006,7 @@ class DbBackupConfigure(models.Model):
             # Amazon S3 Backup
             elif rec.backup_destination == 'amazon_s3':
                 if rec.aws_access_key and rec.aws_secret_access_key:
+                    self._ensure_optional_package(boto3, 'boto3', _('Amazon S3 backups'))
                     try:
                         # Create a boto3 client for Amazon S3 with provided
                         # access key id and secret access key

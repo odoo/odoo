@@ -78,7 +78,6 @@
             'ohrms_core/static/templates/side_bar.xml',
         ],
     },
-    "external_dependencies": {"python": ["pandas"]},
     'images': ['static/description/banner.jpg'],
     'license': 'LGPL-3',
     'installable': True,

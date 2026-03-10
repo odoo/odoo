@@ -2,7 +2,6 @@
 import json
 import logging
 import re
-import openai
 from datetime import datetime
 import io # For Excel export
 import xlsxwriter # For Excel export - needs to be installed: pip install XlsxWriter
@@ -11,7 +10,13 @@ from odoo import http, release
 from odoo.http import request, route, content_disposition # For Excel download
 from odoo.exceptions import UserError, AccessError
 
+try:
+    import openai
+except ImportError:
+    openai = None
+
 _logger = logging.getLogger(__name__)
+_OPENAI_MISSING_MESSAGE = "Python package 'openai' is not installed on the server."
 
 # Backend URL is no longer needed as we call OpenAI directly
 # BACKEND_TIMEOUT = 30 # Keep for OpenAI call timeout if needed
@@ -252,6 +257,8 @@ class AISQLGeneratorController(http.Controller):
     def _get_corrected_sql_from_ai(self, original_nl_query, failed_sql, db_error_msg,
                                    sql_schema_context_str, odoo_version_str, user_api_key):
         _logger.info(f"Attempting AI correction for failed SQL. NLQ: {original_nl_query[:50]}, Error: {db_error_msg[:100]}")
+        if openai is None:
+            return {'status': 'correction_api_error', 'explanation': _OPENAI_MISSING_MESSAGE}
         try:
             client = openai.OpenAI(api_key=user_api_key)
             # === System Prompt for SQL Correction ===
@@ -294,6 +301,8 @@ Ensure the corrected_sql is a read-only SELECT statement using only provided sch
         # Do not log the full key or very long schema unless in deep debug
         # _logger.debug(f"SQL Schema Context for AI:\n{sql_schema_context_str}")
         # _logger.debug(f"Odoo Version for AI: {odoo_version_str}")
+        if openai is None:
+            return {'status': 'error', 'error_detail': _OPENAI_MISSING_MESSAGE}
 
         try:
             # Initialize OpenAI client with the user's key for THIS call
@@ -351,24 +360,24 @@ SQL Schema Context (PostgreSQL - use these exact table and column names):
                 _logger.info(f"OpenAI generated SQL: \n{generated_sql}")
                 return {'status': 'sql_generated', 'sql_query': generated_sql}
 
-        except openai.APIConnectionError as e:
-            _logger.error(f"OpenAI API Connection Error: {e}")
-            return {'status': 'error', 'error_detail': "Failed to connect to OpenAI API. Please check network."}
-        except openai.RateLimitError as e:
-            _logger.error(f"OpenAI API Rate Limit Exceeded: {e}")
-            return {'status': 'error', 'error_detail': "OpenAI API rate limit exceeded. Please try again later or check your OpenAI plan."}
-        except openai.AuthenticationError as e:
-            _logger.error(f"OpenAI API Authentication Error: {e}") # Usually bad API key
-            return {'status': 'error', 'error_detail': "OpenAI API Key is invalid or expired. Please check configuration."}
-        except openai.APIError as e: # Other OpenAI API errors
-            _logger.error(f"OpenAI API Error: {e}")
-            return {'status': 'error', 'error_detail': f"An error occurred with the OpenAI API: {e}"}
         except Exception as e:
+            if isinstance(e, getattr(openai, 'APIConnectionError', ())):
+                _logger.error(f"OpenAI API Connection Error: {e}")
+                return {'status': 'error', 'error_detail': "Failed to connect to OpenAI API. Please check network."}
+            if isinstance(e, getattr(openai, 'RateLimitError', ())):
+                _logger.error(f"OpenAI API Rate Limit Exceeded: {e}")
+                return {'status': 'error', 'error_detail': "OpenAI API rate limit exceeded. Please try again later or check your OpenAI plan."}
+            if isinstance(e, getattr(openai, 'AuthenticationError', ())):
+                _logger.error(f"OpenAI API Authentication Error: {e}")
+                return {'status': 'error', 'error_detail': "OpenAI API Key is invalid or expired. Please check configuration."}
+            if isinstance(e, getattr(openai, 'APIError', ())):
+                _logger.error(f"OpenAI API Error: {e}")
+                return {'status': 'error', 'error_detail': f"An error occurred with the OpenAI API: {e}"}
             _logger.exception("Unexpected error calling OpenAI for SQL generation:")
             return {'status': 'error', 'error_detail': "An unexpected error occurred during AI processing."}
 
 
-    @route('/ai_sql/generate_sql/', type='json', auth='user', methods=['POST']) # Ensure module name is in route
+    @route('/ai_sql/generate_sql/', type='jsonrpc', auth='user', methods=['POST']) # Ensure module name is in route
     def handle_sql_generation_request(self, nl_query, attempt=1, previous_sql=None, previous_error=None):
         if not nl_query:
             return {'error': 'No natural language query provided.'}

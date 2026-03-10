@@ -14,9 +14,6 @@
     'price': 0,
     'currency': 'USD',
     'images': ['static/description/banner.gif'],
-    'external_dependencies': {
-    'python': ['openai','requests','xlsxwriter']
-    },
     'license': 'OPL-1',
     'depends': ['base', 'web'],
     'data': [
@@ -32,7 +29,7 @@
         ],
     },
     'external_dependencies': {
-        'python': ['openai', 'requests', 'xlsxwriter'],
+        'python': ['requests', 'xlsxwriter'],
     },
     'application': True,
     'installable': True,

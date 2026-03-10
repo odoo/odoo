@@ -30,7 +30,11 @@ from io import BytesIO
 from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 from ofxparse import OfxParser
-from qifparse.parser import QifParser
+
+try:
+    from qifparse.parser import QifParser
+except ImportError:
+    QifParser = None
 
 
 class ImportBankStatement(models.TransientModel):
@@ -390,6 +394,10 @@ class ImportBankStatement(models.TransientModel):
                 }
 
             elif split_tup[1] == '.qif':
+                if QifParser is None:
+                    raise ValidationError(
+                        _("Install the Python package 'qifparse' to import QIF statements.")
+                    )
                 try:
                     file_data = base64.b64decode(self.attachment)
                     file_string = file_data.decode('utf-8-sig')

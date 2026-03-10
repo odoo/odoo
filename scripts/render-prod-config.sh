@@ -31,6 +31,12 @@ require_value "PROD_DB_PASSWORD" "$PROD_DB_PASSWORD"
 
 mkdir -p "$(dirname "$CONFIG_OUTPUT")"
 
+EXTRA_ADDONS_PATHS="$(scripts/build-custom-addon-paths.sh /mnt/custom-addons)"
+ADDONS_PATH="/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/custom-addons"
+if [ -n "$EXTRA_ADDONS_PATHS" ]; then
+    ADDONS_PATH="$ADDONS_PATH,$EXTRA_ADDONS_PATHS"
+fi
+
 cat > "$CONFIG_OUTPUT" <<EOF
 [options]
 ; Generated locally by scripts/render-prod-config.sh. Do not commit.
@@ -41,7 +47,7 @@ db_port = $PROD_DB_PORT
 db_user = $PROD_DB_USER
 db_password = $PROD_DB_PASSWORD
 
-addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/custom-addons,/mnt/custom-addons/knowledge,/mnt/custom-addons/om_account_accountant-19.0.1.0.3
+addons_path = $ADDONS_PATH
 
 proxy_mode = True
 list_db = False

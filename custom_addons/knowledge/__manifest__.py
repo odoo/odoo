@@ -6,6 +6,7 @@
     "summary": "Community compatibility wrapper for the standard Odoo Knowledge app.",
     "description": "This module provides a compatibility bridge so dependencies on technical module 'knowledge' work with the community knowledge stack.",
     "author": "Kodoo",
+    "license": "LGPL-3",
     "depends": [
         "attachment_preview",
         "attachment_zipped_download",
