@@ -16,9 +16,9 @@ import {
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
-import { mockIndexedDB } from "./mock_indexed_db.hoot";
+import { mockIndexedDBFactory } from "./mock_indexed_db.hoot";
 import { mockSessionFactory } from "./mock_session.hoot";
-import { makeTemplateFactory } from "./mock_templates.hoot";
+import { mockTemplatesFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
 
 /**
@@ -274,16 +274,21 @@ function getSuitePath(name) {
 }
 
 /**
- * Keeps the original definition of a factory.
+ * Returns a mocked version of the module factory function to ensure that the same
+ * module instance is used for all test suites.
  *
- * @param {string} name
+ * These "fixed" modules CANNOT require any other module, except:
+ * - Owl/Hoot;
+ * - other "fixed" modules.
+ *
+ * @param {string} moduleName
  */
-function makeFixedFactory(name) {
-    return () => {
-        if (!loader.modules.has(name)) {
-            loader.startModule(name);
+function mockFixedFactory(moduleName) {
+    return function fixedFactory() {
+        if (loader.modules.has(moduleName)) {
+            return loader.modules.get(moduleName);
         }
-        return loader.modules.get(name);
+        return loader.startModule(moduleName);
     };
 }
 
@@ -513,19 +518,19 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
-    ["@web/core/template_inheritance", makeFixedFactory],
+    ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
     ["@web/core/browser/browser", mockBrowserFactory],
-    ["@web/core/utils/indexed_db", mockIndexedDB],
     ["@web/core/currency", mockCurrencyFactory],
-    ["@web/core/templates", makeTemplateFactory],
+    ["@web/core/templates", mockTemplatesFactory],
     ["@web/core/user", mockUserFactory],
     ["@web/core/utils/functions", mockFunctionsFactory],
+    ["@web/core/utils/indexed_db", mockIndexedDBFactory],
     ["@web/session", mockSessionFactory],
 ]);
 const MODULE_MOCKS_BY_REGEX = new Map([
     // Fixed modules
-    [/\.bundle\.xml$/, makeFixedFactory],
+    [/\.bundle\.xml$/, mockFixedFactory],
 ]);
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
