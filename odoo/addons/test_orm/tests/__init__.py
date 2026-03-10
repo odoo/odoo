@@ -24,4 +24,5 @@ from . import (
     test_many2many,
     test_models,
     test_modules_db,
+    test_one2many,
 )
