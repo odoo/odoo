@@ -6,13 +6,14 @@ import {
     click,
     contains,
     insertText,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -84,4 +85,21 @@ test("clicking on notification opens the chat", async () => {
         text: "Need help? Chat with us.",
     });
     await contains(".o-mail-ChatWindow");
+});
+
+test("can start a new live chat when acting as an agent in active live chats", async () => {
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-livechat-LivechatButton");
 });
