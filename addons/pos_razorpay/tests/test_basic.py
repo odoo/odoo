@@ -122,7 +122,7 @@ class TestRazorpayPosRequest(TransactionCase):
 
         self.assertEqual(calls[0]['url'], f'{DEMO_P2P_URL}cancel')
         self.assertNotIn('mode', calls[0]['json'])
-        self.assertEqual(result, {'error': 'Razorpay POS transaction canceled successfully'})
+        self.assertEqual(result, {'error': 'Razorpay POS transaction cancelled successfully'})
 
     def test_refund_request_uses_void_endpoint(self):
         calls, mocked = self._mock_razorpay({
