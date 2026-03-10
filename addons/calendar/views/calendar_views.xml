@@ -240,8 +240,8 @@
                                     <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
-                                        <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" />
-                                        <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'"/>
+                                        <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" readonly="not user_can_edit"/>
+                                        <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'" readonly="not user_can_edit"/>
                                     </div>
                                     <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
                                     <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>

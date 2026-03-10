@@ -10,4 +10,38 @@
             </field>
         </field>
     </record>
+
+    <record id="view_microsoft_calendar_event_form" model="ir.ui.view">
+        <field name="name">microsoft_calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[./field[@name='recurrence_update']][@role='status']"
+                position="attributes">
+                <attribute name="invisible" add="microsoft_sync_active" separator="or"/>
+            </xpath>
+
+            <xpath
+                expr="//div[./field[@name='recurrence_update']][@role='status']"
+                position="after">
+                <div invisible="not (microsoft_sync_active and recurrency)" class="alert alert-info"
+                    role="alert">
+                    Recurring events can only be edited from Outlook.
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='recurrency']" position="attributes">
+                <attribute name="readonly" add="microsoft_sync_active" separator="or"/>
+            </xpath>
+
+            <xpath expr="//field[@name='recurrency']" position="after">
+                <div invisible="recurrency or not microsoft_sync_active"
+                    class="alert alert-info" role="alert"
+                    colspan="2">
+                    Recurring events must be created directly in Outlook Calendar.
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>
