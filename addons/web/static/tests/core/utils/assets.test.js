@@ -3,14 +3,7 @@ import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-do
 import { mockFetch } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import {
-    assets,
-    assetCacheByDocument,
-    globalBundleCache,
-    loadBundle,
-    loadCSS,
-    loadJS,
-} from "@web/core/assets";
+import { assetCaches, assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
 
 describe.current.tags("headless");
 
@@ -33,8 +26,8 @@ const bundles = {
 };
 
 beforeEach(() => {
-    globalBundleCache.clear();
-    assetCacheByDocument.delete(document);
+    assetCaches.global.clear();
+    assetCaches.byDocument.delete(document);
 });
 
 test("loadJS: load invalid JS lib", async () => {

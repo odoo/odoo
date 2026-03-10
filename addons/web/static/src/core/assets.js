@@ -2,66 +2,74 @@ import { whenReady } from "@odoo/owl";
 import { session } from "@web/session";
 
 /**
+ * @typedef {{ targetDoc?: Document }} LoadAssetOptions
+ *
+ * @typedef {HTMLLinkElement | HTMLScriptElement} LoadTarget
+ *
  * @typedef {{
  *  cssLibs: string[];
  *  jsLibs: string[];
  * }} BundleFileNames
  */
 
-export const globalBundleCache = new Map();
-export const assetCacheByDocument = new WeakMap();
-
-function getGlobalBundleCache() {
-    return globalBundleCache;
-}
-
-function getAssetCache(targetDoc) {
-    if (!assetCacheByDocument.has(targetDoc)) {
-        assetCacheByDocument.set(targetDoc, new Map());
+function computeAssetCaches() {
+    for (const script of document.head.querySelectorAll("script[src]")) {
+        assetCaches.global.set(script.getAttribute("src"), Promise.resolve(script));
     }
-    return assetCacheByDocument.get(targetDoc);
-}
-
-export function computeBundleCacheMap(targetDoc) {
-    const cacheMap = getGlobalBundleCache();
-    for (const script of targetDoc.head.querySelectorAll("script[src]")) {
-        cacheMap.set(script.getAttribute("src"), Promise.resolve());
-    }
-    for (const link of targetDoc.head.querySelectorAll("link[rel=stylesheet][href]")) {
-        cacheMap.set(link.getAttribute("href"), Promise.resolve());
+    for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
+        assetCaches.global.set(link.getAttribute("href"), Promise.resolve(link));
     }
 }
-
-whenReady(() => computeBundleCacheMap(document));
 
 /**
- * @param {HTMLLinkElement | HTMLScriptElement} el
- * @param {(event: Event) => any} onLoad
+ * @param {Document} targetDoc
+ */
+function getDocumentAssetCache(targetDoc) {
+    if (!assetCaches.byDocument.has(targetDoc)) {
+        assetCaches.byDocument.set(targetDoc, new Map());
+    }
+    return assetCaches.byDocument.get(targetDoc);
+}
+
+/**
+ * @param {LoadTarget} el
+ * @param {(target: LoadTarget) => void} onLoad
  * @param {(error: Error) => any} onError
  */
-const onLoadAndError = (el, onLoad, onError) => {
-    const onLoadListener = (event) => {
+function onLoadAndError(el, onLoad, onError) {
+    function onLoadListener() {
         removeListeners();
-        onLoad(event);
-    };
+        onLoad(el);
+    }
 
-    const onErrorListener = (error) => {
+    /**
+     * @param {Error} error
+     */
+    function onErrorListener(error) {
         removeListeners();
         onError(error);
-    };
+    }
 
-    const removeListeners = () => {
+    function removeListeners() {
         el.removeEventListener("load", onLoadListener);
         el.removeEventListener("error", onErrorListener);
-    };
+    }
 
     el.addEventListener("load", onLoadListener);
     el.addEventListener("error", onErrorListener);
 
-    window.addEventListener("pagehide", () => {
-        removeListeners();
-    });
+    const view = el.ownerDocument.defaultView || window;
+    view.addEventListener("pagehide", removeListeners);
+}
+
+export const assetCaches = {
+    /** @type {Map<string, Promise<LoadTarget>>} */
+    byDocument: new WeakMap(),
+    /** @type {Map<string, Promise<LoadTarget>>} */
+    global: new Map(),
 };
+
+whenReady(computeAssetCaches);
 
 /** @type {typeof assets["getBundle"]} */
 export function getBundle() {
@@ -104,9 +112,8 @@ export const assets = {
      * @returns {Promise<BundleFileNames>}
      */
     getBundle(bundleName) {
-        const cacheMap = getGlobalBundleCache();
-        if (cacheMap.has(bundleName)) {
-            return cacheMap.get(bundleName);
+        if (assetCaches.global.has(bundleName)) {
+            return assetCaches.global.get(bundleName);
         }
         const url = new URL(`/web/bundle/${bundleName}`, location.origin);
         for (const [key, value] of Object.entries(session.bundle_params || {})) {
@@ -129,10 +136,10 @@ export const assets = {
                 return { cssLibs, jsLibs };
             })
             .catch((reason) => {
-                cacheMap.delete(bundleName);
+                assetCaches.global.delete(bundleName);
                 throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: reason });
             });
-        cacheMap.set(bundleName, promise);
+        assetCaches.global.set(bundleName, promise);
         return promise;
     },
 
@@ -141,13 +148,15 @@ export const assets = {
      * asset will be loaded if it was already done before.
      *
      * @param {string} bundleName
-     * @param {Object} options
-     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
-     * @param {Boolean} [options.css=true] apply bundle css on targetDoc
-     * @param {Boolean} [options.js=true] apply bundle js on targetDoc
-     * @returns {Promise<void[]>}
+     * @param {LoadAssetOptions & {
+     *  css?: boolean;
+     *  js?: boolean;
+     * }} options
+     * @returns {Promise<LoadTarget>}
      */
-    loadBundle(bundleName, { targetDoc = document, css = true, js = true } = {}) {
+    loadBundle(bundleName, options) {
+        const loadCss = options?.css ?? true;
+        const loadJs = options?.js ?? true;
         if (typeof bundleName !== "string") {
             throw new Error(
                 `loadBundle(bundleName:string) accepts only bundleName argument as a string ! Not ${JSON.stringify(
@@ -157,11 +166,15 @@ export const assets = {
         }
         return getBundle(bundleName).then(({ cssLibs, jsLibs }) => {
             const promises = [];
-            if (css && cssLibs) {
-                promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
+            if (loadCss) {
+                for (const url of cssLibs) {
+                    promises.push(assets.loadCSS(url, options));
+                }
             }
-            if (js && jsLibs) {
-                promises.push(...jsLibs.map((url) => assets.loadJS(url, { targetDoc })));
+            if (loadJs && jsLibs) {
+                for (const url of jsLibs) {
+                    promises.push(assets.loadJS(url, options));
+                }
             }
             return Promise.all(promises);
         });
@@ -171,20 +184,25 @@ export const assets = {
      * Loads the given url as a stylesheet.
      *
      * @param {string} url the url of the stylesheet
-     * @param {number} [retryCount]
-     * @param {Object} options
-     * @param {number} [retryCount]
-     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
-     * @returns {Promise<void>} resolved when the stylesheet has been loaded
+     * @param {LoadAssetOptions & {
+     *  retryCount?: number;
+     *  type?: string;
+     * }} [options]
+     * @returns {Promise<LoadTarget>} resolved when the stylesheet has been loaded
      */
-    loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
-        const cacheMap = getAssetCache(targetDoc);
+    loadCSS(url, options) {
+        if (assetCaches.global.has(url)) {
+            return assetCaches.global.get(url);
+        }
+        const targetDoc = options?.targetDoc || document;
+        const retryCount = options?.retryCount || 0;
+        const cacheMap = getDocumentAssetCache(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
         const linkEl = targetDoc.createElement("link");
         linkEl.setAttribute("href", url);
-        linkEl.type = "text/css";
+        linkEl.type = options?.type || "text/css";
         linkEl.rel = "stylesheet";
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(linkEl, resolve, async (error) => {
@@ -193,7 +211,8 @@ export const assets = {
                     const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
                     await new Promise((res) => setTimeout(res, delay));
                     linkEl.remove();
-                    loadCSS(url, { retryCount: retryCount + 1, targetDoc })
+                    assets
+                        .loadCSS(url, { ...options, retryCount: retryCount + 1 })
                         .then(resolve)
                         .catch((reason) => {
                             cacheMap.delete(url);
@@ -215,18 +234,23 @@ export const assets = {
      * Loads the given url inside a script tag.
      *
      * @param {string} url the url of the script
-     * @param {Document} targetDoc document to which the bundle will be applied (e.g. iframe document)
-     * @param {String} type type of JavaScript file (e.g. javascript or module)
-     * @returns {Promise<void>} resolved when the script has been loaded
+     * @param {LoadAssetOptions & {
+     *  type?: string;
+     * }} [options]
+     * @returns {Promise<LoadTarget>} resolved when the script has been loaded
      */
-    loadJS(url, { type = "text/javascript", targetDoc = document } = {}) {
-        const cacheMap = getAssetCache(targetDoc);
+    loadJS(url, options) {
+        if (assetCaches.global.has(url)) {
+            return assetCaches.global.get(url);
+        }
+        const targetDoc = options?.targetDoc || document;
+        const cacheMap = getDocumentAssetCache(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
-        scriptEl.type = type;
+        scriptEl.type = options?.type || "text/javascript";
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
