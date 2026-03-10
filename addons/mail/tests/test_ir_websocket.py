@@ -26,7 +26,7 @@ class TestIrWebsocket(WebsocketCase):
         )
         # offline => online
         self.env["mail.presence"]._update_presence(bob)
-        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+        self.trigger_notification_dispatching([(bob, "presence")])
         message = json.loads(websocket.recv())[0]["message"]
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["im_status"], "online")
@@ -36,7 +36,7 @@ class TestIrWebsocket(WebsocketCase):
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
             self.env["mail.presence"]._update_presence(bob, (AWAY_TIMER + 1) * 1000)
-            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+            self.trigger_notification_dispatching([(bob, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "away")
@@ -46,7 +46,7 @@ class TestIrWebsocket(WebsocketCase):
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
             self.env["mail.presence"]._update_presence(bob)
-            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+            self.trigger_notification_dispatching([(bob, "presence")])
             message = json.loads(websocket.recv())[0]["message"]
             self.assertEqual(message["type"], "bus.bus/im_status_updated")
             self.assertEqual(message["payload"]["im_status"], "online")
@@ -56,7 +56,7 @@ class TestIrWebsocket(WebsocketCase):
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
             self.env["mail.presence"]._update_presence(bob)
-            self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+            self.trigger_notification_dispatching([(bob, "presence")])
             timeout_occurred = False
             # Save point rollback of `assertRaises` can compete with `on_websocket_close`
             # leading to `InvalidSavepoint` errors. We need to avoid it.
@@ -77,7 +77,7 @@ class TestIrWebsocket(WebsocketCase):
             [f"odoo-presence-res.partner_{bob.partner_id.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
-        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
+        self.trigger_notification_dispatching([(bob, "presence")])
         notification = json.loads(websocket.recv())[0]
         self._close_websockets()
         bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])

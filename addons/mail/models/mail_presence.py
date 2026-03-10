@@ -97,7 +97,7 @@ class MailPresence(models.Model):
         :param im_status: 'online', 'away' or 'offline'
         """
         for presence in self:
-            persona = presence.guest_id or presence.user_id.partner_id
+            persona = presence.guest_id or presence.user_id
             target = bus_target or (persona, "presence")
             self.env["bus.bus"]._sendone(
                 target,

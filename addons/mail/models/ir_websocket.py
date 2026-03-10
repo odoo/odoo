@@ -84,7 +84,10 @@ class IrWebsocket(models.AbstractModel):
             )
             | guest
         )
-        data["channels"].update((partner, "presence") for partner in allowed_partners)
+        # sudo - res.users: can access users of allowed partners
+        data["channels"].update(
+            (user, "presence") for user in allowed_partners.sudo().user_ids.sudo(False)
+        )
         data["channels"].update((guest, "presence") for guest in allowed_guests)
         # There is a gap between a subscription client side (which is debounced)
         # and the actual subcription thus presences can be missed. Send a
