@@ -23,6 +23,7 @@
         'data/test_inherits.xml',
         'data/test_json_field.xml',
         'data/test_one2many.xml',
+        'data/test_properties.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
@@ -43,6 +44,7 @@
         'security/test_many2many/ir.model.access.csv',
         'security/test_one2many/ir.model.access.csv',
         'security/test_performance/ir.model.access.csv',
+        'security/test_properties/ir.model.access.csv',
 
         # VIEWS
     ],

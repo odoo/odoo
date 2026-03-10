@@ -19,4 +19,5 @@ from . import (
     test_many2many,
     test_one2many,
     test_performance,
+    test_properties,
 )
