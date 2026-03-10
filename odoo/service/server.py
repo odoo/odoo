@@ -68,13 +68,6 @@ SLEEP_INTERVAL = 60     # 1 min
 GEVENT_STOP_TIMEOUT = 60
 
 
-# A global-ish object, each thread/worker uses its own
-thread_local = threading.local()
-
-# the model and method name that was called via rpc, for logging
-thread_local.rpc_model_method = ''
-
-
 def memory_info(process):
     """
     :return: the relevant memory usage according to the OS in bytes.
@@ -145,7 +138,7 @@ class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
     def log_request(self, code='-', size='-'):
         try:
             path = uri_to_iri(self.path)
-            fragment = thread_local.rpc_model_method
+            fragment = threading.current_thread().rpc_model_method
             if fragment:
                 path += '#' + fragment
             msg = f"{self.command} {path} {self.request_version}"
