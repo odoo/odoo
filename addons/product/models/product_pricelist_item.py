@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.orm.domains import Domain
 from odoo.orm.query import SQL, Query, TableSQL
 from odoo.tools import float_round, format_amount, format_datetime, formatLang
 
@@ -678,11 +679,22 @@ class ProductPrice(models.Model):
     _description = "Product Price"
     _auto = False
 
-    rule_id = fields.Many2one('product.pricelist.item')
-    product_id = fields.Many2one('product.product')
+    @property
+    def _order(self):
+        return self.rule_id._order
 
-    parent_price_id = fields.Many2one('product.price')
-    parent_price_currency_id = fields.Many2one(related='parent_price_id.currency_id')
+    rule_id = fields.Many2one(
+        comodel_name='product.pricelist.item', delegate=True, required=True, ondelete='cascade'
+    )
+    product_id = fields.Many2one(comodel_name='product.product', required=True)
+
+    base_id = fields.Many2one(
+        comodel_name='product.price',
+        compute='_compute_base_id',
+        compute_sql='_compute_sql_base_id',
+        compute_sudo=False,
+        store=True,
+    )
 
     base_price = fields.Monetary(
         compute='_compute_base_price',
@@ -690,102 +702,168 @@ class ProductPrice(models.Model):
         # standard_price field can only be seen by users in base.group_user.
         # Thus, sudo is needed to compute the base price from the cost.
         compute_sudo=True,
+        store=True,
     )
     price = fields.Monetary(
-        compute='_compute_price', compute_sql='_compute_sql_price', compute_sudo=False
+        compute='_compute_price', compute_sql='_compute_sql_price', compute_sudo=False, store=True
     )
 
     @property
-    def _table_query(self):
+    def _table_view(self):
         query = Query(self.env['product.pricelist.item'])
         rule = query.table
 
         product = TableSQL(self.env['product.product']._table, self.env['product.product'], query)
-        query.add_join(
-            'JOIN', product, None, self._table_query_on_rule_applies_to_product(rule, product)
+        query.add_join('JOIN', product, None, SQL("TRUE"))
+        query.add_where(self._table_view_where_rule_applies_to_product(rule, product))
+
+        return query.select(
+            SQL("%s AS id", rule.id),
+            SQL("%s AS rule_id", rule.id),
+            SQL("%s AS product_id", product.id),
         )
 
-        return query.select(SQL(f"{rule.id} AS rule_id"), SQL(f"{product.id} AS product_id"))
-
-    def _table_query_on_rule_applies_to_product(self, rule: TableSQL, product: TableSQL):
-        return SQL(f"""
-            CASE {rule.applied_on}
-            WHEN '0_product_variant' THEN {rule.product_id} = {product.id}
-            WHEN '1_product' THEN {rule.product_tmpl_id} = {product.product_tmpl_id}
+    def _table_view_where_rule_applies_to_product(self, rule: TableSQL, product: TableSQL):
+        return SQL(
+            """
+            CASE %(rule_applied_on)s
+            WHEN '0_product_variant' THEN %(rule_product_id)s = %(product_id)s
+            WHEN '1_product' THEN %(rule_product_tmpl_id)s = %(product_product_tmpl_id)s
             WHEN '2_product_category' THEN (
-                {product.categ_id} IS NULL
-                OR starts_with(
-                    {product._join('categ_id').parent_path}, {rule._join('categ_id').parent_path}
+                %(product_categ_id)s IS NULL OR starts_with(  -- child_of or =
+                    %(product_categ_id_parent_path)s, %(rule_categ_id_parent_path)s
                 )
             )
             ELSE TRUE  -- '3_global'
             END
-        """)
+            """,
+            rule_applied_on=rule.applied_on,
+            rule_product_id=rule.product_id,
+            product_id=product.id,
+            rule_product_tmpl_id=rule.product_tmpl_id,
+            product_product_tmpl_id=product.product_tmpl_id,
+            product_categ_id=product.categ_id,
+            product_categ_id_parent_path=product._join('categ_id').parent_path,
+            rule_categ_id_parent_path=rule._join('categ_id').parent_path,
+        )
 
     def init(self):
         super().init()
         self.env.cr.execute(
-            "CREATE OR REPLACE VIEW %s AS %s", (SQL.identifier(self._table), self._table_query)
+            SQL("CREATE OR REPLACE VIEW %s AS %s", SQL.identifier(self._table), self._table_view)
+        )
+
+    def _compute_base_id(self): ...
+
+    def _compute_sql_base_id(self, table: TableSQL):
+        return SQL(
+            "CASE WHEN %(table_base_pricelist_id)s IS NOT NULL THEN (%(recursive_search)s) END",
+            table_base_pricelist_id=table.base_pricelist_id,
+            recursive_search=self._search(
+                Domain([
+                    ('pricelist_id', 'in', SQL("(%s)", table.base_pricelist_id)),
+                    ('product_id', 'in', SQL("(%s)", table.product_id)),
+                    # TODO: how do i forward the root domain?
+                    # TODO: how do i forward the root order?
+                ]),
+                limit=1,
+            ).select(),
         )
 
     def _compute_base_price(self): ...
 
     def _compute_sql_base_price(self, table: TableSQL):
-        return SQL(f"""
-            CASE {table.base}
-            WHEN 'list_price' THEN {self._compute_sql_base_price_list_price(table)}
-            WHEN 'standard_price' THEN {self._compute_sql_base_price_standard_price(table)}
-            WHEN 'pricelist' THEN {self._compute_sql_base_price_pricelist(table)}
+        return SQL(
+            """
+            CASE %(rule_base)s
+            WHEN 'list_price' THEN %(compute_base_list_price)s
+            WHEN 'standard_price' THEN %(compute_base_standard_price)s
+            WHEN 'pricelist' THEN %(compute_base_pricelist)s
             END
-        """)
+            """,
+            rule_base=table.base,
+            compute_base_list_price=self._compute_sql_base_list_price(table),
+            compute_base_standard_price=self._compute_sql_base_standard_price(table),
+            compute_base_pricelist=self._compute_sql_base_pricelist(table),
+        )
 
-    def _compute_sql_base_price_list_price(self, table: TableSQL):
+    def _compute_sql_base_list_price(self, table: TableSQL):
         return table._join('product_id').lst_price
 
-    def _compute_sql_base_price_standard_price(self, table: TableSQL):
+    def _compute_sql_base_standard_price(self, table: TableSQL):
         return table._join('product_id').standard_price
 
-    def _compute_sql_base_price_pricelist(self, table: TableSQL):
-        return table._join('parent_price_id').price
+    def _compute_sql_base_pricelist(self, table: TableSQL):
+        parent_price_recursion_depth = self.env.context.get('parent_price_recursion_depth', 0)
+        if parent_price_recursion_depth > 1:
+            return SQL("0.0")
+        return (
+            table
+            ._with_model(
+                self.with_context(parent_price_recursion_depth=parent_price_recursion_depth + 1)
+            )
+            ._join('base_id')
+            .price
+        )
 
     def _compute_price(self): ...
 
     def _compute_sql_price(self, table: TableSQL):
-        return SQL(f"""
-            CASE {table.compute_price}
-            WHEN 'fixed' THEN {self._compute_sql_price_fixed(table)}
-            WHEN 'percentage' THEN {self._compute_sql_price_percentage(table)}
-            WHEN 'formula' THEN {self._compute_sql_price_formula(table)}
+        return SQL(
+            """
+            CASE %(rule_compute_price)s
+            WHEN 'fixed' THEN %(compute_price_fixed)s
+            WHEN 'percentage' THEN %(compute_price_percentage)s
+            WHEN 'formula' THEN %(compute_price_formula)s
             END
-        """)
+            """,
+            rule_compute_price=table.compute_price,
+            compute_price_fixed=self._compute_sql_price_fixed(table),
+            compute_price_percentage=self._compute_sql_price_percentage(table),
+            compute_price_formula=self._compute_sql_price_formula(table),
+        )
 
     def _compute_sql_price_fixed(self, table: TableSQL):
         return table.fixed_price
 
     def _compute_sql_price_percentage(self, table: TableSQL):
-        return SQL(f"{table.base_price} * (1 - {table.percent_price} / 100.0)")
+        return SQL("%s * (1 - %s / 100.0)", table.base_price, table.percent_price)
 
     def _compute_sql_price_formula(self, table: TableSQL):
         price = self._compute_sql_price_percentage(table)
 
-        price = SQL(f"""
-            CASE WHEN {table.price_round} != 0
-            THEN ROUND({price} / {table.price_round}) * {table.price_round}
-            ELSE {price} END
-        """)
+        price = SQL(
+            """
+            CASE WHEN %(rule_price_round)s != 0
+            THEN ROUND(%(price)s / %(rule_price_round)s) * %(rule_price_round)s
+            ELSE %(price)s END
+            """,
+            rule_price_round=table.price_round,
+            price=price,
+        )
 
-        price = SQL(f"{price} + {table.price_surcharge}")
+        price = SQL("%s + %s", price, table.price_surcharge)
 
-        price = SQL(f"""
-            CASE WHEN {table.price_min_margin} != 0
-            THEN MAX({price}, {table.base_price} + {table.price_min_margin})
-            ELSE {price} END
-        """)
+        price = SQL(
+            """
+            CASE WHEN %(rule_price_min_margin)s != 0
+            THEN GREATEST(%(price)s, %(rule_base_price)s + %(rule_price_min_margin)s)
+            ELSE %(price)s END
+            """,
+            rule_price_min_margin=table.price_min_margin,
+            price=price,
+            rule_base_price=table.base_price,
+        )
 
-        price = SQL(f"""
-            CASE WHEN {table.price_max_margin} != 0
-            THEN MIN({price}, {table.base_price} + {table.price_max_margin})
-            ELSE {price} END
-        """)
+        price = SQL(
+            """
+            CASE WHEN %(rule_price_max_margin)s != 0
+            THEN LEAST(%(price)s, %(rule_base_price)s + %(rule_price_max_margin)s)
+            ELSE %(price)s END
+            """,
+            rule_price_max_margin=table.price_min_margin,
+            price=price,
+            rule_base_price=table.base_price,
+        )
 
         return price  # noqa: RET504
