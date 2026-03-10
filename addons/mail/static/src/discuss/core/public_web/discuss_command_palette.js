@@ -61,7 +61,11 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.state = useState({ name: this.props.name || "", isInvalid: false, is_readonly: false });
+        this.state = useState({
+            name: this.props.name || "",
+            isInvalid: false,
+            is_readonly: false,
+        });
     }
 
     /** @param {KeyboardEvent} ev */
@@ -92,7 +96,7 @@ class DiscussCommand extends Component {
     static props = {
         counter: { type: Number, optional: true },
         executeCommand: Function,
-        imgUrl: { String, optional: true },
+        imgUrl: { type: String, optional: true },
         name: String,
         persona: { type: Object, optional: true },
         channel: { type: Object, optional: true },

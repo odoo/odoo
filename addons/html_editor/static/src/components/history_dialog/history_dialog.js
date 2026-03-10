@@ -26,9 +26,9 @@ export class HistoryDialog extends Component {
         restoreRequested: Function,
         historyMetadata: Array,
         versionedFieldName: String,
-        title: { String, optional: true },
-        noContentHelper: { String, optional: true }, //Markup
-        embeddedComponents: { Array, optional: true },
+        title: { type: String, optional: true },
+        noContentHelper: { type: String, optional: true }, //Markup
+        embeddedComponents: { type: Array, optional: true },
     };
 
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
@@ -111,7 +111,7 @@ export class HistoryDialog extends Component {
     }
 
     onRevisionKeydown(revisionId, ev) {
-        if (ev.key === 'Enter' || ev.key === ' ') {
+        if (ev.key === "Enter" || ev.key === " ") {
             ev.preventDefault();
             this.updateCurrentRevision(revisionId);
         }
@@ -237,10 +237,12 @@ export class HistoryDialog extends Component {
         if (!revision || !revision["create_date"]) {
             return "--";
         }
-        const revisionDate = DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(this.userTZ);
+        const revisionDate = DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(
+            this.userTZ
+        );
         const now = DateTime.now().setZone(this.userTZ);
-        const diffInMinutes = now.diff(revisionDate, 'minutes').minutes;
-        const diffInHours = now.diff(revisionDate, 'hours').hours;
+        const diffInMinutes = now.diff(revisionDate, "minutes").minutes;
+        const diffInHours = now.diff(revisionDate, "hours").hours;
 
         if (diffInMinutes < 1 && diffInMinutes >= 0) {
             return "Just now";
@@ -248,35 +250,37 @@ export class HistoryDialog extends Component {
 
         if (diffInMinutes < 60 && diffInMinutes >= 1) {
             const minutes = Math.floor(diffInMinutes);
-            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
         }
 
-        if (diffInHours < 24 && revisionDate.hasSame(now, 'day')) {
+        if (diffInHours < 24 && revisionDate.hasSame(now, "day")) {
             const hours = Math.floor(diffInHours);
-            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            return `${hours} hour${hours > 1 ? "s" : ""} ago`;
         }
 
-        if (revisionDate.hasSame(now, 'day')) {
-            return `Today at ${revisionDate.toFormat('h:mm a')}`;
+        if (revisionDate.hasSame(now, "day")) {
+            return `Today at ${revisionDate.toFormat("h:mm a")}`;
         }
 
-        if (revisionDate.plus({ days: 1 }).hasSame(now, 'day')) {
-            return `Yesterday at ${revisionDate.toFormat('h:mm a')}`;
+        if (revisionDate.plus({ days: 1 }).hasSame(now, "day")) {
+            return `Yesterday at ${revisionDate.toFormat("h:mm a")}`;
         }
 
-        if (revisionDate.hasSame(now, 'year')) {
-            return revisionDate.toFormat('MMM d \'at\' h:mm a');
+        if (revisionDate.hasSame(now, "year")) {
+            return revisionDate.toFormat("MMM d 'at' h:mm a");
         }
 
-        return revisionDate.toFormat('MMM d, yyyy');
+        return revisionDate.toFormat("MMM d, yyyy");
     }
 
     getRevisionFullDate(revision) {
         if (!revision || !revision["create_date"]) {
             return "--";
         }
-        const revisionDate = DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(this.userTZ);
-        return revisionDate.toFormat('MMM d, yyyy \'at\' h:mm:ss a');
+        const revisionDate = DateTime.fromISO(revision["create_date"], { zone: "utc" }).setZone(
+            this.userTZ
+        );
+        return revisionDate.toFormat("MMM d, yyyy 'at' h:mm:ss a");
     }
 
     isRevisionSelected(revision) {

@@ -9,7 +9,7 @@ export class Switch extends Component {
         disabled: { type: Boolean, optional: true },
         label: { type: String, optional: true },
         description: { type: String, optional: true },
-        onChange: { Function, optional: true },
+        onChange: { type: Function, optional: true },
     };
     static defaultProps = {
         onChange: NO_OP,

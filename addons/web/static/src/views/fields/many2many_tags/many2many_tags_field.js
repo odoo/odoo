@@ -52,9 +52,7 @@ export class Many2ManyTagsField extends Component {
         canCreateEdit: { type: Boolean, optional: true },
         onTagClick: {
             optional: true,
-            validate(value) {
-                return ["open_form", "edit_color"].includes(value);
-            },
+            validate: (value) => ["open_form", "edit_color"].includes(value),
         },
         colorField: { type: String, optional: true },
         createExpression: { type: String, optional: true },

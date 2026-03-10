@@ -542,7 +542,7 @@ export class TitleDescription extends Component {
         canEditUrl: Boolean,
         canEditTitle: Boolean,
         seoNameHelp: String,
-        seoNameDefault: { optional: true, String },
+        seoNameDefault: { optional: true, type: String },
         isIndexed: Boolean,
         defaultTitle: String,
         previewDescription: String,
@@ -961,8 +961,11 @@ export class OptimizeSEODialog extends Component {
             this.canEditDescription = this.canEditSeo && "website_meta_description" in this.data;
             this.canEditTitle = this.canEditSeo && "website_meta_title" in this.data;
             // The URL must not be customizable if it does not contain an editable slug.
-            const editableSlugPattern = new RegExp(`.*/(${this.data.seo_name || ""}|${this.data.seo_name_default || ""})-\\d+.*`);
-            this.canEditUrl = this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
+            const editableSlugPattern = new RegExp(
+                `.*/(${this.data.seo_name || ""}|${this.data.seo_name_default || ""})-\\d+.*`
+            );
+            this.canEditUrl =
+                this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
@@ -972,7 +975,9 @@ export class OptimizeSEODialog extends Component {
             );
             this.previousSeoName = this.canEditUrl && this.data.seo_name;
             seoContext.seoName = this.previousSeoName;
-            this.seoNameDefault = this.canEditUrl && this.data.seo_name_default;
+            if (this.canEditUrl) {
+                this.seoNameDefault = this.data.seo_name_default;
+            }
 
             seoContext.description = this.getMeta({ name: "description" });
             this.previewDescription = _t(
@@ -1091,7 +1096,10 @@ export class OptimizeSEODialog extends Component {
         await Promise.all(rpcCalls);
 
         this.website.goToWebsite({
-            path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName || this.seoNameDefault),
+            path: this.url.replace(
+                this.previousSeoName || this.seoNameDefault,
+                seoContext.seoName || this.seoNameDefault
+            ),
         });
     }
 }

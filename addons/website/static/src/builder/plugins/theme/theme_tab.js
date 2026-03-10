@@ -8,8 +8,8 @@ export class ThemeTab extends Component {
     static components = { OptionsContainer };
     static props = {
         // optionsContainers: { type: Array, optional: true },
-        colorPresetToShow: { type: Number | null, optional: true },
-        shadowSizeToShow: { type: String | null, optional: true },
+        colorPresetToShow: { type: [Number, { value: null }], optional: true },
+        shadowSizeToShow: { type: [String, { value: null }], optional: true },
     };
     static defaultProps = {
         // optionsContainers: [],
