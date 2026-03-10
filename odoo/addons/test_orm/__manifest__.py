@@ -36,6 +36,7 @@
         'security/test_fields/ir.model.access.csv',
         'security/test_indexed_translation/ir.model.access.csv',
         'security/test_inherits/ir.model.access.csv',
+        'security/test_ir_rules/ir.model.access.csv',
 
         # VIEWS
     ],
