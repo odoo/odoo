@@ -13,7 +13,7 @@ import { useSequential, useVisible } from "@mail/utils/common/hooks";
  */
 export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };
-    static props = ["channel"];
+    static props = ["channel", "close?"];
     static template = "mail.AttachmentPanel";
 
     setup() {

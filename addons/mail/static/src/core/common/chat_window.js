@@ -57,6 +57,7 @@ export class ChatWindow extends Component {
         this.isMobileOS = isMobileOS();
 
         useChildSubEnv({
+            /** @deprecated */
             closeActionPanel: () => this.threadActions.activeAction?.actionPanelClose(),
             messageHighlight: this.messageHighlight,
         });
