@@ -860,3 +860,19 @@ font[class^="text-o-"] a,
 font[style*="color"] a {
     color: inherit !important;
 }
+
+.o_button_area {
+    position: absolute;
+    inset: 0;
+}
+
+// Remove default user-agent styles on buttons
+.o_btn_reset {
+    appearance: none;
+    margin: unset;
+    padding: unset;
+    background: unset;
+    border: unset;
+    font-family: inherit;
+    font-size: 100%;
+}
