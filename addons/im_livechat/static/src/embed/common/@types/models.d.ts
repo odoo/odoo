@@ -5,13 +5,13 @@ declare module "models" {
         isLastMessageFromCustomer: Readonly<unknown>;
         livechatWelcomeMessage: Message;
         requested_by_operator: boolean;
-        storeAsActiveLivechats: Store;
+        storeAsActiveVisitorLivechats: Store;
     }
     export interface Message {
         disableChatbotAnswers: boolean;
     }
     export interface Store {
-        activeLivechats: DiscussChannel[];
+        activeVisitorLivechats: DiscussChannel[];
         guest_token: null;
         livechat_available: boolean;
         livechat_rule: LivechatChannelRule;
