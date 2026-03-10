@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<div t-name="website_builder.DraftDialog">
+    <Dialog title="this.title" size="'md'">
+        <p>
+            <t t-out="this.body" />
+            <br/>
+            <br/>
+            Would you like to proceed?
+        </p>
+        <t t-set-slot="footer">
+            <div class="d-flex flex-column">
+                <div>
+                    <button class="btn btn-primary" t-on-click="this.onConfirmClick.bind(this)" data-hotkey="q">
+                        Ok
+                    </button>
+                    <button class="btn btn-secondary" style="margin-left: 6px" t-on-click="this.onDiscardClick.bind(this)" data-hotkey="x">
+                        Discard
+                    </button>
+                </div>
+                <CheckBox value="!this.state.shouldShowAgain" onChange.bind="this.toggleShouldShowAgain" className="'mt-1 small'">
+                    Don't show it again
+                </CheckBox>
+            </div>
+        </t>
+    </Dialog>
+</div>
+</templates>
