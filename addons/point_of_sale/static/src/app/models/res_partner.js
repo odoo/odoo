@@ -10,6 +10,10 @@ export class ResPartner extends Base {
         this._searchString = null;
     }
 
+    get property_product_pricelist_id() {
+        return this.property_product_pricelist?.id || this.raw.property_product_pricelist;
+    }
+
     get searchString() {
         if (this._searchString) {
             return this._searchString;
