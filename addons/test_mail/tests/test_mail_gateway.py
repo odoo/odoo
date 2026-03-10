@@ -26,6 +26,11 @@ from odoo.tools.mail import email_normalize, email_split_and_format, formataddr
 @tagged('mail_gateway')
 class TestEmailParsing(MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def test_message_parse_and_replace_binary_octetstream(self):
         """ Incoming email containing a wrong Content-Type as described in RFC2046/section-3 """
         received_mail = self.from_string(test_mail_data.MAIL_MULTIPART_BINARY_OCTET_STREAM)
@@ -185,6 +190,7 @@ class MailGatewayCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.mail_test_gateway_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.mail_test_gateway_company_model = cls.env['ir.model']._get('mail.test.gateway.company')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'

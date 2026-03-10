@@ -20,6 +20,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # don't be annoyed by enrich cron for query counters (unmodular but hey)
         cls.env['ir.config_parameter'].sudo().set_str('crm.iap.lead.enrich.setting', 'no')
@@ -105,6 +106,9 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
 
 @tagged('event_mail', 'post_install', '-at_install')
 class TestMailSchedule(EventMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_assert_initial_values(self):
         """ Ensure base values for tests """
@@ -822,6 +826,9 @@ class TestMailSchedule(EventMailCommon):
 
 @tagged('event_mail', 'post_install', '-at_install')
 class TestMailScheduleInternals(EventMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_scheduled_date(self):
         now = self.reference_now.replace(microsecond=0)

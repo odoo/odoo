@@ -20,6 +20,7 @@ class TestMailMCCommon(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.test_model = cls.env['ir.model']._get('mail.test.gateway')
         cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'

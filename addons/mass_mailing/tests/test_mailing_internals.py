@@ -794,6 +794,9 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingScheduleDateWizard(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('user_marketing')
@@ -818,6 +821,10 @@ class TestMailingScheduleDateWizard(MassMailCommon):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingActions(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([
             {'subject': 'First subject'},

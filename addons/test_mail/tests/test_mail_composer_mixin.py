@@ -14,6 +14,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.mail_template = cls.env['mail.template'].create({
             'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',

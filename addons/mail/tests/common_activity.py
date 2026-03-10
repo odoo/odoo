@@ -12,6 +12,7 @@ class ActivityScheduleCase(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # prepare activities
         cls.activity_type_todo = cls.env.ref('mail.mail_activity_data_todo')

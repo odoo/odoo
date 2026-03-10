@@ -7,6 +7,13 @@ from odoo.tests.common import users
 
 
 class TestImLivechatSessionViews(TestImLivechatCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+
     def test_session_history_navigation_back_and_forth(self):
         operator = new_test_user(
             self.env,

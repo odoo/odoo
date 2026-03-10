@@ -17,6 +17,7 @@ class ThreadRecipients(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.user_portal = cls._create_portal_user()
         cls.test_partner, cls.test_partner_archived = cls.env['res.partner'].create([
             {
@@ -1151,6 +1152,7 @@ class TestDiscuss(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestDiscuss, cls).setUpClass()
+        cls._setup_mail_common()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
@@ -1258,6 +1260,7 @@ class TestNotification(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.test_record = cls.env['mail.test.simple'].create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
@@ -1299,6 +1302,7 @@ class TestNoThread(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.test_record_nothread = cls.env['mail.test.nothread'].with_user(cls.user_employee).create({
             'customer_id': cls.partner_1.id,
             'name': 'Not A Thread',

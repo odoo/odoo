@@ -20,6 +20,7 @@ class TestTrackingCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.dt_ref = datetime(2025, 9, 30, 9, 28, 15)
         cls.tracking_parent_for_properties = cls.env['mail.test.track.all.properties.parent'].with_user(cls.user_admin).create({
             'definition_properties': [
@@ -561,6 +562,7 @@ class TestTrackingInternals(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.record = cls.env['mail.test.ticket'].with_user(cls.user_employee).create({
             'name': 'Test',

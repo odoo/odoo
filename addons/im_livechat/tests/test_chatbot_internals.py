@@ -12,6 +12,11 @@ from odoo.addons.mail.tools.discuss import Store
 
 class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def test_chatbot_duplicate(self):
         """ In this test we make sure that 'triggering_answer_ids' are correctly duplicated and
         reference the answers from the copied script steps.

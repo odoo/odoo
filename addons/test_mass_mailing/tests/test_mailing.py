@@ -10,6 +10,9 @@ from odoo.tools import mute_logger, email_normalize
 
 @tagged('mass_mailing')
 class TestMassMailing(TestMassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_author(self):

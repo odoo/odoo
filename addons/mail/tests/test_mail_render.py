@@ -15,6 +15,7 @@ class TestMailRenderCommon(common.MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailRenderCommon, cls).setUpClass()
+        cls._setup_mail_common()
 
         # activate multi language support
         cls.env['res.lang']._activate_lang('fr_FR')

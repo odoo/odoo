@@ -15,6 +15,7 @@ class MessageAccessCommon(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.user_public = mail_new_test_user(
             cls.env,

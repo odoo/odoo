@@ -22,6 +22,7 @@ class BaseFollowersTest(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(BaseFollowersTest, cls).setUpClass()
+        cls._setup_mail_common()
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
         cls._create_portal_user()
 
@@ -282,6 +283,7 @@ class AdvancedFollowersTest(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(AdvancedFollowersTest, cls).setUpClass()
+        cls._setup_mail_common()
         cls._create_portal_user()
 
         cls.test_track = cls.env['mail.test.track'].with_user(cls.user_employee).create({
@@ -527,6 +529,11 @@ class AdvancedFollowersTest(MailCommon):
 @tagged('mail_followers')
 class AdvancedResponsibleNotifiedTest(MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def setUp(self):
         super(AdvancedResponsibleNotifiedTest, self).setUp()
 
@@ -580,6 +587,7 @@ class RecipientsNotificationTest(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(RecipientsNotificationTest, cls).setUpClass()
+        cls._setup_mail_common()
 
         # portal user for testing share status / internal subtypes
         cls.user_portal = cls._create_portal_user()
@@ -886,6 +894,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.user_portal = cls._create_portal_user()
         cls.partner_portal = cls.user_portal.partner_id
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})

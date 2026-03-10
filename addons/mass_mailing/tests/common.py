@@ -427,6 +427,7 @@ class MassMailCommon(MailCommon, MassMailCase):
     @classmethod
     def setUpClass(cls):
         super(MassMailCommon, cls).setUpClass()
+        cls._setup_mail_common()
 
         cls.user_marketing, cls.user_marketing_1 = [mail_new_test_user(
             cls.env,

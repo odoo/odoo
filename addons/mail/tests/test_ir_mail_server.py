@@ -20,6 +20,7 @@ class TestIrMailServer(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.default_bounce_address = f'{cls.alias_bounce}@{cls.alias_domain}'
         cls.default_from_address = f'{cls.default_from}@{cls.alias_domain}'
 
@@ -402,6 +403,7 @@ class TestPersonalServer(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.user_1, cls.user_2 = cls.user_employee, cls.user_employee_c2
         cls.mail_server_1, cls.mail_server_2 = cls.env["ir.mail_server"].create([{
             'name': 'test',

@@ -17,6 +17,7 @@ class TestMailAliasCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.test_alias_mc = cls.env['mail.alias'].create({
             'alias_domain_id': cls.mail_alias_domain.id,

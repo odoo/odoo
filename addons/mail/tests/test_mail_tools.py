@@ -12,6 +12,7 @@ class TestMailTools(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailTools, cls).setUpClass()
+        cls._setup_mail_common()
 
         cls._test_email = 'alfredoastaire@test.example.com'
         cls.test_partner = cls.env['res.partner'].create({

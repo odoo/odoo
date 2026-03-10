@@ -4,6 +4,10 @@ from odoo.tests import tagged, users
 
 @tagged("ir_attachment")
 class TestAttachment(MailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
 
     @users("employee")
     def test_register_as_main_attachment(self):

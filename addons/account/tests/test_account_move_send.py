@@ -20,6 +20,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # ensure print params
         cls.partner_a.email = 'turlututu@tsointsoin'

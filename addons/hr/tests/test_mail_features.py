@@ -9,6 +9,7 @@ class TestHrEmployeeMail(TestHrCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.test_template_employee = cls.env['mail.template'].with_user(cls.user_admin).create({
             'auto_delete': True,
             'body_html': '<p>Hello <t t-out="object.name"/></p>',

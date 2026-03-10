@@ -24,6 +24,7 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # portal user, notably for ACLS / notifications
         cls.user_portal = cls._create_portal_user()
@@ -2231,6 +2232,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.test_records = cls.env['mail.test.lang'].create([
             {'customer_id': False,

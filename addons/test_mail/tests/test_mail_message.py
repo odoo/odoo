@@ -21,6 +21,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.user_employee_2 = mail_new_test_user(
             cls.env,
@@ -147,6 +148,7 @@ class TestMessageValues(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMessageValues, cls).setUpClass()
+        cls._setup_mail_common()
 
         cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
             'name': 'Pigs',

@@ -205,6 +205,11 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
 @tagged('mail_thread', 'mail_blacklist')
 class TestMailThread(MailCommon, TestRecipients):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @mute_logger('odoo.models.unlink')
     def test_blacklist_mixin_email_normalized(self):
         """ Test email_normalized and is_blacklisted fields behavior, notably

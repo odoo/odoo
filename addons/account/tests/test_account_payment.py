@@ -15,6 +15,7 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.other_currency = cls.setup_other_currency('EUR')
 

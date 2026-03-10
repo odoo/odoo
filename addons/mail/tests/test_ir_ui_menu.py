@@ -34,6 +34,7 @@ class TestMenuRootLookupByModel(MailCommon):
                 - Companies (res.company)
         """
         super().setUpClass()
+        cls._setup_mail_common()
         Menu = cls.env['ir.ui.menu']
         Action = cls.env['ir.actions.act_window']
 

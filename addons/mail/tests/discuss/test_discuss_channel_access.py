@@ -2,13 +2,12 @@
 
 from psycopg2.errors import UniqueViolation
 
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import mute_logger
 
 
-class TestDiscussChannelAccess(MailCommon):
+class TestDiscussChannelAccess(MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -18,6 +18,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._test_body = 'VOID CONTENT'
 
         cls.sms_all = cls.env['sms.sms']

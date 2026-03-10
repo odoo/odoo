@@ -8,6 +8,13 @@ from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
 class TestImLivechatCalls(TestImLivechatCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+
     def test_meeting_view(self):
         og_get_session = LivechatController.get_session
 

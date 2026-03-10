@@ -6,6 +6,12 @@ from odoo.tests.common import HttpCase
 
 
 class TestResRole(MailCommon, HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def test_post_mention_role(self):
         """Test mention with role"""
         contact = self.env["res.partner"].create({"name": "A contact"})

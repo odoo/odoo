@@ -2,32 +2,50 @@
 from lxml import html
 from itertools import product
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.discuss.discuss_common import DiscussCommon
 from odoo.exceptions import UserError
-from odoo.tests import HttpCase, new_test_user, users
+from odoo.tests import HttpCase, users
 from odoo.tools.misc import hash_sign
 
 
-class TestDiscussChannelInvite(HttpCase, MailCommon):
+class TestDiscussChannelInvite(DiscussCommon, HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_bob()
+        cls._setup_john()
+        cls.group_chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.bob_user)
+            ._create_group(
+                partners_to=cls.bob_partner.ids,
+            )
+        )
+
     def test_01_invite_by_email_flow(self):
-        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
-        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
+            self.env["discuss.channel"]
+            .with_user(self.bob_user)
+            ._create_group(
+                partners_to=self.bob_partner.ids,
+            )
         )
         with self.mock_mail_gateway():
             self.start_tour(
-                f"/odoo/discuss?active_id={group_chat.id}", "discuss.invite_by_email", login="bob"
+                f"/odoo/discuss?active_id={group_chat.id}",
+                "discuss.invite_by_email",
+                login=self.bob_user.login,
             )
-        self.assertIn(john.partner_id, group_chat.channel_member_ids.partner_id)
+        self.assertIn(self.john_partner, group_chat.channel_member_ids.partner_id)
         self.assertNoMail(self.env["res.partner"], "john@test.com")
         self.assertMailMail(
             self.env["res.partner"],
             status=None,
             email_to_all=["unknown_email@test.com"],
-            author=bob.partner_id,
+            author=self.bob_partner,
             email_values={
-                "subject": f"{bob.name} has invited you to a channel",
+                "subject": f"{self.bob_user.name} has invited you to a channel",
             },
         )
         mail = self.env["mail.mail"].search(
@@ -42,35 +60,29 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         )
 
     def test_02_invite_by_email_excludes_member_emails(self):
-        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
-        group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
-        )
         alfred_guest = self.env["mail.guest"].create({"email": "alfred@test.com", "name": "Alfred"})
-        group_chat._add_members(guests=alfred_guest)
+        self.group_chat._add_members(guests=alfred_guest)
         with self.mock_mail_gateway():
-            group_chat.invite_by_email(["alfred@test.com", "bob@test.com", "other@test.com"])
+            self.group_chat.invite_by_email(["alfred@test.com", "bob@test.com", "other@test.com"])
         self.assertMailMail(
             self.env["res.partner"],
             status=None,
             email_to_all=["other@test.com"],
-            author=bob.partner_id,
+            author=self.bob_partner,
         )
         self.assertNoMail(self.env["res.partner"], "bob@test.com")
         self.assertNoMail(self.env["res.partner"], "alfred@test.com")
 
     def test_03_only_invite_by_email_on_allowed_channel_types(self):
-        bob = new_test_user(self.env, "bob", groups="base.group_user")
-        john = new_test_user(self.env, "john", groups="base.group_user")
         chat = (
             self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
+            .with_user(self.bob_user)
+            ._get_or_create_chat(partners_to=self.john_partner.ids)
         )
         group_chat = (
             self.env["discuss.channel"]
-            .with_user(bob)
-            ._create_group(partners_to=john.partner_id.ids)
+            .with_user(self.bob_user)
+            ._create_group(partners_to=self.john_partner.ids)
         )
         public_channel = self.env["discuss.channel"].create(
             {"name": "public community", "group_public_id": False}
@@ -100,21 +112,17 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
                 )
 
     def test_04_guest_email_updated_when_invited_from_email(self):
-        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
-        group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
-        )
         # Guest email is filled at create
         self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
+            f"{self.group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}",
         )
-        self.assertEqual(group_chat.channel_member_ids.guest_id.email, "alfred@test.com")
-        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "alfred@test.com")
+        self.assertEqual(self.group_chat.channel_member_ids.guest_id.email, "alfred@test.com")
+        self.assertEqual(self.group_chat.channel_member_ids.guest_id.name, "alfred@test.com")
         # Guest email is updated if empty when invited from email
         guest = self.env["mail.guest"].create({"name": "Alice"})
         self.assertFalse(guest.email)
         self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alice@test.com')}",
+            f"{self.group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alice@test.com')}",
             cookies={
                 guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}",
             },
@@ -124,7 +132,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         # Guest email is not overwriten if already filled
         guest = self.env["mail.guest"].create({"name": "John", "email": "john@test.com"})
         self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'john_other_email@test.com')}",
+            f"{self.group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'john_other_email@test.com')}",
             cookies={
                 guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}",
             },
@@ -133,18 +141,16 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         self.assertEqual(guest.name, "John")
 
     def test_05_search_for_channel_invite_selectable_email(self):
-        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
-        john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         alfred_guest = self.env["mail.guest"].create({"email": "alfred@test.com", "name": "Alfred"})
         chat = (
             self.env["discuss.channel"]
-            .with_user(bob)
-            ._get_or_create_chat(partners_to=john.partner_id.ids)
+            .with_user(self.bob_user)
+            ._get_or_create_chat(partners_to=self.john_partner.ids)
         )
         group_chat = (
             self.env["discuss.channel"]
-            .with_user(bob)
-            ._create_group(partners_to=john.partner_id.ids)
+            .with_user(self.bob_user)
+            ._create_group(partners_to=self.john_partner.ids)
         )
         group_chat._add_members(guests=alfred_guest)
         public_channel = self.env["discuss.channel"].create(

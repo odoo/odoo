@@ -15,6 +15,11 @@ from .test_token_access import TestTokenAccess
 @tagged('odoo2google')
 class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @patch.object(ResUsers, '_get_google_calendar_token', lambda user: user.google_calendar_token)
     @freeze_time("2020-01-01")
     def test_event_creation_for_user(self):

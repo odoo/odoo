@@ -12,6 +12,11 @@ from odoo.tools import mute_logger
 @tagged('ir_actions')
 class TestServerActionsEmail(MailCommon, TestServerActionsBase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def setUp(self):
         super(TestServerActionsEmail, self).setUp()
         self.template = self._create_template(

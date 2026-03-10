@@ -6,20 +6,32 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
-from odoo.addons.mail.tests.common import MailCase
 
 
-class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
-    def test_unfollow_from_non_member_does_not_close_livechat(self):
-        bob_user = new_test_user(
-            self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_manager"
+class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+        cls.laura_livechat_manager = new_test_user(
+            cls.env,
+            "laura_manager",
+            groups="im_livechat.im_livechat_group_manager",
         )
+        cls.diana_livechat_agent = new_test_user(
+            cls.env,
+            "diana_agent",
+            groups="im_livechat.im_livechat_group_user",
+        )
+
+    def test_unfollow_from_non_member_does_not_close_livechat(self):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertFalse(chat.livechat_end_dt)
-        chat.with_user(bob_user).action_unfollow()
+        chat.with_user(self.laura_livechat_manager).action_unfollow()
         self.assertFalse(chat.livechat_end_dt)
         agent_user = chat.livechat_agent_partner_ids.mapped("main_user_id")
         chat.with_user(agent_user).action_unfollow()
@@ -48,9 +60,6 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             "message": "I will transfer you to a human.",
             "chatbot_script_id": chatbot_script.id,
         })
-        bob_operator = new_test_user(
-            self.env, "bob_user", groups="im_livechat.im_livechat_group_user"
-        )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {"chatbot_script_id": chatbot_script.id, "channel_id": self.livechat_channel.id},
@@ -61,12 +70,12 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.livechat_channel.user_ids = False  # remove operators so forwarding will fail
         chat._forward_human_operator(chat.chatbot_current_step_id)
         self.assertEqual(chat.livechat_failure, "no_agent")
-        self.livechat_channel.user_ids += bob_operator
+        self.livechat_channel.user_ids += self.diana_livechat_agent
         self.assertTrue(self.livechat_channel.available_operator_ids)
         chat._forward_human_operator(chat.chatbot_current_step_id)
-        self.assertEqual(chat.livechat_agent_partner_ids, bob_operator.partner_id)
+        self.assertEqual(chat.livechat_agent_partner_ids, self.diana_livechat_agent.partner_id)
         self.assertEqual(chat.livechat_failure, "no_answer")
-        chat.with_user(bob_operator).message_post(
+        chat.with_user(self.diana_livechat_agent).message_post(
             body="I am here to help!",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
@@ -152,7 +161,6 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             "channel_type": "livechat",
         })
         channel_2._add_members(users=self.operators[0])
-        bob_operator = new_test_user(self.env, "bob_user", groups="im_livechat.im_livechat_group_user")
         channel_1.livechat_status = "need_help"
         channel_2.livechat_status = "need_help"
         self.assertEqual(channel_1.livechat_status, "need_help")
@@ -164,7 +172,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(channel_1.livechat_agent_partner_ids, self.operators[0].partner_id)
         agent_user = channel_1.livechat_agent_partner_ids.mapped("main_user_id")
         (channel_1 | channel_2).with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
+            partner_ids=self.diana_livechat_agent.partner_id.ids,
         )
         self.assertEqual(channel_1.livechat_status, "in_progress")
         self.assertEqual(channel_2.livechat_status, "in_progress")
@@ -172,9 +180,12 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         # Re-add the same operator and ensure the status does not change
         channel_1.livechat_status = "need_help"
         self.assertEqual(channel_1.livechat_status, "need_help")
-        self.assertEqual(channel_1.livechat_agent_partner_ids, bob_operator.partner_id | self.operators[0].partner_id)
+        self.assertEqual(
+            channel_1.livechat_agent_partner_ids,
+            self.diana_livechat_agent.partner_id | self.operators[0].partner_id,
+        )
         channel_1.with_user(agent_user).add_members(
-            partner_ids=bob_operator.partner_id.ids
+            partner_ids=self.diana_livechat_agent.partner_id.ids,
         )
         self.assertEqual(channel_1.livechat_status, "need_help")
 

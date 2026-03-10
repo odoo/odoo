@@ -307,6 +307,7 @@ class TestEventMailCommon(EventCase, SMSCase, MailCase, CronMixinCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.event_cron_id = cls.env.ref('event.event_mail_scheduler')
         # deactivate other schedulers to avoid messing with crons

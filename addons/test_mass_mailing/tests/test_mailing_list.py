@@ -5,6 +5,9 @@ from odoo.addons.mass_mailing.tests.common import MassMailCommon
 
 @tagged('mailing_list')
 class TestMailingListMerge(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     def test_mailing_list_merge(self):

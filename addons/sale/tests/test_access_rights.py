@@ -15,6 +15,7 @@ class TestAccessRights(SaleCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.user_portal = cls._create_new_portal_user()
         cls.user_internal = cls._create_new_internal_user()

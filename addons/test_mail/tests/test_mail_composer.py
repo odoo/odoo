@@ -27,6 +27,7 @@ class TestMailComposer(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # force 'now' to ease test about schedulers
         cls.reference_now = FieldDatetime.from_string('2022-12-24 12:00:00')

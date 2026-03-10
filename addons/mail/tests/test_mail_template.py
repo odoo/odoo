@@ -15,6 +15,7 @@ class TestMailTemplate(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailTemplate, cls).setUpClass()
+        cls._setup_mail_common()
         # Enable the Jinja rendering restriction
         cls.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
         cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
@@ -600,6 +601,7 @@ class TestSearchTemplateCategory(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         MailTemplate = cls.env['mail.template'].with_context(active_test=False)
         ModelData = cls.env['ir.model.data']
 

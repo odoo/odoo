@@ -15,17 +15,15 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._create_portal_user()
-
-    def setUp(self):
-        super().setUp()
-        self.password = 'Pl1bhD@2!kXZ'
-        self.users = self.env['res.users'].create([
+        cls.password = "Pl1bhD@2!kXZ"
+        cls.users = cls.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
-                'group_ids': [Command.link(self.env.ref('base.group_user').id)],
+                'group_ids': [Command.link(cls.env.ref('base.group_user').id)],
                 'login': 'emp',
-                'password': self.password,
+                'password': cls.password,
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',
                 'odoobot_state': 'disabled',
@@ -35,12 +33,12 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "email": "test1@example.com",
                 "login": "test1",
                 "name": "test1",
-                "password": self.password,
+                "password": cls.password,
             },
         ])
-        settings = self.env["res.users.settings"]._find_or_create_for_user(self.users[1])
+        settings = cls.env["res.users.settings"]._find_or_create_for_user(cls.users[1])
         settings.livechat_username = "chuck"
-        self.maxDiff = None
+        cls.maxDiff = None
 
     def test_update_username(self):
         user = self.env['res.users'].create({

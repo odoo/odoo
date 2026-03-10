@@ -14,9 +14,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         cls.public_channel = cls.env["discuss.channel"]._create_channel(
             name="Public Channel", group_id=None
         )
-        cls.users = (
-            cls.user_public + cls.user_portal + cls.user_employee + cls.user_admin
-        )
+        cls.users = cls.user_portal + cls.user_employee + cls.user_admin
 
     def test_open_guest_avatar(self):
         """Test access to open the avatar of a guest.

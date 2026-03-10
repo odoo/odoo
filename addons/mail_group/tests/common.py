@@ -11,6 +11,7 @@ class TestMailListCommon(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailListCommon, cls).setUpClass()
+        cls._setup_mail_common()
 
         # Test credentials / from
         cls.email_from_unknown = tools.formataddr(("Bob Lafrite", "bob.email@test.example.com"))

@@ -10,6 +10,7 @@ class MailTrackingDurationMixinCase(MailCommon):
     @classmethod
     def setUpClass(cls, test_model_name):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._prepare_duration_setup(test_model_name)
 
         cls.test_model_name = test_model_name

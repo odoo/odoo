@@ -5,6 +5,13 @@ from odoo.tests import new_test_user
 
 
 class TestImLivechatSessions(TestImLivechatCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+
     def test_livechat_session_open(self):
         new_test_user(
             self.env,

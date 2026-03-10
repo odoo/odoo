@@ -318,6 +318,7 @@ class TestMessageLinks(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
         cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)

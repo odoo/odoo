@@ -2,57 +2,57 @@
 
 from odoo import Command
 from odoo.tests import HttpCase
-from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.addons.website_livechat.tests.common import TestWebsiteLivechatCommon
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 
 
-class TestFwOperator(ChatbotCase, HttpCase, TestLivechatCommon):
-    def setUp(self):
-        super().setUp()
-        self.chatbot_fw_script = self.env["chatbot.script"].create({"title": "Forward Bot"})
+class TestFwOperator(ChatbotCase, TestWebsiteLivechatCommon, HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.chatbot_fw_script = cls.env["chatbot.script"].create({"title": "Forward Bot"})
         question_step, *_ = tuple(
-            self.env["chatbot.script.step"].create(
+            cls.env["chatbot.script.step"].create(
                 [
                     {
-                        "chatbot_script_id": self.chatbot_fw_script.id,
+                        "chatbot_script_id": cls.chatbot_fw_script.id,
                         "message": "Hello, what can I do for you?",
                         "step_type": "question_selection",
                     },
                     {
-                        "chatbot_script_id": self.chatbot_fw_script.id,
+                        "chatbot_script_id": cls.chatbot_fw_script.id,
                         "message": "I'll forward you to an operator.",
                         "step_type": "forward_operator",
                     },
                     {
-                        "chatbot_script_id": self.chatbot_fw_script.id,
+                        "chatbot_script_id": cls.chatbot_fw_script.id,
                         "message": "I could not find an operator to help you.",
                         "step_type": "text",
                     }
                 ]
             )
         )
-        self.fw_to_operator_answer = self.env["chatbot.script.answer"].create(
+        cls.fw_to_operator_answer = cls.env["chatbot.script.answer"].create(
             {
                 "name": "Forward to operator",
                 "script_step_id": question_step.id,
             }
         )
-        self.livechat_channel = self.env["im_livechat.channel"].create(
+        cls.livechat_channel = cls.env["im_livechat.channel"].create(
             {
                 "name": "Forward to operator channel",
                 "rule_ids": [
                     Command.create(
                         {
                             "regex_url": "/",
-                            "chatbot_script_id": self.chatbot_fw_script.id,
+                            "chatbot_script_id": cls.chatbot_fw_script.id,
                         }
                     )
                 ],
-                "user_ids": [self.operator.id],
+                "user_ids": [cls.operator.id],
             }
         )
-        default_website = self.env.ref("website.default_website")
-        default_website.channel_id = self.livechat_channel.id
+        cls.env.ref("website.default_website").channel_id = cls.livechat_channel.id
 
     def test_chatbot_removed_after_forward_to_operator(self):
         self.start_tour("/", "website_livechat.chatbot_forward")

@@ -13,6 +13,7 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
     @classmethod
     def setUpClass(cls):
         super(TestSMSActionsCommon, cls).setUpClass()
+        cls._setup_mail_common()
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,

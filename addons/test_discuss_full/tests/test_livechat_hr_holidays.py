@@ -13,6 +13,7 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.env["mail.presence"]._update_presence(cls.user_employee)
         work_entry_type = cls.env['hr.work.entry.type'].create(
             {

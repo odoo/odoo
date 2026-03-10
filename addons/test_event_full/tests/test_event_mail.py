@@ -11,6 +11,9 @@ from odoo.tools import formataddr
 
 @tagged('event_mail', 'post_install', '-at_install')
 class TestEventMailInternals(TestEventMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_template_ref_delete_lines(self):
         """ When deleting a template, related lines should be deleted too """
@@ -54,6 +57,9 @@ class TestEventMailInternals(TestEventMailCommon):
 
 @tagged('event_mail', 'post_install', '-at_install')
 class TestEventMailSchedule(TestEventMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_event_mail_before_trigger_sent_count(self):
         """ Emails are only sent to confirmed attendees. """

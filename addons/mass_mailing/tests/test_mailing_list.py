@@ -14,6 +14,9 @@ from odoo.tests import Form, tagged, users
 @tagged('mailing_list')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingContactAccess(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     def test_mailing_contact_properties_access(self):
@@ -46,6 +49,9 @@ class TestMailingContactAccess(MassMailCommon):
 @tagged('mailing_list')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingContactToList(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     def test_mailing_contact_to_list(self):
@@ -171,6 +177,10 @@ class TestMailingListMerge(MassMailCommon):
 class TestMailingContactImport(MassMailCommon):
     """Test the transient <mailing.contact.import>."""
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
     @users('user_marketing')
     def test_mailing_contact_import(self):
         first_list, second_list, third_list = self.env['mailing.list'].create([
@@ -267,6 +277,9 @@ class TestMailingContactImport(MassMailCommon):
 @tagged('mailing_list')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubscriptionManagement(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     def test_mailing_update_optout(self):

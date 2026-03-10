@@ -257,6 +257,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.company_data_2 = cls.setup_other_company()
 
     def test_alias_name_creation(self):

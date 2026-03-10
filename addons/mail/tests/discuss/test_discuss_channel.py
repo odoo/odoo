@@ -12,43 +12,60 @@ from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.discuss.discuss_common import DiscussCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, users
 from odoo.tools import html_escape, mute_logger
 
 
-class TestChannelInternals(MailCommon, HttpCase):
-
+class TestChannelInternals(DiscussCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_public_channel()
+        cls._setup_nomail_user()
+        cls._setup_alice()
+        cls._setup_bob()
+        cls._setup_eve()
+        cls._setup_john()
         cls.maxDiff = None
-        cls.test_channel = cls.env['discuss.channel'].with_context(cls._test_context)._create_channel(name='Channel', group_id=None)
         cls.test_user = (
             cls.env["res.users"]
             .with_context(cls._test_context)
             .create({"name": "Test Partner", "email": "test_customer@example.com", "login": "fndz"})
         )
         cls.test_partner = cls.test_user.partner_id
-        cls.user_employee_nomail = mail_new_test_user(
-            cls.env, login='employee_nomail',
-            email=False,
-            groups='base.group_user',
-            company_id=cls.company_admin.id,
-            name='Evita Employee NoEmail',
-            notification_type='email',
-            signature='--\nEvite'
+        cls.all_test_user = mail_new_test_user(
+            cls.env,
+            login="all",
+            name="all",
+            email="all@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
         )
-        cls.partner_employee_nomail = cls.user_employee_nomail.partner_id
+        cls.mentions_test_user = mail_new_test_user(
+            cls.env,
+            login="mentions",
+            name="mentions",
+            email="mentions@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        cls.nothing_test_user = mail_new_test_user(
+            cls.env,
+            login="nothing",
+            name="nothing",
+            email="nothing@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
 
     def test_channel_member_cannot_be_public_user(self):
         """Public users can only join channels as guest."""
-        user_public = mail_new_test_user(self.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
-        public_channel = self.env['discuss.channel']._create_channel(name='Public Channel', group_id=None)
         with self.assertRaises(ValidationError):
-            public_channel._add_members(users=user_public)
+            self.public_channel._add_members(users=self.user_public)
 
     @users("employee")
     def test_channel_creator_is_owner(self):
@@ -271,14 +288,14 @@ class TestChannelInternals(MailCommon, HttpCase):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_channel(self):
         """ Posting a message on a channel should not send emails """
-        channel = self.env['discuss.channel'].browse(self.test_channel.ids)
+        channel = self.env["discuss.channel"].browse(self.public_channel.id)
         # sudo: discuss.channel.member - adding members in non-accessible channel in a test file
         channel.sudo()._add_members(users=self.user_employee | self.user_admin, partners=self.test_partner)
         with self.mock_mail_gateway():
             new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
-        self.assertEqual(new_msg.model, self.test_channel._name)
-        self.assertEqual(new_msg.res_id, self.test_channel.id)
+        self.assertEqual(new_msg.model, self.public_channel._name)
+        self.assertEqual(new_msg.res_id, self.public_channel.id)
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
 
@@ -302,10 +319,13 @@ class TestChannelInternals(MailCommon, HttpCase):
         no_user_partner = self.env["res.partner"].create({"name": "No User", "email": "nouser@example.com"})
         message = None
         with self.mock_mail_gateway():
-            message = self.test_channel.message_post(
-                body="Test", partner_ids=[self.test_partner.id, no_user_partner.id],
-                message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.test_channel.env.user.partner_id, [no_user_partner])
+            message = self.public_channel.message_post(
+                body="Test",
+                partner_ids=[self.test_partner.id, no_user_partner.id],
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
+        self.assertSentEmail(self.public_channel.env.user.partner_id, [no_user_partner])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", message.id),
             ("res_partner_id", "=", self.test_partner.id),
@@ -315,30 +335,36 @@ class TestChannelInternals(MailCommon, HttpCase):
     @mute_logger("odoo.models.unlink")
     def test_channel_special_mention(self):
         """ Posting a message on a channel should support special mention """
-        self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
+        self.public_channel._add_members(users=self.user_employee | self.user_employee_nomail)
         with self.mock_mail_gateway():
-            new_msg = self.test_channel.message_post(
+            new_msg = self.public_channel.message_post(
                 body="Test", special_mentions=["everyone"],
                 message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.assertEqual(new_msg.partner_ids, self.test_channel.channel_member_ids.partner_id)
+        self.assertEqual(new_msg.partner_ids, self.public_channel.channel_member_ids.partner_id)
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
         """Archiving / deleting a user should automatically unsubscribe related partner from group restricted channels"""
         group_restricted_channel = self.env['discuss.channel']._create_channel(name='Sic Mundus', group_id=self.env.ref('base.group_user').id)
 
-        self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
+        self.public_channel._add_members(users=self.user_employee | self.user_employee_nomail)
         group_restricted_channel._add_members(users=self.user_employee | self.user_employee_nomail)
 
         # Unsubscribe archived user from the private channels, but not from public channels
         self.user_employee.active = False
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.partner_employee_nomail)
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
+        self.assertEqual(
+            self.public_channel.channel_partner_ids,
+            self.user_employee.partner_id | self.partner_employee_nomail,
+        )
 
         # Unsubscribe deleted user from the private channels, but not from public channels
         self.user_employee_nomail.unlink()
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | self.partner_employee_nomail)
+        self.assertEqual(
+            self.public_channel.channel_partner_ids,
+            self.user_employee.partner_id | self.partner_employee_nomail,
+        )
 
     @users('employee_nomail')
     def test_channel_info_get(self):
@@ -530,7 +556,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             'group_public_id': self.env.ref('base.group_user').id,
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
-        self.test_channel.with_context(self._test_context).write({
+        self.public_channel.with_context(self._test_context).write({
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
         private_group = self.env['discuss.channel'].with_user(self.user_employee).with_context(self._test_context).create({
@@ -541,15 +567,21 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         # Unsubscribe archived user from the private channels, but not from public channels and not from group
         self.user_employee.active = False
-        (private_group | self.test_channel).invalidate_recordset(['channel_partner_ids'])
+        (private_group | self.public_channel).invalidate_recordset(["channel_partner_ids"])
         self.assertEqual(group_restricted_channel.channel_partner_ids, test_partner)
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(
+            self.public_channel.channel_partner_ids,
+            self.user_employee.partner_id | test_partner,
+        )
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
         # Unsubscribe deleted user from the private channels, but not from public channels and not from group
         test_user.unlink()
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
-        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(
+            self.public_channel.channel_partner_ids,
+            self.user_employee.partner_id | test_partner,
+        )
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
     @users('employee')
@@ -619,7 +651,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(messages_1, messages_2)
 
     def test_channel_join_unfollow_should_not_post_message(self):
-        channel = self.env['discuss.channel'].browse(self.test_channel.id)
+        channel = self.env["discuss.channel"].browse(self.public_channel.id)
         channel.with_user(self.test_user)._add_members(partners=self.test_partner)
 
         # no message should be posted to notify others when a partner is joined and left
@@ -678,61 +710,45 @@ class TestChannelInternals(MailCommon, HttpCase):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
 
     def test_channel_notification(self):
-        all_test_user = mail_new_test_user(
-            self.env,
-            login="all",
-            name="all",
-            email="all@example.com",
-            notification_type="inbox",
-            groups="base.group_user",
-        )
-        mentions_test_user = mail_new_test_user(
-            self.env,
-            login="mentions",
-            name="mentions",
-            email="mentions@example.com",
-            notification_type="inbox",
-            groups="base.group_user",
-        )
-        nothing_test_user = mail_new_test_user(
-            self.env,
-            login="nothing",
-            name="nothing",
-            email="nothing@example.com",
-            notification_type="inbox",
-            groups="base.group_user",
-        )
-        all_test_user.res_users_settings_id.write({"channel_notifications": "all"})
-        nothing_test_user.res_users_settings_id.write({"channel_notifications": "no_notif"})
+        self.all_test_user.res_users_settings_id.write({"channel_notifications": "all"})
+        self.nothing_test_user.res_users_settings_id.write({"channel_notifications": "no_notif"})
 
-        channel = self.env["discuss.channel"]._create_channel(name="Channel", group_id=None)
-        channel._add_members(users=self.user_employee | all_test_user | mentions_test_user | nothing_test_user)
+        self.public_channel._add_members(
+            users=self.user_employee
+            | self.all_test_user
+            | self.mentions_test_user
+            | self.nothing_test_user,
+        )
 
         # sending normal message
         with self.with_user("employee"):
-            channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
+            channel_msg = self.public_channel.message_post(
+                body="Test",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "=", self.all_test_user.partner_id.id),
         ])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+            ("res_partner_id", "=", self.mentions_test_user.partner_id.id),
         ])
         nothing_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+            ("res_partner_id", "=", self.nothing_test_user.partner_id.id),
         ])
         self.assertEqual(len(all_notif), 0, "all + normal message = no needaction")
         self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
 
-        all_users = all_test_user + mentions_test_user + nothing_test_user
+        all_users = self.all_test_user + self.mentions_test_user + self.nothing_test_user
         self._reset_bus()
         with self.assertBusNotificationType([(user, "mail.message/inbox") for user in all_users]):
             # sending mention message
             with self.with_user("employee"):
-                channel_msg = channel.message_post(
+                channel_msg = self.public_channel.message_post(
                     body="Test @mentions",
                     partner_ids=all_users.partner_id.ids,
                     message_type="comment",
@@ -740,15 +756,15 @@ class TestChannelInternals(MailCommon, HttpCase):
                 )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "=", self.all_test_user.partner_id.id),
         ])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+            ("res_partner_id", "=", self.mentions_test_user.partner_id.id),
         ])
         nothing_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+            ("res_partner_id", "=", self.nothing_test_user.partner_id.id),
         ])
         self.assertEqual(len(all_notif), 1, "all + mention message = needaction")
         self.assertEqual(len(mentions_notif), 1, "mentions + mention message = needaction")
@@ -756,26 +772,28 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         # mute the channel
         now = datetime.now()
-        self.env["discuss.channel.member"].search([
-            ("partner_id", "in", (all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids),
-        ]).write({
-            "mute_until_dt": now + timedelta(days=5),
-        })
+        self.env["discuss.channel.member"].search(
+            [("partner_id", "in", all_users.partner_id.ids)],
+        ).mute_until_dt = now + timedelta(days=5)
 
         # sending normal message
         with self.with_user("employee"):
-            channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
+            channel_msg = self.public_channel.message_post(
+                body="Test",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "=", self.all_test_user.partner_id.id),
         ])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+            ("res_partner_id", "=", self.mentions_test_user.partner_id.id),
         ])
         nothing_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+            ("res_partner_id", "=", self.nothing_test_user.partner_id.id),
         ])
         self.assertEqual(len(all_notif), 0, "mute + all + normal message = no needaction")
         self.assertEqual(len(mentions_notif), 0, "mute + mentions + normal message = no needaction")
@@ -783,18 +801,23 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         # sending mention message
         with self.with_user("employee"):
-            channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
+            channel_msg = self.public_channel.message_post(
+                body="Test @mentions",
+                partner_ids=all_users.partner_id.ids,
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", all_test_user.partner_id.id)
+            ("res_partner_id", "=", self.all_test_user.partner_id.id),
         ])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+            ("res_partner_id", "=", self.mentions_test_user.partner_id.id),
         ])
         nothing_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
-            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+            ("res_partner_id", "=", self.nothing_test_user.partner_id.id),
         ])
         self.assertEqual(len(all_notif), 1, "mute + all + mention message = needaction")
         self.assertEqual(len(mentions_notif), 1, "mute + mentions + mention message = needaction")
@@ -848,7 +871,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     @users("employee")
     def test_channel_command_help_in_channel(self):
         """Ensures the command '/help' works in a channel"""
-        channel = self.env["discuss.channel"].browse(self.test_channel.ids)
+        channel = self.env["discuss.channel"].browse(self.public_channel.ids)
         channel.name = "<strong>R&D</strong>"
         with self.assertBus(
             [self.env.user],
@@ -951,10 +974,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                 )
 
     def test_member_based_channel_naming(self):
-        john = mail_new_test_user(self.env, groups="base.group_user", login="john")
-        bob = mail_new_test_user(self.env, groups="base.group_user", login="bob")
-        alice = mail_new_test_user(self.env, groups="base.group_user", login="alice")
-        eve = mail_new_test_user(self.env, groups="base.group_user", login="eve")
         group = self.env["discuss.channel"].create({"name": "", "channel_type": "group"})
         channel = self.env["discuss.channel"].create({"name": "General"})
 
@@ -969,22 +988,22 @@ class TestChannelInternals(MailCommon, HttpCase):
             # Channel does not use member-based naming (not in `_member_based_naming_channel_types`).
             (
                 channel,
-                [(john, "add", False), (john, "remove", False)],
+                [(self.john_user, "add", False), (self.john_user, "remove", False)],
             ),
             # Group uses member-based naming (in `_member_based_naming_channel_types`).
             # Name is computed from the first 3 members. Updates are only sent when those change.
             (
                 group,
                 [
-                    (john, "add", [self.env.user, john]),
-                    (bob, "add", [self.env.user, john, bob]),
+                    (self.john_user, "add", [self.env.user, self.john_user]),
+                    (self.bob_user, "add", [self.env.user, self.john_user, self.bob_user]),
                     # Alice is added: we already have 3 members to compute the name, no update.
-                    (alice, "add", False),
-                    (eve, "add", False),
+                    (self.alice_user, "add", False),
+                    (self.eve_user, "add", False),
                     # Eve is removed: not taken into account for name computation, no update.
-                    (eve, "remove", False),
+                    (self.eve_user, "remove", False),
                     # John is removed: was used in naming, update.
-                    (john, "remove", [self.env.user, bob, alice]),
+                    (self.john_user, "remove", [self.env.user, self.bob_user, self.alice_user]),
                 ],
             ),
         ]

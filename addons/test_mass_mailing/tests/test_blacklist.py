@@ -60,6 +60,10 @@ class TestBLAccessRights(common.TestMassMailCommon):
 
 
 class TestBLConsistency(common.TestMassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
     _base_list = ['Arya.Stark@example.com', 'ned.stark@example.com']
 
     def setUp(self):

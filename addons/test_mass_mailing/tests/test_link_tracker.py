@@ -6,6 +6,9 @@ from odoo.addons.test_mass_mailing.tests import common
 
 
 class TestLinkTracker(common.TestMassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         super(TestLinkTracker, self).setUp()

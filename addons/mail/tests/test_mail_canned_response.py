@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import tagged
+from odoo.tests.common import tagged, TransactionCase
 
 
 @tagged("mail_canned_response")
-class TestMailCannedResponse(MailCommon):
+class TestMailCannedResponse(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

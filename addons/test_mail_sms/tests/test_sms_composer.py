@@ -354,6 +354,7 @@ class TestSMSComposerBatchTwilio(SMSCommon, MockSmsTwilioApi):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._test_body = 'Hello {{ object.name }} zizisse an SMS.'
 
         cls._create_records_for_batch('mail.test.sms', 3)
@@ -679,6 +680,7 @@ class TestSMSComposerMassTwilio(SMSCommon, MockSmsTwilioApi):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._test_body = 'Hello {{ object.name }} zizisse an SMS.'
 
         cls._create_records_for_batch('mail.test.sms', 10)

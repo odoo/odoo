@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.discuss.discuss_common import DiscussCommon
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import new_test_user
 
 
-class TestDiscussChannelMember(MailCommon):
+class TestDiscussChannelMember(DiscussCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_bob()
 
         cls.secret_group = cls.env['res.groups'].create({
             'name': 'Secret User Group',
@@ -33,11 +35,10 @@ class TestDiscussChannelMember(MailCommon):
 
     def test_cannot_change_member_immutable_fields(self):
         channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
-        bob = new_test_user(self.env, "bob", groups="base.group_user")
         another_channel = self.env["discuss.channel"]._create_channel(group_id=None, name="Another channel")
         another_partner = self.env["res.partner"].create({"name": "John"})
         guest = self.env["mail.guest"].create({"name": "Jane"})
-        member = channel._add_members(users=bob)
+        member = channel._add_members(users=self.bob_user)
         with self.assertRaises(AccessError):
             member.channel_id = another_channel
         with self.assertRaises(AccessError):

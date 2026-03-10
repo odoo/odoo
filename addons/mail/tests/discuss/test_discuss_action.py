@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import HttpCase, tagged
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.bus.tests.common import BusCase
 
 
 @tagged("discuss_action")
-class TestDiscussAction(HttpCase, MailCommon):
+class TestDiscussAction(BusCase, HttpCase):
     def test_go_back_to_thread_from_breadcrumbs(self):
         self.start_tour(
             "/odoo/discuss?active_id=mail.box_inbox",

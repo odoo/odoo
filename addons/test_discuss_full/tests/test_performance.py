@@ -13,6 +13,12 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged("is_query_count")
 class TestDiscussFullPerformance(HttpCase, MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)

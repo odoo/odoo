@@ -8,6 +8,12 @@ from odoo.tests.common import tagged, users
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalWizard(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def setUp(self):
         super(TestPortalWizard, self).setUp()
 

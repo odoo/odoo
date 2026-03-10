@@ -9,6 +9,11 @@ from odoo.exceptions import AccessError
 
 class TestSubtypeAccess(MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def test_subtype_access(self):
         """
         The function aims to formally verify the access restrictions on mail.message.subtype for

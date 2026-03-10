@@ -27,6 +27,7 @@ class TestMailMail(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailMail, cls).setUpClass()
+        cls._setup_mail_common()
 
         cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
             'name': 'Test',
@@ -792,6 +793,7 @@ class TestMailMailServer(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.mail_server_domain_2 = cls.env['ir.mail_server'].create({
             'from_filter': 'test_2.com',
@@ -1115,6 +1117,11 @@ class TestMailMailServer(MailCommon):
 
 @tagged('mail_mail')
 class TestMailMailRace(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):

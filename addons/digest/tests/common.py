@@ -16,6 +16,7 @@ class TestDigestCommon(mail_test.MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.company_1 = cls.env.company
         cls.company_2 = cls.env['res.company'].create({'name': 'Digest Company 2'})

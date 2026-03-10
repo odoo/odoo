@@ -11,11 +11,11 @@ from itertools import product
 
 from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
+from odoo.addons.mail.tests.common import freeze_all_time
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
-class TestMailPresence(WebsocketCase, MailCommon):
+class TestMailPresence(WebsocketCase):
     def _receive_presence(self, requested_by, target, has_token=False):
         self.env["mail.presence"].search([]).unlink()
         target_user = isinstance(target, self.env.registry["res.users"])

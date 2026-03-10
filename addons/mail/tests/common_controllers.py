@@ -50,6 +50,7 @@ class MailControllerCommon(HttpCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.maxDiff = None
         cls._create_portal_user()
         cls.guest = cls.env["mail.guest"].create({"name": "Guest"})

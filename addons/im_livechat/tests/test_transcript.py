@@ -7,6 +7,13 @@ from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
 class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+
     def test_download_transcript(self):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",

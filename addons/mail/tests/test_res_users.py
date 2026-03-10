@@ -16,6 +16,11 @@ from odoo.tools import mute_logger
 @tagged('mail_tools', 'res_users')
 class TestNotifySecurityUpdate(MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @users('employee')
     def test_security_update_email(self):
         """ User should be notified on old email address when the email changes """
@@ -57,6 +62,7 @@ class TestUser(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.portal_user = cls._create_portal_user()
 
     @mute_logger('odoo.sql_db')

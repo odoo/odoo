@@ -9,6 +9,7 @@ class CrmChatbotCase(MailCommon, ChatbotCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._create_portal_user()
         teams_data = [
             {

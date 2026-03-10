@@ -18,6 +18,7 @@ class TestMailActivityMixin(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMailActivityMixin, cls).setUpClass()
+        cls._setup_mail_common()
         # using res.partner as the model inheriting from mail.activity.mixin
         cls.test_record = cls.env['res.partner'].with_context(cls._test_context).create({'name': 'Test'})
         cls.activity_type_1 = cls.env['mail.activity.type'].create({

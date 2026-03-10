@@ -12,6 +12,7 @@ class TestMailPoll(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.test_record = cls.env["discuss.channel"].create({"name": "General"})
 
     def test_only_one_option_allowed_on_single_option_polls(self):

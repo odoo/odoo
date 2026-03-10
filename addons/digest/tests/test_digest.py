@@ -300,6 +300,10 @@ class TestDigest(TestDigestCommon):
 
 @tagged("digest", "mail_mail", "-at_install", "post_install")
 class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
 
     def setUp(self):
         super(TestUnsubscribe, self).setUp()

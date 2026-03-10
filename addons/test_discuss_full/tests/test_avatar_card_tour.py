@@ -12,6 +12,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         new_test_user(
             cls.env,
             login="hr_user",

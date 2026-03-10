@@ -2,27 +2,28 @@
 
 from odoo import Command, tests
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
-from odoo.addons.website_livechat.tests.common import TestLivechatCommon as TestWebsiteLivechatCommon
+from odoo.addons.website_livechat.tests.common import TestWebsiteLivechatCommon
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
 @tests.tagged("is_tour")
 class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatCommon, ChatbotCase):
-    def setUp(self):
-        super().setUp()
-        self.env['im_livechat.channel'].search([
-            ('id', '!=', self.livechat_channel.id)
-        ]).unlink()  # delete other channels to avoid them messing with the URL rules
-
-        self.livechat_channel.write({
-            'rule_ids': [(5, 0), (0, 0, {
-                'action': 'auto_popup',
-                'regex_url': '/',
-                'chatbot_script_id': self.chatbot_script.id,
-            })]
-        })
-
-        self.env.ref('website.default_website').channel_id = self.livechat_channel.id
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # delete other channels to avoid them messing with the URL rules
+        cls.env["im_livechat.channel"].search([("id", "!=", cls.livechat_channel.id)]).unlink()
+        cls.livechat_channel.rule_ids = [
+            Command.clear(),
+            Command.create(
+                {
+                    "action": "auto_popup",
+                    "regex_url": "/",
+                    "chatbot_script_id": cls.chatbot_script.id,
+                },
+            ),
+        ]
+        cls.env.ref("website.default_website").channel_id = cls.livechat_channel.id
 
     def chatbot_redirect_tour(self):
         chatbot_redirect_script = self.env["chatbot.script"].create(

@@ -27,6 +27,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
         cls.mocked_incoming_invoice_fname = 'incoming_invoice'
 

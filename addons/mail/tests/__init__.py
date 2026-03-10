@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from .discuss import *
 from . import test_discuss_tools
 from . import test_fetchmail
 from . import test_font_to_img
@@ -25,5 +26,3 @@ from . import test_res_users
 from . import test_uninstall
 from . import test_update_notification
 from . import test_websocket_controller
-
-from .discuss import *

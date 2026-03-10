@@ -10,6 +10,9 @@ from odoo.addons.test_mass_mailing.tests import common
 
 @tagged('mail_composer')
 class TestMailComposerMassMailing(TestMailComposer, common.TestMassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mass_mailing.models.mailing')

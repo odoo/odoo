@@ -8,6 +8,9 @@ from odoo.tests.common import tagged, users
 
 @tagged('post_install', '-at_install', 'utm_consistency')
 class TestUTMConsistencyMassMailing(TestUTMCommon, MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @users('user_marketing')
     def test_utm_consistency(self):

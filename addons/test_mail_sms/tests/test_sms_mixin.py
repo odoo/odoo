@@ -10,6 +10,7 @@ class TestSMSNoThread(SMSCommon, TestSMSRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls._test_body_dyn = 'Hello {{ object.name }} zizisse an SMS.'
         cls._test_body_sta = 'Hello Zboing'
         cls.test_nothreads = cls.env['sms.test.nothread'].create([

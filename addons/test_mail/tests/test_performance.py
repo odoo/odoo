@@ -18,6 +18,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # standard users
         cls.user_emp_email = mail_new_test_user(

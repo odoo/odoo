@@ -12,6 +12,9 @@ from odoo.tools import mute_logger
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('user_marketing')

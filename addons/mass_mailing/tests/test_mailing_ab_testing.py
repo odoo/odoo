@@ -11,6 +11,9 @@ from odoo import fields
 
 @tagged('post_install', '-at_install')
 class TestMailingABTestingCommon(MassMailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         super().setUp()

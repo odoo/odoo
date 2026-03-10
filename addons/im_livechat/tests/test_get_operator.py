@@ -10,6 +10,12 @@ from odoo.tests.common import users
 
 
 class TestGetOperator(MailCommon, TestGetOperatorCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def setUp(self):
         super().setUp()
         random_choice_patch = patch("random.choice", lambda arr: arr[0])

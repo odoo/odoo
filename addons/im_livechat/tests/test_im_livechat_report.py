@@ -10,6 +10,13 @@ from odoo.tests.common import new_test_user
 
 
 class TestImLivechatReport(TestImLivechatCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+        cls._setup_livechat_common()
+
     def setUp(self):
         super().setUp()
         self.env['discuss.channel'].search([('livechat_channel_id', '!=', False)]).unlink()

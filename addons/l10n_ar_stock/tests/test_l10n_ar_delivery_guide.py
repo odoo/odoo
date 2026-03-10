@@ -11,6 +11,7 @@ class TestArDeliveryGuide(TestArCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.wh = cls.env['stock.warehouse'].search([('company_id', '=', cls.company_data['company'].id)])
         cls.stock_location = cls.env['stock.location'].search([

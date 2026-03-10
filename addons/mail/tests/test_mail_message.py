@@ -7,6 +7,11 @@ from odoo.tests import HttpCase, new_test_user, tagged, users
 @tagged("mail_message")
 class TestMailMessage(common.MailCommon, HttpCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @users("employee")
     def test_can_star_message_without_write_access(self):
         self.authenticate(self.env.user.login, self.env.user.login)

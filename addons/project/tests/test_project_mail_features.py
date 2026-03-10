@@ -12,6 +12,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         # set high threshold to be sure to not hit mail limit during tests for a model
         cls.env['ir.config_parameter'].sudo().set_int('mail.gateway.loop.threshold', 50)

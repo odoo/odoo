@@ -23,6 +23,7 @@ class TestWebPushNotification(SMSCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.user_email = cls.user_employee
         cls.user_email.notification_type = 'email'
 

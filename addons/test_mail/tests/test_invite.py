@@ -9,6 +9,11 @@ from odoo.tools import mute_logger
 @tagged('mail_followers')
 class TestInvite(MailCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_invite_email(self):
         test_record = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})

@@ -12,6 +12,7 @@ class TestMailFlow(MailCommon, TestRecipients):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
 
         cls.user_employee_2 = mail_new_test_user(
             cls.env,

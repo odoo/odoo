@@ -1837,8 +1837,7 @@ class MailCommon(MailCase):
     Used mainly for class inheritance in other applications and test modules. """
 
     @classmethod
-    def setUpClass(cls):
-        super(MailCommon, cls).setUpClass()
+    def _setup_mail_common(cls):
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.partner_admin = cls.env.ref('base.partner_admin')

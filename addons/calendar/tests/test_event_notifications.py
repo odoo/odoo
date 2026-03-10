@@ -17,6 +17,7 @@ class CalendarMailCommon(MailCase, CronMixinCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         # give default values for all email aliases and domain
         cls._init_mail_gateway()
         cls._init_mail_servers()
@@ -67,6 +68,7 @@ class TestCalendarMail(CalendarMailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.user_employee = cls.user
         cls.test_template_event = cls.env['mail.template'].with_user(cls.user_admin).create({
             'auto_delete': True,
@@ -136,6 +138,7 @@ class TestEventNotifications(CalendarMailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.partner = cls.user.partner_id
 
     def test_assert_initial_values(self):

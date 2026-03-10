@@ -103,6 +103,10 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
 
 @tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
 
     def test_salesman_assignation(self):
         self.website.salesperson_id = self.user_admin

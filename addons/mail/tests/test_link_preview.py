@@ -17,6 +17,7 @@ class TestLinkPreview(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._setup_mail_common()
         cls.maxDiff = None
         cls.test_partner = cls.env['res.partner'].create({'name': 'a partner'})
         cls.existing_message = cls.test_partner.message_post(body='Test')

@@ -8,6 +8,11 @@ from odoo.tests.common import tagged, HttpCase
 @tagged('-at_install', 'post_install', 'mail_composer')
 class TestMailFullComposer(MailCommon, HttpCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     def test_mail_composer_test_tour(self):
         self.env['mail.template'].create({
             'auto_delete': True,

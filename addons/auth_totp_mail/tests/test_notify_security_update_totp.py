@@ -8,6 +8,12 @@ from odoo.tests import tagged, users
 
 @tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
 class TestNotifySecurityUpdateTotp(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @users('employee')
     def test_security_update_totp_enabled_disabled(self):
         recipients = [self.env.user.email_formatted]

@@ -8,6 +8,12 @@ from odoo.tests.common import HttpCase, tagged, warmup
 
 @tagged("is_query_count")
 class TestInboxPerformance(HttpCase, MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_mail_common()
+
     @warmup
     def test_fetch_with_rating_stats_enabled(self):
         """
