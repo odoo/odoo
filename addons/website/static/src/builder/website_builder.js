@@ -19,6 +19,8 @@ import {
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
 import { router } from "@web/core/browser/router";
+import { deleteQueryParam } from "@website/utils/misc";
+import { confirmDraftAction } from "@website/components/dialog/draft_dialog";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -43,6 +45,7 @@ export class WebsiteBuilder extends Component {
         this.dialog = useService("dialog");
         this.websiteEditService =
             this.websiteService.websiteRootInstance?.env.services["website_edit"];
+        this.orm = useService("orm");
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
@@ -162,8 +165,11 @@ export class WebsiteBuilder extends Component {
      * @param {boolean} [options.reloadIframe=true] - If `true`, the iframe will
      *   be reloaded after the save operation; if `false`, the iframe remains as
      *   is.
+     * @param {boolean} [options.shouldClose=true] - If `true`, the builder will
+     *   be closed after the save operation; if `false`, the builder remains
+     *   open.
      */
-    async save({ reloadIframe = true }) {
+    async save({ reloadIframe = true, shouldClose = true }) {
         if (this.editor.shared.operation.hasTimedOut()) {
             const shouldContinue = await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
@@ -187,11 +193,43 @@ export class WebsiteBuilder extends Component {
         await this.editor.shared.operation.next(
             async () => {
                 await this.editor.shared.savePlugin.save();
-                this.props.builderProps.closeEditor(reloadIframe);
+                if (shouldClose) {
+                    this.props.builderProps.closeEditor();
+                }
             },
             { withLoadingEffect: false, canTimeout: false }
         );
         this.reloadAfterTimeout();
+    }
+
+    async publishDraft() {
+        if (!(await confirmDraftAction(this.dialog, true, true))) {
+            return;
+        }
+        await this.save({ shouldClose: false });
+        await this.exitDraft("publish_draft");
+    }
+
+    async deleteDraft() {
+        if (await confirmDraftAction(this.dialog, false, true)) {
+            await this.exitDraft("delete_draft");
+        }
+    }
+
+    exitDraft(method) {
+        const { pathname } = new URL(window.location.href);
+        return this.editor.shared.operation.next(
+            async () => {
+                await this.orm.call("website.page", method, [
+                    pathname,
+                    this.websiteService.currentWebsiteId,
+                ]);
+                deleteQueryParam("draft_preview", this.websiteService.contentWindow, true);
+                this.websiteService.isDraftPreview = false;
+                this.props.builderProps.closeEditor();
+            },
+            { withLoadingEffect: true, canTimeout: false }
+        );
     }
 
     get builderProps() {
