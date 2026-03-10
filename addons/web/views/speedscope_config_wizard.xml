@@ -11,14 +11,32 @@
                             <form method="get" t-attf-action="/web/profile_config/{{profile_str}}">
                                 <h4>Memory profile</h4>
                                 <div class="mt-3">
-                                    <label for="memory_limit">Memory limit (in bytes)</label>
-                                    <input type="number" id="memory_limit" name="memory_limit" class="form-control" value="1000"/>
+                                    <label for="report">Report type</label>
+                                    <select class="form-select" id="report" name="report">
+                                        <option value="flamegraph">Flame graph</option>
+                                    </select>
                                 </div>
-
-                                <input type="hidden" name="profile_id" t-att-value="profile_str" />
-                                
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="leaks" name="leaks" value="True"/>
+                                    <label class="form-check-label" for="leaks">Show memory leaks</label>
+                                </div>
+                                <div class="form-check mt-2" id="temporal_check">
+                                    <input type="checkbox" class="form-check-input" id="temporal" name="temporal" value="True"/>
+                                    <label class="form-check-label" for="temporal">Temporal (flame graph only)</label>
+                                </div>
+                                <div class="form-check mt-2">
+                                    <input type="checkbox" class="form-check-input" id="split_threads" name="split_threads" value="True"/>
+                                    <label class="form-check-label" for="split_threads">Split threads</label>
+                                </div>
+                                <script>
+                                    document.getElementById('report').addEventListener('change', function () {
+                                        document.getElementById('temporal_check').style.display =
+                                            this.value === 'flamegraph' ? '' : 'none';
+                                    });
+                                </script>
+                                <input type="hidden" name="profile_id" t-att-value="profile_str"/>
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-primary" name="action" value="memory_open">open</button>
+                                    <button type="submit" class="btn btn-primary" name="action" value="memory_open">Open</button>
                                 </div>
                             </form>
                         </div>
