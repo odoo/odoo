@@ -2452,3 +2452,38 @@ class Website(models.CachedModel):
 
     def _is_tag_classes_watchlisted(self, tagName, atts):
         return self._get_blocked_iframe_containers_classes().intersection((atts.get('class') or '').split(' '))
+    @api.model
+    def publish_draft(self, website_id):
+        """ Publish all views, assets, and fields related to the website."""
+        if not website_id:
+            return
+        self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            '|',
+            ('arch_draft', '!=', False),
+            ('active_draft', '!=', -1),
+        ]).publish_draft()
+
+        # Publish all pending embedded field drafts for this website
+        # (e.g. product descriptions, partner names edited inline)
+        self.env['website.draft.field'].search([
+            ('website_id', '=', website_id),
+        ]).publish()
+        self.env['website.assets'].publish_draft(website_id)
+
+    @api.model
+    def delete_draft(self, website_id):
+        """ Delete all views, assets, and fields related to the website."""
+        if not website_id:
+            return
+        self.env['ir.ui.view'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            '|',
+            ('arch_draft', '!=', False),
+            ('active_draft', '!=', -1),
+        ]).delete_draft()
+
+        self.env['website.draft.field'].search([
+            ('website_id', '=', website_id),
+        ]).unlink()
+        self.env['website.assets'].delete_draft(website_id)

@@ -1182,12 +1182,18 @@ class Website(Home):
         return Model.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, readonly=True)
-    def theme_customize_data_get(self, keys, is_view_data):
+    def theme_customize_data_get(self, keys, is_view_data, draft=False):
         records = self._get_customize_data(keys, is_view_data)
+        if draft:
+            # In draft preview, return keys whose effective active state is True:
+            # use active_draft when explicitly set, otherwise fall back to active.
+            return records.filtered(
+                lambda v: v.active_draft if v.active_draft != -1 else v.active,
+            ).mapped('key')
         return records.filtered('active').mapped('key')
 
     @http.route(['/website/theme_customize_data'], type='jsonrpc', auth='user', website=True)
-    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False, draft=False):
         """
         Enables and/or disables views/assets according to list of keys.
 
@@ -1195,24 +1201,37 @@ class Website(Home):
         :param enable: list of views/assets keys to enable
         :param disable: list of views/assets keys to disable
         :param reset_view_arch: restore the default template after disabling
+        :param draft: if True, defer toggling to active_draft instead of active
         """
         if disable:
-            records = self._get_customize_data(disable, is_view_data).filtered('active')
-            if reset_view_arch:
-                records.reset_arch(mode='hard')
-            records.write({'active': False})
+            records = self._get_customize_data(disable, is_view_data)
+            if draft:
+                records.filtered(lambda x: x.active_draft if x.active_draft != -1 else x.active).set_active_draft(False)
+            else:
+                records = records.filtered('active')
+                if reset_view_arch:
+                    records.reset_arch(mode='hard')
+                records.write({'active': False})
 
         if enable:
             records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({'active': True})
+            if draft:
+                records.filtered(lambda x: not x.active_draft if x.active_draft != -1 else not x.active).set_active_draft(True)
+            else:
+                records.filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True, readonly=True)
-    def theme_customize_bundle_reload(self):
+    def theme_customize_bundle_reload(self, draft=False):
         """
         Reloads asset bundles and returns their unique URLs.
+
+        :param bool draft: if True, compile the bundle using draft assets
         """
+        qweb = request.env['ir.qweb']
+        if draft:
+            qweb = qweb.with_context(draft_preview=True)
         return {
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
+            'web.assets_frontend': qweb._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)

@@ -121,6 +121,9 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_has_plausible_shared_key',
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
+    allow_draft_preview = fields.Boolean(
+        "Draft preview",
+        config_parameter='website.allow_draft_preview')
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
@@ -240,3 +243,11 @@ class ResConfigSettings(models.TransientModel):
             'views': [[False, "form"]],
             'target': 'new',
         }
+
+    @api.model
+    def is_draft_preview_enabled(self):
+        return (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_bool("website.allow_draft_preview", default=False)
+        )

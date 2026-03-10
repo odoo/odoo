@@ -9,7 +9,7 @@ from odoo import api, models
 from odoo.tools import BinaryBytes, file_open
 from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
-_match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
+_match_asset_file_url_regex = re.compile(r"^(/_custom(_draft)?/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
 
 
 class WebsiteAssets(models.AbstractModel):
@@ -17,7 +17,7 @@ class WebsiteAssets(models.AbstractModel):
     _description = 'Assets Utils'
 
     @api.model
-    def reset_asset(self, url, bundle):
+    def reset_asset(self, url, bundle, draft=False):
         """
         Delete the potential customizations made to a given (original) asset.
 
@@ -27,8 +27,10 @@ class WebsiteAssets(models.AbstractModel):
             bundle (str):
                 the name of the bundle in which the customizations to delete
                 were made
+
+            draft (bool): whether it's a draft mode or not
         """
-        custom_url = self._make_custom_asset_url(url, bundle)
+        custom_url = self._make_custom_asset_url(url, bundle, draft)
 
         # Simply delete the attachement which contains the modified scss/js file
         # and the xpath view which links it
@@ -36,7 +38,7 @@ class WebsiteAssets(models.AbstractModel):
         self._get_custom_asset(custom_url).unlink()
 
     @api.model
-    def save_asset(self, url, bundle, content, file_type):
+    def save_asset(self, url, bundle, content, file_type, draft=False, is_content_encoded=False):
         """
         Customize the content of a given asset (scss / js).
 
@@ -53,10 +55,14 @@ class WebsiteAssets(models.AbstractModel):
 
             file_type (src):
                 either 'scss' or 'js' according to the file being customized
-        """
-        custom_url = self._make_custom_asset_url(url, bundle)
-        raw = (content or "\n").encode("utf-8")
 
+            draft (bool): whether it's a draft mode or not
+        """
+        custom_url = self._make_custom_asset_url(url, bundle, draft)
+        if is_content_encoded:
+            raw = content
+        else:
+            raw = (content or "\n").encode("utf-8")
         # Check if the file to save had already been modified
         custom_attachment = self._get_custom_attachment(custom_url)
         if custom_attachment:
@@ -162,14 +168,15 @@ class WebsiteAssets(models.AbstractModel):
         if not m:
             return False
         return {
-            'module': m.group(3),
-            'resource_path': m.group(4),
+            'module': m.group(4),
+            'resource_path': m.group(5),
             'customized': bool(m.group(1)),
-            'bundle': m.group(2) or False
+            'draft': bool(m.group(2)),
+            'bundle': m.group(3) or False
         }
 
     @api.model
-    def _make_custom_asset_url(self, url, bundle_xmlid):
+    def _make_custom_asset_url(self, url, bundle_xmlid, draft=False):
         """
         Return the customized version of an asset URL, that is the URL the asset
         would have if it was customized.
@@ -182,10 +189,10 @@ class WebsiteAssets(models.AbstractModel):
             str: the URL the given asset would have if it was customized in the
                  given bundle
         """
-        return f"/_custom/{bundle_xmlid}{url}"
+        return f"/_custom{'_draft' if draft else ''}/{bundle_xmlid}{url}"
 
     @api.model
-    def make_scss_customization(self, url, values):
+    def make_scss_customization(self, url, values, draft=False):
         """
         Makes a scss customization of the given file. That file must
         contain a scss map including a line comment containing the word 'hook',
@@ -200,18 +207,20 @@ class WebsiteAssets(models.AbstractModel):
                 key,value mapping to integrate in the file's map (containing the
                 word hook). If a key is already in the file's map, its value is
                 overridden.
+
+            draft (bool): whether it's a draft mode
         """
         IrAttachment = self.env['ir.attachment']
         if 'color-palettes-name' in values:
-            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_frontend')
-            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_frontend')
+            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_frontend', draft)
+            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_frontend', draft)
             # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
             self.make_scss_customization('/website/static/src/scss/options/colors/user_theme_color_palette.scss', {
                 'success': 'null',
                 'info': 'null',
                 'warning': 'null',
                 'danger': 'null',
-            })
+            }, draft)
             # Also reset gradients which are in the "website" values palette
             preset_gradients = {f'o-cc{cc}-bg-gradient': 'null' for cc in range(1, 6)}
             self.make_scss_customization('/website/static/src/scss/options/user_values.scss', {
@@ -221,7 +230,7 @@ class WebsiteAssets(models.AbstractModel):
                 'copyright-gradient': 'null',
                 'breadcrumb-gradient': 'null',
                 **preset_gradients,
-            })
+            }, draft)
 
         delete_attachment_id = values.pop('delete-font-attachment-id', None)
         if delete_attachment_id:
@@ -294,7 +303,14 @@ class WebsiteAssets(models.AbstractModel):
             values['google-local-fonts'] = str(google_local_fonts).replace('{', '(').replace('}', ')')
 
         custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
-        updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
+        custom_url_draft = self._make_custom_asset_url(url, 'web.assets_frontend', draft)
+
+        updatedFileContent = (
+            (draft and self._get_content_from_url(custom_url_draft))
+            or self._get_content_from_url(custom_url)
+            or self._get_content_from_url(url)
+        )
+
         updatedFileContent = updatedFileContent.decode('utf-8')
         for name, value in values.items():
             # Protect variable names so they cannot be computed as numbers
@@ -312,7 +328,7 @@ class WebsiteAssets(models.AbstractModel):
             else:
                 updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
 
-        self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+        self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss', draft)
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):
@@ -362,3 +378,54 @@ class WebsiteAssets(models.AbstractModel):
         website = self.env['website'].get_current_website()
         values['website_id'] = website.id
         return values
+
+    @api.model
+    def publish_draft(self, website_id):
+        """Publish all draft asset customizations for the provided website."""
+
+        draft_attachments = self.env['ir.attachment'].search([
+            ('url', 'like', '/_custom_draft/'),
+            ('website_id', '=', website_id),
+        ])
+        for attach in draft_attachments:
+            custom_url = attach.url.split('/')
+            bundle, url = custom_url[2], '/' + '/'.join(custom_url[3:])
+            file_content = self._get_content_from_url(attach.url)
+            self.save_asset(
+                url, bundle,
+                file_content,
+                url.split('.')[-1],
+                is_content_encoded=True,
+            )
+        draft_attachments.unlink()
+        self.env['ir.asset'].with_context(active_test=False).search([
+            ('path', 'like', '/_custom_draft/'),
+            ('website_id', '=', website_id),
+        ]).unlink()
+
+        self.env['ir.asset'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            ('active_draft', '!=', -1),
+        ]).apply_active_draft()
+
+        self.env.registry.clear_cache('assets')
+
+    @api.model
+    def delete_draft(self, website_id):
+        """Deletes all draft asset customizations for the provided website."""
+
+        self.env['ir.attachment'].search([
+            ('url', 'like', '/_custom_draft/'),
+            ('website_id', '=', website_id),
+        ]).unlink()
+        self.env['ir.asset'].with_context(active_test=False).search([
+            ('path', 'like', '/_custom_draft/'),
+            ('website_id', '=', website_id),
+        ]).unlink()
+
+        self.env['ir.asset'].with_context(active_test=False).search([
+            ('website_id', '=', website_id),
+            ('active_draft', '!=', -1),
+        ]).delete_active_draft()
+
+        self.env.registry.clear_cache('assets')

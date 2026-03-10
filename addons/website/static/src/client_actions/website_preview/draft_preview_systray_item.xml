@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.DraftPreviewSystrayItem">
+    <div class="o_menu_systray_item o_website_draft_preview d-flex ms-auto">
+        <div class="o_nav_entry d-flex align-items-center mx-1">
+            <span class="d-none d-md-block mx-0 pe-1" style="white-space: nowrap;">Draft Preview</span>
+            <a href="#" data-hotkey="d" t-on-click.prevent="this.toggleDraftPreview">
+                <CheckBox value="this.state.isDraftPreview" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
+            </a>
+            <t t-if="this.state.isDraftPreview">
+                <button type="button" t-on-click="this.deleteDraft" class="o-hb-btn btn px-1" data-action="remove" title="Delete draft">
+                    <i class="fa fa-trash fa-fw"/>
+                </button>
+                <button type="button" t-on-click="this.publishDraft" class="o-hb-btn btn px-1" style="text-overflow: clip" data-action="publish" title="Publish draft">
+                    <i class="fa fa-cloud-upload fa-fw" />
+                </button>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

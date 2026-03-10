@@ -299,9 +299,12 @@ export class ResourceEditor extends Component {
             throw new Error(_t("Reseting views is not supported yet"));
         }
         const resource = this.state.currentResource;
-        await this.orm.call("website.assets", "reset_asset", [resource.url, resource.bundle], {
-            context: this.context,
-        });
+        await this.orm.call(
+            "website.assets",
+            "reset_asset",
+            [resource.url, resource.bundle, this.website.isDraftPreview],
+            { context: this.context }
+        );
         await this.loadResources();
         this.website.contentWindow.location.reload();
     }
@@ -368,7 +371,7 @@ export class ResourceEditor extends Component {
             ? this.state.resources.js[url].bundle
             : this.state.resources.scss[url].bundle;
         const fileType = isJSFile ? "js" : "scss";
-        const params = [url, bundle, arch, fileType];
+        const params = [url, bundle, arch, fileType, this.website.isDraftPreview];
         await this.orm.call("website.assets", "save_asset", params, { context: this.context });
         delete resource.dirty;
     }

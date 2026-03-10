@@ -169,6 +169,75 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.assertEqual('font/woff', font.headers.get('Content-Type'), "Should be woff")
         self.assertEqual(b'wOFF', font.content[:4])
 
+    def test_03_draft_customization(self):
+        """Test creating a draft SCSS customization and publishing it."""
+        Website = self.env['website']
+        Attachment = self.env['ir.attachment']
+        IrAsset = self.env['ir.asset']
+
+        website = Website.search([], limit=1)
+        asset_bundle = 'web.assets_frontend'
+        scss_url = '/website/static/src/scss/options/colors/user_color_palette.scss'
+
+        self.env['website.assets'].with_context(website_id=website.id).make_scss_customization(
+            scss_url,
+            {"o-cc1-bg": "'draft-value'"},
+            draft=True,
+        )
+
+        draft_custom_url = f'/_custom_draft/{asset_bundle}{scss_url}'
+        draft_attachment = Attachment.search([
+            ('url', '=', draft_custom_url),
+            ('website_id', '=', website.id),
+        ])
+        self.assertTrue(draft_attachment.exists(), "Draft attachment should exist")
+
+        draft_asset = IrAsset.search([
+            ('path', '=', draft_custom_url),
+            ('website_id', '=', website.id),
+        ])
+        self.assertTrue(draft_asset.exists(), "Draft asset should exist")
+
+        live_custom_url = f'/_custom/{asset_bundle}{scss_url}'
+        live_attachment = Attachment.search([
+            ('url', '=', live_custom_url),
+            ('website_id', '=', website.id),
+        ])
+        self.assertFalse(live_attachment.exists(), "Live attachment should not exist yet")
+
+        self.env['website.assets'].publish_draft(website.id)
+
+        self.assertFalse(
+            Attachment.search([
+                ('url', '=', draft_custom_url),
+                ('website_id', '=', website.id),
+            ]).exists(),
+            "Draft attachment should be removed after publishing it"
+        )
+
+        self.assertFalse(
+            IrAsset.search([
+                ('path', '=', draft_custom_url),
+                ('website_id', '=', website.id),
+            ]).exists(),
+            "Draft asset should be removed after publishing it"
+        )
+
+        live_attachment = Attachment.search([
+            ('url', '=', live_custom_url),
+            ('website_id', '=', website.id),
+        ])
+        self.assertTrue(live_attachment.exists(), "Live attachment should exist after publishing it")
+
+        live_asset = IrAsset.search([
+            ('path', '=', live_custom_url),
+            ('website_id', '=', website.id),
+        ])
+        self.assertTrue(live_asset.exists(), "Live asset should exist after publish")
+
+        live_content = live_attachment.raw.decode('utf-8')
+        self.assertIn("'o-cc1-bg': 'draft-value',", live_content)
+
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestWebAssets(odoo.tests.HttpCase):

@@ -10,9 +10,15 @@ class IrAsset(models.Model):
     key = fields.Char(copy=False) # used to resolve multiple assets in a multi-website environment
     website_id = fields.Many2one('website', ondelete='cascade')
 
+    active_draft = fields.Integer(
+        string='Draft Active State',
+        default=-1,
+        help='Stores the active state for this view in the draft mode, equals to -1 if it\'s equal to the "active" field.')
+
     def _get_asset_params(self):
         params = super()._get_asset_params()
         params['website_id'] = self.env['website'].get_current_website(fallback=False).id
+        params['draft_preview'] = bool(self.env.context.get('draft_preview'))
         return params
 
     def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
@@ -20,14 +26,39 @@ class IrAsset(models.Model):
         if ignore_params: # we dont care about website id, match both
             route_prefix = '/web/assets%'
         elif website_id := assets_params.get('website_id', None):
-            route_prefix = f'/web/assets/{website_id}'
+            if assets_params.get('draft_preview'):
+                route_prefix = f'/web/assets/{website_id}/draft'
+            else:
+                route_prefix = f'/web/assets/{website_id}'
         return f'{route_prefix}/{unique}/{filename}'
 
-    def _get_related_assets(self, domain, *, website_id=None, **params):
+    def _get_related_assets(self, domain, *, website_id=None, draft_preview=False, **params):
         if website_id:
             domain = Domain(domain) & self.env['website'].browse(website_id).website_domain()
         assets = super()._get_related_assets(domain, **params)
-        return assets.filter_duplicate(website_id)
+        assets = assets.filter_duplicate(website_id)
+        if draft_preview:
+            assets = self._prefer_draft_assets(assets)
+        else:
+            assets = assets.filtered(lambda a: not (a.path and a.path.startswith('/_custom_draft/')))
+        return assets
+
+    def _prefer_draft_assets(self, assets):
+        """When in draft_preview mode, swap any non-draft custom asset for its
+        _draft counterpart if it exists.
+        """
+        draft_targets = set()
+        for asset in assets:
+            if asset.path and asset.path.startswith('/_custom_draft/'):
+                draft_targets.add(asset.target)
+
+        if not draft_targets:
+            return assets
+
+        def _keep(asset):
+            return not (asset.path and asset.path.startswith('/_custom/') and asset.target in draft_targets)
+
+        return assets.filtered(_keep)
 
     def _get_active_addons_list(self, *, website_id=None, **params):
         """Overridden to discard inactive themes."""
@@ -104,3 +135,26 @@ class IrAsset(models.Model):
             super(IrAsset, website_specific_asset).write(vals)
 
         return True
+
+    def set_active_draft(self, enable):
+        """ Store the active state for draft mode
+
+        :param bool enable: True to mark assets as active in draft, False to mark
+            them as inactive in draft.
+        """
+        self.write({'active_draft': int(enable)})
+
+    def apply_active_draft(self):
+        """ Copy the draft value into active and reset the draft"""
+        for record in self.filtered(lambda r: r.active_draft != -1):
+            record.write({
+                'active': record.active_draft,
+                'active_draft': -1,
+            })
+
+    def delete_active_draft(self):
+        """ Delete the active draft state """
+        for record in self.filtered(lambda r: r.active_draft != -1):
+            record.write({
+                'active_draft': -1,
+            })

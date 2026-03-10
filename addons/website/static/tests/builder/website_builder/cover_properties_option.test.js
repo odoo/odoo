@@ -33,6 +33,7 @@ const websiteServiceWithUserModelName = {
             metadata: {},
         },
     ],
+    getCanHaveDraftPreview: () => false,
 };
 
 test("Add image as cover", async () => {

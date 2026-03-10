@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 import copy
 import logging
 import uuid
@@ -37,6 +38,11 @@ class IrUiView(models.Model):
     )
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+    arch_draft = fields.Text(string='Draft View Architecture')
+    active_draft = fields.Integer(
+        string='Draft Active State',
+        default=-1,
+        help='Stores the active state for this view in the draft mode, equals to -1 if it\'s equal to the "live" field.')
 
     @api.depends('visibility_password')
     def _get_pwd(self):
@@ -340,7 +346,12 @@ class IrUiView(models.Model):
 
         views = super(IrUiView, self.with_context(active_test=False))._get_inheriting_views()
         # prefer inactive website-specific views over active generic ones
-        return views.filter_duplicate().filtered('active')
+        views = views.filter_duplicate()
+        if self.env.context.get('draft_preview'):
+            # In draft preview, use active_draft when it has been explicitly set,
+            # otherwise fall back to the live active value.
+            return views.filtered(lambda v: v.active_draft if v.active_draft != -1 else v.active)
+        return views.filtered('active')
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -373,7 +384,10 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_template_minimal_cache_keys(self):
-        return super()._get_template_minimal_cache_keys() + (self.env.context.get('website_id'),)
+        return super()._get_template_minimal_cache_keys() + (
+            self.env.context.get('website_id'),
+            self.env.context.get('draft_preview'),
+        )
 
     @api.model
     def _get_template_domain(self, xmlids):
@@ -400,6 +414,45 @@ class IrUiView(models.Model):
     @api.model
     def _get_template_order(self):
         return f"website_id asc, {super()._get_template_order()}"
+
+    def _combine(self, hierarchy):
+        """ Override to use arch_draft as the base architecture when we have
+        ``draft_preview`` in the context.
+        """
+        if not self.env.context.get('draft_preview'):
+            return super()._combine(hierarchy)
+
+        # This is the copy of the original `_combine`, with the only difference being
+        # is that we prefer arch_draft whenever we have one
+        combined_arch = etree.fromstring(self.arch_draft or self.arch)
+        if self.env.context.get('inherit_branding'):
+            combined_arch.attrib.update({
+                'data-oe-model': 'ir.ui.view',
+                'data-oe-id': str(self.id),
+                'data-oe-field': 'arch',
+            })
+        self._add_validation_flag(combined_arch)
+
+        queue = collections.deque(sorted(hierarchy[self], key=lambda v: v.mode))
+        tree_cut_off_view = self.env.context.get('ir_ui_view_tree_cut_off_view')
+        while queue:
+            view = queue.popleft()
+            if view == tree_cut_off_view:
+                break
+            view_arch = view.arch_draft or view.arch or '<data/>'
+            arch = etree.fromstring(view_arch)
+            if view.env.context.get('inherit_branding'):
+                view.inherit_branding(arch)
+            self._add_validation_flag(combined_arch, view, arch)
+            combined_arch = view.apply_inheritance_specs(combined_arch, arch)
+
+            for child_view in reversed(hierarchy[view]):
+                if child_view.mode == 'primary':
+                    queue.append(child_view)
+                else:
+                    queue.appendleft(child_view)
+
+        return combined_arch
 
     def _get_cached_visibility(self):
         info = self._get_cached_template_info(self.id, _view=self)
@@ -472,7 +525,7 @@ class IrUiView(models.Model):
             return False
 
     def _read_template_keys(self):
-        return super()._read_template_keys() + ['website_id']
+        return super()._read_template_keys() + ['website_id', 'draft_preview']
 
     # ------------------------------------------------------
     # Save from html
@@ -487,7 +540,7 @@ class IrUiView(models.Model):
         return arch.xpath('//*[hasclass("oe_structure")][contains(@id, "oe_structure")]')
 
     @api.model
-    def save_embedded_field(self, el):
+    def save_embedded_field(self, el, draft=False):
         Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
@@ -498,14 +551,25 @@ class IrUiView(models.Model):
             value = converter.from_html(Model, Model._fields[field], el)
             if value is not None:
                 # TODO: batch writes?
-                record = Model.browse(int(el.get('data-oe-id')))
-                if not self.env.context.get('lang') and self.get_default_lang_code():
-                    record.with_context(lang=self.get_default_lang_code()).write({field: value})
+                res_id = int(el.get('data-oe-id'))
+                if draft:
+                    website_id = self.env['website'].get_current_website().id
+                    page_url = self.env['website.draft.field']._page_url_from_request(request)
+                    draft_record = self.env['website.draft.field']._get_or_create(
+                        website_id, Model._name, res_id, page_url=page_url,
+                    )
+                    values = dict(draft_record.values or {})
+                    values[field] = value
+                    draft_record.write({'values': values})
                 else:
-                    record.write({field: value})
+                    record = Model.browse(res_id)
+                    if not self.env.context.get('lang') and self.get_default_lang_code():
+                        record.with_context(lang=self.get_default_lang_code()).write({field: value})
+                    else:
+                        record.write({field: value})
 
-                if callable(Model._fields[field].translate):
-                    self._copy_custom_snippet_translations(record, field)
+                    if callable(Model._fields[field].translate):
+                        self._copy_custom_snippet_translations(record, field)
 
         except (ValueError, TypeError):
             raise ValidationError(_(
@@ -514,7 +578,7 @@ class IrUiView(models.Model):
                 value=el.text_content().strip(),
             ))
 
-    def save_oe_structure(self, el):
+    def save_oe_structure(self, el, draft=False):
         self.ensure_one()
 
         if el.get('id') in self.key:
@@ -531,10 +595,12 @@ class IrUiView(models.Model):
         for child in el.iterchildren(tag=etree.Element):
             structure.append(copy.deepcopy(child))
 
+        arch_str = etree.tostring(arch, encoding='unicode')
+        # In draft mode write to arch_draft so the live arch is untouched.
         vals = {
             'inherit_id': self.id,
             'name': '%s (%s)' % (self.name, el.get('id')),
-            'arch': etree.tostring(arch, encoding='unicode'),
+            'arch_draft' if draft else 'arch': arch_str,
             'key': '%s_%s' % (self.key, el.get('id')),
             'type': 'qweb',
             'mode': 'extension',
@@ -581,11 +647,12 @@ class IrUiView(models.Model):
             return False
         return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
-    def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
+    def replace_arch_section(self, section_xpath, replacement, replace_tail=False, draft=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
         self.ensure_one()
-        arch = etree.fromstring(self.arch.encode('utf-8'))
+        base_arch = (draft and self.arch_draft) or self.arch
+        arch = etree.fromstring(base_arch.encode('utf-8'))
         # => get the replacement root
         if not section_xpath:
             root = arch
@@ -644,12 +711,13 @@ class IrUiView(models.Model):
         if not self.env.context.get('website_id'):
             self.sudo().mapped('model_data_id').write({'noupdate': True})
 
-    def save(self, value, xpath=None):
+    def save(self, value, xpath=None, draft=False):
         """ Update a view section. The view section may embed fields to write
 
         Note that `self` record might not exist when saving an embed field
 
         :param str xpath: valid xpath to the tag to replace
+        :param boolean draft: if True, save as a draft
         """
         self.ensure_one()
         current_website = self.env['website'].get_current_website()
@@ -675,17 +743,17 @@ class IrUiView(models.Model):
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
-            self.save_embedded_field(arch_section)
+            self.save_embedded_field(arch_section, draft)
             return
 
         for el in self.extract_embedded_fields(arch_section):
-            self.save_embedded_field(el)
+            self.save_embedded_field(el, draft)
 
             # transform embedded field back to t-field
             el.getparent().replace(el, self.to_field_ref(el))
 
         for el in self.extract_oe_structures(arch_section):
-            if self.save_oe_structure(el):
+            if self.save_oe_structure(el, draft):
                 # empty oe_structure in parent view
                 empty = self.to_empty_oe_structure(el)
                 if el == arch_section:
@@ -693,12 +761,49 @@ class IrUiView(models.Model):
                 else:
                     el.getparent().replace(el, empty)
 
-        new_arch = self.replace_arch_section(xpath, arch_section)
-        old_arch = etree.fromstring(self.arch.encode('utf-8'))
+        new_arch = self.replace_arch_section(xpath, arch_section, draft=draft)
+        source_arch = self.arch if not (draft and self.arch_draft) else self.arch_draft
+        old_arch = etree.fromstring(source_arch.encode('utf-8'))
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
-            self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
+            to_update = 'arch_draft' if draft else 'arch'
+            self.write({to_update: etree.tostring(new_arch, encoding='unicode')})
             self._copy_custom_snippet_translations(self, 'arch_db')
+
+    def set_active_draft(self, enable):
+        """ Store the intended active state for draft mode without touching the
+        live ``active`` field.
+
+        :param bool enable: True to mark views as active in draft, False to mark
+            them as inactive in draft.
+        """
+        self.write({'active_draft': int(enable)})
+
+    def publish_draft(self):
+        """Write arch_draft to arch and active_draft to active, and reset them accordingly"""
+        for view in self.filtered(lambda x: x.arch_draft and x.arch_draft != x.arch):
+            view.write({
+                'arch': view.arch_draft,
+                'arch_draft': '',
+            })
+
+        for view in self.filtered(lambda x: x.active_draft != -1):
+            view.write({
+                'active': bool(view.active_draft),
+                'active_draft': -1,
+            })
+
+    def delete_draft(self):
+        """Reset arch_draft and active_draft state"""
+        for view in self.filtered(lambda x: x.arch_draft and x.arch_draft != x.arch):
+            view.write({
+                'arch_draft': '',
+            })
+
+        for view in self.filtered(lambda x: x.active_draft != -1):
+            view.write({
+                'active_draft': -1,
+            })
 
     @api.model
     def _get_allowed_root_attrs(self):

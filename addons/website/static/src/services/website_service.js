@@ -39,6 +39,8 @@ export const websiteService = {
         let websiteRootInstance;
         let isRestrictedEditor;
         let isDesigner;
+        let canHaveDraftPreviewProm;
+        let isDraftPreview = false;
         let hasMultiWebsites;
         let actionJsId;
         const blockingProcesses = [];
@@ -140,6 +142,12 @@ export const websiteService = {
             },
             get bus() {
                 return bus;
+            },
+            get isDraftPreview() {
+                return isDraftPreview;
+            },
+            set isDraftPreview(value) {
+                isDraftPreview = value;
             },
             set pageDocument(document) {
                 pageDocument = document;
@@ -358,6 +366,16 @@ export const websiteService = {
                 }
                 await modelNamesProm;
                 return modelNames[model] || _t("Data");
+            },
+            async getCanHaveDraftPreview() {
+                if (!canHaveDraftPreviewProm) {
+                    canHaveDraftPreviewProm = orm.call(
+                        "res.config.settings",
+                        "is_draft_preview_enabled",
+                        []
+                    );
+                }
+                return canHaveDraftPreviewProm;
             },
         };
     },
