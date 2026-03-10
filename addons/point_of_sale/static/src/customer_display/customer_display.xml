@@ -58,7 +58,7 @@
                                         <t t-out="line.customerNote" />
                                     </li>
                                     <div class="internal-note-container d-flex gap-2 p-2">
-                                        <t t-foreach="this.getInternalNotes()" t-as="note" t-key="note.id or note_index">
+                                        <t t-foreach="this.getInternalNotes(line)" t-as="note" t-key="note.id or note_index">
                                             <BadgeTag color="note.colorIndex" text="note.text"/>
                                         </t>
                                     </div>

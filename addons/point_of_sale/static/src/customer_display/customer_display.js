@@ -45,8 +45,8 @@ export class CustomerDisplay extends Component {
         );
     }
 
-    getInternalNotes() {
-        return JSON.parse(this.line.internalNote || "[]");
+    getInternalNotes(line) {
+        return JSON.parse(line.internalNote || "[]");
     }
 }
 
