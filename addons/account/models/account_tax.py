@@ -222,6 +222,7 @@ class AccountTax(models.Model):
     # Technical field depicting if the tax has at least one repartition line with a percentage below 0.
     # Used for the taxes computation to manage the reverse charge taxes having a repartition +100 -100.
     has_negative_factor = fields.Boolean(compute='_compute_has_negative_factor')
+    non_deductible_amount = fields.Float(compute='_compute_non_deductible_amount')
 
     @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope', 'country_id')
     def _constrains_name(self):
@@ -708,6 +709,19 @@ class AccountTax(models.Model):
     def _compute_tax_label(self):
         for tax in self:
             tax.tax_label = tax.invoice_label or tax.name
+
+    @api.depends(
+        'invoice_repartition_line_ids.repartition_type',
+        'invoice_repartition_line_ids.use_in_tax_closing',
+        'invoice_repartition_line_ids.factor_percent',
+    )
+    def _compute_non_deductible_amount(self):
+        for tax in self:
+            tax.non_deductible_amount = sum(
+                rep_line.factor_percent / 100.0
+                for rep_line in tax.invoice_repartition_line_ids
+                if rep_line.repartition_type == 'tax' and not rep_line.use_in_tax_closing
+            )
 
     @api.onchange('amount')
     def onchange_amount(self):

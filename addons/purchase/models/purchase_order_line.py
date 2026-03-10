@@ -45,6 +45,7 @@ class PurchaseOrderLine(models.Model):
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
+    non_deductible_tax = fields.Float(compute='_compute_amount', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
 
@@ -123,6 +124,10 @@ class PurchaseOrderLine(models.Model):
             line.price_subtotal = base_line['tax_details']['total_excluded_currency']
             line.price_total = base_line['tax_details']['total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
+            line.non_deductible_tax = sum(
+                tax_data['tax_amount_currency'] * tax_data['tax'].non_deductible_amount
+                for tax_data in base_line['tax_details']['taxes_data']
+            )
 
     def _prepare_base_line_for_taxes_computation(self):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
