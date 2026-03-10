@@ -13,4 +13,10 @@ patch(Navbar.prototype, {
         const cashier = this.pos.getCashierUserId();
         return !this.pos.config.module_pos_hr || (cashier && cashier.id === this.pos.user?.id);
     },
+    get showPrintReport() {
+        return (
+            this.hardwareProxy.printer &&
+            (!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin)
+        );
+    },
 });
