@@ -21,7 +21,7 @@ const R_EMAIL =
 const R_FALSY = /^false|0$/i;
 const R_KEYED_SUBSTITUTION = /%\((?<key>[^)]+)\)s/g;
 const R_NUMERIC = /^\d+$/;
-const R_REGEX_SPECIAL_CHARS = /[.*+?^${}()|[\]\\]/g;
+const R_REGEX_SPECIAL_CHARS = /[-/\\^$*+?.()|[\]{}]/g;
 
 export const nbsp = "\u00a0";
 

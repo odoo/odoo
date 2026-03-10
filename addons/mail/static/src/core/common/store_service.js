@@ -8,6 +8,9 @@ import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -15,12 +18,8 @@ import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
-import { session } from "@web/session";
-import { loader } from "@web/core/emoji_picker/emoji_picker";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getOrigin } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
+import { session } from "@web/session";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -77,7 +76,6 @@ export class Store extends BaseStore {
         sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
     });
     settings = fields.One("Settings");
-    emojiLoader = loader;
 
     /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = [];

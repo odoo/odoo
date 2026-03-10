@@ -1,7 +1,7 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { cleanTerm } from "@mail/utils/common/format";
 import { toRaw } from "@odoo/owl";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -16,7 +16,6 @@ export class SuggestionService {
         this.orm = services.orm;
         this.store = services["mail.store"];
         this.composer = services["mail.composer"];
-        this.emojis;
     }
 
     /**
@@ -46,8 +45,7 @@ export class SuggestionService {
                 await this.store.cannedReponses.fetch();
                 break;
             case ":": {
-                const { emojis } = await loadEmoji();
-                this.emojis = emojis;
+                await emojiLoader.load();
                 break;
             }
         }
@@ -148,8 +146,12 @@ export class SuggestionService {
 
     searchEmojisSuggestions(cleanedSearchTerm) {
         let emojis = [];
-        if (this.emojis && cleanedSearchTerm) {
-            emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
+        if (emojiLoader.loaded && cleanedSearchTerm) {
+            emojis = fuzzyLookup(
+                cleanedSearchTerm,
+                emojiLoader.emojis,
+                (emoji) => emoji.shortcodes
+            );
         }
         return {
             type: "emoji",

@@ -6,16 +6,25 @@ export const frequentEmojiService = {
     start() {
         const state = reactive({
             all: JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}"),
+            /**
+             * @param {string} codepoints
+             */
             incrementEmojiUsage(codepoints) {
-                state.all[codepoints] ??= 0;
+                state.all[codepoints] ||= 0;
                 state.all[codepoints]++;
                 browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(state.all));
             },
+            /**
+             * @param {number} [limit]
+             */
             getMostFrequent(limit) {
-                return Object.entries(state.all)
-                    .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
-                    .slice(0, limit ?? Infinity)
-                    .map(([codepoints]) => codepoints);
+                let entries = Object.entries(state.all).sort(
+                    ([, usage_1], [, usage_2]) => usage_2 - usage_1
+                );
+                if (limit) {
+                    entries = entries.slice(0, limit);
+                }
+                return entries.map(([codepoints]) => codepoints);
             },
         });
         browser.addEventListener("storage", (ev) => {
