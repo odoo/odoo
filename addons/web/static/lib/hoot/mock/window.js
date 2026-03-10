@@ -352,9 +352,9 @@ function observeAddedNodes(mutations) {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (runner.dry) {
-                node.remove();
+                removeDiscardableHeadNode(node);
             } else {
-                runner.after(node.remove.bind(node));
+                runner.after(removeDiscardableHeadNode.bind(null, node));
             }
         }
     }
@@ -386,6 +386,23 @@ function onAnchorHrefClick(ev) {
 
 function onWindowResize() {
     callMediaQueryChanges();
+}
+
+/**
+ * @param {Node} node
+ */
+function removeDiscardableHeadNode(node) {
+    if (
+        node.nodeType !== Node.ELEMENT_NODE ||
+        !(
+            (node.nodeName === "SCRIPT" && node.getAttribute("src")) ||
+            (node.nodeName === "LINK" &&
+                node.getAttribute("rel") === "stylesheet" &&
+                node.getAttribute("href"))
+        )
+    ) {
+        node.remove();
+    }
 }
 
 /**
@@ -702,6 +719,14 @@ export function setupWindow() {
 }
 
 /**
+ * Attaches an observer to the document's head and returns a cleanup function that
+ * will remove anything that was added to it, except scripts and links with external
+ * reference;
+ *
+ * The rationale is that some caches built manually may rely on existing script/link
+ * elements and their 'src'/'href' attributes. Also, since scripts are executed
+ * immediatly, it is no use removing them afterwards.
+ *
  * @param {typeof globalThis} [view=getWindow()]
  */
 export function watchAddedNodes(view = getWindow()) {
