@@ -1541,6 +1541,8 @@ def preload_registries(dbnames):
                                 sql_db.sql_counter - t0_sql)
 
                     registry._assertion_report.log_stats()
+                    if os.environ.get('CI'):  # too noisy in console
+                        log_ormcache_stats(signal.SIGUSR1)
                 if registry._assertion_report and not registry._assertion_report.wasSuccessful():
                     rc += 1
         except Exception:
