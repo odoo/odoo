@@ -25,4 +25,5 @@ from . import (
     test_models,
     test_modules_db,
     test_one2many,
+    test_parent_store,
 )
