@@ -4,14 +4,22 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { rpc } from "@web/core/network/rpc";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { cellMenuRegistry } = spreadsheet.registries;
+const { cellMenuRegistry, topbarMenuRegistry, colMenuRegistry, rowMenuRegistry } =
+    spreadsheet.registries;
 
-cellMenuRegistry.get("copy").isEnabled = (env) =>
-    env.model.getters.isReadonly() && env.model.getters.getLoadedDataSources().length;
+cellMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+
+colMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+
+rowMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
+
+topbarMenuRegistry.get("edit").children.filter((c) => c.id === "copy")[0].isEnabled = (env) =>
+    !env.isFrozenSpreadsheet?.();
 
 export class LoggingUIPlugin extends OdooUIPlugin {
     constructor(config) {
         super(config);
+        this.isFrozenSpreadsheet = config.custom.isFrozenSpreadsheet;
     }
 
     async log(type, datasources) {
@@ -24,11 +32,7 @@ export class LoggingUIPlugin extends OdooUIPlugin {
     }
 
     allowDispatch(cmd) {
-        if (
-            cmd.type === "COPY" &&
-            this.getters.isReadonly() &&
-            this.getLoadedDataSources().length
-        ) {
+        if (cmd.type === "COPY" && this.isFrozenSpreadsheet) {
             return CommandResult.Readonly;
         }
         return CommandResult.Success;
