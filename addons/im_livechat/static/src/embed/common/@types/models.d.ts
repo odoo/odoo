@@ -4,6 +4,7 @@ declare module "models" {
     }
     export interface Store {
         activeLivechats: Thread[];
+        activeVisitorLivechats: Thread[];
         guest_token: null;
         livechat_available: boolean;
         livechat_rule: LivechatChannelRule;
@@ -19,5 +20,6 @@ declare module "models" {
         readyToSwapDeferred: Deferred;
         requested_by_operator: boolean;
         storeAsActiveLivechats: Store;
+        storeAsActiveVisitorLivechats: Store;
     }
 }

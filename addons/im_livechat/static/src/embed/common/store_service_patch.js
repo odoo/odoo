@@ -10,6 +10,9 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.activeLivechats = fields.Many("Thread", { inverse: "storeAsActiveLivechats" });
+        this.activeVisitorLivechats = fields.Many("Thread", {
+            inverse: "storeAsActiveVisitorLivechats",
+        });
         expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
         this.guest_token = fields.Attr(null, {
             compute() {
