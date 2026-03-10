@@ -276,8 +276,8 @@ class IncrementalPdfMerge:
             overlay_page = overlay_pdf.pages[page_index]
 
             content_stream = overlay_page.get_contents()
-            if not content_stream:
-                continue  # Skip if the ReportLab page is completely blank
+            if content_stream is None:
+                continue
 
             overlay_resources = overlay_page.get(PG.RESOURCES, DictionaryObject())
             media_box = page.mediabox
@@ -1170,8 +1170,9 @@ class IncrementalPdfMerge:
             elif isinstance(data, IndirectObject):
                 data, next_id = self._resolve_indirect_object(pdf_reader, data, idnum_hash, incremented_objects, next_id)
 
-                if str(data) not in discovered:
-                    discovered.add(str(data))
+                data_key = (data.idnum, data.generation)
+                if data_key not in discovered:
+                    discovered.add(data_key)
                     real_obj = self._get_indirect_object_data(data, incremented_objects)
                     stack.append((real_obj, None, None, []))
 
