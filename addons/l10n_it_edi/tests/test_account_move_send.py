@@ -221,6 +221,15 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
                 invoice.cron_l10n_it_edi_download_and_update()
                 self.assertEqual(update_send_state.call_count, 2)
 
+    def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
+        invoice = self._create_invoice_it()
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        signed_data_result = 'some signed data'
+        success = {'id_transaction': "SDI ID 1", 'signed': True, 'signed_data': signed_data_result}
+        with patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_upload_single', return_value=success, autospec=True):
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['email'])
+            self.assertEqual(invoice.l10n_it_edi_attachment_file.content.decode(), signed_data_result)
+
     def test_l10n_it_edi_send_proxy_error(self):
         invoice = self._create_invoice_it()
         self.generate_l10n_it_edi_send_attachments(invoice)
