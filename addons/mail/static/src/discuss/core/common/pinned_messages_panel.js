@@ -15,7 +15,7 @@ export class PinnedMessagesPanel extends Component {
         MessageCardList,
         ActionPanel,
     };
-    static props = ["channel", "className?"];
+    static props = ["close?", "channel", "className?"];
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {

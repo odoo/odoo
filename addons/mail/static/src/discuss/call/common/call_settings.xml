@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallSettings">
-        <ActionPanel t-if="props.withActionPanel" title.translate="Voice &amp; Video Settings" icon="'fa fa-gear'">
+        <ActionPanel t-if="props.withActionPanel" close="props.close" title.translate="Voice &amp; Video Settings" icon="'fa fa-gear'">
             <t t-call="discuss.CallSettings.content" />
         </ActionPanel>
         <t t-else="" t-call="discuss.CallSettings.content" />
