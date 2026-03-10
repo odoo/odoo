@@ -70,6 +70,16 @@ export class ReferenceField extends Component {
                     this.currentModelId = record.data[props.modelField]?.id;
                 }
             });
+        } else {
+            /** Sync the currentRelation with current value's resModel */
+            useRecordObserver(async (record, props) => {
+                if (
+                    record.data[props.name]?.resModel &&
+                    this.state.currentRelation !== record.data[props.name].resModel
+                ) {
+                    this.state.currentRelation = record.data[props.name].resModel;
+                }
+            });
         }
     }
 
