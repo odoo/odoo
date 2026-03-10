@@ -27,3 +27,11 @@
 .o-mail-ActionPanel-header {
     z-index: $o-mail-NavigableList-zIndex - 1;
 }
+
+.popover:has(.o-mail-ActionPanel-content) {
+    width: Min(95vw, 400px);
+}
+
+.popover .o-mail-ActionPanel-content {
+    max-height: Min(50vh, 530px);
+}
