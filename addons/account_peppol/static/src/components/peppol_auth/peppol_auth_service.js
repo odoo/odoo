@@ -18,7 +18,7 @@ export const peppolAuthService = {
                     "message": _t("Your details are being verified. There is nothing else to do on your end: your Peppol registration will be finalized automatically."),
                 },
                 canceled: {
-                    "title": _t("Authentication canceled"),
+                    "title": _t("Authentication cancelled"),
                     "type": "warning",
                 },
                 failure: {

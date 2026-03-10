@@ -28,7 +28,7 @@ class MailingTraceReport(models.Model):
     opened = fields.Integer(readonly=True)
     replied = fields.Integer(readonly=True)
     bounced = fields.Integer(readonly=True)
-    canceled = fields.Integer(readonly=True)
+    canceled = fields.Integer(readonly=True, string="Cancelled")
     clicked = fields.Integer(readonly=True)
 
     def init(self):

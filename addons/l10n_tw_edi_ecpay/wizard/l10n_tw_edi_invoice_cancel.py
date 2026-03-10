@@ -22,7 +22,7 @@ class L10nTwEDIInvoiceCancel(models.TransientModel):
     def button_request_cancel(self):
         self.ensure_one()
         if not self.reason.strip():
-            raise UserError(self.env._("You must provide a reason for canceling the invoice."))
+            raise UserError(self.env._("You must provide a reason for cancelling the invoice."))
 
         self.invoice_id.l10n_tw_edi_invalidate_reason = self.reason
         self.invoice_id._l10n_tw_edi_run_invoice_invalid()

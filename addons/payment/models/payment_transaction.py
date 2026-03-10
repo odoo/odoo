@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
             ("pending", "Pending"),
             ("authorized", "Authorized"),
             ("done", "Confirmed"),
-            ("cancel", "Canceled"),
+            ("cancel", "Cancelled"),
             ("error", "Error"),
         ],
         default="draft",
@@ -1482,7 +1482,7 @@ class PaymentTransaction(models.Model):
                 )
             case "cancel":
                 received_message = self.env._(
-                    "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled.",
+                    "The %(tx_label)s %(ref)s of %(formatted_amount)s has been cancelled.",
                     **msg_values,
                 )
             case "error":
@@ -1522,7 +1522,7 @@ class PaymentTransaction(models.Model):
                 "done": Markup("<p>%s</p>") % self.env._("Your payment method has been saved."),
                 "cancel": (
                     Markup("<p>%s</p>")
-                    % self.env._("The saving of your payment method has been canceled.")
+                    % self.env._("The saving of your payment method has been cancelled.")
                 ),
                 "error": (
                     Markup("<p>%s</p><p>%s</p>")

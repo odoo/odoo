@@ -1753,7 +1753,7 @@ class HrLeave(models.Model):
                    and hol.state not in ('confirm', 'draft') for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
-                raise UserError(_('Only a manager can modify a canceled leave.'))
+                raise UserError(_('Only a manager can modify a cancelled leave.'))
 
         # If a leave changes state from validated unlink the corresponding resource calendar leave
         validated_leaves = self.filtered(lambda l: l.state == 'validate')

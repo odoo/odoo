@@ -331,7 +331,7 @@ class MyInvoisDocument(models.Model):
         # Documents linked to an invoice, and whose invoice is cancelled or draft, shouldn't be sent.
         invalid_documents = documents.filtered(lambda d: d.invoice_ids and any(invoice.state in ('draft', 'cancel') for invoice in d.invoice_ids))
         if invalid_documents and allow_raising:
-            raise UserError(self.env._('You cannot send this document to MyInvois because the related invoice(s) %s have the status "Draft" or "Canceled".', ','.join(invalid_documents.mapped('name'))))
+            raise UserError(self.env._('You cannot send this document to MyInvois because the related invoice(s) %s have the status "Draft" or "Cancelled".', ','.join(invalid_documents.mapped('name'))))
 
         # Required for the file, this is the exact date at which the consolidated invoice was sent to MyInvois.
         documents.filtered(lambda d: not d.myinvois_issuance_date).myinvois_issuance_date = fields.Date.context_today(documents)

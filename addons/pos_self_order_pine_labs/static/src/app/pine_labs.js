@@ -71,7 +71,7 @@ export class PineLabs {
                 if (cancelResponse.notification) {
                     if (this.paymentStopped) {
                         this.errorCallback(
-                            new PineLabsError("Transaction canceled due to inactivity", "warning")
+                            new PineLabsError("Transaction cancelled due to inactivity", "warning")
                         );
                     } else {
                         this.errorCallback(

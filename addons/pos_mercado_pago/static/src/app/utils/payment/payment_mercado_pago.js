@@ -184,7 +184,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
         const handleFinishedOrder = (order) => {
             if (order.status === "canceled") {
-                return showMessageAndResolve(_t("Payment has been canceled"), "info", false);
+                return showMessageAndResolve(_t("Payment has been cancelled"), "info", false);
             }
             if (order.status === "expired") {
                 return showMessageAndResolve(_t("Payment expired"), "info", false);
