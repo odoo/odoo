@@ -5,6 +5,7 @@ import contextlib
 import logging
 import re
 import textwrap
+import typing
 from binascii import Error as binascii_error
 from collections import defaultdict
 from lxml import html
@@ -12,11 +13,15 @@ from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
+
+if typing.TYPE_CHECKING:
+    from odoo.models import BaseModel
+
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -1249,7 +1254,7 @@ class MailMessage(models.Model):
                 record = record_by_message.get(message)
                 if record and hasattr(record, "_track_filter_for_display"):
                     trackings = record._track_filter_for_display(trackings)
-                return trackings._tracking_value_format()
+                return message._message_tracking_value_format(trackings)
 
             res.attr("trackingValues", tracking_values)
         # Add extras at the end to guarantee order in result. In particular, the parent message
@@ -1378,6 +1383,25 @@ class MailMessage(models.Model):
             )
             and not self.has_poll
         )
+
+    @api.model
+    def _message_tracking_value_format(self, tracking_values: BaseModel):
+        """ Return structured formatted data to be used by chatter to display
+        tracking values. It is organized by model.
+
+        :return: for each tracking value in self, their formatted display
+          values given as a dict;
+        :rtype: list[ValuesType]
+        """
+        model_map = {}
+        for tracking in tracking_values:
+            model = tracking.field_id.model or tracking.mail_message_id.model
+            model_map.setdefault(model, tracking_values.browse())
+            model_map[model] += tracking
+        formatted = []
+        for model, trackings in model_map.items():
+            formatted += trackings.env[model]._tracking_value_format_model(trackings)
+        return formatted
 
     @api.model
     def _get_reply_to(self, values):

@@ -92,7 +92,7 @@ class MailMessage(models.Model):
                     'new_value': fmt_vals['newValue'],
                     'field': fmt_vals['fieldInfo']['changedField'],
                 }
-                for fmt_vals in tracking_value_ids._tracking_value_format()
+                for fmt_vals in message._message_tracking_value_format(tracking_value_ids)
             )
             message.account_audit_log_preview = audit_log_preview
 

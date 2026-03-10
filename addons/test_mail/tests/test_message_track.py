@@ -753,7 +753,7 @@ class TestTrackingInternals(TestTrackingCommon):
             }
         )
         # check formatting for all field types
-        formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
+        formatted_values_all = new_message._message_tracking_value_format(new_message.sudo().tracking_value_ids)
         for (field_name, field_type, _, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
             currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
             precision = None if field_name != 'float_field_with_digits' else (10, 8)
@@ -871,7 +871,7 @@ class TestTrackingInternals(TestTrackingCommon):
             }
         )
 
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
+        formatted_values = [self._new_msgs._message_tracking_value_format(t)[0] for t in self._new_msgs.sudo().tracking_value_ids]
         self.assertEqual(len(formatted_values), 5)
         self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
         self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
@@ -902,7 +902,7 @@ class TestTrackingInternals(TestTrackingCommon):
             }
         )
 
-        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
+        formatted_values = [self._new_msgs._message_tracking_value_format(t)[0] for t in self._new_msgs.sudo().tracking_value_ids]
         self.assertEqual(len(formatted_values), 4)
         self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
         self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
@@ -1198,7 +1198,7 @@ class TestTrackingInternals(TestTrackingCommon):
             self.assertEqual(groups, exp_groups)
 
         # check formatting, as it fetches info on model
-        formatted = trackings._tracking_value_format()
+        formatted = new_message._message_tracking_value_format(trackings)
         self.assertEqual(
             formatted,
             [
@@ -1297,7 +1297,7 @@ class TestTrackingInternals(TestTrackingCommon):
             list(reversed(custom_order_fnames)),
             'Tracking model: order, based on ID DESC, following reverted insertion'
         )
-        tracking_formatted = tracking_values._tracking_value_format()
+        tracking_formatted = record.message_ids[0]._message_tracking_value_format(tracking_values)
         self.assertEqual(
             [tracking_values.browse(t['id']).field_id.name for t in tracking_formatted],
             ordered_fnames,
@@ -1381,7 +1381,7 @@ class TestTrackingInternals(TestTrackingCommon):
             ('email.from.1@example.com', 'email.from.2@example.com'),
             (False, 'email.from.1@example.com'),
         ]
-        formatted = trackings_all._tracking_value_format()
+        formatted = record.env['mail.message']._message_tracking_value_format(trackings_all)
         self.assertEqual(
             formatted,
             [
@@ -1410,7 +1410,7 @@ class TestTrackingInternals(TestTrackingCommon):
         self.assertEqual(len(trackings_all.exists()), 5)
 
         # check display / format, even if field is removed
-        formatted = trackings_all._tracking_value_format()
+        formatted = record.env['mail.message']._message_tracking_value_format(trackings_all)
         self.assertEqual(
             formatted,
             [

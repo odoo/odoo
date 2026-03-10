@@ -3729,7 +3729,7 @@ class MailThread(models.AbstractModel):
                     fmt_vals['fieldInfo']['changedField'],
                     fmt_vals['oldValue'],
                     fmt_vals['newValue'],
-                ) for fmt_vals in tracking_values._tracking_value_format()
+                ) for fmt_vals in message._message_tracking_value_format(tracking_values)
             ]
 
         subtype_id = msg_vals['subtype_id'] if 'subtype_id' in msg_vals else message.subtype_id.id
