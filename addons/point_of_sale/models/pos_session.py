@@ -1677,7 +1677,7 @@ class PosSession(models.Model):
             # - values: list of tax ids
             key_company_id = itemgetter('company_id')
             key_id = itemgetter('id')
-            for key, group in groupby(loaded_data['account.tax'], key=key_company_id):
+            for key, group in groupby(sorted(loaded_data['account.tax'], key=key_company_id), key=key_company_id):
                 taxes_by_company[key[0]] = list(map(key_id, group))
         if len(taxes_by_company) > 1:
             for product in loaded_data['product.product']:
