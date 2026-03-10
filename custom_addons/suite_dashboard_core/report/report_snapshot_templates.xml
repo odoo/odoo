@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_suite_dashboard_snapshot_document">
+        <t t-call="web.external_layout">
+            <t t-set="payload" t-value="data.get('payload', {}) if data else {}"/>
+            <div class="page">
+                <h2 t-esc="payload.get('workspace', {}).get('name', doc.name)"/>
+                <p t-if="payload.get('workspace', {}).get('description')" t-esc="payload.get('workspace', {}).get('description')"/>
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><strong>Provider</strong></td>
+                            <td t-esc="payload.get('workspace', {}).get('provider_key', '')"/>
+                            <td><strong>Period</strong></td>
+                            <td>
+                                <span t-esc="payload.get('filters', {}).get('date_from', '')"/>
+                                -
+                                <span t-esc="payload.get('filters', {}).get('date_to', '')"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Companies</strong></td>
+                            <td colspan="3" t-esc="', '.join(payload.get('filters', {}).get('company_names', []))"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div t-if="payload.get('ai_context', {}).get('summary')" class="mt16 mb16">
+                    <h3>Executive Pulse</h3>
+                    <p t-esc="payload.get('ai_context', {}).get('summary')"/>
+                </div>
+
+                <t t-foreach="payload.get('widgets', [])" t-as="widget" t-key="widget.get('widget_key')">
+                    <div class="mt16 mb16">
+                        <h3 t-esc="widget.get('label', widget.get('widget_key'))"/>
+                        <p t-if="widget.get('subtitle')" t-esc="widget.get('subtitle')"/>
+                        <t t-if="widget.get('type') == 'kpi'">
+                            <p>
+                                <strong>Value:</strong>
+                                <span t-esc="widget.get('display_value') or widget.get('value')"/>
+                            </p>
+                            <p t-if="widget.get('delta_pct') is not None">
+                                <strong>Delta:</strong>
+                                <span t-esc="widget.get('delta_pct')"/>
+                                %
+                            </p>
+                        </t>
+                        <t t-elif="widget.get('type') == 'table'">
+                            <table class="table table-sm table-borderless">
+                                <thead>
+                                    <tr>
+                                        <t t-foreach="widget.get('columns', [])" t-as="column" t-key="column.get('key')">
+                                            <th t-esc="column.get('label')"/>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="widget.get('rows', [])" t-as="row" t-key="row.get('id') or row.get('name')">
+                                        <t t-foreach="widget.get('columns', [])" t-as="column" t-key="column.get('key')">
+                                            <td t-esc="row.get(column.get('key'), '')"/>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p t-if="widget.get('summary')" t-esc="widget.get('summary')"/>
+                            <p t-if="widget.get('footer_note')" t-esc="widget.get('footer_note')"/>
+                            <p t-else="">Chart rendered in the live dashboard.</p>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_suite_dashboard_snapshot">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="suite_dashboard_core.report_suite_dashboard_snapshot_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_suite_dashboard_workspace_user" model="ir.rule">
+        <field name="name">Suite Dashboard workspace user visibility</field>
+        <field name="model_id" ref="model_suite_dashboard_workspace"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_user'))]"/>
+        <field name="domain_force">
+            ['&amp;',
+                '|',
+                    ('company_ids', '=', False),
+                    ('company_ids', 'in', user.company_ids.ids),
+                '|',
+                    '|',
+                        '&amp;', ('scope', '=', 'personal'), ('owner_id', '=', user.id),
+                        '&amp;', ('scope', '=', 'team'),
+                            '|', ('allowed_user_ids', 'in', user.id), ('owner_id', '=', user.id),
+                    ('scope', '=', 'global')
+            ]
+        </field>
+    </record>
+
+    <record id="rule_suite_dashboard_workspace_manager" model="ir.rule">
+        <field name="name">Suite Dashboard workspace manager all</field>
+        <field name="model_id" ref="model_suite_dashboard_workspace"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_suite_dashboard_workspace_item_user" model="ir.rule">
+        <field name="name">Suite Dashboard workspace item user visibility</field>
+        <field name="model_id" ref="model_suite_dashboard_workspace_item"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_user'))]"/>
+        <field name="domain_force">
+            ['&amp;',
+                '|',
+                    ('workspace_id.company_ids', '=', False),
+                    ('workspace_id.company_ids', 'in', user.company_ids.ids),
+                '|',
+                    '|',
+                        '&amp;', ('workspace_id.scope', '=', 'personal'), ('workspace_id.owner_id', '=', user.id),
+                        '&amp;', ('workspace_id.scope', '=', 'team'),
+                            '|', ('workspace_id.allowed_user_ids', 'in', user.id), ('workspace_id.owner_id', '=', user.id),
+                    ('workspace_id.scope', '=', 'global')
+            ]
+        </field>
+    </record>
+
+    <record id="rule_suite_dashboard_workspace_item_manager" model="ir.rule">
+        <field name="name">Suite Dashboard workspace item manager all</field>
+        <field name="model_id" ref="model_suite_dashboard_workspace_item"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_suite_dashboard_snapshot_user" model="ir.rule">
+        <field name="name">Suite Dashboard snapshot user visibility</field>
+        <field name="model_id" ref="model_suite_dashboard_snapshot"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_user'))]"/>
+        <field name="domain_force">[('owner_id', '=', user.id)]</field>
+    </record>
+
+    <record id="rule_suite_dashboard_snapshot_manager" model="ir.rule">
+        <field name="name">Suite Dashboard snapshot manager all</field>
+        <field name="model_id" ref="model_suite_dashboard_snapshot"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_suite_dashboard_schedule_user" model="ir.rule">
+        <field name="name">Suite Dashboard schedule user visibility</field>
+        <field name="model_id" ref="model_suite_dashboard_schedule"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_user'))]"/>
+        <field name="domain_force">[('owner_id', '=', user.id)]</field>
+    </record>
+
+    <record id="rule_suite_dashboard_schedule_manager" model="ir.rule">
+        <field name="name">Suite Dashboard schedule manager all</field>
+        <field name="model_id" ref="model_suite_dashboard_schedule"/>
+        <field name="groups" eval="[(4, ref('suite_dashboard_core.group_suite_dashboard_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

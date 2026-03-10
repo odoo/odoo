@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="suite_dashboard_provider_registry_sales" model="suite.dashboard.provider.registry">
+        <field name="name">Sales</field>
+        <field name="key">sales</field>
+        <field name="provider_model">suite.dashboard.provider.sales</field>
+        <field name="bridge_module">suite_dashboard_sales</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="suite_dashboard_template_sales_command_center" model="suite.dashboard.template">
+        <field name="name">Sales Command Center</field>
+        <field name="code">sales_command_center</field>
+        <field name="provider_key">sales</field>
+        <field name="sequence">30</field>
+        <field name="description">Cockpit comercial para carteira fechada, pipeline, faturamento pendente e concentração de clientes.</field>
+        <field name="default_filter_state">{"date_filter":"mtd"}</field>
+        <field name="item_definition_json"><![CDATA[
+[
+  {"widget_key": "sale_booked_revenue", "size": "md", "sequence": 10, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_orders_confirmed", "size": "md", "sequence": 20, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_quotes_open", "size": "md", "sequence": 30, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_to_invoice", "size": "md", "sequence": 40, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_avg_ticket", "size": "md", "sequence": 50, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_conversion_rate", "size": "md", "sequence": 60, "col_span": 3, "row_span": 1},
+  {"widget_key": "sale_revenue_trend", "size": "xl", "sequence": 70, "col_span": 8, "row_span": 2},
+  {"widget_key": "sale_salesperson_mix", "size": "lg", "sequence": 80, "col_span": 4, "row_span": 2},
+  {"widget_key": "sale_top_customers", "size": "xl", "sequence": 90, "col_span": 12, "row_span": 2}
+]
+        ]]></field>
+    </record>
+</odoo>

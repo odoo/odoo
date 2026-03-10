@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_suite_dashboard_root"
+        name="Dashboards"
+        sequence="15"
+        action="suite_dashboard_core.action_suite_dashboard_hub"
+        groups="suite_dashboard_core.group_suite_dashboard_user"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_workspaces"
+        name="Workspaces"
+        parent="suite_dashboard_core.menu_suite_dashboard_root"
+        action="suite_dashboard_core.action_suite_dashboard_workspace"
+        sequence="10"
+        groups="suite_dashboard_core.group_suite_dashboard_user"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_snapshots"
+        name="Snapshots"
+        parent="suite_dashboard_core.menu_suite_dashboard_root"
+        action="suite_dashboard_core.action_suite_dashboard_snapshot"
+        sequence="20"
+        groups="suite_dashboard_core.group_suite_dashboard_user"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_configuration"
+        name="Configuration"
+        parent="suite_dashboard_core.menu_suite_dashboard_root"
+        sequence="90"
+        groups="suite_dashboard_core.group_suite_dashboard_manager"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_templates"
+        name="Templates"
+        parent="suite_dashboard_core.menu_suite_dashboard_configuration"
+        action="suite_dashboard_core.action_suite_dashboard_template"
+        sequence="10"
+        groups="suite_dashboard_core.group_suite_dashboard_manager"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_provider_registry"
+        name="Providers"
+        parent="suite_dashboard_core.menu_suite_dashboard_configuration"
+        action="suite_dashboard_core.action_suite_dashboard_provider_registry"
+        sequence="20"
+        groups="suite_dashboard_core.group_suite_dashboard_admin"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_schedule"
+        name="Schedules"
+        parent="suite_dashboard_core.menu_suite_dashboard_configuration"
+        action="suite_dashboard_core.action_suite_dashboard_schedule"
+        sequence="30"
+        groups="suite_dashboard_core.group_suite_dashboard_manager"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_ai_provider"
+        name="AI Providers"
+        parent="suite_dashboard_core.menu_suite_dashboard_configuration"
+        action="suite_dashboard_core.action_suite_dashboard_ai_provider"
+        sequence="40"
+        groups="suite_dashboard_core.group_suite_dashboard_admin"
+    />
+
+    <menuitem
+        id="menu_suite_dashboard_ai_run"
+        name="AI Runs"
+        parent="suite_dashboard_core.menu_suite_dashboard_configuration"
+        action="suite_dashboard_core.action_suite_dashboard_ai_run"
+        sequence="50"
+        groups="suite_dashboard_core.group_suite_dashboard_manager"
+    />
+</odoo>

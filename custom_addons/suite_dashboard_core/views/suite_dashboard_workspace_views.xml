@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_suite_dashboard_workspace_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.workspace.list</field>
+        <field name="model">suite.dashboard.workspace</field>
+        <field name="arch" type="xml">
+            <list string="Dashboards">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider_key"/>
+                <field name="scope"/>
+                <field name="owner_id"/>
+                <field name="is_favorite"/>
+                <field name="default_date_filter"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_workspace_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.workspace.form</field>
+        <field name="model">suite.dashboard.workspace</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Workspace">
+                <header>
+                    <button
+                        name="action_open_dashboard"
+                        string="Open Dashboard"
+                        type="object"
+                        class="btn-primary"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="provider_key"/>
+                            <field name="template_id"/>
+                            <field name="default_date_filter"/>
+                        </group>
+                        <group>
+                            <field name="owner_id"/>
+                            <field name="scope"/>
+                            <field name="color"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Sharing">
+                            <group>
+                                <field name="company_ids" widget="many2many_tags"/>
+                                <field name="allowed_user_ids" widget="many2many_tags"/>
+                                <field name="favorite_user_ids" widget="many2many_tags" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Layout">
+                            <field name="item_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="widget_key"/>
+                                    <field name="visible"/>
+                                    <field name="size"/>
+                                    <field name="col_span"/>
+                                    <field name="row_span"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Filter State">
+                            <field name="filter_state" nolabel="1" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_template_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.template.list</field>
+        <field name="model">suite.dashboard.template</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard Templates">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="provider_key"/>
+                <field name="sequence"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_template_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.template.form</field>
+        <field name="model">suite.dashboard.template</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Template">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="provider_key"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <field name="item_definition_json" widget="text"/>
+                        <field name="default_filter_state" widget="text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_provider_registry_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.provider.registry.list</field>
+        <field name="model">suite.dashboard.provider.registry</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard Providers">
+                <field name="name"/>
+                <field name="key"/>
+                <field name="provider_model"/>
+                <field name="bridge_module"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_provider_registry_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.provider.registry.form</field>
+        <field name="model">suite.dashboard.provider.registry</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Provider">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="key"/>
+                        <field name="provider_model"/>
+                        <field name="bridge_module"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_schedule_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.schedule.list</field>
+        <field name="model">suite.dashboard.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard Schedules">
+                <field name="name"/>
+                <field name="workspace_id"/>
+                <field name="owner_id"/>
+                <field name="frequency"/>
+                <field name="next_run"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_schedule_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.schedule.form</field>
+        <field name="model">suite.dashboard.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Schedule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="workspace_id"/>
+                            <field name="owner_id"/>
+                        </group>
+                        <group>
+                            <field name="frequency"/>
+                            <field name="next_run"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recipients">
+                            <field name="recipient_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Filters">
+                            <field name="filter_state" nolabel="1" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

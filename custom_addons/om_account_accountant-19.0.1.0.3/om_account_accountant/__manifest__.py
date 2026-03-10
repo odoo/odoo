@@ -1,5 +1,5 @@
 {
-    'name': 'Odoo 19 Accounting Community',
+    'name': 'Accountant',
     'version': '1.0.3',
     'category': 'Accounting',
     'summary': 'Accounting Reports, Asset Management and Budget, Recurring Payments, '

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="suite_dashboard_core.SuiteDashboardHub" owl="1">
+        <div class="suite-dashboard-hub o_action">
+            <t t-if="state.loading">
+                <div class="suite-dashboard-empty">
+                    <div class="suite-dashboard-spinner"/>
+                    <p>Construindo o cockpit...</p>
+                </div>
+            </t>
+            <t t-elif="state.error">
+                <div class="suite-dashboard-empty">
+                    <h3>Falha ao carregar o dashboard</h3>
+                    <p t-esc="state.error"/>
+                    <button class="btn btn-primary" t-on-click="onRefresh">Tentar novamente</button>
+                </div>
+            </t>
+            <t t-elif="!workspace">
+                <div class="suite-dashboard-empty">
+                    <h3>Nenhum workspace disponivel</h3>
+                    <p>Crie um workspace ou habilite um template para comecar.</p>
+                    <button class="btn btn-primary" t-on-click="openWorkspaceAdmin">
+                        Abrir configuracao
+                    </button>
+                </div>
+            </t>
+            <t t-else="">
+                <section class="suite-dashboard-hero">
+                    <div class="suite-dashboard-hero__panel">
+                        <div class="suite-dashboard-hero__header">
+                            <div class="suite-dashboard-hero__copy">
+                                <div class="suite-dashboard-hero__eyebrow">
+                                    <span class="suite-dashboard-pill">Suite Dashboard</span>
+                                    <span class="suite-dashboard-pill suite-dashboard-pill--ghost" t-esc="workspace.provider_key"/>
+                                </div>
+                                <h1 t-esc="workspace.name"/>
+                                <p class="suite-dashboard-hero__description" t-esc="workspace.description || 'Cockpit curado para leitura executiva, acoes rapidas e drilldown operacional.'"/>
+                                <div class="suite-dashboard-hero__meta">
+                                    <span class="suite-dashboard-meta-chip" t-esc="formatDateRange()"/>
+                                    <span class="suite-dashboard-meta-chip" t-esc="((payload.filters &amp;&amp; payload.filters.company_names) || []).join(' | ')"/>
+                                    <span class="suite-dashboard-meta-chip" t-esc="workspace.scope"/>
+                                    <span class="suite-dashboard-meta-chip" t-if="payload.generated_at" t-esc="'Atualizado ' + formatGeneratedAt()"/>
+                                </div>
+                            </div>
+
+                            <div class="suite-dashboard-hero__controls">
+                                <select
+                                    class="form-select"
+                                    t-att-value="state.workspaceId"
+                                    t-on-change="onWorkspaceChange"
+                                >
+                                    <option
+                                        t-foreach="workspaces"
+                                        t-as="workspace_option"
+                                        t-key="workspace_option.id"
+                                        t-att-value="workspace_option.id"
+                                        t-esc="workspace_option.name"
+                                    />
+                                </select>
+                                <button
+                                    class="btn btn-light suite-dashboard-icon-btn"
+                                    t-att-title="workspace.is_favorite ? 'Desfavoritar' : 'Favoritar'"
+                                    t-on-click="onToggleFavorite"
+                                >
+                                    <t t-esc="workspace.is_favorite ? '★' : '☆'"/>
+                                </button>
+                                <button class="btn btn-light" t-on-click="onRefresh">Atualizar</button>
+                                <button class="btn btn-light" t-on-click="onDuplicateWorkspace">Duplicar</button>
+                                <button class="btn btn-primary" t-on-click="onCreateSnapshot">Snapshot PDF</button>
+                            </div>
+                        </div>
+
+                        <div class="suite-dashboard-hero__body">
+                            <div class="suite-dashboard-hero__story">
+                                <div class="suite-dashboard-story-card">
+                                    <div class="suite-dashboard-story-card__title">Executive pulse</div>
+                                    <p t-esc="aiSummary || 'As rotinas estao conectadas. Agora e so descer para o detalhe certo no momento certo.'"/>
+                                    <ul t-if="aiHighlights.length" class="suite-dashboard-story-card__list">
+                                        <li
+                                            t-foreach="aiHighlights"
+                                            t-as="highlight"
+                                            t-key="highlight"
+                                            t-esc="highlight"
+                                        />
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="suite-dashboard-hero__metrics">
+                                <article
+                                    t-foreach="heroMetrics"
+                                    t-as="metric"
+                                    t-key="metric.key"
+                                    class="suite-dashboard-hero-metric"
+                                    t-att-class="metricToneClass(metric)"
+                                >
+                                    <span class="suite-dashboard-hero-metric__label" t-esc="metric.label"/>
+                                    <strong class="suite-dashboard-hero-metric__value" t-esc="formatMetricValue(metric)"/>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="suite-dashboard-toolbar">
+                    <div class="suite-dashboard-toolbar__filters">
+                        <div class="suite-dashboard-periods">
+                            <button
+                                t-foreach="(payload.available_filters &amp;&amp; payload.available_filters.date_filters) || []"
+                                t-as="option"
+                                t-key="option.key"
+                                class="suite-dashboard-period"
+                                t-att-class="isPeriodActive(option.key) ? 'is-active' : ''"
+                                t-on-click="() => this.onPeriodSelect(option.key)"
+                                t-esc="option.label"
+                            />
+                        </div>
+
+                        <div t-if="companyOptions.length &gt; 1" class="suite-dashboard-companies">
+                            <button
+                                t-foreach="companyOptions"
+                                t-as="company"
+                                t-key="company.id"
+                                t-attf-class="suite-dashboard-period suite-dashboard-company-chip {{ isCompanySelected(company.id) ? 'is-active' : '' }}"
+                                t-on-click="() => this.onToggleCompany(company.id)"
+                                t-esc="company.name"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="suite-dashboard-toolbar__side">
+                        <div t-if="state.filters.date_filter === 'custom'" class="suite-dashboard-custom-range">
+                            <input
+                                type="date"
+                                class="form-control"
+                                t-att-value="state.filters.date_from || ''"
+                                t-on-change="(ev) => this.onCustomDateInput('date_from', ev)"
+                            />
+                            <input
+                                type="date"
+                                class="form-control"
+                                t-att-value="state.filters.date_to || ''"
+                                t-on-change="(ev) => this.onCustomDateInput('date_to', ev)"
+                            />
+                            <button class="btn btn-primary" t-on-click="onApplyCustomDates">Aplicar</button>
+                        </div>
+                        <button class="btn btn-outline-secondary" t-on-click="openWorkspaceAdmin">
+                            Workspaces
+                        </button>
+                    </div>
+                </section>
+
+                <section t-if="quickAccess.length" class="suite-dashboard-quick-access">
+                    <button
+                        t-foreach="quickAccess"
+                        t-as="item"
+                        t-key="item.key"
+                        class="suite-dashboard-quick-card"
+                        t-att-style="quickAccessStyle(item)"
+                        t-on-click="() => this.onQuickAccess(item)"
+                    >
+                        <span class="suite-dashboard-quick-card__label" t-esc="item.label"/>
+                        <span class="suite-dashboard-quick-card__description" t-esc="item.description || 'Abrir acao relacionada'"/>
+                    </button>
+                </section>
+
+                <section class="suite-dashboard-grid">
+                    <article
+                        t-foreach="widgets"
+                        t-as="widget"
+                        t-key="widget.widget_key"
+                        class="suite-dashboard-card"
+                        t-att-style="cardStyle(widget)"
+                    >
+                        <div class="suite-dashboard-card__accent"/>
+                        <div class="suite-dashboard-card__header">
+                            <div>
+                                <div class="suite-dashboard-card__title" t-esc="widget.label"/>
+                                <p
+                                    t-if="widget.subtitle"
+                                    class="suite-dashboard-card__subtitle"
+                                    t-esc="widget.subtitle"
+                                />
+                            </div>
+                            <button
+                                t-if="widget.drilldown_enabled"
+                                class="btn btn-sm btn-outline-secondary"
+                                t-on-click="() => this.onWidgetDrilldown(widget)"
+                            >
+                                Abrir
+                            </button>
+                        </div>
+
+                        <t t-if="widget.type === 'kpi'">
+                            <div class="suite-dashboard-kpi" t-att-class="deltaClass(widget)">
+                                <div class="suite-dashboard-kpi__value" t-esc="formatWidgetValue(widget)"/>
+                                <div class="suite-dashboard-kpi__meta">
+                                    <span
+                                        t-if="widget.delta_pct !== undefined &amp;&amp; widget.delta_pct !== null"
+                                        class="suite-dashboard-kpi__delta"
+                                        t-att-class="deltaClass(widget)"
+                                    >
+                                        <t t-esc="widget.delta_pct"/>
+                                        %
+                                    </span>
+                                    <span t-if="widget.delta_label" class="suite-dashboard-kpi__delta-label" t-esc="widget.delta_label"/>
+                                </div>
+                            </div>
+                            <p t-if="widget.summary" class="suite-dashboard-card__summary" t-esc="widget.summary"/>
+                        </t>
+
+                        <t t-elif="widget.type === 'chart'">
+                            <div class="suite-dashboard-chart">
+                                <SuiteDashboardChartWidget widget="widget"/>
+                            </div>
+                            <p t-if="widget.summary" class="suite-dashboard-card__summary" t-esc="widget.summary"/>
+                            <p t-if="widget.footer_note" class="suite-dashboard-card__footnote" t-esc="widget.footer_note"/>
+                        </t>
+
+                        <t t-elif="widget.type === 'table'">
+                            <div class="suite-dashboard-table-wrap">
+                                <table class="table table-sm table-borderless suite-dashboard-table">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                t-foreach="widget.columns || []"
+                                                t-as="column"
+                                                t-key="column.key"
+                                                t-esc="column.label"
+                                            />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            t-foreach="widget.rows || []"
+                                            t-as="row"
+                                            t-key="row.id || row.name || row.rank"
+                                        >
+                                            <td
+                                                t-foreach="widget.columns || []"
+                                                t-as="column"
+                                                t-key="column.key"
+                                                t-att-class="column.type === 'currency' || column.type === 'number' ? 'text-end' : ''"
+                                                t-esc="formatCellValue(column, row)"
+                                            />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p t-if="widget.summary" class="suite-dashboard-card__summary" t-esc="widget.summary"/>
+                        </t>
+                    </article>
+                </section>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="suite_dashboard_core.SuiteDashboardChartWidget" owl="1">
+        <div class="suite-dashboard-chart__canvas">
+            <canvas t-ref="canvas"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="suite_dashboard_provider_registry_account" model="suite.dashboard.provider.registry">
+        <field name="name">Accounting</field>
+        <field name="key">account</field>
+        <field name="provider_model">suite.dashboard.provider.account</field>
+        <field name="bridge_module">suite_dashboard_account</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="suite_dashboard_template_finance_control_tower" model="suite.dashboard.template">
+        <field name="name">Finance Command Center</field>
+        <field name="code">finance_command_center</field>
+        <field name="provider_key">account</field>
+        <field name="sequence">10</field>
+        <field name="description">Cockpit executivo para receita, liquidez, atrasos e foco operacional do financeiro.</field>
+        <field name="default_filter_state">{"date_filter":"mtd"}</field>
+        <field name="item_definition_json"><![CDATA[
+[
+  {"widget_key": "acc_revenue_mtd", "size": "md", "sequence": 10, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_expenses_mtd", "size": "md", "sequence": 20, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_net_result", "size": "md", "sequence": 30, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_cash_position", "size": "md", "sequence": 40, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_ar_overdue", "size": "md", "sequence": 50, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_ap_overdue", "size": "md", "sequence": 60, "col_span": 3, "row_span": 1},
+  {"widget_key": "acc_liquidity_pulse", "size": "lg", "sequence": 70, "col_span": 6, "row_span": 1},
+  {"widget_key": "acc_revenue_trend", "size": "xl", "sequence": 80, "col_span": 8, "row_span": 2},
+  {"widget_key": "acc_top_customers", "size": "xl", "sequence": 90, "col_span": 4, "row_span": 2}
+]
+        ]]></field>
+    </record>
+</odoo>

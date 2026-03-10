@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_suite_dashboard_snapshot_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.snapshot.list</field>
+        <field name="model">suite.dashboard.snapshot</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard Snapshots">
+                <field name="name"/>
+                <field name="workspace_id"/>
+                <field name="owner_id"/>
+                <field name="state" widget="badge"/>
+                <field name="sent_on"/>
+                <field name="attachment_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_snapshot_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.snapshot.form</field>
+        <field name="model">suite.dashboard.snapshot</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Snapshot">
+                <header>
+                    <button
+                        name="action_generate_snapshot"
+                        string="Generate PDF"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_download_attachment"
+                        string="Download PDF"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not attachment_id"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="workspace_id"/>
+                            <field name="owner_id"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="schedule_id"/>
+                            <field name="sent_on"/>
+                            <field name="attachment_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recipients">
+                            <field name="recipient_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Filters">
+                            <field name="filter_state" nolabel="1" widget="text"/>
+                        </page>
+                        <page string="Payload">
+                            <field name="payload_json" nolabel="1" widget="text" readonly="1"/>
+                        </page>
+                        <page string="Errors" invisible="not error_msg">
+                            <field name="error_msg" nolabel="1" readonly="1" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

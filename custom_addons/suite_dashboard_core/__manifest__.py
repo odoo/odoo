@@ -1,0 +1,30 @@
+{
+    "name": "Suite Dashboard Core",
+    "version": "19.0.1.0.0",
+    "summary": "Manager-first dashboard hub with provider bridges",
+    "category": "Productivity/Dashboards",
+    "author": "Kodoo / GRP",
+    "license": "LGPL-3",
+    "depends": ["base", "web", "mail"],
+    "data": [
+        "security/suite_dashboard_groups.xml",
+        "security/ir.model.access.csv",
+        "security/suite_dashboard_record_rules.xml",
+        "views/suite_dashboard_actions.xml",
+        "views/suite_dashboard_workspace_views.xml",
+        "views/suite_dashboard_snapshot_views.xml",
+        "views/suite_dashboard_ai_views.xml",
+        "views/suite_dashboard_menus.xml",
+        "report/report_snapshot_templates.xml",
+        "report/suite_dashboard_snapshot_report.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "suite_dashboard_core/static/src/css/suite_dashboard.css",
+            "suite_dashboard_core/static/src/js/suite_dashboard_hub.js",
+            "suite_dashboard_core/static/src/xml/suite_dashboard_hub.xml",
+        ],
+    },
+    "installable": True,
+    "application": True,
+}

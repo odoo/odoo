@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_suite_dashboard_hub" model="ir.actions.client">
+        <field name="name">Dashboard Hub</field>
+        <field name="tag">suite_dashboard_hub</field>
+    </record>
+
+    <record id="action_suite_dashboard_workspace" model="ir.actions.act_window">
+        <field name="name">Workspaces</field>
+        <field name="res_model">suite.dashboard.workspace</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">suite.dashboard.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_provider_registry" model="ir.actions.act_window">
+        <field name="name">Providers</field>
+        <field name="res_model">suite.dashboard.provider.registry</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_snapshot" model="ir.actions.act_window">
+        <field name="name">Snapshots</field>
+        <field name="res_model">suite.dashboard.snapshot</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_schedule" model="ir.actions.act_window">
+        <field name="name">Schedules</field>
+        <field name="res_model">suite.dashboard.schedule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_ai_provider" model="ir.actions.act_window">
+        <field name="name">AI Providers</field>
+        <field name="res_model">suite.dashboard.ai.provider</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_suite_dashboard_ai_run" model="ir.actions.act_window">
+        <field name="name">AI Runs</field>
+        <field name="res_model">suite.dashboard.ai.run</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

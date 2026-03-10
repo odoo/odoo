@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_suite_dashboard_snapshot" model="ir.actions.report">
+        <field name="name">Dashboard Snapshot</field>
+        <field name="model">suite.dashboard.snapshot</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">suite_dashboard_core.report_suite_dashboard_snapshot</field>
+        <field name="report_file">suite_dashboard_core.report_suite_dashboard_snapshot</field>
+        <field name="binding_type">report</field>
+        <field name="binding_model_id" ref="model_suite_dashboard_snapshot"/>
+    </record>
+</odoo>

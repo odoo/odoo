@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_suite_dashboard_ai_provider_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.ai.provider.list</field>
+        <field name="model">suite.dashboard.ai.provider</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard AI Providers">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="provider_type"/>
+                <field name="model_name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_ai_provider_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.ai.provider.form</field>
+        <field name="model">suite.dashboard.ai.provider</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard AI Provider">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="provider_type"/>
+                        <field name="model_name"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="endpoint"/>
+                        <field name="timeout"/>
+                        <field name="api_key" password="True"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_ai_run_list" model="ir.ui.view">
+        <field name="name">suite.dashboard.ai.run.list</field>
+        <field name="model">suite.dashboard.ai.run</field>
+        <field name="arch" type="xml">
+            <list string="Dashboard AI Runs">
+                <field name="create_date"/>
+                <field name="workspace_id"/>
+                <field name="provider_id"/>
+                <field name="state" widget="badge"/>
+                <field name="duration_ms"/>
+                <field name="tokens_used"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_suite_dashboard_ai_run_form" model="ir.ui.view">
+        <field name="name">suite.dashboard.ai.run.form</field>
+        <field name="model">suite.dashboard.ai.run</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard AI Run">
+                <sheet>
+                    <group>
+                        <field name="provider_id" readonly="1"/>
+                        <field name="workspace_id" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                        <field name="duration_ms" readonly="1"/>
+                        <field name="tokens_used" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="prompt" readonly="1" widget="text"/>
+                        <field name="response" readonly="1" widget="text"/>
+                        <field name="error_msg" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

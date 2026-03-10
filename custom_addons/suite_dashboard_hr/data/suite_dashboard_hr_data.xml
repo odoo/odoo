@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="suite_dashboard_provider_registry_hr" model="suite.dashboard.provider.registry">
+        <field name="name">Human Resources</field>
+        <field name="key">hr</field>
+        <field name="provider_model">suite.dashboard.provider.hr</field>
+        <field name="bridge_module">suite_dashboard_hr</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="suite_dashboard_template_people_command_center" model="suite.dashboard.template">
+        <field name="name">People Command Center</field>
+        <field name="code">people_command_center</field>
+        <field name="provider_key">hr</field>
+        <field name="sequence">20</field>
+        <field name="description">Cockpit executivo para headcount, ausências, presença e filas de aprovação de RH.</field>
+        <field name="default_filter_state">{"date_filter":"today"}</field>
+        <field name="item_definition_json"><![CDATA[
+[
+  {"widget_key": "hr_headcount", "size": "md", "sequence": 10, "col_span": 3, "row_span": 1},
+  {"widget_key": "hr_leaves_pending", "size": "md", "sequence": 20, "col_span": 3, "row_span": 1},
+  {"widget_key": "hr_leaves_today", "size": "md", "sequence": 30, "col_span": 3, "row_span": 1},
+  {"widget_key": "hr_approvals_pending", "size": "md", "sequence": 40, "col_span": 3, "row_span": 1},
+  {"widget_key": "hr_dept_breakdown", "size": "xl", "sequence": 50, "col_span": 8, "row_span": 2},
+  {"widget_key": "hr_attendance_late", "size": "md", "sequence": 60, "col_span": 4, "row_span": 1},
+  {"widget_key": "hr_contracts_expiring", "size": "xl", "sequence": 70, "col_span": 4, "row_span": 2}
+]
+        ]]></field>
+    </record>
+</odoo>
