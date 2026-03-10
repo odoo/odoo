@@ -27,4 +27,5 @@ from . import (
     test_one2many,
     test_parent_store,
     test_performance,
+    test_properties,
 )
