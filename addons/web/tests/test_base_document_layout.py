@@ -239,3 +239,10 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({'street2': 'street_2_detail'})
         doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
         self.assertTrue('street_2_detail' in doc_layout_2.company_details)
+
+    def test_extract_primary_secondary_on_svg(self):
+        svg_b64 = base64.b64encode(b'<svg xmlns="http://www.w3.org/2000/svg"/>')
+        primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(svg_b64)
+
+        self.assertFalse(primary)
+        self.assertFalse(secondary)
