@@ -5,9 +5,10 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useChildRef } from "@web/core/utils/hooks";
+import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
@@ -19,6 +20,7 @@ export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
     static props = {
+        title: { type: String, optional: true },
         selectedSnippet: { type: Object },
         selectSnippet: { type: Function },
         snippetModel: { type: Object },
@@ -27,7 +29,12 @@ export class AddSnippetDialog extends Component {
         editor: { type: Object },
     };
 
+    static defaultProps = {
+        title: _t("Insert a block"),
+    };
+
     setup() {
+        useAutofocus();
         this.iframeRef = useRef("iframe");
         this.modalRef = useChildRef();
         this.state = useState({
@@ -35,6 +42,7 @@ export class AddSnippetDialog extends Component {
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,
             hasNoSearchResults: false,
+            isMobilePreviewMode: false,
         });
         this.snippetViewerProps = {
             state: this.state,
@@ -204,5 +212,9 @@ export class AddSnippetDialog extends Component {
             ev.preventDefault();
             ev.stopPropagation();
         }
+    }
+
+    toggleMobilePreview() {
+        this.state.isMobilePreviewMode = !this.state.isMobilePreviewMode;
     }
 }

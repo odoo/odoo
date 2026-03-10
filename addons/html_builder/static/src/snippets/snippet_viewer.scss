@@ -4,7 +4,7 @@
     > body {
         overflow-x: hidden;
         overflow-y: auto;
-        width: 30%;
+        width: calc(100% / 3.33);
         height: 100%;
         background-color: unset;
         scrollbar-gutter: stable both-edges;
@@ -17,11 +17,13 @@
         height: 100%;
 
         .o_snippet_preview_wrap {
+            $-snippet-margin-x: map-get($spacers, 5) * .5;
+            $-snippet-margin-bottom: map-get($spacers, 3) * 4;
+            --SnippetViewer-zoom: 1;
             min-height: 100px;
             box-shadow: 0 0 6rem rgba(0, 0, 0, 0.16);
-            margin: map-get($spacers, 5) (map-get($spacers, 5) * .5) (map-get($spacers, 3) * 4);
+            margin: 0 calc(#{$-snippet-margin-x} / var(--SnippetViewer-zoom)) calc(#{$-snippet-margin-bottom} / var(--SnippetViewer-zoom));
             background-color: var(--body-bg);
-            transform: scale(.98);
             cursor: pointer;
 
             [data-snippet="s_carousel"],
@@ -58,10 +60,6 @@
             [inert="inert"] > [data-snippet] {
                 isolation: isolate;
 
-                &[data-snippet="s_text_block"] {
-                    font-size: 1.6rem;
-                }
-
                 &.s_popup {
                     min-height: 660px;
 
@@ -95,7 +93,7 @@
                 @include o-position-absolute(0, 0);
                 z-index: 1;
                 transform-origin: top right;
-                transform: scale(3.4);
+                transform: scale(calc(3.4 / var(--SnippetViewer-zoom)));
                 font-family: $o-we-font-family;
                 font-size: $o-we-sidebar-font-size;
                 background-color: $o-we-toolbar-color-accent;
@@ -113,7 +111,7 @@
             &:hover, &:focus-visible {
                 box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
                 &::after {
-                    outline: 6px solid $o-we-handles-accent-color;
+                    outline: calc(6px / var(--SnippetViewer-zoom)) solid $o-we-handles-accent-color;
                 }
             }
             &.o_snippet_preview_install {
@@ -138,7 +136,7 @@
                     z-index: 1;
                     @include o-position-absolute(auto, 0, 0, 0);
                     opacity: 0;
-                    transform: scale(3.33);
+                    transform: scale(calc(3.33 / var(--SnippetViewer-zoom)));
                     width: max-content;
                     font-size: 14px;
                     font-family: $o-we-font-family;
@@ -178,4 +176,28 @@
             color: $white;
         }
     }
+
+    @include media-breakpoint-down(md) {
+        > body {
+            width: 100%;
+        }
+        .o_snippets_preview_row {
+            .o_custom_snippet_edit > * {
+                font-size: x-large;
+            }
+
+            .o_snippet_preview_wrap {
+                --SnippetViewer-zoom: 2;
+
+                &.o_snippet_preview_install > .o_snippet_preview_install_btn {
+                    transform-origin: top;
+                }
+            }
+        }
+    }
+}
+
+iframe.o_is_mobile_preview {
+    zoom: 2;
+    width: 100%;
 }
