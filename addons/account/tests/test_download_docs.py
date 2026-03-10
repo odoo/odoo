@@ -90,7 +90,11 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
     def test_download_moves_attachments(self):
         self.authenticate(self.env.user.login, self.env.user.login)
         url = f'/account/download_move_attachments/{",".join(map(str, self.invoices.ids))}'
-        attachment_names = sorted([doc['filename'] for invoice in self.invoices for doc in invoice._get_invoice_legal_documents_all()])
+        attachment_names = sorted([
+            f"{invoice.name.replace('/', '_')}.pdf"
+            for invoice in self.invoices
+            for doc in invoice._get_invoice_legal_documents_all()
+        ])
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
@@ -100,7 +104,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
     def test_download_moves_attachments_with_bills(self):
         bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
         bill.message_main_attachment_id = self.env['ir.attachment'].create({'name': "Attachment", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
-        attachment_names = [bill.message_main_attachment_id.name]
+        attachment_names = [bill.name.replace('/', '_')]
         self.authenticate(self.env.user.login, self.env.user.login)
         url = f'/account/download_move_attachments/{bill.id}'
         res = self.url_open(url)
@@ -117,7 +121,11 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         bill_1.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
         bill_2.message_main_attachment_id = self.env['ir.attachment'].create({'name': att_name, 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
         bill_3.message_main_attachment_id = self.env['ir.attachment'].create({'name': f"{att_name} (1)", 'mimetype': 'text/plain', 'res_model': 'account.move', 'raw': b"test_bill"})
-        attachment_names = [att_name, f"{att_name} (1)", f"{att_name} (1) (1)"]
+        attachment_names = sorted([
+            bill_1.name.replace('/', '_'),
+            bill_2.name.replace('/', '_'),
+            bill_3.name.replace('/', '_'),
+        ])
         self.authenticate(self.env.user.login, self.env.user.login)
 
         url = f'/account/download_move_attachments/{bill_1.id},{bill_2.id},{bill_3.id}'
@@ -130,8 +138,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         att_name = "Attachment.ext"
         bill_1.message_main_attachment_id.name = att_name
         bill_2.message_main_attachment_id.name = att_name
-        attachment_names = [f"{att_name.split('.')[0]} (1).{att_name.split('.')[1]}", att_name]
-
+        attachment_names = sorted([f"{bill_1.name.replace('/', '_')}.ext", f"{bill_2.name.replace('/', '_')}.ext"])
         url = f'/account/download_move_attachments/{bill_1.id},{bill_2.id}'
         res = self.url_open(url)
         with ZipFile(BytesIO(res.content)) as zip_file:

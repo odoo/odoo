@@ -5,7 +5,7 @@ import re
 
 from lxml import etree
 
-from odoo import _, api, fields, models, Command
+from odoo import api, fields, models, Command
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.exceptions import UserError
 from odoo.tools import frozendict
@@ -39,17 +39,6 @@ class AccountMove(models.Model):
         """ Compute the filename based on the uploaded file. """
         for record in self:
             record.ubl_cii_xml_filename = record.ubl_cii_xml_id.name
-
-    # -------------------------------------------------------------------------
-    # ACTIONS
-    # -------------------------------------------------------------------------
-
-    def action_invoice_download_ubl(self):
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/ubl?allow_fallback=true',
-            'target': 'download',
-        }
 
     # -------------------------------------------------------------------------
     # BUSINESS
@@ -88,27 +77,6 @@ class AccountMove(models.Model):
                         'errors': errors,
                     }]
         return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
-
-    def get_extra_print_items(self):
-        print_items = super().get_extra_print_items()
-        posted_moves = self.filtered(lambda move: move.state == 'posted')
-        can_export_xml = any(
-            (
-                move.ubl_cii_xml_id
-                or (
-                    (edi_format := move.commercial_partner_id.with_company(move.company_id)._get_ubl_cii_edi_format())
-                    and move._need_ubl_cii_xml(edi_format)
-                )
-            )
-            for move in posted_moves.filtered(lambda move: move.ubl_cii_xml_id or move.commercial_partner_id)
-        )
-        if can_export_xml:
-            print_items.append({
-                'key': 'download_ubl',
-                'description': _('Export XML'),
-                **posted_moves.action_invoice_download_ubl(),
-            })
-        return print_items
 
     def action_group_ungroup_lines_by_tax(self):
         """

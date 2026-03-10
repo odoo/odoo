@@ -6336,9 +6336,21 @@ class AccountMove(models.Model):
         }
 
     def action_move_download_all(self):
+        moves_to_export = self.filtered(lambda m: m._get_move_zip_export_docs())
+
+        if not moves_to_export:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _('No files found to download'),
+                    'type': 'warning',
+                    'sticky': False
+                }
+            }
         return {
             'type': 'ir.actions.act_url',
-            'url': f'/account/download_move_attachments/{",".join(str(move_id) for move_id in self.ids)}',
+            'url': f'/account/download_move_attachments/{",".join(str(move_id) for move_id in moves_to_export.ids)}',
             'target': 'download',
         }
 
@@ -7162,6 +7174,7 @@ class AccountMove(models.Model):
             ]
         elif allow_fallback:
             return [self._get_invoice_pdf_proforma()]
+        return []
 
     def _get_invoice_report_filename(self, extension='pdf', report=None):
         """ Get the filename of the generated invoice report with extension file. """
@@ -7620,29 +7633,28 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        if moves_to_export := self.filtered(lambda m: m._get_move_zip_export_docs()):
-            return [
-                {
-                    'key': 'download_all',
-                    'description': _("Export ZIP"),
-                    **moves_to_export.action_move_download_all(),
-                },
-            ]
         return []
 
     def _get_move_zip_export_docs(self):
         self.ensure_one()
 
-        if self.state != 'posted':
-            return []
-
         if self.is_purchase_document(include_receipts=True):
-            attachment = self.message_main_attachment_id
+            attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
+            main = self.message_main_attachment_id
+            if main and main not in attachments:
+                attachments = main | attachments
             return [{
-                'filename': attachment.name,
-                'filetype': attachment.mimetype,
-                'content': attachment.raw,
-            }] if attachment else []
+                'filename': a.name,
+                'filetype': a.mimetype,
+                'content': a.raw,
+            } for a in attachments]
+
+        if self.state == 'draft' and (main := self.message_main_attachment_id):
+            return [{
+                'filename': main.name,
+                'filetype': main.mimetype,
+                'content': main.raw,
+            }]
 
         return self._get_invoice_legal_documents_all()
 
