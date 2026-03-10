@@ -4,7 +4,7 @@ import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
 import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 import { useService } from '@web/core/utils/hooks';
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, status } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 export class ProjectTaskKanbanRenderer extends KanbanRenderer {
@@ -21,6 +21,16 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         onWillStart(async () => {
             this.isProjectManager = await user.hasGroup('project.group_project_manager');
         });
+    }
+
+    async sortRecordDrop(dataRecordId, dataGroupId, params) {
+        try {
+            await super.sortRecordDrop(dataRecordId, dataGroupId, params);
+        } catch (e) {
+            if (status(this) !== 'destroyed') {
+                throw e;
+            }
+        }
     }
 
     canCreateGroup() {
