@@ -382,12 +382,12 @@
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <list editable="bottom">
                                 <field name="user_id"/>
-                                <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="id"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
+                                <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="0" sum="Time Spent"/>
                                 <field name="workcenter_id" column_invisible="True"/>
+                                <field name="date_start" optional="hide"/>
+                                <field name="date_end" optional="hide"/>
                                 <field name="company_id" column_invisible="True"/>
-                                <field name="loss_id" string="Productivity" optional="show"/>
+                                <field name="loss_id" string="Productivity" optional="hide"/>
                             </list>
                             <form>
                                 <group>
