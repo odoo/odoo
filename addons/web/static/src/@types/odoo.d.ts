@@ -33,26 +33,19 @@ class OdooModuleLoader {
     modules: Map<string, OdooModule>;
 
     constructor(root?: HTMLElement);
-
     addJob: (name: string) => void;
-
     define: (
         name: string,
         deps: string[],
         factory: OdooModuleFactoryFn,
         lazy?: boolean
     ) => OdooModule;
-
     findErrors: (jobs?: Iterable<string>) => OdooModuleErrors;
-
     findJob: () => string | null;
-
     reportErrors: (errors: OdooModuleErrors) => Promise<void>;
-
+    require: (dependency: string) => OdooModule;
     sortFactories: () => void;
-
     startModule: (name: string) => OdooModule;
-
     startModules: () => void;
 }
 
