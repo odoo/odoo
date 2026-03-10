@@ -84,7 +84,7 @@ export class LivechatService {
             // flickering, we do not want another load that would result in the
             // same issue.
             savedChannel.scrollUnread = false;
-            temporaryThread.channel.chatWindow?.close();
+            temporaryThread.channel?.chatWindow?.close();
             savedChannel.openChatWindow({ focus: true });
         });
         return savedChannel;
