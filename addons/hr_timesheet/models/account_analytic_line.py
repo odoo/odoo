@@ -315,7 +315,7 @@ class AccountAnalyticLine(models.Model):
             employee_per_company = employee_id_per_company_per_user.get(user_id)
             employee_out_id = False
             if employee_per_company:
-                company_id = list(employee_per_company)[0] if len(employee_per_company) == 1\
+                company_id = next(iter(employee_per_company)) if len(employee_per_company) == 1\
                         else vals.get('company_id') or self.env.company.id
                 employee_out_id = employee_per_company.get(company_id, False)
 

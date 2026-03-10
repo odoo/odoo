@@ -24,7 +24,7 @@ up a management by affair.
         'security/ir.model.access.csv',
         'security/ir.model.access.xml',
         'data/portal_entry_data.xml',
-        'views/hr_timesheet_views.xml',
+        'views/account_analytic_line_views.xml',
         'views/res_config_settings_views.xml',
         'views/project_project_views.xml',
         'views/project_task_views.xml',
