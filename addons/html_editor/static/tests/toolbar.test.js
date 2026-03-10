@@ -252,6 +252,25 @@ test("toolbar works: can format bold", async () => {
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
 });
 
+test.tags("desktop");
+test("bold shortcut should work when focus is on a toolbar button", async () => {
+    const { el } = await setupEditor("<p>test</p>");
+    expect(getContent(el)).toBe("<p>test</p>");
+
+    // set selection to open toolbar
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Move focus to toolbar button by pressing Alt + F
+    await press(["alt", "f"]);
+    expect(queryOne(".o-we-toolbar button[name='font_type']")).toBeFocused();
+
+    // Format bold shortcut operation should be performed
+    await press(["ctrl", "b"]);
+    expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
+});
+
 test.tags("iframe");
 test("toolbar in an iframe works: can format bold", async () => {
     const { el } = await setupEditor("<p>test</p>", { props: { iframe: true } });

@@ -128,13 +128,20 @@ export class ShortCutPlugin extends Plugin {
     addShortcut(hotkey, action, { isAvailable, global }) {
         this._cleanups.push(
             this.services.hotkey.add(hotkey, action, {
-                area: () => this.editable,
                 bypassEditableProtection: true,
                 allowRepeat: true,
-                isAvailable: (target) =>
-                    (!isAvailable ||
-                        isAvailable(this.dependencies.selection.getEditableSelection())) &&
-                    (global || isValidTargetForDomListener(target)),
+                isAvailable: (target) => {
+                    // Shortcuts are available when focus is in the editable or the toolbar
+                    const isFocusInAvailableArea =
+                        this.editable.contains(target) ||
+                        !!target?.closest(".o-we-toolbar[data-namespace], .o-we-toolbar-dropdown");
+                    return (
+                        isFocusInAvailableArea &&
+                        (!isAvailable ||
+                            isAvailable(this.dependencies.selection.getEditableSelection())) &&
+                        (global || isValidTargetForDomListener(target))
+                    );
+                },
             })
         );
     }
