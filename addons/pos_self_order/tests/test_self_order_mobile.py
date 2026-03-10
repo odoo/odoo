@@ -277,9 +277,24 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             'use_presets': False,
         })
 
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            }), (0, 0, {
+                "table_number": 2,
+            }), (0, 0, {
+                "table_number": 3,
+            })],
+        })
+        self.pos_config.write({
+            "floor_ids": [(6, 0, [floor.id])],
+        })
+
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        table = self.pos_config.floor_ids.table_ids[0]
+        table = floor.table_ids[0]
         table_identifier = table.identifier
         self_route = self.pos_config._get_self_order_route(table_id=table.id)
 
