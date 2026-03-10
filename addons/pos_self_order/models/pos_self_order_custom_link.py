@@ -14,6 +14,16 @@ class Pos_Self_OrderCustom_Link(models.Model):
     )
     name = fields.Char(string="Label", required=True, translate=True)
     url = fields.Char(string="URL", required=True)
+    self_order_config_count = fields.Integer(
+        string="Self-Order Configurations Count",
+        compute="_compute_self_order_config_count",
+    )
+    self_order_config_ids = fields.Many2many(
+        "pos.self.order.config",
+        string="Self-Order Configurations",
+        rel="pos_self_order_config_custom_link_rel",
+        help="Select for which self-order configurations you want to display this link. Leave empty to display it for all configurations.",
+    )
     pos_config_ids = fields.Many2many(
         "pos.config",
         string="Points of Sale",
@@ -51,3 +61,8 @@ class Pos_Self_OrderCustom_Link(models.Model):
         for link in self:
             if link.name:
                 link.link_html = f'<a class="btn btn-{link.style} w-100">{escape(link.name)}</a>'
+
+    @api.depends("self_order_config_ids")
+    def _compute_self_order_config_count(self):
+        for link in self:
+            link.self_order_config_count = len(link.self_order_config_ids)

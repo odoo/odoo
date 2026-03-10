@@ -8,4 +8,7 @@ patch(PosTicketPrinterService.prototype, {
     async markReceiptAsPrinted(order) {
         return false;
     },
+    get config() {
+        return this.data.models["pos.self.order.config"].getFirst();
+    },
 });

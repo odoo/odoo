@@ -49,7 +49,7 @@ export class PosOrder extends PosOrderAccounting {
         }
 
         if (!this.config_id) {
-            this.config_id = this.config;
+            this.config_id = this.models["pos.config"].getFirst();
         }
     }
 

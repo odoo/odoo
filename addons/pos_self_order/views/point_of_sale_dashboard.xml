@@ -24,13 +24,6 @@
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='card_left']" position="inside">
-                <field name="self_ordering_mode" invisible="1" />
-                 <button invisible="not self_ordering_mode == 'mobile' and not self_ordering_mode == 'consultation'"
-                         class="btn btn-secondary" name="preview_self_order_app" type="object">
-                        Mobile Menu
-                 </button>
-            </xpath>
             <xpath expr="//div[@name='card_left']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
                 <field name="current_session_id" invisible="1" />

@@ -35,9 +35,9 @@ class IrHttp(models.AbstractModel):
         if path_with_config:
             config_id_match = re.search(r'/pos-self(?:/data)?/(\d+)', path_with_config)
             if config_id_match:
-                pos_config = request.env['pos.config'].sudo().browse(int(config_id_match[1]))
-                if pos_config.self_ordering_available_language_ids:
-                    self_order_langs = pos_config.self_ordering_available_language_ids.mapped('code')
+                pos_config = request.env['pos.self.order.config'].sudo().browse(int(config_id_match[1]))
+                if pos_config.available_language_ids:
+                    self_order_langs = pos_config.available_language_ids.mapped('code')
                     if lang_code in self_order_langs:
                         return lang_code
                     short_code = lang_code.partition('_')[0]

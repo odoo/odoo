@@ -31,4 +31,16 @@
             </field>
         </field>
     </record>
+
+    <record id="view_pos_preset_self_order_list" model="ir.ui.view">
+        <field name="name">pos.preset.self.order.list</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <list string="Presets" editable="bottom">
+                <field name="name"/>
+                <field name="service_at"/>
+                <field name="mail_template_id"/>
+            </list>
+        </field>
+    </record>
 </odoo>

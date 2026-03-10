@@ -10,7 +10,7 @@ export const unpatchSelf = patch(PosData.prototype, {
         const localData = await this.getCachedServerDataFromIndexedDB();
         const partners = localData?.["res.partner"] || [];
         await this.fetchReceiptTemplate();
-        const data = await rpc(`/pos-self/data/${parseInt(configId)}`, {
+        const data = await rpc(`/pos-self-order/data/${parseInt(configId)}`, {
             access_token: odoo.access_token,
         });
         data["res.partner"] = partners;
@@ -18,14 +18,14 @@ export const unpatchSelf = patch(PosData.prototype, {
     },
     async fetchReceiptTemplate() {
         const configId = session.data.config_id;
-        const data = await rpc(`/pos-self/receipt-template/${parseInt(configId)}`);
+        const data = await rpc(`/pos-self-order/receipt-template/${parseInt(configId)}`);
         for (const [name, string] of data) {
             registerPythonTemplate(name, "", string);
         }
     },
     async loadFieldsAndRelations() {
         const configId = session.data.config_id;
-        return await rpc(`/pos-self/relations/${parseInt(configId)}`);
+        return await rpc(`/pos-self-order/relations/${parseInt(configId)}`);
     },
     get databaseName() {
         return `pos-self-order-${odoo.access_token}`;

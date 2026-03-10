@@ -58,7 +58,7 @@ export class SelfOrder extends Reactive {
         // data
         this.models = this.data.models;
         this.session = this.models["pos.session"].getFirst();
-        this.config = this.models["pos.config"].getFirst();
+        this.config = this.models["pos.self.order.config"].getFirst();
         this.company = this.config.company_id;
         this.currency = this.config.currency_id;
 
@@ -429,7 +429,6 @@ export class SelfOrder extends Reactive {
             company_id: this.company,
             ticket_code: random5Chars(),
             session_id: this.session,
-            config_id: this.config,
             fiscal_position_id: fiscalPosition,
             pricelist_id: pricelist,
             preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
@@ -449,8 +448,8 @@ export class SelfOrder extends Reactive {
     }
 
     initProducts() {
-        this.productCategories = this.config.limit_categories
-            ? this.config.iface_available_categ_ids
+        this.productCategories = this.config.available_category_ids.length
+            ? this.config.available_category_ids
             : this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
 
@@ -507,7 +506,7 @@ export class SelfOrder extends Reactive {
     }
 
     _initLanguages() {
-        const languages = this.config.self_ordering_available_language_ids;
+        const languages = this.config.available_language_ids;
         this.currentLanguage = languages.find((l) => l.code === cookie.get("frontend_lang"));
         if (languages && !this.currentLanguage) {
             this.currentLanguage = this.config.self_ordering_default_language_id;

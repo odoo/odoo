@@ -18,3 +18,4 @@ from . import res_partner
 from . import res_country
 from . import mail_template
 from . import pos_snooze
+from . import pos_self_order_config

@@ -15,6 +15,14 @@ import { normalize } from "@web/core/l10n/utils";
 export class ProductTemplate extends ProductTemplateAccounting {
     static pythonModel = "product.template";
 
+    get config() {
+        return this.models["pos.config"].getFirst();
+    }
+
+    get company() {
+        return this.config.company_id;
+    }
+
     isAllowOnlyOneLot() {
         return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
     }

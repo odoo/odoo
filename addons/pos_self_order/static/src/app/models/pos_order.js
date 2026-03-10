@@ -13,6 +13,9 @@ patch(PosOrder.prototype, {
             receiptReady: false,
         };
     },
+    get config() {
+        return this.models["pos.self.order.config"].getFirst();
+    },
     get unsentLines() {
         return this.lines.filter(
             (l) =>

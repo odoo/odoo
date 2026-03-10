@@ -160,19 +160,18 @@ export class ProductTemplateAccounting extends Base {
     }
 
     getTaxDetails(opts = {}) {
-        const config = this.models["pos.config"].getFirst();
         const baseLine = this.getBaseLine(opts);
-        accountTaxHelpers.add_tax_details_in_base_line(baseLine, config.company_id);
-        accountTaxHelpers.round_base_lines_tax_details([baseLine], config.company_id);
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, this.company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], this.company);
         return baseLine.tax_details;
     }
 
     get displayPriceUnit() {
-        const config = this.models["pos.config"].getFirst();
+        const config = this.config;
         const price =
             config.iface_tax_included === "total"
                 ? this.getTaxDetails().total_included
                 : this.getTaxDetails().total_excluded;
-        return formatCurrency(price, config.currency_id.id);
+        return formatCurrency(price, this.currency.id);
     }
 }
