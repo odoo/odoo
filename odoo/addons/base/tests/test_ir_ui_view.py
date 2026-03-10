@@ -5003,7 +5003,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_es_reports',
             'l10n_eu_oss_reports',
             'l10n_fr_hr_holidays',
-            'l10n_fr_hr_payroll',
             'l10n_fr_intrastat',
             'l10n_fr_pos_cert',
             'l10n_fr_reports',
