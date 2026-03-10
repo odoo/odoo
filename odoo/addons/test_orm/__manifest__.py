@@ -21,6 +21,7 @@
         'data/test_domain.xml',
         'data/test_fields.xml',
         'data/test_inherits.xml',
+        'data/test_json_field.xml',
 
         # SECURITY
         'security/test_access_feedback/ir.model.access.csv',
@@ -37,6 +38,7 @@
         'security/test_indexed_translation/ir.model.access.csv',
         'security/test_inherits/ir.model.access.csv',
         'security/test_ir_rules/ir.model.access.csv',
+        'security/test_json_field/ir.model.access.csv',
 
         # VIEWS
     ],

@@ -15,4 +15,5 @@ from . import (
     test_indexed_translation,
     test_inherits,
     test_ir_rules,
+    test_json_field,
 )
