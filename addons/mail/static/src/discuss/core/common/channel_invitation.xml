@@ -9,7 +9,7 @@
     </t>
 
     <t t-name="discuss.ChannelInvitation.main">
-        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': this.props.hasSizeConstraints, 'px-1': !this.props.channel }">
+        <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'w-100': this.props.hasSizeConstraints, 'px-1': !this.props.channel }">
             <t t-if="this.store.self_user?.share === false">
                 <div class="position-relative">
                     <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="this.searchStr" t-custom-ref="input" t-att-placeholder="this.searchPlaceholder" t-on-input="this.onInput"/>
