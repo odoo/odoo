@@ -28,4 +28,5 @@ from . import (
     test_parent_store,
     test_performance,
     test_properties,
+    test_query,
 )
