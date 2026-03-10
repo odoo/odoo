@@ -346,3 +346,55 @@ class TestReturnPicking(TestStockCommon):
         # 2 exchanged products received: both on-hand and forecasted quantities should be 10
         self.assertEqual(self.productA.qty_available, 10)
         self.assertEqual(self.productA.virtual_available, 10)
+
+    def test_return_to_partner_from_sub_location(self):
+        '''
+        Ensure that products moved to a sub location can still be reserved when creating a return.
+        '''
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        wh_stock = self.env['stock.location'].browse(self.stock_location)
+        sub_loc = wh_stock.child_ids and wh_stock.child_ids[0] or self.env['stock.location'].create({
+            'name': 'New sub location',
+            'usage': 'internal',
+            'location_id': wh_stock.id,
+        })
+
+        # Receive 13 of the product in stock
+        receipt_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+        })
+        in_move = self.MoveObj.create({
+            'name': "OUT move",
+            'product_id': self.productA.id,
+            'product_uom_qty': 13,
+            'picking_id': receipt_picking.id,
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+        })
+        in_move.quantity = 1
+        receipt_picking.button_validate()
+
+        # Transfer the product to the sub location
+        transfer_move = self.env['stock.move'].create({
+            'name': 'Move 1 product',
+            'product_id': self.productA.id,
+            'product_uom_qty': 13,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location,
+            'location_dest_id': sub_loc.id,
+        })
+        transfer_move._action_confirm()
+        transfer_move._action_assign()
+        transfer_move.quantity = 13
+        transfer_move.picked = True
+        transfer_move._action_done()
+
+        # Create a return on the reception transfer
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=receipt_picking.id, active_model='stock.picking').create({})
+        return_wizard.product_return_moves.quantity = 13
+        res = return_wizard.action_create_returns()
+        return_picking = self.PickingObj.browse(res["res_id"])
+        self.assertEqual(return_picking.location_dest_id.id, self.customer_location)
+        self.assertEqual(return_picking.state, 'assigned')
