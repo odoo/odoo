@@ -21,7 +21,7 @@ class MailPreviewRecordField extends ReferenceField {
                 this.records = [
                     {
                         id: this.currentResId,
-                        display_name: this.props.record.data[this.props.name].display_name,
+                        display_name: this.props.record.data[this.props.name].displayName,
                     },
                 ];
                 // Load other records to enable navigation
@@ -47,7 +47,7 @@ class MailPreviewRecordField extends ReferenceField {
             [this.props.name]: {
                 displayName: value.display_name,
                 resId: value.id,
-                resModel: this.props.record.data[this.props.name].resModel,
+                resModel: this.getRelation(),
             },
         });
     }
