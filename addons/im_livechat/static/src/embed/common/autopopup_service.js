@@ -35,7 +35,7 @@ export class AutopopupService {
                 !this.ui.isSmall &&
                 this.store.livechat_rule?.action === "auto_popup" &&
                 this.store.livechat_available &&
-                this.store.activeLivechats.length === 0
+                this.store.activeVisitorLivechats.length === 0
         );
     }
 }

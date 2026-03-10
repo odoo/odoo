@@ -1,12 +1,14 @@
 declare module "models" {
     export interface DiscussChannel {
         storeAsActiveLivechats: Store;
+        storeAsActiveVisitorLivechats: Store;
     }
     export interface Message {
         disableChatbotAnswers: boolean;
     }
     export interface Store {
         activeLivechats: DiscussChannel[];
+        activeVisitorLivechats: DiscussChannel[];
         guest_token: null;
         livechat_available: boolean;
         livechat_rule: LivechatChannelRule;
