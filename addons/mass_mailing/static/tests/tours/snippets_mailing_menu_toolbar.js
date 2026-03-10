@@ -37,18 +37,35 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
         trigger: ':iframe .o_mailing_template_preview_wrapper [data-name="default"]',
         run: "click",
     },
-    { // necessary to wait for the cursor to be placed in the first p
-      // and to avoid leaving the page before the selection is added
-        content: "Wait for template selection event to be over.",
-        trigger: ":iframe .odoo-editor-editable .o_savable",
-        run: "click",
-    },
     {
         content: "Make sure the snippets menu is not hidden",
         trigger: ".o-snippets-menu",
     },
     {
-        content: "Wait for .s_text_block to be populated",
+        content: "Click on the empty wrapper to open the block library",
+        trigger: ":iframe .o_mail_wrapper_td.oe_empty",
+        run: "click",
+    },
+    {
+        content: "Wait for the block library dialog to open",
+        trigger: ".modal-content.o_add_snippet_dialog",
+    },
+    {
+        content: "Select the Text tab in the block library",
+        trigger: ".o_dialog button#tab_text",
+        run: "click",
+    },
+    {
+        content: "Wait for the text blocks to load",
+        trigger: ".o_add_snippet_dialog :iframe .o_snippet_preview_wrap[data-snippet-id='s_text_block']",
+    },
+    {
+        content: "Select a text block from the dialog",
+        trigger: ".o_add_snippet_dialog :iframe .o_snippet_preview_wrap[data-snippet-id='s_text_block']",
+        run: "click",
+    },
+    {
+        content: "Wait for .s_text_block to be loaded",
         trigger: ':iframe .s_text_block p',
     },
     {
