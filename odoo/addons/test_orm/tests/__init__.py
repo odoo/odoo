@@ -26,4 +26,5 @@ from . import (
     test_modules_db,
     test_one2many,
     test_parent_store,
+    test_performance,
 )
