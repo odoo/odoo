@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="product_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.product.product.search</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_search_form_view" />
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field
+                    string="NCM"
+                    name="ncm_id"
+                    filter_domain="[('ncm_id', '=', raw_value)]"
+                />
+                <field
+                    string="NBS"
+                    name="nbs_id"
+                    filter_domain="[('nbs_id', '=', raw_value)]"
+                />
+                <field
+                    string="CEST"
+                    name="cest_id"
+                    filter_domain="[('cest_id', '=', raw_value)]"
+                />
+                <field
+                    string="Service Type LC 166"
+                    name="service_type_id"
+                    filter_domain="[('service_type_id', '=', raw_value)]"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="product_tree" model="ir.ui.view">
+        <field name="name">product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree>
+              <field name="default_code" />
+              <field name="name" />
+              <field name="ncm_id" />
+              <field name="standard_price" />
+              <field name="type" />
+              <field name="active" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page
+                    name="fiscal"
+                    string="Fiscal"
+                    groups="l10n_br_fiscal.group_manager"
+                >
+                    <group>
+                        <group>
+                            <field name="fiscal_type" required="1" />
+                            <field
+                                name="icms_origin"
+                                attrs="{'required': [('fiscal_type', '!=', '09')], 'invisible': [('fiscal_type', '=', '09')]}"
+                            />
+                            <field name="ncm_id" required="1" />
+                            <field name="tax_icms_or_issqn" required="1" />
+                            <field
+                                name="service_type_id"
+                                attrs="{'invisible': [('fiscal_type', '!=', '09')]}"
+                            />
+                            <field
+                                name="city_taxation_code_id"
+                                attrs="{'invisible': [('fiscal_type', '!=', '09')]}"
+                                context="{'default_service_type_id': service_type_id}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="code" />
+                                    <field name="name" />
+                                    <field name="service_type_id" />
+                                    <field name="state_id" />
+                                    <field name="city_id" />
+                                </tree>
+                            </field>
+                            <field
+                                name="national_taxation_code_id"
+                                attrs="{'invisible': [('fiscal_type', '!=', '09')]}"
+                                context="{'default_service_type_id': service_type_id}"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                            />
+                        </group>
+                        <group>
+                            <field name="fiscal_genre_id" required="1" />
+                            <field
+                                name="cest_id"
+                                attrs="{'invisible': [('fiscal_type', '=', '09')]}"
+                            />
+                            <field
+                                name="nbs_id"
+                                attrs="{'invisible': [('fiscal_type', '!=', '09')]}"
+                            />
+                            <field
+                                name="ipi_guideline_class_id"
+                                attrs="{'invisible': [('fiscal_type', '=', '09')]}"
+                            />
+                            <field
+                                name="ipi_control_seal_id"
+                                attrs="{'invisible': [('fiscal_type', '=', '09')]}"
+                            />
+                        </group>
+                        <group string="Tax UOM">
+                            <field name="uoe_id" />
+                            <field
+                                name="uoe_factor"
+                                attrs="{'invisible': [('fiscal_type', '=', False)], 'required': [('uot_id', '!=', False)]}"
+                            />
+                            <field name="uot_id" />
+                            <field
+                                name="uot_factor"
+                                attrs="{'invisible': [('uot_id', '=', False)], 'required': [('uot_id', '!=', False)]}"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,32 @@
+{
+  "name": "Owl devtools",
+  "version": "1.3.0",
+  "manifest_version": 3,
+  "description": "Chrome devtools extension for Odoo Owl framework",
+  "icons": {
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "128": "assets/icon_disabled128.png"
+    },
+    "default_title": "Owl devtools",
+    "default_popup": "popup_app/popup.html"
+  },
+  "permissions": ["scripting", "storage"],
+  "host_permissions": ["http://*/*", "https://*/*", "file://*"],
+  "content_security_policy": {
+    "script-src": "self",
+    "object-src": "self"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "devtools_page": "devtools_app/devtools.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

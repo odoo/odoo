@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+        UOM Alternative
+    -->
+
+    <record id="product_uom_unit_unid" model="uom.uom.alternative">
+        <field name="code">UNID</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+    </record>
+
+    <record id="product_uom_unit_und" model="uom.uom.alternative">
+        <field name="code">UND</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+    </record>
+
+    <record id="product_uom_unit_uni" model="uom.uom.alternative">
+        <field name="code">UNI</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+    </record>
+
+    <record id="UOM_CENTO_CT" model="uom.uom.alternative">
+        <field name="code">CT</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_CENTO" />
+    </record>
+
+    <record id="UOM_MILHEIRO_MIL" model="uom.uom.alternative">
+        <field name="code">MIL</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_MILHEIRO" />
+    </record>
+
+    <record id="UOM_MILHEIRO_MI" model="uom.uom.alternative">
+        <field name="code">MI</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_MILHEIRO" />
+    </record>
+
+    <record id="product_uom_meter_mt" model="uom.uom.alternative">
+        <field name="code">MT</field>
+        <field name="uom_id" ref="uom.product_uom_meter" />
+    </record>
+
+    <record id="UOM_ROLO_RL" model="uom.uom.alternative">
+        <field name="code">RL</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_ROLO" />
+    </record>
+
+    <record id="UOM_PC_PC" model="uom.uom.alternative">
+        <field name="code">PC</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_PC" />
+    </record>
+
+    <record id="UOM_PC_PECA" model="uom.uom.alternative">
+        <field name="code">PECA</field>
+        <field name="uom_id" ref="l10n_br_fiscal.UOM_PC" />
+    </record>
+
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="l10n_br_base_res_config_settings_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='multi_company']" position="after">
+                <div id="l10n_br_base_config">
+                    <field name="company_id" invisible="1" />
+                    <h2>Brazilian Localization</h2>
+                    <div class="row mt16 o_settings_container" name="l10n_br_base">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_cnpj_multi_ie" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    string="Multiple partners with the same CNPJ"
+                                    for="allow_cnpj_multi_ie"
+                                />
+                                <div class="text-muted">
+                                    Allows you to create more than one partner with the same CNPJ and different State Tax Number
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-12 col-lg-6 o_setting_box"
+                            name="l10n_br_zip_api"
+                        >
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_br_zip" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    string="Use Brazilian postal service API"
+                                    for="module_l10n_br_zip"
+                                />
+                                <div class="text-muted">
+                                    Use Brazilian postal service API to search partner address using postal zip code
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-12 col-lg-6 o_setting_box"
+                            name="disable_cpf_cnpj_validation"
+                        >
+                            <div class="o_setting_left_pane">
+                                <field name="disable_cpf_cnpj_validation" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    string="Disable CPF and CNPJ validation"
+                                    for="disable_cpf_cnpj_validation"
+                                />
+                                <div class="text-muted">
+                                   Select to disable CPF and CNPJ validation
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-12 col-lg-6 o_setting_box"
+                            name="disable_ie_validation"
+                        >
+                            <div class="o_setting_left_pane">
+                                <field name="disable_ie_validation" />
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label
+                                    string="Disable IE validation"
+                                    for="disable_ie_validation"
+                                />
+                                <div class="text-muted">
+                                   Select to disable IE validation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

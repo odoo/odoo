@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <function model="crm.lead" name="write">
+        <value model="crm.lead" eval="[ref('crm_lead_49'), ref('crm_lead_50')]"/>
+        <value eval="{'stage_id': ref('crm.stage_lead2')}"/>
+    </function>
+    <function model="crm.lead" name="write">
+        <value model="crm.lead" eval="[ref('crm_lead_53')]"/>
+        <value eval="{'stage_id': ref('crm.stage_lead3')}"/>
+    </function>
+</odoo>

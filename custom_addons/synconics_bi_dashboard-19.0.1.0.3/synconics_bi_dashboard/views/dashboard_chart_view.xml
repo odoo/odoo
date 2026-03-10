@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dashboard_chart_tree_view" model="ir.ui.view">
+        <field name="name">dashboard.chart.tree.view</field>
+        <field name="model">dashboard.chart</field>
+        <field name="arch" type="xml">
+            <list duplicate="0">
+                <field name="name" />
+                <field name="dashboard_id" />
+                <field name="chart_type" />
+                <field name="company_id" />
+            </list>
+        </field>
+    </record>
+
+    <record id="dashboard_chart_form_view" model="ir.ui.view">
+        <field name="name">dashboard.chart.form.view</field>
+        <field name="model">dashboard.chart</field>
+        <field name="arch" type="xml">
+            <form duplicate="0" js_class="synconics_bi_dashboard_form_view">
+                <sheet>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="">
+                                <field name="chart_type" widget="dashboard_selection" />
+                            </div>
+                            <div>
+                                <h2>Dashboard Preview</h2>
+                                <widget name="form_dashboard_preview" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="oe_title">
+                                <h2>
+                                    <field name="name" placeholder="Name ..."/>
+                                </h2>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="dashboard_id" options="{'no_create': 1}" domain="[('created_menu_id', '!=', False)]"/>
+                                    <field name="model_id" domain="[('access_ids', '!=', False), ('transient', '=', False), ('model', 'not ilike', 'base_import%'), '|', ('model', 'not ilike', 'ir.%'), ('model', '=ilike', '_%ir.%'), ('model', 'not ilike', 'web_editor.%'), ('model', 'not ilike', 'web_tour.%'), ('model', '!=', 'mail.thread')]" options="{'no_create': 1}" required="chart_type in ['to_do'] and todo_layout == 'activity'" context="{'dashboard_model': True}" invisible="chart_type in ['to_do'] and todo_layout != 'activity'"/>
+                                    <field name="active" widget="boolean_toggle" />
+                                </group>
+                                <group>
+                                    <!-- <field name="chart_type" /> -->
+                                    <field name="company_id" options="{'no_create': 1}"/>
+                                    <field name="group_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page string="Data" name="data">
+                                    <group invisible="not model_id">
+                                        <group>
+                                            <field name="image" widget="image" force_save="1" invisible="1"/>
+                                            <!-- List Chart Fields -->
+                                            <field name="list_type" widget="radio" options="{'horizontal': True}" invisible="not model_id or chart_type != 'list'" required="chart_type == 'list'" />
+
+                                            <field name="used_list_field_ids" invisible="1"/>
+                                            <separator string="List Standard Fields" invisible="not model_id or chart_type != 'list' or list_type == 'grouped'" />
+                                            <field name="list_field_ids" colspan="2" nolabel="1" context="{'default_model_id': model_id, 'list_field_ids': list_field_ids}" invisible="not model_id or chart_type != 'list' or list_type == 'grouped'" required="chart_type == 'list' and list_type == 'standard'" >
+                                                <list editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="list_field_id" context="{'list_field_ids': parent.list_field_ids}" required="1" domain="[('model_id', '=', context.get('default_model_id')), ('store', '=', True), ('name', 'not in', ['id', 'sequence']), ('ttype', 'not in', ['one2many', 'many2many', 'binary', 'html']), ('id', 'not in', parent.used_list_field_ids)]" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                                                    <field name="value_type" column_invisible="1"/>
+                                                    <field name="model_id" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" column_invisible="1" />
+                                                    <field name="field_id" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" column_invisible="1" />
+                                                </list>
+                                            </field>
+                                            <separator string="List Measure Fields" invisible="chart_type != 'list' or list_type == 'standard'" />
+                                            <field name="list_measure_ids" colspan="2" nolabel="1" context="{'default_model_id': model_id}" invisible="chart_type != 'list' or list_type == 'standard'" required="chart_type == 'list' and list_type == 'grouped'" >
+                                                <list editable="bottom">
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="list_measure_id" context="{'list_measure_ids': parent.list_measure_ids}" required="1" domain="[('model_id', '=', context.get('default_model_id')), ('store', '=', True), ('name', 'not in', ['id', 'sequence']), ('ttype', 'in', ['integer', 'float', 'monetary'])]" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                                                    <field name="value_type" default="sum" required="1"/>
+                                                    <field name="model_id" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" column_invisible="1"/>
+                                                    <field name="measure_id" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" column_invisible="1"/>
+                                                </list>
+                                            </field>
+
+                                            <field name="data_type" widget="radio" options="{'horizontal': True}" invisible="chart_type in ['list', 'to_do'] or not model_id" required="chart_type in ['list', 'to_do']"/>
+                                            <field name="measurement_field_ids" widget="many2many_tags" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), '|', '|', ('ttype', '=', 'integer'), ('ttype', '=', 'float'), ('ttype', '=', 'monetary')]" invisible="chart_type not in ['area_chart', 'bar_chart', 'column_chart', 'doughnut_chart', 'line_chart', 'stackedcolumn_chart', 'radial_chart', 'scatter_chart'] or data_type == 'count'" options="{'no_create': 1}"/>
+                                            <field name="measurement_field_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('store', '=', True), '|', '|', ('ttype', '=', 'integer'), ('ttype', '=', 'float'), ('ttype', '=', 'monetary')]" invisible="chart_type not in ['funnel_chart', 'pyramid_chart', 'pie_chart', 'radar_chart', 'meter_chart', 'map_chart', 'kpi', 'tile'] or data_type == 'count'" required="chart_type in ['funnel_chart', 'pyramid_chart', 'pie_chart', 'meter_chart', 'radar_chart', 'map_chart', 'kpi', 'tile'] and data_type != 'count'" options="{'no_create': 1}"/>
+                                        </group>
+                                        <group>
+                                            <field name="meter_target" invisible="chart_type != 'meter_chart'" />
+                                            <field name="group_by_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), ('ttype', '!=', 'binary'), ('ttype', '!=', 'many2many'), ('ttype', '!=', 'one2many')]" invisible="chart_type in ['kpi','tile', 'meter_chart', 'map_chart', 'to_do'] or (chart_type == 'list' and list_type != 'grouped')" options="{'no_create': 1}" required="list_type == 'grouped'"/>
+                                            <field name="group_by_type" invisible="1"/>
+                                            <field name="time_range" widget="selection_badge" invisible="group_by_type not in ['date', 'datetime']" required="group_by_type in ['date', 'datetime']"/>
+
+                                            <field name="map_group_by_id" domain="[('model_id', '=', model_id), ('relation', '=', 'res.partner')]" invisible="chart_type != 'map_chart'" options="{'no_create': 1}"/>
+                                            <field name="sub_group_by_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), ('ttype', '!=', 'binary'), ('ttype', '!=', 'many2many'), ('ttype', '!=', 'one2many')]" invisible="chart_type not in ['area_chart', 'bar_chart', 'column_chart', 'doughnut_chart', 'line_chart', 'stackedcolumn_chart', 'radial_chart', 'scatter_chart']" options="{'no_create': 1}"/>
+                                            <field name="sub_group_by_type" invisible="1"/>
+                                            <field name="sub_time_range" widget="selection_badge" invisible="sub_group_by_type not in ['date', 'datetime']" required="sub_group_by_type in ['date', 'datetime']"/>
+                                        </group>
+                                    </group>
+                                    <group invisible="chart_type != 'to_do'">
+                                        <group>
+                                        <!-- TODO Layout -->
+                                            <field name="todo_layout" widget="radio" options="{'horizontal': True}" invisible="chart_type != 'to_do'" required="chart_type == 'to_do'" />
+                                            <field name="todo_action_ids" invisible="chart_type != 'to_do' or todo_layout == 'activity'">
+                                                <list>
+                                                    <field name="sequence" widget="handle"/>
+                                                    <field name="name" required="1"/>
+                                                </list>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="name" required="1"/>
+                                                        </group>
+                                                    </group>
+                                                    <group>
+                                                        <field name="action_line_ids">
+                                                            <list editable="bottom">
+                                                                <field name="sequence" widget="handle"/>
+                                                                <field name="name" required="1"/>
+                                                                <field name="active_record"/>
+                                                            </list>
+                                                        </field>
+                                                    </group>
+                                                </form>
+                                            </field>
+                                        </group>
+                                    </group>
+                                    <group invisible="not model_id">
+                                        <group>
+                                            <field name="sort_field_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), ('ttype', 'not in', ['one2many', 'many2many', 'binary', 'char', 'text', 'boolean', 'html'])]" invisible="not model_id or chart_type in ['kpi', 'tile', 'to_do']" options="{'no_create': 1}"/>
+                                            <field name="sort_order" invisible="not model_id or chart_type in ['kpi', 'tile'] or (not sort_field_id and chart_type not in ['kpi', 'tile', 'to_do'])" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="limit_record" invisible="not model_id" />
+                                            <label for="previous_period_comparision" invisible="chart_type not in ['kpi', 'meter_chart'] or date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_now', 'future_starting_tomorrow']"/>
+                                            <div invisible="chart_type not in ['kpi', 'meter_chart'] or date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_now', 'future_starting_tomorrow']">
+                                                <field name="previous_period_comparision" widget="boolean_toggle" class="oe_inline"/>
+                                                <field name="previous_period_duration" invisible="not previous_period_comparision" required="previous_period_comparision" class="oe_inline"/>
+                                            </div>
+                                            <field name="previous_period_type" widget="radio" invisible="chart_type not in ['kpi'] or not previous_period_comparision" required="previous_period_comparision" options="{'horizontal': 1}" />
+                                        </group>
+                                        <group>
+                                            <field name="model" invisible="1" />
+                                            <field name="hide_false_value" widget="boolean_toggle" invisible="not model_id or (chart_type in ['kpi', 'tile', 'to_do', 'list'])" />
+                                            <field name="domain" widget="domain" options="{'model': 'model', 'in_dialog': True, 'allow_expressions': True}" invisible="not model_id or (chart_type in ['to_do'] and todo_layout != 'activity')"/>
+                                        </group>
+                                    </group>
+                                    <group string="Date Default Filter" invisible="not model_id or (chart_type in ['to_do'] and todo_layout != 'activity')">
+                                        <group>
+                                            <field name="date_filter_field_id" domain="[('model_id', '=', model_id), ('ttype', 'in', ['date', 'datetime'])]" options="{'no_create': 1}" invisible="chart_type in ['to_do']" />
+                                            <field name="date_filter_field_id" domain="[('model', '=', 'mail.activity'), ('ttype', 'in', ['date', 'datetime'])]" options="{'no_create': 1}" invisible="chart_type not in ['to_do']"/>
+                                            <field name="include_periods" invisible="chart_type in ['to_do'] or date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_today', 'future_starting_now', 'future_starting_tomorrow']" />
+                                        </group>
+                                        <group>
+                                            <field name="date_filter_option" required="1" />
+                                            <field name="same_period_previous_years" invisible="chart_type in ['to_do'] or date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_today', 'future_starting_now', 'future_starting_tomorrow']" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Data2" name="data2" invisible="not model_id or chart_type not in ['kpi']">
+                                    <group>
+                                        <group>
+                                            <field name="kpi_model_id" domain="[('access_ids', '!=', False), ('transient', '=', False), ('model', 'not ilike', 'base_import%'), '|', ('model', 'not ilike', 'ir.%'), ('model', '=ilike', '_%ir.%'), ('model', 'not ilike', 'web_editor.%'), ('model', 'not ilike', 'web_tour.%'), ('model', '!=', 'mail.thread')]" options="{'no_create': 1}"/>
+                                            <field name="kpi_data_type" widget="radio" options="{'horizontal': True}" invisible="chart_type in ['list', 'to_do'] or not kpi_model_id" required="chart_type in ['list', 'to_do']"/>
+                                            <field name="kpi_measurement_field_id" domain="[('model_id', '=', kpi_model_id), ('name', '!=', 'id'), ('store', '=', True), '|', '|', ('ttype', '=', 'integer'), ('ttype', '=', 'float'), ('ttype', '=', 'monetary')]" invisible="chart_type not in ['funnel_chart', 'pyramid_chart', 'pie_chart', 'radar_chart', 'map_chart', 'kpi', 'tile'] or kpi_data_type == 'count' or not kpi_model_id" required="chart_type in ['funnel_chart', 'pyramid_chart', 'pie_chart', 'radar_chart', 'map_chart', 'kpi', 'tile'] and kpi_data_type != 'count'" options="{'no_create': 1}"/>
+                                            <field name="kpi_limit_record" />
+                                        </group>
+                                        <group>
+                                            <field name="kpi_model" invisible="1" />
+                                            <field name="kpi_domain" widget="domain" options="{'model': 'kpi_model', 'in_dialog': True, 'allow_expressions': True}" invisible="not kpi_model_id"/>
+                                            <field name="kpi_comparison_type" widget="radio" invisible="not kpi_model_id" options="{'horizontal': True}"/>
+                                        </group>
+                                    </group>
+                                    <group string="Date Default Filter" invisible="not kpi_model_id">
+                                        <group>
+                                            <field name="kpi_date_filter_field_id" domain="[('model_id', '=', kpi_model_id), ('ttype', 'in', ['date', 'datetime'])]" options="{'no_create': 1}"/>
+                                            <field name="kpi_include_periods" invisible="kpi_date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_today', 'future_starting_now', 'future_starting_tomorrow']" />
+                                        </group>
+                                        <group>
+                                            <field name="kpi_date_filter_option" required="1" />
+                                            <field name="kpi_same_period_previous_years" invisible="kpi_date_filter_option in ['none', 'past_till_now', 'past_excluding_today', 'future_starting_today', 'future_starting_now', 'future_starting_tomorrow']" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Target" invisible="not model_id or chart_type not in ['kpi'] or ((chart_type in ['kpi'] and kpi_comparison_type in ['none', 'ratio'] and kpi_model_id) or (chart_type in ['kpi'] and kpi_comparison_type in ['none', 'ratio'] and not kpi_model_id and not model_id))">
+                                    <group>
+                                        <group>
+                                            <field name="kpi_enable_target" widget="boolean_toggle" />
+                                            <field name="kpi_target_value" invisible="not kpi_enable_target" />
+                                            <field name="kpi_view_type" widget="radio" invisible="not kpi_enable_target" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Layout" name="layout" invisible="not model_id or chart_type in ['list', 'map_chart', 'to_do', 'meter_chart']">
+                                    <group  invisible="chart_type in ['tile', 'kpi']">
+                                        <group>
+                                            <field name="theme" required="1" widget="selection_badge"/>
+                                        </group>
+                                    </group>
+                                    <group invisible="chart_type not in ['tile', 'kpi', 'to_do']">
+                                        <group>
+                                            <field name="layout_type" required="1" widget="selection_badge" invisible="chart_type != 'kpi'" />
+                                            <field name="tile_layout_type" required="1" widget="selection_badge" invisible="chart_type != 'tile'" />
+                                            <field name="text_align" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="font_size"  />
+                                            <field name="font_weight" />
+                                            <field name="icon_option" widget="radio" options="{'horizontal': True}"/>
+                                            <field name="show_unit" widget="boolean_toggle" invisible="chart_type in ['list', 'to_do', 'funnel_chart', 'pyramid_chart']" />
+                                            <field name="unit_type" widget="radio" options="{'horizontal': True}" invisible="not show_unit" required="show_unit" />
+                                            <field name="custom_unit" invisible="not show_unit or unit_type == 'monetary'" />
+                                        </group>
+                                        <group>
+                                            <field name="background_color" widget="color" />
+                                            <field name="is_kpi_border" />
+                                            <field name="kpi_border_type" invisible="not is_kpi_border" />
+                                            <field name="kpi_border_color" widget="color" invisible="not is_kpi_border" />
+                                            <field name="kpi_border_width" invisible="not is_kpi_border" />
+                                            <field name="font_color" widget="color" />
+                                            <field name="button_color" widget="color" invisible="chart_type in ['kpi', 'tile', 'to_do']" />
+                                            <field name="default_icon" widget="fa_icon_widget" invisible="icon_option != 'default'" />
+                                            <field name="icon" widget="image" invisible="icon_option != 'custom'" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Item Actions" name="item_action" invisible="not model_id or chart_type in ['to_do', 'tile', 'kpi', 'list', 'map_chart', 'meter_chart']">
+                                    <field name="item_view_action_ids">
+                                        <list editable="bottom">
+                                            <field name="model_id" column_invisible="1" />
+                                            <field name="group_by_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), ('ttype', '!=', 'binary'), ('ttype', '!=', 'many2many'), ('ttype', '!=', 'one2many')]" options="{'no_create': 1, 'no_open': 1}" />
+                                            <field name="chart_type" />
+                                            <field name="sort_field_id" domain="[('model_id', '=', model_id), ('name', '!=', 'id'), ('name', '!=', 'sequence'), ('store', '=', True), ('ttype', '!=', 'binary'), ('ttype', '!=', 'many2many'), ('ttype', '!=', 'one2many')]" options="{'no_create': 1, 'no_open': 1}" />
+                                            <field name="sort_order" invisible="not sort_field_id" />
+                                            <field name="limit_record" />
+                                        </list>
+                                    </field>
+                                    <group>
+                                        <group>
+                                            <field name="item_action_id" domain="[('res_model', '=', model)]" />
+                                        </group>
+                                    </group>
+                                </page>
+                                <page string="Advanced Configuration" name="advanced_conf" invisible="not model_id or chart_type in ['to_do', 'funnel_chart', 'pyramid_chart', 'scatter_chart', 'list'] or data_type == 'count'">
+                                    <group>
+                                        <group>
+                                            <field name="is_apply_multiplier" />
+                                        </group>
+                                    </group>
+                                    <group invisible="not is_apply_multiplier or data_type == 'count'">
+                                        <field name="chart_multiplier_ids">
+                                            <list editable="bottom" create="0" delete="0">
+                                                <field name="field_id" readonly="1" force_save="1" />
+                                                <field name="multiplier" />
+                                            </list>
+                                        </field>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </div>
+
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dashboard_chart_filter" model="ir.ui.view">
+        <field name="name">dashboard.chart</field>
+        <field name="model">dashboard.chart</field>
+        <field name="arch" type="xml">
+            <search string="Chart">
+                <field name="name" />
+                <field name="dashboard_id"/>
+                <field name="chart_type"/>
+                <filter string="KPI" domain="[('chart_type', '=', 'kpi')]" name="kpi"/>
+                <filter string="Tile View" domain="[('chart_type', '=', 'tile')]" name="tile"/>
+                <filter string="Bar Chart" domain="[('chart_type', '=', 'bar_chart')]" name="bar_chart"/>
+                <filter string="Column Chart" domain="[('chart_type', '=', 'column_chart')]" name="column_chart"/>
+                <filter string="Doughnut Chart" domain="[('chart_type', '=', 'doughnut_chart')]" name="doughnut_chart"/>
+                <filter string="Area Chart" domain="[('chart_type', '=', 'area_chart')]" name="area_chart"/>
+                <filter string="Funnel Chart" domain="[('chart_type', '=', 'funnel_chart')]" name="funnel_chart"/>
+                <filter string="Pyramid Chart" domain="[('chart_type', '=', 'pyramid_chart')]" name="pyramid_chart"/>
+                <filter string="Line Chart" domain="[('chart_type', '=', 'line_chart')]" name="line_chart"/>
+                <filter string="Pie Chart" domain="[('chart_type', '=', 'pie_chart')]" name="pie_chart"/>
+                <filter string="Radial Chart" domain="[('chart_type', '=', 'radar_chart')]" name="radar_chart"/>
+                <filter string="Scatter Chart" domain="[('chart_type', '=', 'scatter_chart')]" name="scatter_chart"/>
+                <filter string="StackedColumn Chart" domain="[('chart_type', '=', 'stackedcolumn_chart')]" name="stackedcolumn_chart"/>
+                <filter string="Meter Chart" domain="[('chart_type', '=', 'meter_chart')]" name="meter_chart"/>
+                <filter string="Map Chart" domain="[('chart_type', '=', 'map_chart')]" name="map_chart"/>
+                <filter string="To Do" domain="[('chart_type', '=', 'to_do')]" name="to_do"/>
+                <filter string="List View" domain="[('chart_type', '=', 'list')]" name="list"/>
+                <separator/>
+                <filter string="Apply Multiplier" domain="[('is_apply_multiplier', '=', True)]" name="is_apply_multiplier"/>
+                <separator/>
+                <filter string="Active" domain="[('active', '=', True)]" name="active"/>
+                <filter string="Archive" domain="[('active', '=', False)]" name="archive"/>
+                <group>
+                    <filter string="Dashboard" name="dashboard_group_id" domain="[]" context="{'group_by': 'dashboard_id'}"/>
+                    <filter name="chart_type" string="Type" domain="[]" context="{'group_by': 'chart_type'}"/>
+                    <filter string="Model" name="model_id" domain="[]" context="{'group_by': 'model_id'}"/>
+                    <filter string="List Type" name="list_type" domain="[]" context="{'group_by': 'list_type'}"/>
+                    <filter string="To Do Layout" name="todo_layout" domain="[]" context="{'group_by': 'todo_layout'}"/>
+                    <filter string="Group By" name="group_by_id" domain="[]" context="{'group_by': 'group_by_id'}"/>
+                    <filter string="Measure Field" name="measurement_field_id" domain="[]" context="{'group_by': 'measurement_field_id'}"/>
+                    <filter string="Sort Order" name="sort_order" domain="[]" context="{'group_by': 'sort_order'}"/>
+                    <filter string="Data Type" name="data_type" domain="[]" context="{'group_by': 'data_type'}"/>
+                    <filter string="Date Filter Options" name="date_filter_option" domain="[]" context="{'group_by': 'date_filter_option'}"/>
+                    <filter string="Company" name="company_id" domain="[]" context="{'group_by': 'company_id'}" groups="!base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="dashboard_chart_action" model="ir.actions.act_window">
+        <field name="name">Charts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dashboard.chart</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_dashboard_group_id': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Charts were found.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="dashboard_chart_menu" parent="dashboard_configuration_menu" name="Charts" action="dashboard_chart_action" />
+
+</odoo>

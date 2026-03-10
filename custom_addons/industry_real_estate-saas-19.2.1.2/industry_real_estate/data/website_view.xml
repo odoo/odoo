@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="contactus" model="ir.ui.view">
+        <field name="name">Contact Us</field>
+        <field name="key">industry_real_estate.contactus</field>
+        <field name="website_id" ref="website.default_website" />
+        <field name="type">qweb</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <t name="Contact Us" t-name="website.contactus">
+                <t t-call="website.layout">
+                    <t t-set="logged_partner" t-value="request.env['website.visitor']._get_visitor_from_request().partner_id" />
+                    <t t-set="contactus_form_values" t-value="{
+                            'email_to': res_company.email,
+                            'name': request.params.get('name', ''),
+                            'phone': request.params.get('phone', ''),
+                            'email_from': request.params.get('email_from', ''),
+                            'company': request.params.get('company', ''),
+                            'subject': request.params.get('subject', ''),
+                        }" />
+                    <span class="hidden" data-for="contactus_form" t-att-data-values="contactus_form_values" />
+                    <div id="wrap" class="oe_structure oe_empty">
+                        <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1" data-name="Title">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/industry_real_estate.s_banner_default_image'); background-position: 50% 0;" />
+                            <div class="o_we_bg_filter bg-black-50" />
+                            <div class="container">
+                                <h1>Contact us</h1>
+                            </div>
+                        </section>
+                        <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
+                            <div class="s_allow_columns container">
+                                <div class="row">
+                                    <div class="col-lg-8 mt-4 mt-lg-0 o_colored_level" style="">
+                                        <p>
+                                                                        Contact us about anything related to our company or services.<br />
+                                                                        We'll do our best to get back to you as soon as possible.
+                                                                </p>
+                                        <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form" style="">
+                                            <div class="container">
+                                                <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="crm.lead" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                                                        <div class="s_website_form_field mb-3 col-12 s_website_form_required" data-type="char" data-name="Field" style="" data-visibility-condition="" data-visibility-between="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="odj8phaevstd">
+                                                                    <span class="s_website_form_label_content">Your Name</span>
+                                                                    <span class="s_website_form_mark"> *</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="text" class="form-control s_website_form_input" name="contact_name" required="1" data-fill-with="name" id="odj8phaevstd" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="s_website_form_field mb-3 col-12" data-type="tel" data-name="Field" style="" data-visibility-condition="" data-visibility-between="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="ojbpfje0gndf">
+                                                                    <span class="s_website_form_label_content">Phone Number</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone" id="ojbpfje0gndf" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="s_website_form_field mb-3 col-12 s_website_form_required" data-type="email" data-name="Field" style="" data-visibility-condition="" data-visibility-between="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="o2vvvnfda254">
+                                                                    <span class="s_website_form_label_content">Your Email</span>
+                                                                    <span class="s_website_form_mark"> *</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="email" class="form-control s_website_form_input" name="email_from" required="1" data-fill-with="email" id="o2vvvnfda254" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="s_website_form_field mb-3 col-12    s_website_form_required    " data-type="char" data-name="Field" style="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="oh4jmssxcnyj">
+                                                                    <span class="s_website_form_label_content">Your Company</span>
+                                                                    <span class="s_website_form_mark"> *</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="text" class="form-control s_website_form_input" name="partner_name" required="1" data-fill-with="commercial_company_name" id="oh4jmssxcnyj" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div style="" data-visibility-condition="" data-visibility-between="" class="s_website_form_field mb-3 col-12" data-type="many2one" data-name="Field">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="oq00ja637m1">
+                                                                    <span class="s_website_form_label_content">Property</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="text" class="form-control s_website_form_input" name="Property" id="property_text" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="s_website_form_field mb-3 col-12    s_website_form_model_required    " data-type="char" data-name="Field" style="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="ooaagq6al9uo">
+                                                                    <span class="s_website_form_label_content">Subject</span>
+                                                                    <span class="s_website_form_mark"> *</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <input type="text" class="form-control s_website_form_input" name="name" required="true" id="ooaagq6al9uo" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="s_website_form_field mb-3 col-12    s_website_form_required    " data-type="text" data-name="Field" style="">
+                                                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                                <label class="col-form-label col-sm-auto s_website_form_label " style="width: 200px" for="obmdggdpi45">
+                                                                    <span class="s_website_form_label_content">Your Question</span>
+                                                                    <span class="s_website_form_mark"> *</span>
+                                                                </label>
+                                                                <div class="col-sm">
+                                                                    <textarea class="form-control s_website_form_input" name="description" required="1" id="obmdggdpi45" rows="3" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-0 py-2 col-12 s_website_form_submit" data-name="Submit Button" style="">
+                                                            <div style="width: 200px;" class="s_website_form_label" />
+                                                            <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send" data-bs-original-title="" title="">Submit</a>
+                                                            <span id="s_website_form_result" class="text-danger ml8" />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <div class="col-lg-4 mt-4 mt-lg-0 o_colored_level" style="">
+                                        <ul class="list-unstyled mb-0 ps-2">
+                                            <li>My Company</li>
+                                            <li>
+                                                <i class="fa fa-map-marker fa-fw me-2" />
+                                                <span class="o_force_ltr">3575 Fake Buena Vista Avenue</span>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-phone fa-fw me-2" />
+                                                <span class="o_force_ltr">+1 (650) 555-0111</span>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-1x fa-fw fa-envelope me-2" />
+                                                <span>info@yourcompany.example.com</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </t>
+            </t>
+        </field>
+    </record>
+</odoo>

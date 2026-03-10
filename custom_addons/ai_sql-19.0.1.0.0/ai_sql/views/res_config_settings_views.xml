@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ai_sql" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ai.sql</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+            <app data-string="Niyu AI Analyst" string="Niyu AI SQL Generator" name="ai_sql_generator" logo="/ai_sql/static/description/icon.png">
+            <!-- Card with custom blue accent -->
+            <div class="card o_panel mb-4 shadow-sm" style="border-left:4px solid #007bff;">
+                <!-- Header with inline blue background -->
+                <div class="card-header d-flex align-items-center" style="background: linear-gradient(135deg, #e3f2fd, #ffffff);">
+                <img src="/ai_sql/static/description/icon.png" alt="Logo" style="height:40px; width:40px; margin-right:12px;"/>
+                <h4 class="mb-0" style="font-size:22px; margin: 0;">AI SQL Generator Configuration</h4>
+                </div>
+                <!-- Body -->
+                <div class="card-body p-4">
+                <group>
+                    <div class="form-group row mb-0">
+                    <label for="user_openai_api_key" class="col-sm-3 col-form-label font-weight-bold h5 text-primary" style="font-size:18px;">OpenAI API Key</label>
+                    <div class="col-sm-9">
+                        <field name="user_openai_api_key" password="True" class="o_field_char form-control"/>
+                    </div>
+                    </div>
+                </group>
+                </div>
+                <!-- Footer with light background -->
+                <div class="card-footer" style="background-color:#f8f9fa;">
+                <ul class="mb-0 pl-3">
+                    <li>Enter your <strong>OpenAI API Key</strong>.</li>
+                    <li>Ensure proper credits are available with the used API key. The solution might not work without credits.</li>
+                    <li>For customizations and feedback, reach us at <a href="mailto:info@niyulabs.com">info@niyulabs.com</a> or visit <a href="https://niyulabs.com" target="_blank">niyulabs.com</a>.</li>
+                    <li>Click <strong style="color:#007bff;">SAVE</strong> to apply the changes.</li>
+                </ul>
+                </div>
+            </div>
+            </app>
+        </xpath>
+    
+        </field>
+    </record>
+</odoo>
+
+        

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--Extends the 'hr.employee' form view to include the 'resign_date' field-->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.hr.resignation</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="joining_date" position="after">
+                <field name="resign_date" invisible="active != False"/>
+            </field>
+        </field>
+    </record>
+    <!-- Extends the 'hr.employee' search view to include filters for resigned and fired employees.-->
+    <record id="view_employee_filter" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit.hr.resignation</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <filter string="Resigned Employees" name="resigned"
+                        domain="['&amp;',('resigned', '=', True),('active', '=', False)]"/>
+                <filter string="Fired Employees" name="fired"
+                        domain="['&amp;',('fired', '=', True),('active', '=', False)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

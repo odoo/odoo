@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="l10n_br_base_res_partner_address" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.partner.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <div>
+                        <field name="street" class="oe_read_only" invisible="1" />
+                    </div>
+                    <field
+                        name="zip"
+                        placeholder="Zip code..."
+                        style="width: 70%"
+                        class="o_address_zip"
+                    />
+                    <field
+                        name="street_name"
+                        placeholder="Street..."
+                        class="o_address_street"
+                    />
+                    <field
+                        name="street_number"
+                        placeholder="Street number..."
+                        class="o_address_street"
+                    />
+                    <field
+                        name="street2"
+                        placeholder="Complement..."
+                        class="o_address_street"
+                    />
+                    <field
+                        name="district"
+                        placeholder="District..."
+                        class="o_address_street"
+                    />
+                    <field
+                        name="state_id"
+                        domain="[('country_id', '=', country_id)]"
+                        placeholder="State..."
+                        style="width: 45%"
+                        class="o_address_state"
+                        options='{"no_open": True, "no_create": True}'
+                    />
+                    <field
+                        name="city_id"
+                        placeholder="City..."
+                        style="width: 50%"
+                        class="o_address_city"
+                        options='{"no_open": True, "no_create": True}'
+                        attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                    />
+                    <field
+                        name="city"
+                        placeholder="City..."
+                        style="width: 50%"
+                        class="o_address_city"
+                        force_save="True"
+                        attrs="{'invisible': [('country_id', '=', %(base.br)d)]}"
+                    />
+                    <field
+                        name="country_id"
+                        placeholder="Country..."
+                        class="o_address_country"
+                        options='{"no_open": True, "no_create": True}'
+                    />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

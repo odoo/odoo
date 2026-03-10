@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dashboard_dashboard_tree_view" model="ir.ui.view">
+        <field name="name">dashboard.dashboard.tree.view</field>
+        <field name="model">dashboard.dashboard</field>
+        <field name="arch" type="xml">
+            <list duplicate="0">
+                <field name="menu_sequence" widget="handle"/>
+                <field name="name" />
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                <button name="action_view_charts" type="object" string="View Charts"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="dashboard_dashboard_form_view" model="ir.ui.view">
+        <field name="name">dashboard.dashboard.form.view</field>
+        <field name="model">dashboard.dashboard</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <header>
+                    <button name="create_update_menu" type="object" string='Create/Update Menu' invisible="created_menu_id" />
+                    <button name="action_delete_menu" type="object" string='Delete Menu' invisible="not created_menu_id"/>
+                    <button name="%(action_dashboard_access)d" type="action" string="Add/Update Users" groups="synconics_bi_dashboard.group_dashboard_manager"/>
+                    <button name="action_dashboard_send" invisible="1" id="send_by_email_dashboard" string="Send by Email" type="object" class="btn-primary" context="{'validate_analytic': True, 'check_document_layout': True}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_charts"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-th"
+                            invisible="chart_count == 0">
+                            <field name="chart_count" widget="statinfo" string="Charts"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="menu_sequence" invisible="1" />
+                            <field name="mail_cron_id" invisible="1"/>
+                            <field name="access_by" invisible="not access_by" readonly="1" />
+                            <field name="group_ids" readonly="1" widget="many2many_tags" invisible="access_by != 'access_group'" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                            <field name="user_ids" readonly="1" widget="many2many_tags" invisible="access_by != 'user'" domain="[('share', '=', False)]" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="parent_menu_id" context="{'ir.ui.menu.full_list': True}" />
+                            <field name="menu_active" widget="boolean_toggle" invisible="1" />
+                            <field name="created_menu_id" invisible="1" />
+                            <field name="created_action_id" invisible="1" />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Auto Update" name="auto_update">
+                            <group>
+                                <group>
+                                    <field name="auto_reload_duration" required="1" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string='Email'>
+                            <field name="dashboard_mail_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="dashboard_id" column_invisible="1" />
+                                    <field name="name" />
+                                    <field name="mail_template_id" required="1" />
+                                    <field name="is_automated" />
+                                    <field name="chart_ids" invisible="not mail_template_id" required="mail_template_id" domain="[('dashboard_id', '=', dashboard_id), '|', ('chart_type', '!=', 'to_do'), ('todo_layout', '!=', 'default')]" widget="many2many_tags" options="{'no_create': 1}" context="{'is_automated': is_automated}" />
+                                    <field name="recipient_ids" widget="many2many_tags" invisible="not mail_template_id" required="mail_template_id"  domain="[('type', '!=', 'private')]" options="{'no_create': 1}" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dashboard_filter" model="ir.ui.view">
+        <field name="name">dashboard.dashboard</field>
+        <field name="model">dashboard.dashboard</field>
+        <field name="arch" type="xml">
+            <search string="Dashboard">
+                <field name="name" />
+                <field name="access_by" />
+                <field name="user_ids"/>
+                <group>
+                    <filter string="Access By" name="access_by" domain="[]" context="{'group_by': 'access_by'}"/>
+                    <filter string="Company" name="company_id" domain="[]" context="{'group_by': 'company_id'}" groups="!base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="dashboard_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Dashboards</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dashboard.dashboard</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Dashboards or were found.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="parent_dashboard_menu" name="BI Dashboard" web_icon="synconics_bi_dashboard,static/description/icon.png" />
+    <menuitem id="dashboard_configuration_menu" parent="parent_dashboard_menu" name="Configuration" groups="synconics_bi_dashboard.group_dashboard_manager" />
+    <menuitem id="dashboard_dashboard_menu" name="Dashboards" parent="dashboard_configuration_menu" action="dashboard_dashboard_action" />
+
+</odoo>

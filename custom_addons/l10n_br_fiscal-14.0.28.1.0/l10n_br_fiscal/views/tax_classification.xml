@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Marcel Savegnago <https://escodoo.com.br>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="tax_classification_search" model="ir.ui.view">
+        <field name="model">l10n_br_fiscal.tax.classification</field>
+        <field name="arch" type="xml">
+            <search string="Tax Classification">
+                <field name="code" />
+                <field name="name" />
+                <group expand="0" string="Group By...">
+                    <filter
+                        string="Rate Type"
+                        name="rate_type"
+                        domain="[]"
+                        context="{'group_by': 'rate_type'}"
+                    />
+                    <filter
+                        string="Regular Taxation"
+                        name="regular_taxation"
+                        domain="[('regular_taxation', '=', True)]"
+                    />
+                    <filter
+                        string="Presumed Credit"
+                        name="presumed_credit"
+                        domain="[('presumed_credit', '=', True)]"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tax_classification_tree" model="ir.ui.view">
+        <field name="model">l10n_br_fiscal.tax.classification</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="cst_code_prefix_like" invisible="1" />
+                <field name="tax_ibs_id" />
+                <field name="tax_cbs_id" />
+                <field name="regular_taxation" string="Regular Taxation" />
+                <field name="presumed_credit" string="Presumed Credit" />
+                <field name="credit_reversal" string="Credit Reversal" />
+                <field name="rate_type" string="Rate Type" />
+                <field
+                    name="document_type_ids"
+                    widget="many2many_tags"
+                    string="Related DFes"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <record id="tax_classification_form" model="ir.ui.view">
+        <field name="model">l10n_br_fiscal.tax.classification</field>
+        <field name="arch" type="xml">
+            <form string="Tax Classification">
+                <field name="id" invisible="1" />
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="cst_code_prefix_like" invisible="1" />
+                            <field name="description" />
+                            <field name="rate_type" />
+                        </group>
+                    </group>
+                    <group string="Taxes">
+                        <group>
+                            <field name="tax_ibs_id" />
+                        </group>
+                        <group>
+                            <field name="tax_cbs_id" />
+                        </group>
+                    </group>
+                    <group string="Tax Indicators">
+                        <group>
+                            <field name="regular_taxation" />
+                        </group>
+                        <group>
+                            <field name="presumed_credit" />
+                        </group>
+                        <group>
+                            <field name="credit_reversal" />
+                        </group>
+                    </group>
+                    <group string="Related Digital Fiscal Documents">
+                        <field
+                            name="document_type_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tax_classification_act_window" model="ir.actions.act_window">
+        <field name="name">Tax Classification</field>
+        <field name="res_model">l10n_br_fiscal.tax.classification</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="cnae_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cnae.search</field>
+        <field name="model">l10n_br_fiscal.cnae</field>
+        <field name="arch" type="xml">
+            <search string="CNAE">
+                <field name="code" />
+                <field name="name" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Parent'
+                        name="parent_id"
+                        domain="[]"
+                        context="{'group_by' : 'parent_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cnae_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cnae.tree</field>
+        <field name="model">l10n_br_fiscal.cnae</field>
+        <field name="field_parent">children_ids</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="version" />
+                <field name="parent_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="cnae_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cnae.form</field>
+        <field name="model">l10n_br_fiscal.cnae</field>
+        <field name="arch" type="xml">
+            <form string="CNAE">
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="version" />
+                        <field name="internal_type" />
+                        <field name="parent_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

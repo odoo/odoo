@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="website_menu_properties" model="website.menu">
+        <field name="name">Properties</field>
+        <field name="url" model="website.controller.page"
+               eval="'/model/%s' % obj().env.ref('industry_real_estate.website_controller_page_1').name_slugified"/>
+        <field name="sequence">60</field>
+        <field name="controller_page_id" ref="website_controller_page_1"/>
+        <field name="parent_id" model="website.menu" eval="obj().search([
+                ('website_id', '=', ref('website.default_website')),
+                ('url', '=', '#'),
+        ], limit=1).id"/>
+        <field name="website_id" ref="website.default_website"/>
+    </record>
+</odoo>

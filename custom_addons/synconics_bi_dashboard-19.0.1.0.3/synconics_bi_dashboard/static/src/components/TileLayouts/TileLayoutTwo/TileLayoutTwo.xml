@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.TileLayoutTwo" owl="1">
+        <div t-att-title="state.data.tooltip_info" class="shadow card w-100 h-100 tile_layout_1" t-attf-style="background-color: #{state.data.background_color} !important; border-#{state.data.kpi_border_type}: #{state.data.is_kpi_border ? state.data.kpi_border_width : 0}px solid #{state.data.kpi_border_color}; overflow: hidden;">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + state.data.background_color+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + state.data.background_color+';cursor: pointer;'">
+                    <div class="row py-2 px-2 px-2 h-100 d-flex align-items-center" style="position: relative;--gutter-x: 0px;">
+                        <div t-if="state.data.icon or state.data.default_icon" class="p-0 pl-2 col-md-4 p-0 col-md-4 d-flex align-items-center justify-content-center" t-attf-style="font-size: 2vw;color: #{state.data.font_color}">
+                            <img  t-if="state.data.icon_option == 'custom' and state.data.icon" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{state.data.icon}"/>
+                            <t t-att-style="'color:' + state.data.font_color+';'" t-elif="state.data.icon_option == 'default' and state.data.default_icon" t-out="state.kpi_icon"/>
+                            <i t-else="" t-att-style="'color:' + state.data.font_color+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + state.data.text_align+';'">
+                                <span class="oe_name oe_tile oe_title text-wrap p-0" t-att-style="'font-size: 22px;'+'color:' + state.data.font_color+';'" t-esc="state.data.name"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + state.data.text_align+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:' + state.data.font_size+'px;'+'color:' + state.data.font_color+';'">
+                                        <t t-esc="state.data.count"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

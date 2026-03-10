@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © 2025 TugIT. All rights reserved. -->
+<odoo>
+    <template id="remove_powered_by_login" inherit_id="web.login_layout">
+        <xpath expr="//div[contains(@class, 'card-body')]//div[contains(@class, 'text-center') and contains(@class, 'small')]/a[contains(@href, 'odoo.com')]" position="replace"/>
+    </template>
+</odoo>

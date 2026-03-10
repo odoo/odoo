@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Operation Dashboard -->
+    <record id="operation_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Operation Dashboard</field>
+        <field name="res_model">l10n_br_fiscal.operation</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="operation_dashboard_kanban" />
+        <field name="usage">menu</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                This is the fiscal dashboard
+            </p>
+        </field>
+    </record>
+
+    <!-- Legal Nature -->
+    <record id="legal_nature_action" model="ir.actions.act_window">
+        <field name="name">Legal Nature</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.legal.nature</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="legal_nature_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Legal Nature
+            </p><p>
+              A Legal nature is necessary to determine the
+              fiscal definitions for your company.
+            </p>
+        </field>
+    </record>
+
+    <!-- CNAE -->
+    <record id="cnae_action" model="ir.actions.act_window">
+        <field name="name">CNAE</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.cnae</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cnae_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new CNAE
+            </p><p>
+              A CNAE is necessary to determine the
+              fiscal definitions for your company.
+            </p>
+        </field>
+    </record>
+
+    <!-- CFOP -->
+    <record id="cfop_action" model="ir.actions.act_window">
+        <field name="name">CFOP</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.cfop</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cfop_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new CFOP
+            </p><p>
+              A CFOP is necessary to determine the
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- CST -->
+    <record id="cst_action" model="ir.actions.act_window">
+        <field name="name">CST</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.cst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cst_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new CST
+            </p><p>
+              A CST is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax Group -->
+    <record id="tax_group_action" model="ir.actions.act_window">
+        <field name="name">Tax Group</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_group_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax Group
+            </p><p>
+              A Tax Group is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax -->
+    <record id="tax_action" model="ir.actions.act_window">
+        <field name="name">Tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax ICMS Regulation -->
+    <record id="tax_icms_regulation_action" model="ir.actions.act_window">
+        <field name="name">ICMS Regulation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.icms.regulation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_icms_regulation_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new ICMS Regulation
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax ICMS Relief -->
+    <record id="tax_icms_relief_action" model="ir.actions.act_window">
+        <field name="name">ICMS Relief</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.icms.relief</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_icms_relief_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new ICMS Relief
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax PIS/COFINS -->
+    <record id="tax_pis_cofins_action" model="ir.actions.act_window">
+        <field name="name">PIS/COFINS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.pis.cofins</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_pis_cofins_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax PIS/COFINS
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax PIS/COFINS Base -->
+    <record id="tax_pis_cofins_base_action" model="ir.actions.act_window">
+        <field name="name">PIS COFINS Base</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.pis.cofins.base</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_pis_cofins_base_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax PIS/COFINS Base
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax PIS/COFINS Credit -->
+    <record id="tax_pis_cofins_credit_action" model="ir.actions.act_window">
+        <field name="name">PIS COFINS Credit</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.pis.cofins.credit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_pis_cofins_credit_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax PIS/COFINS Credit
+            </p><p>
+              A Tax is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax IPI Control Seal -->
+    <record id="tax_ipi_control_seal_action" model="ir.actions.act_window">
+        <field name="name">IPI Control Seal</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.ipi.control.seal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_ipi_control_seal_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax IPI Control Seal
+            </p><p>
+              A Tax IPI control seal is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax IPI Guideline -->
+    <record id="tax_ipi_guideline_action" model="ir.actions.act_window">
+        <field name="name">IPI Guideline</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.ipi.guideline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_ipi_guideline_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax IPI Guideline
+            </p><p>
+              A Tax IPI guideline is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax IPI Guideline Class -->
+    <record id="tax_ipi_guideline_class_action" model="ir.actions.act_window">
+        <field name="name">Tax IPI Guideline Class</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.ipi.guideline.class</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_ipi_guideline_class_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Tax IPI Guideline Class
+            </p><p>
+              A Tax IPI guideline Class is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- NCM -->
+    <record id="ncm_action" model="ir.actions.act_window">
+        <field name="name">NCM</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.ncm</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="ncm_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new NCM
+            </p><p>
+              A NCM is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- NBM -->
+    <record id="nbm_action" model="ir.actions.act_window">
+        <field name="name">NBM</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.nbm</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="nbm_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new NBM
+            </p><p>
+              A NBM is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- NBS -->
+    <record id="nbs_action" model="ir.actions.act_window">
+        <field name="name">NBS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.nbs</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="nbs_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new NBS
+            </p><p>
+              A NBS is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Service Type -->
+    <record id="service_type_action" model="ir.actions.act_window">
+        <field name="name">Service Type LC 166</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.service.type</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="service_type_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Service Type
+            </p><p>
+              A Service Type is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- CEST -->
+    <record id="cest_action" model="ir.actions.act_window">
+        <field name="name">CEST</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.cest</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cest_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new CEST
+            </p><p>
+              A CEST is necessary to create
+              fiscal operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Product Genre -->
+    <record id="product_genre_action" model="ir.actions.act_window">
+        <field name="name">Fiscal Product Genre</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.product.genre</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="product_genre_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Fiscal Product Genre
+            </p><p>
+              An Fiscal Product Genre is necessary to create
+              EFD operations for your fiscal moves.
+            </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Document Type -->
+    <record id="document_type_action" model="ir.actions.act_window">
+        <field name="name">Fiscal Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="document_type_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Fiscal Document
+            </p><p>
+              All Documents supported by Brazilian
+              Fiscal modulo for Odoo.
+            </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Document Serie -->
+    <record id="document_serie_action" model="ir.actions.act_window">
+        <field name="name">Fiscal Document Serie</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document.serie</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="document_serie_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Fiscal Document Serie
+            </p><p>
+              All Serie for Documents supported by
+              Brazilian Fiscal modulo for Odoo.
+            </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Document Email -->
+    <record id="document_email_action" model="ir.actions.act_window">
+        <field name="name">Fiscal Document Email</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document.email</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="document_email_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Fiscal Document Email Definition
+            </p><p>
+              All Document Email Definitions supported by the Brazilian
+              Fiscal module for Odoo.
+            </p>
+        </field>
+    </record>
+
+    <!-- Tax Classification -->
+
+    <record id="tax_classification_action" model="ir.actions.act_window">
+        <field name="name">Tax Classification</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.tax.classification</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="tax_classification_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a new Tax Classification</p>
+            <p
+            >A Tax Classification is necessary to create fiscal operations for your fiscal moves.</p>
+        </field>
+    </record>
+
+    <!-- Simplefied Tax -->
+    <record id="simplified_tax_action" model="ir.actions.act_window">
+        <field name="name">Simplified Tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.simplified.tax</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="simplified_tax_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Simplified Tax
+            </p><p>
+              A Simplified Tax is necessary to determine the
+              fiscal definitions for your company.
+            </p>
+        </field>
+    </record>
+
+    <!-- Partner -->
+    <record id="partner_action" model="ir.actions.act_window">
+        <field name="name">Partner</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new partner in your address book
+          </p><p>
+            Odoo helps you easily track all activities related to a partner.
+          </p>
+        </field>
+    </record>
+
+    <!-- Partner Profile -->
+    <record id="partner_profile_action" model="ir.actions.act_window">
+        <field name="name">Partner Profile</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.partner.profile</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="partner_profile_search" />
+        <field name="view_id" ref="partner_profile_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Fiscal Partner Profile
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal operation.
+          </p>
+        </field>
+    </record>
+
+    <!-- Product -->
+    <record id="product_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="domain"
+        >['|', '|', ('fiscal_type', '!=', '09'), ('fiscal_type', '=', False), ('type', '!=', 'service')]</field>
+        <field name="view_id" ref="product_template_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Product
+            </p><p>
+              Create new products.
+            </p>
+        </field>
+    </record>
+
+    <!-- Service -->
+    <record id="service_action" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="domain"
+        >['|', '|', ('fiscal_type', '=', '09'), ('fiscal_type', '=', False), ('type', '=', 'service')]</field>
+        <field
+            name="context"
+        >{'default_fiscal_type': '09', 'default_type': 'service'}</field>
+        <field name="view_id" ref="product_template_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new Service
+            </p><p>
+              All Serie for Documents supported by
+              Brazilian Fiscal modulo for Odoo.
+            </p>
+        </field>
+    </record>
+
+    <!-- Operation -->
+    <record id="operation_action" model="ir.actions.act_window">
+        <field name="name">Operation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.operation</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="operation_search" />
+        <field name="view_id" ref="operation_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new fiscal operation
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal operation.
+          </p>
+        </field>
+    </record>
+
+    <!-- Subsequent Operation-->
+    <record id="subsequent_operation_action" model="ir.actions.act_window">
+        <field name="name">Subsequent Operation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.subsequent.operation</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="subsequent_operation_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Subsequent operation
+          </p><p>
+
+          </p>
+        </field>
+    </record>
+
+    <!-- Subsequent Document-->
+    <record id="subsequent_document_action" model="ir.actions.act_window">
+        <field name="name">Subsequent Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.subsequent.document</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="subsequent_document_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Subsequent Document
+          </p><p>
+
+          </p>
+        </field>
+    </record>
+
+    <!-- Comment -->
+    <record id="comment_action" model="ir.actions.act_window">
+        <field name="name">Comment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.comment</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="comment_search" />
+        <field name="view_id" ref="comment_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Comment
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal comment.
+          </p>
+        </field>
+    </record>
+
+    <!-- NF-e Document -->
+    <record id="nfe_document_action" model="ir.actions.act_window">
+        <field name="name">NF-e</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="domain"
+            eval="[('document_type_id', '=', ref('l10n_br_fiscal.document_55'))]"
+        />
+        <field name="view_id" ref="document_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new NFe
+            </p><p>
+              Here you can create NF-es
+            </p>
+        </field>
+    </record>
+
+    <!-- NFS-e Document -->
+    <record id="nfse_document_action" model="ir.actions.act_window">
+        <field name="name">NFS-e</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="domain"
+            eval="[('document_type_id', '=', ref('l10n_br_fiscal.document_SE'))]"
+        />
+        <field name="view_id" ref="document_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new NFSe
+            </p><p>
+              Here you can create NFS-es
+            </p>
+        </field>
+    </record>
+
+    <!-- CT-e Document -->
+    <record id="cte_document_action" model="ir.actions.act_window">
+        <field name="name">CT-e</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="domain"
+            eval="[('document_type_id', '=', ref('l10n_br_fiscal.document_57'))]"
+        />
+        <field name="view_id" ref="document_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Add a new CTe
+            </p><p>
+              Here you can create CT-es
+            </p>
+        </field>
+    </record>
+
+    <record id="document_all_action" model="ir.actions.act_window">
+        <field name="name">All Documents</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="document_search" />
+        <field name="view_id" ref="document_tree" />
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Document
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal operation.
+          </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Document In -->
+    <record id="document_in_action" model="ir.actions.act_window">
+        <field name="name">Incomming Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="document_search" />
+        <field name="view_id" ref="document_tree" />
+        <field name="domain">[('fiscal_operation_type', '=', 'in')]</field>
+        <field name="context">{'default_fiscal_operation_type': 'in'}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Document
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal operation.
+          </p>
+        </field>
+    </record>
+
+    <!-- Fiscal Document Out -->
+    <record id="document_out_action" model="ir.actions.act_window">
+        <field name="name">Outgoing Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_br_fiscal.document</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="document_search" />
+        <field name="view_id" ref="document_tree" />
+        <field name="domain">[('fiscal_operation_type', '=', 'out')]</field>
+        <field name="context">{'default_fiscal_operation_type': 'out'}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Document
+          </p><p>
+            Odoo helps you easily track all activities
+            related to a fiscal operation.
+          </p>
+        </field>
+    </record>
+
+    <!-- Config Settings -->
+    <record id="config_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'l10n_br_fiscal'}</field>
+    </record>
+
+    <!-- City Taxation Code -->
+    <record id="city_taxation_code_action" model="ir.actions.act_window">
+        <field name="name">City Taxation Code</field>
+        <field name="res_model">l10n_br_fiscal.city.taxation.code</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="national_taxation_code_action" model="ir.actions.act_window">
+        <field name="name">National Taxation Code</field>
+        <field name="res_model">l10n_br_fiscal.national.taxation.code</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Operation Indicator -->
+
+    <record id="operation_indicator_action" model="ir.actions.act_window">
+        <field name="name">Operation Indicator</field>
+        <field name="res_model">l10n_br_fiscal.operation.indicator</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Operation Indicator record
+            </p>
+            <p>
+                Operation Indicators are used to categorize consumption
+                operations.
+            </p>
+        </field>
+    </record>
+
+</odoo>

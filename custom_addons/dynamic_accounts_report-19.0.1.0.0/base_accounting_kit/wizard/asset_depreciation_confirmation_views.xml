@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--Asset Depreciation Confirmation Form View-->
+    <record id="asset_depreciation_confirmation_view_form" model="ir.ui.view">
+        <field name="name">asset.depreciation.confirmation.view.form</field>
+        <field name="model">asset.depreciation.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Compute Asset">
+                <div>
+                    <p>
+                        This wizard will post installment/depreciation lines for the selected month.<br/>
+                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well.
+                    </p>
+                </div>
+                <group>
+                    <field name="date"/>
+                </group>
+                <footer>
+                    <button string="Generate Entries" name="asset_compute" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+         </field>
+    </record>
+<!--Action Asset Depreciation Confirmation-->
+    <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">
+        <field name="name">Post Depreciation Lines</field>
+        <field name="res_model">asset.depreciation.confirmation</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="asset_depreciation_confirmation_view_form"/>
+        <field name="target">new</field>
+        <field name="context">{'asset_type': 'purchase'}</field>
+    </record>
+</odoo>

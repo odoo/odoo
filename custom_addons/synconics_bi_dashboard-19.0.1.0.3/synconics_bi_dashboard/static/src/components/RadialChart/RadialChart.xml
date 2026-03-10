@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.RadialChart">
+        <div t-att-id="`radial_chart__${this.props.chartId}`" t-attf-class="#{this.state.isError ? 'd-none' : ''}" style="height: 92%" />
+        <div t-if="this.state.isError" class="w-100 d-flex align-items-center justify-content-center" style="height: 90%;">
+            <h5 t-out="this.state.errorMessage"></h5>
+        </div>
+    </t>
+</templates>

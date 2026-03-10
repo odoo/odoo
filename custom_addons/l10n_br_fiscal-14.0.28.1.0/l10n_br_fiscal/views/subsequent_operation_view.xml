@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 KMEE INFORMATICA LTDA
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="subsequent_operation_tree">
+        <field name="name">l10n_br_fiscal.subsequent.operation.tree</field>
+        <field name="model">l10n_br_fiscal.subsequent.operation</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle" />
+                <field name="subsequent_operation_id" />
+                <field name="operation_document_type_id" />
+                <field name="partner_id" />
+                <field name="generation_situation" />
+                <field name="reference_document" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

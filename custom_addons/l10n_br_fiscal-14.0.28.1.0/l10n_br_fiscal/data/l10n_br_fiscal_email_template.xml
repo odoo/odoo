@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="fiscal_document_change_state_template" model="mail.template">
+      <field name="name">Fiscal Document Change State Notification Email</field>
+      <field name="model_id" ref="model_l10n_br_fiscal_document" />
+      <field name="email_from">${object.company_id.partner_id.email}</field>
+      <field
+            name="email_cc"
+        >${not object.partner_id and object.partner_email or ''|safe},</field>
+      <field
+            name="subject"
+        >${object.document_type_id.name}: ${object.document_number} Serie: ${object.document_serie} is: ${dict(object.fields_get('state').get('state').get('selection')).get(object.state, '')}</field>
+      <field name="partner_to">${object.partner_id.id}</field>
+      <field name="auto_delete" eval="False" />
+      <field name="lang">${object.partner_id.lang}</field>
+      <field
+            name="body_html"
+        ><![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;">
+                    <tbody>
+                      <!-- HEADER -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                            <tr>
+                              <td valign="middle" align="right">
+                                <img src="/logo.png?company=${object.company_id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}">
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- CONTENT -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
+                            <tbody>
+                              <tr>
+                                <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                                  <p>Hello ${object.partner_id.name},</p>
+                                  <p>The Fiscal Document ${object.document_number} has changed.</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Number: ${object.document_number}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Serie: ${object.document_serie}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Key: ${object.document_key}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Status: ${dict(object.fields_get('state').get('state').get('selection')).get(object.state, '')}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- FOOTER -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                            <tr>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.phone}
+                              </td>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.email}
+                              </td>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.website}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+                </body>
+                </html>
+            ]]></field>
+    </record>
+
+    <record id="fiscal_document_change_state_template_nfse" model="mail.template">
+      <field name="name">NFSe Fiscal Document Change State Notification Email</field>
+      <field name="model_id" ref="model_l10n_br_fiscal_document" />
+      <field name="email_from">${object.company_id.partner_id.email}</field>
+      <field
+            name="email_cc"
+        >${not object.partner_id and object.partner_email or ''|safe},</field>
+      <field
+            name="subject"
+        >${object.document_type_id.name}: ${object.document_number} Serie: ${object.document_serie} is: ${dict(object.fields_get('state').get('state').get('selection')).get(object.state, '')}</field>
+      <field name="partner_to">${object.partner_id.id}</field>
+      <field name="auto_delete" eval="False" />
+      <field name="lang">${object.partner_id.lang}</field>
+      <field
+            name="body_html"
+        ><![CDATA[<html>
+                <head></head>
+                <body style="margin: 0; padding: 0;">
+                <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;">
+                    <tbody>
+                      <!-- HEADER -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                            <tr>
+                              <td valign="middle" align="right">
+                                <img src="/logo.png?company=${object.company_id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}">
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- CONTENT -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
+                            <tbody>
+                              <tr>
+                                <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                                  <p>Hello ${object.partner_id.name},</p>
+                                  <p>The Fiscal Document ${object.document_number} has changed.</p>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Number: ${object.document_number}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Serie: ${object.document_serie}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Key: ${object.document_key}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;" valign="top">
+                                  Document Status: ${dict(object.fields_get('state').get('state').get('selection')).get(object.state, '')}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- FOOTER -->
+                      <tr>
+                        <td align="center" style="min-width: 590px;">
+                          <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                            <tr>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.phone}
+                              </td>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.email}
+                              </td>
+                              <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                ${object.company_id.website}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+                </body>
+                </html>
+            ]]></field>
+    </record>
+
+</odoo>

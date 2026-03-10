@@ -1,0 +1,337 @@
+@font-face {
+  font-family: 'Fira Mono';
+  src: url('../assets/FiraMono-Medium.ttf') format('truetype');
+}
+
+:root {
+  --border-color: lightgray;
+  --navbar-selected: #5f9cf0;
+  --component-hover: #d4e3f2;
+  --bs-font-monospace: "Fira Mono";
+  --text-color: #494949;
+  --object-color: rgb(119, 34, 255);
+  --prototype-color: rgb(179 133 255);
+  --text-proto-color: #818181;
+  --highlight-color: yellow;
+  --component-color: rgb(48, 74, 219);
+  --key-name: rgb(192 166 118);
+  --key-content: rgb(141 112 188 / 59%);
+  --subscription-key: rgb(34, 49, 255);
+  --component-highlighted: #f0f8fb;
+  --component-selected: #d4e3f2;
+  --active-icon: rgb(41, 134, 255);
+  --active-recorder: rgb(255, 31, 31);
+  --navbar-bg: #f1f3f4;
+  --background-color: white;
+  --text-selected: white;
+  --menu-highlight-bg: rgb(201, 201, 201);
+  --version-bg: teal;
+  --hover-bg: #ebebeb;
+  --navbar-hover-bg: #d3d3d3;
+  /* to change the color here, put it in stroke='%23[color in hexadecimal]' */
+  --select-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23444444' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.dark-mode {
+  --border-color: #838383;
+  --navbar-selected: #33a3ff;
+  --component-hover: #597179;
+  --text-color: #c9c9c9;
+  --object-color: rgb(188 147 255);
+  --prototype-color: rgb(134 105 180);
+  --text-proto-color: #818181;
+  --highlight-color: yellow;
+  --component-color: rgb(135 153 255);
+  --key-name: rgb(171 212 253 / 51%);
+  --key-content: rgb(227 213 252 / 60%);
+  --subscription-key: rgb(154 161 255);
+  --component-highlighted: #525d61;
+  --component-selected: #287e99;
+  --active-icon: rgb(93 163 255);
+  --active-recorder: rgb(255, 31, 31);
+  --navbar-bg: #484a4b;
+  --background-color: rgb(45 45 45);
+  --text-selected: #c9c9c9;
+  --menu-highlight-bg: rgb(65, 65, 65);
+  --version-bg: #805900ad;
+  --hover-bg: #575757;
+  --navbar-hover-bg: #6b6b6b;
+  color-scheme: dark;
+  /* to change the color here, put it in stroke='%23[color in hexadecimal]' */
+  --select-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23c9c9c9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.caret {
+  width: 0.9rem;
+}
+
+#container {
+  font-size: 0.75em;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.status-message {
+  min-height: 70vh;
+  font-size: 1.1em;
+}
+
+.custom-navbar {
+  font-size: 12px;
+  padding: 0 !important;
+  background: var(--navbar-bg);
+}
+
+.form-select {
+  color: var(--text-color) !important;
+}
+
+.form-check-label {
+  user-select: none;
+}
+
+.navbar-btn {
+  height: 23px;
+  padding: 0.5rem;
+  padding-top: 0.2em;
+  color: var(--text-color);
+  border-right: solid 1px lightgrey;
+  user-select: none;
+  cursor: pointer;
+}
+
+.navbar-btn:hover {
+  color: var(--navbar-selected);
+}
+
+.btn-selected {
+  background-color: var(--navbar-selected);
+  color: var(--text-selected);
+  font-weight: bold;
+}
+
+.btn-selected:hover{
+  color: var(--text-selected);
+}
+
+#tree-wrapper {
+  min-width: max-content;
+}
+
+.tree-component:hover {
+  background-color: var(--component-hover);
+}
+
+.object-line.attenuate {
+  color: var(--text-proto-color);
+}
+
+.object-content {
+  color: var(--object-color);
+}
+
+.object-content.attenuate {
+  color: var(--prototype-color);
+}
+
+.key-changes {
+  background-color: var(--version-bg);
+}
+
+.event-container {
+  border-bottom: 1px solid rgb(240, 238, 238);
+  padding-top: 2px!important;
+  padding-bottom: 2px!important;
+  font-size: 11px;
+}
+
+.event-last {
+  border-bottom: 3px solid rgb(225, 154, 0);
+}
+
+.getter-content:hover {
+  text-decoration: underline;
+}
+
+.render-highlight {
+  background-color: var(--highlight-color) !important;
+}
+
+.highlight-fade {
+  transition: background-color 0.5s ease-out;
+}
+
+.highlight-search {
+  background-color: var(--highlight-color);
+}
+
+.key-name {
+  color: var(--key-content);
+}
+
+.custom-select {
+  max-width: max-content;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--text-color) !important;
+  background-color: var(--background-color);
+  background-image: var(--select-icon);
+  font-size: 12px;
+}
+
+.navbar-select {
+  font-size: .7rem !important;
+  padding-top: 0.35rem !important;
+  border-right: solid 1px var(--border-color) !important;
+}
+
+:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.details-panel {
+  border-top: 1px solid var(--border-color);
+}
+
+.details-panel:first-child {
+  border: none;
+}
+
+.component-highlighted {
+  background-color: var(--component-highlighted);
+}
+
+.component-selected {
+  background-color: var(--component-selected);
+}
+
+.split-screen-border {
+  width: 10px;
+  cursor: col-resize;
+  margin: 0px -5px;
+  z-index: 1;
+}
+
+.blank-space {
+  height: 100px;
+}
+
+.key-content {
+  color: var(--subscription-key);
+}
+
+.version {
+  margin-left: 5px;
+  background-color: var(--version-bg);
+  color: white;
+  padding: 2px 3px;
+  border-radius: 4px;
+  font-size: smaller;
+}
+
+.panel-top {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.details-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.events-container {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.split-screen-right {
+  margin: 0;
+  border-left: 1px solid var(--border-color);
+}
+
+.search-input {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 0.37rem 0rem;
+}
+
+.search-icon {
+  position: relative;
+  bottom: 1px;
+}
+
+.utility-icon {
+  cursor: pointer;
+  font-size: 1.2em;
+  border-radius: 35%;
+}
+
+.mouse-icon {
+  border-radius: 35%;
+  cursor: pointer;
+  padding-left: 0.4rem !important;
+}
+
+.profiler-icon {
+  border-radius: 35%;
+  cursor: pointer;
+}
+
+.utility-icon:hover, .mouse-icon:hover, .profiler-icon:hover, .bg-feedback:hover {
+  background-color: var(--hover-bg);
+}
+
+.navbar-icon {
+  border-radius: 35%;
+  cursor: pointer;
+}
+
+.navbar-icon:hover {
+  background-color: var(--navbar-hover-bg);
+}
+
+.bg-feedback {
+  border-radius: 5%;
+}
+
+.lg-icon {
+  font-size: 1.4em;
+}
+
+.fa-caret-right {
+  font-size: 1.15em;
+}
+
+.icons-separator {
+  width: 1px;
+  height: 17px;
+  background-color: var(--border-color);
+  user-select: none;
+}
+
+.pointer-icon {
+  cursor: pointer;
+}
+
+.custom-menu {
+  position: absolute;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border: 1px solid gray;
+  z-index: 2;
+  box-shadow: 1px 2px 5px #888;
+  font-family: var(--bs-font-sans-serif);
+}
+
+.custom-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.custom-menu-item {
+  cursor: pointer;
+}
+
+.custom-menu-item:hover {
+  background-color: var(--menu-highlight-bg);
+}

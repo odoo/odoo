@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+
+    <record id="filter_default_property_availability" model="ir.filters">
+        <field name="name">Availability</field>
+        <field name="model_id">sale.order</field>
+        <field name="is_default" eval="True"/>
+        <field name="action_id" ref="action_availability"/>
+        <field name="domain">[]</field>
+        <field name="context">{'group_by': ['x_related_buildings_ids', 'x_account_analytic_account_id']}</field>
+        <field name="sort">[]</field>
+    </record>
+
+    <record id="sale_order_user_filter" model="ir.filters">
+        <field name="name">Running contracts</field>
+        <field name="model_id">sale.order</field>
+        <field name="is_default" eval="True"/>
+        <field name="action_id" ref="action_rental_contracts"/>
+        <field name="context" eval="{'group_by': ['x_related_buildings_ids']}"/>
+    </record>
+
+    <record id="property_filter_view" model="ir.filters">
+        <field name="name">Building</field>
+        <field name="model_id">account.analytic.account</field>
+        <field name="is_default" eval="True"/>
+        <field name="action_id" ref="action_properties"/>
+        <field name="context" eval="{'group_by': ['x_property_building_id']}"/>
+    </record>
+
+</odoo>

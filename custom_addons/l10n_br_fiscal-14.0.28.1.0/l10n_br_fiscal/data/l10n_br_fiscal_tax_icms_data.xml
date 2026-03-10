@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="True">
+
+  <record id="tax_icms_regulation" model="l10n_br_fiscal.icms.regulation">
+    <field name="name">Regulamento do ICMS</field>
+    <field name="icms_imported_tax_id" ref="l10n_br_fiscal.tax_icms_4" />
+  </record>
+
+  <!-- ICMS - Simples Faturamento -->
+  <record
+        id="tax_icms_definition_simples_faturamento"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="True" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_icms_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_icms_90" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_simples_faturamento_simples_faturamento"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- PIS - Entrega Futura -->
+  <record id="tax_pis_definition_entrega_futura" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_pis_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_pis" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_pis_06" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrega_futura_entrega_futura"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- COFINS - Entrega Futura -->
+  <record
+        id="tax_cofins_definition_entrega_futura"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_cofins_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_cofins" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_cofins_06" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrega_futura_entrega_futura"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- IPI - Entrega Futura -->
+  <record id="tax_ipi_definition_entrega_futura" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_51" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrega_futura_entrega_futura"
+        />
+    <field name="state">approved</field>
+  </record>
+
+</odoo>

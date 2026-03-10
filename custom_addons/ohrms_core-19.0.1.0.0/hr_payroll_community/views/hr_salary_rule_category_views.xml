@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salary Categories form view-->
+    <record id="hr_salary_rule_category_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.category.view.form</field>
+        <field name="model">hr.salary.rule.category</field>
+        <field name="arch" type="xml">
+            <form string="Salary Categories">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="parent_id"/>
+                </group>
+                <group string="Notes">
+                    <field name="note" nolabel="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+        <!-- Salary Categories tree view-->
+    <record id="hr_salary_rule_category_view_tree" model="ir.ui.view">
+        <field name="name">hr.salary.rule.category.view.list</field>
+        <field name="model">hr.salary.rule.category</field>
+        <field name="arch" type="xml">
+            <list string="Salary Rule Categories">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="parent_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <!-- Search option for Salary Categories-->
+    <record id="hr_salary_rule_category_search" model="ir.ui.view">
+        <field name="name">hr.salary.rule.category.search</field>
+        <field name="model">hr.salary.rule.category</field>
+        <field name="arch" type="xml">
+            <search string="Salary Rule Categories">
+                <field name="name" string="Salary Rule Categories"
+                       filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+            </search>
+        </field>
+    </record>
+    <!-- Menu action forSalary Categories form view-->
+    <record id="hr_salary_rule_category_action"
+            model="ir.actions.act_window">
+        <field name="name">Salary Rule Categories</field>
+        <field name="res_model">hr.salary.rule.category</field>
+        <field name="view_id" ref="hr_salary_rule_category_view_tree"/>
+        <field name="search_view_id"
+               ref="hr_salary_rule_category_search"/>
+    </record>
+    <menuitem
+            id="menu_hr_salary_rule_category"
+            action="hr_salary_rule_category_action"
+            parent="menu_hr_payroll_community_configuration"
+            sequence="11"
+            groups="base.group_no_one"
+    />
+</odoo>

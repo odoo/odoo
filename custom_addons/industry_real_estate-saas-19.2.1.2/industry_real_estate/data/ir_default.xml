@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="default_plan_id_property" model="ir.default">
+        <field name="field_id" ref="analytic.field_account_analytic_account__plan_id"/>
+        <field name="json_value" eval="ref('analytic_plan_properties')"/>
+    </record>
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--    Advanced sidebar view-->
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//nav[hasclass('o_main_navbar')]" position="attributes">
+            <attribute name="class" add="small_nav" separator=" " t-if="sidebarState.isOpen"/>
+        </xpath>
+
+        <xpath expr="//nav[hasclass('o_main_navbar')]" position="after">
+            <div class="cybro-sidebar-qweb" t-att-class="{ 'sidebar-active': sidebarState.isOpen }">
+                <div class="sidebar-menus" role="menu">
+                    <DropdownItem
+                        t-foreach="menuService.getApps()"
+                        t-as="app"
+                        t-key="app.id"
+                        class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
+                        onSelected="() => this.onNavBarDropdownItemSelection(app)"
+                        attrs="{ href: getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
+                    >
+                        <img t-if="app.webIconData"
+                             class="o_app_icon me-2"
+                             t-attf-src="{{app.webIconData}}"
+                             t-att-title="app.name"
+                             style="width: 40px !important;height: 40px !important; border-radius: 10px !important;margin: 5px;"/>
+                    </DropdownItem>
+                </div>
+            </div>
+
+            <div class="sidebar_panel" t-att-class="{ 'sidebar-visible': sidebarState.isOpen }">
+                <div class="sidebar">
+                    <div class="sidebar_close">
+                        <a class="sidebar-close-btn"
+                           style="cursor: pointer;"
+                           t-on-click="onclickCloseSidebar"/>
+                    </div>
+
+                    <div class="search-container form-row align-items-center m-auto col-12" t-attf-class="{{ searchState.hasResults ? 'has-results' : '' }}">
+                        <div class="search-input col-md-12 ml-auto mr-auto">
+                            <div class="d-flex align-items-center">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-search"/>
+                                    </div>
+                                </div>
+                                <input type="search"
+                                       autocomplete="off"
+                                       placeholder="Search menus..."
+                                       class="o_input search_input_style"
+                                       t-ref="searchInput"
+                                       t-on-input="_searchMenusSchedule"
+                                />
+                            </div>
+                        </div>
+                        <div class="search-results col-md-12 ml-auto mr-auto"
+                             t-attf-class="{{ !searchState.showResults ? 'o_hidden' : '' }}"
+                             t-on-click="onclickCloseSidebar">
+                            <t t-foreach="searchState.searchResults" t-as="result" t-key="result.id">
+                                <p class="search-items">
+                                    <a t-att-data-tooltip-info="result.name"
+                                       t-att-href="getMenuUrl(result.actionID, result.id)"
+                                       t-on-click="onSearchResultClick"
+                                       t-esc="result.name"/>
+                                </p>
+                            </t>
+                        </div>
+                    </div>
+
+                    <ul class="sidebar_menu">
+                        <DropdownItem
+                            t-foreach="menuService.getApps()"
+                            t-as="app"
+                            t-key="app.id"
+                            class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
+                            onSelected="() => this.onNavBarDropdownItemSelection(app)"
+                            attrs="{ href: getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
+                        >
+                            <img t-if="app.webIconData"
+                                 class="o_app_icon me-2"
+                                 t-attf-src="{{app.webIconData}}"
+                                 t-att-title="app.name"
+                                 style="width: 40px !important;height: 40px !important; border-radius: 10px !important;margin: 5px;"/>
+                            <b class="a_app_menu_title"><t t-esc="app.name"/></b>
+                        </DropdownItem>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+     <!--Toggle icon for Advanced sidebar-->
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown" position="replace">
+            <div class="">
+                <a class="sidebar-toggle"
+                   style="display: block; cursor: pointer; margin-left: 10px;"
+                   t-on-click="sidebarState.isOpen ? this.onclickCloseSidebar : this.onclickOpenSidebar">
+                    <i t-attf-class="fa fa-lg {{ sidebarState.isOpen ? 'fa-close' : 'fa-bars' }}"/>
+                </a>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="action_create_invoice_meters" model="ir.actions.server">
+        <field name="name">Create Invoice for Meter Readings</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="state">code</field>
+        <field name="code">
+<![CDATA[
+for analytic_account in records:
+    meter_readings = analytic_account.x_property_meter_reading_ids.filtered(lambda l: not l.x_invoice_id and l.x_usage > 0)
+    if meter_readings:
+        invoice = env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': analytic_account.x_rental_contract_id.partner_id.id,
+        })
+        for meter_reading in meter_readings:
+            env['account.move.line'].create({
+                'move_id': invoice.id,
+                'price_unit': meter_reading.x_meter_id.x_price,
+                'name': str(meter_reading.x_date) + ' - ' + meter_reading.x_description if meter_reading.x_description else meter_reading.x_date,
+                'quantity' : meter_reading.x_usage,
+                'analytic_distribution': {analytic_account.id: 100},
+            })
+        meter_readings['x_invoice_id'] = invoice.id
+        action = env['ir.actions.act_window']._for_xml_id('account.action_move_out_invoice_type')
+        action['views'] = [(env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = invoice.id
+]]>
+        </field>
+    </record>
+
+    <record id="action_server_set_usage_meter_reading" model="ir.actions.server" >
+        <field name="name">Meter Reading</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="state">code</field>
+        <field name="base_automation_id" ref="automation_set_usage_meter_reading"/>
+        <field name="code"><![CDATA[
+mrs = env['x_meter_reading'].search([
+    ('id', 'in', record.x_account_analytic_account_id.x_property_meter_reading_ids.ids),
+    ('x_meter_id', '=', record.x_meter_id.id)], order='x_date')
+previous_mr = False
+for mr in mrs:
+    if previous_mr:
+        mr['x_usage'] = mr['x_quantity'] - previous_mr['x_quantity']
+    else :
+        mr['x_usage'] = 0
+    previous_mr = mr
+]]>
+        </field>
+    </record>
+</odoo>

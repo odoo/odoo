@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+  <t t-name="ai_sql.SQLGeneratorView" owl="1">
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+
+      :root {
+        --font-primary: 'Inter', sans-serif;
+        --font-code: 'Fira Code', monospace;
+        --color-bg-app: #f9fafb;
+        --color-bg-main-app: #ffffff;
+        --color-bg-section: #f3f4f6;
+        --color-bg-highlight: #f5f5f5;
+        --color-bg-codeblock: #f3f4f6;
+        --color-bg-table-header: #e5e7eb;
+        --color-border-soft: #d1d5db;
+        --color-border-strong: #9ca3af;
+        --color-border-accent-focus: #3b82f6;
+        --color-text-primary: #111827;
+        --color-text-secondary: #374151;
+        --color-text-muted: #6b7280;
+        --color-text-accent: #2563eb;
+        --color-text-accent-hover: #1d4ed8;
+        --color-text-on-accent: #ffffff;
+        --shadow-interface: 0 4px 12px rgba(0, 0, 0, 0.04);
+        --shadow-focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        --shadow-button-active: inset 0 2px 4px rgba(0,0,0,0.06);
+        --radius-interface: 12px;
+        --radius-element: 8px;
+        --transition-main: 0.2s ease;
+        --transition-content-reveal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      html, body, .o_web_client, .o_action_manager, .o_content, .o_main_content,
+      .o_action_manager > .o_action {
+        overflow: hidden !important; height: 100% !important; max-height: 100vh !important;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-primary);
+        background-color: var(--color-bg-app);
+        color: var(--color-text-primary);
+        font-size: 16px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .app-container-fullwidth-layout {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        max-height: 100vh;
+        width: 100%;
+        background-color: var(--color-bg-main-app);
+        overflow: hidden;
+        padding: 1.5rem 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .app-container-fullwidth-layout {
+          padding: 2rem 3rem;
+        }
+      }
+
+      .app-main-header-fullwidth {
+        text-align: center;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        flex-shrink: 0;
+      }
+
+      .app-main-header-fullwidth .brand-name-link-fullwidth {
+        color: var(--color-text-accent);
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+       .primary-content-area-fullwidth {
+        padding: 1.5rem;
+        background: var(--color-bg-highlight);
+        border-radius: var(--radius-interface);
+        border: 1px solid var(--color-border-soft);
+        box-shadow: var(--shadow-interface);
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        animation: sectionFadeIn 0.4s var(--transition-content-reveal) backwards;
+      }
+      @keyframes sectionFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .input-group label {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        margin-bottom: 0.6rem;
+      }
+
+      textarea.styled-query-input {
+        width: 100%;
+        padding: 0.85rem 1.1rem;
+        font-family: var(--font-primary);
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--color-text-primary);
+        background-color: var(--color-bg-main-app);
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-element);
+        resize: vertical;
+        min-height: 90px;
+        transition: border-color var(--transition-main), box-shadow var(--transition-main);
+      }
+
+      textarea.styled-query-input:focus {
+        border-color: var(--color-border-accent-focus);
+        outline: 0;
+        box-shadow: var(--shadow-focus-ring);
+      }
+
+      .action-button-main {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0.9rem 1.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-text-on-accent);
+        background: linear-gradient(105deg, var(--color-text-accent) 0%, var(--color-border-accent-focus) 100%);
+        border: none;
+        border-radius: var(--radius-element);
+        cursor: pointer;
+        transition: transform 0.15s ease-out, box-shadow 0.2s ease-out;
+        box-shadow: 0 4px 10px -2px hsla(245, 66%, 56%, 0.3), 0 2px 4px -2px hsla(245, 66%, 56%, 0.2);
+        background-size: 150% 150%;
+        margin-top: 1rem;
+      }
+
+      .action-button-main:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 15px -3px hsla(245, 66%, 56%, 0.35), 0 4px 6px -3px hsla(245, 66%, 56%, 0.25);
+      }
+
+      .dynamic-content-area {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.15s, max-height 0.15s, margin-top 0.15s;
+      }
+
+      .dynamic-content-area.visible {
+        opacity: 1;
+        max-height: 600px;
+        margin-top: 1.5rem;
+      }
+
+      .output-title {
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        margin-bottom: 0.75rem;
+      }
+
+      .code-block-main {
+        background-color: #ffffff;
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-element);
+        padding: 1rem 1.25rem;
+        font-family: var(--font-code);
+        font-size: 0.875rem;
+        color: var(--color-text-primary);
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 180px;
+        overflow-y: auto;
+      }
+
+      .button-copy-styled {
+        position: absolute;
+        top: 2.60rem;
+        right: 0.75rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--color-text-accent);
+        background-color: hsla(245, 66%, 56%, 0.08);
+        border: 1px solid hsla(245, 66%, 56%, 0.15);
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .results-viewport-section-fullwidth {
+        flex-grow: 1;
+        overflow-x: hidden;
+        background-color: var(--color-bg-main-app);
+        margin-top: 0;
+        padding: 0;
+        border-top: none;
+        min-height: 0;
+        opacity: 0;
+        max-height: 0;
+        visibility: hidden;
+        transition: opacity 0.2s, max-height 0.2s, visibility 0.2s, margin-top 0.2s, padding 0.2s;
+      }
+
+      .results-viewport-section-fullwidth.visible {
+        opacity: 1;
+        max-height: 100%;
+        visibility: visible;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        border-radius: 15px;
+      }
+
+      .results-area-header-fullwidth-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--color-border-soft);
+      }
+
+      .section-title-text {
+        font-size: 1.375rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        margin: 0;
+      }
+
+      .export-action-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background-color: var(--color-text-accent);
+        color: var(--color-text-on-accent);
+        border: 1.5px solid var(--color-text-accent);
+        border-radius: var(--radius-element);
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .export-action-button:hover {
+        background-color: var(--color-text-accent-hover);
+        box-shadow: 0 2px 8px hsla(245, 66%, 56%, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .data-table-container-fullwidth {
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid var(--color-border-soft);
+        border-radius: var(--radius-interface);
+        background-color: var(--color-bg-section);
+      }
+
+      .main-data-table thead th {
+        padding: 0.75rem 1rem;          /* Adds horizontal spacing */
+        min-width: 120px;               /* Ensures readable width */
+        letter-spacing: 0.2px;          /* Slight space between characters */
+        white-space: nowrap;            /* Keeps headers in one line */
+        text-align: left;
+      }
+
+    ]]></style>
+
+    <div class="app-container-fullwidth-layout">
+      <h3 class="app-main-header-fullwidth">
+        <span>AI SQL Generator — </span>
+        <a href="https://niyulabs.com" class="brand-name-link-fullwidth" target="_blank" rel="noopener">NIYU LABS</a>
+      </h3>
+
+      <section class="primary-content-area-fullwidth">
+        <div class="input-group">
+          <label for="nlQueryInput">Your Question</label>
+          <textarea id="nlQueryInput" class="styled-query-input" t-model="state.nlQuery"
+            placeholder="e.g., Show all customers from Belgium with total sales last month…"></textarea>
+        </div>
+
+        <button class="action-button-main" t-on-click="onGenerateSQL">
+          <i t-if="state.isLoading" class="fa fa-spinner fa-spin"/>
+          <t t-if="!state.isRetrying">&#128161;Generate SQL</t>
+          <t t-if="state.isRetrying">Retrying…</t>
+        </button>
+
+        <div t-attf-class="dynamic-content-area #{state.generatedSQL ? 'visible' : ''}">
+          <h5 class="output-title">Generated SQL</h5>
+          <div class="code-block-container-styled">
+            <div class="code-block-main">
+              <code><t t-esc="state.generatedSQL or 'SQL will appear here once generated.'"/></code>
+            </div>
+            <button t-if="state.generatedSQL" class="button-copy-styled" t-on-click="copySQLToClipboard">Copy</button>
+          </div>
+        </div>
+
+        <section t-attf-class="results-viewport-section-fullwidth #{state.generatedSQL ? 'visible' : ''}">
+          <div class="results-area-header-fullwidth-container">
+            <h5 class="section-title-text">Results</h5>
+            <t t-if="state.resultsHeaders.length > 0">
+              <button class="export-action-button" t-on-click="onExportExcel">
+                <i t-if="state.isExporting" class="fa fa-spinner fa-spin" style="margin-right: 0.5em;" />
+                Export to Excel
+              </button>
+            </t>
+          </div>
+
+          <div class="data-table-container-fullwidth">
+            <t t-if="state.resultsHeaders.length > 0">
+              <table class="main-data-table">
+                <thead class="">
+                  <tr>
+                    <th t-foreach="state.resultsHeaders" t-as="h" t-key="h"><t t-esc="h"/></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr t-foreach="state.resultsData" t-as="row" t-key="row_index">
+                    <td t-foreach="state.resultsHeaders" t-as="h" t-key="h"><t t-esc="row[h]"/></td>
+                  </tr>
+                </tbody>
+              </table>
+            </t>
+            <t t-if="!state.resultsHeaders.length > 0 and state.generatedSQL">
+              <div class="no-data-message">No results found for your query.</div>
+            </t>
+          </div>
+        </section>
+      </section>
+    </div>
+  </t>
+</templates>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="document_related_tree" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.document.related.tree</field>
+    <field name="model">l10n_br_fiscal.document.related</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="document_type_id" />
+        <field name="document_key" />
+        <field name="document_serie" />
+        <field name="document_number" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="document_related_form" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.document.related.form</field>
+    <field name="model">l10n_br_fiscal.document.related</field>
+    <field name="arch" type="xml">
+      <form string="Fiscal Document Related">
+        <field name="document_type_code" invisible="1" />
+        <group>
+        <field
+                        name="document_related_id"
+                        context="{'fiscal_document_complete_name': True}"
+                    />
+        </group>
+        <group>
+            <field name="document_type_id" />
+        </group>
+        <group
+                    string="NF-e/CT-e"
+                    attrs="{'invisible': [('document_type_code','not in', ('55', '57'))]}"
+                >
+            <field name="document_key" />
+        </group>
+        <group
+                    string="Nota Fiscal/Produtor/Cupom Fiscal"
+                    attrs="{'invisible': [('document_type_code', 'not in', ('01', '04'))]}"
+                >
+            <field
+                        name="document_serie"
+                        attrs="{'required': [('document_type_code', 'in', ('01', '04', '07'))]}"
+                    />
+            <field
+                        name="document_number"
+                        attrs="{'required': [('document_type_code', 'in', ('01', '04', '07'))]}"
+                    />
+            <field
+                        name="state_id"
+                        attrs="{'required': [('document_type_code', 'in', ('01', '04'))], 'invisible': [('document_type_code', '=', '07')]}"
+                    />
+            <field
+                        name="document_date"
+                        attrs="{'required': [('document_type_code', 'in', ('01', '04'))], 'invisible': [('document_type_code', '=', '07')]}"
+                    />
+            <field
+                        name="cpfcnpj_type"
+                        attrs="{'required': [('document_type_code', 'in', ('04'))], 'invisible': [('document_type_code', '!=', '04')]}"
+                    />
+            <field
+                        name="cnpj_cpf"
+                        attrs="{'required': [('document_type_code', 'in', ('01', '04'))], 'invisible': [('document_type_code', '=', '07')]}"
+                    />
+            <field
+                        name="inscr_est"
+                        attrs="{'invisible': [('document_type_code', '!=', '04')]}"
+                    />
+        </group>
+        <group
+                    string="Totais"
+                    attrs="{'invisible': [('document_type_code', 'not in', ('55', '57', '58'))]}"
+                >
+            <field name="document_total_weight" />
+            <field
+                        name="document_total_amount"
+                        attrs="{'invisible': [('document_related_id', '!=', False)]}"
+                    />
+        </group>
+      </form>
+    </field>
+  </record>
+
+</odoo>

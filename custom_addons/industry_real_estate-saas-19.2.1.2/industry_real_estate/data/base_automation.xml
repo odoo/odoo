@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="automation_set_usage_meter_reading" model="base.automation">
+        <field name="name">Set Usage in Meter Readings</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('field_meter_reading_date'), ref('field_meter_reading_quantity'), ref('field_meter_reading_meter_id')])]"/>
+    </record>
+</odoo>

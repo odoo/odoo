@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <template id="welcome_article_body">
+        <h1>Property Management</h1>
+        <p>Hello there!</p>
+        <p>
+            You just installed the Odoo for Property Management package. By doing so, we have installed a bunch of necessary
+            apps to run your bar efficiently.
+        </p>
+        <p>Discover the basics of this package and explore all the possibilities Odoo offers to improve your experience.</p>
+        <div data-embedded="tableOfContent"></div>
+        <h1>Basics</h1>
+        <hr />
+        <p>You can access every installed App in your Odoo database on your main dashboard.</p>
+        <ul>
+            <li>
+                <b>CRM App</b>: Manage your leads efficiently, tracking ongoing buying and selling opportunities in a visual
+                pipeline.
+            </li>
+            <li>
+                <b>Properties App: </b>Organize your portfolio with a dedicated app to manage property listings, contracts, and
+                availability status.
+            </li>
+            <li>
+                <b>Subscriptions App: </b>Automate the collection of recurring rent and service charges with flexible billing
+                cycles, ensuring consistent cash flow and effortless lease renewals.
+            </li>
+            <li>
+                <b>Sales App: </b>Handle offers, negotiations, and closing deals with professional quotations and digital
+                signatures.
+            </li>
+            <li>
+                <b>Website App: </b>Drive qualified traffic by promoting your listings on a beautiful, mobile-responsive
+                property management portal.
+            </li>
+            <li>
+                <b>Contacts App: </b>Centralize all stakeholder data, managing the unique relationships between property owners,
+                tenants, and service providers within a single, searchable directory with full communication history.
+            </li>
+        </ul>
+        <p><br/></p>
+        <h1><strong>Use case</strong></h1>
+        <hr />
+        <p>By uploading this module's demo data, your database has been filled with a few products, sale orders and more.</p>
+        <p>
+            You should be able to execute the following flows to have an overview of various flows you can quickly execute with
+            this package using Odoo.
+        </p>
+        <p>
+            Of course, this is just an overview of the features included in this package. Feel free to add new apps,
+            delete/modify demo data, and test everything around!
+        </p>
+        <div
+            class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-warning pb-0 pt-3"
+            data-oe-role="status">
+            <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Warning">⚠️</i>
+            <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
+                <p>
+                    You didn't import demo data? You can still do it. Go to Apps > Industries > Upgrade your Bar &amp; Pub package
+                    and check the related box
+                </p>
+            </div>
+        </div>
+        <p><br/></p>
+        <h3>🏠 Managing Properties &amp; Products</h3>
+        <p>From the <b>Properties App</b>, you can define the physical assets you manage.</p>
+        <ul>
+            <li>
+                <b>Open the Properties: </b>Open the <b>Properties App </b>and navigate through the app menu Properties /
+                Properties.
+            </li>
+            <li>
+                <div>
+                    <b>Create a Property:</b> Click "New" to create a unit. Fill in its building, location and other details.
+                </div>
+            </li>
+            <li class="oe-nested"><br/></li>
+        </ul>
+        <h3>📄 Managing Rental Contracts</h3>
+        <p>The <b>Subscriptions App</b> handles the legal and financial bridge between the property and the tenant.</p>
+        <ul>
+            <li><b>Open the Contracts</b>: Open the <strong>Properties App</strong> to reach the Subscriptions.</li>
+            <li>
+                <b>Create a Contract:</b> Click "New" and select the tenant as the "Customer" and add the Rental fee product.
+            </li>
+            <li><b>Select the Property:</b> Select the "Property" to rent.</li>
+            <li>
+                <b>Timeline:</b> Specify the start date, the recurring period (monthly, quarterly, etc.) and the expiration of
+                the contract.
+            </li>
+            <li>
+                <b>Move-in Logs:</b> Utilize the dedicated property tab to record meter readings (water, electricity) at the
+                time of the tenant's entry to ensure accurate utility re-billing later.
+            </li>
+        </ul>
+        <p><br/></p>
+        <h3>📅 Availability &amp; Occupancy Tracking</h3>
+        <p>Click on the <b>Availability</b> to view your portfolio in a Gantt view.</p>
+        <ul>
+            <li>
+                <b>Open the Availability</b>: Open the <strong>Properties App</strong> and navigate through the app menu
+                Availability.
+            </li>
+            <li class="oe-nested">This screen visualizes all active rental contracts and identifies vacancies at a glance.</li>
+        </ul>
+        <div
+            class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-success pb-0 pt-3"
+            data-oe-role="status">
+            <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Success">✅</i>
+            <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
+                <p>
+                    <b>Pro Tip:</b> You can create a new rental contract directly from this view by clicking on an empty slot in
+                    the timeline.
+                </p>
+            </div>
+        </div>
+        <div
+            class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-warning pb-0 pt-3"
+            data-oe-role="status">
+            <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Warning">⚠️</i>
+            <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
+                <p>
+                    <i>Note: Only properties with at least one current or future contract will appear in this visualization.</i>
+                </p>
+            </div>
+        </div>
+        <p><br/></p>
+        <div
+            class="o_editor_banner user-select-none lh-1 d-flex align-items-center alert alert-success pb-0 pt-3 o-contenteditable-false"
+            data-oe-role="status">
+            <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Success">🎉</i>
+            <div class="w-100 px-3 o_editor_banner_content o-contenteditable-true">
+                <p>
+                    You completed that demo use case! There are millions of other ways to adapt your Odoo setup to fit your
+                    business needs.
+                </p>
+                <p>
+                    Discover more about Odoo by diving into our
+                    <a href="https://www.odoo.com/documentation/latest/">documentation</a> and
+                    <a href="https://www.odoo.com/slides/getting-started-15">academy</a> , and feel free to
+                    <a href="https://www.odoo.com/contactus">request a demo</a> if you need help!
+                </p>
+            </div>
+        </div>
+        <p><br/></p>
+        <h1><strong>Do you want to go further?</strong></h1>
+        <hr />
+        <p><strong>Odoo offers you infinite possibilities, such as:</strong></p>
+        <ul>
+            <li>
+                <b>Documents App:</b> Store signed leases, property deeds, and insurance certificates with expiration alerts.
+            </li>
+            <li><b>Sign App:</b> Send lease agreements for legally binding electronic signatures.</li>
+            <li>
+                <strong>Accounting App: </strong>Manage your accounting easier than ever with a completely integrated
+                environment.
+            </li>
+        </ul>
+        <p>These all go free in your current subscription; feel free to explore! 🙃</p>
+        <div
+            class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3"
+            data-oe-role="status">
+            <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info">🚀</i>
+            <div class="o_editor_banner_content o-contenteditable-true w-100 px-3">
+                <p>
+                    Would you like to discuss your Odoo setup with us or go even further?
+                    <a href="https://www.odoo.com/contactus" class="btn btn-primary">Reach Us</a>
+                </p>
+            </div>
+        </div>
+    </template>
+
+    <record id="welcome_article" model="knowledge.article">
+        <field name="name">Property Management 🏠</field>
+        <field name="sequence">1</field>
+        <field name="is_locked" eval="True"/>
+        <field name="is_article_visible_by_everyone" eval="True"/>
+        <field name="internal_permission">write</field>
+        <field name="cover_image_id" ref="knowledge_cover_3"/>
+        <field name="cover_image_position">75.40000000000002</field>
+        <field name="body">
+            <![CDATA[]]>
+        </field>
+    </record>
+</odoo>

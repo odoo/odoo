@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="email_compose_message_wizard_form">
+        <field name="name">mail.compose.message.form</field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+        <field name="arch" type="xml">
+            <label for="partner_ids" position="before">
+                <field name="dashboard_id" options="{'no_create': 1}" invisible="not context.get('is_dashboard', False)" />
+                <field name="dashboard_mail_id" options="{'no_create': 1}" domain="[('dashboard_id', '=', dashboard_id)]" invisible="not context.get('is_dashboard', False)" />
+                <field name="chart_ids" widget="many2many_tags" domain="[('dashboard_id', '=', dashboard_id), '|', ('chart_type', '!=', 'to_do'), ('todo_layout', '!=', 'default')]" invisible="not context.get('is_dashboard', False)" />
+            </label>
+        </field>
+    </record>
+
+</odoo>

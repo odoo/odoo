@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="0">
+
+    <record id="fo_venda" model="l10n_br_fiscal.operation">
+        <field
+            name="comment_ids"
+            eval="[(6,0,[ref('l10n_br_fiscal.fiscal_comment_dummy')])]"
+        />
+    </record>
+
+    <record id="fo_venda_venda" model="l10n_br_fiscal.operation.line">
+        <field
+            name="comment_ids"
+            eval="[(6,0,[ref('l10n_br_fiscal.fiscal_line_comment_dummy')])]"
+        />
+    </record>
+
+</odoo>

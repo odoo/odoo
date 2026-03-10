@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="tax_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.search</field>
+        <field name="model">l10n_br_fiscal.tax</field>
+        <field name="arch" type="xml">
+            <search string="Tax">
+                <field name="name" />
+                <field name="tax_domain" />
+                <separator />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Tax Group'
+                        name="tax_group_id"
+                        context="{'group_by' : 'tax_group_id'}"
+                    />
+                    <filter
+                        string='Tax Scope'
+                        name="tax_scope"
+                        context="{'group_by' : 'tax_scope'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tax_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.tree</field>
+        <field name="model">l10n_br_fiscal.tax</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="tax_domain" invisible="1" />
+                <field name="name" />
+                <field name="tax_group_id" />
+                <field name="cst_in_id" />
+                <field name="cst_out_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="tax_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.form</field>
+        <field name="model">l10n_br_fiscal.tax</field>
+        <field name="arch" type="xml">
+            <form string="Tax">
+                <field name="tax_domain" invisible="1" />
+                <field name="sequence" invisible="1" />
+                <sheet>
+                    <group>
+                        <field
+                            name="tax_group_id"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                        <field name="name" />
+                        <field
+                            name="tax_base_type"
+                            attrs="{'invisible': [('tax_domain', 'in', ('icms', 'icmsst'))]}"
+                        />
+                        <field
+                            name="icms_base_type"
+                            attrs="{'invisible': [('tax_domain', '!=', 'icms')]}"
+                        />
+                        <field
+                            name="icmsst_base_type"
+                            attrs="{'invisible': [('tax_domain', '!=', 'icmsst')]}"
+                        />
+                        <field
+                            name="icmsst_mva_percent"
+                            attrs="{'invisible': [('tax_domain', '!=', 'icmsst'), ('icmsst_base_type', '!=', '4')]}"
+                        />
+                        <field
+                            name="icmsst_value"
+                            attrs="{'invisible': [('tax_domain', '!=', 'icmsst'), ('icmsst_base_type', '=', '4')]}"
+                        />
+                        <field
+                            name="percent_amount"
+                            attrs="{'invisible': [('tax_base_type', '!=', 'percent')]}"
+                        />
+                        <field
+                            name="percent_reduction"
+                            attrs="{'invisible': [('tax_base_type', '!=', 'percent')]}"
+                        />
+                        <field
+                            name="percent_debit_credit"
+                            attrs="{'invisible': [('tax_base_type', '!=', 'percent')]}"
+                        />
+                        <field
+                            name="value_amount"
+                            attrs="{'invisible': [('tax_base_type', 'not in', ('quantity', 'fixed'))]}"
+                            widget="monetary"
+                            options="{'currency_field': 'currency_id', 'field_digits': True}"
+                        />
+                        <field
+                            name="uot_id"
+                            attrs="{'invisible': [('tax_base_type', '!=', 'quantity')], 'required': [('tax_base_type', '=', 'quantity')]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                        <field
+                            name="cst_in_id"
+                            attrs="{'invisible': [('tax_domain', 'not in', ['icms', 'icmssn', 'ipi', 'pis', 'cofins', 'ibs', 'cbs'])]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                        <field
+                            name="cst_out_id"
+                            attrs="{'invisible': [('tax_domain', 'not in', ['icms', 'icmssn', 'ipi', 'pis', 'cofins', 'ibs', 'cbs'])]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--  Inheriting Account Payment Form View  -->
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.view.form.inherit.base.accounting.kit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="after">
+                <widget name="web_ribbon" title="Sent"
+                        invisible="is_sent != True"/>
+            </xpath>
+            <xpath expr="//button[@name='action_post']" position="before">
+                <button name="print_checks" class="oe_highlight"
+                        invisible="payment_method_code not in ['check_printing','pdc'] or state != 'posted'"
+                        string="Print Check" type="object"/>
+                <button name="unmark_as_sent"
+                        invisible="payment_method_code not in ['check_printing','pdc'] or state != 'sent'"
+                        string="Unmark Sent" type="object"/>
+            </xpath>
+            <xpath expr="//div[@name='amount_div']" position="after">
+                <field name="check_amount_in_words"
+                       invisible="payment_method_code not in ['check_printing','pdc'] or state != 'draft'"
+                       groups="base.group_no_one"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='ref']" position="after">-->
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="check_manual_sequencing" invisible="1"/>
+                <field name="check_number"
+                       invisible="payment_method_code not in ['check_printing','pdc'] or check_number == 0"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="effective_date"
+                       invisible="payment_method_code != 'pdc'"
+                       required="payment_method_code in 'pdc'"
+                       readonly="state not in ('draft')"/>
+                <field name="bank_reference"/>
+                <field name="cheque_reference" readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_bank_statement_line_tree" model="ir.ui.view">
+        <field name="name">account.bank.statement.line.view.tree</field>
+        <field name="model">account.bank.statement.line</field>
+        <field name="priority">8</field>
+        <field name="arch" type="xml">
+            <list string="Statement lines" create="false"
+                  default_order="date desc, statement_id desc, sequence desc, id desc">
+                <!-- Invisible fields -->
+                <field name="state" column_invisible="1"/>
+                <field name="sequence" readonly="1" column_invisible="1"/>
+                <field name="company_id" column_invisible="1"/>
+                <field name="journal_id" column_invisible="1"/>
+                <field name="is_reconciled" column_invisible="1"/>
+                <field name="partner_bank_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <!-- Displayed fields -->
+                <field name="statement_id" optional="hide"/>
+                <field name="move_id"/>
+                <field name="date"/>
+                <field name="payment_ref"/>
+                <field name="partner_id"/>
+                <field name="ref" groups="base.group_no_one" optional="hidden"/>
+                <field name="narration" string="Notes" optional="hidden"/>
+                <field name="transaction_type" optional="hidden"/>
+                <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
+                <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                <field name="amount"/>
+                <field name="account_number" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+    <!-- For multiple payments -->
+    <record model="ir.ui.view" id="view_account_payment_register_form">
+        <field name="name">account.payment.register.view.form.base.accounting.kit</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_date']" position="after">
+                <field name="effective_date"/>
+                <field name="bank_reference"/>
+                <field name="cheque_reference"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

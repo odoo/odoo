@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- payslip -->
+    <record id="hr_payslip_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.view.list</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state in ('confirm','hr_check','accont_check')"
+                  decoration-muted="state == 'cancel'" string="Payslips">
+                <field name="number"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       options="{'no_create': True}"/>
+                <field name="payslip_run_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <!-- Payslip kanban view -->
+    <record id="hr_payslip_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.view.kanban</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>
+                                        <field name="employee_id"/>
+                                    </strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right badge badge-secondary">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="date_from"/>
+                                        -
+                                        <field name="date_to"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="name"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="hr_payslip_search" model="ir.ui.view">
+        <field name="name">hr.payslip.search</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslips">
+                <field name="name" string="Payslips"
+                       filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
+                <field name="date_from"/>
+                <filter string="Draft" name="draft"
+                        domain="[('state','=','draft')]" help="Draft Slip"/>
+                <filter string="Done" name="done"
+                        domain="[('state','=','done')]" help="Done Slip"/>
+                <field name="employee_id"/>
+                <field name="payslip_run_id"/>
+                <group>
+                    <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
+                    <filter string="PaySlip Batch" name="payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
+                    <filter string="Companies" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="States" name="state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="hr_payslip_action" model="ir.actions.act_window">
+        <field name="name">Employee Payslips</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="hr_payslip_search"/>
+    </record>
+    <menuitem action="hr_payslip_action"
+              id="menu_department_tree"
+              parent="menu_hr_payroll_community_root"
+              groups="hr_payroll_community.group_hr_payroll_community_user"/>
+
+    <record id="action_hr_payslip" model="ir.actions.act_window">
+        <field name="res_model">hr.payslip</field>
+        <field name="name">Payslips</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="context">{'search_default_employee_id': [active_id],
+            'default_employee_id': active_id}
+        </field>
+    </record>
+</odoo>

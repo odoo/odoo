@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="simplified_tax_range_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.simplified.tax.range.tree</field>
+        <field name="model">l10n_br_fiscal.simplified.tax.range</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="amount_deduced" />
+                <field name="inital_revenue" />
+                <field name="final_revenue" />
+                <field name="total_tax_percent" string="Tax %" />
+                <field name="tax_cpp_percent" string="CPP %" />
+                <field name="tax_csll_percent" string="CSLL %" />
+                <field name="tax_ipi_percent" string="IPI %" />
+                <field name="tax_icms_percent" string="ICMS %" />
+                <field name="tax_iss_percent" string="ISS %" />
+                <field name="tax_irpj_percent" string="IRPJ %" />
+                <field name="tax_cofins_percent" string="COFINS %" />
+                <field name="tax_pis_percent" string="PIS %" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

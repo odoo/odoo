@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Statement report template -->
+    <template id="res_partner_statement_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div page="page">
+                    <h3>Payment Statement Report</h3>
+                </div><br/>
+                <table border="0">
+                    <tr><t t-esc="customer"/></tr><br/><br/>
+                    <tr><t t-if="street"> <t t-esc="street"/></t></tr><br/>
+                    <tr><t t-if="street2"> <t t-esc="street2"/></t></tr><br/>
+                    <tr><t t-if="city"> <t t-esc="city"/></t></tr><br/>
+                    <tr><t t-if="state"> <t t-esc="state"/></t></tr><br/>
+                </table>
+                <br/><br/>
+                <table class="table" style="align-items: center;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Invoice/Bill Number</th>
+                            <th>Due Date</th>
+                            <th>Invoices/Debit</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="my_data" t-as="line">
+                            <tr>
+                                <td align="center"><t t-esc="line['invoice_date']"/></td>
+                                <td align="center"><t t-esc="line['name']"/></td>
+                                <td align="center"><t t-esc="line['invoice_date_due']"/></td>
+                                <td align="center">
+                                    <t t-esc="currency"/>
+                                    <t t-esc="line['sub_total']"/>
+                                </td>
+                                <td align="center">
+                                    <t t-esc="currency"/>
+                                    <t t-esc="line['balance']"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <br/>
+                <t t-if="total">
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Amount:</td>
+                                            <td>
+                                                <t t-esc="currency"/>
+                                                <t t-esc="total"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Balance:</td>
+                                            <td>
+                                                <t t-esc="currency"/>
+                                                <t t-esc="balance"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

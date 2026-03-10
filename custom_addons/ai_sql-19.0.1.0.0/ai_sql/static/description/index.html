@@ -1,0 +1,638 @@
+<div style="font-family: 'Arial', sans-serif; background-color: #0D1117; color: #e0e0e0; line-height: 1.7;">
+
+  <template id="some_unique_template_id" name="My Hero Section">
+    <!-- HERO SECTION -->
+    <div style="position: relative; text-align: center; overflow: hidden; margin-bottom: 80px;">
+      <div style="
+          position: absolute;
+          z-index: 2;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding-top: 40px;
+          min-height: 80vh; /* Slightly less than image to avoid scrollbar if image has aspect ratio issues */
+          background: linear-gradient(to bottom, rgba(13, 17, 23, 0.5) 0%, rgba(13, 17, 23, 1) 90%); /* Gradient overlay */
+        ">
+        <h1 style="
+            color: white;
+            font-size: clamp(40px, 7vw, 72px); /* Responsive font size */
+            font-weight: bold;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+          ">
+           <span style="color: #00BFFF;">Talk to Your Odoo Database</span><br />
+        </h1>
+        <p style="
+            font-size: clamp(18px, 2.5vw, 24px);
+            color: #c9c9c9;
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+          ">
+           Ask Questions, <span style="color: #7FFF00;">Get Odoo SQL queries from plain English and see your data instantly.</span>
+        </p>
+        <video
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          style="
+            width: 80%;
+            max-width: 900px; /* Max width for very large screens */
+            border: 3px solid #00BFFF;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3);
+          "
+          alt="demo showing NLQ -> SQL -> Data Table -> Export. Focus on speed & simplicity.">
+          <source src="./video.webm" type="video/webm" />
+        </video>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 80px; text-align: center;">
+        <h3 style="font-size: clamp(28px, 4vw, 40px); color: white; margin-bottom: 50px;">
+         What's the difference between this and <span style="color: #a1a311;">just asking ChatGPT</span>  directly about Odoo SQL?
+        </h3>
+        <h4 style="font-size: clamp(24px, 3.5vw, 32px); color: white; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">
+         <span style="color: #00BFFF;">Three main things</span>
+        </h4>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 30px;">
+            <!-- Feature Card 1 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; /* sm, lg for media queries */ box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128736; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">Your Database Context</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;"> This module provides the AI with the actual schema structure of YOUR specific Odoo database. ChatGPT alone only has general knowledge so prone to mistakes.</p>
+            </div>
+            <!-- Feature Card 2 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128202; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">Data Integration</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;">This runs inside Odoo, executes the SQL, and shows you the data immediately. No copy-pasting queries between browser tabs and your database client.</p>
+            </div>
+            <!-- Feature Card 3 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#129504; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">Error Correction Loop</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;">If the SQL fails, it tries to get an AI-assisted correction automatically.</p>
+            </div>
+            <!-- Add more cards as needed -->
+          
+        </div>
+        <video
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"  
+            alt="Key Features Visualized" 
+            style="width: 70%; max-width: 600px; margin: 40px auto 0 auto; border-radius: 10px; border: 1px solid #444; display: block;">
+            <source src="./q5.webm" type="video/webm" />
+        </video>
+    </div>
+  
+    <!-- MAIN CONTENT AREA -->
+    <div style="background-color: #0D1117; padding: 40px 5%; /* Added more padding */">
+  
+      <!-- Section: Instant Answers -->
+      <div style="text-align: center; margin-bottom: 80px;">
+        <h2 style="
+            font-family: 'Inter', sans-serif; /* Assuming Inter is available or fallback to Arial */
+            font-weight: bold;
+            font-size: clamp(32px, 5vw, 48px);
+            line-height: 1.3;
+            color: white;
+            margin-bottom: 20px;
+          ">
+          No More   <span style="color: #7FFF00;">Report</span> Bottlenecks
+        </h2>
+        <p style="
+            font-size: clamp(18px, 2.2vw, 22px);
+            line-height: 1.8;
+            color: #f0f0f0;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+          ">
+          Doing lengthy work for Odoo data you need right now?<br/>
+          Or worse,<span style="color: #FFD700; font-weight: bold;">waiting for someone else to build a report?</span> 
+        </p>
+        <p style="
+            font-weight: bold;
+            font-size: clamp(22px, 2.2vw, 22px);
+            color: white;
+            margin-bottom: 40px;
+          ">
+            THIS MODULE CHANGES THAT
+          <br />
+          
+        </p>
+        <video
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          style="
+            width: 80%;
+            max-width: 800px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            margin-top: 20px;
+          "
+          alt="Shows the simple UI – input box, a query like "customers in France with orders last month", the generated SQL, and a snippet of the resulting data table.">
+          <source src="./q1.webm" type="video/webm" />
+        </video>
+      </div>
+    </div>
+  </template>
+    <!-- Alternating Content Blocks -->
+    <div style=" padding: 40px 0; border-top: 1px solid #222; border-bottom: 1px solid #222;">
+      <div style="width: 100%; md-width: 48%; text-align: left; padding: 40px; /* md styles would be for media queries, here it's a fallback */">
+        <h3 style="font-size: clamp(28px, 4vw, 40px); line-height: 1.3; color: white; margin-bottom: 20px;">
+          You need a specific data <i>now</i> <span style="color: #FFD700;">but building a custom view takes too long, or you don't know how.</span>
+        </h3>
+        <p style="font-size: clamp(16px, 2vw, 19px); color: #e0e0e0; line-height: 1.7;">
+           Get the SQL, see the data. Move on.     </p>
+        <p style="font-size: clamp(16px, 2vw, 19px); line-height: 1.7; font-weight: bold; color: #ffffffdb; margin-top: 15px;">
+          <span style="color: #7FFF00;">For example:</span> <span style="font-style: italic;">"Show me sales orders from last week for 'Azure Interior' that are still in 'Quotation' state."</span>
+        </p>
+      </div>
+      <!-- Placeholder for an illustrative image or icon related to "Uncover Gold" if you have one -->
+       <div style="width: 100%; md-width: 48%; text-align: center;">
+        <video
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          alt="Insight Illustration" 
+          style="max-width: 85%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+          <source src="./q2.webm" type="video/webm" />
+       </video>
+      </div>
+    </div>
+
+    <div style=" padding: 40px 0; border-top: 1px solid #222; border-bottom: 1px solid #222; margin-bottom: 60px;">
+      <!-- Placeholder for an illustrative image or icon related to "Data Fluent" -->
+      <div style="width: 100%; md-width: 48%; text-align: left; padding: 40px;">
+        <h3 style="font-size: clamp(28px, 4vw, 40px); line-height: 1.3; color: white; margin-bottom: 20px;">
+          Needs to write SQL frequently,  <span style="color: #00BFFF;">but get tired of looking up exact table and column names for every new query.</span>
+        </h3>
+        <p style="font-size: clamp(16px, 2vw, 19px); color: #e0e0e0; line-height: 1.7;">
+          Speed up your workflow. Grab the generated SQL as a starting point, verify it, adapt it. Faster iterations. </p>
+        <p style="font-size: clamp(16px, 2vw, 19px); line-height: 1.7; font-weight: bold; color: #ffffffdb; margin-top: 15px;">
+          <span style="color: #7FFF00;">Ask:</span>  <span style="font-style: italic;">"products with 'Chair' in the name and their current stock quantity."</span>
+        </p>
+      </div>
+      <div style="width: 100%; md-width: 48%; text-align: center;">
+        <video
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto" 
+          alt="Data Flow Illustration" 
+          style="max-width: 85%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+          <source src="./q3.webm" type="video/webm" />
+        </video>
+     </div>
+    </div>
+
+    <!-- Example Queries & Pain Points Section -->
+    <div style="background: linear-gradient(145deg, #1a202c, #161B22);  border-radius: 20px; margin-bottom: 80px; box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset; color: #e0e0e0; overflow: hidden;">
+      <h3 style="font-size: clamp(28px, 4vw, 42px); color: white; text-align: center; margin-bottom: 50px; font-weight: 700; letter-spacing: -0.5px;">
+        Who Needs This? <span style="background: linear-gradient(90deg, #FF4500, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; padding: 0 5px;">Probably You </span> If You Deal With Odoo Data
+      </h3>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px;">
+        <!-- Column 1: Example Queries -->
+        <div style="flex: 1 1 300px; /* Adapts: tries to be 300px, grows if space, wraps if not */ min-width: 300px; max-width: 100%; padding: 25px; margin: 20px; background-color: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 20px; /* Added margin-bottom for stacked view */">
+          <h4 style="font-size: clamp(22px, 2.8vw, 30px); margin-bottom: 25px; font-weight: 600; color: #00BFFF;">If you're digging into Odoo's data, this makes it faster. Simple as that!</h4>
+          <ul style="list-style: none; padding-left: 0; font-size: clamp(16px, 1.9vw, 19px); color: #cccccc;">
+            <li style="margin-bottom: 20px; display: flex; align-items: flex-start; line-height: 1.6;">
+              
+              <span style="font-weight: bold; margin-right: 12px; font-size: 22px; line-height: 1.3; flex-shrink: 0; color: #00BFFF;">&#10024;</span> 
+              <b style="color: #7FFF00;">Developers:</b>
+              Quickly scaffold SQL queries for custom development, test data assumptions.
+            </li>
+            <li style="margin-bottom: 20px; display: flex; align-items: flex-start; line-height: 1.6;">
+              <span style="font-weight: bold; margin-right: 12px; font-size: 22px; line-height: 1.3; flex-shrink: 0; color: #00BFFF;">&#128200;</span> 
+              <b style="color: #7FFF00;">Data Analysts / BI Folks:</b>
+              Generate SQL for ad-hoc analysis, extract specific datasets for external tools.
+            </li>
+            <li style="margin-bottom: 20px; display: flex; align-items: flex-start; line-height: 1.6;">
+              <span style="font-weight: bold; margin-right: 12px; font-size: 22px; line-height: 1.3; flex-shrink: 0; color: #00BFFF;">&#128269;</span> 
+              <b style="color: #7FFF00;">Technical Power Users:</b>
+              Go beyond standard reports without needing to be an Odoo ORM wizard.
+            </li>
+            <li style="margin-bottom: 20px; display: flex; align-items: flex-start; line-height: 1.6;">
+              <span style="font-weight: bold; margin-right: 12px; font-size: 22px; line-height: 1.3; flex-shrink: 0; color: #00BFFF;">&#129662;</span> 
+              <b style="color: #7FFF00;">Consultants:</b>
+              Rapidly explore client data, validate configurations, or demonstrate data relationships.
+            </li>
+            <li style="margin-bottom: 20px; display: flex; align-items: flex-start; line-height: 1.6;">
+              <span style="font-weight: bold; margin-right: 12px; font-size: 22px; line-height: 1.3; flex-shrink: 0; color: #00BFFF;">&#127919;</span> 
+               <b style="color: #7FFF00;">Anyone Needing Custom Lists Fast:</b>
+              If you find yourself exporting to Excel constantly just to filter/sort in a specific way, try asking first.
+            </li>
+          </ul>
+         </div>
+    
+        <!-- Column 2: Pain Points Solved -->
+        <div style="flex: 1 1 300px; /* Adapts: tries to be 300px, grows if space, wraps if not */ min-width: 300px; max-width: 100%; padding: 25px; margin: 20px; background-color: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 20px; /* Added margin-bottom for stacked view */">
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"  
+            alt="Pain Points Solved Visually" 
+            style="width: 100%; max-width: 610px; margin-top: 30px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); display: block; margin-left: auto; margin-right: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <source src="./q4.webm" type="video/webm" />
+          </video>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Key Features Section -->
+    <div style="margin-bottom: 80px; text-align: center;">
+        <h3 style="font-size: clamp(28px, 4vw, 40px); color: white; margin-bottom: 50px;">
+         <span style="color: #00BFFF;">What It Does</span> (No Frills):
+        </h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 30px;">
+            <!-- Feature Card 1 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; /* sm, lg for media queries */ box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128172; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;"> Natural Language to Odoo SQL</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;"> You type a question, it writes the PostgreSQL query for your Odoo database using its understanding of common Odoo table structures.</p>
+            </div>
+            <!-- Feature Card 2 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128202; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">See Your Data, Instantly</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;">If the SQL is valid, it runs <b>(read-only!)</b> and shows you the results in a clean table, right in Odoo.</p>
+            </div>
+            <!-- Feature Card 3 -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+                <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128451; </span>
+                <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">Grab the SQL, Or the Data</h4>
+                <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;">Copy the generated SQL to use elsewhere, or export the resulting data table directly to Excel.</p>
+            </div>
+            <!-- Add more cards as needed -->
+            <div style="background-color: #1A1F2A; margin: 20px; padding: 30px; border-radius: 10px; width: 100%; sm-width: 45%; lg-width: 30%; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: left;">
+              <span style="color: #FFD700; font-weight: bold; font-size: 24px; margin-right: 10px; display: block; margin-bottom: 10px;">&#128736; </span>
+              <h4 style="color: white; font-size: clamp(18px, 2.2vw, 22px); margin-bottom: 10px;">AI Helps Fix Mistakes</h4>
+              <p style="font-size: clamp(14px, 1.7vw, 16px); color: #b0b0b0;">If the first SQL try has an error on execution, the AI takes another shot at correcting it based on the database error, or tells you why it couldn't.</p>
+          </div>
+        </div>
+        <video
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"  
+            alt="Key Features Visualized" 
+            style="width: 70%; max-width: 600px; margin: 40px auto 0 auto; border-radius: 10px; border: 1px solid #444; display: block;">
+            <source src="./q5.webm" type="video/webm" />
+        </video>
+    </div>
+
+    <!-- About Niyu Section -->
+    <div style="border-top: 1px solid #4A5568; border-bottom: 1px solid #4A5568; padding: 70px 25px; text-align: center; margin: 80px 0; background: radial-gradient(circle at 50% 0%, rgba(30,37,48,0.9) 0%, rgba(13,17,23,1) 80%); box-shadow: 0 0 25px rgba(0,191,255,0.1) inset;">
+      <h3 style="font-size: clamp(30px, 5vw, 48px); line-height: 1.2; color: white; margin-bottom: 25px; font-weight: 700; letter-spacing: -0.5px;">
+        Nerds Corner
+      </h3>
+   
+      <!-- Key Features Section -->
+      <div style="max-width: 1100px; margin: 0 auto;">
+        <h4 style="font-size: clamp(24px, 3.5vw, 32px); color: white; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;">
+          For the  <span style="color: #00BFFF;">Technically Curious</span>
+        </h4>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+          <!-- Feature 3 -->
+          <div style="flex: 1 1 300px; min-width: 280px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 380px; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0,191,255,0.2); border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 15px; color: #00BFFF;">&#9889;</div>
+            <h5 style="font-size: clamp(18px, 2.2vw, 22px); color: white; margin-bottom: 10px; font-weight: 600;">Local Schema Analysis</h5>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #b0b8c4; line-height: 1.6;">Your Odoo module analyzes your database structure to find the right SQL table and column names related to your question. This specific, local context is key.</p>
+          </div>
+          <!-- Feature 1 -->
+          <div style="flex: 1 1 300px; min-width: 280px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 380px; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0,191,255,0.2); border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 15px; color: #00BFFF;">&#128172;</div>
+            <h5 style="font-size: clamp(18px, 2.2vw, 22px); color: white; margin-bottom: 10px; font-weight: 600;">AI-Powered SQL Crafting</h5>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #b0b8c4; line-height: 1.6;">Your natural language question, Odoo version, and the relevant SQL schema context are sent to a large language model (via your OpenAI key) to generate the SQL.</p>
+          </div>
+    
+          <!-- Feature 2 -->
+          <div style="flex: 1 1 300px; min-width: 280px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 380px; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0,191,255,0.2); border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 15px; color: #00BFFF;">&#129504;</div>
+            <h5 style="font-size: clamp(18px, 2.2vw, 22px); color: white; margin-bottom: 10px; font-weight: 600;">Direct DB Execution</h5>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #b0b8c4; line-height: 1.6;">Generated <b>SELECT</b> queries are run directly against your PostgreSQL database using Odoo's standard cursor. No ORM middleman for the execution itself.</p>
+          </div> 
+          <!-- Feature 4 -->
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-left: 135px;">
+          <div style="flex: 1 1 300px; min-width: 280px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 380px; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0,191,255,0.2); border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 15px; color: #00BFFF;">&#128421;</div>
+            <h5 style="font-size: clamp(18px, 2.2vw, 22px); color: white; margin-bottom: 10px; font-weight: 600;">Iterative Correction Loop</h5>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #b0b8c4; line-height: 1.6;">If a generated SQL query throws a database error, the error, original query, and schema go back to the AI for a correction attempt.</p>
+          </div>
+    
+          <!-- Feature 5 -->
+          <div style="flex: 1 1 300px; min-width: 280px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 380px; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0,191,255,0.2); border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 15px; color: #00BFFF;">&#9881; </div>
+            <h5 style="font-size: clamp(18px, 2.2vw, 22px); color: white; margin-bottom: 10px; font-weight: 600;">Client-Side UI (OWL)</h5>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #b0b8c4; line-height: 1.6;">A responsive Odoo Web Library (OWL) component handles the user interface for a smooth experience within Odoo.
+</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid #4A5568; border-bottom: 1px solid #4A5568; padding: 70px 25px; text-align: center; margin: 80px 0; background: radial-gradient(circle at 50% 0%, rgba(30,37,48,0.9) 0%, rgba(13,17,23,1) 80%); box-shadow: 0 0 25px rgba(0,191,255,0.1) inset;">
+      <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+        <h3 style="font-size: clamp(28px, 4.5vw, 44px); line-height: 1.3; color: white; margin-bottom: 15px; font-weight: 700; letter-spacing: -0.5px;">
+          What's Coming Next?
+        </h3>
+        <p style="font-size: clamp(24px, 3.5vw, 32px); line-height: 1.7; color: #a0aec0; max-width: 800px; margin: 0 auto 50px auto;">
+          We're focused on core SQL generation now. Later, we're looking at -
+        </p>
+    
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+    
+          <!-- Tip 1: Be Specific -->
+          <div style="flex: 1 1 320px; min-width: 300px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 400px; background-color: #1A202C; border: 1px solid #2D3748; border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 6px 20px rgba(0,0,0,0.25);">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+              <span style="font-size: 30px; margin-right: 15px; color: #4FD1C5; /* Teal accent */ line-height: 1;">&#127919;</span>
+              <h5 style="font-size: clamp(19px, 2.3vw, 23px); color: white; margin: 0; font-weight: 600;">AI Suggested Charts</h5>
+            </div>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #cbd5e0; line-height: 1.65;">
+             Automatically suggest and display basic charts (bar, line, pie) based on the queried data.
+            </p>
+          </div>
+    
+          <!-- Tip 2: Use Timeframes -->
+          <div style="flex: 1 1 320px; min-width: 300px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 400px; background-color: #1A202C; border: 1px solid #2D3748; border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 6px 20px rgba(0,0,0,0.25);">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+              <span style="font-size: 30px; margin-right: 15px; color: #63B3ED; /* Blue accent */ line-height: 1;">&#9203;</span>
+              <h5 style="font-size: clamp(19px, 2.3vw, 23px); color: white; margin: 0; font-weight: 600;">Cloud Spreadsheet Integration</h5>
+            </div>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #cbd5e0; line-height: 1.65;">
+              Direct export/sync to Google Sheets or Excel Online.
+            </p>
+          </div>
+    
+          <!-- Tip 3: Ask One Thing at a Time -->
+          <div style="flex: 1 1 320px; min-width: 300px; margin: 20px;  box-shadow: 0 10px 40px rgba(0, 191, 255, 0.3); max-width: 400px; background-color: #1A202C; border: 1px solid #2D3748; border-radius: 12px; padding: 30px 25px; text-align: left; box-shadow: 0 6px 20px rgba(0,0,0,0.25);">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+              <span style="font-size: 30px; margin-right: 15px; color: #F6AD55; /* Orange accent */ line-height: 1;">&#9757;</span>
+              <h5 style="font-size: clamp(19px, 2.3vw, 23px); color: white; margin: 0; font-weight: 600;">Advanced Schema Understanding</h5>
+            </div>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #cbd5e0; line-height: 1.65;">
+              Better handling of complex custom models and many-to-many relationships automatically.
+
+            </p>
+          </div>
+    
+      </div>
+    </div>
+
+
+
+    <!-- Important Points / Fine Print -->
+    <div style="max-width: 900px; margin: 0 auto 80px auto; padding: 40px; background-color: #161B22; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.2);">
+        <h3 style="font-size: clamp(24px, 3.5vw, 36px); line-height: 1.4; color: white; margin-bottom: 30px; text-align: center;">
+             <span style="color: #FFD700;">Data  </span> Privacy / Important <span style="color: #FFD700;">Notes</span>:
+        </h3>
+        <ul style="list-style-type: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #e0e0e0;">
+            <li style="margin-bottom: 25px; display: flex; align-items: flex-start;">
+                <span style="color: #FFA500; font-weight: bold; margin-right: 15px; font-size: 22px; line-height: 1.5;">&#128273;</span>
+                <div><span style="font-weight:bold; color: white;">Your OpenAI Key, Your Control:</span> The module requires YOUR OpenAI API key. All AI processing happens under your OpenAI account, and you are responsible for any associated costs.</div>
+            </li>
+            <li style="margin-bottom: 25px; display: flex; align-items: flex-start;">
+                <span style="color: #FFA500; font-weight: bold; margin-right: 15px; font-size: 22px; line-height: 1.5;">&#128176;</span>
+                <div><span style="font-weight:bold; color: white;">Data Execution is Local:</span> The generated SQL query runs directly on your Odoo server against your database.</div>
+            </li>
+            <li style="margin-bottom: 25px; display: flex; align-items: flex-start;">
+                <span style="color: #FFA500; font-weight: bold; margin-right: 15px; font-size: 22px; line-height: 1.5;">&#128737;</span>
+                <div>
+                    <span style="font-weight:bold; color: white;">What Gets Sent to AI?</span>
+                    <ul style="list-style-type: '- '; padding-left: 20px; margin-top: 10px; color: #c0c0c0; font-size: clamp(14px, 1.7vw, 16px);">
+                        <li>Your natural language question.</li>
+                        <li>Snippets of your database's structure. Your actual data records (e.g., customer names, sales amounts) are NOT sent to the AI for generating the SQL query.</li>
+                        <li>If a generated SQL query fails, the failed SQL and the database error message are sent back to the AI (with the schema) for a correction attempt.</li>
+                    </ul>
+                </div>
+            </li>
+            <li style="margin-bottom: 15px; display: flex; align-items: flex-start;">
+                <span style="color: #FFA500; font-weight: bold; margin-right: 15px; font-size: 22px; line-height: 1.5;">&#129504;</span>
+                <div><span style="font-weight:bold; color: white;">No Niyu Labs Server Involved</span> This module directly uses your Odoo instance and your OpenAI key. We don't see your queries or your data.</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- CTA Section -->
+    <div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #003973 0%, #00BFFF 100%); border-radius: 15px; margin-bottom: 50px;">
+      <p style="font-size: clamp(20px, 3vw, 28px); line-height: 1.5; color: white; font-weight: bold; margin-bottom: 15px;">
+        Need More? Custom AI for Your Odoo? 
+      </p>
+      <p style="font-size: clamp(16px, 2vw, 20px); line-height: 1.7; color: #e0e0e0; margin-bottom: 25px;">
+        If you need <b>Deeper understanding of your specific Odoo customizations. Unique AI-driven workflows or data analysis features for your business. Other AI integrations</b> with Odoo. We build these things.
+      </p>
+      <a
+        href="mailto:info@niyulabs.com"
+        style="
+          color: #0D1117;
+          background-color: #7FFF00;
+          padding: 15px 35px;
+          border-radius: 50px; /* Pill shape */
+          text-decoration: none;
+          font-weight: bold;
+          font-size: clamp(16px, 2vw, 18px);
+          display: inline-block;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          box-shadow: 0 4px 15px rgba(127, 255, 0, 0.4);
+        "
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(127, 255, 0, 0.6)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(127, 255, 0, 0.4)';"
+      >
+        Connect with Us: info@niyulabs.com
+      </a>
+    </div>
+
+
+    <div style="padding: 80px 25px; margin: 80px 0; background: linear-gradient(160deg, #111827 0%, #1F2937 100%); /* Dark blue-grey gradient */">
+      <div style="max-width: 950px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 60px;">
+          <h3 style="font-size: clamp(30px, 5vw, 46px); line-height: 1.2; color: white; margin-bottom: 15px; font-weight: 700; letter-spacing: -0.5px;">
+            Frequently Asked Questions (FAQs):
+          </h3>
+        </div>
+    
+        <div class="faq-list">
+          <!-- FAQ 1 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); /* Translucent dark card */ border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; /* Light grey for question */ margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #c160fa; /* Light Blue */ margin-right: 15px; font-weight: bold; line-height: 1;">01</span>
+              What Odoo versions does this module support?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; /* Slightly softer for answer */ line-height: 1.7; margin: 0; padding-left: 34px; /* Align with question text */">
+              It's built and tested primarily for Odoo 18. It should also work well with Odoo 15, 16, and 17. If you need support for older Odoo versions, contact us to discuss.
+            </p>
+          </div>
+    
+          <!-- FAQ 2 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #ff5050; margin-right: 15px; font-weight: bold; line-height: 1;">02</span>
+              What do I actually need to make this work?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              An Odoo instance (v15+ ideally) and your own API key from OpenAI (the one you use for ChatGPT Plus or their API platform). That's it.
+            </p>
+          </div>
+    
+          <!-- FAQ 3 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #60A5FA; margin-right: 15px; font-weight: bold; line-height: 1;">03</span>
+              Is my sensitive Odoo data sent to external servers or Niyu Labs?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              No, your actual data records (like customer names, sales figures, product details) are NOT sent to any Niyu Labs server. To understand your question, the module sends the text of your question and relevant parts of your database structure.
+            </p>
+          </div>
+          
+          <!-- FAQ 4 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #34D399; /* Green */ margin-right: 15px; font-weight: bold; line-height: 1;">04</span>
+              What about pricing? Is this a subscription?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              No subscription. You make a one-time purchase for this module from the Odoo App Store. The only ongoing potential cost is your own usage of the OpenAI API, which is billed directly by OpenAI to your OpenAI account based on how many questions you ask and their complexity.
+            </p>
+          </div>
+    
+          <!-- FAQ 5 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #F87171; /* Red */ margin-right: 15px; font-weight: bold; line-height: 1;">05</span>
+              Does this always generate perfect SQL? What if the AI gets it wrong?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              The AI is very capable, especially with good schema context, but it's not infallible. If it can't understand your question or the schema context isn't clear enough for it to generate SQL, it will usually tell you it failed and give a reason (this will show up in red in the UI). Sometimes, you might need to rephrase your question more clearly.
+            </p>
+          </div>
+          
+          <!-- FAQ 6 -->
+          <div style="margin-bottom: 25px; background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #FBBF24; /* Amber */ margin-right: 15px; font-weight: bold; line-height: 1;">06</span>
+              How does this "read-only" SQL query work? Is my data safe from accidental changes?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              The module is designed to only instruct the AI to generate SELECT (read-only) SQL queries. We have basic checks to prevent other commands. However, for true peace of mind and best practice on a production system, we strongly recommend your Odoo database administrator configures a dedicated PostgreSQL database user that only has SELECT permissions, and configures Odoo (or this module, if enhanced) to use that specific user for these AI-generated queries. This ensures that even if a rogue query somehow got through, the database itself would block any attempt to modify data.
+            </p>
+          </div>
+    
+          <!-- FAQ 7 -->
+          <div style="background-color: rgba(55, 65, 81, 0.5); border-radius: 10px; padding: 25px 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <h4 style="font-size: clamp(18px, 2.3vw, 22px); color: #E5E7EB; margin: 0 0 12px 0; font-weight: 600; display: flex; align-items: center;">
+              <span style="font-size: 28px; color: #4424fb; /* Amber */ margin-right: 15px; font-weight: bold; line-height: 1;">07</span>
+              Can it query data from my custom Odoo modules or custom fields?
+            </h4>
+            <p style="font-size: clamp(15px, 1.9vw, 18px); color: #D1D5DB; line-height: 1.7; margin: 0; padding-left: 34px;">
+              Yes, to a good extent. The module attempts to send the schema (SQL table and column names) for relevant tables, including custom ones (x_studio_... fields or custom models that are standard PostgreSQL tables). If your custom fields and tables have reasonably descriptive SQL names, the AI can often include them. Highly complex or unusually structured custom data might be more challenging for the AI.
+            </p>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 80px 25px; margin: 80px 0; background-color: #1F2937; /* Slightly lighter dark blue-grey */ border-top: 1px solid #374151; border-bottom: 1px solid #374151;">
+      <div style="max-width: 1100px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 60px;">
+          <h3 style="font-size: clamp(30px, 5vw, 46px); line-height: 1.2; color: white; margin-bottom: 15px; font-weight: 700; letter-spacing: -0.5px;">
+            Your Guide to Niyu AI SQL
+          </h3>
+          <p style="font-size: clamp(17px, 2.1vw, 21px); line-height: 1.7; color: #9CA3AF; max-width: 800px; margin: 0 auto;">
+            Quick and easy setup.
+          </p>
+        </div>
+    
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+    
+          <!-- Section 1: Introduction -->
+          <div style="background-color: #293341; /* Darker card */ margin: 10px; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <span style="color: #3B82F6; /* Blue accent for icon */ margin-right: 12px; font-size: 22px;">&#10067;</span>
+              <h4 style="font-size: clamp(20px, 2.5vw, 24px); color: white; margin: 0; font-weight: 600;">Installation</h4>
+            </div>
+            <p style="font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <ul style="list-style: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <li style="margin-bottom: 8px;">Place the `ai_sql` module folder into your Odoo custom addons directory.</li>
+              <li style="margin-bottom: 8px;">Update your Odoo apps list and install "AI SQL Generator".</li>
+            </ul>
+            </p>
+          </div>
+    
+          <!-- Section 2: Installation & Configuration -->
+          <div style="background-color: #293341; border-radius: 10px; margin: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <span style="color: #3B82F6; margin-right: 12px; font-size: 22px;">&#128737;</span>
+              <h4 style="font-size: clamp(20px, 2.5vw, 24px); color: white; margin: 0; font-weight: 600;">Configuration</h4>
+            </div>
+            <ul style="list-style: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <li style="margin-bottom: 8px;">Go to Odoo Settings -> General Settings. Scroll to "AI SQL Generator Configuration.".</li>
+              <li style="margin-bottom: 8px;">Enter your OpenAI API Key. Click Save.</li>
+            </ul>
+          </div>
+    
+          <!-- Section 3: How to Use -->
+          <div style="background-color: #293341; border-radius: 10px; margin: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <span style="color: #3B82F6; margin-right: 12px; font-size: 22px;">&#129513;</span>
+              <h4 style="font-size: clamp(20px, 2.5vw, 24px); color: white; margin: 0; font-weight: 600;">How to Use</h4>
+            </div>
+            <ul style="list-style: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <li style="margin-bottom: 8px;">Find "AI SQL Generator" in your Odoo menus. Click "Generate SQL".</li>
+              <li style="margin-bottom: 8px;">Type your question, click "Generate SQL".</li>
+              <li style="margin-bottom: 8px;">View SQL, see data preview, export to Excel.</li>
+            </ul>
+          </div>
+          
+          <!-- Section 4: Example Queries & Tips -->
+          <div style="background-color: #293341; border-radius: 10px; margin: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <span style="color: #3B82F6; margin-right: 12px; font-size: 22px;">&#128179;</span>
+              <h4 style="font-size: clamp(20px, 2.5vw, 24px); color: white; margin: 0; font-weight: 600;">Effective Querying</h4>
+            </div>
+            <ul style="list-style: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <li style="margin-bottom: 8px;">Be as specific as possible. Include timeframes ("last month", "in 2023").</li>
+              <li style="margin-bottom: 8px;">Use table/field names if you know them for precision (e.g., "show `name`, `email` from `res_partner` where `country_id` is for Belgium").</li>
+            </ul>
+          </div>
+    
+          <!-- Section 5: Troubleshooting -->
+          <div style="background-color: #293341; border-radius: 10px; margin: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+              <span style="color: #3B82F6; margin-right: 12px; font-size: 22px;">&#129327;</span>
+              <h4 style="font-size: clamp(20px, 2.5vw, 24px); color: white; margin: 0; font-weight: 600;">Troubleshooting</h4>
+            </div>
+            <ul style="list-style: none; padding-left: 0; font-size: clamp(15px, 1.8vw, 17px); color: #D1D5DB; line-height: 1.65;">
+              <li style="margin-bottom: 8px;">"OpenAI API Key not configured/invalid"**: Double-check your key in settings and that it's active with credits in your OpenAI account.</li>
+              <li style="margin-bottom: 8px;">SQL Execution Error:** The AI's generated SQL might still have a database-level error. The module will attempt one AI correction. If it still fails, the error and the SQL are shown. You may need to adjust your English query or the SQL itself if you're comfortable.</li>
+            </ul>
+          </div>
+    
+         
+    
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>

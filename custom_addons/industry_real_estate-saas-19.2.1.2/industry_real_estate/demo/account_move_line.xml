@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="account_move_line_141" model="account.move.line">
+        <field name="move_id" ref="account_move_62"/>
+        <field name="product_id" ref="product_product_43"/>
+        <field name="quantity">1.0</field>
+        <field name="price_unit">160.0</field>
+        <field name="analytic_distribution" eval="{'%s'%(ref('account_analytic_account_21')): 100.0}"/>
+    </record>
+    <record id="account_move_line_143" model="account.move.line">
+        <field name="move_id" ref="account_move_63"/>
+        <field name="product_id" ref="product_product_49"/>
+        <field name="quantity">1.0</field>
+        <field name="price_unit">400.0</field>
+        <field name="analytic_distribution" eval="{'%s'%(ref('account_analytic_account_23')): 100.0}"/>
+    </record>
+    <record id="account_move_line_183" model="account.move.line">
+        <field name="move_id" ref="account_move_82"/>
+        <field name="product_id" ref="product_product_46"/>
+        <field name="quantity">1.0</field>
+        <field name="price_unit">800.0</field>
+        <field name="analytic_distribution" eval="{'%s'%(ref('account_analytic_account_20')): 25.0, '%s'%(ref('account_analytic_account_21')): 25.0, '%s'%(ref('account_analytic_account_22')): 25.0, '%s'%(ref('account_analytic_account_26')): 25.0}"/>
+    </record>
+    <record id="account_move_line_186" model="account.move.line">
+        <field name="move_id" ref="account_move_82"/>
+        <field name="product_id" ref="product_product_48"/>
+        <field name="quantity">1.0</field>
+        <field name="price_unit">2000.0</field>
+        <field name="analytic_distribution" eval="{'%s'%(ref('account_analytic_account_20')): 25.0, '%s'%(ref('account_analytic_account_21')): 25.0, '%s'%(ref('account_analytic_account_22')): 25.0, '%s'%(ref('account_analytic_account_26')): 25.0}"/>
+    </record>
+    <record id="account_move_line_187" model="account.move.line">
+        <field name="move_id" ref="account_move_83"/>
+        <field name="product_id" ref="product_product_47"/>
+        <field name="quantity">1.0</field>
+        <field name="price_unit">1200.0</field>
+        <field name="analytic_distribution" eval="{'%s'%(ref('account_analytic_account_20')): 25.0, '%s'%(ref('account_analytic_account_21')): 25.0, '%s'%(ref('account_analytic_account_22')): 25.0, '%s'%(ref('account_analytic_account_26')): 25.0}"/>
+    </record>
+</odoo>

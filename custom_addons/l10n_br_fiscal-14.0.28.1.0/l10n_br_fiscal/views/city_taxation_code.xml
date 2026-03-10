@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2020 KMEE INFORMATICA LTDA
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="city_taxation_code_search_view" model="ir.ui.view">
+        <field name="name">city.taxation.code.search (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.city.taxation.code</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code" />
+                <field name="name" />
+                <field name="service_type_id" />
+                <field name="state_id" />
+                <field name="city_id" />
+                <field name="cnae_id" />
+            </search>
+        </field>
+    </record>
+
+    <record id="city_taxation_code_tree_view" model="ir.ui.view">
+        <field name="name">city.taxation.code.tree (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.city.taxation.code</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="service_type_id" />
+                <field name="state_id" />
+                <field name="city_id" />
+                <field name="cnae_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="city_taxation_code_form_view" model="ir.ui.view">
+        <field name="name">city.taxation.code.form (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.city.taxation.code</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="service_type_id" />
+                        <field name="state_id" />
+                        <field name="city_id" />
+                        <field name="cnae_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

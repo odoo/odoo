@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="True">
+
+    <record id="res_partner_anonimo" model="res.partner">
+        <field name="name">Consumidor Anônimo</field>
+        <field name="legal_name">Consumidor Anônimo</field>
+        <field
+            name="fiscal_profile_id"
+            ref="l10n_br_fiscal.partner_fiscal_profile_pfnc"
+        />
+        <field name="ind_ie_dest">9</field>
+    </record>
+
+    <record id="res_partner_ministerio_fazenda" model="res.partner">
+        <field name="name">Ministério da Fazenda</field>
+        <field name="legal_name">Ministério da Fazenda</field>
+        <field name="is_company">True</field>
+    </record>
+
+    <record id="res_partner_previdencia_social" model="res.partner">
+        <field name="name">Previdência Social</field>
+        <field name="legal_name">Previdência Social</field>
+        <field name="is_company">True</field>
+    </record>
+
+    <record id="res_partner_prefeitura_municipal" model="res.partner">
+        <field name="name">Prefeitura Municipal</field>
+        <field name="legal_name">Prefeitura Municipal</field>
+        <field name="is_company">True</field>
+    </record>
+
+</odoo>

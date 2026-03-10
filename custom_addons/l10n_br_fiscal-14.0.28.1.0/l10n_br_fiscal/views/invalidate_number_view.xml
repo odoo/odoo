@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="invalidate_number_search" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.invalidate.number.search</field>
+    <field name="model">l10n_br_fiscal.invalidate.number</field>
+    <field name="arch" type="xml">
+      <search string="Invalidate Number">
+        <field name="document_serie_id" />
+        <field name="company_id" />
+      </search>
+    </field>
+  </record>
+
+  <record id="invalidate_number_tree" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.invalidate.number.tree</field>
+    <field name="model">l10n_br_fiscal.invalidate.number</field>
+    <field name="arch" type="xml">
+      <tree>
+          <field name="company_id" />
+          <field name="document_type_id" />
+          <field name="document_serie_id" />
+          <field name="number_start" />
+          <field name="number_end" />
+          <field name="state" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="invalidate_number_form" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.invalidate.number.form</field>
+    <field name="model">l10n_br_fiscal.invalidate.number</field>
+    <field name="arch" type="xml">
+      <form string="Invalidate Number">
+          <header>
+              <field name="state" widget="statusbar" />
+              <button
+                        name="action_invalidate"
+                        type="object"
+                        string="Confirmar"
+                        states="draft"
+                        class="oe_highlight"
+                    />
+          </header>
+          <group name="serie">
+              <field name="company_id" />
+              <field name="document_type_id" />
+              <field name="document_serie_id" />
+          </group>
+          <group name="invalidation">
+              <field name="number_start" />
+              <field name="number_end" />
+              <field name="justification" />
+          </group>
+      </form>
+    </field>
+  </record>
+
+</odoo>

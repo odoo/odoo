@@ -1,0 +1,1981 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+
+    <!-- Service products -->
+    <!-- Virtual Interior Design -->
+    <record id="product.product_product_1" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+        <field name="fiscal_type">09</field>
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_00" />
+        <field name="icms_origin" eval="" />
+        <field name="service_type_id" ref="l10n_br_fiscal.service_type_701" />
+        <field name="nbs_id" ref="l10n_br_fiscal.nbs_114021100" />
+    </record>
+    <!-- fiscal_type property for product_product_1 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_1_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_1').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_1 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_1_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_1').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Virtual Home Staging -->
+    <record id="product.product_product_2" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+        <field name="fiscal_type">09</field>
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_00" />
+        <field name="icms_origin" eval="" />
+        <field name="service_type_id" ref="l10n_br_fiscal.service_type_701" />
+        <field name="nbs_id" ref="l10n_br_fiscal.nbs_114021100" />
+    </record>
+    <!-- fiscal_type property for product_product_2 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_2_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_2').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_2 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_2_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_2').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <record id="product.expense_hotel" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+        <field name="fiscal_type">09</field>
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_00" />
+        <field name="icms_origin" eval="" />
+        <field name="service_type_id" ref="l10n_br_fiscal.service_type_901" />
+        <field name="nbs_id" ref="l10n_br_fiscal.nbs_114021100" />
+    </record>
+    <!-- fiscal_type property for expense_hotel for simples nacional company -->
+    <record forcecreate="True" id="fiscal_type_expense_hotel_sn" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.expense_hotel').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for expense_hotel for lucro presumido company -->
+    <record forcecreate="True" id="fiscal_type_expense_hotel_lp" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.expense_hotel').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Physical Products -->
+    <!-- Office Chair -->
+    <record id="product.product_delivery_01" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94013090" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_delivery_01 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_delivery_01_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_delivery_01 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_delivery_01_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_delivery_01 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_delivery_01_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_delivery_01 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_delivery_01_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Office Lamp -->
+    <record id="product.product_delivery_02" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94052000" />
+        <field name="cest_id" ref="l10n_br_fiscal.cest_2112400" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_delivery_02 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_delivery_02_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_delivery_02 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_delivery_02_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_delivery_02 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_delivery_02_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_delivery_02 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_delivery_02_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Office Design Software -->
+    <record id="product.product_order_01" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_00" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_order_01 for simples nacional company -->
+    <record forcecreate="True" id="fiscal_type_product_order_01_sn" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_order_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_order_01 for lucro presumido company -->
+    <record forcecreate="True" id="fiscal_type_product_order_01_lp" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_order_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_order_01 for simples nacional company -->
+    <record forcecreate="True" id="icms_origin_product_order_01_sn" model="ir.property">
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_order_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_order_01 for lucro presumido company -->
+    <record forcecreate="True" id="icms_origin_product_order_01_lp" model="ir.property">
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_order_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Desk Combination -->
+    <record id="product.product_product_3" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_3 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_3_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_3').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_3 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_3_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_3').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_3 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_3_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_3').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_3 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_3_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_3').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- FURN_0096 - Customizable Desk -->
+    <record id="product.product_product_4" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_4 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_4_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_4').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_4 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_4_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_4').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_4 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_4_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_4').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_4 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_4_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_4').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- FURN_0097 - Customizable Desk -->
+    <record id="product.product_product_4b" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">0</field>
+    </record>
+
+    <!-- FURN_0098 - Customizable Desk -->
+    <record id="product.product_product_4c" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">0</field>
+    </record>
+
+    <!-- DESK0004 - Customizable Desk -->
+    <record id="product.product_product_4c" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">0</field>
+    </record>
+
+    <!-- Corner Desk Right Sit -->
+    <record id="product.product_product_5" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_5 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_5_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_5').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_5 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_5_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_5').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_5 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_5_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_5').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_5 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_5_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_5').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Large Cabinet -->
+    <record id="product.product_product_6" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_6 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_6_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_6').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_6 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_6_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_6').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_6 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_6_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_6').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_6 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_6_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_6').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Storage Box -->
+    <record id="product.product_product_7" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_73269090" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_73" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_7 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_7_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_7').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_7 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_7_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_7').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_7 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_7_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_7').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_7 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_7_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_7').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Large Desk -->
+    <record id="product.product_product_8" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_8 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_8_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_8').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_8 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_8_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_8').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_8 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_8_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_8').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_8 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_8_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_8').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Pedal Bin -->
+    <record id="product.product_product_9" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_73239900" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_73" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">2</field>
+    </record>
+    <!-- fiscal_type property for product_product_9 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_9_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_9').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_9 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_9_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_9').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_9 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_9_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">2</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_9').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_9 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_9_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">2</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_9').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Cabinet with Doors -->
+    <record id="product.product_product_10" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_10 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_10_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_10').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_10 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_10_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_10').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_10 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_10_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_10').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_10 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_10_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_10').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Conference Chair -->
+    <record id="product.product_product_11" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94031000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_11 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_11_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_11').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_11 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_11_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_11').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_11 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_11_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_11').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_11 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_11_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_11').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Conference Chair -->
+    <record id="product.product_product_11b" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94031000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+
+    <!-- MRP Demo Data-->
+    <!-- Office Chair Black -->
+    <record id="product.product_product_12" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94013090" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_12 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_12_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_12').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_12 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_12_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_12').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_12 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_12_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_12').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_12 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_12_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_12').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Corner Desk Black -->
+    <record id="product.product_product_13" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_13 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_13_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_13').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_13 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_13_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_13').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_13 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_13_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_13').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_13 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_13_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_13').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Drawer Black -->
+    <record id="product.product_product_16" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_16 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_16_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_16').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_16 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_16_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_16').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_16 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_16_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_16').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_16 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_16_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_16').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Flipover -->
+    <record id="product.product_product_20" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_96100000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_96" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_20 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_20_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_20').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_20 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_20_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_20').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_20 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_20_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_20').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_20 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_20_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_20').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Desk Stand with Screen -->
+    <record id="product.product_product_22" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_22 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_22_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_22').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_22 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_22_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_22').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_22 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_22_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_22').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_22 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_22_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_22').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Individual Workplace -->
+    <record id="product.product_product_24" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for product_product_24 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_24_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_24').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_24 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_24_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_24').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_24 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_24_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_24').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_24 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_24_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_24').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Acoustic Bloc Screens -->
+    <record id="product.product_product_25" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">3</field>
+    </record>
+    <!-- fiscal_type property for product_product_25 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_25_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_25').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_25 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_25_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_25').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_25 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_25_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">3</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_25').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_25 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_25_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">3</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_25').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Drawer -->
+    <record id="product.product_product_27" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">5</field>
+    </record>
+    <!-- fiscal_type property for product_product_27 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_27_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_27').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for product_product_27 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_product_product_27_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_27').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for product_product_27 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_27_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_27').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for product_product_27 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_product_product_27_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">5</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.product_product_27').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Four Person Desk -->
+    <record id="product.consu_delivery_03" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for consu_delivery_03 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_03_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_03').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for consu_delivery_03 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_03_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_03').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for consu_delivery_03 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_03_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_03').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for consu_delivery_03 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_03_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_03').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Large Meeting Table -->
+    <record id="product.consu_delivery_02" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94033000" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">00</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for consu_delivery_02 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_02_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for consu_delivery_02 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_02_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">00</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for consu_delivery_02 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_02_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for consu_delivery_02 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_02_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_02').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Three-Seat Sofa -->
+    <record id="product.consu_delivery_01" model="product.product">
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_94016100" />
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_94" />
+        <field name="fiscal_type">04</field>
+        <field name="icms_origin">0</field>
+    </record>
+    <!-- fiscal_type property for consu_delivery_01 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_01_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for consu_delivery_01 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_consu_delivery_01_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">04</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+    <!-- icms_origin property for consu_delivery_01 for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_01_sn"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- icms_origin property for consu_delivery_01 for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="icms_origin_consu_delivery_01_lp"
+        model="ir.property"
+    >
+        <field name="name">icms_origin</field>
+        <field name="fields_id" ref="field_product_template__icms_origin" />
+        <field name="value">0</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.consu_delivery_01').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- TODO: Restaurant Expenses: How expenses must be record at fiscal? -->
+    <record id="product.expense_product" model="product.product">
+        <field name="fiscal_type">99</field>
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+    </record>
+    <!-- fiscal_type property for expense_product for simples nacional company -->
+    <record forcecreate="True" id="fiscal_type_expense_product_sn" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">99</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.expense_product').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for expense_product for lucro presumido company -->
+    <record forcecreate="True" id="fiscal_type_expense_product_lp" model="ir.property">
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">99</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('product.expense_product').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <!-- Service products -->
+    <!-- Customized Development-->
+    <record id="customized_development_sale" model="product.product">
+        <field name="name">Customized Odoo Development</field>
+        <field name="list_price">100.0</field>
+        <field name="standard_price">0.0</field>
+        <field name="type">service</field>
+        <field name="default_code">ODOO_DEV</field>
+        <field name="uom_id" ref="uom.product_uom_hour" />
+        <field name="uom_po_id" ref="uom.product_uom_hour" />
+        <field name="categ_id" ref="product.product_category_4" />
+        <field name="ncm_id" ref="l10n_br_fiscal.ncm_00000000" />
+        <field name="fiscal_type">09</field>
+        <field name="tax_icms_or_issqn">issqn</field>
+        <field name="fiscal_genre_id" ref="l10n_br_fiscal.product_genre_00" />
+        <field name="icms_origin" eval="" />
+        <field name="service_type_id" ref="l10n_br_fiscal.service_type_105" />
+    </record>
+    <!-- fiscal_type property for customized_development_sale for simples nacional company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_customized_development_sale_sn"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('l10n_br_fiscal.customized_development_sale').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+    <!-- fiscal_type property for customized_development_sale for lucro presumido company -->
+    <record
+        forcecreate="True"
+        id="fiscal_type_customized_development_sale_lp"
+        model="ir.property"
+    >
+        <field name="name">fiscal_type</field>
+        <field name="fields_id" ref="field_product_template__fiscal_type" />
+        <field name="value">09</field>
+        <field name="type">selection</field>
+        <field
+            eval="'product.template,'+str(obj().env.ref('l10n_br_fiscal.customized_development_sale').product_tmpl_id.id)"
+            model="product.template"
+            name="res_id"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+</odoo>

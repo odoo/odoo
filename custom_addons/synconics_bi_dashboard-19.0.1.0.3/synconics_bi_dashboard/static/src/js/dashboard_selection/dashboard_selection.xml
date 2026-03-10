@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.DashboardSelectionField" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <xpath expr="//SelectMenu" position="replace">
+            <div class="dashboard-selection pb-3">
+                <div t-foreach="options" t-as="option" t-key="option[0]" t-attf-class="select-option #{option[0] === value ? 'selected' : ''}" t-on-click="(ev) => this.onClickDashboard(ev, stringify(option[0]))">
+                    <div class="">
+                        <img t-att-src="'/synconics_bi_dashboard/static/description/chart_images/'+ option[0] + '.png'" height="40" width="40" />
+                    </div>
+                    <div t-out="option[1]" />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

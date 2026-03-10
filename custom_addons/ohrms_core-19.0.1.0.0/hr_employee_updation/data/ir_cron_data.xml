@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Scheduled action for Employee data expiration -->
+        <record id="ir_con_employee_data_reminder" model="ir.cron">
+            <field name="name">HR Employee Data Expiration</field>
+            <field name="interval_number">12</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model.expiry_mail_reminder()</field>
+        </record>
+    </data>
+</odoo>

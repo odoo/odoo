@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="edit_menu_access_dashboard" model="ir.ui.view">
+        <field name="model">ir.ui.menu</field>
+        <field name="inherit_id" ref="base.edit_menu_access"/>
+        <field name="arch" type="xml">
+            <field name="sequence" position="after">
+                <field name="is_dashboard"/>
+                <field name="user_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

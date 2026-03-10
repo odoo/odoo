@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="partner_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_br_base.l10n_br_base_partner_form" />
+        <field name="arch" type="xml">
+            <group name="fiscal_numbers" position="after">
+                <group string="Fiscal Profile" name="fiscal_profile">
+                    <field
+                        name="fiscal_profile_id"
+                        force_save="1"
+                        groups="l10n_br_fiscal.group_user"
+                    />
+                    <field
+                        name="ind_ie_dest"
+                        force_save="1"
+                        attrs="{'readonly': [('fiscal_profile_id', '!=', False)]}"
+                    />
+                    <field
+                        name="tax_framework"
+                        force_save="1"
+                        attrs="{'readonly': [('fiscal_profile_id', '!=', False)]}"
+                    />
+                    <field
+                        name="is_public_entity"
+                        force_save="1"
+                        attrs="{'readonly': [('fiscal_profile_id', '!=', False)]}"
+                    />
+                    <field
+                        name="public_entity_type"
+                        force_save="1"
+                        attrs="{'readonly': [('fiscal_profile_id', '!=', False)],
+                                'invisible': [('is_public_entity', '=', False)]}"
+                    />
+                    <field
+                        name="legal_nature_id"
+                        options="{'no_create': True, 'no_create_edit': True}"
+                    />
+                    <field
+                        name="cnae_main_id"
+                        options="{'no_create': True, 'no_create_edit': True}"
+                    />
+                    <field
+                        name="cnae_secondary_ids"
+                        widget="many2many_tags"
+                        options="{'no_create': True, 'no_create_edit': True}"
+                    />
+                    <field name="ind_final" />
+                    <field
+                        name="nif_motive_absence"
+                        attrs="{'invisible': [('country_id', '==', %(base.br)d)]}"
+                    />
+                    <field name="is_anonymous_consumer" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

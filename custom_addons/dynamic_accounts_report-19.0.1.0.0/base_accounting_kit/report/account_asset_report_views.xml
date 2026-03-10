@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--  Asset Report Pivot View  -->
+    <record id="asset_asset_report_view_pivot" model="ir.ui.view">
+        <field name="name">asset.asset.report.view.pivot</field>
+        <field name="model">asset.asset.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Assets Analysis" disable_linking="True">
+                <field name="asset_category_id" type="row"/>
+                <field name="gross_value" type="measure"/>
+                <field name="unposted_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+<!--  Asset Report Graph View  -->
+    <record id="asset_asset_report_view_graph" model="ir.ui.view">
+        <field name="name">asset.asset.report.view.graph</field>
+        <field name="model">asset.asset.report</field>
+        <field name="arch" type="xml">
+            <graph string="Assets Analysis">
+                <field name="asset_category_id" type="row"/>
+                <field name="gross_value" type="measure"/>
+                <field name="unposted_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+<!--  Asset Report Search View  -->
+    <record id="asset_asset_report_view_search" model="ir.ui.view">
+        <field name="name">asset.asset.report.view.search</field>
+        <field name="model">asset.asset.report</field>
+        <field name="arch" type="xml">
+            <search string="Assets Analysis">
+                <field name="date"/>
+                <field name="depreciation_date"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Assets in draft state"/>
+                <filter string="Running" name="running" domain="[('state','=','open')]" help="Assets in running state"/>
+                <filter string="Not archived" name="only_active" domain="[('asset_id.active','=', True)]"/>
+                <separator/>
+                <filter string="Posted" name="posted" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
+                <field name="asset_id"/>
+                <field name="asset_category_id"/>
+                <group>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group>
+                    <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
+                    <filter string="Asset Category" name="asset_category" context="{'group_by':'asset_category_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Purchase Month" name="purchase_month" help="Date of asset purchase"
+                        context="{'group_by':'date:month'}"/>
+                    <filter string="Depreciation Month" name="deprecation_month" help="Date of depreciation"
+                        context="{'group_by':'depreciation_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+<!--Asset Report Action-->
+    <record  id="action_asset_asset_report" model="ir.actions.act_window">
+        <field name="name">Assets Analysis</field>
+        <field name="res_model">asset.asset.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="asset_asset_report_view_search"/>
+        <field name="domain">[('asset_category_id.type', '=', 'purchase')]</field>
+        <field name="context">{'search_default_only_active': 1}</field>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview on all depreciation's. The
+            search bar can also be used to personalize your assets depreciation reporting.
+          </p>
+        </field>
+    </record>
+<!--Assets Menuitem-->
+    <menuitem name="Assets" action="action_asset_asset_report"
+              id="menu_action_asset_asset_report"
+              parent="account.account_reports_management_menu" sequence="21"/>
+</odoo>

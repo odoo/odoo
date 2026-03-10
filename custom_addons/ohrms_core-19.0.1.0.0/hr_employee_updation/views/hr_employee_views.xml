@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee Form View Extension -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.hr.employee.updation</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='personal_information']/group" position="after">
+                <group name="family_info_ids" colspan="4" string="Dependence Details">
+                    <field name="family_info_ids">
+                        <list editable="bottom">
+                            <field name="member_name" required="1"/>
+                            <field name="relation_id" required="1"/>
+                            <field name="member_contact"/>
+                            <field name="birth_date"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='payroll_information']//field[@name='contract_type_id']" position="before">
+                <field name="joining_date"/>
+            </xpath>
+            <field name="identification_id" position="replace"/>
+            <field name="passport_id" position="replace"/>
+            <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
+                <group name="identification_id" string="Identification ID">
+                    <field name="identification_id"/>
+                    <field name="id_expiry_date" groups="hr.group_hr_user"
+                           invisible="identification_id in [None,False]"/>
+                    <field name="identification_attachment_ids" groups="hr.group_hr_user" widget="many2many_binary"
+                           class="oe_inline" invisible="identification_id in [None,False]"/>
+                </group>
+                <group name="passport_id" string="Passport ID">
+                    <field name="passport_id"/>
+                    <field name="passport_expiry_date" groups="hr.group_hr_user"
+                           invisible="passport_id in [None,False]"/>
+                    <field name="passport_attachment_ids" groups="hr.group_hr_user" widget="many2many_binary"
+                           class="oe_inline" invisible="passport_id in [None,False]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Gamification Employee Form View Extension -->
+    <record id="hr_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.gamification.view.form.inherit.hr.employee.updation</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_gamification.hr_hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='received_badges']" position="replace">
+                <page string="Received Badges" invisible="not user_id">
+                    <div name="badges" groups="hr.group_hr_user">
+                        <field name="has_badges" invisible="1"/>
+                        <button string="Grant a Badge" type="action"
+                                name="%(hr_gamification.action_reward_wizard)d"/>
+                        to reward this employee for a good action
+                        <div class="oe_view_nocontent" invisible="has_badges">
+                            <p class="oe_view_nocontent_create">
+                                Click to grant this employee his first badge
+                            </p>
+                            <p class="oe_grey">
+                                Badges are rewards of good work. Give them to people you believe deserve it.
+                            </p>
+                        </div>
+                    </div>
+                    <field name="badge_ids" widget="many2many_kanban"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

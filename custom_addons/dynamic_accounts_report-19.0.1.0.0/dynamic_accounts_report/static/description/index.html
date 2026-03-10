@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dynamic Accounting Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+
+</head>
+
+
+<body style="font-family: &quot;Montserrat&quot;, sans-serif;background-color: #71639e08;">
+
+
+<div class="container-fluid cmpad">
+    <div class="supports my-3 py-3" style="    border: 2px solid #71639e10;
+    padding: 0 35px;
+    border-radius: 10px;    border: 2px solid #e9ecef;background-color: white;">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-lg-3">
+                <div class="my-3 mx-auto mx-sm-0" style="width: 250px; ">
+                    <img src="//apps.odoocdn.com/apps/assets/17.0/theme_boec/images/Cybrosys.png?fcdde35"
+                         style="width: 100%;">
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="my-3 d-flex align-items-center justify-content-center justify-content-sm-end">
+                        <span class="me-3"><b>Supports: </b></span>
+                        <div class="text-center" style="
+                    background-color: #71639e !important;
+                    font-size: 1rem !important;
+                    color: #fff !important;
+                    font-weight: 500 !important;
+                    padding: 8px !important;
+                    margin: 0 3px !important;
+                    border-radius: 50px !important;
+                    min-width: 130px !important;
+                  ">
+                            Community
+                        </div>
+                        <!--                        <div class="text-center" style="-->
+                        <!--                    background-color: #9e6390 !important;-->
+                        <!--                    font-size: 1rem !important;-->
+                        <!--                    color: #fff !important;-->
+                        <!--                    font-weight: 500 !important;-->
+                        <!--                    padding: 8px !important;-->
+                        <!--                    margin: 0 3px !important;-->
+                        <!--                    border-radius: 50px !important;-->
+                        <!--                    min-width: 130px !important;-->
+                        <!--                  ">-->
+                        <!--                            Enterprise-->
+                        <!--                        </div>-->
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;display: flex;justify-content: end;float: right;">
+                    <div class="d-flex align-items-center justify-content-end flex-wrap gap-2">
+                        <span class="me-3"><b>Availability: </b></span>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                    border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/close.png" alt="" width="18" height="18">
+                            Odoo Online
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                    border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/close.png" alt="" width="18" height="18">
+                            Odoo.sh
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 text-center col" style="
+                   border: 2px solid #ebebeb;
+    font-size: 1rem !important;
+    color: #333 !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    margin: 0 3px !important;
+    border-radius: 20px !important;
+    min-width: 150px !important;
+
+                  ">
+
+                            <img src="./assets/icons/tick.png" alt="" width="18" height="18">
+                            On Premise
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad text-center py-5 py-md-3">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="mainhead" style="font-size: 2.3rem;padding-top: 1rem;font-weight: 700;color: black;">Odoo19 Dynamic Accounting Reports</h3>
+            <p class="para mb-4" style="font-size: 20px;color: #6b7280;"> Dynamic Reports for Trial Balance, Profit and
+                                Loss, General Ledger, Tax Report, etc.</p>
+
+            <div class="d-flex justify-content-center gap-1 flex-wrap">
+                <a href="mailto:"
+                   class="contact-btn email-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #4facfe">
+                    <img src="./assets/icons/mail.png" alt="" width="25" height="25">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">Email Us</span>
+                </a>
+
+                <a href="skype:"
+                   class="contact-btn skype-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #555ecb">
+                    <img src="./assets/icons/tms.png" alt="" width="30" height="30">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">Teams</span>
+                </a>
+
+                <a href="https://wa.me/919074270811"
+                   class="contact-btn whatsapp-btn d-flex align-items-center gap-2 justify-content-center"
+                   style="position: relative;padding: 15px 25px;border: none;border-radius: 50px;font-size: 16px;font-weight: 600;text-decoration: none;color: white;cursor: pointer;min-width: 200px;justify-content: center;background-color: #25d366;">
+                    <img src="./assets/icons/whatsapp.png" alt="" width="25" height="25">
+                    <span class="btn-text" style="font-size: 15px;letter-spacing: 0.5px;">+91 9074270811</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="row">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <!-- Blog Card -->
+            <div class="content-card blog-card h-100" style="    background-color: #8b5cf612;
+    border: 2px solid #8a5cf615;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    overflow: hidden;">
+                <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                     style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #8B5CF6;">
+                    <img src="./assets/icons/document.png" alt="" width="30" height="30">
+                </div>
+                <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                    Read Blog</h3>
+                <p class="card-description mb-3"
+                   style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Dive into our
+                    comprehensive blog posts covering the latest in
+                    cybersecurity
+                    trends and insights.</p>
+
+                <a href="https://www.cybrosys.com/blog/what-are-the-key-features-of-odoo-18-full-accounting-kit-for-community"
+                   class="card-action video-action d-flex align-items-center justify-content-center gap-2"
+                   style="padding: 10px 20px;border-radius: 8px;font-weight: 500;font-size: 15px;text-decoration: none;border: none;width: max-content;background-color: #9e6390;color: white;transition: .3s;">
+                    <img src="./assets/icons/copy.png" alt="" width="18" height="18">
+                    Read Blog
+                </a>
+
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Video Card -->
+            <div class="content-card video-card h-100" style="    background-color: #ef444421;
+    border: 2px solid #ef44441f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    overflow: hidden;">
+                <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                     style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #EF4444;">
+                    <img src="./assets/icons/play.png" alt="" width="23px" height="23px">
+                </div>
+                <h3 class="card-title"
+                    style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                    Video Tutorial</h3>
+                <p class="card-description mb-3"
+                   style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Watch our detailed
+                    video demonstrations and tutorials on YouTube
+                    for
+                    hands-on learning.</p>
+                <a href="https://www.youtube.com/watch?v=ROhYgB35Sls"
+                   class="card-action video-action d-flex align-items-center justify-content-center gap-2"
+                   style="padding: 10px 20px;border-radius: 8px;font-weight: 500;font-size: 15px;text-decoration: none;border: none;width: max-content;background-color: #9e6390;color: white;transition: .3s;">
+                    <img src="./assets/icons/play.png" alt="" width="15px" height="15px">
+                    Watch Demo
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Key
+            <span>Highlights</span>
+        </h2>
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Various Filters to Compare</h3>
+                    <p class="card-description"
+                       style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Option to compare report values with various
+                                    filtering tools available.</p>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Print reports in PDF and XLSX Format</h3>
+                    <p class="card-description"
+                       style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">You can print the reports in both the PDF
+                                    and XLSX format..</p>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+
+                        Access the Journal Entries</h3>
+                    <p class="card-description"
+                       style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Easy access to the corresponding journal
+                                    entries directly from the dynamic report
+                                    view.</p>
+
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="highlight-card h-100" style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;margin-bottom: 12px;letter-spacing: -0.025em;">
+                        Drill-down Approach in Reports</h3>
+                    <p class="card-description"
+                       style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">The user can drill down from the main report
+                                    to the journal entries. You can open the
+                                    form view of each journal entry and view the
+                                    complete details here.</p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="tabs-design1">
+
+
+        <ul class="nav nav-pills justify-content-start justify-content-md-center pb-4" style="    flex-flow: nowrap;
+    overflow: hidden;
+    overflow-x: auto;" id="pills1" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="screenshot-tab" data-bs-toggle="pill" data-bs-target="#screenshot"
+                   type="button" role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Screenshot
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="features-tab" data-bs-toggle="pill" data-bs-target="#features" type="button"
+                   role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Features
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq" type="button"
+                   role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Frequent Questions
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="latest-release-tab" data-bs-toggle="pill" data-bs-target="#latest-release"
+                   type="button" role="tab" style="width: max-content;border-radius: 50px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 500;
+
+    border: 2px solid #e9ecef;
+    position: relative;
+
+    ">
+                    Latest Release
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content bg-white rounded-4" style="border: 2px solid #e9ecef;border-radius: 10px;"
+             id="pills1Content">
+            <div class="tab-pane fade show active" id="screenshot" role="tabpane2">
+                <div class="p-3 py-md-5">
+
+
+                    <h2 class="mainhead text-center mb-2" style="font-size: 2rem;font-weight: 700;color: black;">
+                         <span>Dynamic Financial Reports Menu</span></h2>
+                    <div class="para"
+                         style="max-width: 80%;text-align: center;margin: auto;font-size: 18px;margin-bottom: 2rem;color: #6b7280;">
+                        Can Fetch Dynamic Financial Reports from Accounting > Reporting.
+                    </div>
+
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">General Ledger Report</span></h2>
+
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>General Ledger Drill-Down View</span>
+                    </h2>
+
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Option to View Journal Entry in
+                                                General Ledger</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">General Ledger Journal Entry</span>
+                    </h2>
+
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/5.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Print General Ledger PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/6.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/7.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Print General Ledger XLSX Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/8.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/9.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Trial Balance Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/t1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>General Ledger view from Trial
+                                                Balance.</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/t2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Trial Balance PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/t3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Trial Balance Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/t4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Balance sheet Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/b1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span> Balance Sheet Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/b2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>General Ledger from Balance
+                                                Sheet</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/b3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Balance Sheet PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/b4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Balance Sheet Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/b5.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Profit and Loss Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/p1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Profit and Loss Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/p2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>General Ledger from Profit and
+                                                Loss</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/p3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Profit and Loss PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/p4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Profit and Loss Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/p5.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Partner Ledger Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl1.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Partner Ledger Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl2.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Open the corresponding partner
+                                                by clicking Open</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl3.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl4.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;"><span>Open the corresponding Journal
+                                                Items by clicking Journal Items</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl5.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl6.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Partner Ledger PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl7.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Partner Ledger Excel Report.</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/pl8.png" alt="" style="max-width: 100%;height: auto;">
+                    </div>
+
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Receivable Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar1.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Receivable Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar2.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Open the corresponding partner
+                                                by clicking Open</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar3.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Open the Journal Items by
+                                                clicking Journal Items</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar4.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Receivable PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar6.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Receivable Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ar7.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Payable Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ap1.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Payable Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ap2.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Open the corresponding partner
+                                                by clicking Open and Journal Items by
+                                                clicking Journal Items</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ap3.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Payable PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ap4.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Aged Payable Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/ap5.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Cash Book Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/cb1.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Cash Book Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/cb2.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Cash Book PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/cb3.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Cash Book Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/cb4.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Bank Book Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/bb1.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Bank Book Drill-Down View</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/bb2.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Bank Book PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/bb3.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Bank Book Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/bb4.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Tax Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/tr1.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Tax PDF Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/tr3.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                    <h2 class="mainhead text-center mb-2 mt-5"
+                        style="font-size: 2rem;font-weight: 700;color: black;">Tax Excel Report</span>
+                    </h2>
+                    <div style="border-radius: 10px;
+                        overflow: hidden;
+                        border: 2px solid #e7e7e7;">
+                        <img src="./assets/screenshots/tr2.png" alt=""
+                             style="max-width: 100%;height: auto;">
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="features" role="tabpanel">
+                <div class="p-3 py-md-5">
+
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">Our
+                        <span>Features</span>
+                    </h2>
+                    <div class="row" style="
+    border-radius: 10px;">
+
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">01
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">Manage Customer Follow-Ups</h3>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">02
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">Customer Credit Limit</h3>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">03
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">Asset Management System</h3>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">04
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">Accounting Report</h3>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">05
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">PDC Management</h3>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-item mb-4  d-flex flex-column align-items-center justify-content-center"
+                                 style="
+    padding: 25px;
+    background-color: #637eea0d;
+    border-radius: 10px;
+    text-align: left;">
+                                <div class="feature-number d-flex align-items-center justify-content-center" style="    width: 45px;
+    height: 45px;
+    background-color: #7877c633;
+    border-radius: 50%;
+
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #71639e;
+    margin-bottom: 15px;
+    ">06
+                                </div>
+                                <h3 class="feature-title" style="font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: black;
+    line-height: 1.3;">Accounting Lock Dates</h3>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="faq" role="tabpane2 ">
+                <div class="p-3 py-md-5">
+
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">
+                        Frequently Asked <span>Questions</span></h2>
+
+                    <div class="modern-accordion">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item loading-animation"
+                                 style="margin-bottom: 1rem;overflow: hidden;background-color: white;border: 2px solid #e2e8f0 !important;border-radius: 10px !important;">
+                                <h2 class="accordion-header" style="border-radius: 10px;">
+                                    <a class="accordion-button  collapsed" type="button" style="box-shadow: unset;
+    border: none !important;
+    padding: 1.5rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+
+    color: #71639e !important;
+    background-color: #e3e3f3a9 !important;
+    position: relative;
+    overflow: hidden;" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                       aria-controls="flush-collapseOne"
+                                       style="font-size: 1.1rem;position: relative;overflow: hidden;background-color: white !important;border: none !important;padding: 1.5rem 2rem !important;font-weight: 600 !important;color: #1e293b !important;border-radius: 10px !important;">
+                                        How does the module handle Post-Dated Cheque (PDC) management?
+                                    </a>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordionFlushExample" style="border-top: 1px solid #e2e8f0;">
+                                    <div class="accordion-body"
+                                         style="background-color: rgba(99, 102, 241, 0.02);line-height: 1.6;font-size: 1rem;padding: 2rem !important;">
+                                        <p style="margin-bottom: 1rem;">Our PDC management module provides
+                                            comprehensive tracking and automation
+                                            for post-dated
+                                            cheques. The system allows you to:</p>
+
+                                        <div class="feature-highlight"
+                                             style="background-color: rgba(99, 102, 241, 0.1);padding: 1rem;border-radius: 8px;margin-top: 1rem;border-left: 4px solid #71639e;margin-bottom: 1rem;">
+                                            <strong>Key Features:</strong>
+                                            <ul style="margin-bottom: 0; margin-top: 0.5rem;">
+                                                <li>Automatic cheque maturity date tracking</li>
+                                                <li>Bank reconciliation integration</li>
+                                                <li>Customizable reminder notifications</li>
+                                                <li>Detailed reporting and analytics</li>
+                                            </ul>
+                                        </div>
+
+                                        <p style="margin-bottom: 1rem;">The module seamlessly integrates with your
+                                            existing accounting workflows
+                                            and provides
+                                            real-time visibility into your receivables pipeline.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item loading-animation"
+                                 style="margin-bottom: 1rem;overflow: hidden;background-color: white;border: 2px solid #e2e8f0 !important;border-radius: 10px !important;">
+                                <h2 class="accordion-header" style="border-radius: 10px;">
+                                    <a class="accordion-button  collapsed" type="button" style="box-shadow: unset;
+    border: none !important;
+    padding: 1.5rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+
+    color: #71639e !important;
+    background-color: #e3e3f3a9 !important;
+    position: relative;
+    overflow: hidden;" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                       aria-controls="flush-collapseTwo"
+                                       style="font-size: 1.1rem;position: relative;overflow: hidden;background-color: white !important;border: none !important;padding: 1.5rem 2rem !important;font-weight: 600 !important;color: #1e293b !important;border-radius: 10px !important;">
+                                        Does the module support Odoo 19 Community Edition?
+                                    </a>
+                                </h2>
+                                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordionFlushExample" style="border-top: 1px solid #e2e8f0;">
+                                    <div class="accordion-body"
+                                         style="background-color: rgba(99, 102, 241, 0.02);line-height: 1.6;font-size: 1rem;padding: 2rem !important;">
+                                        <p style="margin-bottom: 1rem;">Yes, our module is fully compatible with
+                                            Odoo 19 Community Edition and
+                                            provides seamless
+                                            integration with all core functionalities.</p>
+
+                                        <div class="feature-highlight"
+                                             style="background-color: rgba(99, 102, 241, 0.1);padding: 1rem;border-radius: 8px;margin-top: 1rem;border-left: 4px solid #71639e;margin-bottom: 1rem;">
+                                            <strong>Compatibility Details:</strong>
+                                            <ul style="margin-bottom: 0; margin-top: 0.5rem;">
+                                                <li>Odoo 19 Community Edition</li>
+                                                <li>Odoo 19 Enterprise Edition</li>
+                                                <li>Multi-company support</li>
+                                                <li>Multi-currency support</li>
+                                            </ul>
+                                        </div>
+
+                                        <p style="margin-bottom: 1rem;">For the latest updates and design examples,
+                                            please check our <a href="https://codepen.io/Gaurav-Rana-the-reactor"
+                                                                style="color: #71639e;text-decoration: none;font-weight: 600;position: relative;">CodePen
+                                                portfolio</a> for more
+                                            innovative solutions.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item loading-animation"
+                                 style="margin-bottom: 0;overflow: hidden;background-color: white;border: 2px solid #e2e8f0 !important;border-radius: 10px !important;">
+                                <h2 class="accordion-header" style="border-radius: 10px;">
+                                    <a class="accordion-button  collapsed" type="button" style="box-shadow: unset;
+    border: none !important;
+    padding: 1.5rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+
+    color: #71639e !important;
+    background-color: #e3e3f3a9 !important;
+    position: relative;
+    overflow: hidden;" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                       aria-controls="flush-collapseThree"
+                                       style="font-size: 1.1rem;position: relative;overflow: hidden;background-color: white !important;border: none !important;padding: 1.5rem 2rem !important;font-weight: 600 !important;color: #1e293b !important;border-radius: 10px !important;">
+                                        How does this module assist with customer follow-ups?
+                                    </a>
+                                </h2>
+                                <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                     data-bs-parent="#accordionFlushExample" style="border-top: 1px solid #e2e8f0;">
+                                    <div class="accordion-body"
+                                         style="background-color: rgba(99, 102, 241, 0.02);line-height: 1.6;font-size: 1rem;padding: 2rem !important;">
+                                        <p style="margin-bottom: 1rem;">Our intelligent follow-up system automates
+                                            customer communications and
+                                            helps maintain
+                                            healthy cash flow through systematic engagement.</p>
+
+                                        <div class="feature-highlight"
+                                             style="background-color: rgba(99, 102, 241, 0.1);padding: 1rem;border-radius: 8px;margin-top: 1rem;border-left: 4px solid #71639e;margin-bottom: 1rem;">
+                                            <strong>Follow-up Features:</strong>
+                                            <ul style="margin-bottom: 0; margin-top: 0.5rem;">
+                                                <li>Automated reminder schedules</li>
+                                                <li>Customizable email templates</li>
+                                                <li>SMS integration capabilities</li>
+                                                <li>Activity tracking and reporting</li>
+                                                <li>Escalation workflows</li>
+                                            </ul>
+                                        </div>
+
+                                        <p style="margin-bottom: 1rem;">The system intelligently prioritizes
+                                            follow-ups based on amount, customer
+                                            history, and
+                                            payment patterns. Explore our <a
+                                                    href="https://codepen.io/Gaurav-Rana-the-reactor"
+                                                    style="color: #71639e;text-decoration: none;font-weight: 600;position: relative;">latest
+                                                design
+                                                implementations</a>
+                                            for more advanced features.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="latest-release" role="tabpanel">
+                <div class="p-3 py-md-5">
+                    <h2 class="mainhead text-center mb-4" style="font-size: 2rem;font-weight: 700;color: black;">
+                        Latest <span>Releases</span></h2>
+                    <div class="row">
+
+                        <div class="col-md-4 mb-4">
+                            <div class="release-item h-100" style="    position: relative;
+                                padding: 30px;
+                                border: 2px solid #71639e24;
+                                border-radius: 15px;">
+                                <div class="release-header d-flex align-items-center flex-wrap gap-3" style="
+                                    margin-bottom: 0.75rem;
+                                    ">
+                                    <div class="version" style="font-size: 1.25rem;
+                                        font-weight: 700;
+                                        color: #1a202c;">Latest Release 19.0.1.0.0
+                                    </div>
+                                    <div style="padding: 0.25rem 0.75rem;
+                                        border-radius: 20px;
+                                        font-size: 0.75rem;
+                                        font-weight: 600;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;
+                                        position: relative;
+                                        overflow: hidden;    background-color: #9ae6b4;
+                                        color: #2d7d32;
+                                        border: 2px solid #68d391;" class=" add">Add
+                                    </div>
+                                    <div class="date" style="    color: #64748b;
+                                        font-size: 0.875rem;
+                                        font-weight: 500;
+
+                                        gap: 0.5rem;">
+                                        <img src="./assets/icons/calendar.png" alt="" width="16" height="16"
+                                             style="margin-right: 5px;">
+                                        19th September, 2025
+                                    </div>
+                                </div>
+                                <div class="feature-list">
+                                    <div class="feature-item p-3" style="border-radius: 5px;    display: flex;
+
+                                        align-items: center;
+                                        padding: 25px;
+                                        background-color: #f5f5f5e7;
+                                        border-radius: 10px;
+                                        text-align: left;">
+
+                                        <div class="feature-text" style="color: #6b7280;
+                                        line-height: 1.6;
+                                        font-size: 0.95rem;">Initial Commit
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Related
+            <span>Modules</span>
+        </h2>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/18.0/dynamic_accounts_report"
+                   style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    overflow: hidden;">
+                            <img src="./assets/modules/1.png" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Odoo18 Dynamic Accounting Reports</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Odoo 19 Accounting
+                            Financial Reports,Dynamic Accounting Reports, Dynamic Financial Reports,Dynamic Report
+                            Odoo18, Odoo18,Financial Reports, Odoo18 Accounting,Accounting, Odoo Apps</p>
+
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/18.0/invoice_format_editor" style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    overflow: hidden;">
+                            <img src="./assets/modules/2.jpg" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Invoice Format Editor</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Invoice Report,
+                            Report Editor, Customise Invoice Report.</p>
+
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="https://apps.odoo.com/apps/modules/18.0/base_account_budget" style="text-decoration: none;">
+                    <div class="highlight-card h-100 p-4" style="background-color: white;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+
+                        <div class="card-image" style="    border: 2px solid #71639e1c;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    overflow: hidden;">
+                            <img src="./assets/modules/3.png" alt="" style="width: 100%;border-radius: 10px;">
+                        </div>
+
+                        <h3 class="card-title"
+                            style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                            Odoo 18 Budget Management</h3>
+                        <p class="card-description"
+                           style="font-size: 16px;color: #6b7280;margin-bottom: 0;line-height: 1.6;">Budget Management
+                            for Odoo 18 Community Edition.</p>
+
+                    </div>
+                </a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid cmpad py-2 py-md-5">
+    <div class="highlights-section">
+
+        <h2 class="mainhead text-center" style="font-size: 2rem;font-weight: 700;color: black;">Our
+            <span>Services</span>
+        </h2>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/setting.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Customization</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/imple.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Implementation</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/support.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Support</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/transfer.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Migration</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/idea.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo integration</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chat.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Consultancy</h3>
+
+
+                </div>
+            </div>
+
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/chart.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Odoo Licensing</h3>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="highlight-card h-100 high d-flex flex-column justify-content-center align-items-center text-center"
+                     style="background-color: #8d76d51f;
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 32px;
+    border: 2px solid #71639e1a;
+    position: relative;
+    overflow: hidden;">
+
+                    <div class="card-icon d-flex align-items-center justify-content-center gap-2"
+                         style="width: 60px;height: 60px;border-radius: 10px;margin-bottom: 24px;position: relative;overflow: hidden;background-color: #71639e;">
+                        <img src="./assets/icons/people.png" alt="" width="30" height="30">
+                    </div>
+                    <h3 class="card-title"
+                        style="font-size: 20px;font-weight: 600;color: black;letter-spacing: -0.025em;">
+                        Hire Odoo Developer</h3>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</html>

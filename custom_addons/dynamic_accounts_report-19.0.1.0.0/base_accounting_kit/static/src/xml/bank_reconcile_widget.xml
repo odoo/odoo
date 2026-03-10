@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="base_accounting_kit.bank_reconcile_widget_lines_widget">
+        <t t-set="data" t-value="getRenderValues()"/>
+        <div class="o_list_renderer table-responsive">
+            <table class="table table-sm position-relative mb-0 o_list_table_ungrouped table-striped o_bank_reconcile_lines_widget_line">
+                <thead>
+                    <tr>
+                        <t t-foreach="data.columns" t-as="column"
+                           t-key="column[0]">
+                            <th t-esc="column[1]"/>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody id="base_accounting_reconcile">
+                    <t t-if="data.default_lines_widget">
+                        <t t-foreach="data.default_lines_widget" t-as="line"
+                           t-key="line.id">
+                            <tr class="o_data_row"
+                                t-on-click="mountStatementLine"
+                                t-att-data-id="line.id">
+                                <t t-set="account"
+                                   t-value="line.account_code+' '+line.account_name"/>
+                                <t t-set="amount"
+                                   t-value="line.currency_symbol+' '+line.amount"/>
+                                <td class="o_data_cell o_field_cell"
+                                    style="font-weight: bolder;"
+                                    field="account_id">
+                                    <t t-esc="account"/>
+                                    <br/>
+                                    <span class="text-muted"
+                                          style="font-style: italic;">
+                                        <t t-esc="line.payment_ref"/>
+                                    </span>
+                                </td>
+                                <t t-if="line.partner_id">
+                                    <td field="partner_id"
+                                        t-esc="line.partner_id[1]"
+                                        style="font-weight: bolder;"/>
+                                </t>
+                                <t t-else="">
+                                    <td t-esc="line.partner_id[1]"/>
+                                </t>
+                                <td field="date"
+                                    t-esc="line.date"
+                                    style="font-weight: bolder;"/>
+                                <t t-if="line.amount &gt; 0">
+                                    <td field="debit"
+                                        t-esc="amount"
+                                        style="font-weight: bolder;"/>
+                                </t>
+                                <t t-else="">
+                                    <td t-esc="' '"/>
+                                </t>
+                                <t t-if="line.amount &lt; 0">
+                                    <td field="credit"
+                                        t-esc="amount"
+                                        style="font-weight: bolder;"/>
+                                </t>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-if="data.default_move_line">
+                        <tr class="o_data_row statement_row"
+                            t-on-click="mountStatementLine"
+                            t-att-data-id="data.default_move_line.id">
+                                <t t-set="amount_residual"
+                                   t-value="data.default_move_line.currency_symbol+' '+data.default_move_line.amount_residual"/>
+                            <t t-set="move_account"
+                               t-value="data.default_move_line.account_code+' '+data.default_move_line.account_name"/>
+                            <td class="o_data_cell o_field_cell"
+                                style="font-weight: bolder;">
+                                     <t t-esc="move_account"/>
+                                <br/>
+                                <span style="font-size: 12px; font-style: italic;font-weight: normal;color: #01666b;cursor: pointer;"
+                                      t-att-data-id="data.default_move_line.numeric_move_id"
+                                      t-on-click="onclickLink">
+                                    <t t-esc="data.default_move_line.move_name"/>
+                                </span>
+                                :
+                                <span class="text-muted"
+                                      style="font-style: italic;">
+                                    <t t-esc="data.default_move_line.name"/>
+                                </span>
+                            </td>
+                            <t t-if="data.default_move_line.partner_id">
+                                <td t-esc="data.default_move_line.partner_name"
+                                    style="font-weight: bolder;"/>
+                            </t>
+                            <t t-else="">
+                                <td t-esc="data.default_move_line.partner_name"/>
+                            </t>
+                            <td t-esc="data.default_move_line.date"
+                                style="font-weight: bolder;"/>
+                            <t t-if="data.default_move_line.amount_residual &lt; 0">
+                                <td t-esc="amount_residual"
+                                    style="font-weight: bolder;"/>
+                            </t>
+                            <t t-else="">
+                                <td t-esc="' '"/>
+                            </t>
+                            <t t-if="data.default_move_line.amount_residual &gt; 0">
+                                 <td t-esc="amount_residual"
+                                     style="font-weight: bolder;"/>
+                            </t>
+                            <t t-if="this.props.record.data.bank_state!='reconciled'">
+                                <td class="o_list_remove_record">
+                                    <button class="btn fa fa-trash-o"
+                                            style="margin-top: -4px;"
+                                            t-on-click="removeRecord"/>
+                                </td>
+                            </t>
+                        </tr>
+                     </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+    <t t-name="base_accounting_kit.FormListView" owl="1">
+        <t t-if="props.record.id">
+            <View t-props="bankReconcileListViewProps"/>
+        </t>
+    </t>
+</templates>

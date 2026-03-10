@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.ListView">
+        <div t-if="this.state.isError" class="w-100 d-flex align-items-center justify-content-center" style="height: 90%;">
+            <h5 t-out="this.state.errorMessage"></h5>
+        </div>
+        <div t-if="!this.state.isError" style="overflow: auto; height: 92%;">
+            <div class="table-responsive">
+                <div class="card-body col-md-12 sync_list_view">
+                    <t t-if="state.columns and state.columns.length">
+                        <div class="table-container">
+                            <table t-attf-id="listPreview-{{props.chartId}}" t-if="state.data" class="table styled-table oe_dashboard_table">
+                                <thead>
+                                    <tr>
+                                        <th t-foreach="this.state.columns" t-as="column" t-key="column.id" t-on-click="(ev) => sortTable(ev, column)" style="position: sticky; top: 0; background: white; z-index: 2; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
+                                            <t t-out="column.name" />
+                                            <span t-attf-class="sort-icon fa {{state.columns_order[column['column_name']] == undefined || state.columns_order[column['column_name']] == 'desc' ? 'fa-angle-down' : 'fa-angle-up'}} ml16">  </span>
+                                        </th>
+                                        <th class="o_icon" style="position: sticky; top: 0; background: white; z-index: 2; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <tr t-foreach="state.currentRecords" t-as="record" t-key="record.id">
+                                        <td t-foreach="this.state.columns" t-as="column" t-key="column.id">
+                                            <t t-if="record[column['column_name']] !== false">
+                                                <t t-out="record[column['column_name']]" />
+                                            </t>
+                                            <t t-else="">
+                                                -
+                                            </t>
+                                        </td>
+                                        <td t-on-click="(ev) => openRecords(ev, record.currentIds)" class="btn_list_edit o_icon" style="cursor: pointer;">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="pagination-container">
+                                <p id="pagination-info">Page <t t-out="state.currentPage" /> of <t t-out="state.totalPages" /></p>
+                                <p id="page-info">Showing <t t-out="state.currentPage != 1 ? ((state.currentPage - 1) * 10) + 1 : 1" /> to
+                                <t t-if="state.currentPage == 1 and state.totalRecords &lt; 10">
+                                    <t t-out="state.totalRecords" />
+                                </t>
+                                <t t-else="">
+                                    <t t-out="state.currentPage != 1 ? ((state.currentPage - 1) * 10) + state.currentRecords.length : 10" />
+                                </t>
+                                 of <t t-out="state.totalRecords" /> entries</p>
+                                <button id="prevPage" t-att-disabled="state.currentPage &lt;= 1" t-on-click="() => this.changePage(-1)">⬅️ Previous</button>
+                                <input type="number" id="currentPage" min="1" t-att-max="state.totalPages" t-att-value="state.currentPage" t-on-change="goToPage" />
+                                <button id="nextPage" t-att-disabled="state.currentPage &gt;= state.totalPages" t-on-click="() => this.changePage(1)">Next ➡️</button>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

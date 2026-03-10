@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+
+    <!-- ICMS 18% with a reduction of 51.11% for NCM 17029000-->
+    <record
+        id="tax_icms_regulation_sp_sp_icms_18_red_51_11"
+        model="l10n_br_fiscal.tax.definition"
+    >
+        <field name="icms_regulation_id" ref="l10n_br_fiscal.tax_icms_regulation" />
+        <field name="state_from_id" ref="base.state_br_sp" />
+        <field name="state_to_ids" eval="[(6, 0, [ref('base.state_br_sp')])]" />
+        <field name="is_taxed" eval="True" />
+        <field name="is_debit_credit" eval="True" />
+        <field name="custom_tax" eval="True" />
+        <field name="tax_id" ref="l10n_br_fiscal.tax_icms_18_red_51_11" />
+        <field name="cst_id" ref="l10n_br_fiscal.cst_icms_20" />
+        <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+        <field name="ncm_ids" eval="[(6, 0, [ref('l10n_br_fiscal.ncm_96100000')])]" />
+        <field name="state">approved</field>
+    </record>
+
+</odoo>

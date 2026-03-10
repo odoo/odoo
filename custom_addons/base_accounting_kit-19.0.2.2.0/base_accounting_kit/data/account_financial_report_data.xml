@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Financial Reports data records in the model account.financial.report-->
+        <record id="account_financial_report_profitandloss0"
+                model="account.financial.report">
+            <field name="name">Profit and Loss</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="type">sum</field>
+        </record>
+<!--    Income report -->
+        <record id="account_financial_report_income0"
+                model="account.financial.report">
+            <field name="name">Income</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="sequence">1</field>
+            <field name="parent_id"
+                   ref="account_financial_report_profitandloss0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">sum</field>
+        </record>
+<!--    Other Income    -->
+        <record id="account_financial_report_other_income0"
+                model="account.financial.report">
+            <field name="name">Other Income</field>
+            <field name="sequence">10</field>
+            <field name="parent_id"
+                   ref="account_financial_report_income0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">income_other</field>
+        </record>
+<!--    Gross profit    -->
+        <record id="financial_report_gross_profit"
+                model="account.financial.report">
+            <field name="name">Gross Profit</field>
+            <field name="parent_id"
+                   ref="account_financial_report_income0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">sum</field>
+            <field name="sequence">3</field>
+        </record>
+<!--    Cost of revenue    -->
+        <record id="financial_report_cost_of_revenue"
+                model="account.financial.report">
+            <field name="name">Cost of Revenue</field>
+            <field name="sequence">10</field>
+            <field name="parent_id"
+                   ref="financial_report_gross_profit"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">expense_direct_cost</field>
+        </record>
+<!--    Operating Income    -->
+        <record id="account_financial_report_operating_income0"
+                model="account.financial.report">
+            <field name="name">Operating Income</field>
+            <field name="sequence">1</field>
+            <field name="parent_id"
+                   ref="financial_report_gross_profit"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">income</field>
+        </record>
+<!--    Expense    -->
+        <record id="account_financial_report_expense0"
+                model="account.financial.report">
+            <field name="name">Expense</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="sequence">2</field>
+            <field name="parent_id"
+                   ref="account_financial_report_profitandloss0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">expense</field>
+        </record>
+<!--    Balance Sheet    -->
+        <record id="account_financial_report_balancesheet0"
+                model="account.financial.report">
+            <field name="name">Balance Sheet</field>
+            <field name="type">sum</field>
+        </record>
+<!--    Assets    -->
+        <record id="account_financial_report_assets0"
+                model="account.financial.report">
+            <field name="name">Assets</field>
+            <field name="parent_id"
+                   ref="account_financial_report_balancesheet0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">income_other</field>
+        </record>
+<!--    Liability    -->
+        <record id="account_financial_report_liabilitysum0"
+                model="account.financial.report">
+            <field name="name">Liability</field>
+            <field name="sequence">1</field>
+            <field name="parent_id"
+                   ref="account_financial_report_balancesheet0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">sum</field>
+        </record>
+<!--    Liability    -->
+        <record id="account_financial_report_liability0"
+                model="account.financial.report">
+            <field name="name">Liability</field>
+            <field name="parent_id"
+                   ref="account_financial_report_liabilitysum0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids">income_other</field>
+        </record>
+<!--    Profit (Loss) to report   -->
+        <record id="account_financial_report_profitloss_toreport0"
+                model="account.financial.report">
+            <field name="name">Profit (Loss) to report</field>
+            <field name="parent_id"
+                   ref="account_financial_report_liabilitysum0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">account_report</field>
+            <field name="account_report_id"
+                   ref="account_financial_report_profitandloss0"/>
+        </record>
+<!--    Common Report    -->
+        <record id="account_report_view_form" model="ir.ui.view">
+            <field name="name">account.report.view.form</field>
+            <field name="model">account.report</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group col="4">
+                        <field name="target_move" widget="radio"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="journal_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="check_report" string="Print"
+                                type="object" default_focus="1"
+                                class="oe_highlight"
+                                data-hotkey="q"/>
+                        <button string="Cancel" class="btn btn-secondary"
+                                special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

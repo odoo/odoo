@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="website_menu_10" model="website.menu">
+        <field name="url">/about-us</field>
+        <field name="name">About Us</field>
+        <field name="page_id" ref="website_page_9"/>
+        <field name="parent_id" model="website.menu" eval="obj().search([
+                ('website_id', '=', ref('website.default_website')),
+                ('url', '=', '#'),
+        ], limit=1).id"/>
+        <field name="website_id" ref="website.default_website"/>
+    </record>
+</odoo>

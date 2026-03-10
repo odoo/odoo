@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Advance salary rules -->
+        <record id="hr_payslip_rule_advance" model="hr.salary.rule">
+            <field name="code">SAR</field>
+            <field name="name">Advance Salary</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.SAR and - (inputs.SAR.amount)</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="sequence" eval="190"/>
+        </record>
+        <record id="hr_rule_input_advance" model="hr.rule.input">
+            <field name="code">SAR</field>
+            <field name="name">Salary Advance</field>
+            <field name="input_id" ref="hr_payslip_rule_advance"/>
+        </record>
+    </data>
+</odoo>

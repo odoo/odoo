@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Report Template for Bank Book.-->
+    <template id="bank_book">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+                <div class="page">
+                    <h3>
+                        <center>
+                            <b>
+                                <span t-esc="report_name"/>
+                            </b>
+                        </center>
+                    </h3>
+                    <br/>
+                    <br/>
+                    <div class="filters">
+                        <table class="table table-sm table-reports">
+                            <thead class="filter_table"
+                                   style="background:#808080;">
+                                <tr>
+                                    <th>Date Range</th>
+                                    <th>Partner</th>
+                                    <th>Account</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:11px;font-weight:100;">
+                                <tr>
+                                    <th>
+                                        <t t-if="filters['start_date']"
+                                           t-out="filters['start_date']"/>
+                                        <t t-if="filters['end_date']">
+                                            to
+                                            <t t-out="filters['end_date']"/>
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-foreach="filters['partner']"
+                                           t-as="selected_partner"
+                                           t-key="partner_index">
+                                            <t t-out="selected_partner['display_name']"/>
+                                            ,
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-set="first_account" t-value="True"/>
+                                        <t t-foreach="filters['account']" t-as="selected_account">
+                                            <t t-if="not first_account">,</t>
+                                            <t t-out="selected_account"/>
+                                            <t t-set="first_account" t-value="False"/>
+                                        </t>
+                                    </th>
+                                    <th>
+                                        Posted,
+                                        <t t-foreach="filters['options']"
+                                           t-as="selected_options"
+                                           t-key="options_index">
+                                            <t t-out="selected_options"/>,
+                                        </t>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <t t-if="move_lines">
+                        <t t-foreach="move_lines"
+                           t-as="move_line"
+                           t-key="move_lines_index">
+                            <table class="table table-sm table-reports">
+                                <thead style="background:#808080;">
+                                    <tr>
+                                        <th style="width:10%" colspan="6"/>
+                                        <th style="width:10%">Journal</th>
+                                        <th style="width:10%">Partner</th>
+                                        <th style="width:10%">Reference</th>
+                                        <th style="width:10%">Move</th>
+                                        <th style="width:10%">Entry label</th>
+                                        <th class="text-right"
+                                            style="padding-right:6px;width:10%;">
+                                            Debit
+                                        </th>
+                                        <th class="text-right"
+                                            style="padding-right:6px;width:10%;">
+                                            Credit
+                                        </th>
+                                        <th class="text-right"
+                                            style="padding-right:6px;width:10%;">
+                                            Balance
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size:11px;font-weight:100;">
+                                    <tr class="border-bottom"
+                                        style="background:#D3D3D3;">
+                                        <th colspan="8"
+                                            style="border:0px solid transparent;">
+                                            <div class="ms-3">
+                                                <span class="fw-bolder">
+                                                    <strong>
+                                                        <b>
+                                                            <t t-esc="move_line"/>
+                                                        </b>
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th style="width:10% border:0px solid transparent;"/>
+                                        <th style="width:10% border:0px solid transparent;"/>
+                                        <th style="width:10% border:0px solid transparent;"/>
+                                        <th style="width:10% border:0px solid transparent;">
+                                            <strong>
+                                                <span>
+                                                    <t t-if="total[move_line]['total_debit']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="total[move_line]['total_debit']"
+                                                       t-esc="total[move_line]['total_debit']"/>
+                                                </span>
+                                            </strong>
+                                        </th>
+                                        <th style="width:10% border:0px solid transparent;">
+                                            <strong>
+                                                <span>
+                                                    <t t-if="total[move_line]['total_credit']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="total[move_line]['total_credit']"
+                                                       t-esc="total[move_line]['total_credit']"/>
+                                                </span>
+                                            </strong>
+                                        </th>
+                                        <th style="width:10% border:0px solid transparent;">
+                                            <strong>
+                                                <span class="fw-bolder">
+                                                    <t t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-esc="total[move_line]['total_debit'] - total[move_line]['total_credit']"/>
+                                                </span>
+                                            </strong>
+                                        </th>
+                                    </tr>
+                                    <t t-foreach="data[move_line]"
+                                       t-as="valuelist"
+                                       t-key="valuelist_index">
+                                        <tr class="border-bottom">
+                                            <th colspan="6" style="width:10%">
+                                                <span>
+                                                    <t t-esc="valuelist['date']"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-esc="valuelist['journal_id'][1]"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-if="valuelist['partner_id']">
+                                                        <t t-esc="valuelist['partner_id'][1]"/>
+                                                    </t>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-if="valuelist['ref']"
+                                                       t-esc="valuelist['ref']"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-if="valuelist['move_name']"
+                                                       t-esc="valuelist['move_name']"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-if="valuelist['name']"
+                                                       t-esc="valuelist['name']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['debit']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['debit']"
+                                                       t-esc="valuelist['debit']"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%">
+                                                <span>
+                                                    <t t-if="valuelist['credit']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['credit']"
+                                                       t-esc="valuelist['credit']"/>
+                                                </span>
+                                            </th>
+                                            <th style="width:10%"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                    <table class="table table-sm table-reports">
+                        <tbody>
+                            <tr>
+                                <th style="width:60%;">Total</th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['total_debit']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['total_credit']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="float(grand_total['total_debit']) - float(grand_total['total_credit'])"/>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

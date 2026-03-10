@@ -1,0 +1,1118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="document_fiscal_line_mixin_form" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.document.line.mixin.form</field>
+    <field name="model">l10n_br_fiscal.document.line</field>
+    <field name="arch" type="xml">
+      <form>
+        <group name="fiscal_fields" invisible="1">
+          <field name="currency_id" force_save="1" invisible="1" />
+          <field name="fiscal_operation_type" force_save="1" invisible="1" />
+          <field name="operation_fiscal_type" force_save="1" invisible="1" />
+          <field name="company_id" force_save="1" invisible="1" />
+          <field name="partner_id" force_save="1" invisible="1" />
+          <field name="fiscal_type" force_save="1" invisible="1" />
+          <field name="partner_company_type" force_save="1" invisible="1" />
+          <field name="tax_framework" force_save="1" invisible="1" />
+          <field name="amount_tax_not_included" force_save="1" invisible="1" />
+          <field name="amount_tax_withholding" force_save="1" invisible="1" />
+          <field name="cfop_destination" force_save="1" invisible="1" />
+          <field name="fiscal_genre_id" force_save="1" invisible="1" />
+          <field name="fiscal_genre_code" force_save="1" invisible="1" />
+          <field name="ncm_id" force_save="1" invisible="1" />
+          <field name="nbm_id" force_save="1" invisible="1" />
+          <field name="cest_id" force_save="1" invisible="1" />
+          <field name="nbs_id" force_save="1" invisible="1" />
+          <field name="service_type_id" force_save="1" invisible="1" />
+          <field name="city_taxation_code_id" force_save="1" invisible="1" />
+          <field name="national_taxation_code_id" force_save="1" invisible="1" />
+          <field name="uot_id" force_save="1" invisible="1" />
+          <field name="fiscal_price" force_save="1" invisible="1" />
+          <field name="fiscal_quantity" force_save="1" invisible="1" />
+          <field name="fiscal_tax_ids" force_save="1" invisible="1" readonly="1" />
+          <field name="allow_csll_irpj" force_save="1" invisible="1" />
+          <field name="cst_code_prefix_like" force_save="1" invisible="1" />
+        </group>
+        <notebook>
+          <field name="product_id" force_save="1" invisible="1" />
+          <page name="fiscal_taxes" string="Taxes">
+            <group>
+              <field name="tax_framework" invisible="1" />
+              <field
+                                name="tax_icms_or_issqn"
+                                force_save="1"
+                                attrs="{'readonly': [('product_id', '!=', False), ('tax_icms_or_issqn', '!=', False)], 'required': [('tax_icms_or_issqn', '!=', False), ('fiscal_tax_ids', '!=', False)]}"
+                            />
+            </group>
+            <notebook>
+                <page name="cbs/ibs" string="CBS/IBS">
+                    <group string="Tax Classification">
+                        <field
+                                        name="tax_classification_id"
+                                        force_save="1"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group string="CBS">
+                        <group>
+                            <field
+                                            name="cbs_tax_id"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                            <field
+                                            name="cbs_cst_id"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                            <field name="cbs_cst_code" readonly="1" invisible="1" />
+                            <field
+                                            name="cbs_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="cbs_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="cbs_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="cbs_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="cbs_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cbs_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                    <group string="IBS">
+                        <group>
+                            <field
+                                            name="ibs_tax_id"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                            <field
+                                            name="ibs_cst_id"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                            <field name="ibs_cst_code" readonly="1" invisible="1" />
+                            <field
+                                            name="ibs_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="ibs_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="ibs_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="ibs_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="ibs_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ibs_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                </page>
+              <page
+                                name="issqn"
+                                string="ISSQN"
+                                attrs="{'invisible': [('tax_icms_or_issqn', '!=', 'issqn')]}"
+                            >
+                <group>
+                  <field
+                                        name="issqn_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field
+                                        name="issqn_fg_city_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field
+                                        name="issqn_eligibility"
+                                        attrs="{'required': [('tax_icms_or_issqn', '=', 'issqn')]}"
+                                    />
+                  <field
+                                        name="issqn_incentive"
+                                        attrs="{'required': [('tax_icms_or_issqn', '=', 'issqn')]}"
+                                    />
+                </group>
+                <group>
+                  <group>
+                    <field
+                                            name="issqn_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                  <group>
+                    <field
+                                            name="issqn_deduction_amount"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_other_amount"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_desc_incond_amount"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_desc_cond_amount"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="issqn_desc_cond_amount"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                </group>
+                <group string="Retenções">
+                   <field
+                                        name="issqn_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  </group>
+                  <group>
+                      <group>
+                        <field
+                                            name="issqn_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_wh_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="issqn_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                      <group>
+                        <field
+                                            name="issqn_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_wh_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="issqn_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('issqn_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                  </group>
+              </page>
+              <page
+                                name="icms"
+                                string="ICMS"
+                                attrs="{'invisible': [('tax_icms_or_issqn', '!=', 'icms')]}"
+                            >
+                  <group name="icms" string="ICMS">
+                    <field
+                                        name="icms_tax_id"
+                                        attrs="{'invisible': [('tax_framework', 'in', ('1', '2'))]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field
+                                        name="icmssn_tax_id"
+                                        attrs="{'invisible': [('tax_framework', '=', '3')]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field
+                                        name="icms_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field name="icms_cst_code" readonly="1" invisible="1" />
+                    <field
+                                        name="icms_origin"
+                                        force_save="1"
+                                        attrs="{'readonly': ['|', ('icms_tax_id', '!=', False), ('icmssn_tax_id', '!=', False)]}"
+                                    />
+                    <field name="icms_tax_benefit_id" force_save="1" />
+                  </group>
+                  <group>
+                      <group>
+                        <field
+                                            name="icmssn_range_id"
+                                            force_save="1"
+                                            readonly="1"
+                                            attrs="{'invisible': [('tax_framework', '=', '3')]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                        <field
+                                            name="icms_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': ['|', ('icms_tax_id', '=', False), ('icmssn_tax_id', '=', False)]}"
+                                        />
+                        <field
+                                            name="icmssn_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmssn_tax_id', '!=', False)], 'invisible': [('tax_framework', '=', '3')]}"
+                                        />
+                        <field
+                                            name="icmssn_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmssn_tax_id', '!=', False)], 'invisible': [('tax_framework', '=', '3')]}"
+                                        />
+                        <field
+                                            name="icms_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': ['|', ('tax_framework', '=', '2'), ('icms_cst_code', 'not in', ('00', '10', '20', '30', '40', '41', '50', '51', '60', '70', '90', '900'))]}"
+                                        />
+                        <field
+                                            name="icms_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': ['|', ('tax_framework', '=', '2'), ('icms_cst_code', 'not in', ('00', '10', '20', '30', '40', '41', '50', '51', '60', '70', '90', '900'))]}"
+                                        />
+                      </group>
+                      <group>
+                        <field
+                                            name="icmssn_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmssn_tax_id', '!=', False)], 'invisible': [('tax_framework', '=', '3')]}"
+                                        />
+                        <field
+                                            name="icmssn_credit_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmssn_tax_id', '!=', False)], 'invisible': [('tax_framework', '=', '3')]}"
+                                        />
+                        <field
+                                            name="icms_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': ['|', ('tax_framework', '=', '3'), ('icms_cst_code', '!=', '900')]}"
+                                        />
+                        <field
+                                            name="icms_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': ['|', ('tax_framework', '=', '2'), ('icms_cst_code', 'not in', ('00', '10', '20', '30', '40', '41', '50', '51', '60', '70', '90', '900'))]}"
+                                        />
+                        <field
+                                            name="icms_relief_id"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False), ('icms_cst_code', 'not in', ('20', '30', '40', '41', '50', '70', '90'))], 'invisible': ['|', ('tax_framework', 'in', ('1', '2')), ('icms_cst_code', 'not in', ('20', '30', '40', '41', '50', '70', '90'))]}"
+                                        />
+                        <field
+                                            name="icms_relief_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False), ('icms_cst_code', 'not in', ('20', '30', '40', '41', '50', '70', '90'))], 'invisible': ['|', ('tax_framework', 'in', ('1', '2')), ('icms_cst_code', 'not in', ('20', '30', '40', '41', '50', '70', '90'))]}"
+                                        />
+                          <field
+                                            name="icms_substitute"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_cst_code', '!=', '500')]}"
+                                        />
+                      </group>
+                  </group>
+                  <group>
+                      <group
+                                        name="icmsst"
+                                        string="ICMS ST"
+                                        attrs="{'invisible': [('icms_cst_code', 'not in', ('10', '30', '70', '90', '201', '202', '203', '500', '900'))]}"
+                                    >
+                        <field
+                                            name="icmsst_tax_id"
+                                            attrs="{'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                        <field
+                                            name="icmsst_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmssn_tax_id', '!=', False)], 'invisible': ['|', ('tax_framework', '=', '3'), ('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_mva_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                          <field
+                                            name="icmsst_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                        <field
+                                            name="icmsst_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)], 'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                      </group>
+                      <group
+                                        name="icms_fcp"
+                                        string="ICMS FCP"
+                                        attrs="{'invisible': [('partner_company_type', 'in', ('company', False))], 'invisible': [('icms_cst_code', 'in', ('40', '41', '50', '101', '102', '103', '300', '400'))]}"
+                                    >
+                          <field
+                                            name="icmsfcp_tax_id"
+                                            attrs="{'invisible': [('icms_cst_code', '=', '500')]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                        <field
+                                            name="icmsfcp_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                        <field
+                                            name="icmsfcp_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                        <field
+                                            name="icmsfcp_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                          <field
+                                            name="icmsfcp_base_wh"
+                                            force_save="1"
+                                            attrs="{'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                          <field
+                                            name="icmsfcp_wh_percent"
+                                            force_save="1"
+                                            attrs="{'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                          <field
+                                            name="icmsfcp_value_wh"
+                                            force_save="1"
+                                            attrs="{'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                        />
+                      </group>
+                      <group
+                                        name="icms_fcp_st"
+                                        string="ICMS FCP ST"
+                                        attrs="{'invisible': [('icms_cst_code', 'not in', ('10', '30', '70', '90', '201', '202', '203', '500', '900'))]}"
+                                    >
+                          <field
+                                            name="icmsfcpst_tax_id"
+                                            attrs="{'invisible': [('icms_cst_code', '=', '500')]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                        <field
+                                            name="icmsfcpst_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                        <field
+                                            name="icmsfcpst_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                        <field
+                                            name="icmsfcpst_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icmsfcp_tax_id', '!=', False)], 'invisible': [('icms_cst_code', '=', '500')]}"
+                                        />
+                      </group>
+                      <group
+                                        name="icms_difal"
+                                        string="ICMS DIFAL"
+                                        attrs="{'invisible': [('partner_company_type', 'in', ('company', False)), ('tax_framework', '=', '1'), ('cfop_destination', 'in', ('1', '3', False))]}"
+                                    >
+                        <field
+                                            name="icms_destination_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="icms_origin_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="icms_destination_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="icms_sharing_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="icms_origin_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="icms_destination_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('icms_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                      <group
+                                        name="icms_effective"
+                                        string="ICMS Effective Calculation"
+                                        attrs="{'invisible': [('icms_cst_code', 'not in', ('60', '500'))]}"
+                                    >
+                          <field
+                                            name="icms_effective_reduction"
+                                            force_save="1"
+                                            attr="{'invisible': [('icms_cst_code', '!=', '500')]}"
+                                        />
+                          <field
+                                            name="icms_effective_base"
+                                            force_save="1"
+                                            attr="{'invisible': [('icms_cst_code', '!=', '500')]}"
+                                        />
+                          <field
+                                            name="icms_effective_percent"
+                                            force_save="1"
+                                            attr="{'invisible': [('icms_cst_code', '!=', '500')]}"
+                                        />
+                          <field
+                                            name="icms_effective_value"
+                                            force_save="1"
+                                            attr="{'invisible': [('icms_cst_code', '!=', '500')]}"
+                                        />
+                      </group>
+                  </group>
+              </page>
+              <page
+                                name="ipi"
+                                string="IPI"
+                                attrs="{'invisible': [('tax_icms_or_issqn', '=', 'issqn')]}"
+                            >
+                  <group string="IPI">
+                      <field
+                                        name="ipi_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                      <field
+                                        name="ipi_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                      <field name="ipi_cst_code" readonly="1" invisible="1" />
+                      <field
+                                        name="ipi_guideline_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  </group>
+                  <group>
+                      <group>
+                        <field
+                                            name="ipi_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="ipi_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="ipi_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                      <group>
+                        <field
+                                            name="ipi_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        />
+                        <field
+                                            name="ipi_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('ipi_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                  </group>
+                  <group
+                                    string="Devolução do IPI"
+                                    attrs="{'invisible': [('operation_fiscal_type', 'in', ['purchase', 'sale'])]}"
+                                >
+                    <field name="p_devol" />
+                    <field name="ipi_devol_value" />
+                  </group>
+              </page>
+              <page
+                                name="ii"
+                                string="II"
+                                attrs="{'invisible': [('cfop_destination', '!=', '3')]}"
+                            >
+                <group string="II">
+                    <field
+                                        name="ii_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                </group>
+                <group>
+                  <group>
+                    <field name="ii_base" />
+                    <field name="ii_value" />
+                  </group>
+                  <group>
+                    <field name="ii_iof_value" />
+                    <field name="ii_customhouse_charges" />
+                  </group>
+                </group>
+              </page>
+              <page name="pis" string="PIS">
+                  <group name="pis" string="PIS">
+                    <field
+                                        name="pis_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field
+                                        name="pis_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field name="pis_cst_code" readonly="1" invisible="1" />
+                    <field
+                                        name="pis_credit_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('pis_tax_id', '!=', False)], 'invisible': [('fiscal_operation_type', '=', 'out')]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  </group>
+                  <group>
+                    <group>
+                      <field
+                                            name="pis_base_id"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)], 'invisible': [('fiscal_operation_type', '=', 'out')]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                      <field
+                                            name="pis_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pis_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pis_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        />
+                    </group>
+                    <group>
+                      <field
+                                            name="pis_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pis_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_tax_id', '!=', False)]}"
+                                        />
+                    </group>
+                  </group>
+                  <group name="pis_st" string="PIS ST">
+                    <field
+                                        name="pisst_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field
+                                        name="pisst_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    <field name="pisst_cst_code" readonly="1" invisible="1" />
+                  </group>
+                  <group>
+                    <group>
+                      <field
+                                            name="pisst_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pisst_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pisst_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        />
+                    </group>
+                    <group>
+                      <field
+                                            name="pisst_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        />
+                      <field
+                                            name="pisst_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pisst_tax_id', '!=', False)]}"
+                                        />
+                    </group>
+                  </group>
+                  <group string="Retenções">
+                      <field
+                                        name="pis_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  </group>
+                  <group>
+                      <group>
+                          <field
+                                            name="pis_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_wh_tax_id', '!=', False)]}"
+                                        />
+                          <field
+                                            name="pis_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                      <group>
+                          <field
+                                            name="pis_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_wh_tax_id', '!=', False)]}"
+                                        />
+                          <field
+                                            name="pis_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('pis_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                  </group>
+              </page>
+              <page name="cofins" string="COFINS">
+                <group name="cofins" string="COFINS">
+                  <field
+                                        name="cofins_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field
+                                        name="cofins_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field name="cofins_cst_code" readonly="1" invisible="1" />
+                  <field
+                                        name="cofins_credit_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('cofins_tax_id', '!=', False)], 'invisible': [('fiscal_operation_type', '=', 'out')]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                </group>
+                <group>
+                  <group>
+                    <field
+                                            name="cofins_base_id"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)], 'invisible': [('fiscal_operation_type', '=', 'out')]}"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                    <field
+                                            name="cofins_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofins_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofins_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                  <group>
+                    <field
+                                            name="cofins_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofins_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                </group>
+                <group name="cofins_st" string="COFINS ST">
+                  <field
+                                        name="cofinsst_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field
+                                        name="cofinsst_cst_id"
+                                        force_save="1"
+                                        attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  <field name="cofinsst_cst_code" readonly="1" invisible="1" />
+                </group>
+                <group>
+                  <group>
+                    <field
+                                            name="cofinsst_base_type"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofinsst_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofinsst_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                  <group>
+                    <field
+                                            name="cofinsst_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        />
+                    <field
+                                            name="cofinsst_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofinsst_tax_id', '!=', False)]}"
+                                        />
+                  </group>
+                </group>
+                  <group string="Retenções">
+                      <field
+                                        name="cofins_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                  </group>
+                  <group>
+                      <group>
+                          <field
+                                            name="cofins_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_wh_tax_id', '!=', False)]}"
+                                        />
+                          <field
+                                            name="cofins_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                      <group>
+                          <field
+                                            name="cofins_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_wh_tax_id', '!=', False)]}"
+                                        />
+                          <field
+                                            name="cofins_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('cofins_wh_tax_id', '!=', False)]}"
+                                        />
+                      </group>
+                  </group>
+              </page>
+                <page
+                                name="csll"
+                                string="CSLL"
+                                attrs="{'invisible': [('allow_csll_irpj', '=', False)]}"
+                            >
+                    <group>
+                        <field name="csll_tax_id" />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="csll_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="csll_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="csll_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="csll_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                    <group string="Retenções">
+                        <field
+                                        name="csll_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="csll_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="csll_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="csll_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="csll_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('csll_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                </page>
+                <page
+                                name="irpj"
+                                string="IRPJ"
+                                attrs="{'invisible': [('allow_csll_irpj', '=', False)]}"
+                            >
+                    <group>
+                        <field
+                                        name="irpj_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="irpj_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="irpj_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="irpj_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="irpj_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                    <group string="Retenções">
+                        <field
+                                        name="irpj_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="irpj_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="irpj_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="irpj_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="irpj_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('irpj_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                </page>
+                <page
+                                name="inss"
+                                string="INSS"
+                                attrs="{'invisible': [('fiscal_genre_code', '!=', '00')]}"
+                            >
+                    <group>
+                        <field
+                                        name="inss_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="inss_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="inss_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="inss_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="inss_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                    <group string="Retenções">
+                        <field
+                                        name="inss_wh_tax_id"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                    </group>
+                    <group>
+                        <group>
+                            <field
+                                            name="inss_wh_base"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="inss_wh_percent"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                        <group>
+                            <field
+                                            name="inss_wh_reduction"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_wh_tax_id', '!=', False)]}"
+                                        />
+                            <field
+                                            name="inss_wh_value"
+                                            force_save="1"
+                                            attrs="{'readonly': [('inss_wh_tax_id', '!=', False)]}"
+                                        />
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+          </page>
+          <page name="fiscal_line_extra_info" string="Extra Info">
+            <group>
+                <field name="partner_order" />
+                <field name="partner_order_line" />
+            </group>
+            <group>
+                <field name="comment_ids" widget="many2many_tags" />
+                <field name="manual_additional_data" />
+                <field name="additional_data" readonly="1" />
+            </group>
+          </page>
+        </notebook>
+      </form>
+    </field>
+  </record>
+
+</odoo>

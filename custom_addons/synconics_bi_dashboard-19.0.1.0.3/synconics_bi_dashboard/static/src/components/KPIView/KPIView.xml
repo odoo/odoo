@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.KPIView" owl="1">
+        <!-- <t t-if="this.state.isError">
+            <span style="font-size: 1rem;" t-out="this.state.title"></span>
+        </t> -->
+        <div t-if="this.state.isError" class="w-100 d-flex align-items-center justify-content-center" style="height: 90%;">
+            <h5 t-out="this.state.errorMessage"></h5>
+        </div>
+        <div t-else="" class="col-sm-12 col-md-12 oe_inner" t-att-style="'background-color:' + state.data.background_color +'!important;height: 100%;'">
+            <t t-if="state.layout_type === 'layout1'">
+                <KpiLayoutOne data="state.data" />
+            </t>
+            <t t-elif="state.layout_type === 'layout2'">
+                <KpiLayoutTwo data="state.data" />
+            </t>
+            <t t-elif="state.layout_type === 'layout3'">
+                <KpiLayoutThree data="state.data" />
+            </t>
+            <t t-elif="state.layout_type === 'layout4'">
+                <KpiLayoutFour data="state.data" />
+            </t>
+            <t t-elif="state.layout_type === 'layout5'">
+                <KpiLayoutFive data="state.data" />
+            </t>
+        </div>
+    </t>
+</templates>

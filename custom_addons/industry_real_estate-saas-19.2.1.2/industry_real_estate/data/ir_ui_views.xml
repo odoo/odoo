@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="property_form_view" model="ir.ui.view">
+        <field name="model">account.analytic.account</field>
+        <field name="mode">primary</field>
+        <field name="active" eval="True"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <header>
+                    <button name="%(action_create_invoice_meters)d" type="action" string="Create Invoice" invisible="not x_rental_contract_id or x_invoice_status != 'to_invoice'"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_invoice" icon="fa-pencil-square-o" invisible="invoice_count == 0">
+                            <field string="Invoices" name="invoice_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_view_vendor_bill" icon="fa-file-text-o" invisible="vendor_bill_count == 0">
+                            <field string="Vendor Bills" name="vendor_bill_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="subscriptions_action" icon="fa-book" invisible="subscription_count == 0">
+                            <field string="Rental Contracts" name="subscription_count" widget="statinfo"/>
+                        </button>
+                    </div>
+
+                    <field name="x_property_image" widget="image" class="oe_avatar ml-3 mr-3" options="{'size': [0, 180]}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Property"/>
+                        <h1>
+                            <field name="name" class="oe_inline" placeholder="e.g. Apartment Oxford Street"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="x_rental_contract_id"/>
+                            <field name="x_property_building_id"/>
+                            <field name="x_property_address" required="x_is_property"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="x_property_type" required="x_is_property"/>
+                            <field name="x_is_published"/>
+                            <field name="x_invoice_status"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description">
+                            <field name="x_website_description" placeholder="Describe your property here"/>
+                        </page>
+                        <page string="Gallery">
+                            <field name="x_property_attachment_image_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}" string="Add Images"/>
+                         </page>
+                        <page string="Documents">
+                            <field name="x_property_attachment_doc_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Meter Readings">
+                            <field name="x_property_meter_reading_ids" context="{'default_x_account_analytic_account_id': id}">
+                                <list editable="bottom">
+                                    <field name="x_meter_id" required="True"/>
+                                    <field name="x_date"/>
+                                    <field name="x_quantity"/>
+                                    <field name="x_usage" optional="show"/>
+                                    <field name="x_description" optional="show"/>
+                                    <field name="x_invoice_id" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="property_kanban_view" model="ir.ui.view">
+        <field name="model">account.analytic.account</field>
+        <field name="mode">primary</field>
+        <field name="active" eval="True"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-item-start">
+                            <div class="o_kanban_image" style="margin-right: 9px;">
+                                <field name="x_property_image" widget="image" options="{'size': [94, 94]}"/>
+                            </div>
+                            <div class="o_kanban_details">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_field">
+                                    <field name="x_property_building_id"/>
+                                </div>
+                                <div class="o_kanban_record_field">
+                                    <field name="x_property_address" class="text-muted"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_crm_lead_form_inherit" model="ir.ui.view">
+        <field name="name">crm.leam.form.inherit.industry_real_estate</field>
+        <field name="model">crm.lead</field>
+        <field name="active" eval="True"/>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="priority">160</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@name='lead_partner']//field[@name='lost_reason_id']" position="before">
+                    <field name="x_property_id" domain="[('x_is_property', '=', True)]"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record id="view_crm_lead_kanban_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.inherit.industry_real_estate</field>
+        <field name="model">crm.lead</field>
+        <field name="active" eval="True"/>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="priority">320</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//t[@t-name='card']/field[@name='name']" position="after">
+                    <field name="x_property_id" display="full"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="view_crm_lead_form_quick_create_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.quick_create</field>
+        <field name="model">crm.lead</field>
+        <field name="active" eval="True"/>
+        <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[1]" position="inside">
+                <div class="d-flex align-items-center" colspan="2">
+                    <i class="fa fa-home fa-lg" title="Property"/>
+                    <field name="x_property_id" string="Property" placeholder="Property's name" nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rental_gantt_view" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field name="active" eval="True"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <gantt date_start="start_date" date_stop="end_date" color="partner_id" default_scale="year" display_unavailability="true" string="Availability" />
+        </field>
+    </record>
+
+    <record id="rental_form_view" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field name="active" eval="True"/>
+        <field name="priority">15</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_order_view_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Tenant</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="x_account_analytic_account_id" readonly="state == 'sale'"/>
+                <field name="x_guarant_partner_id"/>
+            </field>
+            <xpath expr="//div[@name='plan_block']/span" position="replace"/>
+            <xpath expr="//div[@name='plan_block']/field[@name='end_date']" position="replace"/>
+            <xpath expr="//div[@name='plan_block']" position="after">
+                <label string="From" for="start_date"/>
+                <div class="o_row">
+                    <field name="start_date"/>
+                    <span>to</span>
+                    <field name="end_date" required="True"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="meters_list_view" model="ir.ui.view">
+        <field name="name">meter.tree.view</field>
+        <field name="model">x_meters</field>
+        <field name="active" eval="True"/>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="x_sequence" widget="handle"/>
+                <field name="x_name"/>
+                <field name="x_price" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <record id="default_list_view_building" model="ir.ui.view">
+        <field name="model">x_buildings</field>
+        <field name="name">Default list view for buildings</field>
+        <field name="type">list</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="x_name"/>
+            </list>
+        </field>
+    </record>
+    <record id="default_form_view_building" model="ir.ui.view">
+        <field name="name">Default form view for buildings</field>
+        <field name="model">x_buildings</field>
+        <field name="type">form</field>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <form>
+                <header/>
+                <sheet string="Buildings">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="x_name" required="1" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <span class="fw-bold">Address</span>
+                            <div class="o_address_format">
+                                <field name="x_street" placeholder="Street..." class="o_address_street"/>
+                                <field name="x_street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="x_city" placeholder="City" class="o_address_city"/>
+                                <field name="x_state" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"/>
+                                <field name="x_zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="x_country" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

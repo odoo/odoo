@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main App Menu -->
+    <menuitem
+        id="niyu_sql_menu_root"
+        name="AI SQL Generator"
+        sequence="10"/> 
+
+    <!-- Client Action for OWL Component -->
+    <record id="action_ai_sql_client" model="ir.actions.client">
+        <field name="name">AI SQL Generator</field>
+        <field name="tag">ai_sql.SQLGeneratorView</field>
+        <!-- This tag MUST match the tag used to register the OWL component -->
+        <!-- <field name="target">current</field> -->
+    </record>
+
+    <menuitem
+        id="niyu_sql_menu_generate"
+        name="Generate SQL"
+        parent="niyu_sql_menu_root"
+        action="ai_sql.action_ai_sql_client"
+        sequence="10"/>
+
+    <!-- Menu item to easily reach configuration -->
+    <menuitem
+        id="niyu_sql_menu_config"
+        name="Configuration"
+        parent="niyu_sql_menu_root"
+        action="base_setup.action_general_configuration"
+        sequence="100"/>
+</odoo>

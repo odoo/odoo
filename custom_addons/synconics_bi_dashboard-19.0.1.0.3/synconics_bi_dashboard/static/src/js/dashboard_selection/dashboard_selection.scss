@@ -1,0 +1,17 @@
+.dashboard-selection {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 1rem;
+  column-gap: 1.5rem;
+  .select-option {
+    text-align: center;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-radius: 10px;
+    background-color: #ededed54;
+    &.selected {
+      background-color: #714b67;
+      color: white;
+    }
+  }
+}

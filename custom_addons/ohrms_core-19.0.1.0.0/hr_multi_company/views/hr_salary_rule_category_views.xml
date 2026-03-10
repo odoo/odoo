@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited form view of hr_salary_rule_category for adding company. -->
+    <record id="hr_salary_rule_category_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.category.view.form.inherit.hr.multi.company</field>
+        <field name="model">hr.salary.rule.category</field>
+        <field name="inherit_id" ref="hr_payroll_community.hr_salary_rule_category_view_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="company_id" options="{'no_create': True}"
+                       groups="base.group_multi_company"/>
+            </field>
+        </field>
+    </record>
+</odoo>

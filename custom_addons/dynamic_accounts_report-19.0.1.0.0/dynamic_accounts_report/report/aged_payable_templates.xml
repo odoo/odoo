@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Report template for Aged Payable Report.-->
+    <template id="aged_payable">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+                <div class="page">
+                    <h3>
+                        <center>
+                            <b>
+                                <span t-esc="report_name"/>
+                            </b>
+                        </center>
+                    </h3>
+                    <br/>
+                    <br/>
+                    <div class="filters">
+                        <table class="table table-sm table-reports">
+                            <thead class="filter_table"
+                                   style="background:#808080;">
+                                <tr>
+                                    <th>Date Range</th>
+                                    <th>Partner</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:11px;font-weight:100;">
+                                <tr>
+                                    <th>
+                                        <t t-if="filters['end_date']">
+                                            <t t-out="filters['end_date']"/>
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-foreach="filters['partner']"
+                                           t-as="selected_partner"
+                                           t-key="partner_index">
+                                            <t t-out="selected_partner['display_name']"/>
+                                            ,
+                                        </t>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <t t-if="move_lines">
+                        <t t-foreach="move_lines"
+                           t-as="move_line"
+                           t-key="partner_index">
+                            <table class="table table-sm table-reports">
+                                <thead style="background:#808080;">
+                                    <tr>
+                                        <th style="width:10%" colspan="6"/>
+                                        <th style="width:10%">Invoice Date</th>
+                                        <th style="width:10%">Amount Currency
+                                        </th>
+                                        <th style="width:10%">Currency</th>
+                                        <th style="width:10%">Account</th>
+                                        <th style="width:10%">Expected Date</th>
+                                        <th style="width:10%">At Date</th>
+                                        <th style="width:10%">1-30</th>
+                                        <th style="width:10%">31-60</th>
+                                        <th style="width:10%">61-90</th>
+                                        <th style="width:10%">91-120</th>
+                                        <th style="width:10%">Older</th>
+                                        <th style="width:10%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-bottom"
+                                        style="background:#D3D3D3;">
+                                        <th colspan="6"
+                                            style="border:0px solid transparent;border-left: thin solid #dee2e6;">
+                                            <div>
+                                                <span class="fw-bolder">
+                                                    <t t-esc="move_line"/>
+                                                </span>
+                                            </div>
+                                        </th>
+                                        <th style="border:0px solid transparent;"/>
+                                        <th style="border:0px solid transparent;"/>
+                                        <th style="border:0px solid transparent;"/>
+                                        <th style="border:0px solid transparent;"/>
+                                        <th style="border:0px solid transparent;"/>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff0_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff0_sum']"
+                                                   t-esc="total[move_line]['diff0_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff1_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff1_sum']"
+                                                   t-esc="total[move_line]['diff1_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff2_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff2_sum']"
+                                                   t-esc="total[move_line]['diff2_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff3_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff3_sum']"
+                                                   t-esc="total[move_line]['diff3_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff4_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff4_sum']"
+                                                   t-esc="total[move_line]['diff4_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;font-size:11px;font-weight:100;">
+                                            <span>
+                                                <t t-if="total[move_line]['diff5_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['diff5_sum']"
+                                                   t-esc="total[move_line]['diff5_sum']"/>
+                                            </span>
+                                        </th>
+                                        <th style="border:0px solid transparent;border-right: thin solid #dee2e6;font-size:11px;font-weight:100;">
+                                            <span class="fw-bolder">
+                                                <t t-if="total[move_line]['credit_sum']"
+                                                   t-esc="total[move_line]['currency_id']"/>
+                                                <t t-if="total[move_line]['credit_sum']"
+                                                   t-esc="total[move_line]['credit_sum']"/>
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <t t-foreach="data[move_line]"
+                                       t-as="valuelist"
+                                       t-key="valuelist_index">
+                                        <tr class="border-bottom"
+                                            style="font-size:11px;font-weight:100;">
+                                            <th colspan="6">
+                                                <span>
+                                                    <t t-esc="valuelist['move_name']"/>
+                                                    <t t-esc="valuelist['name']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-esc="valuelist['date']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-esc="valuelist['amount_currency']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-esc="valuelist['currency_id'][1]"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-esc="valuelist['account_id'][1]"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['date_maturity']"
+                                                       t-esc="valuelist['date_maturity']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff0']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff0']"
+                                                       t-esc="valuelist['diff0']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff1']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff1']"
+                                                       t-esc="valuelist['diff1']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff2']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff2']"
+                                                       t-esc="valuelist['diff2']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff3']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff3']"
+                                                       t-esc="valuelist['diff3']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff4']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff4']"
+                                                       t-esc="valuelist['diff4']"/>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span>
+                                                    <t t-if="valuelist['diff5']"
+                                                       t-esc="total[move_line]['currency_id']"/>
+                                                    <t t-if="valuelist['diff5']"
+                                                       t-esc="valuelist['diff5']"/>
+                                                </span>
+                                            </th>
+                                            <th/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                    <table class="table table-sm table-reports">
+                        <tbody>
+                            <tr>
+                                <th style="width:60%;">Total</th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff0_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff1_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff2_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff3_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff4_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['diff5_sum']"/>
+                                </th>
+                                <th style="width:10%">
+                                    <t t-out="grand_total['currency']"/>
+                                    <t t-out="grand_total['total_credit']"/>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

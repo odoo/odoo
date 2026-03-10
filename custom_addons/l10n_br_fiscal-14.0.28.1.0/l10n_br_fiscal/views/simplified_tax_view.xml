@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="simplified_tax_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.simplified.tax.form</field>
+        <field name="model">l10n_br_fiscal.simplified.tax</field>
+        <field name="arch" type="xml">
+            <form string="Simplified Tax">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="coefficient_r" />
+                    </group>
+                    <notebook>
+                        <page string="Simplified Range" name="simplified_tax_range">
+                            <field name="simplified_tax_range_ids" nolabel="1" />
+                        </page>
+                        <page string="CNAEs" name="cnae">
+                            <field name="cnae_ids" nolabel="1" readonly="1">
+                                <tree>
+                                    <field name="code" />
+                                    <field name="name" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="simplified_tax_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.simplified.tax.tree</field>
+        <field name="model">l10n_br_fiscal.simplified.tax</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+</odoo>

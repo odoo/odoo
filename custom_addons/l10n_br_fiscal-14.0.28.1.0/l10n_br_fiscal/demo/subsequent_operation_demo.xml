@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+    <!-- Simples Faturamento -->
+    <record id="so_simples_faturamento" model="l10n_br_fiscal.subsequent.operation">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_simples_faturamento" />
+        <field name="subsequent_operation_id" ref="l10n_br_fiscal.fo_entrega_futura" />
+        <field name="operation_document_type_id" ref="l10n_br_fiscal.document_55" />
+        <field name="generation_situation">a_enviar</field>
+    </record>
+</odoo>

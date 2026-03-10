@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="multicolor_theme_module_access">
+            <field name="name">Multicolor Backend Theme</field>
+            <field name="description">User access levels for Theme selection</field>
+            <field name="sequence">10</field>
+        </record>
+        <record model="res.groups.privilege" id="res_groups_privilege_theme">
+            <field name="name">Theme Management</field>
+            <field name="category_id" ref="multicolor_backend_theme.multicolor_theme_module_access"/>
+        </record>
+         <record id="multicolor_theme_manager_access" model="res.groups">
+            <field name="name">Theme Manager</field>
+            <field name="privilege_id" ref="res_groups_privilege_theme"/>
+            <!-- <field name="implied_ids" eval="[(4, ref('group_salon_user'))]" /> -->
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        </record>
+    </data>
+</odoo>
+
+
+
+<!-- <?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+     <record id="multicolor_theme_module_access" model="ir.module.category" >
+         <field name="name">Multicolor Backend Theme </field>
+         <field name="description">User access levels for Theme selection</field>
+         <field name="sequence">10</field>
+    </record>
+    <record id="multicolor_theme_manager_access" model="res.groups">
+        <field name="name">Theme Manager</field>
+        <field name="category_id" ref="multicolor_theme_module_access"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo> -->

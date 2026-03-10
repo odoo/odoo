@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!--    Template of the remainder menu in systray-->
+    <t t-name="owl.reminder_menu">
+        <div class="o_mail_navbar_item dropdown" t-ref="reminder_menu">
+            <a class="dropdown-toggle d-flex align-items-center"
+               t-on-click="(ev) => this.showReminder(ev)"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+               href="#" title="Reminders" role="button">
+                <i class="fa fa-bell me-1"></i>
+                <span class="o_notification_counter"></span>
+            </a>
+            <ul class="o_mail_navbar_dropdown dropdown-menu dropdown-menu-end reminder-dropdown shadow-lg" role="menu">
+                <li class="o_mail_navbar_dropdown_top p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 fw-bold text-primary">Reminders</h6>
+                        <i class="fa fa-bell text-muted"></i>
+                    </div>
+
+
+                    <div class="form-group mb-3">
+                        <label for="reminder_select" class="form-label small text-muted">Select Reminder</label>
+                        <select id="reminder_select"
+                                name="Reminder"
+                                class="form-control rounded-pill">
+                            <t t-foreach='state.all_remainders' t-as='val' t-key="val.id">
+                                <option>
+                                    <t t-esc="val.name"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+
+
+                    <div class="d-grid">
+                        <button type="button"
+                                class="btn btn-outline-primary rounded-pill"
+                                t-on-click="(ev) => this.reminderActive(ev)">
+                            View
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </t>
+</templates>

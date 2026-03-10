@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="tax_ipi_control_seal_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.ipi.control.seal.search</field>
+        <field name="model">l10n_br_fiscal.tax.ipi.guideline.class</field>
+        <field name="arch" type="xml">
+            <search string="IPI Control Seal">
+                <field name="code" />
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record id="tax_ipi_control_seal_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.ipi.control.seal.tree</field>
+        <field name="model">l10n_br_fiscal.tax.ipi.control.seal</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="tax_ipi_control_seal_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.tax.ipi.control.seal.form</field>
+        <field name="model">l10n_br_fiscal.tax.ipi.control.seal</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="account_move_62" model="account.move">
+        <field name="partner_id" ref="res_partner_53"/>
+        <field name="move_type">in_invoice</field>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+    </record>
+    <record id="account_move_63" model="account.move">
+        <field name="partner_id" ref="base.user_admin"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+    </record>
+    <record id="account_move_82" model="account.move">
+        <field name="partner_id" ref="res_partner_54"/>
+        <field name="move_type">in_invoice</field>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+    </record>
+    <record id="account_move_83" model="account.move">
+        <field name="partner_id" ref="res_partner_55"/>
+        <field name="move_type">in_invoice</field>
+        <field name="team_id" ref="sales_team.team_sales_department"/>
+    </record>
+</odoo>

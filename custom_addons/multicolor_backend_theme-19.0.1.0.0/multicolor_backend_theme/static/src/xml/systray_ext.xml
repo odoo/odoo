@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <!--    Systray view-->
+    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+        <!-- <xpath expr="//div[@class='o_menu_systray d-flex flex-shrink-0 ms-auto']//t[@t-foreach='systrayItems']" position="before"> -->
+        <xpath expr="//div[@class='o_menu_systray d-flex flex-shrink-0 ms-auto bg-inherit']//t[@t-foreach='systrayItems']" position="before">
+        <!-- <xpath expr="//div[contains(@class, 'o_menu_systray')]" position="inside"> -->
+            <Dropdown state="dropdown">
+                <t t-log="'insidethe dropdown'"/>
+                <a data-display="static" aria-expanded="false" title="Themes"
+                   role="button">
+                    <t t-if="user">    
+                        <i class="fa fa-paint-brush" role="img"
+                            aria-label="Themes Configuration" />
+                    </t>
+                </a>
+                <t t-set-slot="content">
+                    <div class="themes_selector dropdown-menu-right" role="menu">
+                    <div class="row">
+                        <div class="themes_list">
+                            <div class="row theme_obj">
+                                <select class="theme_select form-control" t-on-change="onChangeTheme">
+                                    <t t-foreach="state.theme_data"
+                                       t-as="theme_data_id" t-key="theme_data_id.id">
+                                        <option t-att-id="theme_data_id.id" t-att-value="theme_data_id.id"
+                                                t-att-selected="theme_data_id.id === state.selected_theme.id">
+                                            <span t-esc="theme_data_id.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="theme_data">
+                            <div class="row name">
+                                <div class="cell">
+                                    <p>Name</p>
+                                </div>
+                                <div class="cell">
+                                    <input type="text"
+                                           id="themeName"
+                                           readonly="readonly"
+                                           t-att-value="state.selected_theme.name"/>
+                                    <i id="editIcon" class="fa fa-pencil" t-on-click="onEditName"/>
+                                </div>
+                            </div>
+                            <div class="theme_extra">
+                                <div id="active_theme" class="theme-active">
+                                    <p>Active</p>
+                                </div>
+                            </div>
+                            <!--            Color selector -->
+                            <div class="color_selector">
+                                <div class="row theme_main_color">
+                                    <div class="cell">
+                                        <p>Base Color
+                                        </p>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="color" id="theme_main_color" t-on-click="onClickBaseColor"
+                                             t-att-style="'background-color:'+state.selected_theme.theme_main_color">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row theme_font_color">
+                                    <div class="cell">
+                                        <p>Font Color</p>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="color" id="theme_font_color" t-on-click="onClickBaseColor"
+                                             t-att-style="'background-color:'+state.selected_theme.theme_font_color"/>
+                                    </div>
+                                </div>
+                                <div class="row view_font_color">
+                                    <div class="cell">
+                                        <p>View Font Color</p>
+                                    </div>
+                                    <div class="cell">
+                                        <div class="color" id="view_font_color" t-on-click="onClickBaseColor"
+                                             t-att-style="'background-color:'+state.selected_theme.view_font_color"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--View for Theme create, remove and apply buttons-->
+                    <div class="header_buttons row" style="position: absolute; bottom: 0;">
+                        <div class="button-create cell">
+                            <p t-on-click="onClickCreate">Create</p>
+                        </div>
+                        <div class="button-create cell">
+                            <p t-on-click="onClickRemove">Remove</p>
+                        </div>
+                        <div class="button-create cell">
+                            <p t-on-click="onClickApply"><i class="fa fa-check"/>Apply</p>
+                        </div>
+                    </div>
+                </div>
+                </t>
+            </Dropdown>
+        </xpath>
+    </t>
+</templates>

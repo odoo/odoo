@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+
+    <record id="document_55_serie_1" model="l10n_br_fiscal.document.serie">
+        <field name="code">1</field>
+        <field name="name">Série 1</field>
+        <field name="document_type_id" ref="l10n_br_fiscal.document_55" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="active">True</field>
+    </record>
+
+    <!-- l10n_br_fiscal.operation -->
+    <record id="fo_venda" model="l10n_br_fiscal.operation">
+        <field name="code">VD</field>
+        <field name="name">Venda</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">sale</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_venda_venda" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Venda</field>
+        <field name="ind_ie_dest">1</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5101" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6101" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7101" />
+        <field name="state">approved</field>
+        <field name="product_type">04</field>
+    </record>
+
+    <record id="fo_venda_revenda" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Revenda</field>
+        <field name="ind_ie_dest">1</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5102" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6102" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7102" />
+        <field name="state">approved</field>
+        <field name="product_type">00</field>
+    </record>
+
+    <record id="fo_venda_venda_nao_contribuinte" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Venda não Contribuinte</field>
+        <field name="ind_ie_dest">9</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5101" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6107" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7101" />
+        <field name="state">approved</field>
+        <field name="product_type">04</field>
+    </record>
+
+    <record
+        id="fo_venda_revenda_nao_contribuinte"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Revenda não Contribuinte</field>
+        <field name="ind_ie_dest">9</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5102" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6108" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7102" />
+        <field name="state">approved</field>
+        <field name="product_type">00</field>
+    </record>
+
+    <record id="fo_venda_servico_ind" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Prestação de Serviço de Industrialização</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5124" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6124" />
+        <field name="state">approved</field>
+        <field name="product_type">09</field>
+        <field name="tax_icms_or_issqn">icms</field>
+    </record>
+
+    <record id="fo_venda_servico" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_venda" />
+        <field name="name">Prestação de Serviço</field>
+        <field name="document_type_id" ref="l10n_br_fiscal.document_SE" />
+        <field name="state">approved</field>
+        <field name="tax_icms_or_issqn">issqn</field>
+    </record>
+
+    <record id="fo_venda_revenda_ipi_nt" model="l10n_br_fiscal.tax.definition">
+        <field name="fiscal_operation_line_id" ref="fo_venda_revenda" />
+        <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+        <field name="custom_tax">True</field>
+        <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_nt" />
+        <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_53" />
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_venda_revenda_nao_contribuinte_ipi_nt"
+        model="l10n_br_fiscal.tax.definition"
+    >
+        <field
+            name="fiscal_operation_line_id"
+            ref="fo_venda_revenda_nao_contribuinte"
+        />
+        <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+        <field name="custom_tax">True</field>
+        <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_nt" />
+        <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_53" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_bonificacao" model="l10n_br_fiscal.operation">
+        <field name="code">BNF</field>
+        <field name="name">Bonificação</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_bonificacao_bonificacao" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_bonificacao" />
+        <field name="name">Bonificação</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5910" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6910" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_devolucao_venda" model="l10n_br_fiscal.operation">
+        <field name="code">DVV</field>
+        <field name="name">Devolução de Venda</field>
+        <field name="fiscal_operation_type">in</field>
+        <field name="fiscal_type">sale_refund</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+        <field name="edoc_purpose">4</field>
+    </record>
+
+    <record
+        id="fo_devolucao_venda_devolucao_venda"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_venda" />
+        <field name="name">Devolução de Venda</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1201" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2201" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3201" />
+        <field name="product_type">04</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_devolucao_revenda_devolucao_revenda"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_venda" />
+        <field name="name">Devolução de Revenda</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1202" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2202" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3202" />
+        <field name="product_type">00</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_compras" model="l10n_br_fiscal.operation">
+        <field name="code">CP</field>
+        <field name="name">Compras</field>
+        <field name="fiscal_operation_type">in</field>
+        <field name="fiscal_type">purchase</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_compras_compras_comercializacao"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Compras para Comercialização</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">00</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1102" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2102" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3102" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_compras_compras" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Compra para industrialização</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1101" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2101" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3101" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_compras_compras_ativo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Compras de Ativo</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">08</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1551" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2551" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3551" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_compras_compras_uso_consumo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Compras para Uso e Consumo</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">07</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1556" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2556" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3556" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_compras_servico_ind" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Prestação de Serviço de Industrialização</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1124" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2124" />
+        <field name="state">approved</field>
+        <field name="product_type">09</field>
+        <field name="tax_icms_or_issqn">icms</field>
+    </record>
+
+    <record id="fo_compras_servico" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_compras" />
+        <field name="name">Prestação de Serviço</field>
+        <field name="document_type_id" ref="l10n_br_fiscal.document_SE" />
+        <field name="state">approved</field>
+        <field name="tax_icms_or_issqn">issqn</field>
+    </record>
+
+    <record id="fo_devolucao_compras" model="l10n_br_fiscal.operation">
+        <field name="code">DVC</field>
+        <field name="name">Devolução de Compras</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">purchase_refund</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+        <field name="edoc_purpose">4</field>
+    </record>
+
+    <record
+        id="fo_devolucao_compras_comercializacao"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_compras" />
+        <field name="name">Devolução de Compras para Comercialização</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">00</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5202" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6202" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7202" />
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_devolucao_compras_devolucao_compras"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_compras" />
+        <field name="name">Devolução de Compras para industrialização</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5201" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6201" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7201" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_devolucao_compras_ativo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_compras" />
+        <field name="name">Devolução de Compras de Bem para o Ativo Imobilizado</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">08</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5553" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6553" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7553" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_devolucao_compras_uso_consumo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_devolucao_compras" />
+        <field name="name">Devolução de Compras para Uso e Consumo</field>
+        <field name="tax_icms_or_issqn">icms</field>
+        <field name="product_type">07</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5556" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6556" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7556" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrada_remessa" model="l10n_br_fiscal.operation">
+        <field name="code">ER</field>
+        <field name="name">Entrada de Remessa</field>
+        <field name="fiscal_operation_type">in</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_entrada_remessa_entrada_remessa"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_entrada_remessa" />
+        <field name="name">Entrada de Remessa</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1949" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2949" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_3949" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_simples_remessa" model="l10n_br_fiscal.operation">
+        <field name="code">SR</field>
+        <field name="name">Simples Remessa</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_simples_remessa_simples_remessa"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_simples_remessa" />
+        <field name="name">Simples Remessa</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5949" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6949" />
+        <field name="cfop_export_id" ref="l10n_br_fiscal.cfop_7949" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_simples_faturamento" model="l10n_br_fiscal.operation">
+        <field name="code">SF</field>
+        <field name="name">Simples Faturamento</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_simples_faturamento_simples_faturamento"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_simples_faturamento" />
+        <field name="name">Simples Faturamento</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5922" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6922" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrega_futura" model="l10n_br_fiscal.operation">
+        <field name="code">VEF</field>
+        <field name="name">Venda - Entrega Futura</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">sale</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrega_futura_entrega_futura" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_entrega_futura" />
+        <field name="name">Venda - Entrega Futura</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5116" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6116" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_remessa_industrializacao" model="l10n_br_fiscal.operation">
+        <field name="code">RI</field>
+        <field name="name">Remessa para industrialização por encomenda</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">return_out</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_remessa_industrializacao_remessa_industrializacao"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field
+            name="fiscal_operation_id"
+            ref="l10n_br_fiscal.fo_remessa_industrializacao"
+        />
+        <field name="name">Remessa para industralização por encomenda</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5901" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6901" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrada_industrializacao" model="l10n_br_fiscal.operation">
+        <field name="code">EI</field>
+        <field name="name">Entrada para industrialização por encomenda</field>
+        <field name="fiscal_operation_type">in</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record
+        id="fo_entrada_industrializacao_entrada_industrializacao"
+        model="l10n_br_fiscal.operation.line"
+    >
+        <field
+            name="fiscal_operation_id"
+            ref="l10n_br_fiscal.fo_entrada_industrializacao"
+        />
+        <field name="name">Entrada para industralização por encomenda</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1901" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2901" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_retorno_reparo" model="l10n_br_fiscal.operation">
+        <field name="code">RR</field>
+        <field
+            name="name"
+        >Retorno de mercadoria ou bem remetido para conserto ou reparo</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">return_out</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_retorno_reparo_retorno_reparo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_retorno_reparo" />
+        <field
+            name="name"
+        >Retorno de mercadoria ou bem remetido para conserto ou reparo</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_5916" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_6916" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrada_reparo" model="l10n_br_fiscal.operation">
+        <field name="code">EMR</field>
+        <field
+            name="name"
+        >Entrada de mercadoria ou bem remetido para conserto ou reparo</field>
+        <field name="fiscal_operation_type">in</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">cost_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_entrada_reparo_entrada_reparo" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_entrada_reparo" />
+        <field
+            name="name"
+        >Entrada de mercadoria ou bem remetido para conserto ou reparo</field>
+        <field name="cfop_internal_id" ref="l10n_br_fiscal.cfop_1915" />
+        <field name="cfop_external_id" ref="l10n_br_fiscal.cfop_2915" />
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_manifesto" model="l10n_br_fiscal.operation">
+        <field name="code">Manifesto</field>
+        <field name="name">Manifesto</field>
+        <field name="fiscal_operation_type">out</field>
+        <field name="fiscal_type">other</field>
+        <field name="default_price_unit">sale_price</field>
+        <field name="state">approved</field>
+    </record>
+
+    <record id="fo_manifesto_manifesto" model="l10n_br_fiscal.operation.line">
+        <field name="fiscal_operation_id" ref="l10n_br_fiscal.fo_manifesto" />
+        <field name="name">Manifesto</field>
+        <field name="ind_ie_dest">1</field>
+        <field name="add_to_amount">False</field>
+        <field name="document_type_id" ref="l10n_br_fiscal.document_58" />
+        <field name="state">approved</field>
+    </record>
+
+    <!-- l10n_br_fiscal.operation relations -->
+    <record id="fo_venda" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_devolucao_venda" />
+        <field name="inverse_fiscal_operation_id" ref="fo_compras" />
+    </record>
+
+    <record id="fo_compras" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_devolucao_compras" />
+        <field name="inverse_fiscal_operation_id" ref="fo_venda" />
+    </record>
+
+    <record id="fo_entrada_remessa" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_simples_remessa" />
+        <field name="inverse_fiscal_operation_id" ref="fo_simples_remessa" />
+    </record>
+
+    <record id="fo_bonificacao" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_entrada_remessa" />
+        <field name="inverse_fiscal_operation_id" ref="fo_entrada_remessa" />
+    </record>
+
+    <record id="fo_simples_remessa" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_entrada_remessa" />
+        <field name="inverse_fiscal_operation_id" ref="fo_entrada_remessa" />
+    </record>
+
+    <record id="fo_entrada_reparo" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_retorno_reparo" />
+        <field name="inverse_fiscal_operation_id" ref="fo_retorno_reparo" />
+    </record>
+
+    <record id="fo_retorno_reparo" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_entrada_reparo" />
+        <field name="inverse_fiscal_operation_id" ref="fo_entrada_reparo" />
+    </record>
+
+    <record id="fo_remessa_industrializacao" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_entrada_industrializacao" />
+        <field name="inverse_fiscal_operation_id" ref="fo_entrada_industrializacao" />
+    </record>
+
+    <record id="fo_entrada_industrializacao" model="l10n_br_fiscal.operation">
+        <field name="return_fiscal_operation_id" ref="fo_remessa_industrializacao" />
+        <field name="inverse_fiscal_operation_id" ref="fo_remessa_industrializacao" />
+    </record>
+
+    <record id="document_SE_serie_1" model="l10n_br_fiscal.document.serie">
+        <field name="code">001</field>
+        <field name="name">Série 1</field>
+        <field name="document_type_id" ref="l10n_br_fiscal.document_SE" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="active">True</field>
+    </record>
+
+    <!-- DEFINIÇÃO DAS TRIBUTAÇÕES -->
+    <!-- ICMS - Remessa de Industrialização -->
+  <record
+        id="tax_icms_definition_remessa_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_icms_suspensao" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_icms_50" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_remessa_industrializacao_remessa_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- IPI - Remessa de Industrialização -->
+  <record
+        id="tax_ipi_definition_remessa_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_suspensao" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_55" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_remessa_industrializacao_remessa_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- PIS - Remessa de Industrialização -->
+  <record
+        id="tax_pis_definition_remessa_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_pis_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_pis" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_pis_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_remessa_industrializacao_remessa_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- COFINS - Remessa de Industrialização -->
+  <record
+        id="tax_cofins_definition_remessa_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_cofins_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_cofins" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_cofins_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_remessa_industrializacao_remessa_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- ICMS - Entrada de Industrialização -->
+  <record
+        id="tax_icms_definition_entrada_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_icms_suspensao" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_icms_50" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_industrializacao_entrada_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- IPI - Entrada de Industrialização -->
+  <record
+        id="tax_ipi_definition_entrada_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_suspensao" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_55" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_industrializacao_entrada_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- PIS - Entrada de Industrialização -->
+  <record
+        id="tax_pis_definition_entrada_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_pis_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_pis" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_pis_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_industrializacao_entrada_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- COFINS - Entrada de Industrialização -->
+  <record
+        id="tax_cofins_definition_entrada_industrializacao"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_cofins_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_cofins" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_cofins_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_industrializacao_entrada_industrializacao"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- ICMS - Retorno do Reparo -->
+  <record id="tax_icms_definition_retorno_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_icms_nt" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_icms_41" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_retorno_reparo_retorno_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- IPI - Retorno do Reparo -->
+  <record id="tax_ipi_definition_retorno_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_nt" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_53" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_retorno_reparo_retorno_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- PIS - Retorno do Reparo -->
+  <record id="tax_pis_definition_retorno_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_pis_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_pis" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_pis_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_retorno_reparo_retorno_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- COFINS - Retorno do Reparo -->
+  <record
+        id="tax_cofins_definition_retorno_reparo"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_cofins_seminc" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_cofins" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_cofins_08" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_retorno_reparo_retorno_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- ICMS - Entrada para Reparo -->
+  <record id="tax_icms_definition_entrada_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_icms_nt" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_icms" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_icms_41" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_reparo_entrada_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- IPI - Entrada para Reparo -->
+  <record id="tax_ipi_definition_entrada_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_ipi_nt" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_ipi" />
+      <field name="cst_id" ref="l10n_br_fiscal.cst_ipi_00" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_reparo_entrada_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+    <!-- PIS - Entrada para Reparo -->
+  <record id="tax_pis_definition_entrada_reparo" model="l10n_br_fiscal.tax.definition">
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_pis_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_pis" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_pis_99" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_reparo_entrada_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+  <!-- COFINS - Entrada para Reparo -->
+  <record
+        id="tax_cofins_definition_entrada_reparo"
+        model="l10n_br_fiscal.tax.definition"
+    >
+    <field name="is_taxed" eval="False" />
+    <field name="is_debit_credit" eval="True" />
+    <field name="custom_tax" eval="True" />
+    <field name="tax_id" ref="l10n_br_fiscal.tax_cofins_0" />
+    <field name="tax_group_id" ref="l10n_br_fiscal.tax_group_cofins" />
+    <field name="cst_id" ref="l10n_br_fiscal.cst_cofins_99" />
+    <field
+            name="fiscal_operation_line_id"
+            ref="l10n_br_fiscal.fo_entrada_reparo_entrada_reparo"
+        />
+    <field name="state">approved</field>
+  </record>
+
+</odoo>

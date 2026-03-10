@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+    Resource: res.partner.pix
+    Partner: AMD do Brasil
+    -->
+    <record id="res_partner_amd_pix_cnpj" model="res.partner.pix">
+        <field name="partner_id" ref="res_partner_amd" />
+        <field name="key_type">cnpj_cpf</field>
+        <field name="key">62228384000151</field>
+    </record>
+
+    <record id="res_partner_amd_pix_phone" model="res.partner.pix">
+        <field name="partner_id" ref="res_partner_amd" />
+        <field name="key_type">phone</field>
+        <field name="key">1144576060</field>
+    </record>
+
+    <record id="res_partner_amd_pix_email" model="res.partner.pix">
+        <field name="partner_id" ref="res_partner_amd" />
+        <field name="key_type">email</field>
+        <field name="key">amdteste@amdteste.com.br</field>
+    </record>
+
+    <record id="res_partner_amd_evp" model="res.partner.pix">
+        <field name="partner_id" ref="res_partner_amd" />
+        <field name="key_type">evp</field>
+        <field name="key">123e4567-e12b-12d1-a456-426655440000</field>
+    </record>
+
+</odoo>

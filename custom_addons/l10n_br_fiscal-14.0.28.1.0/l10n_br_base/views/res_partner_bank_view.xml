@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_l10n_br_base_partner_bank_form" model="ir.ui.view">
+        <field name="name">view_l10n_br_base.partner.bank.form</field>
+        <field name="model">res.partner.bank</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form" />
+        <field name="arch" type="xml">
+            <field name="acc_type" position="after">
+                <field name="bank_account_type" />
+            </field>
+            <field name="acc_number" position="replace">
+                <newline />
+                <field name="acc_number" />
+                <field name="acc_number_dig" />
+                <newline />
+                <field name="bra_number" />
+                <field name="bra_number_dig" />
+            </field>
+            <field name="bank_id" position="after">
+                <label for="bank_bic" string="BIC/Swift Code" />
+                <div>
+                    <field name="bank_bic" class="oe_inline" readonly="True" />
+                    <field name="bra_bank_bic" class="oe_inline" />
+                </div>
+            </field>
+            <xpath expr="//form/sheet/group" position="inside">
+                <group
+                    name="pix"
+                    string="Brazilian Instant Payment Keys (PIX)"
+                    attrs="{'invisible': [('company_country_id', '!=', %(base.br)d)]}"
+                >
+                    <field name="company_country_id" invisible="1" />
+                    <field name="transactional_acc_type" />
+                    <field
+                        name="partner_pix_ids"
+                        context="{'default_partner_id': partner_id}"
+                    >
+                        <tree editable="bottom">
+                            <field name="partner_id" invisible="1" />
+                            <field name="key_type" />
+                            <field name="key" />
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_l10n_br_base_partner_bank_tree" model="ir.ui.view">
+        <field name="name">view_l10n_br_base.partner.bank.tree</field>
+        <field name="model">res.partner.bank</field>
+        <field name="priority">999</field>
+        <field name="inherit_id" ref="base.view_partner_bank_tree" />
+        <field name="arch" type="xml">
+            <field name="acc_number" position="replace">
+                <field name="acc_number" />
+                <field name="acc_number_dig" />
+                <field name="bra_number" />
+                <field name="bra_number_dig" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view of document_type model.-->
+    <record id="document_type_view_form" model="ir.ui.view">
+        <field name="name">document.type.view.form</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <form string="Document Name">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Tree view of document_type model.-->
+    <record id='document_type_view_tree' model='ir.ui.view'>
+        <field name="name">document.type.view.tree</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <!--   Action of document type model.-->
+    <record id="document_type_action" model="ir.actions.act_window">
+        <field name="name">Employee Document Types</field>
+        <field name="res_model">document.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <!--   Menu item for document_type model.-->
+    <menuitem id="document_type_menu"
+              name="Employee Document Types"
+              parent="hr.menu_human_resources_configuration"
+              sequence="6"
+              action="document_type_action"/>
+</odoo>

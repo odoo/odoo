@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    List view of the hr_employee-->
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.view.list.inherit.ohrms.core</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" optional="show"/>
+                <field name="work_phone" optional="show"/>
+                <field name="work_email" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="department_id" optional="show"/>
+                <field name="job_id" optional="show"/>
+                <field name="parent_id" optional="show"/>
+                <field name="coach_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

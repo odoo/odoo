@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action record for Profit and Loss report -->
+    <record id="action_print_profit_loss" model="ir.actions.report">
+        <field name="name">Profit And Loss</field>
+        <field name="model">dynamic.balance.sheet.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.profit_loss</field>
+        <field name="report_file">dynamic_accounts_report.profit_loss</field>
+    </record>
+    <!-- Action record for Balance Sheet report -->
+    <record id="action_print_balance_sheet" model="ir.actions.report">
+        <field name="name">Balance Sheet</field>
+        <field name="model">dynamic.balance.sheet.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.balance_sheet</field>
+        <field name="report_file">dynamic_accounts_report.balance_sheet</field>
+    </record>
+    <!--     Action record for Partner Ledger report -->
+    <record id="action_print_partner_ledger" model="ir.actions.report">
+        <field name="name">Partner Ledger</field>
+        <field name="model">account.partner.ledger</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.partner_ledger</field>
+        <field name="report_file">dynamic_accounts_report.partner_ledger</field>
+    </record>
+    <!--     Action record for General Ledger report -->
+    <record id="action_print_general_ledger" model="ir.actions.report">
+        <field name="name">General Ledger</field>
+        <field name="model">account.general.ledger</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.general_ledger</field>
+        <field name="report_file">dynamic_accounts_report.general_ledger</field>
+    </record>
+    <!--     Action record for Bank Book report -->
+    <record id="action_print_bank_book" model="ir.actions.report">
+        <field name="name">Bank Book</field>
+        <field name="model">bank.book.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.bank_book</field>
+        <field name="report_file">dynamic_accounts_report.bank_book</field>
+    </record>
+    <!-- Action record for Age Receivable report -->
+    <record id="action_print_aged_receivable" model="ir.actions.report">
+        <field name="name">Age Receivable</field>
+        <field name="model">age.receivable.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.aged_receivable</field>
+        <field name="report_file">dynamic_accounts_report.aged_receivable</field>
+    </record>
+    <!--     Action record for Age Payable report -->
+    <record id="action_print_aged_payable" model="ir.actions.report">
+        <field name="name">Age Payable</field>
+        <field name="model">age.payable.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.aged_payable</field>
+        <field name="report_file">dynamic_accounts_report.aged_payable</field>
+    </record>
+    <!--         Action record for Age Payable report -->
+    <record id="action_print_trial_balance" model="ir.actions.report">
+        <field name="name">Trial Balance</field>
+        <field name="model">account.trial.balance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.trial_balance</field>
+        <field name="report_file">dynamic_accounts_report.trial_balance</field>
+    </record>
+    <record id="action_print_tax_report" model="ir.actions.report">
+        <field name="name">Tax Report</field>
+        <field name="model">tax.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dynamic_accounts_report.tax_report</field>
+        <field name="report_file">dynamic_accounts_report.tax_report</field>
+    </record>
+</odoo>

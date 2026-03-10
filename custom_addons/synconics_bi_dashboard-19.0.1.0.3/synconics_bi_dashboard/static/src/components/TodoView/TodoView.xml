@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.TodoView">
+        <div t-if="this.state.isError" class="w-100 d-flex align-items-center justify-content-center" style="height: 90%;">
+            <h5 t-out="this.state.errorMessage"></h5>
+        </div>
+        <div t-if="!this.state.isError" style="height: 92%;">
+            <div t-if="state.layout_type == 'default'" class="bi-todo-preview h-100">
+                <!-- <div style="height: 50%; background-color: #ccc;">
+                    <div class="d-flex gap-4 align-items-center ps-2" style="height: 80%; overflow-x: auto;">
+                        <div t-foreach="state.data.map((record, index) => ({ ...record, __index: index }))" t-as="record" t-key="record.__index">
+                            <button class="btn btn-primary" t-on-click="(ev) => setChildElements(ev, record.action_line_ids)">
+                                <t t-out="record.name" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 50%; overflow: auto;">
+                    <ul>
+                        <li t-foreach="state.lines.map((line, index) => ({ ...line, __index: index }))" t-as="line" t-key="line.__index">
+                            <del t-if="!line.active_record"><t t-out="line.name" /></del>
+                            <span t-if="line.active_record"><t t-out="line.name" /></span>
+                        </li>
+                    </ul>
+                </div> -->
+                <div class="list-navigation">
+                    <t t-foreach="state.data.map((record, index) => ({ ...record, __index: index }))" t-as="record" t-key="record.__index">
+                        <button t-attf-class="#{record.id == state.activeSelectedRecord ? 'list-btn active' : 'list-btn'}" t-on-click="(ev) => setChildElements(ev, record, record.action_line_ids)"><t t-out="record.name" /></button>
+                    </t>
+                </div>
+                <div class="todo-header">
+                    <h1 class="todo-title" id="listTitle"><t t-out="state.currentTask" /></h1>
+                    <div class="todo-stats">
+                        <span id="completed-count"><t t-out="state.completedTasks" /></span> of <span id="total-count"><t t-out="state.totalTasks" /></span> completed
+                    </div>
+                </div>
+
+                <ul class="todo-list" id="todoList">
+                    <t t-foreach="state.lines.map((line, index) => ({ ...line, __index: index }))" t-as="line" t-key="line.__index">
+                        <li t-attf-class="#{line.active_record ? 'todo-item completed': 'todo-item'}">
+                            <span class="todo-text"><t t-out="line.name" /></span>
+                        </li>
+                    </t>
+                </ul>
+
+            </div>
+            <div t-if="state.layout_type == 'activity'" style="overflow: auto; height: 92%;">
+                <div t-foreach="state.data.map((record, index) => ({ ...record, __index: index }))" t-as="record" t-key="record.__index" class="row m-0 p-2">
+                    <div class="col-4 d-flex align-items-center justify-content-center" style="font-size: 1.1rem;">
+                        <span t-out="record.date" />
+                    </div>
+                    <div class="col-8">
+                        <div>Activity: <span t-out="record.activity_type" /></div>
+                        <div>Name: <span t-out="record.name" /></div>
+                        <div>Rep.: <span t-out="record.username" /></div>
+                        <div t-if="record.summary">Summary: <span t-out="record.summary" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

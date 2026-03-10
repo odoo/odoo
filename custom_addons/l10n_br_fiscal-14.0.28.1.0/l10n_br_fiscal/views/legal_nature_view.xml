@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="legal_nature_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.legal.nature.search</field>
+        <field name="model">l10n_br_fiscal.legal.nature</field>
+        <field name="arch" type="xml">
+            <search string="Legal Nature">
+                <field name="code" />
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record id="legal_nature_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.legal.nature.tree</field>
+        <field name="model">l10n_br_fiscal.legal.nature</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="legal_nature_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.legal.nature.form</field>
+        <field name="model">l10n_br_fiscal.legal.nature</field>
+        <field name="arch" type="xml">
+            <form string="Legal Nature">
+                <field name="id" invisible="1" />
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Client actions for the button click-->
+    <record id="action_general_ledger" model="ir.actions.client">
+        <field name="name">General Ledger</field>
+        <field name="tag">gen_l</field>
+    </record>
+    <record id="action_trial_balance" model="ir.actions.client">
+        <field name="name">Trial Balance</field>
+        <field name="tag">trl_b</field>
+    </record>
+    <record id="action_partner_ledger" model="ir.actions.client">
+        <field name="name">Partner Ledger</field>
+        <field name="tag">p_l</field>
+    </record>
+    <record id="action_bank_book" model="ir.actions.client">
+        <field name="name">Bank Book</field>
+        <field name="tag">bnk_b</field>
+    </record>
+    <record id="action_cash_book" model="ir.actions.client">
+        <field name="name">Cash Book</field>
+        <field name="tag">csh_b</field>
+    </record>
+    <record id="action_dynamic_balance_sheet" model="ir.actions.client">
+        <field name="name">Balance Sheet</field>
+        <field name="tag">bl_s</field>
+    </record>
+    <record id="action_dynamic_profit_and_loss" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">dfr_n</field>
+    </record>
+    <record id="action_aged_payable" model="ir.actions.client">
+        <field name="name">Aged Payable</field>
+        <field name="tag">age_p</field>
+    </record>
+    <record id="action_tax_report" model="ir.actions.client">
+        <field name="name">Tax Report</field>
+        <field name="tag">tax_r</field>
+    </record>
+    <record id="action_aged_receivable" model="ir.actions.client">
+        <field name="name">Aged Receivable</field>
+        <field name="tag">age_r</field>
+    </record>
+    <!--    All menus are defined-->
+    <menuitem id="dynamic_report_accounting" sequence="19"
+              name="Dynamic Financial Reports"
+              parent="account.menu_finance_reports"/>
+    <menuitem id="menu_cash_book" action="action_cash_book"
+              name="Cash Book" sequence="5" parent="dynamic_report_accounting"/>
+    <menuitem id="aged_receivable_menu"
+              action="action_aged_receivable"
+              name="Aged Receivable" sequence="4"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="menu_general_ledger" action="action_general_ledger"
+              name="General Ledger" parent="dynamic_report_accounting"/>
+    <menuitem id="menu_trial_balance" action="action_trial_balance"
+              name="Trial Balance" sequence="7"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="menu_partner_ledger" action="action_partner_ledger"
+              name="Partner Ledger" sequence="3"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="menu_bank_book" action="action_bank_book"
+              name="Bank Book" sequence="6" parent="dynamic_report_accounting"/>
+    <menuitem id="menu_balance_sheet_report"
+              action="action_dynamic_balance_sheet"
+              name="Balance Sheet" sequence="2"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="menu_profit_and_loss_report"
+              action="action_dynamic_profit_and_loss"
+              name="Profit and Loss" sequence="1"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="aged_payable_menu"
+              action="action_aged_payable"
+              name="Aged Payable" sequence="9"
+              parent="dynamic_report_accounting"/>
+    <menuitem id="tax_report_menu"
+              action="action_tax_report"
+              name="Tax Report" sequence="10"
+              parent="dynamic_report_accounting"/>
+</odoo>

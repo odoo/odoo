@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+    views: res.partner
+    -->
+    <record id="l10n_br_base_res_partner_filter" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.partner.filter</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="legal_name" />
+                <field
+                    name="cnpj_cpf"
+                    filter_domain="['|', ('cnpj_cpf', 'ilike', self), ('cnpj_cpf_stripped', 'ilike', self)]"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_br_base_res_partner_tree" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="legal_name" />
+                <field name="cnpj_cpf" />
+                <field name="inscr_est" />
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_br_base_partner_form" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="vat" position="attributes">
+                <attribute name="attrs">
+                    {
+                        'readonly':
+                            [
+                                '|', ('cnpj_cpf', 'not in', [False, ""]),
+                                     ('parent_id', '!=', False),
+
+                            ]
+                    }
+                </attribute>
+            </field>
+            <xpath expr="//h1" position="after">
+                <group>
+                    <field name="city_id" invisible="1" />
+                    <!-- Allow inject city_id on context above -->
+                    <div class="oe_edit_only">
+                        <label
+                            for="legal_name"
+                            string="Full Name"
+                            attrs="{'invisible': [('is_company','=', True)]}"
+                        />
+                        <label
+                            for="legal_name"
+                            string="Legal Name"
+                            attrs="{'invisible': [('is_company','!=', True)]}"
+                        />
+                    </div>
+                    <field colspan="4" name="legal_name" nolabel="1" />
+                    <div class="oe_edit_only">
+                        <label
+                            for="cnpj_cpf"
+                            string="CPF"
+                            attrs="{'invisible': [('is_company','=', True)]}"
+                        />
+                        <label
+                            for="cnpj_cpf"
+                            string="CNPJ/Vat Number"
+                            attrs="{'invisible': [('is_company','!=', True)]}"
+                        />
+                    </div>
+                    <field colspan="4" name="cnpj_cpf" nolabel="1" />
+                    <div class="oe_edit_only">
+                        <label
+                            for="rg"
+                            string="RG"
+                            attrs="{'invisible': [('is_company','=', True)]}"
+                        />
+                    </div>
+                    <field
+                        name="rg"
+                        colspan="4"
+                        nolabel="1"
+                        attrs="{'invisible': [('is_company','=', True)]}"
+                    />
+                    <div class="oe_edit_only" name="inscr_est">
+                        <label
+                            for="inscr_est"
+                            name="inscr_est"
+                            string="IE"
+                            attrs="{'invisible': [('is_company','=', False), ('parent_id', '!=', False)]}"
+                        />
+                    </div>
+                    <field
+                        colspan="4"
+                        name="inscr_est"
+                        nolabel="1"
+                        attrs="{'invisible': [('is_company','=', False), ('parent_id', '!=', False)]}"
+                    />
+                </group>
+            </xpath>
+            <page position="after" name="sales_purchases">
+                <page string="Fiscal" name="fiscal">
+                    <group name="fiscal">
+                        <group string="Fiscal Infos" name="fiscal_numbers">
+                            <field name="cei_code" />
+                            <field
+                                name="inscr_mun"
+                                attrs="{'invisible': [('is_company','!=', True)]}"
+                            />
+                            <field
+                                name="suframa"
+                                attrs="{'invisible': [('is_company','!=', True)]}"
+                            />
+                            <field
+                                name="state_tax_number_ids"
+                                attrs="{'invisible': [('is_company','!=', True)]}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="partner_id" invisible="1" />
+                                    <field name="inscr_est" />
+                                    <field
+                                        name="state_id"
+                                        domain="[('country_id', '=', %(base.br)d)]"
+                                        create="False"
+                                        edit="False"
+                                    />
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Other Infos" name="other_infos">
+                            <field name="union_entity_code" />
+                            <field name="is_accountant" />
+                            <field
+                                name="crc_code"
+                                attrs="{'invisible': [('is_accountant','!=', True)]}"
+                            />
+                            <field
+                                name="crc_state_id"
+                                attrs="{'invisible': [('is_accountant','!=', True)]}"
+                                domain="[('country_id', '=', %(base.br)d)]"
+                            />
+                            <field name="rntrc_code" />
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//field[@name='child_ids']" position="attributes">
+                <!-- tracking_disable allow user to zip search on child_ids without save the child -->
+                <attribute
+                    name="context"
+                >{'tracking_disable': True, 'default_city_id': city_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_br_base_partner_contact_form" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.partner.contact.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority">9999</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='div_address']" position="replace">
+                <div class="o_address_format">
+                    <field
+                        name="street"
+                        placeholder="Street..."
+                        class="o_address_street"
+                        invisible="1"
+                    />
+                    <field
+                        name="zip"
+                        placeholder="Zip code..."
+                        style="width: 70%"
+                        class="o_address_zip"
+                    />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

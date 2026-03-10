@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="service_type_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.service.type.search</field>
+        <field name="model">l10n_br_fiscal.service.type</field>
+        <field name="arch" type="xml">
+            <search string="Service Type">
+                <field name="code" />
+                <field name="name" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Parent'
+                        name="parent_id"
+                        domain="[]"
+                        context="{'group_by' : 'parent_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="service_type_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.service.type.tree</field>
+        <field name="model">l10n_br_fiscal.service.type</field>
+        <field name="field_parent">children_ids</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="parent_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="service_type_kanban" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.service.type.kanban</field>
+        <field name="model">l10n_br_fiscal.service.type</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id" />
+                <field name="code" />
+                <field name="name" />
+                <field name="product_tmpl_qty" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <h2><field name="code" /></h2>
+                                </strong>
+                                <strong class="o_kanban_record_title">
+                                    <field name="name" />
+                                </strong>
+                                <div t-if="record.product_tmpl_qty.value &gt;= 1">
+                                    <strong>
+                                        <t
+                                            t-esc="record.product_tmpl_qty.value"
+                                        /> Product(s)
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="service_type_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.service.type.form</field>
+        <field name="model">l10n_br_fiscal.service.type</field>
+        <field name="arch" type="xml">
+            <form string="Service Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            type="action"
+                            class="oe_stat_button"
+                            id="product_tmpl_button"
+                            icon="fa-bars"
+                            name="%(product.product_template_action_all)d"
+                            context="{'search_default_service_type_id': active_id}"
+                            attrs="{'invisible': [('product_tmpl_qty', '=', 0)]}"
+                        >
+                            <field
+                                string="Products"
+                                widget="statinfo"
+                                name="product_tmpl_qty"
+                            />
+                        </button>
+                    </div>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="internal_type" />
+                        <field name="parent_id" />
+                        <field name="withholding_at_place" />
+                        <field name="withholding_possible" />
+                    </group>
+                    <notebook>
+                        <page string="Related Produts" name="tax_product_tmpl">
+                            <field name="product_tmpl_ids" />
+                        </page>
+                        <page string="Child Service Type" name="child">
+                            <field name="child_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

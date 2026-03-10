@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <!-- The gl_template_new template for the GeneralLedger component. -->
+    <t t-name="gl_template_new" owl="1">
+        <div class="container">
+            <div class="fin_report">
+                <div class="filter_view_gl pt-3 pb-5">
+                    <div class="">
+                        <h2 class="text-uppercase" style="padding:10px">
+                            <t t-if="state.title">
+                                <t t-esc="state.title"/>
+                            </t>
+                            <t t-else=" ">
+                                <t t-esc="props.action.name"/>
+                            </t>
+                        </h2>
+                    </div>
+                    <div style="margin-right: 10px; margin-left: 10px;margin-bottom: 15px;display: flex;">
+                        <div class="sub_container_left" style="width:70%;">
+                            <div class="report_print">
+                                <button type="button"
+                                        class="btn btn-primary btn-report-print mr-2"
+                                        t-on-click="printPdf"
+                                        style="margin-right: 8px;">
+                                    Print (PDF)
+                                </button>
+                                <button type="button"
+                                        class="btn btn-primary btn-report-print mr-2"
+                                        t-on-click="print_xlsx">
+                                    Export (XLSX)
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div class="time_range" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    <span class="fa fa-calendar" title="Dates"
+                                          role="img"
+                                          aria-label="Dates"/>
+                                    Date Range
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'month'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            This Month
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'quarter'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            This Quarter
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'year'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            This Year
+                                        </button>
+                                        <div role="separator"
+                                             class="dropdown-divider"/>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'last-month'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            Last month
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'last-quarter'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            Last quarter
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'last-year'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            Last year
+                                        </button>
+                                        <div role="separator"
+                                             class="dropdown-divider"/>
+                                        <label class="" for="date_from">Start
+                                            Date :
+                                        </label>
+                                        <div class="input-group date"
+                                             t-ref="date_from"
+                                             data-target-input="nearest">
+
+                                            <input type="date" id="start_date"
+                                                   t-on-change="applyFilter"
+                                                   style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                   name="start_date"/>
+                                        </div>
+
+                                        <label class="" for="date_to">End Date
+                                            :
+                                        </label>
+                                        <div class="input-group date"
+                                             t-ref="date_to"
+                                             data-target-input="nearest">
+                                            <input type="date" id="end_date"
+                                                   t-on-change="applyFilter"
+                                                   style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                   name="end_date"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="journal" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown"
+                                   style="display:flex;flex-wrap: wrap;align-items: center;justify-content: flex-start;min-width: 105px;">
+                                    <div style="display:content;">
+                                        <span>
+                                            <span class="fa fa-book"
+                                                  title="Journals"
+                                                  role="img"/>
+                                            Journals
+                                        </span>
+                                    </div>
+                                    <t t-if="state.selected_journal_list">:
+                                        <t t-foreach="state.selected_journal_list"
+                                           t-as="Journal_key" t-if="state.selected_journal_list"
+                                           t-key="Journal_key_index">
+                                            <t t-foreach="state.journals"
+                                               t-as="Journal" t-if="state.journals"
+                                               t-key="Journal_index">
+                                                <t t-if="Journal['id'] == Journal_key">
+                                                    <span>
+                                                        <t t-esc="Journal['name']"/>
+                                                    </span>
+                                                </t>
+                                            </t>
+                                            <t t-if="Journal_key_index != Object.keys(state.selected_journal_list).length - 1">
+                                                ,
+                                            </t>
+                                        </t>
+                                    </t>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <t t-if="state.journals">
+                                            <t t-foreach="state.journals"
+                                               t-as="journal"
+                                               t-key="journal.id">
+                                                <button class="report-filter-button"
+                                                        t-att-data-value="'journal'"
+                                                        t-att-data-id="journal.id"
+                                                        aria-expanded="false"
+                                                        type="button"
+                                                        data-bs-auto-close="outside"
+                                                        t-on-click="applyFilter">
+                                                    <t t-esc="journal.name"/>
+                                                </button>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </ul>
+                            </div>
+                            <div class="analytic" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown"
+                                   style="display:flex;flex-wrap: wrap;align-items: center;justify-content: flex-start;min-width: 105px;">
+                                    <div style="display:content;">
+                                        <span>
+                                            <span class="fa fa-book"
+                                                  title="Analytics"
+                                                  role="img"/>
+                                            Analytic
+                                        </span>
+                                    </div>
+                                    <t t-if="state.selected_analytic_list">:
+                                        <t t-foreach="state.selected_analytic_list"
+                                           t-as="Analytic_key"
+                                           t-key="Analytic_key_index">
+                                            <t t-foreach="state.analytics" t-if="state.analytics"
+                                               t-as="Analytic"
+                                               t-key="Analytic_index">
+                                                <t t-if="Analytic['id'] == Analytic_key">
+                                                    <span>
+                                                        <t t-esc="Analytic['name']"/>
+                                                    </span>
+                                                </t>
+                                            </t>
+                                            <t t-if="Analytic_key_index != Object.keys(state.selected_analytic_list).length - 1">
+                                                ,
+                                            </t>
+                                        </t>
+                                    </t>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <t t-if="state.analytics">
+                                            <t t-foreach="state.analytics"
+                                               t-as="analytic"
+                                               t-key="analytic.id">
+                                                <button class="report-filter-button"
+                                                        t-att-data-value="'analytic'"
+                                                        t-att-data-id="analytic.id"
+                                                        type="button"
+                                                        t-on-click="applyFilter">
+                                                    <t t-esc="analytic.name"/>
+                                                </button>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    <span class="fa fa-glass" title="Accounts"
+                                          role="img"
+                                          aria-label="Dates"/>
+                                    Options :Posted Entries ,
+                                    <t t-esc="Object.keys(state.method)[(Object.keys(state.method).length)-1]"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'draft'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            Include Draft Entries
+                                        </button>
+                                        <button class="report-filter-button"
+                                                type="button"
+                                                t-ref="unfoldButton"
+                                                t-on-click="unfoldAll">
+                                            Unfold All
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'cash-basis'"
+                                                type="button"
+                                                t-on-click="applyFilter">
+                                            Cash basis method
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <div class="table_view_gl" style="right:20px;height: 650px; overflow-y: scroll;"
+                     t-ref="table_view_gl">
+                    <div>
+                        <div class="table_main_view">
+                            <table cellspacing="0" width="100%">
+                                <thead>
+                                    <tr class="o_heading">
+                                        <th colspan="6"/>
+                                        <th>Date</th>
+                                        <th>Communication</th>
+                                        <th>Partner</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody t-ref="tbody">
+
+                                    <t t-if="state.account_data">
+
+                                        <t t-set="i" t-value="0"/>
+                                        <t t-if="state.account_data.account_totals">
+                                            <t t-foreach="state.account_data.account_totals"
+                                               t-as="account"
+                                               t-key="account_index">
+                                                <t t-set="i" t-value="i + 1"/>
+                                                <tr class="border-bottom border-dark border-gainsboro">
+                                                    <th>
+                                                        <div data-bs-toggle="collapse"
+                                                             t-attf-href="#account-{{i}}"
+                                                             aria-expanded="false"
+                                                             t-attf-aria-controls="account-{{i}}"
+                                                             class="ms-3 collapsed">
+                                                            <a class="btn header o_heading">
+                                                                <span class="toggle-icon">
+                                                                    <i class="fa fa-caret-down"/>
+                                                                </span>
+                                                                <t t-if="account != 'false'">
+                                                                    <t t-esc="account"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span>Unknown
+                                                                        Accounts
+                                                                    </span>
+                                                                </t>
+                                                            </a>
+                                                        </div>
+                                                    </th>
+                                                    <th colspan="5">
+                                                        <button t-att-data-id="state.account_data.account_totals[account]['account_id']"
+                                                                class="btn bg-secondary"
+                                                                style="margin-left: 3px"
+                                                                t-on-click="gotoJournalItem">
+                                                            <i class="fa fa-arrow-right"/>
+                                                            Journal Items
+                                                        </button>
+                                                    </th>
+                                                    <th/>
+                                                    <th/>
+                                                    <th/>
+                                                    <th>
+                                                        <span>
+                                                            <t t-if="state.account_data.account_totals[account]['total_debit']"
+                                                               t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                            <t t-if="state.account_data.account_totals[account]['total_debit']"
+                                                               t-esc="state.account_data.account_totals[account]['total_debit']"/>
+                                                        </span>
+                                                    </th>
+                                                    <th>
+                                                        <span>
+                                                            <t t-if="state.account_data.account_totals[account]['total_credit']"
+                                                               t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                            <t t-if="state.account_data.account_totals[account]['total_credit']"
+                                                               t-esc="state.account_data.account_totals[account]['total_credit']"/>
+                                                        </span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="fw-bolder">
+                                                            <t t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                            <t t-esc="state.account_data.account_totals[account]['balance_display']"/>
+                                                        </span>
+                                                    </th>
+                                                </tr>
+
+                                                <t t-foreach="state.account_data[account]"
+                                                   t-as="valuelist" t-if="state.account_data"
+                                                   t-key="valuelist_index">
+                                                    <tr class="border-bottom border-gainsboro collapse"
+                                                        t-attf-id="account-{{i}}">
+                                                        <th colspan="6">
+                                                            <span style="gap: 12px;display: flex;">
+                                                                <t t-esc="valuelist[0]['move_name']"/>
+                                                                <a type="button"
+                                                                   class="dropdown-toggle"
+                                                                   data-bs-toggle="dropdown">
+                                                                </a>
+                                                                <div class="dropdown-menu  journals">
+                                                                    <button t-att-data-id="valuelist[0]['move_id'][0]"
+                                                                            type="button"
+                                                                            t-on-click="gotoJournalEntry"
+                                                                            style="border: none;
+                                                                            background-color: inherit;
+                                                                            padding: 4px 8px;
+                                                                            font-size: 16px;
+                                                                            cursor: pointer;
+                                                                            display: inline-block;">
+                                                                        View
+                                                                        Journal
+                                                                        Entry
+                                                                    </button>
+                                                                </div>
+                                                            </span>
+                                                        </th>
+                                                        <th>
+                                                            <span>
+                                                                <t t-esc="valuelist[0]['date']"/>
+                                                            </span>
+                                                        </th>
+                                                        <th>
+                                                            <span>
+                                                                <t t-esc="valuelist[0]['name']"/>
+                                                            </span>
+                                                        </th>
+                                                        <th>
+                                                            <span>
+                                                                <t t-if="valuelist[0]['partner_id']"
+                                                                   t-esc="valuelist[0]['partner_id'][1]"/>
+                                                            </span>
+                                                        </th>
+                                                        <th>
+                                                            <span>
+                                                                <t t-if="valuelist[0]['debit']"
+                                                                   t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                                <t t-if="valuelist[0]['debit']"
+                                                                   t-esc="valuelist[0]['debit']"/>
+                                                            </span>
+                                                        </th>
+                                                        <th>
+                                                            <span>
+                                                                <t t-if="valuelist[0]['credit']"
+                                                                   t-esc="state.account_data.account_totals[account]['currency_id']"/>
+                                                                <t t-if="valuelist[0]['credit']"
+                                                                   t-esc="valuelist[0]['credit']"/>
+                                                            </span>
+                                                        </th>
+                                                        <th/>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <th/>
+                                        <th colspan="8" class="o_heading">
+                                            Total
+                                        </th>
+                                        <th class="o_heading" t-if="state.total_debit">
+                                            <t t-esc="state.currency"/>
+                                            <t t-out="state.total_debit"/>
+                                        </th>
+                                        <th class="o_heading" t-if="state.total_credit">
+                                            <t t-esc="state.currency"/>
+                                            <t t-out="state.total_credit"/>
+                                        </th>
+                                        <th class="o_heading">
+                                            <t t-esc="state.currency"/>
+                                            <t t-out="(state.total_debit - state.total_credit).toFixed(2)"/>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

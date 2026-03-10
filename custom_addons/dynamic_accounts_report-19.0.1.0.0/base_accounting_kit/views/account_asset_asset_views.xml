@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--  Asset Form View  -->
+    <record model="ir.ui.view" id="account_asset_asset_view_form">
+        <field name="name">account.asset.asset.view.form</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <form string="Asset">
+                <header>
+                    <button name="validate" invisible="state != 'draft'" string="Confirm" type="object"
+                            class="oe_highlight"/>
+                    <button type="object" name="compute_depreciation_board" string="Compute Depreciation"
+                            invisible="state != 'draft'"/>
+                    <button name="set_to_close" invisible="state != 'open'" string="Sell or Dispose" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_save_model" invisible="state != 'open' or category_id" string="Save as model" type="object"
+                            />
+                    <button name="action_cancel_assets" string="Cancel Asset" type="object"
+                            invisible="state != 'open'"/>
+                    <button name="set_to_draft" string="Set to Draft" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <button name="%(action_asset_modify)d" invisible="state != 'open'" string="Modify Depreciation"
+                            type="action"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil">
+                            <field string="Items" name="entry_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Laptop iBook"
+                                   readonly="state != 'draft'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id" domain="[('type', '=', 'purchase')]"
+                                   context="{'default_type': 'purchase'}"
+                                   help="Category of asset" readonly="state != 'draft'"/>
+                            <field name="code" readonly="state != 'draft'"/>
+                            <field name="date" help="Date of asset"/>
+                            <field name="type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" groups="base.group_multi_currency" readonly="state != 'draft'"/>
+                            <field name="company_id" options="{'no_create': True}"
+                                   groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="value" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   help="Gross value of asset"
+                                   readonly="state != 'draft'"/>
+                            <field name="salvage_value" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   readonly="state != 'draft'"
+                                   invisible="type in 'sale'"/>
+                            <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="partner_id" string="Vendor" readonly="state != 'draft'"
+                                   domain="[('supplier_rank', '>', 0)]"/>
+                            <field name="invoice_id" string="Invoice"
+                                   options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Assets">
+                            <group>
+                                <group>
+                                    <field name="type" invisible="1"/>
+                                    <field name="company_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                                </group>
+                                <group string="Journal Entries">
+                                    <field name="journal_id" readonly="state != 'draft'"/>
+                                    <div>
+                                        <label for="account_asset_id" invisible="type != 'purchase'"/>
+                                        <label for="account_asset_id" string="Deferred Revenue Account"
+                                               invisible="type != 'sale'"/>
+                                    </div>
+                                    <field name="account_asset_id" nolabel="1" invisible="not type" readonly="state != 'draft'"/>
+                                    <div>
+                                        <label for="account_depreciation_id" invisible="type != 'purchase'"/>
+                                        <label for="account_depreciation_id" string="Recognition Income Account"
+                                               invisible="type != 'sale'"/>
+                                    </div>
+                                    <field name="account_depreciation_id" nolabel="1" readonly="state != 'draft'"/>
+                                    <div>
+                                        <label for="account_depreciation_expense_id" invisible="type != 'purchase'"/>
+                                        <label for="account_depreciation_expense_id" string="Recognition Account"
+                                               invisible="type != 'sale'"/>
+                                    </div>
+                                    <field name="account_depreciation_expense_id" nolabel="1" readonly="state != 'draft'"/>
+                                    <field name="account_analytic_id" readonly="state != 'draft'"/>
+                                </group>
+                                <group string="Periodicity">
+                                    <field name="method_time" string="Time Method Based On" widget="radio"
+                                           invisible="type != 'purchase'" readonly="state != 'draft'"/>
+                                    <field name="method_number" string="Number of Entries"
+                                           invisible="method_time != 'number' and not type"
+                                           required="method_time in 'number'" readonly="state != 'draft'"/>
+                                    <label for="method_period" string="One Entry Every"/>
+                                    <div>
+                                        <field name="method_period" nolabel="1" invisible="not type" class="oe_inline" readonly="state != 'draft'"/>
+                                        months
+                                    </div>
+                                    <field name="method_end"
+                                           required="method_time in 'end'"
+                                           invisible="method_time != 'end'" readonly="state != 'draft'"/>
+                                </group>
+                                <group string="Additional Options">
+                                    <field name="open_asset" readonly="state != 'draft'"/>
+                                    <field name="group_entries" readonly="state != 'draft'"/>
+                                </group>
+                                <group invisible="type in 'sale'" string="Depreciation Method">
+                                    <field name="method" readonly="state != 'draft'"/>
+                                    <field name="method_progress_factor"
+                                           invisible="method in 'linear'"
+                                           required="method in 'degressive'" widget="percentage" readonly="state != 'draft'"/>
+                                    <field name="prorata"
+                                           invisible="method in 'end'" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Depreciation Board" invisible="not depreciation_line_ids">
+                            <field name="depreciation_line_ids" mode="list"
+                                   readonly="state not in ['draft', 'open']"
+                                   options="{'reload_whole_on_button': true}">
+                                <list string="Depreciation Lines" decoration-info="(move_check == False)" create="0"
+                                      editable="top">
+                                    <field name="depreciation_date" readonly="1"/>
+                                    <field name="depreciated_value" readonly="1"/>
+                                    <field name="amount" widget="monetary" string="Depreciation" readonly="1"/>
+                                    <field name="remaining_value" readonly="1" widget="monetary" string="Residual"/>
+                                    <field name="move_check" widget="deprec_lines_toggler"
+                                           invisible="parent_state != 'open'"/>
+                                    <field name="move_posted_check" invisible="1"/>
+                                    <field name="parent_state" invisible="1"/>
+                                </list>
+                                <form string="Depreciation Lines">
+                                    <group>
+                                        <group>
+                                            <field name="parent_state" invisible="1"/>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                            <field name="move_id"/>
+                                            <field name="move_check"/>
+                                            <field name="parent_state" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="amount" widget="monetary"/>
+                                            <field name="depreciation_date"/>
+                                            <field name="depreciated_value"/>
+                                            <field name="remaining_value"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <!--Asset Kanban View-->
+    <record model="ir.ui.view" id="account_asset_asset_view_kanban">
+        <field name="name">account.asset.asset.view.kanban</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong>
+                                        <span>
+                                            <t t-esc="record.name.value"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                                <div class="col-xs-6 pull-right text-right">
+                                    <strong>
+                                        <t t-esc="record.date.value"/>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-muted">
+                                    <span>
+                                        <t t-esc="record.category_id.value"/>
+                                    </span>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right text-right">
+                                        <field name="state" widget="label_selection"
+                                               options="{'classes': {'draft': 'primary', 'open': 'success', 'close': 'default'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--Asset Tree View-->
+    <record model="ir.ui.view" id="account_asset_asset_view_tree">
+        <field name="name">account.asset.asset.view.tree</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <list string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="date"/>
+                <field name="partner_id" string="Vendor"/>
+                <field name="value"/>
+                <field name="value_residual" widget="monetary"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <!--Asset Search View-->
+    <record id="account_asset_asset_view_search" model="ir.ui.view">
+        <field name="name">account.asset.asset.view.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <search string="Asset Account">
+                <field name="name" string="Asset"/>
+                <field name="date"/>
+                <filter name="state" string="Current" domain="[('state','in', ('draft','open'))]"
+                        help="Assets in draft and open states"/>
+                <filter name="state" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                <field name="category_id"/>
+                <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                <group>
+                    <filter name="date" string="Month" domain="[]" context="{'group_by':'date'}"/>
+                    <filter name="category_id" string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--Asset Action-->
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form">
+        <field name="name">Assets</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="account_asset_asset_view_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase')]</field>
+    </record>
+    <!--Asset MenuItem-->
+    <menuitem parent="account.menu_finance_entries"
+              id="management_menu"
+              name="Management"
+              sequence="101" groups="account.group_account_user"/>
+    <menuitem parent="base_accounting_kit.management_menu"
+              id="menu_action_account_asset_asset_form"
+              action="action_account_asset_asset_form"
+              sequence="101" groups="account.group_account_user"/>
+    <!--    <menuitem parent="base_accounting_kit.management_menu"-->
+    <!--              id="menu_act_budget_view"-->
+    <!--              name="Budgets"-->
+    <!--              action="base_account_budget.act_budget_view" sequence="60"-->
+    <!--              groups="account.group_account_user"/>-->
+    <!-- Configuration -->
+    <menuitem id="menu_finance_config_assets"
+              name="Assets and Revenues"
+              parent="account.menu_finance_configuration"
+              sequence="25"/>
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+
+    <record
+        id="fiscal_document_email_definition_1"
+        model="l10n_br_fiscal.document.email"
+    >
+        <field name="issuer">company</field>
+        <field
+            name="email_template_id"
+            ref="l10n_br_fiscal.fiscal_document_change_state_template"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <record
+        id="fiscal_document_email_definition_2"
+        model="l10n_br_fiscal.document.email"
+    >
+        <field name="document_type_id" ref="l10n_br_fiscal.document_SE" />
+        <field name="issuer">company</field>
+        <field
+            name="email_template_id"
+            ref="l10n_br_fiscal.fiscal_document_change_state_template_nfse"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+    </record>
+
+    <record
+        id="fiscal_document_email_definition_3"
+        model="l10n_br_fiscal.document.email"
+    >
+        <field name="issuer">company</field>
+        <field
+            name="email_template_id"
+            ref="l10n_br_fiscal.fiscal_document_change_state_template"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+
+    <record
+        id="fiscal_document_email_definition_4"
+        model="l10n_br_fiscal.document.email"
+    >
+        <field name="document_type_id" ref="l10n_br_fiscal.document_SE" />
+        <field name="issuer">company</field>
+        <field
+            name="email_template_id"
+            ref="l10n_br_fiscal.fiscal_document_change_state_template_nfse"
+        />
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+    </record>
+
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="operation_indicator_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.indicator.tree</field>
+        <field name="model">l10n_br_fiscal.operation.indicator</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="supply_location" />
+                <field name="active" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="operation_indicator_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.indicator.form</field>
+        <field name="model">l10n_br_fiscal.operation.indicator</field>
+        <field name="arch" type="xml">
+            <form string="Operation Indicator">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Operation Details">
+                            <group>
+                                <field
+                                    name="operation_type"
+                                    placeholder="Type of operation"
+                                />
+                                <field
+                                    name="operation_location"
+                                    placeholder="Where the operation is considered"
+                                />
+                            </group>
+                        </page>
+                        <page string="Supply Information">
+                            <group>
+                                <field
+                                    name="supply_characteristic"
+                                    placeholder="Supply characteristic"
+                                />
+                                <field
+                                    name="supply_location"
+                                    placeholder="Place of supply"
+                                />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="operation_indicator_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.indicator.search</field>
+        <field name="model">l10n_br_fiscal.operation.indicator</field>
+        <field name="arch" type="xml">
+            <search string="Operation Indicator">
+                <field name="code" />
+                <field name="name" />
+                <field name="supply_location" />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+</odoo>

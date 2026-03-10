@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.KpiLayoutThree" owl="1">
+        <!-- shadow card  -->
+        <div t-att-title="state.data.tooltip_info" class="border-0 h-100" t-att-style="'background-color:' + state.data.background_color+ '!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0 h-100" t-attf-style="background-color: #{state.data.background_color} !important; border-#{state.data.kpi_border_type}: #{state.data.is_kpi_border ? state.data.kpi_border_width : 0}px solid #{state.data.kpi_border_color};">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + state.data.background_color+';cursor: pointer;overflow: hidden;'">
+                    <div class="row py-2 px-2 h-100 d-flex align-items-center" style="position: relative;--gutter-x: 0px;">
+                        <div t-if="state.data.icon or state.data.default_icon" class="p-0" t-attf-style="display: flex;align-items: start;color: #{state.data.font_color};position: absolute;top: 10px;left: 10px;">
+                            <img  t-if="state.data.icon_option == 'custom' and state.data.icon" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{state.data.icon}"/>
+                            <t t-att-style="'color:' + state.data.font_color+';'" t-elif="state.data.icon_option == 'default' and state.data.default_icon" t-out="state.kpi_icon"/>
+                            <i t-else="" t-att-style="'color:' + state.data.font_color+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-12 p-0 position-relative">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + state.data.text_align+';'">
+                                <span class="oe_name oe_tile oe_title text-wrap p-0" t-att-style="'font-size:22px; '+'color:' + state.data.font_color+';'" t-esc="state.data.name"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + state.data.text_align+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <div class="d-flex align-items-center justify-content-center" t-att-style="'font-size:'+state.data.font_size+'px; '+'color:'+state.data.font_color+';'+'font-weight:'+state.data.font_weight+';'">
+                                        <t t-esc="state.data.count"/>
+                                        <t t-if="state.data.comparison == 'none'">
+                                            <t t-if="state.data.count2"> | <t t-esc="state.data.count2"/></t>
+                                        </t>
+                                        <t t-if="state.data.comparison == 'ratio'">
+                                            : <t t-esc="state.data.count2"/>
+                                        </t>
+                                        <t t-if="state.data.comparison == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="state.data.target"> | <t t-esc="state.data.target"/></t>
+                                        <div class="d-flex align-items-center" t-if="state.data.standard or state.data.progress">
+                                           <i class="fa fa-bullseye ml-2 mr-2"/>
+                                           <t t-if="state.data.arrow == 'down'">
+                                                <svg class="mt-1" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                                     x="0px" y="0px" width="9px" height="22px" viewBox="0 0 4 8" enable-background="new 0 0 4 8" xml:space="preserve">
+                                                <polygon fill="#ED1C24" points="1.969,7.125 4,0.875 0,0.875 "/>
+                                                </svg>
+
+                                           </t>
+                                           <t t-if="state.data.arrow == 'up'">
+                                                <svg version="1.1" id="Layer_1"
+                                                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+                                                     x="0px" y="0px" width="9px" height="22px" viewBox="0 0 4 8" enable-background="new 0 0 4 8" xml:space="preserve">
+                                                <polygon fill="#ED1C24" points="15.303,11.188 17.333,4.938 13.333,4.938 "/>
+                                                <polygon fill="#39B54A" points="1.969,0.875 4,7.125 0,7.125 "/>
+                                                </svg>
+                                           </t>
+                                           <span class="ml-2" t-attf-style="font-size: 20px;color: #{state.data.font_color};position: relative;"><t t-esc="state.data.standard"/><t t-esc="state.data.progress"/></span>
+                                       </div>
+                                    </div>
+                                    <div t-if="state.data.kpi_enable_target and state.data.progress" class="text-center mt-3">
+                                        <div>
+                                            <div class="progress">
+                                                <div t-attf-class="progress-bar #{state.data.color}" t-attf-style="width:#{state.data.progress}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="state.data.previous_data" style="background-color: #ffffff21;text-align: left;margin-bottom: 0;position: absolute;top: 100%;bottom: 0px;right: 0;left: 0;height: 40px;display: flex;align-items: center;">
+                                <div class="h5 d-flex align-items-center text-gray-800">
+                                    <i t-if="state.data.previous_data.arrow == 'up'" t-attf-style="font-size: 25px;color:#{state.data.font_color}; margin: 0 4px 0 4px;" class="fa fa-arrow-up pr-2 pl-2"></i>
+                                    <i t-if="state.data.previous_data.arrow == 'down'" t-attf-style="font-size: 25px;color:#{state.data.font_color}; margin: 0 4px 0 4px;" class="fa fa-arrow-down pr-2 pl-2"></i>
+                                    <span t-attf-style="font-size: 20px;color: #{state.data.font_color};font-family: cursive;">
+                                        <t t-esc="state.data.previous_data.standard"/>
+                                    </span>
+                                    <span class="pl-3" t-attf-style="font-size: 10px;padding: 6px; color: #{state.data.font_color};">
+                                    <t t-esc="state.data.previous_data.message"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+    </t>
+</templates>

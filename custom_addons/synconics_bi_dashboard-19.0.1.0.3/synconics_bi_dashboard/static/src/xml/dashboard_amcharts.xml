@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.DashboardAmcharts">
+        <section class="row container-fluid" style="height: 50px; background: white; border-bottom: 1px #dfdfdff5 solid; border-top: 1px #dfdfdff5 solid;">
+            <div class="left-panel col-md-6 d-flex gap-2 align-items-center mt-auto mb-auto">
+                <h3 class="mb0 mr16 ml16"><strong t-out="state.name"></strong></h3>
+                <button t-if="!state.editMode &amp;&amp; state.charts.length" class="btn btn-secondary" title="Print" t-on-click="onPrintDashboard">
+                    <i class="fa fa-print" />
+                </button>
+                <button t-if="!state.editMode &amp;&amp; state.charts.length" class="btn btn-secondary" title="Download JSON" t-on-click="export_json">
+                    <i class="fa fa-download" />
+                </button>
+                <input type="file" accept=".json" t-ref="fileInput" style="display:none" t-on-change="onFileChange"/>
+                <button  t-if="!state.editMode &amp;&amp; !state.charts.length" class="btn btn-secondary" type="button" title="Upload JSON" t-on-click="onUploadClick">
+                    <i class="fa fa-upload" />
+                </button>
+                <button t-if="!state.editMode &amp;&amp; state.charts.length &amp;&amp; !dashboard_user" class="btn btn-secondary" title="Send by Email" t-on-click="onSendEmail">
+                    <i class="fa fa-envelope" />
+                </button>
+                <button class="btn btn-secondary" t-if="state.editMode" t-on-click="onEditDiscard" title="Discard">
+                    <i class="fa fa-close" />
+                </button>
+                <button class="btn btn-secondary" t-if="state.charts.length &amp;&amp; !dashboard_user" t-on-click="onEditLayout" title="Edit Layout">
+                    <t t-if="state.editMode">
+                        <i class="fa fa-cloud-download" />
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-pencil" />
+                    </t>
+                </button>
+            </div>
+            <div class="right-panel col-md-6 d-flex justify-content-end mt-auto mb-auto">
+                <button t-if="!state.editMode &amp;&amp; !dashboard_user" class="btn btn-primary" t-on-click="onAddLayout">
+                    Add new Layout
+                </button>
+            </div>
+        </section>
+        <main style="height: calc(100vh - 60px);
+    padding: 0 15px 10px 7px;
+    overflow: auto;">
+            <div style="overflow: auto; max-height: 95%;">
+                <div class="grid-stack m-1" gs-w="36">
+                    <t t-foreach="state.charts" t-as="chart" t-key="chart.id">
+                        <div class="grid-stack-item m-1" t-att-data-chart-id="chart.id" t-att-gs-w="chart.w" t-att-gs-h="chart.h" t-att-gs-min-h="chart.minh" t-att-gs-x="chart.x" t-att-gs-y="chart.y">
+                            <DashboardChartWrapper editChart="editChart" theme="chart.theme" onUpdateExport="onUpdateExport" reloadKey="reloadKey.value" chart_type="chart.chart_type" chartId="chart.id" name="chart.name" recordSets="chart.recordset" background_color="chart.background_color" dashboard_user="dashboard_user"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </main>
+    </t>
+</templates>

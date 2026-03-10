@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Added some additional buttons on the loan request form view -->
+    <record id="hr_loan_view_form" model="ir.ui.view">
+        <field name="name">hr.loan.view.form.inherit.ohrms.loan.accounting</field>
+        <field name="model">hr.loan</field>
+        <field name="inherit_id" ref="ohrms_loan.hr_loan_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace">
+                <header>
+                    <button name="action_compute_installment" type="object"
+                            string="Compute Installment"
+                            class="oe_highlight"
+                            invisible="state in ('approve', 'refuse')"/>
+                    <button name="action_submit" type="object"
+                            string="Submit" invisible="state !='draft'"
+                            class="oe_highlight"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel" invisible="state !='draft'"/>
+                    <button name="action_approve" type="object"
+                            string="Approve"
+                            invisible="state != 'waiting_approval_1'"
+                            class="oe_highlight"
+                            groups="hr.group_hr_manager"/>
+                    <button name="action_double_approve" type="object"
+                            string="Approve"
+                            invisible="state != 'waiting_approval_2'"
+                            class="oe_highlight"
+                            groups="account.group_account_manager"/>
+                    <button name="action_refuse" type="object"
+                            string="Refuse"
+                            invisible="state not in ('waiting_approval_1','waiting_approval_2')"
+                            class="oe_highlight"
+                            groups="hr.group_hr_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,waiting_approval_1,approve"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='loan_amount']" position="after">
+                <field name="employee_account_id"
+                       invisible="state == 'draft'"
+                       readonly="state in ('approve', 'refuse')"/>
+                <field name="treasury_account_id"
+                       invisible="state == 'draft'"
+                       readonly="state in  ('approve', 'refuse')"/>
+                <field name="journal_id" invisible="state == 'draft'"
+                       readonly="state in ('approve', 'refuse')"/>
+            </xpath>
+        </field>
+    </record>
+ </odoo>

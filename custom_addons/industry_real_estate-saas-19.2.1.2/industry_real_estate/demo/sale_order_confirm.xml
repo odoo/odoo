@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <!-- update sale order stages -->
+    <function model="sale.order" name="action_confirm" eval="[[
+        ref('sale_order_25'),
+        ref('sale_order_26'),
+        ref('sale_order_27'),
+        ref('sale_order_28'),
+        ref('sale_order_29'),
+        ref('sale_order_30'),
+        ref('sale_order_31'),
+        ref('sale_order_32'),
+        ref('sale_order_33'),
+        ref('sale_order_34'),
+        ref('sale_order_35')
+    ]]"/>
+
+    <!-- create invoices -->
+    <record id="sale_advance_payment_inv_1" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_25')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_1')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <record id="sale_advance_payment_inv_2" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_27')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_2')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <record id="sale_advance_payment_inv_3" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_29')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_3')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <record id="sale_advance_payment_inv_4" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_31')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_4')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <record id="sale_advance_payment_inv_5" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_32')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_5')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <record id="sale_advance_payment_inv_6" model="sale.advance.payment.inv">
+        <field name="advance_payment_method" >delivered</field>
+        <field name="sale_order_ids" eval="[Command.set([ref('sale_order_34')])]"/>
+    </record>
+    <function model="sale.advance.payment.inv" name="create_invoices"
+            eval="[ref('sale_advance_payment_inv_6')]"
+            context="{'raise_if_nothing_to_invoice': False}"/>
+
+    <!-- close subscriptions that have ended -->
+    <function model="sale.order" name="set_close">
+        <value model="sale.order" eval="(
+            obj().env.ref('industry_real_estate.sale_order_25')
+            | obj().env.ref('industry_real_estate.sale_order_27')
+            | obj().env.ref('industry_real_estate.sale_order_29')
+            | obj().env.ref('industry_real_estate.sale_order_31')
+            | obj().env.ref('industry_real_estate.sale_order_32')
+            | obj().env.ref('industry_real_estate.sale_order_34')
+        ).filtered(lambda sub: sub.end_date and sub.end_date &lt; datetime.today().date()).ids"/>
+    </function>
+
+</odoo>

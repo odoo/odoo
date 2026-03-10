@@ -1,0 +1,39 @@
+<odoo>
+    <!--Res Config Settings Form View-->
+    <record id="res_config_settings_view_form_base_accounting_kit" model="ir.ui.view">
+        <field name="name">res.config.view.inherited.base.accounting.kit</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="30"/>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                <setting id="customer_credit" help="Enable credit limit for customers">
+                    <field name="customer_credit_limit" on_change="1"/>
+                </setting>
+            </xpath>
+            <!-- Remove the enterprise budget option -->
+            <xpath expr="//setting[@id='account_budget']" position="replace"/>
+            <xpath expr="//block[@id='bank_cash']" position="inside">
+                <setting id="anglo_saxon" help="It will record the cost of good sold">
+                    <field name="use_anglo_saxon_accounting"/>
+                </setting>
+            </xpath>
+            <setting id="fiscalyear" position="replace">
+                <setting id="fiscalyear">
+
+                        <div class="o_setting_right_pane">
+                            <separator string="Fiscal Year"/>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="fiscalyear_last_month" string="Last Day"
+                                           class="col-lg-3 o_light_label"/>
+                                    <field name="fiscalyear_last_month" style="width: 100px; margin-right: 8px;"/>
+                                    <field name="fiscalyear_last_day" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

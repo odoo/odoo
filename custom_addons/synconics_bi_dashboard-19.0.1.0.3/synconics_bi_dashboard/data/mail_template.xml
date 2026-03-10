@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <record id="mail_template_dashboard_chart" model="mail.template">
+        <field name="name">Dashboard Layout Email</field>
+        <field name="model_id" ref="model_dashboard_dashboard" />
+        <field name="subject">Dashboard: {{ ctx.get('name') }}</field>
+        <field name="partner_to">{{ ctx.get('email_to') }}</field>
+        <field name="lang">{{ ctx.get('default_lang') }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                Hello, <t></t>
+                <br/><br/>
+                You have received mail related to the dashboard.
+                    <br/><br/><br/>
+                    <a t-att-href="ctx.get('url')" style="border-radius:0px;margin:0px;cursor:pointer;appearance:button;text-transform:none;overflow-y:visible;overflow-x:visible;line-height:inherit;font-size:inherit;font-family:inherit;background-color: #714B67; padding: 6px 8px 6px 8px; text-decoration: none; color:#ffffff; border-radius: 10px; font-size:13px; font-weight: 700; border: 0px;" class="o_default_snippet_text">View Dashboard</a>
+                    <br/><br/>
+                    <t t-if="ctx.get('data')">
+                        <br/>
+                        <t t-foreach="ctx['data']" t-as="item">
+                            <p t-if="item.get('chart_type') not in ['tile', 'kpi']">
+                                <b>
+                                    <t t-out="item['name'] or ''"></t>
+                                </b>
+                            </p>
+                            <div style="margin: 16px 0px 16px 0px;">
+                                <img t-attf-src="{{item.get('image')}}" style="padding: 0px; margin: 0px; height: auto;"/>
+                            </div>
+                        </t>
+                        <br/>
+                    </t>
+                Thank you.
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <template id="to_do_layout">
+        <div t-if="recordsets.get('isError')" class="h-100 w-100 d-flex align-items-center justify-content-center" style="border: 1px solid #ccc;">
+            <h2 t-out="recordsets.get('errorMessage')"></h2>
+        </div>
+        <div t-if="not recordsets.get('isError')" class="h-100" style="border: 1px solid #ccc;">
+            <div t-if="recordsets.get('layout_type') == 'default'" class="h-100">
+                <div style="height: 50%; background-color: #ccc;">
+                    <div class="title p-2" style="height: 20%; font-size: 1.1rem;">
+                        <t t-out="recordsets.get('name')" />
+                    </div>
+                    <div class="d-flex gap-4 align-items-center ps-2" style="height: 80%; overflow-x: auto;">
+                        <t t-set="indexed_data" t-value="[(dict(record, index=index)) for index, record in enumerate(recordsets.get('records'))]" />
+                        <div t-foreach="indexed_data" t-as="record" t-key="record.__index">
+                            <button class="btn btn-primary">
+                                <t t-out="record.get('name')" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 50%; overflow: auto;">
+                    <ul>
+                        <t t-set="lines_indexed_data" t-value="[(dict(record, index=index)) for index, record in enumerate(recordsets.get('records'))]" />
+                        <li t-foreach="lines_indexed_data" t-as="line" t-key="line.__index">
+                            <del t-if="not line.get('active_record')"><t t-out="line.get('name')" /></del>
+                            <span t-if="line.get('active_record')"><t t-out="line.get('name')" /></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div t-if="recordsets.get('layout_type') == 'activity'" class="h-100" style="overflow: auto;">
+                <t t-set="indexed_data" t-value="[(dict(record, index=index)) for index, record in enumerate(recordsets.get('records'))]" />
+                <div t-foreach="indexed_data" t-as="record" t-key="record.__index" class="row m-0 p-2">
+                    <div class="col-4 d-flex align-items-center justify-content-center" style="font-size: 1.1rem;">
+                        <span t-out="record.get('date')" />
+                    </div>
+                    <div class="col-8">
+                        <div>Activity: <span t-out="record.get('activity_type')" /></div>
+                        <div>Name: <span t-out="record.get('name')" /></div>
+                        <div>Rep.: <span t-out="record.get('username')" /></div>
+                        <div>Summary: <span t-out="record.get('summary')" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="list_layout">
+        <div t-if="recordsets.get('isError')" class="h-100 w-100 d-flex align-items-center justify-content-center" style="border: 1px solid #ccc;">
+            <h2 t-out="recordsets.get('errorMessage')"></h2>
+        </div>
+        <div t-if="not recordsets.get('isError')" class="h-100" style="overflow: auto;">
+            <div class="table-responsive">
+                <div class="card-body col-md-12 sync_list_view">
+                    <t t-if="recordsets.get('columns')">
+                        <div class="table-container">
+                            <table t-attf-id="listPreview" t-if="recordsets.get('records')" class="table styled-table oe_dashboard_table">
+                                <thead>
+                                    <tr>
+                                        <th t-foreach="recordsets.get('columns')" t-as="column" t-key="column.id">
+                                            <t t-out="column.get('name')" />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <tr t-foreach="recordsets.get('records')" t-as="record" t-key="record.id">
+                                        <td t-foreach="recordsets.get('columns')" t-as="column" t-key="column.id">
+                                            <t t-out="record[column['column_name']]" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="kpi_layout_one">
+        <div t-att-title="recordsets.get('tooltip_info')" class="border-0 tile_layout_1 border-0 h-100" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;overflow: hidden;'">
+                    <div class="row py-2 px-2 h-100 d-flex" style="position: relative;--gutter-x: 0px; align-items: center !important;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0" t-attf-style="display: flex;align-items: start;color: #{recordsets.get('font_color')};position: absolute;top: 10px;left: 10px;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-out="recordsets.get('kpi_icon')"/>
+                            <span t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-12 p-0">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size:22px; color:' + recordsets.get('font_color', '')+';'" t-esc="recordsets.get('name', '')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:'+str(recordsets.get('font_size'))+'px; '+'color:'+recordsets.get('font_color')+';'+'font-weight:'+str(recordsets.get('font_weight'))+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                        <t t-if="recordsets.get('comparison') == 'none'">
+                                            <t t-if="recordsets.get('count2')"> | <t t-esc="recordsets.get('count2')"/></t>
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'ratio'">
+                                            : <t t-esc="recordsets.get('count2')"/>
+                                        </t>
+                                        <t t-if="recordsets.get('target')"> | <t t-esc="recordsets.get('target')"/></t>
+                                        <t t-if="recordsets.get('kpi_enable_target')">
+                                            <div t-if="recordsets.get('kpi_view_type') == 'progress'" class="text-center mt-3" style="margin-bottom: 2rem;">
+                                                <div>
+                                                    <div class="progress">
+                                                        <div t-attf-class="progress-bar #{recordsets.get('color')}" t-attf-style="width:#{recordsets.get('progress')}%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-if="recordsets and (recordsets.get('previous_data') or recordsets.get('standard'))">
+                            <t t-if="(recordsets.get('previous_data') and recordsets.get('previous_data').get('standard')) or recordsets.get('count')">
+                                <!-- d-flex -->
+                                <div class="o_bottom pl-3 px-2 pr-3 col-12 justify-content-between" style="bottom: 4px;right: 0; position: absolute; display: flex !important;">
+                                    <div class="oe_target justify-content-end" style="flex-direction: column !important; display: flex !important;">
+                                        <span t-if="recordsets.get('standard')" style="background-color: #cecece61;height: auto;padding: 5px;size: a3;font-size: 2vh;">
+                                            <span class="fa fa-bullseye" />
+                                            <span t-if="recordsets.get('arrow') == 'down'" style="color: red;">
+                                                <span class="fa fa-caret-down" />
+                                                <span style="font-size: 2vh;color: red;"><t t-esc="recordsets.get('standard')"/></span>
+                                           </span>
+                                           <span t-if="recordsets.get('arrow') == 'up'" style="color: green;">
+                                                <span class="fa fa-caret-up" />
+                                               <span style="font-size: 2vh;color: green;"><t t-esc="recordsets.get('standard')"/></span>
+                                           </span>
+                                       </span>
+                                       <br/>
+                                       <span t-if="recordsets.get('standard')" t-attf-style="font-size: 1vh;color:#{recordsets.get('font_color')};"><t t-esc="recordsets.get('message')"/></span>
+                                   </div>
+                                   <!-- d-flex flex-column -->
+                                   <div class="oe_prev justify-content-end" style="flex-direction: column !important; display: flex !important;">
+                                       <span t-if="recordsets.get('previous_data')" style="background-color: #cecece61;height: auto;padding: 5px;size: a3;font-size: 2vh;align: right;align-items: right;">
+                                            <span class="fa fa-calendar" />
+                                            <span t-if="recordsets.get('previous_data').get('arrow') == 'up'" style="color:green;">
+                                                <span class="fa fa-caret-up" />
+                                               <span style="font-size: 2vh;color:green;"><t t-esc="recordsets.get('previous_data').get('standard')"/></span>
+                                           </span>
+                                           <span t-if="recordsets.get('previous_data').get('arrow') == 'down'" style="color:red;">
+                                                <span class="fa fa-caret-down" />
+                                               <span style="font-size: 2vh;color:red;"><t t-esc="recordsets.get('previous_data').get('standard')"/></span>
+                                           </span>
+                                       </span>
+                                       <br/>
+                                       <span t-if="recordsets.get('previous_data')" t-attf-style="font-size: 1vh;color:#{recordsets.get('font_color')};"><t t-esc="recordsets.get('previous_data').get('message')"/></span>
+                                   </div>
+                               </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="kpi_layout_two">
+        <div t-att-title="recordsets.get('tooltip_info')" class="border-0" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row py-2 px-2" style="--gutter-x: 0px;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0 col-12" t-attf-style="display: flex;align-items: flex-end;color: #{recordsets.get('font_color')};position: absolute;top: 8px;left: 5px;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <span class="col-3" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')">
+                                <t t-att-style="'color:' + recordsets.get('font_color')+';'" class="col-3" t-out="recordsets.get('kpi_icon')"/>
+                            </span>
+                            <span t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user col-3"/>
+                        </div>
+                        <div class="col-md-12 m-auto">
+                            <div class="text-xs text-truncate" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size:22px; '+'color:'+recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-if="not recordsets.get('previous_data')" t-att-style="'font-size:'+str(recordsets.get('font_size'))+'px; '+'color:'+recordsets.get('font_color')+';'+'font-weight:'+str(recordsets.get('font_weight'))+';'">
+                                        <t t-esc="recordsets.get('count')"/><t t-if="recordsets.get('comparison') == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'ratio'">
+                                            : <t t-esc="recordsets.get('count2')"/>
+                                        </t>
+                                        <t t-if="recordsets.get('target')"> | <t t-esc="recordsets.get('target')"/></t>
+                                        <t t-if="recordsets.get('comparison') == 'sum' and recordsets.get('kpi_enable_target')">
+                                            <div t-if="recordsets.get('progress')" class="text-center mt-3">
+                                                <div>
+                                                    <div class="progress">
+                                                        <div t-attf-class="progress-bar #{recordsets.get('color')}" t-attf-style="width:#{recordsets.get('progress')}%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-if="recordsets.get('previous_data')">
+                            <span class="d-flex text-center col-12 justify-content-between" t-att-style="'font-size:' + recordsets.get('font_size')+'px;'+'color:' + recordsets.get('font_color')+';'">
+                                <div class="d-block pr-4 col-6">
+                                    <span class="d-block" t-esc="recordsets.get('count')"/>
+                                    <span style="font-size: 12px;display: block;"><t t-esc="recordsets.get('message')"/></span>
+                                </div>
+                                <div class="d-block" style="border-right: 1px solid;"/>
+                                <div class="d-block pl-4 col-6">
+                                    <span class="d-block" t-esc="recordsets.get('previous_data').get('standard')"/>
+                                    <span style="font-size: 12px;display: block;"><t t-esc="recordsets.get('previous_data').get('message')"/></span>
+                                </div>
+                            </span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="kpi_layout_three">
+        <div t-att-title="recordsets.get('tooltip_info')" class="border-0 h-100" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row h-100 px-2 d-flex" style="position: relative; --gutter-x: 0px; align-items: center !important;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0" t-attf-style="display: flex;align-items: start;color: #{recordsets.get('font_color')};position: absolute;top: 10px;left: 10px;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-out="recordsets.get('kpi_icon')"/>
+                            <span t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-12 position-relative" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                            <div class="text-xs text-truncate mb-2 " t-att-style="'text-align:' + recordsets.get('text_align')+' !important;'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size:22px; '+'color:'+recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <!-- d-flex justify-content-center -->
+                                    <div t-att-style="'text-align: center !important; font-size:'+str(recordsets.get('font_size'))+'px; '+'color:'+recordsets.get('font_color')+';'+'font-weight:'+str(recordsets.get('font_weight'))+';'">
+                                        <span><t t-esc="recordsets.get('count')"/></span>
+                                        <t t-if="recordsets.get('comparison') == 'none'">
+                                            <t t-if="recordsets.get('count2')"> | <t t-esc="recordsets.get('count2')"/></t>
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'ratio'">
+                                            : <t t-esc="recordsets.get('count2')"/>
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="recordsets.get('target')"> | <t t-esc="recordsets.get('target')"/></t>
+                                        <div class="d-flex align-items-center" t-if="recordsets.get('standard') or recordsets.get('progress')">
+                                           <span class="fa fa-bullseye ml-2 mr-2"/>
+                                           <t t-if="recordsets.get('arrow') == 'down'">
+                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAAXNSR0IArs4c6QAAAf9JREFUSEul1T1oFEEUB/D/u4sGAqLuXCLcTgzHjh9ISJEqIFhpoY2CYGUhYiGCgiAIsVEQtLFRLMQihZXEQhsFQRtFTRUsAsLOHSQ3l0TcvaAWIufuyB5ncJO5yd3utPPmN1/vzRByNso5HvmBb1zczLMKCrl4BuB0RmSWgtF950jrmSwAAWfph3uQtehPkAVwfm/f0T7E0BWvQTjWD0LAC0fJU21gjXuXY9D9fgAQnWd1f6YNrI4dqGyLolo/wC89UOKNL+F6HoRcfAQw1SPyiil5IoldBwLXu0FEt3sBSNNFp+E/SgFNXpnQKH7uBYiLrfLw4uJKCmjfBhcLAA7ZEXrDlH/0X0yqFgIu7hJw3QYUoK/sVtUHRqC51zusY3pvAyiKx5yV2pIR6Gwj6Rw1I/odU9Uj//dtKuemKx5qwiUjQPoaq1fv2QHuHdeglyYgQrx/RNV8K9DZxhqAXRuQOabkpkQzvkgBF0+SUk3NpDHtNOSdjSszAqErzoDwNBVcwDhbkkmepJoRWC6XhwYLQz8BFDrZNu8oOWk6l66PapOL5xo4mQyKgVvDShrfzq5AyMUFAI8TIIoxObIs5/tawddKZc9Aq7gKYIEpOd4tO63/QsDFWxA+lepyOhMQuuKqJvpQUv5cJuA798ROVZXW4rLX/ta9+f/GreewR/wF47qWds7FK8YAAAAASUVORK5CYII=" />
+
+                                           </t>
+                                           <t t-if="recordsets.get('arrow') == 'up'">
+                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAAXNSR0IArs4c6QAAAfZJREFUSEu11T1oFEEUB/D/2zsVIoKgIAgigWAhwSJCMreClZG7N9z5BVYpRCxEUBAEITYKAW1sFAuxSGElWuTjZi4RYxNzc2cTLFIpFmm0UCysDtx7ksVIcre72c2Rbff9f/ve7swsoceLesxjZ4HCXGXAFWe+JHWZ2IEyfBtAvaFtMw7ZCnhPQMNpO54ZGJmuHPLyf76DaMWxGcwMKMPXCHgRBkmGHNeWo5DYEQqGpwCcWwtJGw8aZXs/NXBytty3i4LfRPD+hZadtkOpAWX4MgGvNga8IBhcqsyvdCKRIyjDLwkY6yged9o+TAX4hn8JsL+juOm0VVsCypZKJGSj5m23vWPNcvXzxntdIyjDzwi4EfnCSO7UufY4EfANrwpwJGbhLDptT8cCypZOkdCHpM3j7faOLo1WV9drNo2gbOkRCd1NAoToVoPN00igYHjtOx9PPGSIFhybM13ASK14wmt7n9KcUPlccHixOP8t3CbrAVXV94hkIg0A4LrT9vkmwDfsBOhaKDFgzWnL/4HhmbP9uVz+a8qnh2VBq3Xw48WFn+EIyuqbJPIkC0DA1bq2kyHgG34rwGgWAMC00/Y8Db+7cCDXav3IGA7L9/Tt3UfK8BUCJrcDCMkY+YbfCHBpOwAgr0nNcuRZlxbc2V9bmi567uAvmpqWqXLH/QMAAAAASUVORK5CYII=" />
+                                           </t>
+                                           <span class="ml-2" t-attf-style="font-size: 20px;color: #{recordsets.get('font_color')};position: relative;"><t t-esc="recordsets.get('standard')"/><t t-esc="recordsets.get('progress')"/></span>
+                                       </div>
+                                    </div>
+                                    <div t-if="recordsets.get('kpi_enable_target') and recordsets.get('progress')" class="text-center mt-3">
+                                        <div>
+                                            <div class="progress">
+                                                <div t-attf-class="progress-bar #{recordsets.get('color')}" t-attf-style="width:#{recordsets.get('progress')}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="recordsets.get('previous_data')" style="background-color: #ffffff21;text-align: left;margin-bottom: 0;position: absolute;top: 100%;bottom: 0px;right: 0;left: 0;height: 40px;display: flex;">
+                                <div class="h5 d-flex align-items-center text-gray-800">
+                                    <span t-if="recordsets.get('previous_data').get('arrow') == 'up'" t-attf-style="font-size: 25px;color:#{recordsets.get('font_color')}; margin: 0 4px 0 4px;" class="fa fa-arrow-up pr-2 pl-2"></span>
+                                    <span t-if="recordsets.get('previous_data').get('arrow') == 'down'" t-attf-style="font-size: 25px;color:#{recordsets.get('font_color')}; margin: 0 4px 0 4px;" class="fa fa-arrow-down pr-2 pl-2"></span>
+                                    <span t-attf-style="font-size: 20px;color: #{recordsets.get('font_color')};font-family: cursive;">
+                                        <t t-esc="recordsets.get('previous_data').get('standard')"/>
+                                    </span>
+                                    <span class="pl-3" t-attf-style="font-size: 10px;padding: 6px; color: #{recordsets.get('font_color')};">
+                                    <t t-esc="recordsets.get('previous_data').get('message')"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="kpi_layout_four">
+        <div t-att-title="recordsets.get('tooltip_info')" class="h-100" t-att-style="'background-color:' + recordsets.get('background_color') +'!important'">
+            <div class="card-body position-relative p-0 h-100" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important;overflow: hidden;'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row h-100" style="--gutter-x: 0px;">
+                        <div class="p-2 col-12" t-attf-style="display: flex;color: #{recordsets.get('font_color')};">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <span class="col-3" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')">
+                                <t t-att-style="'color:' + recordsets.get('font_color')+';'" class="col-3" t-out="recordsets.get('kpi_icon')"/>
+                            </span>
+                            <span t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user col-3"/>
+                            <div class="text-xs text-truncate col-9" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size:22px; '+'color:'+recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-auto p-2">
+                            <div class="col-12 p-0 d-flex" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="oe_progress col-3 pl-2 pr-0 d-flex justify-content-center">
+                                    <div t-if="recordsets.get('kpi_view_type') == 'progress'" role="progressbar" t-att-aria-valuenow="recordsets.get('progress')" aria-valuemin="0" aria-valuemax="100" t-attf-style="--value:#{recordsets.get('progress')};--background: #{recordsets.get('background_color')}"></div>
+                                </div>
+                                <div class="oe_content col-9">
+                                    <span t-att-style="'font-size:'+str(recordsets.get('font_size'))+'px; '+'color:'+recordsets.get('font_color')+';'+'font-weight:'+str(recordsets.get('font_weight'))+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                        <t t-if="recordsets.get('comparison') == 'none'">
+                                            <t t-if="recordsets.get('count2')"> | <t t-esc="recordsets.get('count2')"/></t>
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'ratio'">
+                                            : <t t-esc="recordsets.get('count2')"/>
+                                        </t>
+                                        <t t-if="recordsets.get('target')"> | <t t-esc="recordsets.get('target')"/></t>
+                                        <t t-if="recordsets.get('kpi_enable_target')">
+                                            <t t-if="recordsets.get('kpi_view_type') == 'standard'">
+                                                <div class="mt-1" style="font-size: 12px;">
+                                                    <div>
+                                                        <span t-if="recordsets.get('previous_data')">
+                                                        <t t-esc="recordsets.get('message')"/></span>
+                                                    </div>
+                                                    <div t-if="recordsets.get('arrow') == 'up'">
+                                                        <span>
+                                                            <span t-attf-style="color: #{recordsets.get('color')}" class="fa fa-arrow-up"/>
+                                                        </span>
+                                                    </div>
+                                                    <div t-if="recordsets.get('arrow') == 'down'">
+                                                        <span>
+                                                            <span t-attf-style="color: #{recordsets.get('color')}" class="fa fa-arrow-down #{recordsets.get('color')}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="recordsets.get('previous_data')" style="background-color: #ffffff21;text-align: left;margin-bottom: 0;bottom: 0px;right: 0;left: 0;height: 34px;display: flex;align-items: center;">
+                            <div class="h5 d-flex align-items-center text-gray-800">
+                                <span t-if="recordsets.get('previous_data').get('arrow') == 'up'" t-attf-style="font-size: 25px;color:#{recordsets.get('font_color')};" class="fa fa-arrow-up pr-2 pl-2"></span>
+                                <span t-if="recordsets.get('previous_data').get('arrow') == 'down'" t-attf-style="font-size: 25px;color:#{recordsets.get('font_color')};" class="fa fa-arrow-down pr-2 pl-2"></span>
+                                <span t-attf-style="font-size: 20px;color: #{recordsets.get('font_color')};font-family: cursive;">
+                                    <t t-esc="recordsets.get('previous_data').get('standard')"/>
+                                </span>
+                                <span t-if="recordsets.get('previous_data')" class="pl-3" t-attf-style="font-size: 10px;padding: 6px; color: #{recordsets.get('font_color')};">
+                                <t t-esc="recordsets.get('previous_data').get('message')"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="kpi_layout_five">
+        <div t-att-title="recordsets.get('tooltip_info')" class="border-0 h-100" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row h-100" style="--gutter-x: 0px;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0" t-attf-style="display: flex;align-items: start;color: #{recordsets.get('font_color')};position: absolute;top: 10px;left: 10px;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-out="recordsets.get('kpi_icon')"/>
+                            <span t-else="" t-att-style="'color:'+recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-center flex-column">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0 p-0" t-att-style="'font-size:22px; '+'color:'+recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="oe_content" style="line-height: 12px;">
+                                    <span t-att-style="'font-size:'+str(recordsets.get('font_size'))+'px; '+'color:'+recordsets.get('font_color')+';'+'font-weight:'+str(recordsets.get('font_weight'))+';'">
+                                        <t t-if="recordsets.get('comparison') == 'none'">
+                                            <t t-if="recordsets.get('count2')"> | <t t-esc="recordsets.get('count2')"/></t>
+                                        </t>
+                                        <t t-esc="recordsets.get('count')"/>
+                                        <t t-if="recordsets.get('comparison') == 'percentage'">
+                                            %
+                                        </t>
+                                        <t t-if="recordsets.get('comparison') == 'ratio'">
+                                            : <t t-esc="recordsets.get('count2')"/>
+                                        </t>
+                                        <t t-if="recordsets.get('target')"> | <t t-esc="recordsets.get('target')"/></t>
+                                        <t t-if="recordsets.get('kpi_enable_target')">
+                                            <div t-if="recordsets.get('kpi_view_type') == 'progress'" class="text-center mt-3">
+                                                <div>
+                                                    <div class="progress">
+                                                        <div t-attf-class="progress-bar #{recordsets.get('color')}" t-attf-style="width:#{recordsets.get('progress')}%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <t t-if="recordsets.get('kpi_view_type') == 'standard'">
+                                                <div class="mt-1" style="font-size: 12px;">
+                                                    <div>
+                                                        <span>vs Prev</span>
+                                                    </div>
+                                                    <div t-if="recordsets.get('arrow') == 'up'">
+                                                        <span>
+                                                            <span t-attf-style="color: #{recordsets.get('color')}" class="fa fa-arrow-up"/>
+                                                        </span>
+                                                    </div>
+                                                    <div t-if="recordsets.get('arrow') == 'down'">
+                                                        <span>
+                                                            <span t-attf-style="color: #{recordsets.get('color')}" class="fa fa-arrow-down #{recordsets.get('color')}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </span>
+                                    <span t-if="recordsets.get('kpi_view_type') == 'progress'" class="progress_value" t-attf-style="color: #{recordsets.get('color')}">
+                                        <t t-esc="recordsets.get('progress')"/>%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tile_layout_one">
+        <div t-att-title="recordsets.get('tooltip_info')" class="shadow card w-100 h-100 border-0 tile_layout_1 border-0" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;overflow: hidden;'">
+                    <div class="row py-2 px-2 px-2 h-100 d-flex" style="position: relative;--gutter-x: 0px;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0" t-attf-style="display: flex;align-items: start;color: #{recordsets.get('font_color')};position: absolute;top: 10px;left: 10px;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-out="recordsets.get('kpi_icon')"/>
+                            <i t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-12 p-0" style="text-align: center !important;">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size: 22px;'+'color:' + recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:' + recordsets.get('font_size')+'px;'+'color:' + recordsets.get('font_color')+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tile_layout_two">
+        <div t-att-title="recordsets.get('tooltip_info')" class="shadow card w-100 h-100 border-0 tile_layout_1 border-0" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row py-2 px-2 px-2 h-100 d-flex" style="position: relative;--gutter-x: 0px;text-align: center;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0 pl-2 col-md-4 p-0 col-md-4 d-flex justify-content-center" t-attf-style="text-align: center !important; font-size: 2vw;color: #{recordsets.get('font_color')}">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-out="recordsets.get('kpi_icon')"/>
+                            <i t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size: 22px;'+'color:' + recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:' + recordsets.get('font_size')+'px;'+'color:' + recordsets.get('font_color')+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tile_layout_three">
+        <div t-att-title="recordsets.get('tooltip_info')" class="shadow card w-100 h-100 border-0 tile_layout_1 border-0" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color') +';cursor: pointer;'">
+                    <div class="row py-2 px-2 px-2 h-100 d-flex" style="position: relative;--gutter-x: 0px; align-items: center !important;">
+                        <div class="col-md-8 p-0">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size: 22px;'+'color:' + recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:' + recordsets.get('font_size')+'px;'+'color:' + recordsets.get('font_color')+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="recordSets.get('icon') or recordsets.get('default_icon')" class="p-0 pr-2 col-md-4 p-0 col-md-4 d-flex align-items-center justify-content-center" t-attf-style="font-size: 2vw;color: #{recordsets.get('font_color')}">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-raw="recordsets.get('kpi_icon')"/>
+                            <i t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tile_layout_four">
+        <div t-att-title="recordsets.get('tooltip_info')" class="shadow card w-100 h-100 border-0 tile_layout_1 border-0" t-att-style="'background-color:' + recordsets.get('background_color') +'!important;overflow: hidden;'">
+            <div class="card-body position-relative p-0" t-att-style="'background-color:' + recordsets.get('background_color')+ '!important'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + recordsets.get('background_color')+';cursor: pointer;'">
+                    <div class="row h-100 d-flex" style="position: relative;--gutter-x: 0px; align-items: center !important;">
+                        <div t-if="recordsets.get('icon') or recordsets.get('default_icon')" class="p-0 pl-2 col-md-4 p-0 col-md-4 d-flex justify-content-center" t-attf-style="text-align: center !important; font-size: 2vw;color: #{recordsets.get('font_color')};height: 100%;background: #12141638;">
+                            <img  t-if="recordsets.get('icon_option') == 'custom' and recordsets.get('icon')" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{recordsets.get('icon')}"/>
+                            <t t-att-style="'color:' + recordsets.get('font_color')+';'" t-elif="recordsets.get('icon_option') == 'default' and recordsets.get('default_icon')" t-raw="recordsets.get('kpi_icon')"/>
+                            <i t-else="" t-att-style="'color:' + recordsets.get('font_color')+';'" class="fa fa-user"/>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <div class="text-xs text-truncate mb-2" t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <span class="oe_name oe_tile oe_title p-0" t-att-style="'font-size: 22px;'+'color:' + recordsets.get('font_color')+';'" t-esc="recordsets.get('name')"></span>
+                            </div>
+                            <div t-att-style="'text-align:' + recordsets.get('text_align')+';'">
+                                <div class="h5 mb-1 text-gray-800">
+                                    <span t-att-style="'font-size:' + recordsets.get('font_size')+'px;'+'color:' + recordsets.get('font_color')+';'">
+                                        <t t-esc="recordsets.get('count')"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

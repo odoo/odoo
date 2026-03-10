@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+
+    <record id="rule_analytic_account_public_website" model="ir.rule">
+        <field name="name">Analytic Account: Public/Portal User can see published properties</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="groups" eval="[(4, ref('website.website_page_controller_expose'))]"/>
+        <field name="domain_force">[('x_is_published', '=', True)]</field>
+    </record>
+
+    <record id="rule_analytic_account_user" model="ir.rule">
+        <field name="name">Analytic Account: Internal User can see all analytic accounts</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+</odoo>

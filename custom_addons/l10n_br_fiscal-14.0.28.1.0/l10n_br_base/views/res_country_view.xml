@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--
+    Views: res.country
+    -->
+    <record id="view_l10n_br_country_form" model="ir.ui.view">
+        <field name="name">res.country</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form" />
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="bc_code" />
+                <field name="siscomex_code" />
+                <field name="ibge_code" />
+                <field name="nationality_code" />
+            </field>
+        </field>
+    </record>
+
+    <!--
+    Views: res.country.state
+    -->
+    <record id="view_l10n_br_country_state_form" model="ir.ui.view">
+        <field name="name">res.country.state</field>
+        <field name="model">res.country.state</field>
+        <field name="inherit_id" ref="base.view_country_state_form" />
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="ibge_code" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

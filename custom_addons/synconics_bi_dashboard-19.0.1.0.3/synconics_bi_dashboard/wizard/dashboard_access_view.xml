@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dashboard_access_view" model="ir.ui.view">
+        <field name="name">Re-sequence Journal Entries</field>
+        <field name="model">dashboard.access</field>
+        <field name="arch" type="xml">
+        <form string="User Access">
+            <group>
+                <field name="is_remove" widget="boolean_toggle"/>
+                <field name="access_by" required="not is_remove" invisible="is_remove"/>
+                <field name="group_ids" widget="many2many_tags" invisible="is_remove or access_by != 'access_group'" required="access_by == 'access_group'" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" />
+                <field name="user_ids" force_save="1" widget="many2many_tags" domain="['|', ('id', '!=', uid), ('share', '=', False)]" required="not is_remove" context="{'user_group_ids': group_ids, 'access_by': access_by, 'user_ids': True}" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}" invisible="is_remove"/>
+                <!-- <field name="selected_user" widget="boolean_toggle"/>
+                <field name="update_user_ids" force_save="1" widget="many2many_tags" domain="['|', ('id', '!=', uid), ('share', '=', False)]" invisible="not selected_user" required="selected_user" context="{'user_group_ids': group_ids, 'access_by': access_by, 'shared_user_ids': user_ids}" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/> -->
+                <!-- <field name="chart_ids" widget="many2many_tags" required="1" domain="[('dashboard_id', '=', dashboard_id)]" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/> -->
+                <field name="dashboard_id" invisible="1" options="{'no_create': True, 'no_create_edit':True, 'no_open': True}"/>
+            </group>
+            <footer>
+                <button string="Confirm" name="action_confirm" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_dashboard_access" model="ir.actions.act_window">
+        <field name="name">User Access</field>
+        <field name="res_model">dashboard.access</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

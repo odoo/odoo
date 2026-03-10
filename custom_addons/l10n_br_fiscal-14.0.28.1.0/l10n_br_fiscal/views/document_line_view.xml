@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="document_line_form" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.document.line.form</field>
+    <field name="model">l10n_br_fiscal.document.line</field>
+    <field name="arch" type="xml">
+      <form string="Fiscal Document Line">
+        <group name="fiscal_fields" invisible="1">
+            <field name="currency_id" invisible="1" />
+            <field name="fiscal_operation_type" invisible="1" />
+            <field name="company_id" invisible="1" />
+            <field name="tax_framework" invisible="1" />
+            <field name="fiscal_genre_id" invisible="1" />
+            <field name="fiscal_genre_code" invisible="1" />
+            <field name="fiscal_type" invisible="1" />
+        </group>
+        <group>
+          <field
+                        name="product_id"
+                        context="{'tree_view_ref': 'product_template_tree', 'form_view_ref': 'product.product_template_only_form_view'}"
+                    />
+          <field name="name" required="1" />
+        </group>
+        <notebook>
+          <page name="general" string="General">
+            <group>
+              <group name="commercial_info" string="Commercial">
+                <label for="quantity" />
+                <div class="o_row">
+                  <field name="quantity" class="oe_inline" />
+                  <field name="uom_id" groups="uom.group_uom" class="oe_inline" />
+                </div>
+                <field name="price_unit" />
+                <field name="discount_value" />
+                <field name="delivery_costs" invisible="1" />
+                <field name="force_compute_delivery_costs_by_total" invisible="1" />
+                <field
+                                    name="insurance_value"
+                                    attrs="{'readonly': ['|', ('delivery_costs', '=', 'total'), ('force_compute_delivery_costs_by_total', '=', True)]}"
+                                />
+                <field
+                                    name="other_value"
+                                    attrs="{'readonly': ['|', ('delivery_costs', '=', 'total'), ('force_compute_delivery_costs_by_total', '=', True)]}"
+                                />
+                <field
+                                    name="freight_value"
+                                    attrs="{'readonly': ['|', ('delivery_costs', '=', 'total'), ('force_compute_delivery_costs_by_total', '=', True)]}"
+                                />
+              </group>
+              <group name="fiscal_info" string="Fiscal">
+                <label for="fiscal_quantity" />
+                <div class="o_row">
+                  <field name="fiscal_quantity" class="oe_inline" />
+                  <field name="uot_id" groups="uom.group_uom" class="oe_inline" />
+                </div>
+                <field name="fiscal_price" />
+                <field name="ncm_id" />
+                <field name="fiscal_genre_id" />
+                <field name="nbm_id" />
+                <field name="cest_id" />
+                <field name="nbs_id" />
+                <field
+                                    name="service_type_id"
+                                    attrs="{'invisible': [('fiscal_genre_code', '!=', '00'), ('cfop_id', '!=', False)]}"
+                                />
+                <field
+                                    name="city_taxation_code_id"
+                                    attrs="{'invisible': [('fiscal_genre_code', '!=', '00'), ('cfop_id', '!=', False)]}"
+                                />
+                <field
+                                    name="national_taxation_code_id"
+                                    attrs="{'invisible': [('fiscal_genre_code', '!=', '00'), ('cfop_id', '!=', False)]}"
+                                />
+                <field
+                                    name="cnae_id"
+                                    attrs="{'invisible': [('fiscal_genre_code', '!=', '00'), ('cfop_id', '!=', False)]}"
+                                />
+                <field
+                                    name="operation_indicator_id"
+                                    attrs="{'invisible': [('fiscal_genre_code', '!=', '00'), ('cfop_id', '!=', False)]}"
+                                />
+              </group>
+              <group name="l10n_br_fiscal" string="Operation">
+                <field name="fiscal_operation_type" invisible="1" readonly="1" />
+                <field name="fiscal_operation_id" required="1" />
+                <field name="fiscal_operation_line_id" required="1" />
+                <field
+                                    name="cfop_id"
+                                    attrs="{'invisible': [('fiscal_type', '=', '00'), ('cfop_id', '=', False)]}"
+                                />
+              </group>
+            </group>
+          </page>
+          <page name="fiscal_taxes" string="Taxes" />
+          <page name="amounts" string="Amounts">
+            <group>
+              <group>
+                <field name="amount_untaxed" />
+                <field name="amount_fiscal" />
+                <field name="amount_tax" />
+                <field name="estimate_tax" />
+              </group>
+              <group>
+                <field name="amount_total" />
+                <field name="amount_tax_withholding" />
+                <field name="amount_taxed" />
+              </group>
+            </group>
+          </page>
+          <page name="fiscal_line_extra_info" string="Extra Info" />
+        </notebook>
+      </form>
+    </field>
+  </record>
+
+</odoo>

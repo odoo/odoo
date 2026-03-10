@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="fiscal_res_company_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <notebook>
+                <page
+                    name="fiscal"
+                    string="Fiscal"
+                    groups="l10n_br_fiscal.group_manager"
+                >
+                    <notebook>
+                        <page name="tax_framework" string="Tax Framework">
+                            <field name="id" invisible="1" />
+                            <group string="CNAE and Legal Nature">
+                                <field
+                                    name="legal_nature_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                                <field
+                                    name="cnae_main_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                                <field
+                                    name="cnae_secondary_ids"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                            </group>
+                            <group string="Tax Framework">
+                                <field name="tax_framework" />
+                                <field name="accountant_id" />
+                                <field
+                                    name="accounting_office"
+                                    domain="[('is_company', '=', True)]"
+                                />
+                                <field
+                                    name="technical_support_id"
+                                    domain="[('is_company', '=', True)]"
+                                />
+                            </group>
+                            <group
+                                name="simples"
+                                string="Simples Nacional"
+                                attrs="{'invisible': [('tax_framework', '=', '3')]}"
+                            >
+                                <group>
+                                    <field name="annual_revenue" />
+                                    <field name="payroll_amount" />
+                                </group>
+                                <group>
+                                    <field name="simplified_tax_id" />
+                                    <field name="simplified_tax_range_id" />
+                                    <field name="coefficient_r" />
+                                    <field name="coefficient_r_percent" />
+                                    <field name="simplified_tax_percent" />
+                                </group>
+                            </group>
+                            <group
+                                name="normal"
+                                string="Regime Normal"
+                                attrs="{'invisible': [('tax_framework', '!=', '3')]}"
+                            >
+                                <group>
+                                    <field
+                                        name="profit_calculation"
+                                        attrs="{'required': [('tax_framework', '=', '3')]}"
+                                    />
+                                </group>
+                                <group>
+                                    <field name="is_industry" />
+                                    <field
+                                        name="industry_type"
+                                        attrs="{'invisible': [('is_industry', '=', False)], 'required': [('is_industry', '=', True)]}"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="taxes" string="Taxes">
+                            <group name="normal_taxes" string="Default Taxes">
+                                  <group name="piscofins_taxes" string="PIS/COFINS">
+                                      <field
+                                        name="piscofins_id"
+                                        required="1"
+                                        domain="{'3': [('piscofins_type', '=', 'company'), ('id', '!=', %(l10n_br_fiscal.tax_pis_cofins_simples_nacional)d)]}.get(tax_framework, [('piscofins_type', '=', 'company'), ('id', '=', %(l10n_br_fiscal.tax_pis_cofins_simples_nacional)d)])"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                                      <field name="tax_pis_wh_id" />
+                                      <field name="tax_cofins_wh_id" />
+                                  </group>
+                                  <group name="ipi_taxes" string="IPI">
+                                      <field
+                                        name="ripi"
+                                        attrs="{'invisible': [('tax_framework', '!=', '3')]}"
+                                    />
+                                      <field
+                                        name="tax_ipi_id"
+                                        attrs="{'invisible': [('tax_framework', '=', '3'), ('ripi', '=', True)], 'required': [('tax_framework', '!=', '3')]}"
+                                        domain="{'3': [('id', '!=', %(l10n_br_fiscal.tax_ipi_outros)d), ('tax_group_id', '=', %(l10n_br_fiscal.tax_group_ipi)d)]}.get(tax_framework, [('id', '=', %(l10n_br_fiscal.tax_ipi_outros)d)])"
+                                    />
+                                      <div
+                                        class="text-muted"
+                                        colspan="2"
+                                        attrs="{'invisible': [('ripi', '=', False)]}"
+                                    >
+                                          IPI tax will be calculed by Product NCM and Fiscal Operation.
+                                      </div>
+                                  </group>
+                                  <group name="icms_taxes" string="ICMS">
+                                      <field
+                                        name="tax_icms_id"
+                                        attrs="{'invisible': [('tax_framework', '=', '3')], 'required': [('tax_framework', 'in', ('1', '2'))]}"
+                                        domain="{'3': [('tax_group_id', '=', %(l10n_br_fiscal.tax_group_icms)d)]}.get(tax_framework, [('tax_group_id', '=', %(l10n_br_fiscal.tax_group_icmssn)d)])"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                                      <field
+                                        name="icms_regulation_id"
+                                        attrs="{'invisible': [('tax_framework', '!=', '3')], 'required': [('tax_framework', '=', '3')]}"
+                                        options="{'no_create': True, 'no_create_edit': True}"
+                                    />
+                                  </group>
+                                  <group name="issqn_taxes" string="ISSQN">
+                                      <field name="tax_issqn_id" />
+                                      <field name="tax_issqn_wh_id" />
+                                  </group>
+                                  <group name="csll_taxes" string="CSLL">
+                                      <field name="tax_csll_id" />
+                                      <field name="tax_csll_wh_id" />
+                                  </group>
+                                  <group name="irpj_taxes" string="IRPJ">
+                                      <field name="tax_irpj_id" />
+                                      <field name="tax_irpj_wh_id" />
+                                  </group>
+                                  <group name="inss_taxes" string="INSS">
+                                      <field name="tax_inss_id" />
+                                      <field name="tax_inss_wh_id" />
+                                  </group>
+                                  <group
+                                    name="ibs_cbs_taxes_classification"
+                                    string="IBS/CBS Tax Classification"
+                                >
+                                      <field name="tax_classification_id" />
+                                  </group>
+                            </group>
+                            <group name="advanced_taxes" string="Advanced Taxes">
+                                <field
+                                    name="tax_definition_ids"
+                                    nolabel="1"
+                                    context="{'tree_view_ref': 'l10n_br_fiscal.tax_definition_tree','form_view_ref': 'l10n_br_fiscal.tax_definition_form', 'default_company_id': id}"
+                                />
+                            </group>
+                        </page>
+                        <page name="delivery_costs" string="Delivery Costs">
+                            <group>
+                                <group>
+                                    <field name="delivery_costs" />
+                                    <div class="text-muted">
+                                        Define if Delivery Costs (Freight, Insurance and Other Costs) should be informed by Line or by Total
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="edoc" string="Documentos Eletrônicos">
+                            <group name="edoc">
+                                <group>
+                                    <field name="processador_edoc" />
+                                    <field name="document_save_disk" />
+                                    <field name="document_type_id" />
+                                    <field
+                                        name="anonymous_partner_id"
+                                        domain="[('is_anonymous_consumer', '=', True)]"
+                                    />
+                                </group>
+                                <group />
+                            </group>
+                        </page>
+                    </notebook>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

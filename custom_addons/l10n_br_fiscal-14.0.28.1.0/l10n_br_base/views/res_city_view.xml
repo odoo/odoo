@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="l10n_br_base_res_city_tree" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.city.tree</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_city.view_city_tree" />
+        <field name="arch" type="xml">
+            <field name="zipcode" position="after">
+                <field name="ibge_code" />
+                <field name="anp_code" />
+                <field name="siafi_code" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

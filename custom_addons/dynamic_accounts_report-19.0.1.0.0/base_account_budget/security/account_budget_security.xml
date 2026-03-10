@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+<!--        Record rule for multi-company-->
+        <record id="budget_post_comp_rule" model="ir.rule">
+            <field name="name">Budget post multi-company</field>
+            <field name="model_id" ref="model_account_budget_post"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="budget_comp_rule" model="ir.rule">
+            <field name="name">Budget multi-company</field>
+            <field name="model_id" ref="model_budget_budget"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="budget_lines_comp_rule" model="ir.rule">
+            <field name="name">Budget lines multi-company</field>
+            <field name="model_id" ref="model_budget_lines"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+        
+        <record model="res.users" id="base.user_root">
+            <field eval="[(4,ref('analytic.group_analytic_accounting'))]" name="group_ids"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <menuitem id="menu_root" action="action_rental_contracts" name="Properties" sequence="10">
+
+        <menuitem id="menu_rental_contracts" action="action_rental_contracts" sequence="10"/>
+
+        <menuitem id="menu_availability" action="action_availability" sequence="20"/>
+
+        <menuitem id="menu_properties_root" name="Properties" sequence="30">
+
+            <menuitem id="menu_properties_properties" action="action_properties" sequence="10"/>
+
+            <menuitem id="menu_properties_buildings" action="action_buildings" sequence="15"/>
+
+            <menuitem id="menu_properties_products" action="action_products" sequence="20"/>
+
+        </menuitem>
+
+        <menuitem id="menu_configuration_root" name="Configuration" sequence="40">
+
+            <menuitem id="menu_configuration_meters" action="action_configuration_meters"/>
+
+        </menuitem>
+
+    </menuitem>
+
+    <record model="ir.ui.menu" id="menu_root">
+        <field name="web_icon_data" type="base64" file="industry_real_estate/static/description/icon.png"/>
+    </record>
+
+</odoo>

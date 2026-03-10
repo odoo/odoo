@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- fiscal.partner.profile -->
+    <record id="partner_fiscal_profile_snc" model="l10n_br_fiscal.partner.profile">
+        <field name="code">SNC</field>
+        <field name="name">Contribuinte Simples Nacional</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="True" />
+        <field name="ind_ie_dest">1</field>
+        <field name="tax_framework">1</field>
+    </record>
+
+    <record id="partner_fiscal_profile_snn" model="l10n_br_fiscal.partner.profile">
+        <field name="code">SNN</field>
+        <field name="name">Simples Nacional Não Contribuinte</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">9</field>
+        <field name="tax_framework">1</field>
+    </record>
+
+    <record id="partner_fiscal_profile_sni" model="l10n_br_fiscal.partner.profile">
+        <field name="code">SNI</field>
+        <field name="name">Simples Nacional Isento</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">2</field>
+        <field name="tax_framework">1</field>
+    </record>
+
+    <record id="partner_fiscal_profile_cnt" model="l10n_br_fiscal.partner.profile">
+        <field name="code">CNT</field>
+        <field name="name">Contribuinte</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">1</field>
+        <field name="tax_framework">3</field>
+    </record>
+
+    <record id="partner_fiscal_profile_ncn" model="l10n_br_fiscal.partner.profile">
+        <field name="code">NCN</field>
+        <field name="name">Não Contribuinte</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">9</field>
+        <field name="tax_framework">3</field>
+    </record>
+
+    <record id="partner_fiscal_profile_int" model="l10n_br_fiscal.partner.profile">
+        <field name="code">INT</field>
+        <field name="name">Isento</field>
+        <field name="is_company" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">2</field>
+        <field name="tax_framework">3</field>
+    </record>
+
+    <record id="partner_fiscal_profile_pfc" model="l10n_br_fiscal.partner.profile">
+        <field name="code">PFC</field>
+        <field name="name">Contribuinte</field>
+        <field name="is_company" eval="False" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">1</field>
+        <field name="tax_framework" eval="False" />
+    </record>
+
+    <record id="partner_fiscal_profile_pfnc" model="l10n_br_fiscal.partner.profile">
+        <field name="code">PFNC</field>
+        <field name="name">Não Contribuinte</field>
+        <field name="is_company" eval="False" />
+        <field name="default" eval="True" />
+        <field name="ind_ie_dest">9</field>
+        <field name="tax_framework" eval="False" />
+    </record>
+
+    <record id="partner_fiscal_profile_isent" model="l10n_br_fiscal.partner.profile">
+        <field name="code">ISENT</field>
+        <field name="name">Isento</field>
+        <field name="is_company" eval="False" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">9</field>
+        <field name="tax_framework" eval="False" />
+    </record>
+
+    <record id="partner_fiscal_profile_estatal" model="l10n_br_fiscal.partner.profile">
+        <field name="code">ESTCONT</field>
+        <field name="name">Empresa Estatal Contribuinte</field>
+        <field name="is_company" eval="True" />
+        <field name="is_public_entity" eval="True" />
+        <field name="default" eval="False" />
+        <field name="ind_ie_dest">1</field>
+        <field name="tax_framework">3</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="l10n_br_fiscal_res_config_settings_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="40" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div
+                    id="l10n_br_fiscal"
+                    class="app_settings_block"
+                    data-string="l10n_br_fiscal"
+                    string="Fiscal"
+                    data-key="l10n_br_fiscal"
+                    groups="l10n_br_fiscal.group_manager"
+                >
+                    <h2>Geral</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="ibpt_api" />
+                            </div>
+                            <div class="o_setting_right_pane" id="ibpt_api_settings">
+                                <label for="ibpt_api" />
+                                <span
+                                    class="fa fa-lg fa-building-o"
+                                    title="Values set here are company-specific."
+                                />
+                                <div class="text-muted">
+                                    Use IBPT API to Update Estimate Taxes for products and services
+                                </div>
+                                <div attrs="{'invisible': [('ibpt_api', '=', False)]}">
+                                    <div class="content-group mt16">
+                                        <label
+                                            for="ibpt_update_days"
+                                            class="o_light_label"
+                                        />
+                                        <field
+                                            name="ibpt_update_days"
+                                            attrs="{'required': [('ibpt_api', '=', True)]}"
+                                        /> dias
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <label for="ibpt_token" class="o_light_label" />
+                                        <field
+                                            name="ibpt_token"
+                                            attrs="{'required': [('ibpt_api', '=', True)]}"
+                                        />
+                                    </div>
+                                    <div>
+                                        <a
+                                            href="https://deolhonoimposto.ibpt.org.br"
+                                            class="oe_link"
+                                            target="_blank"
+                                        >
+                                            <i
+                                                class="fa fa-arrow-right"
+                                            /> Generate an Access Key
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            id="settings_delivery_costs"
+                            class="col-12 col-lg-6 o_setting_box"
+                            title="The Delivery Costs should be informed by Line or by Total ?"
+                        >
+                            <div class="o_setting_right_pane">
+                                <label for="delivery_costs" />
+                                <div class="text-muted">
+                                    Define if Delivery Costs (Freight, Insurance and Other Costs) should be informed by Line or by Total
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field
+                                            name="delivery_costs"
+                                            class="o_light_label"
+                                            widget="radio"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Fiscal Documents</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_br_nfe" />
+                            </div>
+                            <div
+                                class="o_setting_right_pane"
+                                id="module_l10n_br_nfe_settings"
+                            >
+                                <label for="module_l10n_br_nfe" />
+                                <div class="text-muted">
+                                    Create Brazilian eletronic invoice NF-e.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_br_mdfe" />
+                            </div>
+                            <div
+                                class="o_setting_right_pane"
+                                id="module_l10n_br_mdfe_settings"
+                            >
+                                <label for="module_l10n_br_mdfe" />
+                                <div class="text-muted">
+                                    Create Brazilian eletronic invoice NF-e manifest.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_br_nfse" />
+                            </div>
+                            <div
+                                class="o_setting_right_pane"
+                                id="module_l10n_br_nfse_settings"
+                            >
+                                <label for="module_l10n_br_nfse" />
+                                <div class="text-muted">
+                                    Create Brazilian eletronic invoice for services NFS-e.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_l10n_br_cte" />
+                            </div>
+                            <div
+                                class="o_setting_right_pane"
+                                id="module_l10n_br_cte_settings"
+                            >
+                                <label for="module_l10n_br_cte" />
+                                <div class="text-muted">
+                                    Create Brazilian eletronic invoice for freight NFS-e.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

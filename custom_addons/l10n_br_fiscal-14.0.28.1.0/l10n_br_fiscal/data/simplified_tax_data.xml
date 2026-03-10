@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo>
+
+    <record id="simplefied_tax_anexo1" model="l10n_br_fiscal.simplified.tax">
+        <field name="name">Anexo 1 - Comércio</field>
+        <field
+            name="cnae_ids"
+            eval="[(6, 0, [ref('cnae_0111301'), ref('cnae_0111302'), ref('cnae_0111303'), ref('cnae_0111399'), ref('cnae_0112101'), ref('cnae_0112102'), ref('cnae_0112199'), ref('cnae_0113000'), ref('cnae_0114800'), ref('cnae_0115600'), ref('cnae_0116401'), ref('cnae_0116402'), ref('cnae_0116403'), ref('cnae_0116499'), ref('cnae_0119901'), ref('cnae_0119902'), ref('cnae_0119903'), ref('cnae_0119904'), ref('cnae_0119905'), ref('cnae_0119906'), ref('cnae_0119907'), ref('cnae_0119908'), ref('cnae_0119909'), ref('cnae_0119999'), ref('cnae_0121101'), ref('cnae_0121102'), ref('cnae_0122900'), ref('cnae_0131800'), ref('cnae_0132600'), ref('cnae_0133401'), ref('cnae_0133402'), ref('cnae_0133403'), ref('cnae_0133404'), ref('cnae_0133405'), ref('cnae_0133406'), ref('cnae_0133407'), ref('cnae_0133408'), ref('cnae_0133409'), ref('cnae_0133410'), ref('cnae_0133411'), ref('cnae_0133499'), ref('cnae_0134200'), ref('cnae_0135100'), ref('cnae_0139301'), ref('cnae_0139302'), ref('cnae_0139303'), ref('cnae_0139304'), ref('cnae_0139305'), ref('cnae_0139306'), ref('cnae_0139399'), ref('cnae_0141501'), ref('cnae_0141502'), ref('cnae_0142300'), ref('cnae_0151201'), ref('cnae_0151202'), ref('cnae_0151203'), ref('cnae_0152101'), ref('cnae_0152102'), ref('cnae_0152103'), ref('cnae_0153901'), ref('cnae_0153902'), ref('cnae_0154700'), ref('cnae_0155501'), ref('cnae_0155502'), ref('cnae_0155503'), ref('cnae_0155504'), ref('cnae_0155505'), ref('cnae_0159801'), ref('cnae_0159802'), ref('cnae_0159803'), ref('cnae_0159804'), ref('cnae_0159899'), ref('cnae_0170900'), ref('cnae_0210101'), ref('cnae_0210102'), ref('cnae_0210103'), ref('cnae_0210104'), ref('cnae_0210105'), ref('cnae_0210106'), ref('cnae_0210107'), ref('cnae_0210108'), ref('cnae_0210109'), ref('cnae_0210199'), ref('cnae_0220901'), ref('cnae_0220902'), ref('cnae_0220903'), ref('cnae_0220904'), ref('cnae_0220905'), ref('cnae_0220906'), ref('cnae_0220999'), ref('cnae_0311601'), ref('cnae_0311602'), ref('cnae_0311603'), ref('cnae_0312401'), ref('cnae_0312402'), ref('cnae_0312403'), ref('cnae_0321301'), ref('cnae_0321302'), ref('cnae_0321303'), ref('cnae_0321304'), ref('cnae_0321399'), ref('cnae_0322101'), ref('cnae_0322102'), ref('cnae_0322103'), ref('cnae_0322104'), ref('cnae_0322105'), ref('cnae_0322106'), ref('cnae_0322199'), ref('cnae_0500301'), ref('cnae_0500302'), ref('cnae_0600001'), ref('cnae_0600002'), ref('cnae_0600003'), ref('cnae_0710301'), ref('cnae_0721901'), ref('cnae_0722701'), ref('cnae_0723501'), ref('cnae_0724301'), ref('cnae_0725100'), ref('cnae_0729401'), ref('cnae_0729402'), ref('cnae_0729403'), ref('cnae_0729404'), ref('cnae_0810001'), ref('cnae_0810002'), ref('cnae_0810003'), ref('cnae_0810004'), ref('cnae_0810005'), ref('cnae_0810006'), ref('cnae_0810007'), ref('cnae_0810008'), ref('cnae_0810009'), ref('cnae_0810099'), ref('cnae_0891600'), ref('cnae_0892401'), ref('cnae_0892402'), ref('cnae_0893200'), ref('cnae_0899101'), ref('cnae_0899102'), ref('cnae_0899103'), ref('cnae_0899199'), ref('cnae_1091102'), ref('cnae_3520402'), ref('cnae_3600602'), ref('cnae_4511101'), ref('cnae_4511102'), ref('cnae_4511103'), ref('cnae_4511104'), ref('cnae_4511105'), ref('cnae_4511106'), ref('cnae_4512902'), ref('cnae_4530701'), ref('cnae_4530702'), ref('cnae_4530703'), ref('cnae_4530704'), ref('cnae_4530705'), ref('cnae_4541201'), ref('cnae_4541202'), ref('cnae_4541203'), ref('cnae_4541204'), ref('cnae_4542102'), ref('cnae_4621400'), ref('cnae_4622200'), ref('cnae_4623101'), ref('cnae_4623102'), ref('cnae_4623103'), ref('cnae_4623104'), ref('cnae_4623105'), ref('cnae_4623106'), ref('cnae_4623107'), ref('cnae_4623108'), ref('cnae_4623109'), ref('cnae_4623199'), ref('cnae_4631100'), ref('cnae_4632001'), ref('cnae_4632002'), ref('cnae_4632003'), ref('cnae_4633801'), ref('cnae_4633802'), ref('cnae_4633803'), ref('cnae_4634601'), ref('cnae_4634602'), ref('cnae_4634603'), ref('cnae_4634699'), ref('cnae_4635401'), ref('cnae_4635402'), ref('cnae_4635403'), ref('cnae_4636201'), ref('cnae_4637101'), ref('cnae_4637102'), ref('cnae_4637103'), ref('cnae_4637104'), ref('cnae_4637105'), ref('cnae_4637106'), ref('cnae_4637107'), ref('cnae_4637199'), ref('cnae_4639701'), ref('cnae_4639702'), ref('cnae_4641901'), ref('cnae_4641902'), ref('cnae_4641903'), ref('cnae_4642701'), ref('cnae_4642702'), ref('cnae_4643501'), ref('cnae_4643502'), ref('cnae_4644301'), ref('cnae_4644302'), ref('cnae_4645101'), ref('cnae_4645102'), ref('cnae_4645103'), ref('cnae_4646001'), ref('cnae_4646002'), ref('cnae_4647801'), ref('cnae_4647802'), ref('cnae_4649401'), ref('cnae_4649402'), ref('cnae_4649403'), ref('cnae_4649404'), ref('cnae_4649405'), ref('cnae_4649406'), ref('cnae_4649407'), ref('cnae_4649408'), ref('cnae_4649409'), ref('cnae_4649410'), ref('cnae_4649499'), ref('cnae_4651601'), ref('cnae_4651602'), ref('cnae_4652400'), ref('cnae_4661300'), ref('cnae_4662100'), ref('cnae_4663000'), ref('cnae_4664800'), ref('cnae_4665600'), ref('cnae_4669901'), ref('cnae_4669999'), ref('cnae_4671100'), ref('cnae_4672900'), ref('cnae_4673700'), ref('cnae_4674500'), ref('cnae_4679601'), ref('cnae_4679602'), ref('cnae_4679603'), ref('cnae_4679604'), ref('cnae_4679699'), ref('cnae_4681801'), ref('cnae_4681802'), ref('cnae_4681803'), ref('cnae_4681804'), ref('cnae_4681805'), ref('cnae_4682600'), ref('cnae_4683400'), ref('cnae_4684201'), ref('cnae_4684202'), ref('cnae_4684299'), ref('cnae_4685100'), ref('cnae_4686901'), ref('cnae_4686902'), ref('cnae_4687701'), ref('cnae_4687702'), ref('cnae_4687703'), ref('cnae_4689301'), ref('cnae_4689302'), ref('cnae_4689399'), ref('cnae_4691500'), ref('cnae_4692300'), ref('cnae_4693100'), ref('cnae_4711301'), ref('cnae_4711302'), ref('cnae_4712100'), ref('cnae_4713002'), ref('cnae_4721102'), ref('cnae_4721103'), ref('cnae_4721104'), ref('cnae_4722901'), ref('cnae_4722902'), ref('cnae_4723700'), ref('cnae_4724500'), ref('cnae_4729601'), ref('cnae_4729602'), ref('cnae_4729699'), ref('cnae_4731800'), ref('cnae_4732600'), ref('cnae_4741500'), ref('cnae_4742300'), ref('cnae_4743100'), ref('cnae_4744001'), ref('cnae_4744002'), ref('cnae_4744003'), ref('cnae_4744004'), ref('cnae_4744005'), ref('cnae_4744006'), ref('cnae_4744099'), ref('cnae_4751201'), ref('cnae_4752100'), ref('cnae_4753900'), ref('cnae_4754701'), ref('cnae_4754702'), ref('cnae_4754703'), ref('cnae_4755501'), ref('cnae_4755502'), ref('cnae_4755503'), ref('cnae_4756300'), ref('cnae_4757100'), ref('cnae_4759801'), ref('cnae_4759899'), ref('cnae_4761001'), ref('cnae_4761002'), ref('cnae_4761003'), ref('cnae_4762800'), ref('cnae_4763601'), ref('cnae_4763602'), ref('cnae_4763603'), ref('cnae_4763604'), ref('cnae_4763605'), ref('cnae_4771701'), ref('cnae_4771702'), ref('cnae_4771703'), ref('cnae_4771704'), ref('cnae_4772500'), ref('cnae_4773300'), ref('cnae_4774100'), ref('cnae_4781400'), ref('cnae_4782201'), ref('cnae_4782202'), ref('cnae_4783101'), ref('cnae_4783102'), ref('cnae_4784900'), ref('cnae_4785701'), ref('cnae_4785799'), ref('cnae_4789001'), ref('cnae_4789002'), ref('cnae_4789003'), ref('cnae_4789004'), ref('cnae_4789005'), ref('cnae_4789006'), ref('cnae_4789007'), ref('cnae_4789008'), ref('cnae_4789009'), ref('cnae_4789099'), ref('cnae_5611201'), ref('cnae_5611203'), ref('cnae_5612100'), ref('cnae_5620101'), ref('cnae_5620102'), ref('cnae_5620103'), ref('cnae_5620104'), ref('cnae_6810201')])]"
+        />
+        <!-- OLD CNAES ref('cnae_4541205'), ref('cnae_4713001'), ref('cnae_4713003'), ref('cnae_4721101'), ref('cnae_4751200'), ref('cnae_5611202') -->
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range1"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 1</field>
+        <field name="amount_deduced">0.00</field>
+        <field name="inital_revenue">0.00</field>
+        <field name="final_revenue">180000.00</field>
+        <field name="total_tax_percent">4.00</field>
+        <field name="tax_cpp_percent">41.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">34.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">12.74</field>
+        <field name="tax_pis_percent">2.76</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range2"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 2</field>
+        <field name="amount_deduced">5940.00</field>
+        <field name="inital_revenue">180000.01</field>
+        <field name="final_revenue">360000.00</field>
+        <field name="total_tax_percent">7.30</field>
+        <field name="tax_cpp_percent">41.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">34.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">12.74</field>
+        <field name="tax_pis_percent">2.76</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range3"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 3</field>
+        <field name="amount_deduced">13860.00</field>
+        <field name="inital_revenue">360000.01</field>
+        <field name="final_revenue">720000.00</field>
+        <field name="total_tax_percent">9.50</field>
+        <field name="tax_cpp_percent">42.00</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">33.50</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">12.74</field>
+        <field name="tax_pis_percent">2.76</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range4"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 4</field>
+        <field name="amount_deduced">22500.00</field>
+        <field name="inital_revenue">720000.01</field>
+        <field name="final_revenue">1800000.00</field>
+        <field name="total_tax_percent">10.70</field>
+        <field name="tax_cpp_percent">42.00</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">33.50</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">12.74</field>
+        <field name="tax_pis_percent">2.76</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range5"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 5</field>
+        <field name="amount_deduced">87300.00</field>
+        <field name="inital_revenue">1800000.01</field>
+        <field name="final_revenue">3600000.00</field>
+        <field name="total_tax_percent">14.30</field>
+        <field name="tax_cpp_percent">42.00</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">33.50</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">12.74</field>
+        <field name="tax_pis_percent">2.76</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo1_range6"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo1" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 6</field>
+        <field name="amount_deduced">378000.00</field>
+        <field name="inital_revenue">3600000.01</field>
+        <field name="final_revenue">4800000.00</field>
+        <field name="total_tax_percent">19.00</field>
+        <field name="tax_cpp_percent">42.10</field>
+        <field name="tax_csll_percent">10.00</field>
+        <field name="tax_icms_percent">0.00</field>
+        <field name="tax_irpj_percent">13.50</field>
+        <field name="tax_cofins_percent">28.27</field>
+        <field name="tax_pis_percent">6.13</field>
+    </record>
+
+    <record id="simplefied_tax_anexo2" model="l10n_br_fiscal.simplified.tax">
+        <field name="name">Anexo 2 - Indústria</field>
+        <field
+            name="cnae_ids"
+            eval="[(6, 0, [ref('cnae_0710302'), ref('cnae_0721902'), ref('cnae_0722702'), ref('cnae_0723502'), ref('cnae_0724302'), ref('cnae_0729405'), ref('cnae_0810010'), ref('cnae_0892403'), ref('cnae_1011201'), ref('cnae_1011202'), ref('cnae_1011203'), ref('cnae_1011204'), ref('cnae_1011205'), ref('cnae_1012101'), ref('cnae_1012102'), ref('cnae_1012103'), ref('cnae_1012104'), ref('cnae_1013901'), ref('cnae_1013902'), ref('cnae_1020101'), ref('cnae_1020102'), ref('cnae_1031700'), ref('cnae_1032501'), ref('cnae_1032599'), ref('cnae_1033301'), ref('cnae_1033302'), ref('cnae_1041400'), ref('cnae_1042200'), ref('cnae_1043100'), ref('cnae_1051100'), ref('cnae_1052000'), ref('cnae_1053800'), ref('cnae_1061901'), ref('cnae_1061902'), ref('cnae_1062700'), ref('cnae_1063500'), ref('cnae_1064300'), ref('cnae_1065101'), ref('cnae_1065102'), ref('cnae_1065103'), ref('cnae_1066000'), ref('cnae_1069400'), ref('cnae_1071600'), ref('cnae_1072401'), ref('cnae_1072402'), ref('cnae_1081301'), ref('cnae_1081302'), ref('cnae_1082100'), ref('cnae_1091101'), ref('cnae_1092900'), ref('cnae_1093701'), ref('cnae_1093702'), ref('cnae_1094500'), ref('cnae_1095300'), ref('cnae_1096100'), ref('cnae_1099601'), ref('cnae_1099602'), ref('cnae_1099603'), ref('cnae_1099604'), ref('cnae_1099605'), ref('cnae_1099606'), ref('cnae_1099607'), ref('cnae_1099699'), ref('cnae_1121600'), ref('cnae_1122402'), ref('cnae_1122404'), ref('cnae_1210700'), ref('cnae_1311100'), ref('cnae_1312000'), ref('cnae_1313800'), ref('cnae_1314600'), ref('cnae_1321900'), ref('cnae_1322700'), ref('cnae_1323500'), ref('cnae_1330800'), ref('cnae_1340501'), ref('cnae_1340502'), ref('cnae_1340599'), ref('cnae_1351100'), ref('cnae_1352900'), ref('cnae_1353700'), ref('cnae_1354500'), ref('cnae_1359600'), ref('cnae_1411801'), ref('cnae_1411802'), ref('cnae_1412601'), ref('cnae_1412602'), ref('cnae_1412603'), ref('cnae_1413401'), ref('cnae_1413402'), ref('cnae_1413403'), ref('cnae_1414200'), ref('cnae_1421500'), ref('cnae_1422300'), ref('cnae_1510600'), ref('cnae_1521100'), ref('cnae_1529700'), ref('cnae_1531901'), ref('cnae_1532700'), ref('cnae_1533500'), ref('cnae_1539400'), ref('cnae_1540800'), ref('cnae_1621800'), ref('cnae_1622601'), ref('cnae_1622602'), ref('cnae_1622699'), ref('cnae_1623400'), ref('cnae_1629301'), ref('cnae_1629302'), ref('cnae_1710900'), ref('cnae_1721400'), ref('cnae_1722200'), ref('cnae_1731100'), ref('cnae_1732000'), ref('cnae_1733800'), ref('cnae_1741901'), ref('cnae_1741902'), ref('cnae_1742701'), ref('cnae_1742702'), ref('cnae_1742799'), ref('cnae_1749400'), ref('cnae_1811301'), ref('cnae_1811302'), ref('cnae_1812100'), ref('cnae_1910100'), ref('cnae_1921700'), ref('cnae_1922501'), ref('cnae_1922502'), ref('cnae_1922599'), ref('cnae_1931400'), ref('cnae_1932200'), ref('cnae_2011800'), ref('cnae_2012600'), ref('cnae_2013401'), ref('cnae_2013402'), ref('cnae_2014200'), ref('cnae_2019301'), ref('cnae_2019399'), ref('cnae_2021500'), ref('cnae_2022300'), ref('cnae_2029100'), ref('cnae_2031200'), ref('cnae_2032100'), ref('cnae_2033900'), ref('cnae_2040100'), ref('cnae_2051700'), ref('cnae_2052500'), ref('cnae_2061400'), ref('cnae_2062200'), ref('cnae_2063100'), ref('cnae_2071100'), ref('cnae_2072000'), ref('cnae_2073800'), ref('cnae_2091600'), ref('cnae_2092402'), ref('cnae_2092403'), ref('cnae_2093200'), ref('cnae_2094100'), ref('cnae_2099101'), ref('cnae_2099199'), ref('cnae_2110600'), ref('cnae_2121101'), ref('cnae_2121102'), ref('cnae_2121103'), ref('cnae_2122000'), ref('cnae_2123800'), ref('cnae_2211100'), ref('cnae_2219600'), ref('cnae_2221800'), ref('cnae_2222600'), ref('cnae_2223400'), ref('cnae_2229301'), ref('cnae_2229302'), ref('cnae_2229303'), ref('cnae_2229399'), ref('cnae_2311700'), ref('cnae_2312500'), ref('cnae_2319200'), ref('cnae_2320600'), ref('cnae_2330301'), ref('cnae_2330302'), ref('cnae_2330303'), ref('cnae_2330304'), ref('cnae_2330305'), ref('cnae_2330399'), ref('cnae_2341900'), ref('cnae_2342701'), ref('cnae_2342702'), ref('cnae_2349401'), ref('cnae_2349499'), ref('cnae_2391501'), ref('cnae_2391502'), ref('cnae_2391503'), ref('cnae_2392300'), ref('cnae_2399101'), ref('cnae_2399102'), ref('cnae_2399199'), ref('cnae_2411300'), ref('cnae_2412100'), ref('cnae_2421100'), ref('cnae_2422901'), ref('cnae_2422902'), ref('cnae_2423701'), ref('cnae_2423702'), ref('cnae_2424501'), ref('cnae_2424502'), ref('cnae_2431800'), ref('cnae_2439300'), ref('cnae_2441501'), ref('cnae_2441502'), ref('cnae_2442300'), ref('cnae_2443100'), ref('cnae_2449101'), ref('cnae_2449102'), ref('cnae_2449103'), ref('cnae_2449199'), ref('cnae_2451200'), ref('cnae_2452100'), ref('cnae_2511000'), ref('cnae_2512800'), ref('cnae_2513600'), ref('cnae_2521700'), ref('cnae_2522500'), ref('cnae_2531401'), ref('cnae_2531402'), ref('cnae_2532201'), ref('cnae_2532202'), ref('cnae_2541100'), ref('cnae_2542000'), ref('cnae_2543800'), ref('cnae_2591800'), ref('cnae_2592601'), ref('cnae_2592602'), ref('cnae_2593400'), ref('cnae_2599301'), ref('cnae_2599399'), ref('cnae_2610800'), ref('cnae_2621300'), ref('cnae_2622100'), ref('cnae_2631100'), ref('cnae_2632900'), ref('cnae_2640000'), ref('cnae_2651500'), ref('cnae_2652300'), ref('cnae_2660400'), ref('cnae_2670101'), ref('cnae_2670102'), ref('cnae_2680900'), ref('cnae_2710401'), ref('cnae_2710402'), ref('cnae_2710403'), ref('cnae_2721000'), ref('cnae_2722801'), ref('cnae_2722802'), ref('cnae_2731700'), ref('cnae_2732500'), ref('cnae_2733300'), ref('cnae_2740601'), ref('cnae_2740602'), ref('cnae_2751100'), ref('cnae_2759701'), ref('cnae_2759799'), ref('cnae_2790201'), ref('cnae_2790202'), ref('cnae_2790299'), ref('cnae_2811900'), ref('cnae_2812700'), ref('cnae_2813500'), ref('cnae_2814301'), ref('cnae_2814302'), ref('cnae_2815101'), ref('cnae_2815102'), ref('cnae_2821601'), ref('cnae_2821602'), ref('cnae_2822401'), ref('cnae_2822402'), ref('cnae_2823200'), ref('cnae_2824101'), ref('cnae_2824102'), ref('cnae_2825900'), ref('cnae_2829101'), ref('cnae_2829199'), ref('cnae_2831300'), ref('cnae_2832100'), ref('cnae_2833000'), ref('cnae_2840200'), ref('cnae_2851800'), ref('cnae_2852600'), ref('cnae_2853400'), ref('cnae_2854200'), ref('cnae_2861500'), ref('cnae_2862300'), ref('cnae_2863100'), ref('cnae_2864000'), ref('cnae_2865800'), ref('cnae_2866600'), ref('cnae_2869100'), ref('cnae_2910702'), ref('cnae_2910703'), ref('cnae_2920401'), ref('cnae_2920402'), ref('cnae_2930101'), ref('cnae_2930102'), ref('cnae_2930103'), ref('cnae_2941700'), ref('cnae_2942500'), ref('cnae_2943300'), ref('cnae_2944100'), ref('cnae_2945000'), ref('cnae_2949201'), ref('cnae_2949299'), ref('cnae_3011301'), ref('cnae_3011302'), ref('cnae_3012100'), ref('cnae_3031800'), ref('cnae_3032600'), ref('cnae_3041500'), ref('cnae_3042300'), ref('cnae_3050400'), ref('cnae_3091102'), ref('cnae_3092000'), ref('cnae_3099700'), ref('cnae_3101200'), ref('cnae_3102100'), ref('cnae_3103900'), ref('cnae_3104700'), ref('cnae_3211601'), ref('cnae_3211602'), ref('cnae_3211603'), ref('cnae_3212400'), ref('cnae_3220500'), ref('cnae_3230200'), ref('cnae_3240001'), ref('cnae_3240002'), ref('cnae_3240099'), ref('cnae_3250701'), ref('cnae_3250702'), ref('cnae_3250703'), ref('cnae_3250704'), ref('cnae_3250705'), ref('cnae_3250707'), ref('cnae_3291400'), ref('cnae_3292201'), ref('cnae_3292202'), ref('cnae_3299001'), ref('cnae_3299002'), ref('cnae_3299003'), ref('cnae_3299004'), ref('cnae_3299005'), ref('cnae_3299006'), ref('cnae_3299099'), ref('cnae_3520401'), ref('cnae_3530100'), ref('cnae_3831901'), ref('cnae_3831999'), ref('cnae_3832700'), ref('cnae_3839401'), ref('cnae_3839499')])]"
+        />
+        <!-- OLD CNAES ref('cnae_1091100'), ref('cnae_1610201'), ref('cnae_2013400'), ref('cnae_3250708') -->
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range1"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 1</field>
+        <field name="amount_deduced">0.00</field>
+        <field name="inital_revenue">0.00</field>
+        <field name="final_revenue">180000.00</field>
+        <field name="total_tax_percent">4.50</field>
+        <field name="tax_cpp_percent">37.50</field>
+        <field name="tax_ipi_percent">7.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">32.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">11.51</field>
+        <field name="tax_pis_percent">2.49</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range2"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 2</field>
+        <field name="amount_deduced">5940.00</field>
+        <field name="inital_revenue">180000.01</field>
+        <field name="final_revenue">360000.00</field>
+        <field name="total_tax_percent">7.80</field>
+        <field name="tax_cpp_percent">37.50</field>
+        <field name="tax_ipi_percent">7.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">32.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">11.51</field>
+        <field name="tax_pis_percent">2.49</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range3"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 3</field>
+        <field name="amount_deduced">13860.00</field>
+        <field name="inital_revenue">360000.01</field>
+        <field name="final_revenue">720000.00</field>
+        <field name="total_tax_percent">10.00</field>
+        <field name="tax_cpp_percent">37.50</field>
+        <field name="tax_ipi_percent">7.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">32.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">11.51</field>
+        <field name="tax_pis_percent">2.49</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range4"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 4</field>
+        <field name="amount_deduced">22500.00</field>
+        <field name="inital_revenue">720000.01</field>
+        <field name="final_revenue">1800000.00</field>
+        <field name="total_tax_percent">11.20</field>
+        <field name="tax_cpp_percent">37.50</field>
+        <field name="tax_ipi_percent">7.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">32.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">11.51</field>
+        <field name="tax_pis_percent">2.49</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range5"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 5</field>
+        <field name="amount_deduced">85500.00</field>
+        <field name="inital_revenue">1800000.01</field>
+        <field name="final_revenue">3600000.00</field>
+        <field name="total_tax_percent">14.70</field>
+        <field name="tax_cpp_percent">37.50</field>
+        <field name="tax_ipi_percent">7.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_icms_percent">32.00</field>
+        <field name="tax_irpj_percent">5.50</field>
+        <field name="tax_cofins_percent">11.51</field>
+        <field name="tax_pis_percent">2.49</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo2_range6"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo2" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 6</field>
+        <field name="amount_deduced">720000.00</field>
+        <field name="inital_revenue">3600000.01</field>
+        <field name="final_revenue">4800000.00</field>
+        <field name="total_tax_percent">30.00</field>
+        <field name="tax_cpp_percent">23.50</field>
+        <field name="tax_ipi_percent">35.00</field>
+        <field name="tax_csll_percent">7.50</field>
+        <field name="tax_icms_percent">0.00</field>
+        <field name="tax_irpj_percent">8.50</field>
+        <field name="tax_cofins_percent">20.96</field>
+        <field name="tax_pis_percent">4.54</field>
+    </record>
+
+    <record id="simplefied_tax_anexo3" model="l10n_br_fiscal.simplified.tax">
+        <field name="name">Anexo 3 - Prestadores de Serviços</field>
+        <field
+            name="cnae_ids"
+            eval="[(6, 0, [ref('cnae_0161001'), ref('cnae_0161002'), ref('cnae_0161003'), ref('cnae_0161099'), ref('cnae_0162802'), ref('cnae_0162803'), ref('cnae_0162899'), ref('cnae_0163600'), ref('cnae_0230600'), ref('cnae_0311604'), ref('cnae_0312404'), ref('cnae_0321305'), ref('cnae_0322107'), ref('cnae_0990401'), ref('cnae_0990402'), ref('cnae_0990403'), ref('cnae_1531902'), ref('cnae_1813001'), ref('cnae_1813099'), ref('cnae_1821100'), ref('cnae_1822901'), ref('cnae_1822999'), ref('cnae_1830001'), ref('cnae_1830002'), ref('cnae_2539001'), ref('cnae_2539002'), ref('cnae_2599302'), ref('cnae_2950600'), ref('cnae_3250706'), ref('cnae_3250709'), ref('cnae_3311200'), ref('cnae_3312102'), ref('cnae_3312103'), ref('cnae_3312104'), ref('cnae_3313901'), ref('cnae_3313902'), ref('cnae_3313999'), ref('cnae_3314701'), ref('cnae_3314702'), ref('cnae_3314703'), ref('cnae_3314704'), ref('cnae_3314705'), ref('cnae_3314706'), ref('cnae_3314707'), ref('cnae_3314708'), ref('cnae_3314709'), ref('cnae_3314710'), ref('cnae_3314711'), ref('cnae_3314712'), ref('cnae_3314713'), ref('cnae_3314714'), ref('cnae_3314715'), ref('cnae_3314716'), ref('cnae_3314717'), ref('cnae_3314718'), ref('cnae_3314719'), ref('cnae_3314720'), ref('cnae_3314721'), ref('cnae_3314722'), ref('cnae_3314799'), ref('cnae_3315500'), ref('cnae_3316301'), ref('cnae_3316302'), ref('cnae_3317101'), ref('cnae_3317102'), ref('cnae_3319800'), ref('cnae_3321000'), ref('cnae_3329501'), ref('cnae_3329599'), ref('cnae_3811400'), ref('cnae_3812200'), ref('cnae_4211102'), ref('cnae_4212000'), ref('cnae_4221903'), ref('cnae_4221905'), ref('cnae_4322302'), ref('cnae_4322303'), ref('cnae_4329101'), ref('cnae_4329102'), ref('cnae_4329103'), ref('cnae_4329104'), ref('cnae_4329105'), ref('cnae_4329199'), ref('cnae_4399102'), ref('cnae_4399104'), ref('cnae_4520001'), ref('cnae_4520002'), ref('cnae_4520003'), ref('cnae_4520004'), ref('cnae_4520005'), ref('cnae_4520006'), ref('cnae_4520007'), ref('cnae_4520008'), ref('cnae_4543900'), ref('cnae_4751202'), ref('cnae_4911600'), ref('cnae_4912402'), ref('cnae_4912403'), ref('cnae_4921301'), ref('cnae_4922103'), ref('cnae_4923001'), ref('cnae_4923002'), ref('cnae_4924800'), ref('cnae_4929901'), ref('cnae_4929903'), ref('cnae_4930201'), ref('cnae_4930202'), ref('cnae_4930203'), ref('cnae_4930204'), ref('cnae_4940000'), ref('cnae_4950700'), ref('cnae_5011401'), ref('cnae_5012201'), ref('cnae_5012202'), ref('cnae_5021101'), ref('cnae_5021102'), ref('cnae_5022001'), ref('cnae_5022002'), ref('cnae_5030101'), ref('cnae_5030102'), ref('cnae_5030103'), ref('cnae_5091201'), ref('cnae_5099801'), ref('cnae_5099899'), ref('cnae_5111100'), ref('cnae_5112901'), ref('cnae_5112999'), ref('cnae_5120000'), ref('cnae_5130700'), ref('cnae_5211701'), ref('cnae_5211702'), ref('cnae_5211799'), ref('cnae_5212500'), ref('cnae_5221400'), ref('cnae_5223100'), ref('cnae_5229001'), ref('cnae_5229002'), ref('cnae_5229099'), ref('cnae_5231102'), ref('cnae_5231103'), ref('cnae_5239701'), ref('cnae_5239799'), ref('cnae_5240199'), ref('cnae_5250803'), ref('cnae_5310502'), ref('cnae_5320201'), ref('cnae_5320202'), ref('cnae_5510801'), ref('cnae_5510802'), ref('cnae_5510803'), ref('cnae_5590601'), ref('cnae_5590602'), ref('cnae_5590603'), ref('cnae_5590699'), ref('cnae_5620102'), ref('cnae_5811500'), ref('cnae_5812301'), ref('cnae_5812302'), ref('cnae_5813100'), ref('cnae_5819100'), ref('cnae_5821200'), ref('cnae_5822101'), ref('cnae_5822102'), ref('cnae_5823900'), ref('cnae_5829800'), ref('cnae_5911101'), ref('cnae_5911102'), ref('cnae_5911199'), ref('cnae_5912001'), ref('cnae_5912002'), ref('cnae_5912099'), ref('cnae_5913800'), ref('cnae_5914600'), ref('cnae_5920100'), ref('cnae_6010100'), ref('cnae_6021700'), ref('cnae_6022501'), ref('cnae_6110801'), ref('cnae_6110802'), ref('cnae_6110803'), ref('cnae_6110899'), ref('cnae_6120501'), ref('cnae_6120502'), ref('cnae_6120599'), ref('cnae_6130200'), ref('cnae_6141800'), ref('cnae_6142600'), ref('cnae_6143400'), ref('cnae_6190601'), ref('cnae_6190602'), ref('cnae_6190699'), ref('cnae_6201501'), ref('cnae_6201502'), ref('cnae_6202300'), ref('cnae_6203100'), ref('cnae_6209100'), ref('cnae_6311900'), ref('cnae_6319400'), ref('cnae_6391700'), ref('cnae_6399200'), ref('cnae_6493000'), ref('cnae_6622300'), ref('cnae_6821801'), ref('cnae_6821802'), ref('cnae_6822600'), ref('cnae_6920601'), ref('cnae_7111100'), ref('cnae_7312200'), ref('cnae_7319002'), ref('cnae_7319003'), ref('cnae_7319099'), ref('cnae_7420001'), ref('cnae_7420002'), ref('cnae_7420003'), ref('cnae_7420004'), ref('cnae_7420005'), ref('cnae_7490102'), ref('cnae_7711000'), ref('cnae_7719501'), ref('cnae_7719502'), ref('cnae_7719599'), ref('cnae_7721700'), ref('cnae_7722500'), ref('cnae_7723300'), ref('cnae_7729201'), ref('cnae_7729202'), ref('cnae_7729203'), ref('cnae_7729299'), ref('cnae_7731400'), ref('cnae_7732201'), ref('cnae_7732202'), ref('cnae_7733100'), ref('cnae_7739001'), ref('cnae_7739002'), ref('cnae_7739003'), ref('cnae_7739099'), ref('cnae_7911200'), ref('cnae_7912100'), ref('cnae_7990200'), ref('cnae_8011102'), ref('cnae_8211300'), ref('cnae_8219901'), ref('cnae_8219999'), ref('cnae_8220200'), ref('cnae_8230001'), ref('cnae_8230002'), ref('cnae_8291100'), ref('cnae_8292000'), ref('cnae_8299701'), ref('cnae_8299703'), ref('cnae_8299706'), ref('cnae_8299707'), ref('cnae_8299799'), ref('cnae_8511200'), ref('cnae_8512100'), ref('cnae_8513900'), ref('cnae_8520100'), ref('cnae_8541400'), ref('cnae_8591100'), ref('cnae_8592901'), ref('cnae_8592902'), ref('cnae_8592903'), ref('cnae_8592999'), ref('cnae_8593700'), ref('cnae_8599601'), ref('cnae_8599602'), ref('cnae_8599603'), ref('cnae_8599604'), ref('cnae_8599605'), ref('cnae_8599699'), ref('cnae_8610101'), ref('cnae_8610102'), ref('cnae_8621601'), ref('cnae_8621602'), ref('cnae_8630501'), ref('cnae_8630502'), ref('cnae_8630503'), ref('cnae_8630504'), ref('cnae_8630506'), ref('cnae_8630507'), ref('cnae_8630599'), ref('cnae_8640201'), ref('cnae_8640202'), ref('cnae_8640203'), ref('cnae_8640204'), ref('cnae_8640205'), ref('cnae_8640206'), ref('cnae_8640207'), ref('cnae_8640208'), ref('cnae_8640209'), ref('cnae_8640210'), ref('cnae_8640211'), ref('cnae_8640212'), ref('cnae_8640213'), ref('cnae_8640214'), ref('cnae_8640299'), ref('cnae_8650001'), ref('cnae_8650002'), ref('cnae_8650003'), ref('cnae_8650004'), ref('cnae_8650004'), ref('cnae_8650005'), ref('cnae_8650006'), ref('cnae_8690902'), ref('cnae_8690903'), ref('cnae_8690904'), ref('cnae_8711502'), ref('cnae_8711505'), ref('cnae_8712300'), ref('cnae_8730101'), ref('cnae_8730102'), ref('cnae_9001901'), ref('cnae_9001902'), ref('cnae_9001903'), ref('cnae_9001904'), ref('cnae_9001905'), ref('cnae_9001906'), ref('cnae_9001999'), ref('cnae_9002702'), ref('cnae_9003500'), ref('cnae_9101500'), ref('cnae_9102301'), ref('cnae_9102302'), ref('cnae_9103100'), ref('cnae_9200301'), ref('cnae_9200302'), ref('cnae_9200399'), ref('cnae_9311500'), ref('cnae_9312300'), ref('cnae_9313100'), ref('cnae_9319101'), ref('cnae_9319199'), ref('cnae_9321200'), ref('cnae_9329801'), ref('cnae_9329802'), ref('cnae_9329803'), ref('cnae_9329804'), ref('cnae_9329899'), ref('cnae_9511800'), ref('cnae_9512600'), ref('cnae_9521500'), ref('cnae_9529101'), ref('cnae_9529102'), ref('cnae_9529103'), ref('cnae_9529104'), ref('cnae_9529105'), ref('cnae_9529106'), ref('cnae_9529199'), ref('cnae_9601701'), ref('cnae_9601702'), ref('cnae_9601703'), ref('cnae_9602501'), ref('cnae_9602502'), ref('cnae_9603301'), ref('cnae_9603302'), ref('cnae_9603303'), ref('cnae_9603304'), ref('cnae_9603305'), ref('cnae_9603399'), ref('cnae_9609202'), ref('cnae_9609204'), ref('cnae_9609205'), ref('cnae_9609206'), ref('cnae_9609207'), ref('cnae_9609208'), ref('cnae_9609299')])]"
+        />
+        <!-- OLD CNAES ref('cnae_1822900'), ref('cnae_2539000'), ref('cnae_3312101'), ref('cnae_5239700'), ref('cnae_5812300'), ref('cnae_5822100'), ref('cnae_9609203') -->
+        <field name="coefficient_r" eval="True" />
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range1"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 1</field>
+        <field name="amount_deduced">0.00</field>
+        <field name="inital_revenue">0.00</field>
+        <field name="final_revenue">180000.00</field>
+        <field name="total_tax_percent">6.00</field>
+        <field name="tax_cpp_percent">43.40</field>
+        <field name="tax_iss_percent">33.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_irpj_percent">4.00</field>
+        <field name="tax_cofins_percent">12.82</field>
+        <field name="tax_pis_percent">2.78</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range2"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 2</field>
+        <field name="amount_deduced">9360.00</field>
+        <field name="inital_revenue">180000.01</field>
+        <field name="final_revenue">360000.00</field>
+        <field name="total_tax_percent">11.20</field>
+        <field name="tax_cpp_percent">43.40</field>
+        <field name="tax_iss_percent">32.00</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_irpj_percent">4.00</field>
+        <field name="tax_cofins_percent">14.05</field>
+        <field name="tax_pis_percent">3.05</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range3"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 3</field>
+        <field name="amount_deduced">17640.00</field>
+        <field name="inital_revenue">360000.01</field>
+        <field name="final_revenue">720000.00</field>
+        <field name="total_tax_percent">13.50</field>
+        <field name="tax_cpp_percent">43.40</field>
+        <field name="tax_iss_percent">32.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_irpj_percent">4.00</field>
+        <field name="tax_cofins_percent">13.64</field>
+        <field name="tax_pis_percent">2.96</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range4"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 4</field>
+        <field name="amount_deduced">35640.00</field>
+        <field name="inital_revenue">720000.01</field>
+        <field name="final_revenue">1800000.00</field>
+        <field name="total_tax_percent">16.00</field>
+        <field name="tax_cpp_percent">43.40</field>
+        <field name="tax_iss_percent">32.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_irpj_percent">4.00</field>
+        <field name="tax_cofins_percent">13.64</field>
+        <field name="tax_pis_percent">2.96</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range5"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 5</field>
+        <field name="amount_deduced">125640.00</field>
+        <field name="inital_revenue">1800000.01</field>
+        <field name="final_revenue">3600000.00</field>
+        <field name="total_tax_percent">21.00</field>
+        <field name="tax_cpp_percent">43.40</field>
+        <field name="tax_iss_percent">33.50</field>
+        <field name="tax_csll_percent">3.50</field>
+        <field name="tax_irpj_percent">4.00</field>
+        <field name="tax_cofins_percent">12.82</field>
+        <field name="tax_pis_percent">2.78</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo3_range6"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo3" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 6</field>
+        <field name="amount_deduced">648000.00</field>
+        <field name="inital_revenue">3600000.01</field>
+        <field name="final_revenue">4800000.00</field>
+        <field name="total_tax_percent">33.00</field>
+        <field name="tax_cpp_percent">30.50</field>
+        <field name="tax_iss_percent">0.00</field>
+        <field name="tax_csll_percent">15.00</field>
+        <field name="tax_irpj_percent">35.00</field>
+        <field name="tax_cofins_percent">16.03</field>
+        <field name="tax_pis_percent">3.47</field>
+    </record>
+
+    <record id="simplefied_tax_anexo4" model="l10n_br_fiscal.simplified.tax">
+        <field name="name">Anexo 4 - Prestadores de Serviços</field>
+        <field
+            name="cnae_ids"
+            eval="[(6, 0, [ref('cnae_3702900'), ref('cnae_4120400'), ref('cnae_4211101'), ref('cnae_4213800'), ref('cnae_4221901'), ref('cnae_4221902'), ref('cnae_4221904'), ref('cnae_4222701'), ref('cnae_4222702'), ref('cnae_4223500'), ref('cnae_4291000'), ref('cnae_4292801'), ref('cnae_4292802'), ref('cnae_4299501'), ref('cnae_4299599'), ref('cnae_4311801'), ref('cnae_4311802'), ref('cnae_4312600'), ref('cnae_4313400'), ref('cnae_4319300'), ref('cnae_4321500'), ref('cnae_4322301'), ref('cnae_4330401'), ref('cnae_4330402'), ref('cnae_4330403'), ref('cnae_4330404'), ref('cnae_4330405'), ref('cnae_4330499'), ref('cnae_4391600'), ref('cnae_4399103'), ref('cnae_4399105'), ref('cnae_4399199'), ref('cnae_6911701'), ref('cnae_7410202'), ref('cnae_8011101'), ref('cnae_8012900'), ref('cnae_8020001'), ref('cnae_8020002'), ref('cnae_8111700'), ref('cnae_8121400'), ref('cnae_8122200'), ref('cnae_8129000'), ref('cnae_8130300'), ref('cnae_9700500')])]"
+        />
+        <!-- OLD CNAES ref('cnae_8020000'), ref('cnae_9900800') -->
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range1"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 1</field>
+        <field name="amount_deduced">0.00</field>
+        <field name="inital_revenue">0.00</field>
+        <field name="final_revenue">180000.00</field>
+        <field name="total_tax_percent">4.50</field>
+        <field name="tax_iss_percent">44.50</field>
+        <field name="tax_csll_percent">15.20</field>
+        <field name="tax_irpj_percent">18.80</field>
+        <field name="tax_cofins_percent">17.67</field>
+        <field name="tax_pis_percent">3.83</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range2"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 2</field>
+        <field name="amount_deduced">8100.00</field>
+        <field name="inital_revenue">180000.01</field>
+        <field name="final_revenue">360000.00</field>
+        <field name="total_tax_percent">9.00</field>
+        <field name="tax_iss_percent">40.00</field>
+        <field name="tax_csll_percent">15.20</field>
+        <field name="tax_irpj_percent">19.80</field>
+        <field name="tax_cofins_percent">20.55</field>
+        <field name="tax_pis_percent">4.45</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range3"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 3</field>
+        <field name="amount_deduced">12420.00</field>
+        <field name="inital_revenue">360000.01</field>
+        <field name="final_revenue">720000.00</field>
+        <field name="total_tax_percent">10.20</field>
+        <field name="tax_iss_percent">40.00</field>
+        <field name="tax_csll_percent">15.20</field>
+        <field name="tax_irpj_percent">20.80</field>
+        <field name="tax_cofins_percent">19.73</field>
+        <field name="tax_pis_percent">4.27</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range4"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 4</field>
+        <field name="amount_deduced">39780.00</field>
+        <field name="inital_revenue">720000.01</field>
+        <field name="final_revenue">1800000.00</field>
+        <field name="total_tax_percent">14.00</field>
+        <field name="tax_iss_percent">40.00</field>
+        <field name="tax_csll_percent">19.20</field>
+        <field name="tax_irpj_percent">17.80</field>
+        <field name="tax_cofins_percent">18.90</field>
+        <field name="tax_pis_percent">4.10</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range5"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 5</field>
+        <field name="amount_deduced">183780.00</field>
+        <field name="inital_revenue">1800000.01</field>
+        <field name="final_revenue">3600000.00</field>
+        <field name="total_tax_percent">22.00</field>
+        <field name="tax_iss_percent">40.00</field>
+        <field name="tax_csll_percent">19.20</field>
+        <field name="tax_irpj_percent">18.80</field>
+        <field name="tax_cofins_percent">18.08</field>
+        <field name="tax_pis_percent">3.92</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo4_range6"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo4" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 6</field>
+        <field name="amount_deduced">828000.00</field>
+        <field name="inital_revenue">3600000.01</field>
+        <field name="final_revenue">4800000.00</field>
+        <field name="total_tax_percent">33.00</field>
+        <field name="tax_iss_percent">0.00</field>
+        <field name="tax_csll_percent">21.50</field>
+        <field name="tax_irpj_percent">53.50</field>
+        <field name="tax_cofins_percent">20.55</field>
+        <field name="tax_pis_percent">4.45</field>
+    </record>
+
+    <record id="simplefied_tax_anexo5" model="l10n_br_fiscal.simplified.tax">
+        <field name="name">Anexo 5 - Prestadores de Serviços</field>
+        <field
+            name="cnae_ids"
+            eval="[(6, 0, [
+            ref('cnae_0161001'), ref('cnae_0161002'), ref('cnae_0161003'), ref('cnae_0161099'), ref('cnae_0162802'), ref('cnae_0162803'), ref('cnae_0162899'), ref('cnae_0163600'), ref('cnae_0230600'), ref('cnae_0311604'), ref('cnae_0312404'), ref('cnae_0321305'), ref('cnae_0322107'), ref('cnae_0990401'), ref('cnae_0990402'), ref('cnae_0990403'), ref('cnae_1531902'), ref('cnae_1813001'), ref('cnae_1813099'), ref('cnae_1821100'), ref('cnae_1822901'), ref('cnae_1822999'), ref('cnae_1830001'), ref('cnae_1830002'), ref('cnae_2539001'), ref('cnae_2539002'), ref('cnae_2599302'), ref('cnae_2950600'), ref('cnae_3250706'), ref('cnae_3250709'), ref('cnae_3311200'), ref('cnae_3312102'), ref('cnae_3312103'), ref('cnae_3312104'), ref('cnae_3313901'), ref('cnae_3313902'), ref('cnae_3313999'), ref('cnae_3314701'), ref('cnae_3314702'), ref('cnae_3314703'), ref('cnae_3314704'), ref('cnae_3314705'), ref('cnae_3314706'), ref('cnae_3314707'), ref('cnae_3314708'), ref('cnae_3314709'), ref('cnae_3314710'), ref('cnae_3314711'), ref('cnae_3314712'), ref('cnae_3314713'), ref('cnae_3314714'), ref('cnae_3314715'), ref('cnae_3314716'), ref('cnae_3314717'), ref('cnae_3314718'), ref('cnae_3314719'), ref('cnae_3314720'), ref('cnae_3314721'), ref('cnae_3314722'), ref('cnae_3314799'), ref('cnae_3315500'), ref('cnae_3316301'), ref('cnae_3316302'), ref('cnae_3317101'), ref('cnae_3317102'), ref('cnae_3319800'), ref('cnae_3321000'), ref('cnae_3329501'), ref('cnae_3329599'), ref('cnae_3811400'), ref('cnae_3812200'), ref('cnae_4211102'), ref('cnae_4212000'), ref('cnae_4221903'), ref('cnae_4221905'), ref('cnae_4322302'), ref('cnae_4322303'), ref('cnae_4329101'), ref('cnae_4329102'), ref('cnae_4329103'), ref('cnae_4329104'), ref('cnae_4329105'), ref('cnae_4329199'), ref('cnae_4399102'), ref('cnae_4399104'), ref('cnae_4520001'), ref('cnae_4520002'), ref('cnae_4520003'), ref('cnae_4520004'), ref('cnae_4520005'), ref('cnae_4520006'), ref('cnae_4520007'), ref('cnae_4520008'), ref('cnae_4543900'), ref('cnae_4751202'), ref('cnae_4911600'), ref('cnae_4912402'), ref('cnae_4912403'), ref('cnae_4921301'), ref('cnae_4922103'), ref('cnae_4923001'), ref('cnae_4923002'), ref('cnae_4924800'), ref('cnae_4929901'), ref('cnae_4929903'), ref('cnae_4930201'), ref('cnae_4930202'), ref('cnae_4930203'), ref('cnae_4930204'), ref('cnae_4940000'), ref('cnae_4950700'), ref('cnae_5011401'), ref('cnae_5012201'), ref('cnae_5012202'), ref('cnae_5021101'), ref('cnae_5021102'), ref('cnae_5022001'), ref('cnae_5022002'), ref('cnae_5030101'), ref('cnae_5030102'), ref('cnae_5030103'), ref('cnae_5091201'), ref('cnae_5099801'), ref('cnae_5099899'), ref('cnae_5111100'), ref('cnae_5112901'), ref('cnae_5112999'), ref('cnae_5120000'), ref('cnae_5130700'), ref('cnae_5211701'), ref('cnae_5211702'), ref('cnae_5211799'), ref('cnae_5212500'), ref('cnae_5221400'), ref('cnae_5223100'), ref('cnae_5229001'), ref('cnae_5229002'), ref('cnae_5229099'), ref('cnae_5231102'), ref('cnae_5231103'), ref('cnae_5239701'), ref('cnae_5239799'), ref('cnae_5240199'), ref('cnae_5250803'), ref('cnae_5310502'), ref('cnae_5320201'), ref('cnae_5320202'), ref('cnae_5510801'), ref('cnae_5510802'), ref('cnae_5510803'), ref('cnae_5590601'), ref('cnae_5590602'), ref('cnae_5590603'), ref('cnae_5590699'), ref('cnae_5620102'), ref('cnae_5811500'), ref('cnae_5812301'), ref('cnae_5812302'), ref('cnae_5813100'), ref('cnae_5819100'), ref('cnae_5821200'), ref('cnae_5822101'), ref('cnae_5822102'), ref('cnae_5823900'), ref('cnae_5829800'), ref('cnae_5911101'), ref('cnae_5911102'), ref('cnae_5911199'), ref('cnae_5912001'), ref('cnae_5912002'), ref('cnae_5912099'), ref('cnae_5913800'), ref('cnae_5914600'), ref('cnae_5920100'), ref('cnae_6010100'), ref('cnae_6021700'), ref('cnae_6022501'), ref('cnae_6110801'), ref('cnae_6110802'), ref('cnae_6110803'), ref('cnae_6110899'), ref('cnae_6120501'), ref('cnae_6120502'), ref('cnae_6120599'), ref('cnae_6130200'), ref('cnae_6141800'), ref('cnae_6142600'), ref('cnae_6143400'), ref('cnae_6190601'), ref('cnae_6190602'), ref('cnae_6190699'), ref('cnae_6201501'), ref('cnae_6201502'), ref('cnae_6202300'), ref('cnae_6203100'), ref('cnae_6209100'), ref('cnae_6311900'), ref('cnae_6319400'), ref('cnae_6391700'), ref('cnae_6399200'), ref('cnae_6493000'), ref('cnae_6622300'), ref('cnae_6821801'), ref('cnae_6821802'), ref('cnae_6822600'), ref('cnae_6920601'), ref('cnae_7111100'), ref('cnae_7312200'), ref('cnae_7319002'), ref('cnae_7319003'), ref('cnae_7319099'), ref('cnae_7420001'), ref('cnae_7420002'), ref('cnae_7420003'), ref('cnae_7420004'), ref('cnae_7420005'), ref('cnae_7490102'), ref('cnae_7711000'), ref('cnae_7719501'), ref('cnae_7719502'), ref('cnae_7719599'), ref('cnae_7721700'), ref('cnae_7722500'), ref('cnae_7723300'), ref('cnae_7729201'), ref('cnae_7729202'), ref('cnae_7729203'), ref('cnae_7729299'), ref('cnae_7731400'), ref('cnae_7732201'), ref('cnae_7732202'), ref('cnae_7733100'), ref('cnae_7739001'), ref('cnae_7739002'), ref('cnae_7739003'), ref('cnae_7739099'), ref('cnae_7911200'), ref('cnae_7912100'), ref('cnae_7990200'), ref('cnae_8011102'), ref('cnae_8211300'), ref('cnae_8219901'), ref('cnae_8219999'), ref('cnae_8220200'), ref('cnae_8230001'), ref('cnae_8230002'), ref('cnae_8291100'), ref('cnae_8292000'), ref('cnae_8299701'), ref('cnae_8299703'), ref('cnae_8299706'), ref('cnae_8299707'), ref('cnae_8299799'), ref('cnae_8511200'), ref('cnae_8512100'), ref('cnae_8513900'), ref('cnae_8520100'), ref('cnae_8541400'), ref('cnae_8591100'), ref('cnae_8592901'), ref('cnae_8592902'), ref('cnae_8592903'), ref('cnae_8592999'), ref('cnae_8593700'), ref('cnae_8599601'), ref('cnae_8599602'), ref('cnae_8599603'), ref('cnae_8599604'), ref('cnae_8599605'), ref('cnae_8599699'), ref('cnae_8610101'), ref('cnae_8610102'), ref('cnae_8621601'), ref('cnae_8621602'), ref('cnae_8630501'), ref('cnae_8630502'), ref('cnae_8630503'), ref('cnae_8630504'), ref('cnae_8630506'), ref('cnae_8630507'), ref('cnae_8630599'), ref('cnae_8640201'), ref('cnae_8640202'), ref('cnae_8640203'), ref('cnae_8640204'), ref('cnae_8640205'), ref('cnae_8640206'), ref('cnae_8640207'), ref('cnae_8640208'), ref('cnae_8640209'), ref('cnae_8640210'), ref('cnae_8640211'), ref('cnae_8640212'), ref('cnae_8640213'), ref('cnae_8640214'), ref('cnae_8640299'), ref('cnae_8650001'), ref('cnae_8650002'), ref('cnae_8650003'), ref('cnae_8650004'), ref('cnae_8650004'), ref('cnae_8650005'), ref('cnae_8650006'), ref('cnae_8690902'), ref('cnae_8690903'), ref('cnae_8690904'), ref('cnae_8711502'), ref('cnae_8711505'), ref('cnae_8712300'), ref('cnae_8730101'), ref('cnae_8730102'), ref('cnae_9001901'), ref('cnae_9001902'), ref('cnae_9001903'), ref('cnae_9001904'), ref('cnae_9001905'), ref('cnae_9001906'), ref('cnae_9001999'), ref('cnae_9002702'), ref('cnae_9003500'), ref('cnae_9101500'), ref('cnae_9102301'), ref('cnae_9102302'), ref('cnae_9103100'), ref('cnae_9200301'), ref('cnae_9200302'), ref('cnae_9200399'), ref('cnae_9311500'), ref('cnae_9312300'), ref('cnae_9313100'), ref('cnae_9319101'), ref('cnae_9319199'), ref('cnae_9321200'), ref('cnae_9329801'), ref('cnae_9329802'), ref('cnae_9329803'), ref('cnae_9329804'), ref('cnae_9329899'), ref('cnae_9511800'), ref('cnae_9512600'), ref('cnae_9521500'), ref('cnae_9529101'), ref('cnae_9529102'), ref('cnae_9529103'), ref('cnae_9529104'), ref('cnae_9529105'), ref('cnae_9529106'), ref('cnae_9529199'), ref('cnae_9601701'), ref('cnae_9601702'), ref('cnae_9601703'), ref('cnae_9602501'), ref('cnae_9602502'), ref('cnae_9603301'), ref('cnae_9603302'), ref('cnae_9603303'), ref('cnae_9603304'), ref('cnae_9603305'), ref('cnae_9603399'), ref('cnae_9609202'), ref('cnae_9609204'), ref('cnae_9609205'), ref('cnae_9609206'), ref('cnae_9609207'), ref('cnae_9609208'), ref('cnae_9609299'),
+            ref('cnae_1830003'), ref('cnae_3250706'), ref('cnae_3250709'), ref('cnae_4512901'), ref('cnae_4530706'), ref('cnae_4542101'), ref('cnae_4611700'), ref('cnae_4612500'), ref('cnae_4613300'), ref('cnae_4614100'), ref('cnae_4615000'), ref('cnae_4616800'), ref('cnae_4617600'), ref('cnae_4618401'), ref('cnae_4618402'), ref('cnae_4618403'), ref('cnae_4618499'), ref('cnae_4619200'), ref('cnae_6201501'), ref('cnae_6201502'), ref('cnae_6202300'), ref('cnae_6203100'), ref('cnae_6204000'), ref('cnae_6209100'), ref('cnae_6311900'), ref('cnae_6319400'), ref('cnae_6621501'), ref('cnae_6621502'), ref('cnae_6822600'), ref('cnae_6911703'), ref('cnae_6920602'), ref('cnae_7020400'), ref('cnae_7112000'), ref('cnae_7119701'), ref('cnae_7119702'), ref('cnae_7119703'), ref('cnae_7119704'), ref('cnae_7119799'), ref('cnae_7120100'), ref('cnae_7210000'), ref('cnae_7220700'), ref('cnae_7311400'), ref('cnae_7319001'), ref('cnae_7319004'), ref('cnae_7320300'), ref('cnae_7410202'), ref('cnae_7410203'), ref('cnae_7410299'), ref('cnae_7490101'), ref('cnae_7490103'), ref('cnae_7490104'), ref('cnae_7490105'), ref('cnae_7490199'), ref('cnae_7500100'), ref('cnae_7740300'), ref('cnae_7810800'), ref('cnae_8030700'), ref('cnae_8299799'), ref('cnae_8531700'), ref('cnae_8532500'), ref('cnae_8533300'), ref('cnae_8542200'), ref('cnae_8550302'), ref('cnae_8591100'), ref('cnae_8592901'), ref('cnae_8622400'), ref('cnae_8640201'), ref('cnae_8640202'), ref('cnae_8640204'), ref('cnae_8640205'), ref('cnae_8640206'), ref('cnae_8640207'), ref('cnae_8640208'), ref('cnae_8640209'), ref('cnae_8650007'), ref('cnae_8650099'), ref('cnae_8660700'), ref('cnae_8690901'), ref('cnae_8690999'), ref('cnae_8711501'), ref('cnae_8711503'), ref('cnae_8711504'), ref('cnae_8720401'), ref('cnae_8720499'), ref('cnae_8730199'), ref('cnae_8800600'), ref('cnae_9002701'), ref('cnae_9313100')])]"
+        />
+        <!-- OLD CNAE ref('cnae_6201500') -->
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range1"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 1</field>
+        <field name="amount_deduced">0.00</field>
+        <field name="inital_revenue">0.00</field>
+        <field name="final_revenue">180000.00</field>
+        <field name="total_tax_percent">15.50</field>
+        <field name="tax_cpp_percent">28.85</field>
+        <field name="tax_iss_percent">14.00</field>
+        <field name="tax_csll_percent">15.00</field>
+        <field name="tax_irpj_percent">25.00</field>
+        <field name="tax_cofins_percent">14.10</field>
+        <field name="tax_pis_percent">3.05</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range2"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 2</field>
+        <field name="amount_deduced">4500.00</field>
+        <field name="inital_revenue">180000.01</field>
+        <field name="final_revenue">360000.00</field>
+        <field name="total_tax_percent">18.00</field>
+        <field name="tax_cpp_percent">27.85</field>
+        <field name="tax_iss_percent">17.00</field>
+        <field name="tax_csll_percent">15.00</field>
+        <field name="tax_irpj_percent">23.00</field>
+        <field name="tax_cofins_percent">14.10</field>
+        <field name="tax_pis_percent">3.05</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range3"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 3</field>
+        <field name="amount_deduced">9900.00</field>
+        <field name="inital_revenue">360000.01</field>
+        <field name="final_revenue">720000.00</field>
+        <field name="total_tax_percent">19.50</field>
+        <field name="tax_cpp_percent">23.85</field>
+        <field name="tax_iss_percent">19.00</field>
+        <field name="tax_csll_percent">15.00</field>
+        <field name="tax_irpj_percent">24.00</field>
+        <field name="tax_cofins_percent">14.92</field>
+        <field name="tax_pis_percent">3.23</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range4"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 4</field>
+        <field name="amount_deduced">17100.00</field>
+        <field name="inital_revenue">720000.01</field>
+        <field name="final_revenue">1800000.00</field>
+        <field name="total_tax_percent">20.50</field>
+        <field name="tax_cpp_percent">23.85</field>
+        <field name="tax_iss_percent">21.00</field>
+        <field name="tax_csll_percent">15.00</field>
+        <field name="tax_irpj_percent">21.00</field>
+        <field name="tax_cofins_percent">21.00</field>
+        <field name="tax_pis_percent">3.41</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range5"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 5</field>
+        <field name="amount_deduced">62100.00</field>
+        <field name="inital_revenue">1800000.01</field>
+        <field name="final_revenue">3600000.00</field>
+        <field name="total_tax_percent">23.00</field>
+        <field name="tax_cpp_percent">23.85</field>
+        <field name="tax_iss_percent">23.50</field>
+        <field name="tax_csll_percent">12.50</field>
+        <field name="tax_irpj_percent">23.00</field>
+        <field name="tax_cofins_percent">14.10</field>
+        <field name="tax_pis_percent">3.05</field>
+    </record>
+
+    <record
+        id="simplefied_tax_anexo5_range6"
+        model="l10n_br_fiscal.simplified.tax.range"
+    >
+        <field name="simplified_tax_id" ref="simplefied_tax_anexo5" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="name">Faixa 6</field>
+        <field name="amount_deduced">540000.00</field>
+        <field name="inital_revenue">3600000.01</field>
+        <field name="final_revenue">4800000.00</field>
+        <field name="total_tax_percent">30.50</field>
+        <field name="tax_cpp_percent">29.50</field>
+        <field name="tax_iss_percent">0.00</field>
+        <field name="tax_csll_percent">15.50</field>
+        <field name="tax_irpj_percent">35.00</field>
+        <field name="tax_cofins_percent">16.44</field>
+        <field name="tax_pis_percent">3.56</field>
+    </record>
+
+</odoo>

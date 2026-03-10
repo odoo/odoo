@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Customer and vendor statements -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.base.account.report
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page name="customer_statement_page"
+                      string="Customer Statement">
+                    <button name="action_print_pdf" type="object"
+                            class="btn-secondary">
+                        Print PDF
+                    </button>
+                    <button name="action_print_xlsx" type="object"
+                            class="btn-secondary">
+                        Print Excel
+                    </button>
+                    <button name="action_share_pdf" type="object"
+                            class="btn-secondary">
+                        Sent PDF By Email
+                    </button>
+                    <button name="action_share_xlsx" type="object"
+                            class="btn-secondary">
+                        Sent Excel By Email
+                    </button>
+                    <br/>
+                    <br/>
+                    <field name="customer_report_ids">
+                        <list create='false' delete="false">
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_date"
+                                   string="Invoice Date"/>
+                            <field name="name" string="Invoice No."/>
+                            <field name="invoice_date_due"/>
+                            <field name="amount_total_signed"
+                                   sum="Total Amount" string="Total Amount"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual_signed"
+                                   string="Amount Due" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual" sum="Balance Due"
+                                   string="Balance" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </list>
+                    </field>
+                </page>
+<!--                <page name="supplier_statement"-->
+<!--                      string="Supplier Statement">-->
+<!--                    <button name="action_vendor_print_pdf" type="object"-->
+<!--                            class="btn-secondary">-->
+<!--                        Print PDF-->
+<!--                    </button>-->
+<!--                    <button name="action_vendor_print_xlsx" type="object"-->
+<!--                            class="btn-secondary">-->
+<!--                        Print Excel-->
+<!--                    </button>-->
+<!--                    <button name="action_vendor_share_pdf" type="object"-->
+<!--                            class="btn-secondary">-->
+<!--                        Sent PDF By Email-->
+<!--                    </button>-->
+<!--                    <button name="action_vendor_share_xlsx" type="object"-->
+<!--                            class="btn-secondary">-->
+<!--                        Sent Excel By Email-->
+<!--                    </button>-->
+<!--                    <br/>-->
+<!--                    <br/>-->
+<!--                    <field name="vendor_statement_ids">-->
+<!--                        <list create="false" delete="false">-->
+<!--                            <field name="currency_id" column_invisible="1"/>-->
+<!--                            <field name="invoice_date" string="Bill Date"/>-->
+<!--                            <field name="name" string="Bill No."/>-->
+<!--                            <field name="invoice_date_due"/>-->
+<!--                            <field name="amount_total_signed"-->
+<!--                                   sum="Total Amount" string="Total Amount"-->
+<!--                                   widget="monetary"-->
+<!--                                   options="{'currency_field': 'currency_id'}"/>-->
+<!--                            <field name="amount_residual_signed"-->
+<!--                                   string="Amount Due" widget="monetary"-->
+<!--                                   options="{'currency_field': 'currency_id'}"/>-->
+<!--                            <field name="amount_residual" sum="Balance Due"-->
+<!--                                   string="Balance" widget="monetary"-->
+<!--                                   options="{'currency_field': 'currency_id'}"/>-->
+<!--                        </list>-->
+<!--                    </field>-->
+<!--                </page>-->
+            </xpath>
+        </field>
+    </record>
+</odoo>

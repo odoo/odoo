@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Account Financial Report Form View -->
+    <record id="account_financial_report_view_form" model="ir.ui.view">
+        <field name="name">account.financial.report.view.form</field>
+        <field name="model">account.financial.report</field>
+        <field name="arch" type="xml">
+            <form string="Account Report">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                    <field name="type"/>
+                    <field name="sign"/>
+                    <field name="style_overwrite"/>
+                </group>
+                <notebook invisible="type not in ['accounts','account_type', 'account_report']">
+                    <page string="Report">
+                        <group>
+                            <field name="display_detail"
+                                   invisible="type not in ['accounts','account_type']"/>
+                            <field name="account_report_id"
+                                   invisible="type not in ['accounts','account_report']"/>
+                        </group>
+                        <field name="account_ids" invisible="type != 'accounts'"/>
+                        <field name="account_type_ids" invisible="type != 'account_type'"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <!-- Account Financial Report Tree View -->
+    <record id="account_financial_report_view_tree" model="ir.ui.view">
+        <field name="name">account.financial.report.view.tree</field>
+        <field name="model">account.financial.report</field>
+        <field name="arch" type="xml">
+            <list string="Account Report">
+                <field name="name"/>
+                <field name="parent_id" invisible="1"/>
+                <field name="type"/>
+                <field name="account_report_id"/>
+            </list>
+        </field>
+    </record>
+    <!-- Account Financial Report Search View -->
+    <record id="account_financial_report_view_search" model="ir.ui.view">
+        <field name="name">account.financial.report.view.search</field>
+        <field name="model">account.financial.report</field>
+        <field name="arch" type="xml">
+            <search string="Account Report">
+                <field name="name" string="Account Report"/>
+                <field name="type"/>
+                <field name="account_report_id"/>
+                <field name="parent_id"/>
+                <group>
+                    <filter string="Parent Report"
+                            name="group_by_parent_rep"
+                            context="{'group_by':'parent_id'}"/>
+                    <filter string="Report Type"
+                            name="group_by_rep_type"
+                            context="{'group_by':'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Action Account Financial Report -->
+    <record id="action_account_financial_report_tree"
+            model="ir.actions.act_window">
+        <field name="name">Financial Reports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.financial.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="account_financial_report_view_search"/>
+        <field name="view_id" ref="account_financial_report_view_tree"/>
+    </record>
+    <!-- Account Financial Report MenuItem -->
+    <menuitem id="menu_account_financial_reports_tree"
+              name="Account Reports" parent="account.account_account_menu"
+              action="action_account_financial_report_tree"/>
+</odoo>

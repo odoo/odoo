@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Report action for Contribution Register Report-->
+    <record id="contribution_register_action" model="ir.actions.report">
+        <field name="name">Contribution Register PDF</field>
+        <field name="model">hr.contribution.register</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_payroll_community.report_contributionregister</field>
+        <field name="report_file">hr_payroll_community.report_contributionregister</field>
+    </record>
+    <!--Report action for Payslip Details Report-->
+    <record id="hr_payslip_report_action" model="ir.actions.report">
+        <field name="name">Payslip Details</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_hr_payslip"/>
+        <field name="report_name">hr_payroll_community.report_payslipdetails</field>
+        <field name="report_file">hr_payroll_community.report_payslipdetails</field>
+        <field name="print_report_name">('Payslip Details - %s' % (object.employee_id.name))</field>
+    </record>
+</odoo>

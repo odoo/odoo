@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="comment_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.comment.search</field>
+        <field name="model">l10n_br_fiscal.comment</field>
+        <field name="arch" type="xml">
+            <search string="Comment">
+                <field name="name" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Comment Type'
+                        name="comment_type"
+                        domain="[]"
+                        context="{'group_by' : 'comment_type'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="comment_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.comment.tree</field>
+        <field name="model">l10n_br_fiscal.comment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" />
+                <field name="name" />
+                <field name="comment_type" />
+                <field name="object" />
+                <field name="date_begin" />
+                <field name="date_end" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="comment_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.comment.form</field>
+        <field name="model">l10n_br_fiscal.comment</field>
+        <field name="arch" type="xml">
+            <form string="Comment">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                    <group>
+                        <field name="comment" />
+                    </group>
+                    <group>
+                        <group>
+                            <field name="sequence" />
+                            <field name="comment_type" />
+                            <field name="object" />
+                        </group>
+                        <group>
+                            <field name="date_begin" />
+                            <field name="date_end" />
+                        </group>
+                    </group>
+                    <group string="Test Message">
+                        <group>
+                            <field name="object_id" />
+                        </group>
+                        <group>
+                            <button
+                                name="action_test_message"
+                                type="object"
+                                class="btn btn-primary"
+                                string="Test"
+                            />
+                        </group>
+                        <field name="test_comment" readonly="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

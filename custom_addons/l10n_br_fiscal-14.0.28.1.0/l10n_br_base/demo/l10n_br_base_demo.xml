@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+    Resource: res.partner.title
+    -->
+    <record id="res_partner_title_pvt_ltd" model="res.partner.title">
+        <field name="name">Corp.</field>
+        <field name="shortcut">Corp.</field>
+    </record>
+    <!--
+    Resource: res.partner
+    -->
+    <record id="res_partner_intel" model="res.partner">
+        <field name="name">Intel do Brasil</field>
+        <field name="legal_name">Intel do Brasil</field>
+        <field name="cnpj_cpf">86.144.802/0001-90</field>
+        <field name="street_name">Avenida Doutor Chucri Zaidan</field>
+        <field name="street_number">920</field>
+        <field name="district">Vila Cordeiro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">04583-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.intel.com.br</field>
+        <field name="phone">(11) 3365-5500</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">623.343.911.173</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_intel')]" />
+    </function>
+
+    <record id="res_partner_amd" model="res.partner">
+        <field name="name">AMD do Brasil</field>
+        <field name="legal_name">AMD South America Ltda</field>
+        <field name="cnpj_cpf">62.228.384/0001-51</field>
+        <field name="street_name">Rua Samuel Morse</field>
+        <field name="street_number">134</field>
+        <field name="district">Brooklin</field>
+        <field name="street2">15º andar - Conjunto 151</field>
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">04576-060</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.amd.com/br</field>
+        <field name="phone">(55-11) 3478-2150</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">621.240.850.633</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_amd')]" />
+    </function>
+
+    <record id="res_partner_lg" model="res.partner">
+        <field name="name">LG do Brasil</field>
+        <field name="legal_name">LG ELECTRONICS DA AMAZÔNIA LTDA</field>
+        <field name="cnpj_cpf">92.737.124/0001-72</field>
+        <field name="street_name">Avenida Javari</field>
+        <field name="street_number">s/n</field>
+        <field name="district">Distrito Industrial</field>
+        <field name="street2">Lote 2.45/1E</field>
+        <field name="state_id" ref="base.state_br_am" />
+        <field name="city_id" ref="l10n_br_base.city_1302603" />
+        <field name="zip">69075-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.lg.com/br</field>
+        <field name="phone">(92) 2129-8710</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">86.015.623-0</field>
+        <field name="suframa">550309012</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_lg')]" />
+    </function>
+
+    <record id="res_partner_samsungpe" model="res.partner">
+        <field name="name">Samsung Recife</field>
+        <field name="legal_name">Samsung Recife LTDA</field>
+        <field name="cnpj_cpf">21.717.475/0001-73</field>
+        <field name="street_name">Av. República do Líbano</field>
+        <field name="street_number">251</field>
+        <field name="district">Centro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_pe" />
+        <field name="city_id" ref="l10n_br_base.city_2611606" />
+        <field name="zip">51110-160</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.samsung.com/br</field>
+        <field name="phone">(81) 1111-1111</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">4386525-92</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_samsungpe')]" />
+    </function>
+
+    <record id="res_partner_positivo" model="res.partner">
+        <field name="name">Positivo Informatica</field>
+        <field name="legal_name">Positivo Informatica S/A</field>
+        <field name="cnpj_cpf">77.256.611/0001-20</field>
+        <field name="street_name">Rua Senador Accioly Filho</field>
+        <field name="street_number">5200</field>
+        <field name="district">Cidade Industrial</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_pr" />
+        <field name="city_id" ref="l10n_br_base.city_4106902" />
+        <field name="zip">81310-000</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.positivoinformatica.com.br</field>
+        <field name="phone">(41) 3316-7700</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">80320143-90</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_positivo')]" />
+    </function>
+
+    <record id="res_partner_dell" model="res.partner">
+        <field name="name">Dell Computadores do Brasil</field>
+        <field name="legal_name">Dell Computadores do Brasil LTDA</field>
+        <field name="cnpj_cpf">73.623.891/0001-06</field>
+        <field name="street_name">Avenida Ipiranga</field>
+        <field name="street_number">6681</field>
+        <field name="district">Partenon</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_rs" />
+        <field name="city_id" ref="l10n_br_base.city_4314902" />
+        <field name="zip">90619-900</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.dell.com.br</field>
+        <field name="phone">(51) 3320-3500</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">074/2864251</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_dell')]" />
+    </function>
+
+    <record id="res_partner_infobahia" model="res.partner">
+        <field name="name">Info Bahia</field>
+        <field name="legal_name">Informatica Bahia LTDA</field>
+        <field name="cnpj_cpf">14.685.381/0001-02</field>
+        <field name="street_name">Rua Francisco Muniz Barreto</field>
+        <field name="street_number">2</field>
+        <field name="district">Terreiro de Jesus</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_ba" />
+        <field name="city_id" ref="l10n_br_base.city_2927408" />
+        <field name="zip">40835-650</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.infobahia.com.br</field>
+        <field name="phone">(71) 3321-9652</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">2004915-45</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_infobahia')]" />
+    </function>
+
+    <record id="res_partner_infomanaus" model="res.partner">
+        <field name="name">Informatica Manaus</field>
+        <field name="legal_name">Informatica Manaus</field>
+        <field name="cnpj_cpf">38.633.837/0001-40</field>
+        <field name="street_name">Avenida Javari</field>
+        <field name="street_number">s/n</field>
+        <field name="district">Distrito Industrial</field>
+        <field name="street2">Lote 4.45/5E</field>
+        <field name="state_id" ref="base.state_br_am" />
+        <field name="city_id" ref="l10n_br_base.city_1302603" />
+        <field name="zip">69075-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.infomanuas.com/br</field>
+        <field name="phone">(92) 2129-8720</field>
+        <field name="email">teste@teste.com.br</field>
+        <field name="inscr_est">78.002.376-5</field>
+        <field name="suframa">101160100</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_infomanaus')]" />
+    </function>
+
+    <record id="res_partner_cliente1_sp" model="res.partner">
+        <field name="name">Cliente 1 SP Contribuinte</field>
+        <field name="legal_name">Cliente 1 SP</field>
+        <field name="cnpj_cpf">81.493.979/0001-89</field>
+        <field name="street_name">Rua Samuel Morse</field>
+        <field name="street_number">135</field>
+        <field name="district">Brooklin</field>
+        <field name="street2">20º andar - Conjunto 151</field>
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">04576-060</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente1.com/br</field>
+        <field name="phone">(55-11) 3478-2150</field>
+        <field name="email">cliente1@cliente1.com.br</field>
+        <field name="inscr_est">460.429.771.334</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente1_sp')]" />
+    </function>
+
+    <record id="res_partner_cliente2_sp" model="res.partner">
+        <field name="name">Cliente 2 -SP - Simples Nacional</field>
+        <field name="legal_name">Cliente 2 - SP</field>
+        <field name="cnpj_cpf">12.046.835/0001-61</field>
+        <field name="street_name">Avenida Doutor Chucri Zaidan</field>
+        <field name="street_number">950</field>
+        <field name="district">Vila Cordeiro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">04583-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente2.com.br</field>
+        <field name="phone">(11) 7777-7777</field>
+        <field name="email">cliente2@cliente2.com.br</field>
+        <field name="inscr_est">887.273.429.152</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente2_sp')]" />
+    </function>
+
+    <record id="res_partner_cliente2_sp_end_entrega" model="res.partner">
+        <field name="name">Cliente 2 - SP - Endereço Entrega</field>
+        <field name="legal_name">Cliente 2 - SP - Endereço Entrega</field>
+        <field name="cnpj_cpf">96.660.336/0001-50</field>
+        <field name="street_name">Rua Delfos</field>
+        <field name="street_number">111</field>
+        <field name="district">Vila Cordeiro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">04583-120</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente2.com.br</field>
+        <field name="phone">(11) 7777-7777</field>
+        <field name="email">cliente2@cliente2.com.br</field>
+        <field name="inscr_est">811.510.100.755</field>
+        <!-- Necessário company_type person para o metodo address_get
+        identificar como sendo o Partner to Shipping
+        TODO: A localização deveria sobreescrever o metodo address_get
+         ou criar um novo que ignore o company_type? Já que em muitos casos
+         tanto o Endereço de Entrega e Faturamento são company e não person
+         porém sem isso os Casos de Uso com endereços diferentes não funciona
+        -->
+        <field name="company_type">person</field>
+        <field name="type">delivery</field>
+        <field name="parent_id" ref="l10n_br_base.res_partner_cliente2_sp" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente2_sp_end_entrega')]" />
+    </function>
+
+    <record id="res_partner_cliente3_am" model="res.partner">
+        <field name="name">Cliente 3 - Z/F Manaus - Contribuinte</field>
+        <field name="legal_name">Cliente 3 - Manaus</field>
+        <field name="cnpj_cpf">46.081.676/0001-58</field>
+        <field name="street_name">Avenida Javari</field>
+        <field name="street_number">s/n</field>
+        <field name="district">Distrito Industrial</field>
+        <field name="street2">Lote 8.45/30E</field>
+        <field name="state_id" ref="base.state_br_am" />
+        <field name="city_id" ref="l10n_br_base.city_1302603" />
+        <field name="zip">69075-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente3.com/br</field>
+        <field name="phone">(92) 2145-9999</field>
+        <field name="email">cliente3@cliente3.com.br</field>
+        <field name="inscr_est">78.217.504-0</field>
+        <field name="suframa">101362102</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente3_am')]" />
+    </function>
+
+    <record id="res_partner_cliente4_am" model="res.partner">
+        <field name="name">Cliente 4 - Z/F Manaus - Simples Nacional</field>
+        <field name="legal_name">Cliente 4 - Manaus</field>
+        <field name="cnpj_cpf">84.148.732/0001-13</field>
+        <field name="street_name">Avenida Javari</field>
+        <field name="street_number">s/n</field>
+        <field name="district">Distrito Industrial</field>
+        <field name="street2">Lote 9.45/15E</field>
+        <field name="state_id" ref="base.state_br_am" />
+        <field name="city_id" ref="l10n_br_base.city_1302603" />
+        <field name="zip">69075-110</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente3.com/br</field>
+        <field name="phone">(92) 2145-8888</field>
+        <field name="email">cliente4@cliente4.com.br</field>
+        <field name="inscr_est">09.569.321-1</field>
+        <field name="suframa">100695108</field>
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente4_am')]" />
+    </function>
+
+    <record id="res_partner_cliente5_pe" model="res.partner">
+        <field name="name">Cliente 5 - Contribuinte - PE</field>
+        <field name="legal_name">Cliente 5 PE</field>
+        <field name="cnpj_cpf">14.753.702/0001-50</field>
+        <field name="street_name">Av. República do Líbano</field>
+        <field name="street_number">255</field>
+        <field name="district">Centro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_pe" />
+        <field name="city_id" ref="l10n_br_base.city_2611606" />
+        <field name="zip">51110-160</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente5.com/br</field>
+        <field name="phone">(81) 1111-1111</field>
+        <field name="email">cliente5@cliente5.com.br</field>
+        <field name="inscr_est">8700737-10</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente5_pe')]" />
+    </function>
+
+    <record id="res_partner_cliente6_pe" model="res.partner">
+        <field name="name">Cliente 6 - Simples Nacional- PE</field>
+        <field name="legal_name">Cliente 6 Recife LTDA</field>
+        <field name="cnpj_cpf">97.449.840/0001-78</field>
+        <field name="street_name">Av. República do Líbano</field>
+        <field name="street_number">275</field>
+        <field name="district">Centro</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_pe" />
+        <field name="city_id" ref="l10n_br_base.city_2611606" />
+        <field name="zip">51110-160</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente5.com/br</field>
+        <field name="phone">(81) 1111-1111</field>
+        <field name="email">cliente6@cliente6.com.br</field>
+        <field name="inscr_est">7055493-56</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente6_pe')]" />
+    </function>
+
+    <record id="res_partner_cliente7_rs" model="res.partner">
+        <field name="name">Cliente 7 RS - Contribuinte</field>
+        <field name="legal_name">Cliente 7 - RS</field>
+        <field name="cnpj_cpf">43.266.887/0001-77</field>
+        <field name="street_name">Avenida Ipiranga</field>
+        <field name="street_number">6690</field>
+        <field name="district">Partenon</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_rs" />
+        <field name="city_id" ref="l10n_br_base.city_4314902" />
+        <field name="zip">90619-900</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente7.com.br</field>
+        <field name="phone">(51) 3320-7777</field>
+        <field name="email">cliente7@cliente7.com.br</field>
+        <field name="inscr_est">176/1256758</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente7_rs')]" />
+    </function>
+
+    <record id="res_partner_cliente7_rs_end_cobranca" model="res.partner">
+        <field name="name">Cliente 7 - RS - Endereço Cobrança</field>
+        <field name="legal_name">Cliente 7 - RS - Endereço Cobranca</field>
+        <field name="cnpj_cpf">13.691.522/0001-29</field>
+        <field name="street_name">Avenida Borges de Medeiros</field>
+        <field name="street_number">123</field>
+        <field name="district">Praia de Belas</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_rs" />
+        <field name="city_id" ref="l10n_br_base.city_4314902" />
+        <field name="zip">90119-900</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente7.com.br</field>
+        <field name="phone">(11) 7777-7777</field>
+        <field name="email">cliente2@cliente7.com.br</field>
+        <field name="inscr_est">845/2345834</field>
+        <!-- Necessário company_type person para o metodo address_get
+        identificar como sendo o Partner to Invoice
+        TODO: A localização deveria sobreescrever o metodo address_get
+         ou criar um novo que ignore o company_type? Já que em muitos casos
+         tanto o Endereço de Entrega e Faturamento são company e não person
+         porém sem isso os Casos de Uso com endereços diferentes não funciona
+        -->
+        <field name="company_type">person</field>
+        <field name="type">invoice</field>
+        <field name="parent_id" ref="l10n_br_base.res_partner_cliente7_rs" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente7_rs_end_cobranca')]" />
+    </function>
+
+    <record id="res_partner_cliente8_rs" model="res.partner">
+        <field name="name">Cliente 8 RS - Simples Nacional</field>
+        <field name="legal_name">Cliente 7 - RS</field>
+        <field name="cnpj_cpf">32.406.080/0001-76</field>
+        <field name="street_name">Avenida Ipiranga</field>
+        <field name="street_number">6600</field>
+        <field name="district">Partenon</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_rs" />
+        <field name="city_id" ref="l10n_br_base.city_4314902" />
+        <field name="zip">90619-900</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente8.com.br</field>
+        <field name="phone">(51) 3320-8888</field>
+        <field name="email">cliente8@cliente8.com.br</field>
+        <field name="inscr_est">383/4127240</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente8_rs')]" />
+    </function>
+
+    <record id="res_partner_akretion" model="res.partner">
+        <field name="title" ref="res_partner_title_pvt_ltd" />
+        <field name="cnpj_cpf">11.034.414/0001-58</field>
+        <field eval="0" name="employee" />
+        <field name="is_company" eval="1" />
+        <field eval="1" name="active" />
+        <field name="legal_name">AKRETION LTDA</field>
+        <field name="name">Akretion Sao Paulo</field>
+        <field name="district">Centro</field>
+        <field name="zip">01311-915</field>
+        <field name="country_id" ref="base.br" />
+        <field name="street_number">807</field>
+        <field name="phone">(11) 9999-9999</field>
+        <field name="street_name">Avenida Paulista</field>
+        <field name="street2">CJ 2315</field>
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field
+            name="image_128"
+            type="base64"
+            file="l10n_br_base/static/img/res_partner_akretion-image.jpg"
+        />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_akretion')]" />
+    </function>
+
+    <record id="res_partner_address_ak2" model="res.partner">
+        <field name="title" ref="res_partner_title_pvt_ltd" />
+        <field eval="0" name="employee" />
+        <field eval="1" name="active" />
+        <field name="is_company" eval="1" />
+        <field name="legal_name">AKRETION LTDA</field>
+        <field name="name">Akretion Rio de Janeiro</field>
+        <field name="parent_id" ref="res_partner_akretion" />
+        <field name="district">Centro</field>
+        <field name="city_id" ref="l10n_br_base.city_3304557" />
+        <field name="zip">20081-000</field>
+        <field name="type">other</field>
+        <field name="country_id" ref="base.br" />
+        <field name="street_number">47</field>
+        <field name="phone">(21) 9999-9999</field>
+        <field name="street_name">Rua Acre</field>
+        <field name="street2">sala 1310</field>
+        <field name="website">http://www.akretion.com</field>
+        <field name="state_id" ref="base.state_br_rj" />
+        <field
+            name="image_128"
+            type="base64"
+            file="l10n_br_base/static/img/res_partner_akretion-image.jpg"
+        />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_address_ak2')]" />
+    </function>
+
+    <record id="res_partner_address_ak3" model="res.partner">
+        <field name="title" ref="res_partner_title_pvt_ltd" />
+        <field name="cnpj_cpf">11.034.414/0003-10</field>
+        <field name="inscr_mun">1448</field>
+        <field eval="0" name="employee" />
+        <field eval="1" name="active" />
+        <field name="is_company" eval="1" />
+        <field name="legal_name">AKRETION LTDA</field>
+        <field name="name">Akretion Aluminio - SP</field>
+        <field name="parent_id" ref="res_partner_akretion" />
+        <field name="district">Centro</field>
+        <field name="city_id" ref="l10n_br_base.city_3501152" />
+        <field name="zip">18125-000</field>
+        <field name="type">other</field>
+        <field name="country_id" ref="base.br" />
+        <field name="street_number">586</field>
+        <field name="phone">(11) 9999-9999</field>
+        <field name="street_name">Rua Paulo Dias</field>
+        <field name="website">http://www.akretion.com</field>
+        <field name="state_id" ref="base.state_br_sp" />
+        <field
+            name="image_128"
+            type="base64"
+            file="l10n_br_base/static/img/res_partner_akretion-image.jpg"
+        />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_address_ak3')]" />
+    </function>
+
+    <record id="res_partner_cliente9_mg" model="res.partner">
+        <field name="name">Cliente 9 MG - PJ Não Contribuinte</field>
+        <field name="legal_name">Cliente 9 MG</field>
+        <field name="cnpj_cpf">26.355.289/0001-55</field>
+        <field name="street_name">R PRESIDENTE ROOSEVELT</field>
+        <field name="street_number">63</field>
+        <field name="district">Morro Chic</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_mg" />
+        <field name="city_id" ref="l10n_br_base.city_3132404" />
+        <field name="zip">37500-070</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente9.com.br</field>
+        <field name="phone">(35) 3622-7085</field>
+        <field name="email">cliente9@cliente9.com.br</field>
+        <field name="suframa" />
+        <field name="is_company" eval="1" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente9_mg')]" />
+    </function>
+
+    <record id="res_partner_cliente10_mg" model="res.partner">
+        <field name="name">Cliente 10 MG - PF Não Contribuinte</field>
+        <field name="legal_name">Cliente 10 PF</field>
+        <field name="cnpj_cpf">276.288.360-11</field>
+        <field name="street_name">R PRESIDENTE ROOSEVELT</field>
+        <field name="street_number">63</field>
+        <field name="district">Morro Chic</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_mg" />
+        <field name="city_id" ref="l10n_br_base.city_3132404" />
+        <field name="zip">37500-070</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente10.com.br</field>
+        <field name="phone">(35) 3622-7085</field>
+        <field name="email">cliente10@cliente10.com.br</field>
+        <field name="suframa" />
+        <field name="is_company" eval="0" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente10_mg')]" />
+    </function>
+
+    <record id="res_partner_kmee" model="res.partner">
+        <field name="title" ref="res_partner_title_pvt_ltd" />
+        <field name="cnpj_cpf">23.130.935/0001-98</field>
+        <field eval="0" name="employee" />
+        <field name="is_company" eval="1" />
+        <field eval="1" name="active" />
+        <field name="legal_name">KMEE INFORMATICA LTDA</field>
+        <field name="name">KMEE</field>
+        <field name="district">Centro</field>
+        <field name="zip">37500-015</field>
+        <field name="country_id" ref="base.br" />
+        <field name="street_number">07</field>
+        <field name="phone">(11) 3090 9303</field>
+        <field name="street_name">R Coronel Renno</field>
+        <field name="city_id" ref="l10n_br_base.city_3132404" />
+        <field name="state_id" ref="base.state_br_mg" />
+        <field
+            name="image_128"
+            type="base64"
+            file="l10n_br_base/static/img/res_partner_kmee.png"
+        />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_kmee')]" />
+    </function>
+
+    <record id="res_partner_exterior" model="res.partner">
+        <field name="name">Cliente Exterior</field>
+        <field name="is_company">1</field>
+        <field name="street">3404  Edgewood Road</field>
+        <field name="city">Jonesboro</field>
+        <field
+            name="state_id"
+            model="res.country.state"
+            search="[('code','ilike','AR')]"
+        />
+        <field name="zip">72401</field>
+        <field name="phone">(870)-931-0505</field>
+        <field name="country_id" ref="base.us" />
+        <field name="email">exteior@example.com</field>
+        <field name="website">http://www.exterior.com</field>
+    </record>
+
+    <record id="res_partner_cliente11_sp" model="res.partner">
+        <field name="name">Cliente 11 SP - PF Não Contribuinte</field>
+        <field name="legal_name">Cliente 11 PF</field>
+        <field name="cnpj_cpf">765.865.078-12</field>
+        <field name="street_name">Rua do Bosque</field>
+        <field name="street_number">238</field>
+        <field name="district">Barra Funda</field>
+        <field name="street2" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="city_id" ref="l10n_br_base.city_3550308" />
+        <field name="zip">01136-000</field>
+        <field name="country_id" ref="base.br" />
+        <field name="website">www.cliente11.com.br</field>
+        <field name="phone">(11) 3881-7417</field>
+        <field name="email">cliente11@cliente11.com.br</field>
+        <field name="suframa" />
+        <field name="is_company" eval="0" />
+        <field name="active" eval="1" />
+    </record>
+    <function model="res.partner" name="_onchange_city_id">
+        <value eval="[ref('res_partner_cliente11_sp')]" />
+    </function>
+</odoo>

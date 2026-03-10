@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <function name="button_choose_theme" model="ir.module.module" eval="[ref('base.module_theme_treehouse', raise_if_not_found=False) or ref('base.module_theme_default')]"/>
+    <function model="website.assets" name="make_scss_customization" context="{'website_id': ref('website.default_website')}">
+        <value eval="'/website/static/src/scss/options/colors/user_color_palette.scss'"/>
+        <value eval="{'o-color-1': '#0A58CA','o-color-2': '#e0ccaf','o-color-3': '#f0f2f5','o-color-4': '#FFFFFF','o-color-5': '#141f2e', 'menu': 1, 'font': &quot;Poping&quot;}"/>
+    </function>
+
+    <function model="ir.ui.view" name="write">
+        <value model="ir.ui.view" eval="obj().env['website'].with_context(website_id=obj().env.ref('website.default_website').id).viewref('website.homepage').id"/>
+        <value model="ir.ui.view" eval="{'arch': obj().env.ref('industry_real_estate.homepage').arch}"/>
+    </function>
+
+</odoo>

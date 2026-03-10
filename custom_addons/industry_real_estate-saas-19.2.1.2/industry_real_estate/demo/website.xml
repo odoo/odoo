@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="website.default_website" model="website" forcecreate="1">
+        <field name="name">Real Estate</field>
+        <field name="configurator_done" eval="True"/>
+        <field name="theme_id" search="[('id', '=', ref('base.module_theme_treehouse', raise_if_not_found=False))]"/>
+        <field name="logo" type="base64" file="industry_real_estate/static/description/icon.png"/>
+        <field name="favicon" type="base64" file="industry_real_estate/static/description/icon.png"/>
+    </record>
+</odoo>

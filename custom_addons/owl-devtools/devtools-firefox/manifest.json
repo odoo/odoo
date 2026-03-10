@@ -1,0 +1,39 @@
+{
+  "name": "Owl devtools",
+  "version": "1.1.0",
+  "description": "Firefox devtools extension for Odoo Owl framework",
+  "manifest_version": 2,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@owl-devtools",
+      "strict_min_version": "74.0"
+    }
+  },
+  "icons": {
+    "128": "assets/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "128": "assets/icon_disabled128.png"
+    },
+    "default_title": "Owl devtools",
+    "default_popup": "popup_app/popup.html"
+  },
+  "web_accessible_resources": [
+    "popup_app/popup.html",
+    "devtools_app/devtools.html",
+    "devtools_app/components_panel.html"
+  ],
+  "permissions": ["storage", "scripting", "<all_urls>"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "devtools_page": "devtools_app/devtools.html",
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

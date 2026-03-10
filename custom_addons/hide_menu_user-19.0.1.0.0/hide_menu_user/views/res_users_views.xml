@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inheriting fields to res.users-->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.hide.menu.user</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Hide Specific Menu" invisible="role == 'group_system' or is_show_specific_menu">
+                    <list>
+                        <field name="hide_menu_ids"/>
+                    </list>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

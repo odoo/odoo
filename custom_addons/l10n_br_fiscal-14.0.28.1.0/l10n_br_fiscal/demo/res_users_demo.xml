@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- pylint:disable=file-not-used -->
+<odoo noupdate="1">
+
+    <record id="l10n_br_base.user_demo_simples" model="res.users">
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_br_fiscal.group_manager'), ref('l10n_br_fiscal.group_data_maintenance'))]"
+        />
+    </record>
+
+    <record id="l10n_br_base.user_demo_presumido" model="res.users">
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_br_fiscal.group_manager'), ref('l10n_br_fiscal.group_data_maintenance'))]"
+        />
+    </record>
+
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="operation_line_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.line.tree</field>
+        <field name="model">l10n_br_fiscal.operation.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="cfop_internal_id" context="{'show_code_only': 1}" />
+                <field name="cfop_external_id" context="{'show_code_only': 1}" />
+                <field name="cfop_export_id" context="{'show_code_only': 1}" />
+                <field name="tax_definition_ids" widget="many2many_tags" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="operation_line_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.line.form</field>
+        <field name="model">l10n_br_fiscal.operation.line</field>
+        <field name="arch" type="xml">
+            <form string="Fiscal Operation Line">
+                <field name="fiscal_type" invisible="1" />
+                <field name="fiscal_operation_type" invisible="1" />
+                <header>
+                    <button
+                        name="action_review"
+                        type="object"
+                        states="draft"
+                        string="Review"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <h2>
+                        <label for="name" />
+                        <field name="name" />
+                    </h2>
+                    <group>
+                        <group string="Company and Partner" name="tax_framework">
+                            <field name="company_tax_framework" />
+                            <field name="partner_tax_framework" />
+                            <field name="ind_ie_dest" />
+                        </group>
+                        <group string="Product Information">
+                            <field name="product_type" />
+                            <field name="tax_icms_or_issqn" />
+                            <field name="icms_origin" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="general" string="General">
+                            <group name="gereral_settings">
+                                <field name="document_type_id" />
+                                <field name="add_to_amount" />
+                            </group>
+                            <group name="general_tax_classification">
+                                <field name="tax_classification_id" />
+                            </group>
+                            <group
+                                name="general_cfop"
+                                attrs="{'invisible': [('fiscal_operation_type', '=', 'all')]}"
+                            >
+                            <field
+                                    name="cfop_internal_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                            <field
+                                    name="cfop_external_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                            <field
+                                    name="cfop_export_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                            </group>
+                        </page>
+                      <page name="tax_definitions" string="Tax Definitions">
+                          <field
+                                name="tax_definition_ids"
+                                nolabel="1"
+                                context="{'tree_view_ref': 'l10n_br_fiscal.tax_definition_tree','form_view_ref': 'l10n_br_fiscal.tax_definition_form', 'default_fiscal_operation_line_id': id}"
+                            />
+                      </page>
+                      <page name="extra_info" string="Extra Info">
+                        <group>
+                          <group>
+                            <field name="date_start" />
+                          </group>
+                          <group>
+                            <field name="date_end" />
+                          </group>
+                        </group>
+                        <group>
+                            <field name="comment_ids" widget="many2many_tags" />
+                        </group>
+                      </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

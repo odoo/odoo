@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="operation_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.search</field>
+        <field name="model">l10n_br_fiscal.operation</field>
+        <field name="arch" type="xml">
+            <search string="Fiscal Operation">
+                <field name="code" />
+                <field name="name" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Fiscal Operation Type'
+                        name="fiscal_operation_type"
+                        domain="[]"
+                        context="{'group_by' : 'fiscal_operation_type'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="operation_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.tree</field>
+        <field name="model">l10n_br_fiscal.operation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="fiscal_operation_type" />
+                <field name="fiscal_type" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="operation_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.form</field>
+        <field name="model">l10n_br_fiscal.operation</field>
+        <field name="arch" type="xml">
+            <form string="Fiscal Operation">
+                <field name="id" invisible="1" />
+                <header>
+                    <button
+                        name="action_review"
+                        type="object"
+                        states="draft"
+                        string="Review"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+                    <button
+                        name="action_approve"
+                        type="object"
+                        states="review,expired"
+                        string="Approve"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+                    <button
+                        name="action_draft"
+                        type="object"
+                        states="review,approved"
+                        string="Reset To Draft"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <h1 class="o_row row no-gutters d-flex">
+                        <div class="col-10">
+                            <label for="name" class="oe_edit_only" />
+                            <div class="o_row d-flex">
+                                <field name="name" class="oe_inline" />
+                            </div>
+                        </div>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="fiscal_operation_type" />
+                            <field name="fiscal_type" />
+                            <field name="code" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="edoc_purpose" />
+                        </group>
+                        <group>
+                            <field name="default_price_unit" />
+                            <field name="return_fiscal_operation_id" />
+                            <field name="inverse_fiscal_operation_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="operation_line" string="Operation Line">
+                            <field
+                                name="line_ids"
+                                context="{'default_fiscal_operation_id': id, 'default_fiscal_type': fiscal_type, 'default_fiscal_operation_type': fiscal_operation_type, 'form_view_ref': 'l10n_br_fiscal.operation_line_form' , 'show_code_only': 1}"
+                            >
+                            </field>
+                        </page>
+                        <page name="operation_document_type" string="Fiscal Documents">
+                            <field
+                                name="document_type_ids"
+                                context="{'default_fiscal_operation_id': id}"
+                            >
+                                <tree>
+                                    <field name="document_type_id" />
+                                    <field name="document_serie_id" />
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="company_id" invisible="1" />
+                                        <field
+                                            name="document_type_id"
+                                            options="{'no_create': True, 'no_create_edit': True}"
+                                        />
+                                        <field
+                                            name="document_serie_id"
+                                            context="{'default_document_type_id': document_type_id, 'default_company_id': company_id}"
+                                        />
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page name="subsequent_operation" string="Operations">
+                            <group>
+                                <field name="return_fiscal_operation_id" />
+                                <field name="inverse_fiscal_operation_id" />
+                            </group>
+                            <field name="operation_subsequent_ids" />
+                        </page>
+                        <page name="notes" string="Notes">
+                            <field name="comment_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

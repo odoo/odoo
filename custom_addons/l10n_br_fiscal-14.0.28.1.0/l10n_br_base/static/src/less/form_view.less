@@ -1,0 +1,22 @@
+.o_form_view {
+    .o_address_format {
+        &.o_zip_state_city {
+            .o_address_zip {
+                margin-right: 2%;
+            }
+            .o_address_city {
+                margin-right: 0;
+            }
+        }
+    }
+
+    &.o_form_editable .o_address_format {
+        &.o_zip_state_city {
+            .o_address_zip,
+            .o_address_state,
+            .o_address_city {
+                width: 32%;
+            }
+        }
+    }
+}

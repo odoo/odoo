@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+    Views: res.company
+    -->
+    <record id="l10n_br_base_res_company_form" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': [('country_id', '=', %(base.br)d)]}</attribute>
+            </xpath>
+            <field name="company_registry" position="after">
+                <field
+                    name="legal_name"
+                    placeholder="Legal Name..."
+                    attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                />
+                <field
+                    name="cnpj_cpf"
+                    placeholder="CNPJ..."
+                    attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                />
+                <field
+                    name="inscr_est"
+                    placeholder="State Tax Number..."
+                    attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                />
+                <field
+                    name="inscr_mun"
+                    placeholder="Municipal Tax Number..."
+                    attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                />
+                <field
+                    name="suframa"
+                    placeholder="Suframa"
+                    attrs="{'invisible': [('state_id', '!=', %(base.state_br_am)d)]}"
+                />
+                <field
+                    name="state_tax_number_ids"
+                    attrs="{'invisible': [('country_id', '!=', %(base.br)d)]}"
+                >
+                    <tree editable="bottom">
+                        <field name="company_id" invisible="1" />
+                        <field name="inscr_est" />
+                        <field
+                            name="state_id"
+                            domain="[('country_id', '=', %(base.br)d)]"
+                            create="False"
+                            edit="False"
+                        />
+                    </tree>
+                </field>
+            </field>
+            <!-- TODO: Na v12 era desnecessario incluir o codigo abaixo para
+                  tornar invisivel o campo City/Char e incluir City_id/m2o,
+                  teria outra forma de fazer isso? -->
+            <field name="state_id" position="after">
+                <field
+                    name="city_id"
+                    class="o_address_city"
+                    placeholder="City"
+                    options='{"no_open": True}'
+                />
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_br_base_res_company_tree" model="ir.ui.view">
+        <field name="name">l10n_br_base.res.company.tree</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_tree" />
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="cnpj_cpf" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

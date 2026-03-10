@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="cst_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cst.search</field>
+        <field name="model">l10n_br_fiscal.cst</field>
+        <field name="arch" type="xml">
+            <search string="CST">
+                <field name="code" />
+                <field name="name" />
+                <field name="tax_group_id" />
+                <field name="tax_domain" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Tax Group'
+                        name="tax_group_id"
+                        domain="[]"
+                        context="{'group_by' : 'tax_group_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cst_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cst.tree</field>
+        <field name="model">l10n_br_fiscal.cst</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="cst_type" />
+                <field name="tax_group_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="cst_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cst.form</field>
+        <field name="model">l10n_br_fiscal.cst</field>
+        <field name="arch" type="xml">
+            <form string="CST">
+                <sheet>
+                    <group>
+                      <field name="code" />
+                      <field name="name" />
+                      <field name="cst_type" />
+                      <field name="tax_group_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Configure Users -->
+    <record id="base.user_admin" model="res.users">
+        <field
+            name="company_ids"
+            eval="[(4, ref('base.main_company')), (4, ref('l10n_br_base.empresa_simples_nacional')), (4, ref('l10n_br_base.empresa_lucro_presumido'))]"
+        />
+    </record>
+    <record id="base.user_demo" model="res.users">
+        <field
+            name="company_ids"
+            eval="[(4, ref('base.main_company')), (4, ref('l10n_br_base.empresa_simples_nacional')), (4, ref('l10n_br_base.empresa_lucro_presumido'))]"
+        />
+    </record>
+    <record id="partner_demo_simples" model="res.partner">
+        <field name="name">Demo Simples</field>
+        <field name="company_id" eval="None" />
+        <field name="company_name">Empresa Simples</field>
+        <field name="street_name">Rua Paulo Dias</field>
+        <field name="street_number">586</field>
+        <field name="city_id" ref="l10n_br_base.city_3501152" />
+        <field name="zip">18125-000</field>
+        <field name='country_id' ref='base.br' />
+        <field name='state_id' ref='base.state_br_sp' />
+        <field name="tz">America/Sao_Paulo</field>
+        <field name="email">simples@example.com</field>
+    </record>
+    <record id="partner_demo_presumido" model="res.partner">
+        <field name="name">Demo Presumido</field>
+        <field name="company_id" eval="None" />
+        <field name="company_name">Empresa Lucro Presumido</field>
+        <field name="street_name">AV Paulista</field>
+        <field name="street_number">1001</field>
+        <field name="city_id" ref="l10n_br_base.city_3501152" />
+        <field name="zip">18125-000</field>
+        <field name='country_id' ref='base.br' />
+        <field name='state_id' ref='base.state_br_sp' />
+        <field name="tz">America/Sao_Paulo</field>
+        <field name="email">presumido@example.com</field>
+    </record>
+    <record id="user_demo_simples" model="res.users">
+        <field name="partner_id" ref="partner_demo_simples" />
+        <field name="login">simples</field>
+        <field name="password">simples</field>
+        <field name="signature" type="xml">
+            <span>--<br />+Mr Simples
+            </span>
+        </field>
+        <field name="company_id" ref="l10n_br_base.empresa_simples_nacional" />
+        <field
+            name="company_ids"
+            eval="[(4, ref('l10n_br_base.empresa_simples_nacional'))]"
+        />
+        <field
+            name="groups_id"
+            eval="[(6,0,[ref('base.group_user'), ref('base.group_partner_manager')])]"
+        />
+    </record>
+    <record id="user_demo_presumido" model="res.users">
+        <field name="partner_id" ref="partner_demo_presumido" />
+        <field name="login">presumido</field>
+        <field name="password">presumido</field>
+        <field name="signature" type="xml">
+            <span>--<br />+Mr Presumido
+            </span>
+        </field>
+        <field name="company_id" ref="l10n_br_base.empresa_lucro_presumido" />
+        <field
+            name="company_ids"
+            eval="[(4, ref('l10n_br_base.empresa_lucro_presumido'))]"
+        />
+        <field
+            name="groups_id"
+            eval="[(6,0,[ref('base.group_user'), ref('base.group_partner_manager')])]"
+        />
+    </record>
+</odoo>

@@ -1,0 +1,399 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <!-- meters -->
+    <record id="field_meters_sequence" model="ir.model.fields">
+        <field name="name">x_sequence</field>
+        <field name="field_description">Sequence</field>
+        <field name="model_id" ref="model_meters"/>
+        <field name="ttype">integer</field>
+    </record>
+
+    <record id="field_meters_name" model="ir.model.fields">
+        <field name="name">x_name</field>
+        <field name="field_description">Description</field>
+        <field name="model_id" ref="model_meters"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_meters_currency" model="ir.model.fields">
+        <field name="name">x_currency_id</field>
+        <field name="field_description">Currency</field>
+        <field name="model_id" ref="model_meters"/>
+        <field name="relation">res.currency</field>
+        <field name="ttype">many2one</field>
+    </record>
+
+    <record id="field_meters_price" model="ir.model.fields">
+        <field name="name">x_price</field>
+        <field name="field_description">Price</field>
+        <field name="model_id" ref="model_meters"/>
+        <field name="ttype">monetary</field>
+    </record>
+
+    <!-- meter reading -->
+    <record id="field_meter_reading_date" model="ir.model.fields">
+        <field name="name">x_date</field>
+        <field name="field_description">Date</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="ttype">date</field>
+        <field name="required" eval="True"/>
+    </record>
+
+    <record id="field_meter_reading_quantity" model="ir.model.fields">
+        <field name="name">x_quantity</field>
+        <field name="field_description">Quantity</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="ttype">float</field>
+    </record>
+
+    <record id="field_meter_reading_usage" model="ir.model.fields">
+        <field name="name">x_usage</field>
+        <field name="field_description">Usage</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="ttype">float</field>
+        <field name="readonly" eval="True"/>
+    </record>
+
+    <record id="field_meters_reading_description" model="ir.model.fields">
+        <field name="name">x_description</field>
+        <field name="field_description">Description</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_meter_reading_sale_order" model="ir.model.fields">
+        <field name="name">x_sale_order_id</field>
+        <field name="field_description">Sale Order</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="domain">[('x_account_analytic_account_id', '!=', False)]</field>
+        <field name="relation">sale.order</field>
+        <field name="ttype">many2one</field>
+    </record>
+
+    <record id="field_meter_reading_account_analytic_account" model="ir.model.fields">
+        <field name="name">x_account_analytic_account_id</field>
+        <field name="field_description">Property</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="relation">account.analytic.account</field>
+        <field name="ttype">many2one</field>
+    </record>
+
+    <record id="field_meter_reading_meter_id" model="ir.model.fields">
+        <field name="name">x_meter_id</field>
+        <field name="field_description">Meter</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">x_meters</field>
+    </record>
+
+    <record id="field_meter_reading_invoice_id" model="ir.model.fields">
+        <field name="name">x_invoice_id</field>
+        <field name="field_description">Invoice</field>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="relation">account.move</field>
+        <field name="ttype">many2one</field>
+    </record>
+
+    <!-- Buildings -->
+    <record id="name_buildings" model="ir.model.fields">
+        <field name="name">x_name</field>
+        <field name="ttype">char</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">Name</field>
+        <field name="model_id" ref="model_buildings"/>
+        <field name="required" eval="True"/>
+    </record>
+    <record id="street" model="ir.model.fields">
+        <field name="name">x_street</field>
+        <field name="ttype">char</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">Street</field>
+        <field name="model_id" ref="model_buildings"/>
+    </record>
+    <record id="street2" model="ir.model.fields">
+        <field name="name">x_street2</field>
+        <field name="ttype">char</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">Street2</field>
+        <field name="model_id" ref="model_buildings"/>
+    </record>
+    <record id="city" model="ir.model.fields">
+        <field name="name">x_city</field>
+        <field name="ttype">char</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">City</field>
+        <field name="model_id" ref="model_buildings"/>
+    </record>
+    <record id="zip" model="ir.model.fields">
+        <field name="name">x_zip</field>
+        <field name="ttype">char</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">ZIP</field>
+        <field name="model_id" ref="model_buildings"/>
+    </record>
+    <record id="country" model="ir.model.fields">
+        <field name="name">x_country</field>
+        <field name="ttype">many2one</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">Country</field>
+        <field name="model_id" ref="model_buildings"/>
+        <field name="relation">res.country</field>
+    </record>
+    <record id="country_state" model="ir.model.fields">
+        <field name="name">x_state</field>
+        <field name="ttype">many2one</field>
+        <field name="copied" eval="True"/>
+        <field name="field_description">State</field>
+        <field name="model_id" ref="model_buildings"/>
+        <field name="relation">res.country.state</field>
+    </record>
+
+    <!-- Analytic account -->
+    <record id="field_property_image" model="ir.model.fields">
+        <field name="name">x_property_image</field>
+        <field name="field_description">Property Image</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">binary</field>
+    </record>
+
+    <record id="field_property_is_property" model="ir.model.fields">
+        <field name="name">x_is_property</field>
+        <field name="field_description">Is Property</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">boolean</field>
+        <field name="readonly" eval="True"/>
+        <field name="depends">plan_id</field>
+        <field name="compute">
+<![CDATA[
+property_plan = self.env.ref('industry_real_estate.analytic_plan_properties', raise_if_not_found=False)
+for property in self:
+    property['x_is_property'] = property.plan_id == property_plan if property_plan else False
+]]>
+</field>
+    </record>
+
+    <record id="field_property_is_published" model="ir.model.fields">
+        <field name="name">x_is_published</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account" />
+        <field name="field_description">Published</field>
+        <field name="ttype">boolean</field>
+        <field name="index" eval="True"/>
+    </record>
+
+    <record id="field_property_building" model="ir.model.fields">
+        <field name="name">x_property_building_id</field>
+        <field name="field_description">Building</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="relation">x_buildings</field>
+        <field name="ttype">many2one</field>
+    </record>
+
+    <record id="field_property_address" model="ir.model.fields">
+        <field name="name">x_property_address</field>
+        <field name="field_description">Address</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">text</field>
+    </record>
+
+    <record id="field_property_type" model="ir.model.fields">
+        <field name="name">x_property_type</field>
+        <field name="field_description">Property Type</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">selection</field>
+    </record>
+
+    <record id="field_property_type_selection_apartment" model="ir.model.fields.selection">
+        <field name="name">Apartment</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Appartment</field>
+    </record>
+
+    <record id="field_property_type_selection_house" model="ir.model.fields.selection">
+        <field name="name">House</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">House</field>
+    </record>
+
+    <record id="field_property_type_selection_studio" model="ir.model.fields.selection">
+        <field name="name">Studio</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Studio</field>
+    </record>
+
+    <record id="field_property_type_selection_office" model="ir.model.fields.selection">
+        <field name="name">Office</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Office</field>
+    </record>
+
+    <record id="field_property_type_selection_commercial_space" model="ir.model.fields.selection">
+        <field name="name">Commercial space</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Commercial space</field>
+    </record>
+
+    <record id="field_property_type_selection_warehouse" model="ir.model.fields.selection">
+        <field name="name">Warehouse</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Warehouse</field>
+    </record>
+
+    <record id="field_property_type_selection_land" model="ir.model.fields.selection">
+        <field name="name">Land</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Land</field>
+    </record>
+
+    <record id="field_property_type_selection_garage" model="ir.model.fields.selection">
+        <field name="name">Garage</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Garage</field>
+    </record>
+
+    <record id="field_property_type_selection_room" model="ir.model.fields.selection">
+        <field name="name">Room</field>
+        <field name="field_id" ref="field_property_type" />
+        <field name="value">Room</field>
+    </record>
+
+    <record id="field_property_description" model="ir.model.fields">
+        <field name="name">x_website_description</field>
+        <field name="field_description">Description</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">text</field>
+    </record>
+
+    <record id="field_property_meter_reading_ids" model="ir.model.fields">
+        <field name="name">x_property_meter_reading_ids</field>
+        <field name="field_description">Meter Readings</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">one2many</field>
+        <field name="relation">x_meter_reading</field>
+        <field name="relation_field">x_account_analytic_account_id</field>
+    </record>
+
+    <record id="field_property_attachment_image_ids" model="ir.model.fields">
+        <field name="name">x_property_attachment_image_ids</field>
+        <field name="field_description">Property Images</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="relation">ir.attachment</field>
+        <field name="relation_table">x_real_estate_property_attachment_image_rel</field>
+        <field name="ttype">many2many</field>
+    </record>
+
+    <record id="field_property_attachment_doc_ids" model="ir.model.fields">
+        <field name="name">x_property_attachment_doc_ids</field>
+        <field name="field_description">Property Documents</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="relation">ir.attachment</field>
+        <field name="relation_table">x_real_estate_property_attachment_doc_rel</field>
+        <field name="ttype">many2many</field>
+    </record>
+
+    <record id="field_property_invoice_status" model="ir.model.fields">
+        <field name="name">x_invoice_status</field>
+        <field name="field_description">Invoice Status</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="ttype">selection</field>
+        <field name="readonly" eval="True"/>
+        <field name="depends">x_property_meter_reading_ids.x_usage,x_property_meter_reading_ids.x_invoice_id</field>
+    </record>
+
+    <record id="field_property_invoice_status_selection_no" model="ir.model.fields.selection">
+        <field name="name">Nothing to invoice</field>
+        <field name="field_id" ref="field_property_invoice_status" />
+        <field name="value">no</field>
+    </record>
+
+    <record id="field_property_invoice_status_selection_invoiced" model="ir.model.fields.selection">
+        <field name="name">Already invoiced</field>
+        <field name="field_id" ref="field_property_invoice_status" />
+        <field name="value">invoiced</field>
+    </record>
+
+    <record id="field_property_invoice_status_selection_to_invoice" model="ir.model.fields.selection">
+        <field name="name">To invoice</field>
+        <field name="field_id" ref="field_property_invoice_status" />
+        <field name="value">to_invoice</field>
+    </record>
+
+    <record id="field_property_invoice_status" model="ir.model.fields">
+        <field name="compute">
+<![CDATA[
+for record in self:
+    meter_readings = record.x_property_meter_reading_ids.filtered(lambda l: l.x_usage > 0)
+    if not meter_readings:
+        record['x_invoice_status'] = 'no'
+    elif not meter_readings.filtered(lambda l: not l.x_invoice_id):
+        record['x_invoice_status'] = 'invoiced'
+    else:
+        record['x_invoice_status'] = 'to_invoice'
+]]></field>
+    </record>
+
+    <!-- crm lead -->
+    <record id="field_crm_lead_property_id" model="ir.model.fields">
+        <field name="field_description">Property</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="name">x_property_id</field>
+        <field name="relation">account.analytic.account</field>
+        <field name="ttype">many2one</field>
+        <field name="website_form_blacklisted" eval="False"/>
+    </record>
+
+    <!-- After field_rental_start_date because field_property_rental_contract_id needs it-->
+    <record id="field_property_rental_contract_id" model="ir.model.fields">
+        <field name="name">x_rental_contract_id</field>
+        <field name="field_description">Rental Contract</field>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="relation">sale.order</field>
+        <field name="ttype">many2one</field>
+        <field name="readonly" eval="True"/>
+        <field name="store" eval="False"/>
+        <field name="compute">
+<![CDATA[
+sos = self.env['sale.order']._read_group([('x_account_analytic_account_id', 'in', self.ids), ('state', '=', 'sale'), ('start_date', '<=', datetime.date.today()), ('subscription_state', 'not in', ['5_renewed', '6_churn'])], groupby=['x_account_analytic_account_id','id'], order='start_date:max')
+mapped_data = {account_id.id: so_id for account_id, so_id in sos}
+for record in self:
+    record['x_rental_contract_id'] = mapped_data.get(record.id, False)
+]]></field>
+    </record>
+
+    <record id="field_account_analytic_account_id" model="ir.model.fields">
+        <field name="name">x_account_analytic_account_id</field>
+        <field name="field_description">Property</field>
+        <field name="domain">[('x_is_property', '=', True)]</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">account.analytic.account</field>
+        <field name="group_expand" eval="True"/>
+    </record>
+
+    <record id="field_guarant_partner_id" model="ir.model.fields">
+        <field name="name">x_guarant_partner_id</field>
+        <field name="field_description">Guarant</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.partner</field>
+    </record>
+
+    <record id="field_sale_order_meter_reading_ids" model="ir.model.fields">
+        <field name="name">x_so_meter_reading_ids</field>
+        <field name="field_description">Meter Readings</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="ttype">one2many</field>
+        <field name="relation">x_meter_reading</field>
+        <field name="relation_field">x_sale_order_id</field>
+    </record>
+
+    <record id="field_sale_order_related_building_ids" model="ir.model.fields">
+        <field name="name">x_related_buildings_ids</field>
+        <field name="field_description">Building</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="ttype">many2one</field>
+        <field name="readonly" eval="True"/>
+        <field name="related">x_account_analytic_account_id.x_property_building_id</field>
+        <field name="relation">x_buildings</field>
+    </record>
+</odoo>

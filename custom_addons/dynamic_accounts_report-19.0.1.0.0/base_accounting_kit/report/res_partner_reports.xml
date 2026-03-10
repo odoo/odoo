@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Action for statement report -->
+    <record id="res_partner_action" model="ir.actions.report">
+        <field name="name">Statement Report</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">base_accounting_kit.res_partner_statement_report_template</field>
+        <field name="report_file">base_accounting_kit.res_partner_statement_report_template</field>
+        <field name="print_report_name">'Statement Report- %s' %(object.name)</field>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

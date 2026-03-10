@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Report Template for Tax-->
+    <template id="tax_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="data_report_margin_top" t-value="12"/>
+                <t t-set="data_report_header_spacing" t-value="9"/>
+                <t t-set="data_report_dpi" t-value="110"/>
+                <div class="page">
+                    <h3>
+                        <center>
+                            <b>
+                                <span t-esc="report_name"/>
+                            </b>
+                        </center>
+                    </h3>
+                    <br/>
+                    <br/>
+                    <div class="filters">
+                        <table class="table table-sm table-reports">
+                            <thead class="filter_table"
+                                   style="background:#808080;">
+                                <tr>
+                                    <th>Date Range</th>
+                                    <th>Comparison</th>
+                                    <th>Options</th>
+                                    <th>Report</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size:11px;font-weight:100;">
+                                <tr>
+                                    <th>
+                                        <t t-if="filters['start_date']"
+                                           t-out="filters['start_date']"/>
+                                        <t t-if="filters['end_date']">
+                                            to
+                                            <t t-out="filters['end_date']"/>
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-if="filters['comparison_number_range']">
+                                            <t t-out="filters['comparison_type']"/>
+                                            :
+                                            <t t-out="filters['comparison_number_range']"/>
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-foreach="filters['options']"
+                                           t-as="selected_options"
+                                           t-key="options_index">
+                                            <t t-out="selected_options"/>,
+                                        </t>
+                                    </th>
+                                    <th>
+                                        <t t-if="report_type and list(report_type.keys())[0] == 'account'">
+                                            <span>Account</span>
+                                        </t>
+                                        <t t-elif="report_type and list(report_type.keys())[0] == 'tax'">
+                                            <span>Tax</span>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-out="report_type"/>
+                                        </t>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <table class="table table-sm table-reports"
+                           style="width: fit-content;">
+                        <thead style="background:#808080;">
+                            <tr>
+                                <th colspan="6"/>
+                                <t t-foreach="date_viewed" t-as="date_view">
+                                    <th colspan="2">
+                                        <t t-esc="date_view"/>
+                                    </th>
+                                </t>
+                            </tr>
+                            <tr class="o_heading" style="text-align:center;">
+                                <th colspan="6"/>
+                                <th>NET</th>
+                                <th>TAX</th>
+                                <t t-if="apply_comparison == true">
+                                    <t t-set="number_of_periods"
+                                       t-value="comparison_number_range"/>
+                                    <t t-foreach="number_of_periods"
+                                       t-as="number">
+                                        <th>NET</th>
+                                        <th>TAX</th>
+                                    </t>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="data">
+                                <t t-set="prev_account" t-value="None"/>
+                                <t t-set="prev_tax" t-value="None"/>
+                                <tr class="border-bottom"
+                                    style="border-spacing: 0 10px;background:#dfdfdf;">
+                                    <th colspan="6">
+                                        <span style="font-weight: 700;">Sales
+                                        </span>
+                                    </th>
+                                    <th/>
+                                    <t t-if="apply_comparison == true">
+                                        <t t-set="number_of_periods"
+                                           t-value="comparison_number_range"/>
+                                        <t t-foreach="number_of_periods"
+                                           t-as="no">
+                                            <th/>
+                                            <th/>
+                                        </t>
+                                    </t>
+                                    <th style="text-align:center;font-weight: 700;">
+                                        <t t-esc="sale_total"/>
+                                    </th>
+                                </tr>
+                                <t t-set="i" t-value="0"/>
+                                <t t-foreach="data['sale']"
+                                   t-as="sale_tax_line">
+                                    <t t-set="i" t-value="i + 1"/>
+                                    <t t-if="report_type">
+                                        <t t-if="report_type == 'account'">
+                                            <t t-if="prev_account != sale_tax_line['account']">
+                                                <t t-set="prev_account"
+                                                   t-value="sale_tax_line['account']"/>
+                                                <tr class="border-bottom"
+                                                    style="border-spacing: 0 10px;">
+                                                    <th colspan="12">
+                                                        <span>
+                                                            <t t-esc="sale_tax_line['account']"/>
+                                                        </span>
+                                                    </th>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                        <t t-else="list(report_type.keys())[0] == 'tax'">
+                                            <t t-if="prev_tax != sale_tax_line['name']">
+                                                <t t-set="prev_tax"
+                                                   t-value=" sale_tax_line['name']"/>
+                                                <tr class="border-bottom"
+                                                    style="border-spacing: 0 10px;">
+                                                    <th colspan="12">
+                                                        <span>
+                                                            <t t-esc="sale_tax_line['name']"/>
+                                                            (
+                                                            <t t-esc="sale_tax_line['amount']"/>
+                                                            %)
+                                                        </span>
+                                                    </th>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <tr class="border-bottom"
+                                        style="border-spacing: 0 10px;font-weight: 400;">
+                                        <th colspan="6">
+                                            <span style="font-weight: 400;">
+                                                <t t-if="report_type and list(report_type.keys())[0] == 'tax'">
+                                                    <t t-esc="sale_tax_line['account']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="sale_tax_line['name']"/>
+                                                    (
+                                                    <t t-esc="sale_tax_line['amount']"/>
+                                                    %)
+                                                </t>
+                                            </span>
+                                        </th>
+                                        <t t-if="apply_comparison == true">
+                                            <t t-if="sale_tax_line['dynamic net']">
+                                                <t t-set="number_of_periods"
+                                                   t-value="comparison_number_range"/>
+                                                <t t-foreach="number_of_periods"
+                                                   t-as="num">
+                                                    <th style="text-align:center;font-weight: 400;">
+                                                        <t t-if="sale_tax_line['dynamic net']['dynamic_total_net_sum' + str(num)]"
+                                                           t-esc="sale_tax_line['dynamic net']['dynamic_total_net_sum' + str(num)]"/>
+                                                    </th>
+                                                    <th style="text-align:center;font-weight: 400;">
+                                                        <t t-if="sale_tax_line['dynamic tax']['dynamic_total_tax_sum' + str(num)]"
+                                                           t-esc="sale_tax_line['dynamic tax']['dynamic_total_tax_sum' + str(num)]"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <th style="text-align:center;">
+                                            <span style="font-weight: 400;">
+                                                <t t-esc="sale_tax_line['net']"/>
+                                            </span>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <span style="font-weight: 400;">
+                                                <t t-esc="sale_tax_line['tax']"/>
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </t>
+                                <tr style="height: 2rem;"/>
+                                <tr class="border-bottom"
+                                    style="border-spacing: 0 10px;background:#dfdfdf;">
+                                    <th colspan="6">
+                                        <span style="font-weight: 700;">
+                                            Purchase
+                                        </span>
+                                    </th>
+                                    <th/>
+                                    <t t-if="apply_comparison == true">
+                                        <t t-set="number_of_periods"
+                                           t-value="comparison_number_range"/>
+                                        <t t-foreach="number_of_periods"
+                                           t-as="numb">
+                                            <th/>
+                                            <th/>
+                                        </t>
+                                    </t>
+                                    <th style="text-align:center;font-weight: 700;">
+                                        <t t-esc="purchase_total"/>
+                                    </th>
+                                </tr>
+                                <t t-set="i" t-value="0"/>
+                                <t t-foreach="data['purchase']"
+                                   t-as="purchase_tax_line">
+                                    <t t-set="i" t-value="i + 1"/>
+                                    <t t-if="report_type">
+                                        <t t-if="list(report_type.keys())[0] == 'account'">
+                                            <tr class="border-bottom"
+                                                style="border-spacing: 0 10px;">
+                                                <th colspan="12">
+                                                    <span>
+                                                        <t t-esc="purchase_tax_line['account']"/>
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </t>
+                                        <t t-else="list(report_type.keys())[0] == 'tax'">
+                                            <t t-set="prev_account"
+                                               t-value="purchase_tax_line['name']"/>
+                                            <tr class="border-bottom"
+                                                style="border-spacing: 0 10px;">
+                                                <th colspan="12">
+                                                    <span>
+                                                        <t t-esc="purchase_tax_line['name']"/>
+                                                        (
+                                                        <t t-esc="purchase_tax_line['amount']"/>
+                                                        %)
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr class="border-bottom"
+                                        style="border-spacing: 0 10px;">
+                                        <th colspan="6">
+                                            <span style="font-weight: 400;">
+                                                <t t-if="report_type and list(report_type.keys())[0] == 'tax'">
+                                                    <t t-esc="purchase_tax_line['account']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="purchase_tax_line['name']"/>
+                                                    (
+                                                    <t t-esc="purchase_tax_line['amount']"/>
+                                                    %)
+                                                </t>
+                                            </span>
+                                        </th>
+                                        <t t-if="apply_comparison == true">
+                                            <t t-if="purchase_tax_line['dynamic net']">
+                                                <t t-set="number_of_periods"
+                                                   t-value="comparison_number_range"/>
+                                                <t t-foreach="number_of_periods"
+                                                   t-as="period">
+                                                    <th style="text-align:center;font-weight: 400;">
+                                                        <t t-if="purchase_tax_line['dynamic net']['dynamic_total_net_sum' + str(period)]"
+                                                           t-esc="purchase_tax_line['dynamic net']['dynamic_total_net_sum' + str(period)]"/>
+                                                    </th>
+                                                    <th style="text-align:center;font-weight: 400;">
+                                                        <t t-if="purchase_tax_line['dynamic net']['dynamic_total_net_sum' + str(period)]"
+                                                           t-esc="purchase_tax_line['dynamic net']['dynamic_total_net_sum' + str(period)]"/>
+                                                    </th>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <th style="text-align:center;">
+                                            <span style="font-weight: 400;">
+                                                <t t-esc="purchase_tax_line['net']"/>
+                                            </span>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <span style="font-weight: 400;">
+                                                <t t-esc="purchase_tax_line['tax']"/>
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

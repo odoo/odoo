@@ -1,0 +1,5 @@
+[build-system]
+requires = ["whool"]
+build-backend = "whool.buildapi"
+[tool.ruff]
+lint.extend-per-file-ignores = { "**/__init__.py" = ["F401"] }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.formDashboardPreview">
+        <div class="w-100 form-chart" style="height: 65vh;">
+            <div t-attf-style="height: #{['tile', 'kpi'].includes(state.chart_type) ? 35 : 80}%">
+                <div t-if="state.chart_type != 'tile'">
+                    <span style="font-size: 1rem;" t-out="state.name"></span>
+                </div>
+                <AreaChart t-if="state.chart_type == 'area_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <BarChart t-if="state.chart_type == 'bar_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <ColumnChart t-if="state.chart_type == 'column_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <DoughnutChart t-if="state.chart_type == 'doughnut_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <FunnelChart t-if="state.chart_type == 'funnel_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <PyramidChart t-if="state.chart_type == 'pyramid_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <LineChart t-if="state.chart_type == 'line_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <PieChart t-if="state.chart_type == 'pie_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <RadarChart t-if="state.chart_type == 'radar_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <StackedColumnChart t-if="state.chart_type == 'stackedcolumn_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <RadialChart t-if="state.chart_type == 'radial_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <ScatterChart t-if="state.chart_type == 'scatter_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <MapChart t-if="state.chart_type == 'map_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <MeterChart t-if="state.chart_type == 'meter_chart'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <ListView t-if="state.chart_type == 'list'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <TileView t-if="state.chart_type == 'tile'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <KPIView t-if="state.chart_type == 'kpi'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+                <TodoView t-if="state.chart_type == 'to_do'" theme="state.theme" chartId="'edit_' + state.id" isDirty="state.isDirty" recordSets="state.recordSets" data="state.data" name="state.name" />
+            </div>
+        </div>
+    </t>
+</templates>

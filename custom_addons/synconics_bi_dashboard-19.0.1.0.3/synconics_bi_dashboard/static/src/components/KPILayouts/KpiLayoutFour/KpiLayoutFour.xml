@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.KpiLayoutFour" owl="1">
+        <!-- shadow card  -->
+        <div t-att-title="state.data.tooltip_info" class="h-100" t-attf-style="background-color: #{state.data.background_color} !important; border-#{state.data.kpi_border_type}: #{state.data.is_kpi_border ? state.data.kpi_border_width : 0}px solid #{state.data.kpi_border_color};">
+            <div class="card-body position-relative p-0 h-100" t-att-style="'background-color:' + state.data.background_color+ '!important;overflow: hidden;'">
+                <div class="col-md-12 h-100 oe_card_layout" t-att-style="'background-color:' + state.data.background_color+';cursor: pointer;'">
+                    <div class="row h-100" style="--gutter-x: 0px;">
+                        <div class="p-2 col-12" t-attf-style="display: flex;color: #{state.data.font_color};">
+                            <!-- position: absolute;top: 3px; -->
+                            <img  t-if="state.data.icon_option == 'custom' and state.data.icon" class="img" style="height: 45px;width: 45px;" t-attf-src="data:images/png;base64,#{state.data.icon}"/>
+                            <span class="col-3" t-elif="state.data.icon_option == 'default' and state.data.default_icon">
+                                <t t-att-style="'color:' + state.data.font_color+';'" class="col-3" t-out="state.kpi_icon"/>
+                            </span>
+                            <i t-else="" t-att-style="'color:' + state.data.font_color+';'" class="fa fa-user col-3"/>
+                            <div class="text-xs text-truncate col-9" t-att-style="'text-align:' + state.data.text_align+';'">
+                                <span class="oe_name oe_tile oe_title  text-wrap p-0" t-att-style="'font-size:22px; '+'color:'+state.data.font_color+';'" t-esc="state.data.name"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 m-auto p-2">
+                            <div class="col-12 p-0 d-flex align-items-center" t-att-style="'text-align:' + state.data.text_align+';'">
+                                <div class="oe_progress col-3 pl-2 pr-0 d-flex justify-content-center">
+                                    <div t-if="state.data.kpi_view_type == 'progress'" role="progressbar" t-att-aria-valuenow="state.data.progress" aria-valuemin="0" aria-valuemax="100" t-attf-style="--value:#{state.data.progress};--background: #{state.data.background_color}"></div>
+                                </div>
+                                <div class="oe_content col-9">
+                                    <span t-att-style="'font-size:'+state.data.font_size+'px; '+'color:'+state.data.font_color+';'+'font-weight:'+state.data.font_weight+';'">
+                                        <t t-esc="state.data.count"/>
+                                        <t t-if="state.data.comparison == 'none'">
+                                            <t t-if="state.data.count2"> | <t t-esc="state.data.count2"/></t>
+                                        </t>
+                                        <t t-if="state.data.comparison == 'percentage'">
+                                            %
+                                        </t>
+                                        <!-- <t t-esc="result['count']"/> -->
+                                        <t t-if="state.data.comparison == 'ratio'">
+                                            : <t t-esc="state.data.count2"/>
+                                        </t>
+                                        <t t-if="state.data.target"> | <t t-esc="state.data.target"/></t>
+                                        <t t-if="state.data.kpi_enable_target">
+                                            <t t-if="state.data.kpi_view_type == 'standard'">
+                                                <div class="mt-1" style="font-size: 12px;">
+                                                    <div>
+                                                        <span t-if="state.data.previous_data">
+                                                        <t t-esc="state.data.message"/></span>
+                                                    </div>
+                                                    <div t-if="state.data.arrow == 'up'">
+                                                        <span>
+                                                            <i t-attf-style="color: #{state.data.color}" class="fa fa-arrow-up"/>
+                                                        </span>
+                                                    </div>
+                                                    <div t-if="state.data.arrow == 'down'">
+                                                        <span>
+                                                            <i t-attf-style="color: #{state.data.color}" class="fa fa-arrow-down #{state.data.color}"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="state.data.previous_data" style="background-color: #ffffff21;text-align: left;margin-bottom: 0;bottom: 0px;right: 0;left: 0;height: 34px;display: flex;align-items: center;">
+                            <div class="h5 d-flex align-items-center text-gray-800">
+                                <i t-if="state.data.previous_data.arrow == 'up'" t-attf-style="font-size: 25px;color:#{state.data.font_color};" class="fa fa-arrow-up pr-2 pl-2"></i>
+                                <i t-if="state.data.previous_data.arrow == 'down'" t-attf-style="font-size: 25px;color:#{state.data.font_color};" class="fa fa-arrow-down pr-2 pl-2"></i>
+                                <span t-attf-style="font-size: 20px;color: #{state.data.font_color};font-family: cursive;">
+                                    <t t-esc="state.data.previous_data.standard"/>
+                                </span>
+                                <span t-if="state.data.previous_data" class="pl-3" t-attf-style="font-size: 10px;padding: 6px; color: #{state.data.font_color};">
+                                <t t-esc="state.data.previous_data.message"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

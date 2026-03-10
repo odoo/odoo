@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="my_dashboard_default" model="dashboard.dashboard">
+        <field name="name">My Dashboard</field>
+    </record>
+
+    <function name="create_update_menu" model="dashboard.dashboard">
+        <value eval="[ref('my_dashboard_default')]" />
+    </function>
+</odoo>

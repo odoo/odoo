@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Customizing the hr.salary.rule form view to include additional
+     fields in the 'Accounting' section. -->
+    <record id="hr_salary_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.form.inherit.hr.payroll.account.community</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id"
+               ref="hr_payroll_community.hr_salary_rule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/notebook/page[@name='rules']" position="after">
+                <page string="Accounting">
+                    <group colspan="4">
+                        <field name="account_debit_id"/>
+                        <field name="account_credit_id"/>
+                        <field name="analytic_account_id"
+                               groups="analytic.group_analytic_accounting"/>
+                        <field name="account_tax_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

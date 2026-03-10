@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <template id="website_listing_account_analytic_account">
+        <t t-name="website_studio.properties">
+            <t t-call="website.layout">
+                <div class="container o_website_listing_layout">
+                <div class="oe_structure oe_new"/>
+                <section class="s_searchbar o_colored_level o_cc pt48 pb48">
+                    <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="btn-toolbar">
+                        <form method="get" class="o_searchbar_form s_searchbar_input me-auto flex-grow-1">
+                            <div role="search" class="input-group">
+                            <input type="search" name="search" class="search-query form-control oe_search_box border-0 text-bg-light" placeholder="Search..." t-att-value="search" autocomplete="off"/>
+                            <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button btn-light">
+                                <i class="oi oi-search"/>
+                                <span t-if="search" class="oe_search_found">
+                                    <small>(<t t-out="search_count or 0"/> found)</small>
+                                </span>
+                            </button>
+                            </div>
+                            <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+                        </form>
+                        <t t-call="website_studio.listing_layout_switcher"/>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+                <div t-attf-class="row mx-n2 mt8 #{'o_website_grid' if layout_mode == 'grid' else 'o_website_list'}">
+                    <t t-foreach="records" t-as="record">
+                    <div t-attf-class="#{'col-lg-3 col-md-4 col-sm-6 px-2 col-xs-12' if layout_mode == 'grid' else ''}">
+                        <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" t-att-href="record_to_url(record)">
+                        <div class="d-flex">
+                            <t>
+                                <img t-if="record.x_property_image" class="o_website_image h-100 w-100" style="" t-attf-src="data:image/png;base64,{{record.x_property_image}}"/>
+                                <div t-else="" class="o_website_image bg-light h-100 w-100"/>
+                            </t>
+                        </div>
+                        <div class="card-body py-2 px-3">
+                            <h5 class="card-title">
+                            <span t-field="record.display_name"/>
+                            </h5>
+                        </div>
+                        </a>
+                    </div>
+                    </t>
+                </div>
+                <div class="oe_structure oe_new"/>
+                    <div t-if="pager" class="o_portal_pager d-flex justify-content-center my-4">
+                        <t t-call="portal.pager"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="website_listing_details_account_analytic_account" name="Properties">
+        <t t-set="additional_title"><t t-out="record.name"/></t>
+        <t t-call="website.layout">
+            <div id="o_website_record_page wrap">
+            <div class="oe_structure oe_new" data-editor-message="Drag building blocks to customize the header of single record pages."/>
+            <div class="container">
+                <ol t-if="listing" class="breadcrumb p-0 my-2">
+                <li class="breadcrumb-item o_not_editable">
+                    <a t-att-href="listing['href']">
+                    <span t-out="listing['name']"/>
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <span t-field="record.display_name"/>
+                </li>
+                </ol>
+                <div class="d-flex flex-row my-4 flex-wrap align-items-center justify-content-between">
+                    <div class="col-lg-4 mt-lg-4 col-sm-12">
+                        <h1 class="h1"><span t-field="record.display_name"/></h1>
+                        <p class="o_website_monetary" t-field="record.sudo().x_property_building_id.x_name"/>
+                        <div class="o_website_html mb-3" t-field="record.x_website_description"
+                            data-editor-message="Drag building blocks to edit the website description of this record."/>
+                    </div>
+                    <t>
+                        <img t-if="record.x_property_image" class="o_website_image col-lg-6 mt-md-4 col-sm-12 me-2 mw-100 rounded-3" style="" t-attf-src="data:image/png;base64,{{record.x_property_image}}"/>
+                        <div t-else="" class="o_website_image bg-light col-lg-6 mt-md-4 col-sm-12 me-2 rounded-3"/>
+                    </t>
+                </div>
+                <t t-set="images" t-value="record.sudo().x_property_attachment_image_ids"/>
+                <section class="s_image_gallery o_spc-small pt24 pb24 o_colored_level o_grid" data-vcss="001" data-columns="4" style="overflow: hidden; background-image: none;" data-snippet="s_images_wall" data-name="Images Wall" t-if="images">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-2" t-foreach="images" t-as="image">
+                                <img class="img img-fluid d-block rounded-3" t-attf-src="/web/image/{{ image.id }}?access_token={{ image.sudo().generate_access_token()[0] }}" t-att-data-index="image_index" data-name="Image" loading="lazy" style=""/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="oe_structure oe_new" data-editor-message="Drag building blocks to customize the footer of single record pages."/>
+            </div>
+        </t>
+    </template>
+
+    <record id="website_controller_page_1" model="website.controller.page">
+        <field name="name">Properties</field> <!-- page title -->
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="website_id" ref="website.default_website"/>
+        <field name="website_published" eval="True"/>
+        <field name="view_id" ref="website_listing_account_analytic_account"/>
+        <field name="record_view_id" ref="website_listing_details_account_analytic_account"/>
+        <field name="record_domain" eval="[
+            ('x_is_property', '=', True),
+            ('x_is_published', '=', True)
+        ]"/>
+    </record>
+</odoo>

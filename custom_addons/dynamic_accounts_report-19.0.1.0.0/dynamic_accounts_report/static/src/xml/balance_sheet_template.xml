@@ -1,0 +1,1709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <!-- Section contains a structure for the Balance Sheet report, including a filter
+        view and a table view. It has div elements for the filter view and table view,
+         with respective classes for styling.-->
+    <t t-name="bls_template_new" owl="1">
+        <div class="container">
+            <div class="fin_report">
+                <!--  Filter View  -->
+                <div class="filter_view_dfr pt-3 pb-5">
+                    <div class="">
+                        <h2 class="text-uppercase" style="padding:10px">
+                            <t t-esc="state.title"/>
+                        </h2>
+                    </div>
+                    <div class="sub_container_right d-flex mx-2">
+                        <t t-if="state.filter_data">
+                            <div class="report_print">
+                                <button type="button"
+                                        class="btn btn-primary btn-report-print"
+                                        t-on-click="print_pdf"
+                                        style="margin-right: 8px;">
+                                    Print (PDF)
+                                </button>
+                                <button type="button"
+                                        class="btn btn-primary btn-report-print"
+                                        t-on-click="print_xlsx"
+                                        style="position: relative;">
+                                    Export (XLSX)
+                                </button>
+                            </div>
+                            <div class="filter d-flex ms-auto"
+                                 style="gap: 1.5rem;">
+                                <div class="time_range" style="">
+                                    <a type="button" class="dropdown-toggle"
+                                       data-bs-toggle="dropdown">
+                                        <span class="fa fa-calendar"
+                                              title="Dates"
+                                              role="img"
+                                              aria-label="Dates"/>
+                                        Date Range
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <div class="list-group">
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'month'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                This Month
+                                            </button>
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'quarter'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                This Quarter
+                                            </button>
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'year'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                This Year
+                                            </button>
+                                            <div role="separator"
+                                                 class="dropdown-divider"/>
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'last-month'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                Last month
+                                            </button>
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'last-quarter'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                Last quarter
+                                            </button>
+                                            <button class="report-filter-button"
+                                                    t-att-data-value="'last-year'"
+                                                    type="button"
+                                                    t-on-click="apply_date">
+                                                Last year
+                                            </button>
+                                            <div role="separator"
+                                                 class="dropdown-divider"/>
+                                            <label class="" for="date_from">
+                                                Start
+                                                Date :
+                                            </label>
+                                            <div class="input-group date"
+                                                 t-ref="date_from"
+                                                 data-target-input="nearest">
+
+                                                <input type="date"
+                                                       id="start_date"
+                                                       t-on-change="apply_date"
+                                                       style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                       name="start_date"/>
+                                            </div>
+
+                                            <label class="" for="date_to">End
+                                                Date
+                                                :
+                                            </label>
+                                            <div class="input-group date"
+                                                 t-ref="date_to"
+                                                 data-target-input="nearest">
+                                                <input type="date"
+                                                       id="end_date"
+                                                       t-on-change="apply_date"
+                                                       style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                       name="end_date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comparison_range" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    <span class="fa fa-signal"
+                                          title="Comparison"
+                                          role="img"
+                                          aria-label="Comparison"/>
+                                    Comparison
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <button class="report-filter-button"
+                                                t-att-data-value="'no comparison'"
+                                                type="button"
+                                                t-on-click="apply_comparison">
+                                            No Comparison
+                                        </button>
+                                        <div role="separator"
+                                             class="dropdown-divider"/>
+                                        <label class="" for="periods"
+                                               style="display: flex;padding: 4px 20px;color: #000;">
+                                            Previous Period
+                                            <br/>
+                                            Number of Periods:
+                                        </label>
+                                        <div class="input-group comparison"
+                                             data-target-input="nearest">
+
+                                            <input type="number"
+                                                   t-ref="periods"
+                                                   min="1"
+                                                   t-on-input="onPeriodChange"
+                                                   style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                   name="previous_period"/>
+                                        </div>
+                                        <button class="btn btn-primary"
+                                                type="button"
+                                                style="margin-left: 19px;margin-top: 4px;"
+                                                t-on-click="applyComparisonPeriod">
+                                            Apply
+                                        </button>
+                                        <div role="separator"
+                                             class="dropdown-divider"/>
+                                        <label class="" for="period_year"
+                                               style="display: flex;padding: 4px 20px;color: #000;">
+                                            Same Period Last Year
+                                            <br/>
+                                            Number of Periods:
+                                        </label>
+                                        <div class="input-group comparison"
+                                             data-target-input="nearest">
+                                            <input type="number"
+                                                   t-ref="period_year"
+                                                   t-on-input="onPeriodYearChange"
+                                                   min="1"
+                                                   style="border:none;border-bottom: 1px solid #000;padding: 5px;outline: none;"
+                                                   name="period_year"/>
+                                        </div>
+                                        <button class="btn btn-primary"
+                                                type="button"
+                                                style="margin-left: 19px;margin-top: 4px;"
+                                                t-on-click="applyComparisonYear">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="journals_filter dropdown" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    <span class="fa fa-book"/>
+                                    Journals:
+                                    <span class="code"/>
+                                </a>
+                                <div class="dropdown-menu journals"
+                                     name="states[]">
+                                    <div role="separator"
+                                         class="dropdown-divider"/>
+                                    <t t-foreach="state.filter_data['journal']"
+                                       t-as="journal" t-key="journal_index">
+                                        <span class="dropdown-item"
+                                              role="menuitem"
+                                              t-on-click="apply_journal">
+                                            <span t-esc="journal.id"
+                                                  class="d-none"/>
+                                            <t t-esc="journal.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="accounts_filter">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown" style="display: flex;text-wrap: wrap;
+                                                                    flex-direction: row;
+                                                                    align-items: center;
+                                                                    justify-content: flex-start;
+                                                                    min-width: 105px;">
+                                    <span class="fa fa-book"/>
+                                    Accounts:
+                                    <span class="account"/>
+                                </a>
+                                <div class="dropdown-menu journals"
+                                     name="states[]">
+                                    <div role="separator"
+                                         class="dropdown-divider"/>
+                                    <t t-foreach="state.filter_data['account']"
+                                       t-as="account" t-key="account_index">
+                                        <span class="dropdown-item"
+                                              role="menuitem"
+                                              t-on-click="apply_account">
+                                            <span t-esc="account.id"
+                                                  class="d-none"/>
+                                            <t t-esc="account.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="analytic_filter" style="max-width:17%;">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown" style="display: flex;
+                                                            text-wrap: wrap;
+                                                            flex-direction: row;
+                                                            align-items: center;
+                                                            justify-content: flex-start;
+                                                            min-width: 105px;">
+                                    <span class="fa fa-folder-open"/>
+                                    Analytic Accounts:
+                                    <span class="analytic"/>
+                                </a>
+                                <div class="dropdown-menu analytic_accounts"
+                                     name="states[]">
+                                    <div role="separator"
+                                         class="dropdown-divider"/>
+                                    <t t-foreach="state.filter_data['analytic']"
+                                       t-as="analytic" t-key="analytic_index">
+                                        <span class="dropdown-item"
+                                              role="menuitem"
+                                              t-on-click="apply_analytic_accounts">
+                                            <span t-esc="analytic.id"
+                                                  class="d-none"/>
+                                            <t t-esc="analytic.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="search_Target_move" style="">
+                                <a type="button" class="dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    <span class="fa fa-filter"/>
+                                    Target Move:
+                                    <span class="target"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <div class="list-group">
+                                        <button class="report-filter-button"
+                                                t-attf-value="posted"
+                                                t-ref="posted"
+                                                type="button"
+                                                t-on-click="apply_entries">
+                                            Posted Entries
+                                        </button>
+                                        <button class="report-filter-button"
+                                                t-attf-value="draft"
+                                                t-ref="draft"
+                                                type="button"
+                                                t-on-click="apply_entries">
+                                            Include Draft Entries
+                                        </button>
+                                        <button class="report-filter-button"
+                                                type="button"
+                                                t-ref="unfoldButton"
+                                                t-on-click="unfoldAll">
+                                            Unfold All
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <!-- Table View -->
+                <div class="table_view_dfr" style="height: 650px; overflow-y: scroll;">
+                    <div class="table_main_view px-5">
+                        <table cellspacing="0" width="100%">
+                            <t t-if="state.data">
+                                <thead>
+                                    <tr class="o_heading">
+                                        <th colspan="6"/>
+                                        <t t-if="state.year">
+                                            <t t-foreach="state.year"
+                                               t-as="periodData"
+                                               t-key="periodData_index">
+                                                <th class="text-end">
+                                                    <t t-esc="periodData"/>
+                                                </th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                    <tr class="o_heading">
+                                        <th colspan="6"/>
+                                        <t t-if="state.year">
+                                            <t t-foreach="state.year"
+                                               t-as="periodData"
+                                               t-key="periodData_index">
+                                                <th class="text-end">Balance
+                                                </th>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody t-ref="tbody">
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="8">
+                                            <span class="fw-bold">
+                                                ASSETS
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="9">
+                                            <span class="fw-bolder ms-2">
+                                                Current Assets
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_cash[1] != '0.00'">
+                                            <t t-set="asset_cash" t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_cash == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_cash"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_cash"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Bank and Cash
+                                                            Accounts
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_cash[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_cash[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_cash[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_cash">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_cash[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Bank and
+                                                    Cash Accounts
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_receivable[1] != '0.00'">
+                                            <t t-set="asset_receivable"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_receivable == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_receivable"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_receivable"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Receivables
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_receivable[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_receivable[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_receivable[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_receivable">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_receivable[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Receivables
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_current[1] != '0.00'">
+                                            <t t-set="asset_current"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_current == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_current"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_current"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Current Assets
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_current[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_current[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_current[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_current">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_current[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Current
+                                                    Assets
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_prepayments[1] != '0.00'">
+                                            <t t-set="asset_prepayments"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_prepayments == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_prepayments"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_prepayments"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Prepayments
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_prepayments[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_prepayments[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_prepayments[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_prepayments">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_prepayments[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Prepayments
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-3">
+                                                Total Current Assets
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_current_asset"
+                                                       t-esc="value.total_current_asset"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_fixed[1] != '0.00'">
+                                            <t t-set="asset_fixed" t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_fixed == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_fixed"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_fixed"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Plus Fixed Assets
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_fixed[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_fixed[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_fixed[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_fixed">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_fixed[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Plus Fixed
+                                                    Assets
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.asset_non_current[1] != '0.00'">
+                                            <t t-set="asset_non_current"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="asset_non_current == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_asset_non_current"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_asset_non_current"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Plus Non-current
+                                                            Assets
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.asset_non_current[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.asset_non_current[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.asset_non_current[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_asset_non_current">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.asset_non_current[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Plus
+                                                    Non-current Assets
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-2">
+                                                Total ASSETS
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_assets"
+                                                       t-esc="value.total_assets"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="8">
+                                            <span class="fw-bolder">
+                                                LIABILITIES
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="9">
+                                            <span class="fw-bolder ms-2">
+                                                Current Liabilities
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.liability_current[1] != '0.00'">
+                                            <t t-set="liability_current"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="liability_current == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_liability_current"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_liability_current"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Current Liabilities
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.liability_current[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.liability_current[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.liability_current[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_liability_current">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.liability_current[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Current Liabilities
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.liability_payable[1] != '0.00'">
+                                            <t t-set="liability_payable"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="liability_payable == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_liability_payable"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_liability_payable"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Payables
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.liability_payable[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.liability_payable[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.liability_payable[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_liability_payable">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.liability_payable[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Payables
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-3">
+                                                Total Current Liabilities
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_current_liability"
+                                                       t-esc="value.total_current_liability"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.liability_non_current[1] != '0.00'">
+                                            <t t-set="liability_non_current"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="liability_non_current == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_liability_non_current"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_liability_non_current"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Plus Non-current
+                                                            Liabilities
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.liability_non_current[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.liability_non_current[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.liability_non_current[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_liability_non_current">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.liability_non_current[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Plus
+                                                    Non-current Liabilities
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-2">
+                                                Total LIABILITIES
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_liability"
+                                                       t-esc="value.total_liability"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="8">
+                                            <span class="fw-bolder">
+                                                EQUITY
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="9">
+                                            <span class="fw-bolder ms-2">
+                                                Unallocated Earnings
+                                            </span>
+                                        </th>
+                                    </tr>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="6">
+                                            <a class="btn current_earnings">
+                                                <span class="ms-4">Current
+                                                    Earnings
+                                                </span>
+                                            </a>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_earnings"
+                                                       t-esc="value.total_earnings"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.equity_unaffected[1] != '0.00'">
+                                            <t t-set="equity_unaffected"
+                                               t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="equity_unaffected == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_equity_unaffected"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_equity_unaffected"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Current Allocated
+                                                            Earnings
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.equity_unaffected[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.equity_unaffected[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.equity_unaffected[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_equity_unaffected">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.equity_unaffected[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-4">Current
+                                                    Allocated Earnings
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-gainsboro">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-3">
+                                                Total Unallocated Earnings
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_unallocated_earning"
+                                                       t-esc="value.total_unallocated_earning"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <t t-foreach="state.datas" t-as="value"
+                                       t-key="value_index">
+                                        <t t-if="value.equity[1] != '0.00'">
+                                            <t t-set="equity" t-value="1"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="equity == 1">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="6">
+                                                <div data-bs-toggle="collapse"
+                                                     href="#collapse_equity"
+                                                     aria-expanded="false"
+                                                     aria-controls="collapse_equity"
+                                                     class="ms-3 collapsed">
+                                                    <a class="btn header">
+                                                        <span class="toggle-icon">
+                                                            <i class="fa fa-caret-down"/>
+                                                        </span>
+                                                        <span class="ms-3">
+                                                            Retained Earnings
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                            <t t-foreach="state.datas"
+                                               t-as="value" t-key="value_index">
+                                                <th class="text-end">
+                                                    <span>
+                                                        <t t-esc="value.equity[1]"/>
+                                                    </span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <t t-if="value_index == 0">
+                                                <t t-foreach="value.equity[0]"
+                                                   t-as="data"
+                                                   t-key="data_index">
+                                                    <t t-set="account_name"
+                                                       t-value="data.name"/>
+                                                    <t t-set="account_value"
+                                                       t-value="0"/>
+                                                    <t t-foreach="state.datas"
+                                                       t-as="values"
+                                                       t-key="values_index">
+                                                        <t t-foreach="values.equity[0]"
+                                                           t-as="data"
+                                                           t-key="data_index">
+                                                            <t t-if="account_name == data.name">
+                                                                <t t-if="data.amount != '0.00'">
+                                                                    <t t-set="account_value"
+                                                                       t-value="1"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                    <t t-if="account_value == 1">
+                                                        <tr class="border-bottom border-gainsboro collapse"
+                                                            id="collapse_equity">
+                                                            <th colspan="6">
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle"
+                                                                       data-bs-toggle="dropdown">
+                                                                        <span class="ms-5">
+                                                                            <t t-esc="data.name"/>
+                                                                        </span>
+                                                                    </a>
+                                                                    <span class="dropdown-menu">
+                                                                        <a role="menuitem"
+                                                                           t-on-click="show_gl"
+                                                                           class="show_gl">
+                                                                            General
+                                                                            Ledger
+                                                                        </a>
+                                                                    </span>
+                                                                </span>
+                                                            </th>
+                                                            <t t-foreach="state.datas"
+                                                               t-as="values"
+                                                               t-key="values_index">
+                                                                <t t-foreach="values.equity[0]"
+                                                                   t-as="data"
+                                                                   t-key="data_index">
+                                                                    <t t-if="account_name == data.name">
+                                                                        <th class="text-end">
+                                                                            <span>
+                                                                                <t t-esc="data.amount"/>
+                                                                            </span>
+                                                                        </th>
+                                                                    </t>
+                                                                </t>
+                                                            </t>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <tr class="border-bottom border-gainsboro">
+                                            <th colspan="9">
+                                                <span class="ms-3">Retained
+                                                    Earnings
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </t>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-2">
+                                                Total EQUITY
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_equity"
+                                                       t-esc="value.total_equity"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                    <tr class="border-bottom border-dark">
+                                        <th colspan="6">
+                                            <span class="fw-bolder ms-2">
+                                                LIABILITIES + EQUITY
+                                            </span>
+                                        </th>
+                                        <t t-foreach="state.datas" t-as="value"
+                                           t-key="value_index">
+                                            <th class="text-end">
+                                                <span class="fw-bolder">
+                                                    <t t-if="value.total_balance"
+                                                       t-esc="value.total_balance"/>
+                                                </span>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </t>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

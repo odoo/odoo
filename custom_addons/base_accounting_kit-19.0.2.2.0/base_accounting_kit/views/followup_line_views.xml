@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--  FollowUp Line Tree View  -->
+    <record id="followup_line_view_tree" model="ir.ui.view">
+        <field name="name">followup.line.view.tree</field>
+        <field name="model">followup.line</field>
+        <field name="arch" type="xml">
+            <list string="Follow-up Steps" >
+                <field name="name"/>
+                <field name="delay"/>
+            </list>
+        </field>
+    </record>
+<!--  FollowUp Line Form View  -->
+    <record id="followup_line_view_form" model="ir.ui.view">
+        <field name="name">followup.line.view.form</field>
+        <field name="model">followup.line</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up Steps">
+                <label for="name" class="oe_edit_only"/>
+                <h1><field name="name"/></h1>
+                <div class="oe_inline">
+                    After <field name="delay" class="oe_inline"/> days overdue, do the following actions:
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

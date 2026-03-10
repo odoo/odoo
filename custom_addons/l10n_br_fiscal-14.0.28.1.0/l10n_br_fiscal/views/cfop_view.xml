@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="cfop_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cfop.search</field>
+        <field name="model">l10n_br_fiscal.cfop</field>
+        <field name="arch" type="xml">
+            <search string="CFOP">
+                <filter
+                    string="Input"
+                    name="type_input"
+                    domain="[('type_in_out', '=', 'in')]"
+                />
+                <filter
+                    string="Output"
+                    name="type_output"
+                    domain="[('type_in_out','=','out')]"
+                />
+                <filter
+                    string="All"
+                    name="type_all"
+                    domain="[('type_in_out','=','all')]"
+                />
+                <separator />
+                <field name="code" />
+                <field name="name" />
+                <field name="small_name" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Type In Out'
+                        name="type_in_out"
+                        domain="[]"
+                        context="{'group_by' : 'type_in_out'}"
+                    />
+                    <filter
+                        string='Type Move'
+                        name="type_move"
+                        domain="[]"
+                        context="{'group_by' : 'type_move'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cfop_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cfop.tree</field>
+        <field name="model">l10n_br_fiscal.cfop</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+                <field name="type_in_out" />
+                <field name="destination" />
+                <field name="type_move" />
+                <field name="ind_nfe" optional="hide" />
+                <field name="ind_cte" optional="hide" />
+                <field name="ind_comunica" optional="hide" />
+                <field name="ind_transp" optional="hide" />
+                <field name="ind_devol" optional="hide" />
+                <field name="ind_retor" optional="hide" />
+                <field name="ind_anula" optional="hide" />
+                <field name="ind_remes" optional="hide" />
+                <field name="ind_comb" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="cfop_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cfop.form</field>
+        <field name="model">l10n_br_fiscal.cfop</field>
+        <field name="arch" type="xml">
+            <form string="CFOP">
+                <field name="id" invisible="1" />
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="small_name" />
+                        <field name="type_in_out" />
+                        <field name="destination" />
+                        <field name="cfop_inverse_id" />
+                        <field name="cfop_return_id" />
+                    </group>
+                    <group>
+                        <group name="move_settings" string="Move Settings">
+                            <field name="type_move" />
+                            <field name="stock_move" />
+                            <field name="finance_move" />
+                            <field name="account_move" />
+                            <field name="assent_move" />
+                        </group>
+                        <group name="fiscal_document" string="Used In Fiscal Document">
+                            <field name="ind_nfe" />
+                            <field name="ind_cte" />
+                        </group>
+                        <group name="move_type" string="Move Type">
+                            <field name="ind_comunica" />
+                            <field name="ind_transp" />
+                            <field name="ind_devol" />
+                            <field name="ind_retor" />
+                            <field name="ind_anula" />
+                            <field name="ind_remes" />
+                            <field name="ind_comb" />
+                        </group>
+                    </group>
+                    <group name="tax_settings" string="Taxes Settings">
+                        <field
+                            name="tax_definition_ids"
+                            nolabel="1"
+                            context="{'tree_view_ref': 'l10n_br_fiscal.tax_definition_tree','form_view_ref': 'l10n_br_fiscal.tax_definition_form', 'default_cfop_id': id}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

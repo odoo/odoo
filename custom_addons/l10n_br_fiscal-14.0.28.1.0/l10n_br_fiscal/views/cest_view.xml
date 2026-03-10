@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="cest_search" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cest.search</field>
+        <field name="model">l10n_br_fiscal.cest</field>
+        <field name="arch" type="xml">
+            <search string="CEST">
+                <field name="code" />
+                <field name="name" />
+                <field name="item" />
+                <field name="segment" />
+                <group expand='0' string='Group By...'>
+                    <filter
+                        string='Segment'
+                        name="segment"
+                        domain="[]"
+                        context="{'group_by' : 'segment'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cest_tree" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cest.tree</field>
+        <field name="model">l10n_br_fiscal.cest</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="item" />
+                <field name="name" />
+                <field name="segment" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="cest_form" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.cest.form</field>
+        <field name="model">l10n_br_fiscal.cest</field>
+        <field name="arch" type="xml">
+            <form string="CEST">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            type="action"
+                            class="oe_stat_button"
+                            id="product_tmpl_button"
+                            icon="fa-bars"
+                            name="%(product.product_template_action_all)d"
+                            context="{'search_default_cest_id': active_id}"
+                            attrs="{'invisible': [('product_tmpl_qty', '=', 0)]}"
+                        >
+                            <field
+                                string="Products"
+                                widget="statinfo"
+                                name="product_tmpl_qty"
+                            />
+                        </button>
+                    </div>
+                    <group>
+                        <field name="code" />
+                        <field name="item" />
+                        <field name="name" />
+                        <field name="segment" />
+                    </group>
+                    <notebook>
+                        <page string="Related Produts" name="tax_product_tmpl">
+                            <field name="product_tmpl_ids" />
+                        </page>
+                        <page string="Related NCM" name="ncm">
+                            <group>
+                                <field name="ncms" />
+                            </group>
+                            <field name="ncm_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

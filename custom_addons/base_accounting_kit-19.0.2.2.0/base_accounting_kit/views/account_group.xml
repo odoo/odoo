@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--  Account Group Form View  -->
+    <record id="account_group_view_form" model="ir.ui.view">
+        <field name="name">account.group.view.form</field>
+        <field name="model">account.group</field>
+        <field name="arch" type="xml">
+            <form string="Account Groups">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code_prefix_start"/>
+                            <field name="code_prefix_end"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+<!--  Account Group Tree View  -->
+    <record id="account_group_view_tree" model="ir.ui.view">
+        <field name="name">account.group.view.tree</field>
+        <field name="model">account.group</field>
+        <field name="arch" type="xml">
+            <list string="Account Groups">
+                <field name="name"/>
+                <field name="code_prefix_start"/>
+                <field name="code_prefix_end"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+<!--Account Groups Action-->
+    <record id="action_account_group" model="ir.actions.act_window">
+        <field name="name">Account Groups</field>
+        <field name="res_model">account.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+<!--Account Groups MenuItem-->
+    <menuitem id="menu_account_group" name="Account Groups"
+              action="action_account_group" sequence="10"
+              parent="account.account_account_menu"/>
+</odoo>

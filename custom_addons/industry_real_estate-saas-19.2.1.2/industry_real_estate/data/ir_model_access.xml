@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="access_meter_reading_user" model="ir.model.access">
+        <field name="name">access_meter_reading_user</field>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="model_id" ref="model_meter_reading"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+
+    <record id="access_meters_admin" model="ir.model.access">
+        <field name="name">access_meter_reading_admin</field>
+        <field name="group_id" ref="base.group_system"/>
+        <field name="model_id" ref="model_meters"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+
+    <record id="access_meters_user" model="ir.model.access">
+        <field name="name">access_meters_user</field>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="model_id" ref="model_meters"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+
+    <record id="access_anaytic_account_property_public_website" model="ir.model.access">
+        <field name="name">access_anaytic_account_property_public_website</field>
+        <field name="group_id" ref="website.website_page_controller_expose"/>
+        <field name="model_id" ref="analytic.model_account_analytic_account"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="False"/>
+    </record>
+
+    <record id="buildings_group_sys" model="ir.model.access">
+        <field name="group_id" ref="base.group_system"/>
+        <field name="model_id" ref="model_buildings"/>
+        <field name="name">Buildings group_system</field>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+
+    <record id="buildings_group_user" model="ir.model.access">
+        <field name="group_id" ref="base.group_user"/>
+        <field name="model_id" ref="model_buildings"/>
+        <field name="name">Buildings group_user</field>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="perm_write" eval="True"/>
+    </record>
+</odoo>

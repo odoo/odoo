@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="synconics_bi_dashboard.DashboardChartWrapper">
+        <div t-attf-class="#{['tile','kpi'].includes(state.chart_type) &amp;&amp; !state.isKpiError ? 'grid-stack-item-content' : 'grid-stack-item-content p-2'}" style="border-radius: 10px; background: white; border: 1px #dfdfdff5 solid;">
+            <div style="height: 100%; position: relative;">
+                <div class="chart-header" t-att-style="['tile', 'kpi'].includes(state.chart_type) &amp;&amp; !state.isKpiError ? 'position: absolute; right: 0; z-index: 9; background-color:' + state.background_color +'!important;' : 'height: 6%;'">
+                    <span class="title" t-out="(state.isKpiError || !['tile', 'kpi'].includes(state.chart_type)) ? state.name : ''"></span>
+                    <div class="button-box">
+                        <div class="dropdown">
+                          <button class="btn dropdown-toggle" title="Download Chart" type="button" id="downloadMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="padding-right: 5px;">
+                            <i class="fa fa-download" />
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="downloadMenuButton">
+                            <li t-if="!['kpi', 'tile', 'meter_chart'].includes(state.chart_type)"><a class="dropdown-item" t-on-click="(ev) => onDownloadExcel(ev)" href="#">Excel</a></li>
+                            <li t-if="!['kpi', 'tile', 'meter_chart'].includes(state.chart_type)"><a class="dropdown-item" t-on-click="(ev) => onDownloadCSV(ev)" href="#">CSV</a></li>
+                            <li><a class="dropdown-item" t-on-click="(ev) => onDownloadImage(ev)" href="#">Image</a></li>
+                          </ul>
+                        </div>
+                        <button class="btn" title="Edit Chart" t-if="!props.dashboard_user" t-on-click="(ev) => onEditChart(ev, state.chartId)"><i class="fa fa-pencil" /></button>
+                    </div>
+                </div>
+                <AreaChart t-if="state.chart_type == 'area_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <BarChart t-if="state.chart_type == 'bar_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <ColumnChart t-if="state.chart_type == 'column_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <DoughnutChart t-if="state.chart_type == 'doughnut_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <FunnelChart t-if="state.chart_type == 'funnel_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <PyramidChart t-if="state.chart_type == 'pyramid_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <LineChart t-if="state.chart_type == 'line_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <PieChart t-if="state.chart_type == 'pie_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <RadarChart t-if="state.chart_type == 'radar_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <StackedColumnChart t-if="state.chart_type == 'stackedcolumn_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <RadialChart t-if="state.chart_type == 'radial_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <ScatterChart t-if="state.chart_type == 'scatter_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <MapChart t-if="state.chart_type == 'map_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <MeterChart t-if="state.chart_type == 'meter_chart'" theme="state.theme" chartId="state.chartId" name="state.name" export="setExporting" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <ListView t-if="state.chart_type == 'list'" theme="state.theme" chartId="state.chartId" name="state.name" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <TileView t-if="state.chart_type == 'tile'" theme="state.theme" chartId="state.chartId" name="state.name" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <KPIView t-if="state.chart_type == 'kpi'" theme="state.theme" chartId="state.chartId" name="state.name" recordSets="state.recordSets" update_chart="this.update_chart" />
+                <TodoView t-if="state.chart_type == 'to_do'" theme="state.theme" chartId="state.chartId" name="state.name" recordSets="state.recordSets" update_chart="this.update_chart" />
+            </div>
+        </div>
+    </t>
+</templates>

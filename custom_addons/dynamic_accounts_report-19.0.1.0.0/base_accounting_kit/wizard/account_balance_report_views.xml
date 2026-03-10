@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--Account Balance Report Form View-->
+    <record id="account_report_balance_view" model="ir.ui.view">
+        <field name="name">account.balance.report.view.form.inherit.base.accounting.kit</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_report_view_form"/>
+        <field name="arch" type="xml">
+            <field name="journal_ids" position="replace"/>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="display_account" widget="radio"/>
+                <newline/>
+            </xpath>
+        </field>
+    </record>
+<!--Action Account Balance Report-->
+    <record id="action_account_balance_menu" model="ir.actions.act_window">
+        <field name="name">Trial Balance</field>
+        <field name="res_model">account.balance.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_balance_view"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_account"/>
+    </record>
+<!--Menu Trial Balance-->
+    <menuitem id="menu_Balance_report"
+              name="Trial Balance"
+              sequence="7"
+              action="action_account_balance_menu"
+              parent="base_accounting_kit.account_reports_audit"/>
+</odoo>

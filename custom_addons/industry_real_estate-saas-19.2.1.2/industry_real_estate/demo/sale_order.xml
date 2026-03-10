@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record id="sale_order_25" model="sale.order">
+        <field name="start_date" eval="datetime.today().date().replace(month=3, day=1)"/>
+        <field name="end_date" eval="datetime.today().date().replace(month=3, day=1) + relativedelta(months=12)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="partner_id" ref="res_partner_41"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_20"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_26" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=2)"/>
+        <field name="end_date" eval="datetime.today().date().replace(month=1, day=31)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="res_partner_42"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_20"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_27" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=1)"/>
+        <field name="end_date" eval="datetime.today().date().replace(month=10, day=30)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="res_partner_43"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_21"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_28" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=3)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="res_partner_44"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_22"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_29" model="sale.order">
+        <field name="start_date" eval="datetime.today().date().replace(month=11, day=1)"/>
+        <field name="end_date" eval="datetime.today().date() + relativedelta(months=24)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="partner_id" ref="res_partner_45"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_22"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_30" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=4)"/>
+        <field name="end_date" eval="datetime.today().date()"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="res_partner_46"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_27"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_31" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=1)"/>
+        <field name="end_date" eval="datetime.today().date() + relativedelta(years=1)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="partner_id" ref="res_partner_47"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_27"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_32" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=3)"/>
+        <field name="end_date" eval="datetime.today().date() + relativedelta(years=1)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="partner_id" ref="base.user_admin"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_23"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_33" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=3)"/>
+        <field name="end_date" eval="datetime.today().date().replace(month=7, day=31)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="base.user_admin"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_24"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_34" model="sale.order">
+        <field name="start_date" eval="datetime.today().replace(month=9, day=1)"/>
+        <field name="end_date" eval="datetime.today() + relativedelta(months=18)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="partner_id" ref="base.user_admin"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_24"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="sale_order_35" model="sale.order">
+        <field name="start_date" eval="datetime.today().date() - relativedelta(years=4)"/>
+        <field name="end_date" eval="datetime.today().date().replace(month=1, day=31)"/>
+        <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+        <field name="close_reason_id" ref="sale_subscription.close_reason_end_of_contract"/>
+        <field name="partner_id" ref="base.main_partner"/>
+        <field name="x_account_analytic_account_id" ref="account_analytic_account_25"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+</odoo>

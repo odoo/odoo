@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="l10n_br_base_bank_form" model="ir.ui.view">
+        <field name="name">l10n_br_base.bank.form</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_form" />
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[2]/group[1]" position="replace" />
+            <field name="bic" position="before">
+                <field name="code_bc" />
+                <field name="ispb_number" />
+                <field name="compe_member" />
+            </field>
+            <field name="name" position="after">
+                <field name="short_name" />
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_br_base_bank_tree" model="ir.ui.view">
+        <field name="name">l10n_br_base.bank.tree</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_tree" />
+        <field name="arch" type="xml">
+            <field name="bic" position="before">
+                <field name="code_bc" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

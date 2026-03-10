@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="0">
+    <record id="fiscal_comment_dummy" model="l10n_br_fiscal.comment">
+        <field name="name">Usuário emissor</field>
+        <field name="comment">Documento emitido por: ${(doc.user_id.name)}</field>
+        <field name="comment_type">fiscal</field>
+        <field name="object">l10n_br_fiscal.document.mixin</field>
+    </record>
+
+    <record id="fiscal_comment_icms_fcp" model="l10n_br_fiscal.comment">
+        <field name="name">Total ICMS FCP</field>
+        <field
+            name="comment"
+        >ICMS FCP: ${format_amount(doc.amount_icmsfcp_value)}</field>
+        <field name="comment_type">fiscal</field>
+        <field name="object">l10n_br_fiscal.document.mixin</field>
+    </record>
+
+    <record id="fiscal_comment_icms_difal" model="l10n_br_fiscal.comment">
+        <field name="name">Total ICMS DIFAL Destino</field>
+        <field
+            name="comment"
+        >ICMS DIFAL Destino: ${format_amount(doc.amount_icms_destination_value)}</field>
+        <field name="comment_type">fiscal</field>
+        <field name="object">l10n_br_fiscal.document.mixin</field>
+    </record>
+
+    <record id="fiscal_line_comment_dummy" model="l10n_br_fiscal.comment">
+        <field name="name">Total estimado dos impostos</field>
+        <field
+            name="comment"
+        >Valor Aprox. dos Tributos: ${format_amount(item.estimate_tax)}</field>
+        <field name="comment_type">fiscal</field>
+        <field name="object">l10n_br_fiscal.document.line.mixin</field>
+    </record>
+
+    <record id="fiscal_comment_sn_permissao_credito" model="l10n_br_fiscal.comment">
+        <field name="name">Simples Nacional permissão de crédito</field>
+        <field
+            name="comment"
+        >SIMPLES NACIONAL - Documento emitido por ME ou EPP optante pelo simples nacional, não gera direito a credito fiscal de IPI. Permite o aproveitamento de crédito de ICMS no valor de ${format_amount(doc.amount_icmssn_credit_value)},  nos termos do artigo 23 da LC 123/2006.</field>
+        <field name="comment_type">fiscal</field>
+        <field name="object">l10n_br_fiscal.document.mixin</field>
+    </record>
+</odoo>

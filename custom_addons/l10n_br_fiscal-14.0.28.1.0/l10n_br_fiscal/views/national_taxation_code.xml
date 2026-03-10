@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Marcel Savegnago <https://escodoo.com.br>
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="national_taxation_code_search_view" model="ir.ui.view">
+        <field name="name">national.taxation.code.search (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.national.taxation.code</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code" />
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record id="national_taxation_code_tree_view" model="ir.ui.view">
+        <field name="name">national.taxation.code.tree (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.national.taxation.code</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="national_taxation_code_form_view" model="ir.ui.view">
+        <field name="name">national.taxation.code.form (in l10n_br_fiscal)</field>
+        <field name="model">l10n_br_fiscal.national.taxation.code</field>
+        <field name="arch" type="xml">
+            <form>
+                <header />
+                <sheet>
+                    <group>
+                        <field name="code" />
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

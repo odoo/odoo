@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+  <record id="tax_definition_tree" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.tax.definition.tree</field>
+    <field name="model">l10n_br_fiscal.tax.definition</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="state" invisible="1" />
+        <field name="tax_group_id" />
+        <field name="is_taxed" />
+        <field name="tax_id" />
+        <field name="cst_code" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="tax_definition_icms_tree" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.tax.definition.icms.tree</field>
+    <field name="model">l10n_br_fiscal.tax.definition</field>
+    <field name="arch" type="xml">
+      <tree
+                decoration-info="state in ('draft', 'review')"
+                decoration-muted="state == 'expired'"
+            >
+        <field name="state" invisible="1" />
+        <field name="tax_group_id" invisible="1" />
+        <field name="state_from_id" />
+        <field name="state_to_ids" />
+        <field name="tax_id" />
+        <field name="cst_code" />
+      </tree>
+    </field>
+  </record>
+
+  <record id="tax_definition_form" model="ir.ui.view">
+    <field name="name">l10n_br_fiscal.tax.definition.form</field>
+    <field name="model">l10n_br_fiscal.tax.definition</field>
+    <field name="arch" type="xml">
+      <form string="Tax Definition">
+        <field name="company_id" invisible="1" />
+        <field name="icms_regulation_id" invisible="1" />
+        <field name="tax_domain" invisible="1" />
+        <header>
+          <button
+                        name="action_review"
+                        type="object"
+                        states="draft"
+                        string="Review"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+          <button
+                        name="action_approve"
+                        type="object"
+                        states="review,expired"
+                        string="Approve"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+          <button
+                        name="action_draft"
+                        type="object"
+                        states="review,approved"
+                        string="Reset To Draft"
+                        class="oe_highlight"
+                        groups="l10n_br_fiscal.group_manager"
+                    />
+          <field name="state" widget="statusbar" />
+        </header>
+        <sheet>
+          <group>
+            <field
+                            name="tax_group_id"
+                            force_save="1"
+                            attrs="{'readonly': [('icms_regulation_id', '!=', False)]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+            <field name="type_in_out" invisible="1" />
+            <field name="is_taxed" />
+            <field
+                            name="is_debit_credit"
+                            attrs="{'invisible': [('is_taxed', '=', False)]}"
+                        />
+            <field name="custom_tax" />
+            <field
+                            name="tax_id"
+                            attrs="{'invisible': [('custom_tax', '=', False)], 'required': [('custom_tax', '=', True)]}"
+                        />
+            <field
+                            name="cst_id"
+                            force_save="1"
+                            attrs="{'invisible': ['|', ('custom_tax', '=', False), ('tax_domain', 'not in', ('icmssn', 'icms', 'ipi', 'pis', 'pisst', 'cofins', 'cofinsst'))], 'required': [('custom_tax', '=', True), ('tax_domain', 'in', ('icms', 'ipi', 'pis', 'pisst', 'cofins', 'cofinsst'))]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+            <field
+                            name="ipi_guideline_id"
+                            attrs="{'invisible': [('tax_domain', '!=', 'ipi')]}"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+            <field
+                            name="is_benefit"
+                            attrs="{'invisible': [('tax_domain', '!=', 'icms')]}"
+                        />
+          </group>
+          <group
+                        name="tax_benefit"
+                        string="Tax Benefit"
+                        attrs="{'invisible': [('is_benefit', '=', False)]}"
+                    >
+            <field name="code" attrs="{'required': [('is_benefit', '!=', False)]}" />
+            <field
+                            name="description"
+                            attrs="{'required': [('is_benefit', '!=', False)]}"
+                        />
+            <field
+                            name="benefit_type"
+                            attrs="{'required': [('is_benefit', '!=', False)]}"
+                        />
+
+          </group>
+          <group name="state" string="State">
+            <field
+                            name="state_from_id"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                            attrs="{'required': [('is_benefit', '=', True)]}"
+                        />
+            <field name="state_to_ids" options="{'no_create': True}" />
+          </group>
+          <notebook>
+            <page name="ncms_page" string="NCM">
+              <group name="ncms" string="NCMs">
+                <label for="ncms" />
+                <div class="o_row">
+                  <field name="ncms" force_save="1" class="oe_inline" />
+                  <button
+                                        name="action_search_ncms"
+                                        type="object"
+                                        class="oe_inline btn-sm btn-link mb4 fa fa-search oe_edit_only"
+                                        aria-label="Search NCMs"
+                                        title="Search NCMs"
+                                    />
+                </div>
+                <field
+                                    name="ncm_ids"
+                                    options="{'no_create': True}"
+                                    force_save="1"
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+                <field name="ncm_exception" />
+                <field name="not_in_ncms" />
+              </group>
+            </page>
+            <page name="nbm_page" string="NBM">
+              <group name="nbms" string="NBMs">
+                <label for="nbms" />
+                <div class="o_row">
+                  <field name="nbms" force_save="1" class="oe_inline" />
+                  <button
+                                        name="action_search_nbms"
+                                        type="object"
+                                        class="oe_inline btn-sm btn-link mb4 fa fa-search oe_edit_only"
+                                        aria-label="Search NBMs"
+                                        title="Search NBMs"
+                                    />
+                </div>
+                <field
+                                    name="nbm_ids"
+                                    options="{'no_create': True}"
+                                    force_save="1"
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+                <field name="not_in_nbms" />
+              </group>
+            </page>
+            <page name="cests_page" string="CEST">
+              <group name="cests" string="CESTs">
+                <label for="cests" />
+                <div class="o_row">
+                  <field name="cests" force_save="1" class="oe_inline" />
+                  <button
+                                        name="action_search_cests"
+                                        type="object"
+                                        class="oe_inline btn-sm btn-link mb4 fa fa-search oe_edit_only"
+                                        aria-label="Search CESTs"
+                                        title="Search CESTs"
+                                    />
+                </div>
+                <field
+                                    name="cest_ids"
+                                    force_save="1"
+                                    nolabel="1"
+                                    colspan="2"
+                                    options="{'no_create': True}"
+                                />
+              </group>
+            </page>
+            <page name="city_taxation_codes_page" string="City Taxation Code">
+              <group name="city_taxation_codes" string="City Taxation Codes">
+                <field
+                                    name="city_taxation_code_ids"
+                                    force_save="1"
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+              </group>
+            </page>
+            <page name="national_taxation_codes_page" string="National Taxation Code">
+                <group name="national_taxation_codes" string="National Taxation Codes">
+                    <field
+                                    name="national_taxation_code_ids"
+                                    force_save="1"
+                                    nolabel="1"
+                                    colspan="2"
+                                />
+                </group>
+            </page>
+            <page name="service_types_page" string="Fiscal Service Type">
+              <group name="service_types" string="Fiscal Service Types">
+                <field name="service_type_ids" force_save="1" nolabel="1" colspan="2" />
+              </group>
+            </page>
+            <page name="products_page" string="Product">
+              <group name="products" string="Products">
+                <field name="product_ids" force_save="1" nolabel="1" colspan="2" />
+              </group>
+            </page>
+            <page name="fiscal_profile_page" string="Fiscal Profile">
+              <group name="fiscal_profile" string="Fiscal Profile">
+                <field name="ind_final" />
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter">
+          <field name="message_follower_ids" groups="base.group_user" />
+          <field name="activity_ids" />
+          <field name="message_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+
+</odoo>

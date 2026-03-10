@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2020 KMEE INFORMATICA LTDA
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo>
+    <record model="ir.ui.view" id="subsequent_document_tree">
+        <field name="name">l10n_br_fiscal.subsequent.document.tree</field>
+        <field name="model">l10n_br_fiscal.subsequent.document</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="subsequent_document_id" />
+                <field name="subsequent_operation_id" />
+                <field name="fiscal_operation_id" invisible="True" />
+                <field name="operation_performed" />
+                <button
+                    name="show_subsequent_document"
+                    type="object"
+                    string="Show Document"
+                    attrs="{'invisible': [('subsequent_document_id', '=', False)]}"
+                />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="source_document_tree">
+        <field name="name">source.document.tree</field>
+        <field name="model">l10n_br_fiscal.subsequent.document</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="source_document_id" />
+                <field name="subsequent_operation_id" string="Source Operation" />
+                <field name="fiscal_operation_id" invisible="True" />
+                <field name="operation_performed" />
+                <button
+                    name="show_source_document"
+                    type="object"
+                    string="Show Document"
+                    attrs="{'invisible': [('source_document_id', '=', False)]}"
+                />
+            </tree>
+        </field>
+    </record>
+</odoo>

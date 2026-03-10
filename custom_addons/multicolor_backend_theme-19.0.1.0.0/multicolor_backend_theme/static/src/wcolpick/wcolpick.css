@@ -1,0 +1,1121 @@
+ /*
+Wcolpick - A Web Color Picker
+
+Copyright (C) 2017-2020  devpelux (Salvatore Peluso)
+Find me on github: https://github.com/devpelux
+Dual licensed under GPL v3.0 and MIT licenses.
+(Based on Jose Vargas' Color Picker)
+
+Description, how to use, and examples: https://github.com/devpelux/wcolpick
+
+Last Edit: 2020/12/06 18:53
+*/
+
+
+
+/* ////////////////////////////////////////
+             STANDARD LAYOUTS
+////////////////////////////////////////*/
+
+
+/*////////// DEFAULT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+/*Main container*/
+.wcolpick {
+	position: absolute;
+	display: none;
+	width: 549px;
+	height: 276px;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	overflow: hidden;
+	text-align: left;
+	font-family: Arial;
+	direction: ltr;
+	border: 1px solid;
+	-webkit-border-radius: 7.5px;
+	-moz-border-radius: 7.5px;
+	border-radius: 7.5px;
+	z-index: 10;
+	/*Prevents selecting text when dragging the selectors*/
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+/*Color selector*/
+.wcolpick_color {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 225px;
+	height: 225px;
+	overflow: hidden;
+	outline: 1px solid;
+	cursor: crosshair;
+}
+.wcolpick_color_overlay1 {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 225px;
+	height: 225px;
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ffffff',endColorstr='#00ffffff'); /* IE6-9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ffffff',endColorstr='#00ffffff')"; /* IE8 */
+	background: -webkit-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -moz-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+	background: -ms-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* IE10+ */
+	background: -o-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+	background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+}
+.wcolpick_color_overlay2 {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 225px;
+	height: 225px;
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#00000000',endColorstr='#000000'); /* IE6-9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#00000000',endColorstr='#000000')"; /* IE8 */
+	background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+	background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* IE10+ */
+	background: -o-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+	background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+}
+/*Color selector indicator*/
+.wcolpick_selector_outer {
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	margin: -8px 0px 0px -8px;
+	background: none;
+	border: 1px solid black;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+.wcolpick_selector_inner {
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	background: none;
+	border: 1px solid white;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+/*Hue bar*/
+.wcolpick_hue {
+	position: absolute;
+	top: 5px;
+	left: 244px;
+	width: 20px;
+	height: 225px;
+	cursor: ns-resize;
+}
+.wcolpick_hue_underlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	outline: 1px solid;
+}
+.wcolpick_hue_overlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+/*Hue bar indicator*/
+.wcolpick_hue_arrs {
+	position: absolute;
+	left: -7px;
+	width: 34px;
+	height: 6px;
+	margin-top: -5px;
+}
+.wcolpick_hue_larr {
+	position: absolute;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: transparent transparent transparent black;
+	border-width: 5px 0px 5px 6px;
+}
+.wcolpick_hue_rarr {
+	position: absolute;
+	right: 0px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: transparent black transparent transparent;
+	border-width: 5px 6px 5px 0px;
+}
+/*Alpha bar*/
+.wcolpick_alpha {
+	position: absolute;
+	top: 244px;
+	left: 5px;
+	width: 225px;
+	height: 20px;
+	cursor: ew-resize;
+}
+.wcolpick_alpha_underlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	outline: 1px solid;
+}
+.wcolpick_alpha_overlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+/*Alpha bar indicator*/
+.wcolpick_alpha_arrs {
+	position: absolute;
+	top: -7px;
+	left: 225px;
+	width: 6px;
+	height: 34px;
+	margin-left: -5px;
+}
+.wcolpick_alpha_darr {
+	position: absolute;
+	top: 0px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: black transparent transparent transparent;
+	border-width: 6px 5px 0px 5px;
+}
+.wcolpick_alpha_uarr {
+	position: absolute;
+	bottom: 0px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: transparent transparent black transparent;
+	border-width: 0px 5px 6px 5px;
+}
+/*Fields*/
+.wcolpick_field, .wcolpick_hex_field {
+	position: absolute;
+	width: 75px;
+	height: 30px;
+	overflow: hidden;
+	font-size: 11px;
+	border: 1px solid;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.wcolpick_hex_field { top: 115px; left: 467px; }
+.wcolpick_rgb_r { top: 115px; left: 291px; }
+.wcolpick_rgb_g { top: 156px; left: 291px; }
+.wcolpick_rgb_b { top: 197px; left: 291px; }
+.wcolpick_hsb_h { top: 115px; left: 379px; }
+.wcolpick_hsb_s { top: 156px; left: 379px; }
+.wcolpick_hsb_b { top: 197px; left: 379px; }
+.wcolpick_alpha_field { top: 238px; left: 291px; }
+/*Fields' labels*/
+.wcolpick_field_letter {
+	position: absolute;
+	left: -1px;
+	height: 30px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	min-width: 10px;
+	max-width: 10px;
+	line-height: 30px;
+	text-align: center;
+	font-weight: bold;
+	z-index: 1;
+}
+/*Fields' text inputs*/
+.wcolpick_field input, .wcolpick_hex_field input {
+	position: absolute;
+	right: 15px;
+	height: 30px;
+	margin: 0px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0px;
+	line-height: 30px;
+	text-align: right;
+	font-family: Arial;
+	font-size: 11px;
+	border: none;
+	outline: none;
+}
+.wcolpick_hex_field input { right: 3px; }
+/*Fields on focus*/
+.wcolpick_focus { border-color: black; }
+/*Fields' up/down arrows*/
+.wcolpick_field_arrs {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 7px;
+	height: 30px;
+	cursor: ns-resize;
+}
+.wcolpick_field_uarr {
+	position: absolute;
+	top: 4px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: transparent transparent black transparent;
+	border-width: 0px 3px 3px 3px;
+}
+.wcolpick_field_darr {
+	position: absolute;
+	bottom: 4px;
+	width: 0px;
+	height: 0px;
+	border-style: solid;
+	border-color: black transparent transparent transparent;
+	border-width: 3px 3px 0px 3px;
+}
+/*Fields' up/down arrows while using them*/
+.wcolpick_changing .wcolpick_field_uarr { border-bottom-color: black; }
+.wcolpick_changing .wcolpick_field_darr { border-top-color: black; }
+/*New and Current color*/
+.wcolpick_colors {
+	position: absolute;
+	top: 5px;
+	left: 291px;
+	width: 253px;
+	height: 102px;
+}
+.wcolpick_colors_underlay {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	outline: 1px solid;
+}
+.wcolpick_new_color {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 50%;
+}
+.wcolpick_current_color {
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	width: 100%;
+	height: 50%;
+}
+/*Submit button*/
+.wcolpick_submit {
+	position: absolute;
+	top: 238px;
+	left: 511px;
+	width: 31px;
+	height: 31px;
+	display: flex;
+	-webkit-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: center;
+	align-items: center;
+	border: 1px solid;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+.wcolpick_submit:hover { opacity: 0.6; cursor: pointer; }
+.wcolpick_tear {
+	width: 15px;
+	height: 15px;
+	margin-top: 2px;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	border: none;
+	-webkit-border-radius: 80% 0 55% 50% / 55% 0 80% 50%;
+	-moz-border-radius: 80% 0 55% 50% / 55% 0 80% 50%;
+	border-radius: 80% 0 55% 50% / 55% 0 80% 50%;
+	-webkit-transform: rotateZ(-45deg);
+	-moz-transform: rotateZ(-45deg);
+	-ms-transform: rotateZ(-45deg);
+	-o-transform: rotateZ(-45deg);
+	transform: rotateZ(-45deg);
+}
+/*Checkerboards*/
+.wcolpick_checkerboards {
+	-webkit-background-size: 10px 10px; /* Chrome10+,Safari5.1+ */
+	-moz-background-size: 10px 10px; /* FF3.6+ */
+	-o-background-size: 10px 10px; /* Opera 11.10+ */
+	background-size: 10px 10px;
+}
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_full_ns .wcolpick_new_color { height: 100%; }
+.wcolpick_full_ns .wcolpick_current_color, .wcolpick_full_ns .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpick_rgbhex { width: 461px; }
+.wcolpick_rgbhex .wcolpick_hex_field { left: 379px; }
+.wcolpick_rgbhex .wcolpick_hsb_h, .wcolpick_rgbhex .wcolpick_hsb_s, .wcolpick_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpick_rgbhex .wcolpick_colors { width: 165px; }
+.wcolpick_rgbhex .wcolpick_submit { left: 423px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_rgbhex_ns .wcolpick_new_color { height: 100%; }
+.wcolpick_rgbhex_ns .wcolpick_current_color, .wcolpick_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpick_hex { width: 373px; }
+.wcolpick_hex .wcolpick_hex_field { left: 291px; }
+.wcolpick_hex .wcolpick_rgb_r, .wcolpick_hex .wcolpick_rgb_g, .wcolpick_hex .wcolpick_rgb_b, .wcolpick_hex .wcolpick_hsb_h, .wcolpick_hex .wcolpick_hsb_s, .wcolpick_hex .wcolpick_hsb_b, .wcolpick_hex .wcolpick_alpha_field { display: none; }
+.wcolpick_hex .wcolpick_colors { width: 77px; }
+.wcolpick_hex .wcolpick_submit { left: 313px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_hex_ns .wcolpick_hex_field { top: 238px; }
+.wcolpick_hex_ns .wcolpick_new_color { height: 100%; }
+.wcolpick_hex_ns .wcolpick_current_color, .wcolpick_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpick_noalpha { height: 235px; }
+.wcolpick_noalpha .wcolpick_alpha, .wcolpick_noalpha .wcolpick_alpha_field { display: none; }
+.wcolpick_noalpha .wcolpick_submit { top: 197px; }
+/*hex layout - no submit button*/
+.wcolpick_hex_noalpha_ns .wcolpick_hex_field { top: 197px; }
+
+
+/*////////// COMPACT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+.wcolpick_compact { width: 277px; height: 392px; }
+.wcolpick_compact .wcolpick_field { width: 43px; }
+.wcolpick_compact .wcolpick_hex_field { top: 355px; left: 5px; width: 64px; }
+.wcolpick_compact .wcolpick_rgb_r { top: 277px; left: 77px; }
+.wcolpick_compact .wcolpick_rgb_g { top: 277px; left: 127px; }
+.wcolpick_compact .wcolpick_rgb_b { top: 277px; left: 177px; }
+.wcolpick_compact .wcolpick_hsb_h { top: 317px; left: 77px; }
+.wcolpick_compact .wcolpick_hsb_s { top: 317px; left: 127px; }
+.wcolpick_compact .wcolpick_hsb_b { top: 317px; left: 177px; }
+.wcolpick_compact .wcolpick_alpha_field { top: 277px; left: 227px; }
+.wcolpick_compact .wcolpick_field input { right: 10px; }
+.wcolpick_compact .wcolpick_hex_field input { right: 2px; }
+.wcolpick_compact .wcolpick_colors { top: 277px; left: 5px; width: 66px; height: 72px; }
+.wcolpick_compact .wcolpick_submit { top: 354px; left: 239px; }
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_compact_full_ns .wcolpick_current_color, .wcolpick_compact_full_ns .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpick_compact_rgbhex { height: 354px; }
+.wcolpick_compact_rgbhex .wcolpick_hex_field { top: 317px; left: 77px; }
+.wcolpick_compact_rgbhex .wcolpick_hsb_h, .wcolpick_compact_rgbhex .wcolpick_hsb_s, .wcolpick_compact_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpick_compact_rgbhex .wcolpick_submit { top: 316px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_compact_rgbhex_ns .wcolpick_current_color, .wcolpick_compact_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpick_compact_hex { height: 314px; }
+.wcolpick_compact_hex .wcolpick_hex_field { top: 277px; left: 101px; }
+.wcolpick_compact_hex .wcolpick_rgb_r, .wcolpick_compact_hex .wcolpick_rgb_g, .wcolpick_compact_hex .wcolpick_rgb_b, .wcolpick_compact_hex .wcolpick_hsb_h, .wcolpick_compact_hex .wcolpick_hsb_s, .wcolpick_compact_hex .wcolpick_hsb_b, .wcolpick_compact_hex .wcolpick_alpha_field { display: none; }
+.wcolpick_compact_hex .wcolpick_colors { width: 90px; height: 32px; }
+.wcolpick_compact_hex .wcolpick_new_color { width: 50%; height: 100%; }
+.wcolpick_compact_hex .wcolpick_current_color { top: 0; left: 50%; width: 50%; height: 100%; }
+.wcolpick_compact_hex .wcolpick_submit { top: 276px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpick_compact_hex_ns .wcolpick_new_color { width: 100%; }
+.wcolpick_compact_hex_ns .wcolpick_current_color, .wcolpick_compact_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpick_compact_noalpha { height: 359px; }
+.wcolpick_compact_noalpha .wcolpick_field { width: 60px; }
+.wcolpick_compact_noalpha .wcolpick_hex_field { top: 322px; }
+.wcolpick_compact_noalpha .wcolpick_rgb_r { top: 244px; }
+.wcolpick_compact_noalpha .wcolpick_rgb_g { top: 244px; left: 144px; }
+.wcolpick_compact_noalpha .wcolpick_rgb_b { top: 244px; left: 211px; width: 59px; }
+.wcolpick_compact_noalpha .wcolpick_hsb_h { top: 284px; }
+.wcolpick_compact_noalpha .wcolpick_hsb_s { top: 284px; left: 144px; }
+.wcolpick_compact_noalpha .wcolpick_hsb_b { top: 284px; left: 211px; width: 59px; }
+.wcolpick_compact_noalpha .wcolpick_colors { top: 244px; }
+.wcolpick_compact_noalpha .wcolpick_submit { top: 321px; }
+/*rgbhex layout*/
+.wcolpick_compact_rgbhex_noalpha { height: 321px; }
+.wcolpick_compact_rgbhex_noalpha .wcolpick_hex_field { top: 284px; width: 60px; }
+.wcolpick_compact_rgbhex_noalpha .wcolpick_submit { top: 283px; }
+/*hex layout*/
+.wcolpick_compact_hex_noalpha { height: 281px; }
+.wcolpick_compact_hex_noalpha .wcolpick_hex_field { top: 244px; width: 60px; }
+.wcolpick_compact_hex_noalpha .wcolpick_submit { top: 243px; }
+
+
+/*////////// STANDARD LAYOUTS - RESPONSIVE //////////*/
+
+@media screen and (max-width: 650px) {
+
+	/*//// FULL LAYOUT ////*/
+	.wcolpick { width: 277px; height: 392px; }
+	.wcolpick_field { width: 43px; }
+	.wcolpick_hex_field { top: 355px; left: 5px; width: 64px; }
+	.wcolpick_rgb_r { top: 277px; left: 77px; }
+	.wcolpick_rgb_g { top: 277px; left: 127px; }
+	.wcolpick_rgb_b { top: 277px; left: 177px; }
+	.wcolpick_hsb_h { top: 317px; left: 77px; }
+	.wcolpick_hsb_s { top: 317px; left: 127px; }
+	.wcolpick_hsb_b { top: 317px; left: 177px; }
+	.wcolpick_alpha_field { top: 277px; left: 227px; }
+	.wcolpick_field input { right: 10px; }
+	.wcolpick_hex_field input { right: 2px; }
+	.wcolpick_colors { top: 277px; left: 5px; width: 66px; height: 72px; }
+	.wcolpick_submit { top: 354px; left: 239px; }
+
+	/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpick_full_ns .wcolpick_current_color, .wcolpick_full_ns .wcolpick_submit { display: none; }
+
+	/*//// RGBHEX LAYOUT ////*/
+	.wcolpick_rgbhex { height: 354px; }
+	.wcolpick_rgbhex .wcolpick_hex_field { top: 317px; left: 77px; }
+	.wcolpick_rgbhex .wcolpick_hsb_h, .wcolpick_rgbhex .wcolpick_hsb_s, .wcolpick_rgbhex .wcolpick_hsb_b { display: none; }
+	.wcolpick_rgbhex .wcolpick_colors { width: 66px; }
+	.wcolpick_rgbhex .wcolpick_submit { top: 316px; left: 239px; }
+
+	/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpick_rgbhex_ns .wcolpick_current_color, .wcolpick_rgbhex_ns .wcolpick_submit { display: none; }
+
+	/*//// HEX LAYOUT ////*/
+	.wcolpick_hex { height: 314px; }
+	.wcolpick_hex .wcolpick_hex_field { top: 277px; left: 101px; }
+	.wcolpick_hex .wcolpick_rgb_r, .wcolpick_hex .wcolpick_rgb_g, .wcolpick_hex .wcolpick_rgb_b, .wcolpick_hex .wcolpick_hsb_h, .wcolpick_hex .wcolpick_hsb_s, .wcolpick_hex .wcolpick_hsb_b, .wcolpick_hex .wcolpick_alpha_field { display: none; }
+	.wcolpick_hex .wcolpick_colors { width: 90px; height: 32px; }
+	.wcolpick_hex .wcolpick_new_color { width: 50%; height: 100%; }
+	.wcolpick_hex .wcolpick_current_color { top: 0px; left: 50%; width: 50%; height: 100%; }
+	.wcolpick_hex .wcolpick_submit { top: 276px; left: 239px; }
+
+	/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpick_hex_ns .wcolpick_new_color { width: 100%; }
+	.wcolpick_hex_ns .wcolpick_current_color, .wcolpick_hex_ns .wcolpick_submit { display: none; }
+
+	/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+	/*full layout*/
+	.wcolpick_noalpha { height: 359px; }
+	.wcolpick_noalpha .wcolpick_field { width: 60px; }
+	.wcolpick_noalpha .wcolpick_hex_field { top: 322px; }
+	.wcolpick_noalpha .wcolpick_rgb_r { top: 244px; }
+	.wcolpick_noalpha .wcolpick_rgb_g { top: 244px; left: 144px; }
+	.wcolpick_noalpha .wcolpick_rgb_b { top: 244px; left: 211px; width: 59px; }
+	.wcolpick_noalpha .wcolpick_hsb_h { top: 284px; }
+	.wcolpick_noalpha .wcolpick_hsb_s { top: 284px; left: 144px; }
+	.wcolpick_noalpha .wcolpick_hsb_b { top: 284px; left: 211px; width: 59px; }
+	.wcolpick_noalpha .wcolpick_colors { top: 244px; }
+	.wcolpick_noalpha .wcolpick_submit { top: 321px; }
+	/*rgbhex layout*/
+	.wcolpick_rgbhex_noalpha { height: 321px; }
+	.wcolpick_rgbhex_noalpha .wcolpick_hex_field { top: 284px; width: 60px; }
+	.wcolpick_rgbhex_noalpha .wcolpick_submit { top: 283px; }
+	/*hex layout*/
+	.wcolpick_hex_noalpha { height: 281px; }
+	.wcolpick_hex_noalpha .wcolpick_hex_field { top: 244px; width: 60px; }
+	.wcolpick_hex_noalpha .wcolpick_submit { top: 243px; }
+}
+
+
+
+
+
+/* ////////////////////////////////////////
+              SMALL LAYOUTS
+////////////////////////////////////////*/
+
+
+/*////////// DEFAULT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+/*Main container*/
+.wcolpickS { width: 394px; height: 202px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
+/*Color selector*/
+.wcolpickS .wcolpick_color { top: 4px; left: 4px; width: 160px; height: 160px; }
+.wcolpickS .wcolpick_color_overlay1 { width: 160px; height: 160px; }
+.wcolpickS .wcolpick_color_overlay2 { width: 160px; height: 160px; }
+/*Color selector indicator*/
+.wcolpickS .wcolpick_selector_outer { width: 12px; height: 12px; margin: -7px 0px 0px -7px; }
+.wcolpickS .wcolpick_selector_inner { width: 10px; height: 10px; }
+/*Hue bar*/
+.wcolpickS .wcolpick_hue { top: 4px; left: 177px; width: 15px; height: 160px; }
+/*Hue bar indicator*/
+.wcolpickS .wcolpick_hue_arrs { left: -6px; width: 27px; height: 5px; margin-top: -4px; }
+.wcolpickS .wcolpick_hue_larr { border-width: 4px 0px 4px 5px; }
+.wcolpickS .wcolpick_hue_rarr { border-width: 4px 5px 4px 0px; }
+/*Alpha bar*/
+.wcolpickS .wcolpick_alpha { top: 177px; left: 4px; width: 160px; height: 15px; }
+/*Alpha bar indicator*/
+.wcolpickS .wcolpick_alpha_arrs { top: -6px; left: 160px; width: 5px; height: 27px; margin-left: -4px; }
+.wcolpickS .wcolpick_alpha_darr { border-width: 5px 4px 0px 4px; }
+.wcolpickS .wcolpick_alpha_uarr { border-width: 0px 4px 5px 4px; }
+/*Fields*/
+.wcolpickS .wcolpick_field, .wcolpickS .wcolpick_hex_field { width: 52px; height: 20px; font-size: 8.5px; }
+.wcolpickS .wcolpick_hex_field { top: 83px; left: 336px; }
+.wcolpickS .wcolpick_rgb_r { top: 83px; left: 216px; }
+.wcolpickS .wcolpick_rgb_g { top: 113px; left: 216px; }
+.wcolpickS .wcolpick_rgb_b { top: 143px; left: 216px; }
+.wcolpickS .wcolpick_hsb_h { top: 83px; left: 276px; }
+.wcolpickS .wcolpick_hsb_s { top: 113px; left: 276px; }
+.wcolpickS .wcolpick_hsb_b { top: 143px; left: 276px; }
+.wcolpickS .wcolpick_alpha_field { top: 173px; left: 216px; }
+/*Fields' labels*/
+.wcolpickS .wcolpick_field_letter { min-width: 8px; max-width: 8px; height: 20px; line-height: 20px; }
+/*Fields' text inputs*/
+.wcolpickS .wcolpick_field input, .wcolpickS .wcolpick_hex_field input { right: 9px; height: 20px; line-height: 20px; font-size: 9px; }
+.wcolpickS .wcolpick_hex_field input { right: 2px; }
+/*Fields' up/down arrows*/
+.wcolpickS .wcolpick_field_arrs { width: 5px; height: 20px; }
+.wcolpickS .wcolpick_field_uarr { top: 2px; border-width: 0px 2px 3px 2px; }
+.wcolpickS .wcolpick_field_darr { bottom: 2px; border-width: 3px 2px 0px 2px; }
+/*New and Current color*/
+.wcolpickS .wcolpick_colors { top: 4px; left: 216px; width: 174px; height: 70px; }
+/*Submit button*/
+.wcolpickS .wcolpick_submit { top: 175px; left: 367px; width: 21px; height: 21px; }
+.wcolpickS .wcolpick_tear { width: 9px; height: 9px; }
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_full_ns .wcolpick_new_color { height: 100%; }
+.wcolpickS_full_ns .wcolpick_current_color, .wcolpickS_full_ns .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpickS_rgbhex { width: 334px; }
+.wcolpickS_rgbhex .wcolpick_hex_field { left: 276px; }
+.wcolpickS_rgbhex .wcolpick_hsb_h, .wcolpickS_rgbhex .wcolpick_hsb_s, .wcolpickS_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpickS_rgbhex .wcolpick_colors { width: 114px; }
+.wcolpickS_rgbhex .wcolpick_submit { left: 307px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_rgbhex_ns .wcolpick_new_color { height: 100%; }
+.wcolpickS_rgbhex_ns .wcolpick_current_color, .wcolpickS_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpickS_hex { width: 274px; }
+.wcolpickS_hex .wcolpick_hex_field { left: 216px; }
+.wcolpickS_hex .wcolpick_rgb_r, .wcolpickS_hex .wcolpick_rgb_g, .wcolpickS_hex .wcolpick_rgb_b, .wcolpickS_hex .wcolpick_hsb_h, .wcolpickS_hex .wcolpick_hsb_s, .wcolpickS_hex .wcolpick_hsb_b, .wcolpickS_hex .wcolpick_alpha_field { display: none; }
+.wcolpickS_hex .wcolpick_colors { width: 54px; }
+.wcolpickS_hex .wcolpick_submit { left: 231px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_hex_ns .wcolpick_hex_field { top: 176px; }
+.wcolpickS_hex_ns .wcolpick_new_color { height: 100%; }
+.wcolpickS_hex_ns .wcolpick_current_color, .wcolpickS_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpickS_noalpha { height: 168px; }
+.wcolpickS_noalpha .wcolpick_alpha, .wcolpickS_noalpha .wcolpick_alpha_field { display: none; }
+.wcolpickS_noalpha .wcolpick_rgb_r, .wcolpickS_noalpha .wcolpick_hsb_h, .wcolpickS_noalpha .wcolpick_hex_field { top: 82px; }
+.wcolpickS_noalpha .wcolpick_rgb_g, .wcolpickS_noalpha .wcolpick_hsb_s { top: 112px; }
+.wcolpickS_noalpha .wcolpick_rgb_b, .wcolpickS_noalpha .wcolpick_hsb_b { top: 142px; }
+.wcolpickS_noalpha .wcolpick_submit { top: 141px; }
+/*hex layout - no submit button*/
+.wcolpickS_hex_noalpha_ns .wcolpick_hex_field { top: 142px; }
+
+
+/*////////// COMPACT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+.wcolpickS_compact { width: 204px; height: 281px; }
+.wcolpickS_compact .wcolpick_field { width: 31px; }
+.wcolpickS_compact .wcolpick_hex_field { top: 256px; left: 3px; width: 51px; }
+.wcolpickS_compact .wcolpick_rgb_r { top: 204px; left: 59px; }
+.wcolpickS_compact .wcolpick_rgb_g { top: 204px; left: 95px; }
+.wcolpickS_compact .wcolpick_rgb_b { top: 204px; left: 131px; }
+.wcolpickS_compact .wcolpick_hsb_h { top: 230px; left: 59px; }
+.wcolpickS_compact .wcolpick_hsb_s { top: 230px; left: 95px; }
+.wcolpickS_compact .wcolpick_hsb_b { top: 230px; left: 131px; }
+.wcolpickS_compact .wcolpick_alpha_field { top: 204px; left: 167px; }
+.wcolpickS_compact .wcolpick_field input { right: 6.3px; }
+.wcolpickS_compact .wcolpick_hex_field input { right: 1px; }
+.wcolpickS_compact .wcolpick_colors { top: 204px; left: 4px; width: 51px; height: 48px; }
+.wcolpickS_compact .wcolpick_submit { top: 255px; left: 178px; }
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_compact_full_ns .wcolpick_current_color, .wcolpickS_compact_full_ns  .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpickS_compact_rgbhex { height: 256px; }
+.wcolpickS_compact_rgbhex .wcolpick_hex_field { top: 230px; left: 59px; }
+.wcolpickS_compact_rgbhex .wcolpick_hsb_h, .wcolpickS_compact_rgbhex .wcolpick_hsb_s, .wcolpickS_compact_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpickS_compact_rgbhex .wcolpick_submit { top: 230px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_compact_rgbhex_ns .wcolpick_current_color, .wcolpickS_compact_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpickS_compact_hex { height: 230px; }
+.wcolpickS_compact_hex .wcolpick_hex_field { top: 204px; left: 68px; }
+.wcolpickS_compact_hex .wcolpick_rgb_r, .wcolpickS_compact_hex .wcolpick_rgb_g, .wcolpickS_compact_hex .wcolpick_rgb_b, .wcolpickS_compact_hex .wcolpick_hsb_h, .wcolpickS_compact_hex .wcolpick_hsb_s, .wcolpickS_compact_hex .wcolpick_hsb_b, .wcolpickS_compact_hex .wcolpick_alpha_field { display: none; }
+.wcolpickS_compact_hex .wcolpick_colors { width: 60px; height: 22px; }
+.wcolpickS_compact_hex .wcolpick_new_color { width: 50%; height: 100%; }
+.wcolpickS_compact_hex .wcolpick_current_color { top: 0; left: 50%; width: 50%; height: 100%; }
+.wcolpickS_compact_hex .wcolpick_submit { top: 204px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickS_compact_hex_ns .wcolpick_new_color { width: 100%; }
+.wcolpickS_compact_hex_ns .wcolpick_current_color, .wcolpickS_compact_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpickS_compact_noalpha { height: 254px; }
+.wcolpickS_compact_noalpha .wcolpick_field { width: 43px; }
+.wcolpickS_compact_noalpha .wcolpick_hex_field { top: 229px; }
+.wcolpickS_compact_noalpha .wcolpick_rgb_r { top: 177px; }
+.wcolpickS_compact_noalpha .wcolpick_rgb_g { top: 177px; left: 107px; }
+.wcolpickS_compact_noalpha .wcolpick_rgb_b { top: 177px; left: 155px; }
+.wcolpickS_compact_noalpha .wcolpick_hsb_h { top: 203px; }
+.wcolpickS_compact_noalpha .wcolpick_hsb_s { top: 203px; left: 107px; }
+.wcolpickS_compact_noalpha .wcolpick_hsb_b { top: 203px; left: 155px; }
+.wcolpickS_compact_noalpha .wcolpick_colors { top: 177px; }
+.wcolpickS_compact_noalpha .wcolpick_submit { top: 228px; }
+/*rgbhex layout*/
+.wcolpickS_compact_rgbhex_noalpha { height: 229px; }
+.wcolpickS_compact_rgbhex_noalpha .wcolpick_hex_field { top: 203px; width: 43px; }
+.wcolpickS_compact_rgbhex_noalpha .wcolpick_submit { top: 203px; }
+/*hex layout*/
+.wcolpickS_compact_hex_noalpha { height: 203px; }
+.wcolpickS_compact_hex_noalpha .wcolpick_hex_field { top: 177px; width: 43px; }
+.wcolpickS_compact_hex_noalpha .wcolpick_submit { top: 177px; }
+
+
+/*////////// SMALL LAYOUTS - RESPONSIVE //////////*/
+
+@media screen and (max-width: 460px) {
+
+	/*//// FULL LAYOUT ////*/
+	.wcolpickS { width: 204px; height: 281px; }
+	.wcolpickS .wcolpick_field { width: 31px; }
+	.wcolpickS .wcolpick_hex_field { top: 256px; left: 3px; width: 51px; }
+	.wcolpickS .wcolpick_rgb_r { top: 204px; left: 59px; }
+	.wcolpickS .wcolpick_rgb_g { top: 204px; left: 95px; }
+	.wcolpickS .wcolpick_rgb_b { top: 204px; left: 131px; }
+	.wcolpickS .wcolpick_hsb_h { top: 230px; left: 59px; }
+	.wcolpickS .wcolpick_hsb_s { top: 230px; left: 95px; }
+	.wcolpickS .wcolpick_hsb_b { top: 230px; left: 131px; }
+	.wcolpickS .wcolpick_alpha_field { top: 204px; left: 167px; }
+	.wcolpickS .wcolpick_field input { right: 6.3px; }
+	.wcolpickS .wcolpick_hex_field input { right: 1px; }
+	.wcolpickS .wcolpick_colors { top: 204px; left: 4px; width: 51px; height: 48px; }
+	.wcolpickS .wcolpick_submit { top: 255px; left: 178px; }
+
+	/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickS_full_ns .wcolpick_current_color, .wcolpickS_full_ns .wcolpick_submit { display: none; }
+
+	/*//// RGBHEX LAYOUT ////*/
+	.wcolpickS_rgbhex { height: 256px; }
+	.wcolpickS_rgbhex .wcolpick_hex_field { top: 230px; left: 59px; }
+	.wcolpickS_rgbhex .wcolpick_hsb_h, .wcolpickS_rgbhex .wcolpick_hsb_s, .wcolpickS_rgbhex .wcolpick_hsb_b { display: none; }
+	.wcolpickS_rgbhex .wcolpick_submit { top: 230px; }
+
+	/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickS_rgbhex_ns .wcolpick_current_color, .wcolpickS_rgbhex_ns .wcolpick_submit { display: none; }
+
+	/*//// HEX LAYOUT ////*/
+	.wcolpickS_hex { height: 230px; }
+	.wcolpickS_hex .wcolpick_hex_field { top: 204px; left: 68px; }
+	.wcolpickS_hex .wcolpick_rgb_r, .wcolpickS_hex .wcolpick_rgb_g, .wcolpickS_hex .wcolpick_rgb_b, .wcolpickS_hex .wcolpick_hsb_h, .wcolpickS_hex .wcolpick_hsb_s, .wcolpickS_hex .wcolpick_hsb_b, .wcolpickS_hex .wcolpick_alpha_field { display: none; }
+	.wcolpickS_hex .wcolpick_colors { width: 60px; height: 22px; }
+	.wcolpickS_hex .wcolpick_new_color { width: 50%; height: 100%; }
+	.wcolpickS_hex .wcolpick_current_color { top: 0px; left: 50%; width: 50%; height: 100%; }
+	.wcolpickS_hex .wcolpick_submit { top: 204px; }
+
+	/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickS_hex_ns .wcolpick_new_color { width: 100%; }
+	.wcolpickS_hex_ns .wcolpick_current_color, .wcolpickS_hex_ns .wcolpick_submit { display: none; }
+
+	/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+	/*full layout*/
+	.wcolpickS_noalpha { height: 254px; }
+	.wcolpickS_noalpha .wcolpick_field { width: 43px; }
+	.wcolpickS_noalpha .wcolpick_hex_field { top: 229px; }
+	.wcolpickS_noalpha .wcolpick_rgb_r { top: 177px; }
+	.wcolpickS_noalpha .wcolpick_rgb_g { top: 177px; left: 107px; }
+	.wcolpickS_noalpha .wcolpick_rgb_b { top: 177px; left: 155px; }
+	.wcolpickS_noalpha .wcolpick_hsb_h { top: 203px; }
+	.wcolpickS_noalpha .wcolpick_hsb_s { top: 203px; left: 107px; }
+	.wcolpickS_noalpha .wcolpick_hsb_b { top: 203px; left: 155px; }
+	.wcolpickS_noalpha .wcolpick_colors { top: 177px; }
+	.wcolpickS_noalpha .wcolpick_submit { top: 228px; }
+	/*rgbhex layout*/
+	.wcolpickS_rgbhex_noalpha { height: 229px; }
+	.wcolpickS_rgbhex_noalpha .wcolpick_hex_field { top: 203px; width: 43px; }
+	.wcolpickS_rgbhex_noalpha .wcolpick_submit { top: 203px; }
+	/*hex layout*/
+	.wcolpickS_hex_noalpha { height: 203px; }
+	.wcolpickS_hex_noalpha .wcolpick_hex_field { top: 177px; width: 43px; }
+	.wcolpickS_hex_noalpha .wcolpick_submit { top: 177px; }
+}
+
+
+
+
+
+/* ////////////////////////////////////////
+            EXTRA-LARGE LAYOUTS
+////////////////////////////////////////*/
+
+
+/*////////// DEFAULT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+/*Main container*/
+.wcolpickXL { width: 725px; height: 363px; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; }
+/*Color selector*/
+.wcolpickXL .wcolpick_color { top: 7px; left: 7px; width: 300px; height: 300px; }
+.wcolpickXL .wcolpick_color_overlay1 { width: 300px; height: 300px; }
+.wcolpickXL .wcolpick_color_overlay2 { width: 300px; height: 300px; }
+/*Color selector indicator*/
+.wcolpickXL .wcolpick_selector_outer { width: 16px; height: 16px; margin: -9px 0px 0px -9px; }
+.wcolpickXL .wcolpick_selector_inner { width: 14px; height: 14px; }
+/*Hue bar*/
+.wcolpickXL .wcolpick_hue { top: 7px; left: 324px; width: 25px; height: 300px; }
+/*Hue bar indicator*/
+.wcolpickXL .wcolpick_hue_arrs { left: -8px; width: 41px; height: 7px; margin-top: -6px; }
+.wcolpickXL .wcolpick_hue_larr { border-width: 6px 0px 6px 7px; }
+.wcolpickXL .wcolpick_hue_rarr { border-width: 6px 7px 6px 0px; }
+/*Alpha bar*/
+.wcolpickXL .wcolpick_alpha { top: 324px; left: 7px; width: 300px; height: 25px; }
+/*Alpha bar indicator*/
+.wcolpickXL .wcolpick_alpha_arrs { top: -8px; left: 300px; width: 7px; height: 41px; margin-left: -6px; }
+.wcolpickXL .wcolpick_alpha_darr { border-width: 7px 6px 0px 6px; }
+.wcolpickXL .wcolpick_alpha_uarr { border-width: 0px 6px 7px 6px; }
+/*Fields*/
+.wcolpickXL .wcolpick_field, .wcolpickXL .wcolpick_hex_field { width: 100px; height: 40px; font-size: 15px; }
+.wcolpickXL .wcolpick_hex_field { top: 154px; left: 616px; }
+.wcolpickXL .wcolpick_rgb_r { top: 154px; left: 382px; }
+.wcolpickXL .wcolpick_rgb_g { top: 207px; left: 382px; }
+.wcolpickXL .wcolpick_rgb_b { top: 260px; left: 382px; }
+.wcolpickXL .wcolpick_hsb_h { top: 154px; left: 499px; }
+.wcolpickXL .wcolpick_hsb_s { top: 207px; left: 499px; }
+.wcolpickXL .wcolpick_hsb_b { top: 260px; left: 499px; }
+.wcolpickXL .wcolpick_alpha_field { top: 313px; left: 382px; }
+/*Fields' labels*/
+.wcolpickXL .wcolpick_field_letter { min-width: 15px; max-width: 15px; height: 40px; line-height: 40px; }
+/*Fields' text inputs*/
+.wcolpickXL .wcolpick_field input, .wcolpickXL .wcolpick_hex_field input { right: 20px; height: 40px; line-height: 40px; font-size: 15px; }
+.wcolpickXL .wcolpick_hex_field input { right: 4px; }
+/*Fields' up/down arrows*/
+.wcolpickXL .wcolpick_field_arrs { width: 9px; height: 40px; }
+.wcolpickXL .wcolpick_field_uarr { top: 5px; border-width: 0px 4px 4px 4px; }
+.wcolpickXL .wcolpick_field_darr { bottom: 5px; border-width: 4px 4px 0px 4px; }
+/*New and Current color*/
+.wcolpickXL .wcolpick_colors { top: 7px; left: 382px; width: 336px; height: 136px; }
+/*Submit button*/
+.wcolpickXL .wcolpick_submit { top: 314px; left: 676px; width: 40px; height: 40px; }
+.wcolpickXL .wcolpick_tear { width: 20px; height: 20px; }
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_full_ns .wcolpick_new_color { height: 100%; }
+.wcolpickXL_full_ns .wcolpick_current_color, .wcolpickXL_full_ns .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpickXL_rgbhex { width: 608px; }
+.wcolpickXL_rgbhex .wcolpick_hex_field { left: 499px; }
+.wcolpickXL_rgbhex .wcolpick_hsb_h, .wcolpickXL_rgbhex .wcolpick_hsb_s, .wcolpickXL_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpickXL_rgbhex .wcolpick_colors { width: 219px; }
+.wcolpickXL_rgbhex .wcolpick_submit { left: 559px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_rgbhex_ns .wcolpick_new_color { height: 100%; }
+.wcolpickXL_rgbhex_ns .wcolpick_current_color, .wcolpickXL_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpickXL_hex { width: 491px; }
+.wcolpickXL_hex .wcolpick_hex_field { left: 382px; }
+.wcolpickXL_hex .wcolpick_rgb_r, .wcolpickXL_hex .wcolpick_rgb_g, .wcolpickXL_hex .wcolpick_rgb_b, .wcolpickXL_hex .wcolpick_hsb_h, .wcolpickXL_hex .wcolpick_hsb_s, .wcolpickXL_hex .wcolpick_hsb_b, .wcolpickXL_hex .wcolpick_alpha_field { display: none; }
+.wcolpickXL_hex .wcolpick_colors { width: 102px; }
+.wcolpickXL_hex .wcolpick_submit { left: 412px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_hex_ns .wcolpick_hex_field { top: 313px; }
+.wcolpickXL_hex_ns .wcolpick_new_color { height: 100%; }
+.wcolpickXL_hex_ns .wcolpick_current_color, .wcolpickXL_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpickXL_noalpha { height: 314px; }
+.wcolpickXL_noalpha .wcolpick_alpha, .wcolpickXL_noalpha .wcolpick_alpha_field { display: none; }
+.wcolpickXL_noalpha .wcolpick_rgb_r, .wcolpickXL_noalpha .wcolpick_hsb_h, .wcolpickXL_noalpha .wcolpick_hex_field { top: 156px; }
+.wcolpickXL_noalpha .wcolpick_rgb_g, .wcolpickXL_noalpha .wcolpick_hsb_s { top: 210px; }
+.wcolpickXL_noalpha .wcolpick_rgb_b, .wcolpickXL_noalpha .wcolpick_hsb_b { top: 264px; }
+.wcolpickXL_noalpha .wcolpick_submit { top: 266px; }
+/*hex layout - no submit button*/
+.wcolpickXL_hex_noalpha_ns .wcolpick_hex_field { top: 264px; }
+
+
+/*////////// COMPACT LAYOUTS //////////*/
+
+/*//// FULL LAYOUT ////*/
+.wcolpickXL_compact { width: 365px; height: 516px; }
+.wcolpickXL_compact .wcolpick_field { width: 56px; }
+.wcolpickXL_compact .wcolpick_hex_field { top: 467px; left: 7px; width: 88px; }
+.wcolpickXL_compact .wcolpick_rgb_r { top: 365px; left: 105px; }
+.wcolpickXL_compact .wcolpick_rgb_g { top: 365px; left: 170px; }
+.wcolpickXL_compact .wcolpick_rgb_b { top: 365px; left: 235px; }
+.wcolpickXL_compact .wcolpick_hsb_h { top: 417px; left: 105px; }
+.wcolpickXL_compact .wcolpick_hsb_s { top: 417px; left: 170px; }
+.wcolpickXL_compact .wcolpick_hsb_b { top: 417px; left: 235px; }
+.wcolpickXL_compact .wcolpick_alpha_field { top: 365px; left: 300px; }
+.wcolpickXL_compact .wcolpick_field input { right: 12px; }
+.wcolpickXL_compact .wcolpick_hex_field input { right: 3px; }
+.wcolpickXL_compact .wcolpick_colors { top: 365px; left: 7px; width: 90px; height: 94px; }
+.wcolpickXL_compact .wcolpick_submit { top: 467px; left: 316px; }
+
+/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_compact_full_ns .wcolpick_current_color, .wcolpickXL_compact_full_ns  .wcolpick_submit { display: none; }
+
+/*//// RGBHEX LAYOUT ////*/
+.wcolpickXL_compact_rgbhex { height: 466px; }
+.wcolpickXL_compact_rgbhex .wcolpick_hex_field { top: 417px; left: 105px; }
+.wcolpickXL_compact_rgbhex .wcolpick_hsb_h, .wcolpickXL_compact_rgbhex .wcolpick_hsb_s, .wcolpickXL_compact_rgbhex .wcolpick_hsb_b { display: none; }
+.wcolpickXL_compact_rgbhex .wcolpick_submit { top: 417px; }
+
+/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_compact_rgbhex_ns .wcolpick_current_color, .wcolpickXL_compact_rgbhex_ns .wcolpick_submit { display: none; }
+
+/*//// HEX LAYOUT ////*/
+.wcolpickXL_compact_hex { height: 414px; }
+.wcolpickXL_compact_hex .wcolpick_hex_field { top: 365px; left: 135px; }
+.wcolpickXL_compact_hex .wcolpick_rgb_r, .wcolpickXL_compact_hex .wcolpick_rgb_g, .wcolpickXL_compact_hex .wcolpick_rgb_b, .wcolpickXL_compact_hex .wcolpick_hsb_h, .wcolpickXL_compact_hex .wcolpick_hsb_s, .wcolpickXL_compact_hex .wcolpick_hsb_b, .wcolpickXL_compact_hex .wcolpick_alpha_field { display: none; }
+.wcolpickXL_compact_hex .wcolpick_colors { width: 120px; height: 42px; }
+.wcolpickXL_compact_hex .wcolpick_new_color { width: 50%; height: 100%; }
+.wcolpickXL_compact_hex .wcolpick_current_color { top: 0; left: 50%; width: 50%; height: 100%; }
+.wcolpickXL_compact_hex .wcolpick_submit { top: 365px; }
+
+/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+.wcolpickXL_compact_hex_ns .wcolpick_new_color { width: 100%; }
+.wcolpickXL_compact_hex_ns .wcolpick_current_color, .wcolpickXL_compact_hex_ns .wcolpick_submit { display: none; }
+
+/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+/*full layout*/
+.wcolpickXL_compact_noalpha { height: 475px; }
+.wcolpickXL_compact_noalpha .wcolpick_field { width: 78px; }
+.wcolpickXL_compact_noalpha .wcolpick_hex_field { top: 426px; }
+.wcolpickXL_compact_noalpha .wcolpick_rgb_r { top: 324px; }
+.wcolpickXL_compact_noalpha .wcolpick_rgb_g { top: 324px; left: 192px; }
+.wcolpickXL_compact_noalpha .wcolpick_rgb_b { top: 324px; left: 279px; width: 77px; }
+.wcolpickXL_compact_noalpha .wcolpick_hsb_h { top: 376px; }
+.wcolpickXL_compact_noalpha .wcolpick_hsb_s { top: 376px; left: 192px; }
+.wcolpickXL_compact_noalpha .wcolpick_hsb_b { top: 376px; left: 279px; width: 77px; }
+.wcolpickXL_compact_noalpha .wcolpick_colors { top: 324px; }
+.wcolpickXL_compact_noalpha .wcolpick_submit { top: 426px; }
+/*rgbhex layout*/
+.wcolpickXL_compact_rgbhex_noalpha { height: 425px; }
+.wcolpickXL_compact_rgbhex_noalpha .wcolpick_hex_field { top: 376px; width: 78px; }
+.wcolpickXL_compact_rgbhex_noalpha .wcolpick_submit { top: 376px; }
+/*hex layout*/
+.wcolpickXL_compact_hex_noalpha { height: 373px; }
+.wcolpickXL_compact_hex_noalpha .wcolpick_hex_field { top: 324px; width: 78px; }
+.wcolpickXL_compact_hex_noalpha .wcolpick_submit { top: 324px; }
+
+
+/*////////// EXTRA-LARGE LAYOUTS - RESPONSIVE //////////*/
+
+@media screen and (max-width: 840px) {
+
+	/*//// FULL LAYOUT ////*/
+	.wcolpickXL { width: 365px; height: 516px; }
+	.wcolpickXL .wcolpick_field { width: 56px; }
+	.wcolpickXL .wcolpick_hex_field { top: 467px; left: 7px; width: 88px; }
+	.wcolpickXL .wcolpick_rgb_r { top: 365px; left: 105px; }
+	.wcolpickXL .wcolpick_rgb_g { top: 365px; left: 170px; }
+	.wcolpickXL .wcolpick_rgb_b { top: 365px; left: 235px; }
+	.wcolpickXL .wcolpick_hsb_h { top: 417px; left: 105px; }
+	.wcolpickXL .wcolpick_hsb_s { top: 417px; left: 170px; }
+	.wcolpickXL .wcolpick_hsb_b { top: 417px; left: 235px; }
+	.wcolpickXL .wcolpick_alpha_field { top: 365px; left: 300px; }
+	.wcolpickXL .wcolpick_field input { right: 12px; }
+	.wcolpickXL .wcolpick_hex_field input { right: 3px; }
+	.wcolpickXL .wcolpick_colors { top: 365px; left: 7px; width: 90px; height: 94px; }
+	.wcolpickXL .wcolpick_submit { top: 467px; left: 316px; }
+
+	/*//// FULL LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickXL_full_ns .wcolpick_current_color, .wcolpickXL_full_ns .wcolpick_submit { display: none; }
+
+	/*//// RGBHEX LAYOUT ////*/
+	.wcolpickXL_rgbhex { height: 466px; }
+	.wcolpickXL_rgbhex .wcolpick_hex_field { top: 417px; left: 105px; }
+	.wcolpickXL_rgbhex .wcolpick_hsb_h, .wcolpickXL_rgbhex .wcolpick_hsb_s, .wcolpickXL_rgbhex .wcolpick_hsb_b { display: none; }
+	.wcolpickXL_rgbhex .wcolpick_submit { top: 417px; }
+
+	/*//// RGBHEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickXL_rgbhex_ns .wcolpick_current_color, .wcolpickXL_rgbhex_ns .wcolpick_submit { display: none; }
+
+	/*//// HEX LAYOUT ////*/
+	.wcolpickXL_hex { height: 414px; }
+	.wcolpickXL_hex .wcolpick_hex_field { top: 365px; left: 135px; }
+	.wcolpickXL_hex .wcolpick_rgb_r, .wcolpickXL_hex .wcolpick_rgb_g, .wcolpickXL_hex .wcolpick_rgb_b, .wcolpickXL_hex .wcolpick_hsb_h, .wcolpickXL_hex .wcolpick_hsb_s, .wcolpickXL_hex .wcolpick_hsb_b, .wcolpickXL_hex .wcolpick_alpha_field { display: none; }
+	.wcolpickXL_hex .wcolpick_colors { width: 120px; height: 42px; }
+	.wcolpickXL_hex .wcolpick_new_color { width: 50%; height: 100%; }
+	.wcolpickXL_hex .wcolpick_current_color { top: 0px; left: 50%; width: 50%; height: 100%; }
+	.wcolpickXL_hex .wcolpick_submit { top: 365px; }
+
+	/*//// HEX LAYOUT - NO SUBMIT BUTTON ////*/
+	.wcolpickXL_hex_ns .wcolpick_new_color { width: 100%; }
+	.wcolpickXL_hex_ns .wcolpick_current_color, .wcolpickXL_hex_ns .wcolpick_submit { display: none; }
+
+	/*//// ALL SUB-LAYOUTS - NO ALPHA CHANNEL ////*/
+	/*full layout*/
+	.wcolpickXL_noalpha { height: 475px; }
+	.wcolpickXL_noalpha .wcolpick_field { width: 78px; }
+	.wcolpickXL_noalpha .wcolpick_hex_field { top: 426px; }
+	.wcolpickXL_noalpha .wcolpick_rgb_r { top: 324px; }
+	.wcolpickXL_noalpha .wcolpick_rgb_g { top: 324px; left: 192px; }
+	.wcolpickXL_noalpha .wcolpick_rgb_b { top: 324px; left: 279px; width: 77px; }
+	.wcolpickXL_noalpha .wcolpick_hsb_h { top: 376px; }
+	.wcolpickXL_noalpha .wcolpick_hsb_s { top: 376px; left: 192px; }
+	.wcolpickXL_noalpha .wcolpick_hsb_b { top: 376px; left: 279px; width: 77px; }
+	.wcolpickXL_noalpha .wcolpick_colors { top: 324px; }
+	.wcolpickXL_noalpha .wcolpick_submit { top: 426px; }
+	/*rgbhex layout*/
+	.wcolpickXL_rgbhex_noalpha { height: 425px; }
+	.wcolpickXL_rgbhex_noalpha .wcolpick_hex_field { top: 376px; width: 78px; }
+	.wcolpickXL_rgbhex_noalpha .wcolpick_submit { top: 376px; }
+	/*hex layout*/
+	.wcolpickXL_hex_noalpha { height: 373px; }
+	.wcolpickXL_hex_noalpha .wcolpick_hex_field { top: 324px; width: 78px; }
+	.wcolpickXL_hex_noalpha .wcolpick_submit { top: 324px; }
+}
+
+
+
+
+
+/* ////////////////////////////////////////
+               COLOR SCHEMES
+////////////////////////////////////////*/
+
+
+/*////////// MAIN LIGHT COLOR SCHEME //////////*/
+
+/*Main container*/
+.wcolpick_light { background: transparent; border-color: transparent; }
+/*Color selector*/
+.wcolpick_light .wcolpick_color { outline-color: rgba(170, 170, 170, 0.5); }
+/*Hue bar*/
+.wcolpick_light .wcolpick_hue_underlay { outline-color: rgba(170, 170, 170, 0.5); }
+.wcolpick_light .wcolpick_hue_larr { border-left-color: black; }
+.wcolpick_light .wcolpick_hue_rarr { border-right-color: black; }
+/*Alpha bar*/
+.wcolpick_light .wcolpick_alpha_underlay { outline-color: rgba(170, 170, 170, 0.5); }
+.wcolpick_light .wcolpick_alpha_darr { border-top-color: black; }
+.wcolpick_light .wcolpick_alpha_uarr { border-bottom-color: black; }
+/*Fields*/
+.wcolpick_light .wcolpick_field, .wcolpick_light .wcolpick_hex_field { background: white; border-color: #bdbdbd; }
+.wcolpick_light .wcolpick_field_letter { background: #ededed; color: #777; }
+.wcolpick_light .wcolpick_field input, .wcolpick_light .wcolpick_hex_field input { background: transparent; color: #555; }
+.wcolpick_light .wcolpick_focus { border-color: #999; }
+.wcolpick_light .wcolpick_field_uarr { border-bottom-color: #999; }
+.wcolpick_light .wcolpick_field_darr { border-top-color: #999; }
+.wcolpick_light .wcolpick_changing .wcolpick_field_uarr { border-bottom-color: #0caf1a; }
+.wcolpick_light .wcolpick_changing .wcolpick_field_darr { border-top-color: #0caf1a; }
+/*New and Current color*/
+.wcolpick_light .wcolpick_colors_underlay { outline-color: rgba(170, 170, 170, 0.5); }
+/*Submit button*/
+.wcolpick_light .wcolpick_submit { background: white; border-color: #777; }
+.wcolpick_light .wcolpick_tear { background: #777; }
+/*Checkerboards*/
+.wcolpick_light .wcolpick_checkerboards { background-color: white; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Cpath fill='rgb(204,204,204)' fill-rule='evenodd' d='M0 0h1v1H0V0zm1 1h1v1H1V1z'/%3E%3C/svg%3E"); }
+
+
+/*////////// MAIN DARK COLOR SCHEME //////////*/
+
+/*Main container*/
+.wcolpick_dark { background: transparent; border-color: transparent; }
+/*Color selector*/
+.wcolpick_dark .wcolpick_color { outline-color: rgba(213, 213, 213, 0.5); }
+/*Hue bar*/
+.wcolpick_dark .wcolpick_hue_underlay { outline-color: rgba(213, 213, 213, 0.5); }
+.wcolpick_dark .wcolpick_hue_larr { border-left-color: white; }
+.wcolpick_dark .wcolpick_hue_rarr { border-right-color: white; }
+/*Alpha bar*/
+.wcolpick_dark .wcolpick_alpha_underlay { outline-color: rgba(213, 213, 213, 0.5); }
+.wcolpick_dark .wcolpick_alpha_darr { border-top-color: white; }
+.wcolpick_dark .wcolpick_alpha_uarr { border-bottom-color: white; }
+/*Fields*/
+.wcolpick_dark .wcolpick_field, .wcolpick_dark .wcolpick_hex_field { background: black; border-color: #d5d5d5; }
+.wcolpick_dark .wcolpick_field_letter { background: #d5d5d5; color: black; }
+.wcolpick_dark .wcolpick_field input, .wcolpick_dark .wcolpick_hex_field input { background: transparent; color: #d5d5d5; }
+.wcolpick_dark .wcolpick_focus { border-color: #adadad; }
+.wcolpick_dark .wcolpick_field_uarr { border-bottom-color: #d5d5d5; }
+.wcolpick_dark .wcolpick_field_darr { border-top-color: #d5d5d5; }
+.wcolpick_dark .wcolpick_changing .wcolpick_field_uarr { border-bottom-color: #0caf1a; }
+.wcolpick_dark .wcolpick_changing .wcolpick_field_darr { border-top-color: #0caf1a; }
+/*New and Current color*/
+.wcolpick_dark .wcolpick_colors_underlay { outline-color: rgba(213, 213, 213, 0.5); }
+/*Submit button*/
+.wcolpick_dark .wcolpick_submit { background: black; border-color: white; }
+.wcolpick_dark .wcolpick_tear { background: white; }
+/*Checkerboards*/
+.wcolpick_dark .wcolpick_checkerboards { background-color: #666; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Cpath fill='rgb(51,51,51)' fill-rule='evenodd' d='M0 0h1v1H0V0zm1 1h1v1H1V1z'/%3E%3C/svg%3E"); }
+
+
+/*////////// ALTERNATIVE COLOR SCHEMES //////////*/
+
+/*//// LIGHT FULL ////*/
+.wcolpick_light-full { background: white; border-color: #666; }
+
+/*//// DARK FULL ////*/
+.wcolpick_dark-full { background: black; border-color: white; }
+
+
+/*////////// CHANGE COLOR OF THE HUE'S AND THE ALPHA'S ARROWS, IF REQUESTED //////////*/
+
+/*Light color*/
+.wcolpick_lightArrs .wcolpick_hue_larr { border-left-color: white; }
+.wcolpick_lightArrs .wcolpick_hue_rarr { border-right-color: white; }
+.wcolpick_lightArrs .wcolpick_alpha_darr { border-top-color: white; }
+.wcolpick_lightArrs .wcolpick_alpha_uarr { border-bottom-color: white; }
+/*Dark color*/
+.wcolpick_darkArrs .wcolpick_hue_larr { border-left-color: black; }
+.wcolpick_darkArrs .wcolpick_hue_rarr { border-right-color: black; }
+.wcolpick_darkArrs .wcolpick_alpha_darr { border-top-color: black; }
+.wcolpick_darkArrs .wcolpick_alpha_uarr { border-bottom-color: black; }
+
+
+/*////////// CHANGE COLOR OF THE CHECKERBOARDS, IF REQUESTED //////////*/
+
+/*Light color*/
+.wcolpick_lightCheckerboards .wcolpick_checkerboards { background-color: white; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Cpath fill='rgb(204,204,204)' fill-rule='evenodd' d='M0 0h1v1H0V0zm1 1h1v1H1V1z'/%3E%3C/svg%3E"); }
+/*Dark color*/
+.wcolpick_darkCheckerboards .wcolpick_checkerboards { background-color: #666; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2'%3E%3Cpath fill='rgb(51,51,51)' fill-rule='evenodd' d='M0 0h1v1H0V0zm1 1h1v1H1V1z'/%3E%3C/svg%3E"); }
+
+
+/*////////// CHANGE COLOR OF THE SUMBIT BUTTON, IF REQUESTED //////////*/
+
+/*Light color*/
+.wcolpick_lightSubmit .wcolpick_submit { border-color: white; }
+.wcolpick_lightSubmit .wcolpick_tear { background: white; }
+/*Dark color*/
+.wcolpick_darkSubmit .wcolpick_submit { border-color: #777; }
+.wcolpick_darkSubmit .wcolpick_tear { background: #777; }
+
+
+/*////////// HIDE OUTLINES, IF REQUESTED //////////*/
+
+.wcolpick_noCSOutline .wcolpick_color { outline-style: none; }
+.wcolpick_noHOutline .wcolpick_hue_underlay { outline-style: none; }
+.wcolpick_noAOutline .wcolpick_alpha_underlay { outline-style: none; }
+.wcolpick_noNCOutline .wcolpick_colors_underlay { outline-style: none; }

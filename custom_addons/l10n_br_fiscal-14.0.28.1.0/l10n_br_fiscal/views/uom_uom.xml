@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019 KMEE INFORMATICA LTDA
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="uom_uom_form_view">
+        <field name="name">uom.uom.form (in l10n_br_fiscal)</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="code" required="1" />
+            </field>
+            <field name="rounding" position="after">
+                <field
+                    name="alternative_ids"
+                    widget="many2many_tags"
+                    context="{'default_uom_id': active_id}"
+                />
+            </field>
+            <form position="inside">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="uom_uom_tree_view">
+        <field name="name">uom.uom.tree (in l10n_br_fiscal)</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="code" required="1" />
+            </field>
+            <field name="uom_type" position="after">
+                <field name="alternative_ids" widget="many2many_tags" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

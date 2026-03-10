@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="operation_dashboard_kanban" model="ir.ui.view">
+        <field name="name">l10n_br_fiscal.operation.dashboard.kanban</field>
+        <field name="model">l10n_br_fiscal.operation</field>
+        <field name="arch" type="xml">
+            <kanban
+                class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban"
+                create="false"
+            >
+                <field name="fiscal_type" />
+                <field name="kanban_dashboard" />
+                <field name="color" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                            t-attf-class="#{kanban_color(record.color.raw_value)}"
+                            name="operation_dashboard"
+                        >
+                            <t
+                                t-value="JSON.parse(record.kanban_dashboard.raw_value)"
+                                t-set="dashboard"
+                            />
+                            <t
+                                t-value="record.fiscal_type.raw_value"
+                                t-set="fiscal_type"
+                            />
+                            <div>
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <a type="object" name="open_action"><field
+                                                    name="name"
+                                                /></a>
+                                        </div>
+                                        <div
+                                            class="o_secondary"
+                                            t-att-title="dashboard.title"
+                                        >
+                                            <field name="fiscal_type" />
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a
+                                            class="o_kanban_manage_toggle_button"
+                                            href="#"
+                                        ><i
+                                                class="fa fa-ellipsis-v"
+                                                role="img"
+                                                aria-label="Manage"
+                                                title="Manage"
+                                            /></a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button
+                                                type="object"
+                                                name="action_create_new"
+                                                class="btn btn-primary o_invoice_new"
+                                            >
+                                                <span>Novo Documento</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <a
+                                                        type="object"
+                                                        name="open_action"
+                                                        context="{'search_default_2confirm': '1'}"
+                                                    >
+                                                        <span title="A enviar"><t
+                                                                t-esc="dashboard.number_2confirm"
+                                                            /> A enviar</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <a
+                                                        type="object"
+                                                        name="open_action"
+                                                        context="{'search_default_authorized':1}"
+                                                        id="fiscal_dashboard_sale_pay_link"
+                                                    >
+                                                        <t
+                                                            t-esc="dashboard.number_authorized"
+                                                        /> Autorizados
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <a
+                                                        type="object"
+                                                        name="open_action"
+                                                        context="{'search_default_cancelled': '1'}"
+                                                    >
+                                                        <span
+                                                            title="Faturas canceladas"
+                                                        ><t
+                                                                t-esc="dashboard.number_cancelled"
+                                                            /> Cancelados</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

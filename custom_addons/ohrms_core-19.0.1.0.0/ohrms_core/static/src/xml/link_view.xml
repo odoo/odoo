@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<!--UserMenu Template-->
+    <t t-name="ohrms_core.UserMenu" t-extend="UserMenu">
+        <t t-jquery="div.dropdown-menu" t-operation="replace">
+            <div class="dropdown-menu" role="menu">
+                <a role="menuitem" href="#" data-menu="documentation" class="dropdown-item">Documentation</a>
+                <a role="menuitem" href="#" data-menu="support" class="dropdown-item">Open HRMS</a>
+                <div role="separator" class="dropdown-divider"/>
+                <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
+                <a role="menuitem" href="#" data-menu="account" class="dropdown-item">My Odoo.com account</a>
+                <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
+            </div>
+        </t>
+    </t>
+<!--Search Result template-->
+    <t t-name="ohrms_core.SearchResults">
+        <t t-foreach="results" t-as="result" t-key="result.id">
+            <a t-attf-class="o-menu-search-result dropdown-item col-12 ml-auto mr-auto #{result_first ? 'active' : ''}"
+                 t-attf-style="background-image:url('#{result.webIconData}')"
+                 t-attf-href="action-#{result.actionID}"
+                 t-att-data-menu-id="result.id"
+                 t-att-data-action-id="result.actionID"
+                 t-out="result.name"
+                 onclick="$('.dropdown-menu').removeClass('show'); $('.search-results').addClass('o_hidden'); $('.app-menu').removeClass('o_hidden'); $('.search-input input').val('');"/>
+        </t>
+    </t>
+</templates>
