@@ -106,6 +106,7 @@ class PosPaymentMethod(models.Model):
             {"type": "terminal", "provider": "qfpay", "module": "pos_qfpay", "name": "QFPay"},
             {"type": "terminal", "provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
             {"type": "terminal", "provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
+            {"type": "terminal", "provider": "safaricom", "module": "pos_safaricom", "name": "Safaricom"},
             {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
         ]
 
