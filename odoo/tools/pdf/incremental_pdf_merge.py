@@ -182,6 +182,45 @@ class IncrementalPdfMerge:
 
         self._write_incremented_pdf(pdf_reader, incremented_objects)
 
+    def normalize_pages_annotations_to_indirect(self):
+        """
+        Normalizes the ``/Annots`` array of every page into an indirect object,
+        or creates it if it doesn't exist.
+
+        This method sweeps the document, extracts direct arrays (or creates empty ones),
+        assigns them unique object IDs, and updates the Page dictionaries to point
+        to these new indirect references (e.g., ``/Annots 50 0 R``).
+
+        This function runs as its own discrete incremental update.
+        """
+
+        pdf_reader = PdfFileReader(io.BytesIO(self.get_output_stream_value()), strict=False)
+        incremented_objects = {}
+
+        next_id = self._get_pdf_size(pdf_reader)
+
+        for page_index in range(len(pdf_reader.pages)):
+            page = pdf_reader.pages[page_index]
+            try:
+                raw_annots = page.raw_get(PG.ANNOTS)
+            except KeyError:
+                raw_annots = None
+            if not raw_annots or not isinstance(raw_annots, IndirectObject):
+                if raw_annots is None:
+                    raw_annots = ArrayObject()
+
+                incremented_objects[(next_id, 0)] = raw_annots
+                raw_annots_ref = IndirectObject(next_id, 0, None)
+                page[NameObject(PG.ANNOTS)] = raw_annots_ref
+                next_id += 1
+
+                page_ref_id = page.indirect_reference.idnum
+                page_ref_gen = page.indirect_reference.generation
+                incremented_objects[(page_ref_id, page_ref_gen)] = page
+                pdf_reader.cache_indirect_object(page_ref_gen, page_ref_id, page)
+
+        self._write_incremented_pdf(pdf_reader, incremented_objects, False)
+
     def _merge_pdf_pages_as_annotation(
             self,
             overlay_pdf: PdfFileReader,
@@ -230,17 +269,10 @@ class IncrementalPdfMerge:
         incremented_objects = {}
 
         for page_index in range(len(pdf_reader.pages)):
-            page = pdf_reader.pages[page_index]
             if overlay_pages and page_index not in overlay_pages:
-                # Still include skipped pages in the incremental update unchanged.
-                # This ensures their XRef entries are "owned" by this update,
-                # preventing subsequent signings from overriding objects sealed
-                # by this signature's ByteRange.
-                page_ref_id = page.indirect_reference.idnum
-                page_ref_gen = page.indirect_reference.generation
-                if (page_ref_id, page_ref_gen) not in incremented_objects:
-                    incremented_objects[(page_ref_id, page_ref_gen)] = page
                 continue
+
+            page = pdf_reader.pages[page_index]
             overlay_page = overlay_pdf.pages[page_index]
 
             content_stream = overlay_page.get_contents()
@@ -674,7 +706,7 @@ class IncrementalPdfMerge:
         page1.mediabox.lower_left = lowerleft
         page1.mediabox.upper_right = upperright
 
-    def _write_incremented_pdf(self, pdf_reader, incremented_objects):
+    def _write_incremented_pdf(self, pdf_reader, incremented_objects, sweep_new_indirect_objects=True):
         """
         Finalizes the incremental update by writing modified objects and the trailer.
 
@@ -697,8 +729,13 @@ class IncrementalPdfMerge:
         :param pdf_reader: The reader instance representing the current PDF state.
         :type pdf_reader: PdfFileReader
         :param incremented_objects: A dictionary mapping Object IDs to the Page objects
-                                    that were explicitly modified during the merge.
+            that were explicitly modified during the merge.
         :type incremented_objects: dict[tuple[int, int], Any]
+        :param sweep_new_indirect_objects: A flag indicating whether to perform a deep
+            search of the document's object graph. When ``True``, it detects new or
+            incremented ``IndirectObject`` instances that haven't been explicitly
+            tracked, adding them to the incremented objects set.
+        :type sweep_new_indirect_objects: bool
         :return: None
         """
         if incremented_objects is None or len(incremented_objects) == 0:
@@ -718,16 +755,7 @@ class IncrementalPdfMerge:
             if target_bytes and not target_bytes.startswith(b"xref"):
                 is_xref_stream = True
 
-        # Trust that the trailer contain a size first (Standard behavior)
-        size = pdf_reader.trailer.get(TK.SIZE)
-
-        # If size is missing, it's a xref stream PDF, we need calculate size (Fall back for PDF 1.5+)
-        if not size:
-            # Gather IDs, defaulting to {0} to prevent max() crash on empty files
-            all_ids = set(pdf_reader.xref_objStm.keys()) | {0}
-            for gen in pdf_reader.xref.values():
-                all_ids.update(gen.keys())
-            size = max(all_ids) + 1
+        size = self._get_pdf_size(pdf_reader)
 
         # We perform a recursive traversal starting from the Catalog (/Root) to
         # detect any newly created objects injected during the merge. These objects
@@ -735,10 +763,11 @@ class IncrementalPdfMerge:
         # indexed in the upcoming incremental XRef update. Additionally, this step
         # resolves circular references (e.g., objects pointing back to their parent
         # Pages), ensuring the integrity of the object graph.
-        catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
-        new_objects = self._sweep_indirect_references(pdf_reader, catalog, size)
-        for key, val in new_objects.items():
-            incremented_objects[key] = val
+        if sweep_new_indirect_objects:
+            catalog = cast(DictionaryObject, pdf_reader.trailer[TK.ROOT])
+            new_objects = self._sweep_indirect_references(pdf_reader, catalog, size)
+            for key, val in new_objects.items():
+                incremented_objects[key] = val
 
         # Write all objects to the output stream
         new_xref_entries = self._write_objects(incremented_objects)
@@ -755,6 +784,34 @@ class IncrementalPdfMerge:
             self._write_trailer(pdf_reader, original_startxref, xref_start, new_size)
 
         return new_xref_entries
+
+    def _get_pdf_size(self, pdf_reader):
+        """
+        Retrieves or dynamically calculates the ``/Size`` of the PDF.
+
+        The size represents the total number of objects required for the XRef table
+        (which is exactly one greater than the highest object ID in the file).
+        This method first attempts to read it directly from the document's trailer.
+        If missing (common in PDF 1.5+ files utilizing XRef streams), it calculates
+        the size manually by scanning all known object IDs.
+
+        :param pdf_reader: The reader instance representing the current PDF state.
+        :type pdf_reader: PdfFileReader
+        :return: The final calculated size of the PDF (max object ID + 1).
+        :rtype: int
+        """
+        # Trust that the trailer contain a size first (Standard behavior)
+        size = pdf_reader.trailer.get(TK.SIZE)
+
+        # If size is missing, it's a xref stream PDF, we need calculate size (Fall back for PDF 1.5+)
+        if not size:
+            # Gather IDs, defaulting to {0} to prevent max() crash on empty files
+            all_ids = set(pdf_reader.xref_objStm.keys()) | {0}
+            for gen in pdf_reader.xref.values():
+                all_ids.update(gen.keys())
+            size = max(all_ids) + 1
+
+        return size
 
     def _write_objects(self, incremented_objects):
         """
