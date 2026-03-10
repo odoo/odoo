@@ -125,11 +125,22 @@ class SaleOrderLine(models.Model):
                 sale_line_uom = sale_line.product_uom
                 item = sale_line.read(field_names, load=False)[0]
                 if sale_line.product_id.tracking != 'none':
-                    move_lines = sale_line.move_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == sale_line.product_id.id)
+                    candidates = self.env['stock.move.line'].search([
+                        ('picking_id', 'in', sale_line.order_id.picking_ids.ids),
+                        ('product_id', '=', sale_line.product_id.id),
+                        ('move_id.sale_line_id', '=', sale_line.id),
+                        ('move_id.is_inventory', '=', False),
+                    ], order='picking_id, id')
+                    if candidates:
+                        first_picking = candidates[:1].picking_id
+                        move_lines = candidates.filtered(lambda ml: ml.picking_id == first_picking)
+                    else:
+                        move_lines = self.env['stock.move.line']
                     item['lot_names'] = move_lines.lot_id.mapped('name')
                     lot_qty_by_name = {}
                     for line in move_lines:
-                        lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
+                        if line.lot_id:
+                            lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
                     item['lot_qty_by_name'] = lot_qty_by_name
                 if product_uom == sale_line_uom:
                     results.append(item)
