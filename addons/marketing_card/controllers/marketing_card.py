@@ -39,7 +39,7 @@ class MarketingCardController(Controller):
 
         image_bytes = card.image.content
         return request.make_response(image_bytes, [
-            ('Content-Type', ' image/jpeg'),
+            ('Content-Type', 'image/jpeg'),
             ('Content-Length', len(image_bytes)),
             ('Content-Disposition', content_disposition('card.jpg')),
         ])

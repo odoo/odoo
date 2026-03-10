@@ -12,8 +12,6 @@ import threading
 import traceback
 import warnings
 
-import werkzeug.serving
-
 from . import release
 from . import sql_db
 from . import tools
@@ -120,54 +118,6 @@ PID_COLORS = (
 if os.environ.get('ODOO_PY_COLORS_NOPID'):
     TRUE_COLOR_PATTERN = f"\033[%dm%s{RESET_SEQ}"
     PID_COLORS = [0]
-
-class PerfFilter(logging.Filter):
-
-    def format_perf(self, query_count, query_time, remaining_time):
-        return (f"{query_count:d}", f"{query_time:.3f}", f"{remaining_time:.3f}")
-
-    def format_cursor_mode(self, cursor_mode):
-        return cursor_mode or '-'
-
-    def filter(self, record):
-        if hasattr(threading.current_thread(), "query_count"):
-            query_count = threading.current_thread().query_count
-            query_time = threading.current_thread().query_time
-            perf_t0 = threading.current_thread().perf_t0
-            remaining_time = tools.real_time() - perf_t0 - query_time
-            record.perf_info = '%s %s %s' % self.format_perf(query_count, query_time, remaining_time)
-            if tools.config['db_replica_host'] or 'replica' in tools.config['dev_mode']:
-                cursor_mode = threading.current_thread().cursor_mode
-                record.perf_info = f'{record.perf_info} {self.format_cursor_mode(cursor_mode)}'
-            delattr(threading.current_thread(), "query_count")
-        else:
-            if tools.config['db_replica_host'] or 'replica' in tools.config['dev_mode']:
-                record.perf_info = "- - - -"
-            record.perf_info = "- - -"
-        return True
-
-class ColoredPerfFilter(PerfFilter):
-    def format_perf(self, query_count, query_time, remaining_time):
-        def colorize_time(time, format, low=1, high=5):
-            if time > high:
-                return COLOR_PATTERN % (30 + RED, 40 + DEFAULT, format % time)
-            if time > low:
-                return COLOR_PATTERN % (30 + YELLOW, 40 + DEFAULT, format % time)
-            return format % time
-        return (
-            colorize_time(query_count, "%d", 100, 1000),
-            colorize_time(query_time, "%.3f", 0.1, 3),
-            colorize_time(remaining_time, "%.3f", 1, 5),
-            )
-
-    def format_cursor_mode(self, cursor_mode):
-        cursor_mode = super().format_cursor_mode(cursor_mode)
-        cursor_mode_color = (
-            RED if cursor_mode == 'ro->rw'
-            else YELLOW if cursor_mode == 'rw'
-            else GREEN
-        )
-        return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
 
 
 class ColoredFormatter(logging.Formatter):
@@ -278,14 +228,10 @@ def init_logger():
 
     if isinstance(handler, logging.StreamHandler) and (is_a_tty(handler.stream) or os.environ.get("ODOO_PY_COLORS")):
         formatter = ColoredFormatter(format)
-        perf_filter = ColoredPerfFilter()
     else:
         formatter = logging.Formatter(format)
-        perf_filter = PerfFilter()
-        werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
-    logging.getLogger('werkzeug').addFilter(perf_filter)
 
     if tools.config['log_db']:
         db_levels = {
@@ -322,10 +268,10 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
-    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
-    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
-    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
-    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
+    'runbot': ['odoo:RUNBOT'],
+    'warn': ['odoo:WARNING'],
+    'error': ['odoo:ERROR'],
+    'critical': ['odoo:CRITICAL'],
 }
 
 logging.RUNBOT = 25

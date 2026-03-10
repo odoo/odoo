@@ -37,7 +37,7 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.tools import config, file_open, file_path, profiler, real_time
+from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
 if typing.TYPE_CHECKING:
@@ -233,20 +233,9 @@ class Application:
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
-        current_thread = threading.current_thread()
-        current_thread.query_count = 0
-        current_thread.query_time = 0
-        current_thread.perf_t0 = real_time()
-        current_thread.cursor_mode = None
-        if hasattr(current_thread, 'dbname'):
-            del current_thread.dbname
-        if hasattr(current_thread, 'uid'):
-            del current_thread.uid
-        if hasattr(current_thread, 'sess_id'):
-            del current_thread.sess_id
-        current_thread.rpc_model_method = ''
-
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+            # It is done in our wsgi server already, but people might be
+            # using another wsgi server.
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
@@ -261,7 +250,7 @@ class Application:
 
             try:
                 _set_session_and_dbname(request)
-                current_thread.url = httprequest.url
+                threading.current_thread().url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
                     response = serve_static(request)

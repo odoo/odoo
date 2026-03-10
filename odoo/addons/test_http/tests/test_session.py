@@ -22,7 +22,7 @@ from odoo.http.session import (
     get_session_max_inactivity,
     session_store,
 )
-from odoo.tests import get_db_name, tagged
+from odoo.tests import Like, get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
 
 from .test_common import TestHttpBase
@@ -248,7 +248,7 @@ class TestHttpSession(TestHttpBase):
     def test_session10_explicit_session(self):
         forged_sid = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
         self.authenticate('admin', 'admin')
-        with self.assertLogs('odoo.http') as capture:
+        with self.assertLogs('odoo.http', 'WARNING') as capture:
             qs = urlencode({'debug': 1, 'session_id': forged_sid})
             res = self.url_open(
                 f'/web/session/logout?{qs}',
@@ -257,11 +257,9 @@ class TestHttpSession(TestHttpBase):
                     "csrf_token": self.csrf_token(),
                 },
             ).raise_for_status()
-        self.assertEqual(len(capture.output), 2)
-        self.assertRegex(capture.output[0],
-            r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "
-            r"called ignoring args {('session_id', 'debug'|'debug', 'session_id')}$"
-        )
+        self.assertEqual(capture.output, [
+            Like("...logout... called ignoring args ...session_id..."),
+        ])
         self.assertEqual(res.session['debug'], '1')
 
     def test_session11_items_accessibility(self):

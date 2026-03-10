@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+import pprint
 
 import werkzeug
 from psycopg2.errorcodes import SERIALIZATION_FAILURE
@@ -60,6 +61,7 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
     def wsgi_environ(self):
+        _logger.debug("Full WSGI environ:\n%s", pprint.pformat(request.httprequest.environ))
         environ = {
             key: val for key, val in request.httprequest.environ.items()
             if (key.startswith(('HTTP_', 'REMOTE_', 'REQUEST_', 'SERVER_', 'werkzeug.proxy_fix.')) or key in WSGI_SAFE_KEYS)
@@ -67,7 +69,7 @@ class TestHttp(http.Controller):
 
         return request.make_response(
             json.dumps(environ, indent=4),
-            headers=list(CT_JSON.items())
+            headers=list(CT_JSON.items()),
         )
 
     @http.route('/test_http/raise-exception', type='http', auth='public')
@@ -112,7 +114,8 @@ class TestHttp(http.Controller):
         try:
             data = request.get_json_data()
         except ValueError as exc:
-            raise werkzeug.exceptions.BadRequest("Invalid JSON data") from exc
+            e = "Invalid JSON data"
+            raise werkzeug.exceptions.BadRequest(e) from exc
         return request.make_json_response(data)
 
     @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', readonly=True)
@@ -125,12 +128,13 @@ class TestHttp(http.Controller):
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public', readonly=True)
     def galaxy(self, galaxy):
         if not galaxy.exists():
-            raise UserError('The Ancients did not settle there.')
+            e = "The Ancients did not settle there."
+            raise UserError(e)
 
         return http.request.render('test_http.tmpl_galaxy', {
             'galaxy': galaxy,
             'stargates': http.request.env['test_http.stargate'].search([
-                ('galaxy_id', '=', galaxy.id)
+                ('galaxy_id', '=', galaxy.id),
             ]),
         })
 
@@ -144,7 +148,8 @@ class TestHttp(http.Controller):
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user', readonly=True)
     def stargate(self, galaxy, gate):
         if not gate.exists():
-            raise UserError("The goauld destroyed the gate")
+            e = "The goauld destroyed the gate"
+            raise UserError(e)
 
         return http.request.render('test_http.tmpl_stargate', {
             'gate': gate
@@ -220,29 +225,35 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/json_value_error', type='jsonrpc', auth='none')
     def json_value_error(self):
-        raise ValueError('Unknown destination')
+        e = "Unknown destination"
+        raise ValueError(e)
 
     @http.route('/test_http/hide_errors/decorator', type='http', auth='none')
     @replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound())
     def hide_errors_decorator(self, error):
         if error == 'AccessError':
-            raise AccessError("Wrong iris code")
+            e = "Wrong iris code"
+            raise AccessError(e)
         if error == 'UserError':
-            raise UserError("Walter is AFK")
+            e = "Walter is AFK"
+            raise UserError(e)
 
     @http.route('/test_http/hide_errors/context-manager', type='http', auth='none')
     def hide_errors_context_manager(self, error):
         with replace_exceptions(AccessError, by=werkzeug.exceptions.NotFound()):
             if error == 'AccessError':
-                raise AccessError("Wrong iris code")
+                e = "Wrong iris code"
+                raise AccessError(e)
             if error == 'UserError':
-                raise UserError("Walter is AFK")
+                e = "Walter is AFK"
+                raise UserError(e)
 
     @http.route("/test_http/upload_file", methods=["POST"], type="http", auth="none", csrf=False)
     def upload_file_retry(self, ufile):
         global should_fail  # pylint: disable=W0603  # noqa: PLW0603
         if should_fail is None:
-            raise ValueError("should_fail should be set.")
+            e = f"The {(__name__ + '.should_fail')!r} global variable must be set."
+            raise ValueError(e)
 
         data = ufile.read()
         if should_fail:

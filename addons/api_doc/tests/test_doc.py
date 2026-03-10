@@ -7,6 +7,7 @@ from unittest.mock import patch
 from odoo.fields import Command
 from odoo.models import Model
 from odoo.tests import new_test_user, tagged
+from odoo.tools import mute_logger
 
 from .dummy_methods import DummyMethods
 from odoo.addons.api_doc.controllers.api_doc import (
@@ -32,7 +33,10 @@ class TestDoc(HttpCaseWithUserDemo):
         self.authenticate('test_doc_access', 'test_doc_access')
         for path in ('/doc', '/doc/index.json', '/doc/res.company.json'):
             with self.subTest(path=path):
-                with self.assertLogs('odoo.http') as capture:
+                with (
+                    mute_logger('odoo.http.server'),
+                    self.assertLogs('odoo.http') as capture,
+                ):
                     res = self.url_open(path)
                 self.assertEqual(res.status_code, 403)
                 self.assertIn(e, res.text)

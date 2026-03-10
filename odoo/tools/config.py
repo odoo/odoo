@@ -701,6 +701,13 @@ class configmanager:
         if not self['http_interface']:
             self._runtime_options['http_interface'] = '127.0.0.1'
 
+        # check here some envvar options that are exposed as property
+        try:
+            self.http_socket_activation
+            self.max_http_threads
+        except ValueError as exc:
+            self.parser.error(exc.args[0])
+
         # accumulate all log_handlers
         self._runtime_options['log_handler'] = list(_deduplicate_loggers([
             *self._default_options.get('log_handler', []),
@@ -1063,6 +1070,14 @@ class configmanager:
             and os.getenv('LISTEN_FDS') == '1'
             and os.getenv('LISTEN_PID') == str(os.getpid())
         )
+
+    @property
+    def max_http_threads(self):
+        mht = os.getenv('ODOO_MAX_HTTP_THREADS', str(2 * os.cpu_count() + 1))
+        if not (mht.isdecimal() and mht.isascii()):
+            e = f"ODOO_MAX_HTTP_THREADS={mht} but it is not a positive integer"
+            raise ValueError(e)
+        return int(mht)
 
     @classmethod
     def _normalize(cls, path):
