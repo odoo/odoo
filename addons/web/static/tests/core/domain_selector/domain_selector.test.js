@@ -273,7 +273,7 @@ test("building a domain with an invalid operator", async () => {
     await makeDomainSelector({
         domain: `[("foo", "!!!!=!!!!", "abc")]`,
         update(domain) {
-            expect(domain).toBe(`[("foo", "=", "abc")]`);
+            expect(domain).toBe(`[("foo", "ilike", "abc")]`);
         },
     });
 
@@ -287,15 +287,15 @@ test("building a domain with an invalid operator", async () => {
     expect(getCurrentPath()).toBe("Foo");
     expect(".o_model_field_selector_warning").toHaveCount(0);
     expect(getOperatorOptions()).toEqual([
-        label("="),
-        label("!="),
         label("ilike"),
         label("not ilike"),
+        label("="),
+        label("!="),
         label("starts with"),
         label("set"),
         label("not set"),
     ]);
-    expect(getCurrentOperator()).toBe(label("="));
+    expect(getCurrentOperator()).toBe(label("ilike"));
     expect(getCurrentValue()).toBe("abc");
 });
 
@@ -349,6 +349,43 @@ test("building a domain with a m2o without following the relation", async () => 
 
     await contains(`${SELECTORS.valueEditor} input`).edit("pad");
     expect.verifySteps([`[("product_id", "ilike", "pad")]`]);
+});
+
+test("Char/Text/Html fields have operator suggestions in their usage frequency order", async () => {
+    Partner._fields.dummy_text = fields.Text({ string: "Dummy text" });
+    Partner._fields.dummy_html = fields.Html({ string: "Dummy html" });
+
+    const expectedOperators = [
+        label("ilike"),
+        label("not ilike"),
+        label("="),
+        label("!="),
+        label("starts with"),
+        label("set"),
+        label("not set"),
+    ];
+
+    const toTest = [
+        { name: "Display name", expectedDomain: `[("display_name", "ilike", "")]` },
+        { name: "Dummy text", expectedDomain: `[("dummy_text", "ilike", "")]` },
+        { name: "Dummy html", expectedDomain: `[("dummy_html", "ilike", "")]` },
+    ];
+
+    await makeDomainSelector({
+        isDebugMode: true,
+    });
+    await addNewRule();
+    for (const { name, expectedDomain } of toTest) {
+        await openModelFieldSelectorPopover();
+        await contains(
+            `.o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(${name})`
+        ).click();
+        expect(getCurrentPath()).toBe(name);
+        expect(getCurrentOperator()).toBe(label("ilike"));
+        expect(getOperatorOptions()).toEqual(expectedOperators);
+        expect(getCurrentValue()).toBe("");
+        expect(SELECTORS.debugArea).toHaveValue(expectedDomain);
+    }
 });
 
 test("editing a domain with `parent` key", async () => {
@@ -1044,12 +1081,12 @@ test("support properties", async () => {
         },
         {
             name: "xphone_prop_3",
-            domain: `[("properties.xphone_prop_3", "=", "")]`,
+            domain: `[("properties.xphone_prop_3", "ilike", "")]`,
             options: [
-                label("="),
-                label("!="),
                 label("ilike"),
                 label("not ilike"),
+                label("="),
+                label("!="),
                 label("starts with"),
                 label("set"),
                 label("not set"),
@@ -1214,7 +1251,7 @@ test("updating path should also update operator if invalid", async () => {
     await makeDomainSelector({
         domain: `[("id", "<", 0)]`,
         update: (domain) => {
-            expect(domain).toBe(`[("foo", "=", "")]`);
+            expect(domain).toBe(`[("foo", "ilike", "")]`);
         },
     });
 

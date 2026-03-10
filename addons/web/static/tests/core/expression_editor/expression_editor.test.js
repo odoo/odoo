@@ -357,7 +357,7 @@ test("check condition by default when creating a new rule", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Country ID", label("="), ""] },
+        { level: 1, value: ["Country ID", label("ilike"), ""] },
     ]);
 });
 
@@ -404,7 +404,7 @@ test("no field of type properties in model field selector", async () => {
     ]);
     expect(isNotSupportedPath()).toBe(true);
     await clearNotSupported();
-    expect.verifySteps([`foo == ""`]);
+    expect.verifySteps([`"".lower() in (foo or "").lower()`]);
 
     await openModelFieldSelectorPopover();
     expect(queryAllTexts(".o_model_field_selector_popover_item_name")).toEqual(["Bar", "Foo"]);
@@ -423,9 +423,9 @@ test("no special fields in fields", async () => {
     await addNewRule();
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
-        { level: 1, value: ["Foo", label("="), ""] },
+        { level: 1, value: ["Foo", label("ilike"), ""] },
     ]);
-    expect.verifySteps([`foo == ""`]);
+    expect.verifySteps([`"".lower() in (foo or "").lower()`]);
 });
 
 test("between operator", async () => {
@@ -716,10 +716,10 @@ test("expression for char field support 'contains'", async () => {
 
     await makeExpressionEditor({ expression: "name", update });
     expect(getOperatorOptions()).toEqual([
-        label("="),
-        label("!="),
         label("ilike"),
         label("not ilike"),
+        label("="),
+        label("!="),
         label("set"),
         label("not set"),
     ]);
@@ -743,10 +743,10 @@ test("expression for char field support 'contains'", async () => {
     await selectOperator("not ilike");
 
     expect(getOperatorOptions()).toEqual([
-        label("="),
-        label("!="),
         label("ilike"),
         label("not ilike"),
+        label("="),
+        label("!="),
         label("set"),
         label("not set"),
     ]);
