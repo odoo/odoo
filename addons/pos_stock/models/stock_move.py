@@ -149,3 +149,23 @@ class StockMove(models.Model):
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             if existing_lot:
                                 move._update_reserved_quantity(qty, move.location_id, lot_id=existing_lot)
+
+    @api.depends("product_id")
+    def _compute_description_picking(self):
+        super()._compute_description_picking()
+        seen = set()
+        for move in self:
+            if not (pos_order := move.reference_ids.pos_order_ids) or move.description_picking_manual:
+                continue
+
+            product = move.product_id
+            line = pos_order.lines.filtered(
+                lambda l: l.product_id == product
+                and l.id not in seen
+                and any(av.attribute_id.create_variant == "no_variant" for av in l.attribute_value_ids)
+            )[:1]
+
+            if line and move.description_picking == product.display_name:
+                extra = line.full_product_name.replace(product.name, "", 1).strip()
+                move.description_picking = f"\n{extra}" if extra else ""
+                seen.add(line.id)
