@@ -1717,8 +1717,8 @@ class MrpProduction(models.Model):
         for order in self:
             previous_date_start = None
             for message in order.message_ids:
-                if message.tracking_value_ids.field_id.mapped('name') == ['date_start']:
-                    previous_date_start = message.tracking_value_ids.old_value_datetime
+                if message.sudo().tracking_value_ids.field_id.mapped('name') == ['date_start']:
+                    previous_date_start = message.sudo().tracking_value_ids.old_value_datetime
                     break
                 if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
                     break
