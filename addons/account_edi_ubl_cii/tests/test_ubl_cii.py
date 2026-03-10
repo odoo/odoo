@@ -1245,3 +1245,24 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertEqual(due_date.text, '20251231')
         self.assertEqual(days.text, '15')
         self.assertEqual(percent.text, '3.0')
+
+    def test_export_supplier_and_customer_fields(self):
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        bill = self._import_as_attachment_on(attachment=xml_attachment)
+        raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(bill)[0]
+        xml_tree = etree.fromstring(raw)
+        self.assertEqual(
+            xml_tree.find(".//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name", namespaces=self.ubl_namespaces).text,
+            "ALD Automotive LU",
+        )
+        self.assertEqual(
+            xml_tree.find(".//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name", namespaces=self.ubl_namespaces).text,
+            self.env.company.partner_id.name
+        )

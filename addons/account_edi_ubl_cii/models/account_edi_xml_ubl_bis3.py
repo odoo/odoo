@@ -63,7 +63,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         self._ubl_add_values_currency(vals, invoice.currency_id)
         self._ubl_add_values_customer(vals, invoice.partner_id)
         self._ubl_add_values_delivery(vals, invoice.partner_shipping_id or invoice.partner_id)
-        if vals['process_type'] == 'selfbilling':
+        if invoice.is_purchase_document():
             customer = vals['customer']
             supplier = vals['supplier']
             vals['supplier'] = customer
