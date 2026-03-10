@@ -1993,9 +1993,6 @@ test("Channel is added to discuss after invitation", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(
-        ".o_notification:has(.o_notification_bar.bg-info):text('You have been invited to #General')"
-    );
 });
 
 test("select another mailbox", async () => {

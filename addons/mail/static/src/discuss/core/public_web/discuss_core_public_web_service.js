@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class DiscussCorePublicWeb {
@@ -13,28 +12,10 @@ export class DiscussCorePublicWeb {
         this.env = env;
         this.store = services["mail.store"];
         this.busService = services.bus_service;
-        this.notificationService = services.notification;
         this.busService.subscribe("discuss.channel/joined", async (payload) => {
-            const {
-                store_data,
-                channel_id,
-                invite_to_rtc_call,
-                invited_by_user_id: invitedByUserId,
-            } = payload;
+            const { store_data, channel_id } = payload;
             this.store.insert(store_data);
             await this.store.fetchChannel(channel_id);
-            const channel = this.store["discuss.channel"].get(channel_id);
-            if (
-                channel &&
-                invitedByUserId &&
-                invitedByUserId !== this.store.self_user?.id &&
-                !invite_to_rtc_call
-            ) {
-                this.notificationService.add(
-                    _t("You have been invited to #%s", channel.displayName),
-                    { type: "info" }
-                );
-            }
         });
         browser.navigator.serviceWorker?.addEventListener(
             "message",
@@ -68,7 +49,7 @@ export class DiscussCorePublicWeb {
 }
 
 export const discussCorePublicWeb = {
-    dependencies: ["bus_service", "discuss.rtc", "mail.store", "notification"],
+    dependencies: ["bus_service", "discuss.rtc", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

@@ -181,7 +181,6 @@ test("unnamed group chat should display correct name just after being invited", 
         })
     );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jane and Mitchell Admin')");
-    await contains(".o_notification:text('You have been invited to #Jane and Mitchell Admin')");
 });
 
 test("invite user to self chat opens DM chat with user", async () => {
