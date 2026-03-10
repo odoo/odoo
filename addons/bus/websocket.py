@@ -313,13 +313,14 @@ class Websocket:
     # How many seconds between each request.
     RL_DELAY = float(config['websocket_rate_limit_delay'])
 
-    def __init__(self, sock, session, cookies):
+    def __init__(self, sock, session, cookies, prelude=b''):
         # Session linked to the current websocket connection.
         self._session = session
         # Cookies linked to the current websocket connection.
         self._cookies = cookies
         self._db = session.db
         self.__socket = sock
+        self._prelude = prelude and memoryview(prelude)
         self._close_sent = False
         self._close_received = False
         self._timeout_manager = TimeoutManager()
@@ -454,6 +455,11 @@ class Websocket:
         def recv_bytes(n):
             """ Pull n bytes from the socket """
             data = bytearray()
+            if self._prelude:
+                data.extend(self._prelude[:n])
+                self._prelude = self._prelude[n:]
+                if not self._prelude:
+                    self._prelude = b''  # free the bytes
             while len(data) < n:
                 received_data = self.__socket.recv(n - len(data))
                 if not received_data:
@@ -1040,10 +1046,11 @@ class WebsocketConnectionHandler:
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
             socket = request.httprequest._HTTPRequest__environ['socket']
+            trailing_data = request.httprequest._HTTPRequest__environ.get('odoo.trailing_data', lambda: (b'', False))
             session, db, httprequest = (public_session or request.session), request.db, request.httprequest
             response.call_on_close(
                 lambda: cls._serve_forever(
-                    Websocket(socket, session, httprequest.cookies),
+                    Websocket(socket, session, httprequest.cookies, prelude=trailing_data()[0]),
                     db,
                     httprequest,
                     version,

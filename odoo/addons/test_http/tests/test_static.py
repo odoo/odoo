@@ -33,6 +33,7 @@ class TestHttpStaticCommon(TestHttpBase):
     def assertDownload(
         self, url, headers, assert_status_code, assert_headers, assert_content=None
     ):
+        assert_headers = {header.lower(): value for header, value in assert_headers.items()}
         res = self.db_url_open(url, headers=headers)
         res.raise_for_status()
         self.assertEqual(res.status_code, assert_status_code)

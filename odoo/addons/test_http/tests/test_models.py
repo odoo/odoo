@@ -115,7 +115,7 @@ class TestHttpModels(TestHttpBase):
         self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
 
     def test_models6_rpc_path_poisoning(self):
-        with self.assertLogs('werkzeug', logging.INFO) as capture:
+        with self.assertLogs('odoo.http.server', logging.INFO) as capture:
             with mute_logger('odoo.addons.rpc.controllers.xmlrpc'):
                 self.xmlrpc_object.execute_kw(
                     get_db_name(), self.jackoneill.id, 'jackoneill',

@@ -367,9 +367,13 @@ class Request:
 # ruff: noqa: E402
 if typing.TYPE_CHECKING:
     HTTPRequest = werkzeug.wrappers.Request
-    from ._facade import DEFAULT_MAX_CONTENT_LENGTH
+    from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE  # noqa: F401
 else:
-    from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
+    from ._facade import (  # noqa: F401
+        DEFAULT_MAX_CONTENT_LENGTH,
+        MAX_FORM_SIZE,
+        HTTPRequest,
+    )
 from .dispatcher import HttpDispatcher
 from .geoip import GeoIP
 from .response import FutureResponse, Response

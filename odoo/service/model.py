@@ -9,7 +9,6 @@ from odoo.exceptions import (
     AccessDenied,
     UserError,
 )
-from odoo.http.retrying import retrying
 from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -96,6 +95,8 @@ def dispatch(method, params):
 
 
 def execute_cr(cr, uid, obj, method, args, kw):
+    from odoo.http.retrying import retrying  # noqa: PLC0415
+
     env = api.Environment(cr, uid, {})
     env.transaction.reset()  # clean cache, rebind to registry if we retry the same transaction
     env.transaction.default_env = env  # ensure this is the default env for the call
@@ -106,8 +107,8 @@ def execute_cr(cr, uid, obj, method, args, kw):
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
-    for l in _traverse_containers(result, lazy):
-        _0 = l._value
+    for x in _traverse_containers(result, lazy):
+        _0 = x._value
     if result is None:
         _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
     return result
@@ -118,7 +119,7 @@ def _traverse_containers(val, type_):
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """
-    from odoo.models import BaseModel
+    from odoo.models import BaseModel  # noqa: PLC0415
     if isinstance(val, type_):
         yield val
     elif isinstance(val, (str, bytes, BaseModel)):
