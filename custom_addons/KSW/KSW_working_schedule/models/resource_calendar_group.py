@@ -45,6 +45,7 @@ class ResourceCalendarGroupLine(models.Model):
             ('morning', 'Morning'),
             ('afternoon', 'Afternoon'),
             ('full_day', 'Full Day'),
+            ('break', 'Break'),
         ],
         string='Day Period',
         required=True,

@@ -50,12 +50,12 @@ class BiometricScheduleHelper(models.AbstractModel):
         if not lines:
             return None
 
-        work_lines = lines.filtered(lambda l: l.day_period != 'lunch')
-        lunch_lines = lines.filtered(lambda l: l.day_period == 'lunch')
+        work_lines = lines.filtered(lambda l: l.day_period != 'break')
+        break_lines = lines.filtered(lambda l: l.day_period == 'break')
         if not work_lines:
             return None
 
-        break_hours = sum(l.hour_to - l.hour_from for l in lunch_lines)
+        break_hours = sum(l.hour_to - l.hour_from for l in break_lines)
         hour_from = work_lines[0].hour_from
         hour_to = work_lines[-1].hour_to
 
@@ -122,52 +122,131 @@ class BiometricScheduleHelper(models.AbstractModel):
         return False
 
     @api.model
+    def calculate_break_deduction(self, employee, work_date, local_ci, local_co, emp_tz):
+        """Calculate total break hours to deduct.
+
+        Break is only subtracted if the employee checked in before break start
+        AND checked out after break end.
+
+        :param employee: hr.employee record
+        :param work_date: date used for break line lookup
+        :param local_ci: localized check-in datetime
+        :param local_co: localized check-out datetime
+        :param emp_tz: pytz timezone
+        :return: float break hours to deduct
+        """
+        break_deduction_hours = 0.0
+        calendar = employee.main_calendar_id
+        if not calendar:
+            return break_deduction_hours
+
+        calendar_groups = calendar.calendar_group_ids
+        if not calendar_groups:
+            return break_deduction_hours
+
+        day_of_week = str(work_date.weekday())
+        break_lines = self.env['resource.calendar.group.line'].search([
+            ('calendar_group_id', 'in', calendar_groups.ids),
+            ('dayofweek', '=', day_of_week),
+            ('day_period', '=', 'break'),
+        ])
+
+        ref_date = local_ci.date() if hasattr(local_ci, 'date') else work_date
+        for brk in break_lines:
+            brk_hour = int(brk.hour_from)
+            brk_min = int((brk.hour_from - brk_hour) * 60)
+            brk_end_hour = int(brk.hour_to)
+            brk_end_min = int((brk.hour_to - brk_end_hour) * 60)
+
+            break_start = emp_tz.localize(
+                dt(ref_date.year, ref_date.month, ref_date.day,
+                   brk_hour, brk_min))
+            break_end = emp_tz.localize(
+                dt(ref_date.year, ref_date.month, ref_date.day,
+                   brk_end_hour, brk_end_min))
+
+            if local_ci < break_start and local_co > break_end:
+                break_deduction_hours += (break_end - break_start).total_seconds() / 3600.0
+
+        return break_deduction_hours
+
+    @api.model
     def calculate_worked_time(self, check_in, check_out, employee):
         """Calculate worked time considering schedule and grace periods.
+
+        Formula: worked_hours = scheduled_hours - late_minutes - early_leave_minutes - break
+        If absent: worked_hours = 0
+        Grace period: arrival/departure within grace means no late/early deduction.
+        Overtime: anything beyond scheduled end, calculated separately.
 
         :param check_in: naive UTC datetime
         :param check_out: naive UTC datetime
         :param employee: hr.employee record
-        :return: dict with 'worked_hours', 'late_minutes', 'early_leave_minutes'
+        :return: dict with 'worked_hours', 'late_minutes', 'early_leave_minutes',
+                 'overtime_hours'
         """
         emp_tz = self.get_employee_tz(employee)
         local_ci = pytz.utc.localize(check_in).astimezone(emp_tz)
         local_co = pytz.utc.localize(check_out).astimezone(emp_tz)
         work_date = local_ci.date()
 
-        schedule = self.get_employee_day_schedule(
-            employee, work_date, emp_tz)
+        schedule = self.get_employee_day_schedule(employee, work_date, emp_tz)
         if not schedule:
             raw_hours = (check_out - check_in).total_seconds() / 3600.0
             return {
                 'worked_hours': raw_hours,
                 'late_minutes': 0.0,
                 'early_leave_minutes': 0.0,
+                'overtime_hours': 0.0,
             }
 
         grace_minutes = 16
         sched_start = schedule['start']
         sched_end = schedule['end']
-        break_hours = schedule.get('break_hours', 0.0)
-
-        late_minutes = 0.0
         grace_start = sched_start + timedelta(minutes=grace_minutes)
-        if local_ci > grace_start:
-            late_minutes = int(round(
-                (local_ci - sched_start).total_seconds() / 60.0))
-
-        early_leave_minutes = 0.0
         grace_end = sched_end - timedelta(minutes=grace_minutes)
-        if local_co < grace_end:
-            early_leave_minutes = int(round(
-                (sched_end - local_co).total_seconds() / 60.0))
 
-        raw_hours = (check_out - check_in).total_seconds() / 3600.0
-        worked_hours = max(0.0, raw_hours - break_hours)
+        # --- Break subtraction ---
+        break_deduction_hours = self.calculate_break_deduction(
+            employee, work_date, local_ci, local_co, emp_tz)
+
+        # --- Scheduled hours (full day minus break) ---
+        scheduled_hours = (
+                (sched_end - sched_start).total_seconds() / 3600.0
+                - break_deduction_hours
+        )
+
+        # --- Late detection ---
+        late_minutes = 0.0
+        if local_ci > grace_start:
+            late_minutes = round(
+                (local_ci - sched_start).total_seconds() / 60.0)
+
+        # --- Early leave detection ---
+        early_leave_minutes = 0.0
+        if local_co < grace_end:
+            early_leave_minutes = round(
+                (sched_end - local_co).total_seconds() / 60.0)
+
+        # --- Overtime: anything beyond the scheduled end ---
+        overtime_hours = 0.0
+        if local_co > sched_end:
+            overtime_hours = (local_co - sched_end).total_seconds() / 3600.0
+
+        # --- Worked hours = scheduled - late - early leave ---
+        worked_hours = max(
+            0.0,
+            scheduled_hours
+            - (late_minutes / 60.0)
+            - (early_leave_minutes / 60.0),
+        )
 
         return {
             'worked_hours': worked_hours,
             'late_minutes': late_minutes,
-            'early_leave_minutes': early_leave_minutes
+            'early_leave_minutes': early_leave_minutes,
+            'overtime_hours': overtime_hours,
         }
+
+
 

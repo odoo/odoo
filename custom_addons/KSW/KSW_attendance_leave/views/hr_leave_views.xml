@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend hr.leave form to add attendance issue fields -->
+    <record id="hr_leave_view_form_inherit_attendance_issue" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit.attendance.issue</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="x_attendance_ids" widget="many2many_tags"
+                       options="{'no_create': True, 'no_edit': True}"/>
+                <field name="x_total_late_minutes" readonly="1" invisible="x_total_late_minutes == 0"/>
+                <field name="x_total_early_leave_minutes" readonly="1" invisible="x_total_early_leave_minutes == 0"/>
+                <field name="x_total_absent_days" readonly="1" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend hr.attendance list to show coverage status -->
+    <record id="hr_attendance_view_list_inherit_coverage" model="ir.ui.view">
+        <field name="name">hr.attendance.list.inherit.coverage</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="x_is_covered" string="Covered"
+                       widget="boolean_toggle" readonly="1"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend hr.attendance form to show related leaves -->
+    <record id="hr_attendance_view_form_inherit_leaves" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit.leaves</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Related Time Off"
+                       invisible="not x_leave_ids">
+                    <field name="x_leave_ids" widget="one2many_list"
+                           readonly="1"/>
+                    <field name="x_is_covered" readonly="1"
+                           widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

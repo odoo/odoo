@@ -4,14 +4,16 @@
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
-             <xpath expr="//field[@name='employee_id']" position="after">
+            <xpath expr="//field[@name='employee_id']" position="after">
                 <field name="x_day_of_week" string="Day"/>
             </xpath>
             <xpath expr="//list" position="inside">
                 <field name="x_late_minutes" string="Late Minutes"/>
                 <field name="x_early_leave_minutes" string="Early Leave Minutes"/>
             </xpath>
-            <xpath expr="//field[@name='overtime_hours']" position="replace"/>
+            <xpath expr="//field[@name='overtime_hours']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
             <xpath expr="//field[@name='validated_overtime_hours']" position="replace"/>
             <xpath expr="//field[@name='check_in']" position="replace">
                 <field name="check_in" string="Check In" widget="datetime" options="{'show_seconds': true}"/>
@@ -25,6 +27,10 @@
             </xpath>
             <xpath expr="//list" position="attributes">
                 <attribute name="decoration-danger">x_is_absent</attribute>
+                <attribute name="class">o_attendance_list</attribute>
+            </xpath>
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-info">x_weekend_granted</attribute>
                 <attribute name="class">o_attendance_list</attribute>
             </xpath>
         </field>

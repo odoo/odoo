@@ -204,6 +204,7 @@ class BiometricAttendanceSync(models.AbstractModel):
             'x_early_leave_minutes': 0.0,
             'x_is_absent': True,
         })
+
         _logger.info(
             "Absence record created for %s on %s",
             employee.name, absence_date)
@@ -263,6 +264,89 @@ class BiometricAttendanceSync(models.AbstractModel):
             total_created, errors)
         return total_created
 
+    @api.model
+    def _generate_weekend_records(self, employees, date_from, date_to):
+        """Grant weekend hours only if employee attended an adjacent workday."""
+        helper = self.env['biometric.schedule.helper']
+        HrAttendance = self.env['hr.attendance']
+        total_created = 0
+
+        for emp in employees:
+            emp_tz = helper.get_employee_tz(emp)
+
+            # Prefetch all attendance dates for this employee in the range
+            all_attendances = HrAttendance.search([
+                ('employee_id', '=', emp.id),
+                ('check_in', '>=', dt.combine(date_from - timedelta(days=1), dt.min.time())),
+                ('check_in', '<', dt.combine(date_to + timedelta(days=2), dt.min.time())),
+                ('x_is_absent', '=', False),
+            ])
+            attended_dates = set()
+            existing_dates = set()
+            for att in all_attendances:
+                att_date = att.check_in.date() if isinstance(att.check_in, dt) else att.check_in
+                existing_dates.add(att_date)
+                if not att.x_is_weekend:
+                    attended_dates.add(att_date)
+
+            current = date_from
+            while current <= date_to:
+                if helper.is_scheduled_workday(emp, current):
+                    current += timedelta(days=1)
+                    continue
+
+                weekend_start = current
+                weekend_end = current
+                while (weekend_end + timedelta(days=1)) <= date_to \
+                        and not helper.is_scheduled_workday(emp, weekend_end + timedelta(days=1)):
+                    weekend_end += timedelta(days=1)
+
+                day_before = weekend_start - timedelta(days=1)
+                day_after = weekend_end + timedelta(days=1)
+
+                if day_before in attended_dates or day_after in attended_dates:
+                    grant_day = weekend_start
+                    while grant_day <= weekend_end:
+                        if grant_day not in existing_dates:
+                            ref_schedule = helper.get_employee_day_schedule(
+                                emp, day_before, emp_tz
+                            ) or helper.get_employee_day_schedule(
+                                emp, day_after, emp_tz
+                            )
+                            if ref_schedule:
+                                sched_start = emp_tz.localize(
+                                    dt(grant_day.year, grant_day.month, grant_day.day,
+                                       ref_schedule['start'].hour, ref_schedule['start'].minute))
+                                sched_end = emp_tz.localize(
+                                    dt(grant_day.year, grant_day.month, grant_day.day,
+                                       ref_schedule['end'].hour, ref_schedule['end'].minute))
+                                ci_utc = sched_start.astimezone(pytz.utc).replace(tzinfo=None)
+                                co_utc = sched_end.astimezone(pytz.utc).replace(tzinfo=None)
+                                ref_day = day_before if day_before in attended_dates else day_after
+                                break_hours = helper.calculate_break_deduction(
+                                    emp, ref_day, sched_start, sched_end, emp_tz)
+                                worked = (co_utc - ci_utc).total_seconds() / 3600.0 - break_hours
+
+                                rec = HrAttendance.sudo().create({
+                                    'employee_id': emp.id,
+                                    'check_in': ci_utc,
+                                    'check_out': co_utc,
+                                    'x_is_absent': False,
+                                    'x_is_weekend': True,
+                                    'x_weekend_granted': True,
+                                })
+                                rec.sudo().write({'worked_hours': worked})
+
+                                existing_dates.add(grant_day)
+                                total_created += 1
+                                _logger.info("Weekend granted for %s on %s (%.2fh)",
+                                             emp.name, grant_day, worked)
+                        grant_day += timedelta(days=1)
+
+                current = weekend_end + timedelta(days=1)
+
+            self.env.cr.commit()
+
     # -- Cron: yesterday only (lightweight) ----------------------------------
 
     @api.model
@@ -286,6 +370,9 @@ class BiometricAttendanceSync(models.AbstractModel):
 
         total_created = self._generate_absences_date_range(
             employees, yesterday, yesterday)
+
+        # --- Generate weekend records for yesterday ---
+        self._generate_weekend_records(employees, yesterday, yesterday)
 
         duration = (fields.Datetime.now() - cron_start).total_seconds()
         _logger.info("=" * 80)
@@ -326,6 +413,13 @@ class BiometricAttendanceSync(models.AbstractModel):
             created = self._generate_absences_date_range(
                 employee, date_from, yesterday)
             total_created += created
+
+        # --- Generate weekend records for the full historical range ---
+        earliest = min(
+            (self._get_employee_start_date(e) for e in employees),
+            default=yesterday,
+        )
+        self._generate_weekend_records(employees, earliest, yesterday)
 
         return {
             'type': 'ir.actions.client',
@@ -399,6 +493,7 @@ class BiometricAttendanceSync(models.AbstractModel):
         worked_hours = work_data['worked_hours']
         late_minutes = work_data['late_minutes']
         early_leave_minutes = work_data['early_leave_minutes']
+        overtime_hours = work_data.get('overtime_hours', 0.0)
 
         att_date = pytz.utc.localize(ci).astimezone(emp_tz).date()
         att_date_str = att_date.strftime("%Y-%m-%d")
@@ -428,13 +523,17 @@ class BiometricAttendanceSync(models.AbstractModel):
                 worked_hours = work_data['worked_hours']
                 late_minutes = work_data['late_minutes']
                 early_leave_minutes = work_data['early_leave_minutes']
+                overtime_hours = work_data.get('overtime_hours', 0.0)
 
             att_date = pytz.utc.localize(new_ci).astimezone(emp_tz).date()
+            day_name = att_date.strftime('%A')
             new_cr.execute(
                 "UPDATE hr_attendance "
                 "SET check_in = %s, check_out = %s, date = %s, "
                 "worked_hours = %s, "
                 "x_late_minutes = %s, x_early_leave_minutes = %s, "
+                "overtime_hours = %s, "
+                "x_day_of_week = %s, "
                 "write_date = NOW(), write_uid = %s "
                 "WHERE id = %s",
                 (new_ci.strftime("%Y-%m-%d %H:%M:%S"),
@@ -442,19 +541,23 @@ class BiometricAttendanceSync(models.AbstractModel):
                  att_date.strftime("%Y-%m-%d"),
                  worked_hours,
                  late_minutes, early_leave_minutes,
+                 overtime_hours,
+                 day_name,
                  self.env.uid, att_id))
+
             return False, True
         else:
+            day_name = att_date.strftime('%A')
             new_cr.execute(
                 "INSERT INTO hr_attendance "
                 "(employee_id, check_in, check_out, date, "
                 "worked_hours, "
-                "x_late_minutes, x_early_leave_minutes, "
+                "x_late_minutes, x_early_leave_minutes,overtime_hours, x_day_of_week, "
                 "create_date, create_uid, write_date, write_uid) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, NOW(), %s, NOW(), %s)",
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s, NOW(), %s, NOW(), %s)",
                 (emp_id, ci_str, co_str, att_date_str,
                  worked_hours,
-                 late_minutes, early_leave_minutes,
+                 late_minutes, early_leave_minutes,overtime_hours, day_name,
                  self.env.uid, self.env.uid))
             return True, False
 
