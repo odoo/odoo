@@ -30,6 +30,7 @@ const websiteServiceWithUserModelName = {
     context: {},
     websites: [{ id: 1, metadata: {} }],
     currentWebsite: { id: 1, metadata: {} },
+    getCanHaveDraftPreview: () => false,
 };
 
 test("Add image as cover", async () => {

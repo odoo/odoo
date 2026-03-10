@@ -8,7 +8,7 @@ from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, UserError
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import common, HttpCase, tagged
 
@@ -271,6 +271,31 @@ class TestViewSaving(TestViewSavingCommon):
         # FIXME: more precise exception
         with self.assertRaises(Exception):
             View.save_embedded_field(e2)
+
+    def test_draft_embedded_fields_readonly(self):
+        company = self.env.company
+        name = company.name
+        view = self.view_id.with_context(self.website_ctx)
+        field_attrs = attrs(model='res.company', id=company.id, field='name', type='char', expression='company.name')
+
+        with self.assertRaises(UserError):
+            view.save(ET.tostring(h.SPAN("Leeroy", field_attrs), encoding='unicode'), draft=True)
+
+        # a view section is drafted, but its fields are left untouched
+        section = h.DIV(h.H3("Draft column"), h.SPAN("Leeroy", field_attrs))
+        view.save(ET.tostring(section, encoding='unicode'), xpath='/div/div[2]', draft=True)
+        self.assertEqual(company.name, name)
+        self.assertNotIn("Draft column", view.arch_db)
+        self.assertIn("Draft column", view._get_draft_view().arch_draft)
+
+        # fields are rendered read-only in draft mode
+        options = {'inherit_branding': True, 'translate': False}
+        Field = self.env['ir.qweb.field']
+        self.assertNotIn('data-oe-readonly', Field.attributes(company, 'name', options))
+        self.assertEqual(
+            Field.with_context(draft_preview=True).attributes(company, 'name', options)['data-oe-readonly'],
+            'draft',
+        )
 
     def test_embedded_to_field_ref(self):
         View = self.env['ir.ui.view']
@@ -1875,3 +1900,58 @@ class TestThemeViews(common.TransactionCase):
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+
+@tagged('-at_install', 'post_install')
+class TestDraftViewTranslations(common.TransactionCase):
+    def test_draft_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env.ref('base.default_website')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Draft translations',
+            'type': 'qweb',
+            'key': 'test.draft_translations',
+            'website_id': website.id,
+            'arch': '<t><div><p>Hello</p><p>World</p></div></t>',
+        }).with_context(website_id=website.id)
+        view.update_field_translations('arch_db', {'fr_FR': {'Hello': 'Bonjour', 'World': 'Monde'}})
+
+        # editing the draft keeps the translations of the untouched terms
+        view.save('<div><p>Hello</p><p>World</p><p>New</p></div>', xpath='/t/div', draft=True)
+        self.assertIn('Bonjour', view.with_context(lang='fr_FR').arch_draft)
+        self.assertNotIn('New', view.arch_db)
+
+        # translating the draft leaves the live page alone
+        view.update_field_translations('arch_draft', {'fr_FR': {'World': 'Le Monde', 'New': 'Nouveau'}})
+        self.assertIn('Nouveau', view.with_context(lang='fr_FR', draft_preview=True).arch)
+        self.assertNotIn('Le Monde', view.with_context(lang='fr_FR').arch)
+
+        view.publish_draft()
+        fr_arch = view.with_context(lang='fr_FR').arch
+        for term in ('Bonjour', 'Le Monde', 'Nouveau'):
+            self.assertIn(term, fr_arch)
+        self.assertFalse(view.arch_draft)
+
+    def test_translate_without_draft(self):
+        """ Translating in draft mode a view that has no draft yet starts a
+        draft on the website-specific view instead of touching the live one. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env.ref('base.default_website')
+        generic_view = self.env['ir.ui.view'].create({
+            'name': 'Generic draft translations',
+            'type': 'qweb',
+            'key': 'test.generic_draft_translations',
+            'arch': '<t><div><p>Hello</p><p>World</p></div></t>',
+        })
+        generic_view.update_field_translations('arch_db', {'fr_FR': {'Hello': 'Bonjour', 'World': 'Monde'}})
+
+        draft_view = generic_view.with_context(website_id=website.id)._get_draft_view()
+        self.assertEqual(draft_view.website_id, website)
+        self.assertEqual(draft_view.key, generic_view.key)
+        draft_view.update_field_translations('arch_draft', {'fr_FR': {'World': 'Le Monde'}})
+
+        self.assertIn('Le Monde', draft_view.with_context(lang='fr_FR', draft_preview=True).arch)
+        self.assertIn('Bonjour', draft_view.with_context(lang='fr_FR', draft_preview=True).arch)
+        for view in generic_view + draft_view:
+            self.assertNotIn('Le Monde', view.with_context(lang='fr_FR').arch)
+        self.assertEqual(generic_view.with_context(website_id=website.id)._get_draft_view(), draft_view)
