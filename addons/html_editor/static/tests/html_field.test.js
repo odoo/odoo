@@ -2704,6 +2704,7 @@ describe("save image", () => {
         await delay(50);
         // reswitch tab, and check the image was saved properly.
         await contains(".o_notebook_headers .nav-link:not(.active)").click();
+        await waitFor(".odoo-editor-editable", { timeout: 1500 });
         const savedImg = htmlEditor.editable.querySelector("img");
         expect(savedImg.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
         expect(savedImg).not.toHaveClass("o_b64_image_to_save");
