@@ -1,7 +1,7 @@
 import copy
 
 from odoo.exceptions import UserError
-from odoo.tests import common, tagged, Form
+from odoo.tests import common, Command, tagged, Form
 
 
 class TestConsumeComponentCommon(common.TransactionCase):
@@ -462,6 +462,38 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        self.bom_serial_lines[0].unlink()
+        self.bom_serial_lines[2].unlink()
+
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        mo.move_raw_line_ids.quantity = 1
+        mo.move_raw_ids.write({
+            'move_line_ids': [
+                Command.create({
+                    'quantity': 1,
+                    'product_id': self.raw_lot.id,
+                    'product_uom_id': self.raw_lot.uom_id.id,
+                    'lot_id': quants[1].lot_id.id
+                })
+            ]
+        })
+        mo.button_mark_done()
+        mo.invalidate_recordset()
+        self.assertRecordValues(mo.move_raw_line_ids, [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
         ])
 
     def test_no_component_consumption_on_lot_removal(self):
