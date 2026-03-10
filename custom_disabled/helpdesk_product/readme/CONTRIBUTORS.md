@@ -1,2 +1,0 @@
-- [ForgeFlow](https://www.forgeflow.com):
-  - Maria Buscallà \<<maria.buscalla@forgeflow.com>\>
