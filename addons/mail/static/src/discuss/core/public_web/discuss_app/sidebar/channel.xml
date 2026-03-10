@@ -34,7 +34,7 @@
                 <div class="position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" name="threadAvatar" t-att-class="{ 'ms-2': !store.discuss.isSidebarCompact }">
                     <DiscussAvatar channel="channel" size="26"/>
                 </div>
-                <div t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName overflow-hidden ms-2 text-start flex-grow-1" t-att-class="itemNameAttClass">
+                <div t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName overflow-hidden ms-2 text-start flex-grow-1 z-1" t-att-class="itemNameAttClass">
                     <div class="d-flex align-items-baseline o-min-width-0 gap-2">
                         <span class="text-truncate" t-esc="channel.displayName" t-ref="displayName"/>
                         <div class="d-flex gap-2 ms-auto" t-ref="displayNameAdditionalContent"/>
