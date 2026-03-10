@@ -3880,15 +3880,20 @@ class BaseModel(metaclass=MetaModel):
                         ))
                     raise
 
-            # invalidate the cache
-            if real_recs and (cache_name := self._clear_cache_name) and (
-                self._clear_cache_on_fields is None
-                or not vals.keys().isdisjoint(self._clear_cache_on_fields)
-            ):
-                self.env.registry.clear_cache(cache_name)
+            # recompute fields after inverse in case the new computed values are different from the assigned ones
+            recompute_fnames = [field.name for fields in determine_inverses.values() for field in fields if not field.store and field.compute]
+            real_recs.invalidate_recordset(recompute_fnames)
+            real_recs.modified(recompute_fnames)
 
-            # validate inversed fields
-            real_recs._validate_fields(inverse_fields)
+        # invalidate the cache
+        if real_recs and (cache_name := self._clear_cache_name) and (
+            self._clear_cache_on_fields is None
+            or not vals.keys().isdisjoint(self._clear_cache_on_fields)
+        ):
+            self.env.registry.clear_cache(cache_name)
+
+        # validate inversed fields
+        real_recs._validate_fields(inverse_fields)
 
         if self._check_company_auto:
             self._check_company(list(vals))
@@ -4090,8 +4095,9 @@ class BaseModel(metaclass=MetaModel):
         records = self._create(data_list)
 
         # protect fields being written against recomputation
-        protected_fields = [(data['protected'], data['record']) for data in data_list]
-        with self.env.protecting(protected_fields):
+        protected_data = [(data['protected'], data['record']) for data in data_list]
+        to_recompute = []
+        with self.env.protecting(protected_data):
             # fill cached_only fields
             for data in data_list:
                 if vals := data['cached_only']:
@@ -4114,10 +4120,18 @@ class BaseModel(metaclass=MetaModel):
 
                 inv_records = self.browse(inv_rec_ids)
                 next(iter(fields)).determine_inverse(inv_records)
+                to_recompute_field_names = [field.name for field in fields if not field.store and field.compute]
+                to_recompute.append((inv_records, to_recompute_field_names))
                 # Values of non-stored fields were cached before running inverse methods. In case of x2many create
                 # commands, the cache may therefore hold NewId records. We must now invalidate those values.
                 inv_relational_fnames = [field.name for field in fields if field.type in ('one2many', 'many2many') and not field.store]
                 inv_records.invalidate_recordset(fnames=inv_relational_fnames)
+
+            # recompute fields after inverse in case the new computed values are different from the assigned ones
+            for inv_records, field_names in to_recompute:
+                inv_records.invalidate_recordset(field_names)
+            for inv_records, field_names in to_recompute:
+                inv_records.modified(field_names)
 
         # invalidate the cache
         if cache_name := self._clear_cache_name:
