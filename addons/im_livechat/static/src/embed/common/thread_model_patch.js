@@ -74,6 +74,16 @@ patch(Thread.prototype, {
                 return this.livechat_active ? this.store : null;
             },
         });
+        this.storeAsActiveVisitorLivechats = fields.One("Store", {
+            /** @this {import("models").Thread} */
+            compute() {
+                return this.livechat_active &&
+                    (this.selfMember?.eq(this.livechatVisitorMember) || this.isTransient)
+                    ? this.store
+                    : null;
+            },
+            inverse: "activeVisitorLivechats",
+        });
         this.requested_by_operator = false;
     },
     /** @returns {boolean} */

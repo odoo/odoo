@@ -36,6 +36,6 @@ export class LivechatButton extends Component {
     }
 
     get isShown() {
-        return this.store.livechat_available && this.store.activeLivechats.length === 0;
+        return this.store.livechat_available && this.store.activeVisitorLivechats.length === 0;
     }
 }
