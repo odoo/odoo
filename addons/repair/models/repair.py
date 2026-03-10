@@ -60,7 +60,7 @@ class Repair(models.Model):
 
     # Specific Fields
     internal_notes = fields.Html('Internal Notes')
-    tag_ids = fields.Many2many('repair.tags', string="Tags")
+    tag_ids = fields.Many2many('repair.tags', string="Tags", groups="stock.group_stock_user")
     under_warranty = fields.Boolean(
         'Under Warranty',
         help='If ticked, the sales price will be set to 0 for all products transferred from the repair order.')
@@ -187,7 +187,7 @@ class Repair(models.Model):
         help="True if this repair is linked to a Return Order and the order is 'Done'. False otherwise.")
     picking_product_ids = fields.One2many('product.product', compute='_compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
-    allowed_lot_ids = fields.One2many('stock.lot', compute='_compute_allowed_lot_ids')
+    allowed_lot_ids = fields.One2many('stock.lot', compute='_compute_allowed_lot_ids', groups="stock.group_stock_user")
     # UI Fields
     has_uncomplete_moves = fields.Boolean(compute='_compute_has_uncomplete_moves')
     unreserve_visible = fields.Boolean(
