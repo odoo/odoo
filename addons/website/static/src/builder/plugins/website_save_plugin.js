@@ -24,6 +24,7 @@ export class WebsiteSavePlugin extends Plugin {
             }
             return rootEl;
         },
+        content_not_editable_selectors: "[data-oe-readonly=draft]",
     };
 
     setTranslateAttributes(rootEl) {
@@ -66,6 +67,7 @@ export class WebsiteSavePlugin extends Plugin {
                             this.processThrough("clean_for_save_processors", el.cloneNode(true))
                                 .outerHTML,
                             (!el.dataset.oeExpression && el.dataset.oeXpath) || null,
+                            this.services.website.isDraftPreview,
                         ],
                         { context }
                     );

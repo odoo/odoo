@@ -38,6 +38,7 @@ export const websiteService = {
         let websiteRootInstance;
         let isRestrictedEditor;
         let isDesigner;
+        let canHaveDraftPreviewProm;
         let hasMultiWebsites;
         let actionJsId;
         const blockingProcesses = [];
@@ -141,6 +142,9 @@ export const websiteService = {
             get bus() {
                 return bus;
             },
+            get isDraftPreview() {
+                return !!currentMetadata.draftPreview;
+            },
             set pageDocument(document) {
                 pageDocument = document;
                 if (!document) {
@@ -167,6 +171,7 @@ export const websiteService = {
                         viewXmlid,
                         defaultLangName,
                         langName,
+                        draftPreview,
                     } = dataset;
                     // We ignore multiple menus with the same `content_menu_id`
                     // in the DOM, since it's possible to have different
@@ -203,6 +208,7 @@ export const websiteService = {
                         lang: jsToPyLocale(document.documentElement.getAttribute("lang")),
                         defaultLangName: defaultLangName,
                         langName: langName,
+                        draftPreview: !!draftPreview,
                         direction: document.documentElement.querySelector("#wrapwrap.o_rtl")
                             ? "rtl"
                             : "ltr",
@@ -273,6 +279,14 @@ export const websiteService = {
 
             async goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
                 this.websiteRootInstance = undefined;
+                if (path && this.isDraftPreview) {
+                    const url = new URL(path, window.location.origin);
+                    url.searchParams.set("draft_preview", "1");
+                    path =
+                        url.origin === window.location.origin
+                            ? url.pathname + url.search + url.hash
+                            : url.href;
+                }
                 if (lang) {
                     invalidateSnippetCache = true;
                     path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(
@@ -406,6 +420,16 @@ export const websiteService = {
                 }
                 await modelNamesProm;
                 return modelNames[model] || _t("Data");
+            },
+            async getCanHaveDraftPreview() {
+                if (!canHaveDraftPreviewProm) {
+                    canHaveDraftPreviewProm = orm.call(
+                        "res.config.settings",
+                        "is_draft_preview_enabled",
+                        []
+                    );
+                }
+                return canHaveDraftPreviewProm;
             },
         };
     },

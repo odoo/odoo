@@ -35,6 +35,7 @@ import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
+import { deleteQueryParam } from "@website/utils/misc";
 import { CreatePageMessage } from "./create_page_message";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
@@ -485,16 +486,27 @@ export class WebsiteBuilderClientAction extends Component {
                 if (target !== "_blank") {
                     if (isTopWindowURL(closestEl)) {
                         url = new URL(href);
-                    } else if (
-                        this.websiteContent().contentWindow.location.pathname !==
-                        new URL(href).pathname
-                    ) {
+                    } else {
                         // This scenario triggers a navigation inside the iframe.
-                        this.websiteService.websiteRootInstance = undefined;
-                        if (this.websiteService.isNavigatingToAnotherPage) {
-                            this.websiteService.isNavigatingToAnotherPage.resolve();
+                        if (
+                            this.websiteContent().contentWindow.location.pathname !==
+                            new URL(href).pathname
+                        ) {
+                            this.websiteService.websiteRootInstance = undefined;
+                            if (this.websiteService.isNavigatingToAnotherPage) {
+                                this.websiteService.isNavigatingToAnotherPage.resolve();
+                            }
+                            this.websiteService.isNavigatingToAnotherPage = Promise.withResolvers();
                         }
-                        this.websiteService.isNavigatingToAnotherPage = Promise.withResolvers();
+                        // If draft preview is active, inject the param before
+                        // the browser navigates
+                        if (this.websiteService.isDraftPreview) {
+                            ev.preventDefault();
+                            const draftUrl = new URL(href);
+                            draftUrl.searchParams.set("draft_preview", "1");
+                            this.websiteContent().contentWindow.location.href = draftUrl.toString();
+                            return;
+                        }
                     }
                 }
             }
@@ -785,16 +797,6 @@ export class WebsiteBuilderClientAction extends Component {
 
     get isMicrosoftEdge() {
         return isBrowserMicrosoftEdge();
-    }
-}
-
-function deleteQueryParam(param, target = window, adaptBrowserUrl = false) {
-    const url = new URL(target.location.href);
-    url.searchParams.delete(param);
-    // TODO: maybe to use in the action service
-    target.history.replaceState(target.history.state, null, url);
-    if (adaptBrowserUrl) {
-        deleteQueryParam(param);
     }
 }
 

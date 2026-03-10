@@ -45,7 +45,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.html_editor.controllers.svg_utils import get_shape_svg, make_shaped_image
 from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from odoo.addons.website.tools import adapt_dark_palette_content, get_base_domain
+from odoo.addons.website.tools import adapt_dark_palette_content, get_base_domain, is_draft_active
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -1590,11 +1590,15 @@ class Website(Home):
         return result
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
-    def save_xml(self, view_id, arch):
-        request.env['ir.ui.view'].browse(view_id).with_context(
+    def save_xml(self, view_id, arch, draft=False):
+        view = request.env['ir.ui.view'].browse(view_id).with_context(
             lang=self.env.website.default_lang_id.code,
             delay_translations=self._get_delay_translations(),
-        ).arch = arch
+        )
+        if draft:
+            view._get_draft_view().arch_draft = arch
+        else:
+            view.arch = arch
 
     def _get_delay_translations(self):
         disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
@@ -1945,12 +1949,12 @@ class Website(Home):
         return Model.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, replica=True)
-    def theme_customize_data_get(self, keys, is_view_data):
+    def theme_customize_data_get(self, keys, is_view_data, draft=False):
         records = self._get_customize_data(keys, is_view_data)
-        return records.filtered('active').mapped('key')
+        return records.filtered(is_draft_active if draft else 'active').mapped('key')
 
     @http.route(['/website/theme_customize_data'], type='jsonrpc', auth='user', website=True)
-    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False, draft=False):
         """
         Enables and/or disables views/assets according to list of keys.
 
@@ -1958,29 +1962,42 @@ class Website(Home):
         :param enable: list of views/assets keys to enable
         :param disable: list of views/assets keys to disable
         :param reset_view_arch: restore the default template after disabling
+        :param draft: if True, defer toggling to active_draft instead of active
         """
         if disable:
-            records = self._get_customize_data(disable, is_view_data).filtered('active')
-            if reset_view_arch:
-                records.reset_arch(mode='hard')
-            records.write({'active': False})
+            records = self._get_customize_data(disable, is_view_data)
+            if draft:
+                records.filtered(is_draft_active).write({'active_draft': 0})
+            else:
+                records = records.filtered('active')
+                if reset_view_arch:
+                    records.reset_arch(mode='hard')
+                records.write({'active': False})
 
         if enable:
             records = self._get_customize_data(enable, is_view_data)
-            records.filtered(lambda x: not x.active).write({'active': True})
+            if draft:
+                records.filtered(lambda r: not is_draft_active(r)).write({'active_draft': 1})
+            else:
+                records.filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True, replica=True)
-    def theme_customize_bundle_reload(self):
+    def theme_customize_bundle_reload(self, draft=False):
         """
         Reloads asset bundles and returns their unique URLs.
+
+        :param bool draft: if True, compile the bundle using draft assets
         """
+        qweb = request.env['ir.qweb']
+        if draft:
+            qweb = qweb.with_context(draft_preview=True)
         return {
-            'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
+            'web.assets_frontend': qweb._get_asset_link_urls('web.assets_frontend', request.session.debug),
             'font_urls': self.env.website._get_font_urls(),
         }
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)
-    def update_footer_template(self, template_key, possible_values):
+    def update_footer_template(self, template_key, possible_values, draft=False):
         """ Enables the footer template and its corresponding copyright template
             on template change. The goal is to ensure that the content width of
             the copyright aligns with the footer.
@@ -1988,7 +2005,7 @@ class Website(Home):
 
         # Define templates views to enable/disable
         views_enable = [template_key]
-        views_disable = self.theme_customize_data_get(possible_values, is_view_data=True)
+        views_disable = self.theme_customize_data_get(possible_values, is_view_data=True, draft=draft)
 
         # Define the possible footer classes and corresponding views
         width_views = {
@@ -2020,7 +2037,8 @@ class Website(Home):
         self.theme_customize_data(is_view_data=True,
                                   enable=views_enable,
                                   disable=views_disable,
-                                  reset_view_arch=False)
+                                  reset_view_arch=False,
+                                  draft=draft)
 
     # ------------------------------------------------------
     # Server actions
@@ -2292,8 +2310,12 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route("/website/field/translation/update", type="jsonrpc", auth="user", website=True)
-    def update_field_translation(self, model, record_id, field_name, translations):
+    def update_field_translation(self, model, record_id, field_name, translations, draft=False):
         record = request.env[model].browse(record_id)
+        if draft:
+            if record._name != 'ir.ui.view' or field_name != 'arch_db':
+                raise UserError(_("Fields can't be edited in draft mode."))
+            record, field_name = record._get_draft_view(), 'arch_draft'
         field = record._fields[field_name]
         source_lang = None
         if callable(field.translate):

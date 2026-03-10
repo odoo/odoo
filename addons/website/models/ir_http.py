@@ -229,6 +229,13 @@ class IrHttp(models.AbstractModel):
                     raise werkzeug.exceptions.Forbidden()
 
     @classmethod
+    def _can_preview_draft(cls):
+        return (
+            request.env['res.config.settings'].is_draft_preview_enabled()
+            and request.env.user.has_group('website.group_website_designer')
+        )
+
+    @classmethod
     def _get_editor_context(cls):
         ctx = super()._get_editor_context()
         if request.is_frontend_multilang and request.lang == request.env['ir.http']._get_default_lang():
@@ -263,6 +270,10 @@ class IrHttp(models.AbstractModel):
             context['allowed_company_ids'] = [website_company_id]
         else:
             context['allowed_company_ids'] = user.company_id.ids
+
+        # Allow to preview draft content by passing `?draft_preview=1` in the URL.
+        if request.httprequest.args.get('draft_preview') and cls._can_preview_draft():
+            context['draft_preview'] = True
 
         request.update_context(**context)
 

@@ -67,6 +67,7 @@ export class PublishSystrayItem extends Component {
             publishOn: false,
             formattedPublishAt: false,
             processing: false,
+            isDraftPreview: this.website.isDraftPreview,
         });
         this.updateState();
 
@@ -134,6 +135,7 @@ export class PublishSystrayItem extends Component {
               })
             : false;
         this.state.formattedPublishAt = formatDateTime(this.state.publishOn) || false;
+        this.state.isDraftPreview = this.website.isDraftPreview;
     };
 
     triggerPublish() {

@@ -49,6 +49,20 @@
         button {
             min-width: 40%;
         }
+
+        &.o_website_draft_actions {
+            max-width: none;
+            min-width: 0;
+
+            button {
+                min-width: 0;
+            }
+
+            .o_website_draft_btn {
+                --btn-padding-x: #{map-get($spacers, 1)};
+                flex: 0 0 auto;
+            }
+        }
     }
 
     .btn {
