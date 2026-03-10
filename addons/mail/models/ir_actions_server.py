@@ -85,7 +85,8 @@ class IrActionsServer(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
-        compute='_compute_activity_type_id', readonly=False, store=True,
+        related=False, compute='_compute_activity_type_id', search=False,
+        readonly=False, store=True,
         ondelete='restrict')
     activity_summary = fields.Char('Summary', readonly=False, store=True)
     activity_note = fields.Html('Note', readonly=False, store=True)
