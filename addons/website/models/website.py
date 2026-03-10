@@ -2726,3 +2726,21 @@ class Website(models.CachedModel):
     def _get_settings_to_copy_onto_new_default_website(self):
         # This list is extended by other modules
         return []
+
+    @api.model
+    def publish_draft(self, website_id):
+        """ Publish all views and assets related to the website."""
+        if not website_id:
+            return
+        View = self.env['ir.ui.view'].with_context(active_test=False)
+        View.search(View._draft_views_domain(website_id)).publish_draft()
+        self.env['website.assets'].publish_draft(website_id)
+
+    @api.model
+    def delete_draft(self, website_id):
+        """ Delete all views and assets related to the website."""
+        if not website_id:
+            return
+        View = self.env['ir.ui.view'].with_context(active_test=False)
+        View.search(View._draft_views_domain(website_id)).delete_draft()
+        self.env['website.assets'].delete_draft(website_id)

@@ -36,6 +36,7 @@ export class SaveTranslationPlugin extends Plugin {
                     record_id: [Number(els[0].dataset["oeId"])],
                     field_name: els[0].dataset["oeField"],
                     translations,
+                    draft: this.services.website.isDraftPreview,
                 })
             );
         }
@@ -61,6 +62,7 @@ export class SaveTranslationPlugin extends Plugin {
                 record_id: [Number(els[0].dataset["oeId"])],
                 field_name: els[0].dataset["oeField"],
                 translations,
+                draft: this.services.website.isDraftPreview,
             });
         }
         await this.dependencies.websiteSavePlugin.saveView(els[0], false);

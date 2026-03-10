@@ -8,10 +8,13 @@ from lxml import etree, html
 
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import SQL
+from odoo.tools.translate import xml_translate
+
+from odoo.addons.website.tools import is_draft_active
 
 _logger = logging.getLogger(__name__)
 
@@ -38,10 +41,19 @@ class IrUiView(models.Model):
     )
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+    arch_draft = fields.Text(string='Draft View Architecture', translate=xml_translate)
+    active_draft = fields.Integer(
+        string='Draft Active State',
+        default=-1,
+        help='Stores the active state for this view in the draft mode, equals to -1 if it\'s equal to the "live" field.')
 
-    @api.depends_context('website_id')
+    @api.depends('arch_draft')
+    @api.depends_context('website_id', 'draft_preview')
     def _compute_arch(self):
         super()._compute_arch()
+        if self.env.context.get('draft_preview'):
+            for view in self.filtered('arch_draft'):
+                view.arch = view.arch_draft
 
     @api.depends('visibility_password')
     def _get_pwd(self):
@@ -341,7 +353,10 @@ class IrUiView(models.Model):
 
         views = super(IrUiView, self.with_context(active_test=False))._get_inheriting_views()
         # prefer inactive website-specific views over active generic ones
-        return views.filter_duplicate().filtered('active')
+        views = views.filter_duplicate()
+        if self.env.context.get('draft_preview'):
+            return views.filtered(is_draft_active)
+        return views.filtered('active')
 
     @api.model
     def _get_filter_xmlid_query(self, *, modules):
@@ -376,7 +391,10 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_template_minimal_cache_keys(self):
-        return super()._get_template_minimal_cache_keys() + (self.env.context.get('website_id'),)
+        return super()._get_template_minimal_cache_keys() + (
+            self.env.context.get('website_id'),
+            self.env.context.get('draft_preview'),
+        )
 
     @api.model
     def _get_template_domain(self, xmlids):
@@ -462,7 +480,7 @@ class IrUiView(models.Model):
             return False
 
     def _read_template_keys(self):
-        return super()._read_template_keys() + ['website_id']
+        return super()._read_template_keys() + ['website_id', 'draft_preview']
 
     # ------------------------------------------------------
     # Save from html
@@ -504,7 +522,7 @@ class IrUiView(models.Model):
                 value=el.text_content().strip(),
             ))
 
-    def save_oe_structure(self, el):
+    def save_oe_structure(self, el, draft=False):
         self.ensure_one()
 
         if el.get('id') in self.key:
@@ -521,17 +539,19 @@ class IrUiView(models.Model):
         for child in el.iterchildren(tag=etree.Element):
             structure.append(copy.deepcopy(child))
 
+        arch_str = etree.tostring(arch, encoding='unicode')
+        # In draft mode write to arch_draft so the live arch is untouched.
         vals = {
             'inherit_id': self.id,
             'name': '%s (%s)' % (self.name, el.get('id')),
-            'arch': etree.tostring(arch, encoding='unicode'),
+            'arch_draft' if draft else 'arch': arch_str,
             'key': '%s_%s' % (self.key, el.get('id')),
             'type': 'qweb',
             'mode': 'extension',
         }
         vals.update(self._save_oe_structure_hook())
         oe_structure_view = self.env['ir.ui.view'].create(vals)
-        self._copy_custom_snippet_translations(oe_structure_view, 'arch_db')
+        self._copy_custom_snippet_translations(oe_structure_view, 'arch_draft' if draft else 'arch_db')
 
         return True
 
@@ -571,11 +591,12 @@ class IrUiView(models.Model):
             return False
         return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
-    def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
+    def replace_arch_section(self, section_xpath, replacement, replace_tail=False, draft=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
         self.ensure_one()
-        arch = etree.fromstring(self.arch.encode('utf-8'))
+        base_arch = (draft and self.arch_draft) or self.arch
+        arch = etree.fromstring(base_arch.encode('utf-8'))
         # => get the replacement root
         if not section_xpath:
             root = arch
@@ -634,12 +655,13 @@ class IrUiView(models.Model):
         if not self.env.context.get('website_id'):
             self.sudo().mapped('model_data_id').write({'noupdate': True})
 
-    def save(self, value, xpath=None):
+    def save(self, value, xpath=None, draft=False):
         """ Update a view section. The view section may embed fields to write
 
         Note that `self` record might not exist when saving an embed field
 
         :param str xpath: valid xpath to the tag to replace
+        :param boolean draft: if True, save as a draft
         """
         self.ensure_one()
         current_website = self.env.website
@@ -666,17 +688,21 @@ class IrUiView(models.Model):
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
+            if draft:
+                raise UserError(_("Fields can't be edited in draft mode."))
             view.save_embedded_field(arch_section)
             return
 
         for el in view.extract_embedded_fields(arch_section):
-            view.save_embedded_field(el)
+            # fields are read-only in draft mode, only the view is saved
+            if not draft:
+                view.save_embedded_field(el)
 
             # transform embedded field back to t-field
             el.getparent().replace(el, view.to_field_ref(el))
 
         for el in view.extract_oe_structures(arch_section):
-            if view.save_oe_structure(el):
+            if view.save_oe_structure(el, draft):
                 # empty oe_structure in parent view
                 empty = view.to_empty_oe_structure(el)
                 if el == arch_section:
@@ -684,12 +710,51 @@ class IrUiView(models.Model):
                 else:
                     el.getparent().replace(el, empty)
 
-        new_arch = view.replace_arch_section(xpath, arch_section)
-        old_arch = etree.fromstring(view.arch.encode('utf-8'))
+        new_arch = view.replace_arch_section(xpath, arch_section, draft=draft)
+        source_arch = (draft and view.arch_draft) or view.arch
+        old_arch = etree.fromstring(source_arch.encode('utf-8'))
         if not view._are_archs_equal(old_arch, new_arch):
             view._set_noupdate()
-            view.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            view._copy_custom_snippet_translations(view, 'arch_db')
+            if draft:
+                view = view._get_draft_view()
+            view.write({'arch_draft' if draft else 'arch': etree.tostring(new_arch, encoding='unicode')})
+            view._copy_custom_snippet_translations(view, 'arch_draft' if draft else 'arch_db')
+
+    def _get_draft_view(self):
+        """ Return the current website's view holding the draft of ``self``.
+        If there is no draft yet, start it from the live arch with all its
+        translations (which copies generic views on write).
+        """
+        self.ensure_one()
+
+        def specific_view():
+            return self.search([('key', '=', self.key), ('website_id', '=', self.env.website.id)], limit=1)
+
+        view = self if self.website_id else specific_view() or self
+        if not view.arch_draft:
+            view.arch_draft = view._get_stored_translations('arch_db')
+        return view if view.website_id else specific_view()
+
+    def publish_draft(self):
+        """Write arch_draft to arch and active_draft to active, then reset the drafts"""
+        for view in self.filtered('arch_draft'):
+            view.arch_db = view._get_stored_translations('arch_draft')
+        for view in self.filtered(lambda v: v.active_draft != -1):
+            view.active = bool(view.active_draft)
+        self.delete_draft()
+
+    def delete_draft(self):
+        # views created in draft mode (e.g. new oe_structure) have no live arch
+        draft_only = self.filtered(lambda v: not v.arch_db)
+        draft_only.unlink()
+        (self - draft_only).write({'arch_draft': False, 'active_draft': -1})
+
+    @api.model
+    def _draft_views_domain(self, website_id):
+        return [
+            ('website_id', '=', website_id),
+            '|', ('arch_draft', '!=', False), ('active_draft', '!=', -1),
+        ]
 
     @api.model
     def _get_allowed_root_attrs(self):

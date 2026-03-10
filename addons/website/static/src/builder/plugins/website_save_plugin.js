@@ -18,6 +18,7 @@ export class WebsiteSavePlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_will_save_element_handlers: this.saveView.bind(this),
+        content_not_editable_selectors: "[data-oe-readonly=draft]",
     };
 
     setTranslateAttributes(rootEl) {
@@ -66,7 +67,12 @@ export class WebsiteSavePlugin extends Plugin {
         return this.services.orm.call(
             "ir.ui.view",
             "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
+            [
+                viewID,
+                el.outerHTML,
+                (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null,
+                this.services.website.isDraftPreview,
+            ],
             { context }
         );
     }
