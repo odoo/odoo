@@ -17,4 +17,5 @@ from . import (
     test_ir_rules,
     test_json_field,
     test_many2many,
+    test_one2many,
 )
