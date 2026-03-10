@@ -117,7 +117,7 @@ export class MassMailingIframe extends Component {
                 const height = Math.trunc(
                     iframe.contentDocument.body
                         .querySelector(IFRAME_VALUE_SELECTOR)
-                        .getBoundingClientRect().height
+                        .getBoundingClientRect().height,
                 );
                 iframe.style.height = height + "px";
             }
@@ -163,7 +163,7 @@ export class MassMailingIframe extends Component {
                           // height to fill remaining viewport space on an unscrolled page
                           window.innerHeight - sidebar.parentElement.getBoundingClientRect().y - 5,
                           // height of the parent element
-                          sidebar.parentElement.clientHeight
+                          sidebar.parentElement.clientHeight,
                       );
                 const offsetHeight =
                     window.innerHeight -
@@ -196,7 +196,7 @@ export class MassMailingIframe extends Component {
                     this.editor?.shared.builderOverlay?.refreshOverlays();
                 });
             },
-            () => [this.state.showFullscreen]
+            () => [this.state.showFullscreen],
         );
         useEffect(
             () => {
@@ -211,7 +211,7 @@ export class MassMailingIframe extends Component {
                     this.editor?.shared.builderOverlay?.refreshOverlays();
                 });
             },
-            () => [this.state.isMobile]
+            () => [this.state.isMobile],
         );
         onWillUnmount(() => {
             if (this.htmlResizeObserver) {
@@ -260,11 +260,11 @@ export class MassMailingIframe extends Component {
         }
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
         this.htmlResizeObserver.observe(
-            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR),
         );
         if (this.props.readonly) {
             this.retargetLinks(
-                this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+                this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR),
             );
             this.fixInlineDynamicPlaceholders(this.iframeRef.el);
         }
@@ -320,7 +320,7 @@ export class MassMailingIframe extends Component {
             ref: this.overlayRef,
         };
         this.editor.attachTo(
-            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
+            this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR),
         );
     }
 
@@ -330,13 +330,11 @@ export class MassMailingIframe extends Component {
      */
     async loadIframeAssets() {
         const bundleEntryPromises = this.getIframeBundles().map(async (bundle) => {
-            const targets = (
-                await loadBundle(bundle, {
-                    targetDoc: this.iframeRef.el.contentDocument,
-                    css: true,
-                    js: false,
-                })
-            ).map((bundleEvent) => bundleEvent.target);
+            const targets = await loadBundle(bundle, {
+                targetDoc: this.iframeRef.el.contentDocument,
+                css: true,
+                js: false,
+            });
             const iframe = this.iframeRef.el;
             return [
                 bundle,
@@ -381,7 +379,7 @@ export class MassMailingIframe extends Component {
             overlayRef: this.overlayRef,
             // TODO EGGMAIL: iframeInfo is deprecated (should resolve to iframe directly)
             iframeLoaded: this.iframeLoaded.then((iframeInfo) =>
-                iframeInfo ? iframeInfo.iframe : false
+                iframeInfo ? iframeInfo.iframe : false,
             ),
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,

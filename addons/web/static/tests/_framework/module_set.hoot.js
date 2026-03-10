@@ -13,6 +13,7 @@ import {
     watchListeners,
 } from "@odoo/hoot";
 
+import { mockAssetsFactory } from "./mock_assets.hoot";
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
@@ -520,6 +521,7 @@ const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
     ["@web/core/template_inheritance", mockFixedFactory],
     // Other mocks
+    ["@web/core/assets", mockAssetsFactory],
     ["@web/core/browser/browser", mockBrowserFactory],
     ["@web/core/currency", mockCurrencyFactory],
     ["@web/core/templates", mockTemplatesFactory],

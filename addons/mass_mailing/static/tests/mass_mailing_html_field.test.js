@@ -1,26 +1,26 @@
-import { expect, test, describe, beforeEach, getFixture, before, waitUntil } from "@odoo/hoot";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { beforeEach, describe, expect, test, waitUntil } from "@odoo/hoot";
+import { click, waitFor } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import {
+    clickSave,
+    contains,
     defineModels,
     fields,
+    getPagerLimit,
+    getPagerValue,
     models,
     mountView,
     onRpc,
-    clickSave,
     patchWithCleanup,
-    contains,
-    getPagerValue,
-    getPagerLimit,
 } from "@web/../tests/web_test_helpers";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
-import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
-import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
-import { ThemeSelector } from "../src/themes/theme_selector/theme_selector";
-import { ThemeSelectorIframe } from "../src/themes/theme_selector/theme_selector_iframe";
 import { user } from "@web/core/user";
 import { FormController } from "@web/views/form/form_controller";
+import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
+import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
+import { ThemeSelector } from "../src/themes/theme_selector/theme_selector";
+import { ThemeSelectorIframe } from "../src/themes/theme_selector/theme_selector_iframe";
 
 class Mailing extends models.Model {
     _name = "mailing.mailing";
@@ -145,7 +145,7 @@ class IrUiView extends models.Model {
         const args = ["ir.ui.view", "render_public_asset", [template, values], {}];
         if (
             ["mass_mailing.email_designer_snippets", "mass_mailing.email_designer_themes"].includes(
-                template
+                template,
             )
         ) {
             if (!publicAssetsCache.has(template)) {
@@ -239,7 +239,7 @@ async function waitForThemeSelector() {
             themeSelector &&
             themeSelector.props.favoriteThemes.promise &&
             !themeSelector.state.loading,
-        { timeout: 3000 }
+        { timeout: 3000 },
     );
     await waitFor(":iframe .o_mailing_template_preview_wrapper [data-name]", {
         timeout: 3000,
@@ -283,7 +283,7 @@ describe("field HTML", () => {
             resId: 1,
             arch: mailViewArch,
         });
-        expect(queryOne(".o_mass_mailing_iframe_wrapper iframe")).toHaveClass("d-none");
+        expect(".o_mass_mailing_iframe_wrapper iframe").toHaveClass("d-none");
         await waitForThemeSelector();
         await contains(":iframe .o_mailing_template_preview_wrapper [data-name='empty']").click();
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
@@ -354,7 +354,7 @@ describe("field HTML", () => {
                 await waitFor(".o_field_widget[name='body_html']:contains(BuilderUpdated)", {
                     timeout: 3000,
                 })
-            ).innerText.trim()
+            ).innerText.trim(),
         ).toBe("BuilderUpdated");
     });
     test("beforeLeave a FormController with html field should save the record", async () => {
@@ -398,7 +398,7 @@ describe("field HTML", () => {
                 await waitFor(".o_field_widget[name='body_html']:contains(Builder)", {
                     timeout: 3000,
                 })
-            ).innerText.trim()
+            ).innerText.trim(),
         ).toBe("Builder");
         const p = htmlField.editor.editable.querySelector("p");
         p.append(htmlField.editor.document.createTextNode("Updated"));
@@ -409,7 +409,7 @@ describe("field HTML", () => {
                 await waitFor(".o_field_widget[name='body_html']:contains(BuilderUpdated)", {
                     timeout: 3000,
                 })
-            ).innerText.trim()
+            ).innerText.trim(),
         ).toBe("BuilderUpdated");
     });
     test("builder in modal -- owl reconciliation iframe unload", async () => {
@@ -418,12 +418,10 @@ describe("field HTML", () => {
         // When those popovers are killed, OWL tries to reconcile its element List
         // in OverlayContainer, displaces the node that contains the iframe
         // and the editor subsequently crashes
-        before(() => {
-            patchWithCleanup(user, {
-                checkAccessRight() {
-                    return true;
-                },
-            });
+        patchWithCleanup(user, {
+            checkAccessRight() {
+                return true;
+            },
         });
         const base64Img =
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
@@ -456,7 +454,7 @@ describe("field HTML", () => {
         await waitForThemeSelector();
         await contains(
             ".o_dialog :iframe .o_mailing_template_preview_wrapper [data-name='event']",
-            { timeout: 3000 }
+            { timeout: 3000 },
         ).click();
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .o_snippet_thumbnail", {
             timeout: 3000,
@@ -464,7 +462,7 @@ describe("field HTML", () => {
         await contains(".o_dialog :iframe .s_text_block", { timeout: 3000 }).click();
         await waitFor(
             ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)",
-            { timeout: 3000 }
+            { timeout: 3000 },
         );
         const overlayOptionsSelect =
             ".o-main-components-container .o-overlay-container .o_overlay_options";
@@ -483,7 +481,7 @@ describe("field HTML", () => {
         await contains(":iframe .o_mailing_template_preview_wrapper [data-name='default']").click();
         await waitFor(".o_mass_mailing_iframe_wrapper iframe:not(.d-none)");
         expect(
-            await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout", { timeout: 3000 })
+            await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout", { timeout: 3000 }),
         ).toHaveClass("o_default_theme");
         const section = await waitFor(".o_mass_mailing_iframe_wrapper :iframe section", {
             timeout: 3000,
@@ -491,22 +489,17 @@ describe("field HTML", () => {
         await click(section);
         await waitFor(
             ".o-snippets-menu:has([data-action-id='dataAttributeChangeAction'].active:contains(Visible))",
-            { timeout: 3000 }
+            { timeout: 3000 },
         );
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
         htmlField.editor.config.onChange({ isPreviewing: false });
         await waitFor(".o-snippets-menu [data-label='Domain']", { timeout: 3000 });
-        expect(
-            queryOne(
-                ".o-snippets-menu [data-label='Domain'] span.fa-filter + span"
-            ).textContent.toLowerCase()
-        ).toBe("id = 1");
+        expect(".o-snippets-menu [data-label='Domain'] span.fa-filter + span").toHaveText("Id = 1");
         await clickSave();
         const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
         expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');
     });
     test(`Switching mailing records in the Form view properly switches between basic Editor, HtmlBuilder and readonly`, async () => {
-        const fixture = getFixture();
         await mountView({
             resModel: "mailing.mailing",
             type: "form",
@@ -516,12 +509,12 @@ describe("field HTML", () => {
         });
         // readonly default
         expect(await waitFor(":iframe .o_layout", { timeout: 3000 })).toHaveClass(
-            "o_default_theme"
+            "o_default_theme",
         );
         expect(getPagerValue()).toEqual([1]);
         expect(getPagerLimit()).toBe(3);
         expect(htmlField.state.activeTheme).toBe("default");
-        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
         // editable basic
         await contains(`.o_pager_next`).click();
         await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme:only-child", {
@@ -529,7 +522,7 @@ describe("field HTML", () => {
         });
         expect(getPagerValue()).toEqual([2]);
         expect(htmlField.state.activeTheme).toBe("basic");
-        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
         // editable builder
         await contains(`.o_pager_next`).click();
         await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_empty_theme:only-child", {
@@ -537,15 +530,15 @@ describe("field HTML", () => {
         });
         expect(getPagerValue()).toEqual([3]);
         expect(htmlField.state.activeTheme).toBe("empty");
-        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(1);
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(1);
         // readonly default
         await contains(`.o_pager_next`).click();
         await waitFor(
             ".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_default_theme:only-child",
-            { timeout: 3000 }
+            { timeout: 3000 },
         );
         expect(getPagerValue()).toEqual([1]);
         expect(htmlField.state.activeTheme).toBe("default");
-        expect(fixture.querySelectorAll(".o_mass_mailing-builder_sidebar")).toHaveCount(0);
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
     });
 });

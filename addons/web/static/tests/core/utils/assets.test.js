@@ -3,14 +3,7 @@ import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-do
 import { mockFetch } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import {
-    assets,
-    assetCacheByDocument,
-    globalBundleCache,
-    loadBundle,
-    loadCSS,
-    loadJS,
-} from "@web/core/assets";
+import { assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
 
 describe.current.tags("headless");
 
@@ -33,8 +26,14 @@ const bundles = {
 };
 
 beforeEach(() => {
-    globalBundleCache.clear();
-    assetCacheByDocument.delete(document);
+    mockFetch((route) => {
+        expect.step(`fetch bundle: ${route.pathname}`);
+        return bundles[route.pathname];
+    });
+    patchWithCleanup(assets, {
+        globalCache: new Map(),
+        documentCaches: new WeakMap(),
+    });
 });
 
 test("loadJS: load invalid JS lib", async () => {
@@ -51,7 +50,7 @@ test("loadJS: load invalid JS lib", async () => {
 
     await expect(loadJS("/some/invalid/file.js")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.js failed/,
-        { message: "Trying to load an invalid file rejects the promise" }
+        { message: "Trying to load an invalid file rejects the promise" },
     );
 });
 
@@ -72,16 +71,11 @@ test("loadCSS: load invalid CSS lib", async () => {
 
     await expect(loadCSS("/some/invalid/file.css")).rejects.toThrow(
         /The loading of \/some\/invalid\/file.css failed/,
-        { message: "Trying to load an invalid file rejects the promise" }
+        { message: "Trying to load an invalid file rejects the promise" },
     );
 });
 
 test("loadBundle: load js and css files", async () => {
-    mockFetch((route) => {
-        expect.step(`fetch bundle: ${route.pathname}`);
-        return bundles[route.pathname];
-    });
-
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
@@ -99,11 +93,6 @@ test("loadBundle: load js and css files", async () => {
 });
 
 test("loadBundle: load only js files", async () => {
-    mockFetch((route) => {
-        expect.step(`fetch bundle: ${route.pathname}`);
-        return bundles[route.pathname];
-    });
-
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
@@ -119,11 +108,6 @@ test("loadBundle: load only js files", async () => {
 });
 
 test("loadBundle: load only css files", async () => {
-    mockFetch((route) => {
-        expect.step(`fetch bundle: ${route.pathname}`);
-        return bundles[route.pathname];
-    });
-
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(`add ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`);
@@ -139,15 +123,10 @@ test("loadBundle: load only css files", async () => {
 });
 
 test("loadBundle: load same bundle in main document and an iframe", async () => {
-    mockFetch((route) => {
-        expect.step(`fetch bundle: ${route.pathname}`);
-        return bundles[route.pathname];
-    });
-
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
+            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
         );
     });
 
@@ -159,8 +138,8 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });
@@ -189,15 +168,10 @@ test("loadBundle: load same bundle in main document and an iframe", async () => 
 });
 
 test("loadBundle: load same bundles in 2 iframes", async () => {
-    mockFetch((route) => {
-        expect.step(`fetch bundle: ${route.pathname}`);
-        return bundles[route.pathname];
-    });
-
     mockHeadAppendChild(async (node) => {
         const srcAttribute = node.tagName === "LINK" ? "href" : "src";
         expect.step(
-            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`
+            `add document ${node.tagName} - ${node.type} - ${node.getAttribute(srcAttribute)}`,
         );
     });
 
@@ -212,8 +186,8 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });
@@ -222,8 +196,8 @@ test("loadBundle: load same bundles in 2 iframes", async () => {
             const srcAttribute = node.tagName === "LINK" ? "href" : "src";
             expect.step(
                 `add iframe document ${node.tagName} - ${node.type} - ${node.getAttribute(
-                    srcAttribute
-                )}`
+                    srcAttribute,
+                )}`,
             );
         },
     });
