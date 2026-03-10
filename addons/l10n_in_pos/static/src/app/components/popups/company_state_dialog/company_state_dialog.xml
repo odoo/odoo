@@ -9,10 +9,10 @@
             </div>
             <t t-set-slot="footer">
                 <div class="modal-footer-right d-flex gap-2">
-                    <button class="button icon btn btn-lg btn-primary" t-on-click="redirect">
+                    <button class="button icon btn btn-lg btn-primary" t-on-click="this.redirect">
                             Go to company configuration
                     </button>
-                    <button class="button btn btn-secondary" t-on-click="onClose">
+                    <button class="button btn btn-secondary" t-on-click="this.onClose">
                             Ok
                     </button>
                 </div>
