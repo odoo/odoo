@@ -119,6 +119,7 @@ class PosOrderReport(models.Model):
             CREATE OR REPLACE VIEW %s AS (
                 %s
                 %s
+                %s
             )
-        """ % (self._table, self._select(), self._from())
+        """ % (self._table, self._select(), self._from(), "GROUP BY " + self._group_by() if self._group_by() else "")
         )
