@@ -119,6 +119,7 @@ FALLBACK_PAYMENT_METHOD_CODES = {
     'fpx',
     'paylater_india',
     'wallets_india',
+    'duitnow_pay',
 }
 
 # The codes of payment methods that require redirection back to the website
@@ -131,6 +132,7 @@ PAYMENT_METHODS_MAPPING = {
     'wallets_india': 'wallet',
     'paylater_india': 'paylater',
     'emi_india': 'emi',
+    'duitnow_pay': 'duitnow_pay',
 }
 
 # The maximum amount in INR that can be paid through an eMandate.
