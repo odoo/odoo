@@ -21,7 +21,7 @@ export class Tracking extends Interaction {
         const confirmation = this.el.querySelector('div[name="order_confirmation"]');
         if (confirmation) {
             this._vpv('/stats/ecom/order_confirmed/' + confirmation.dataset.orderId);
-            this._trackGa('event', 'purchase', confirmation.dataset.orderTrackingInfo);
+            this._trackGa('event', 'purchase', JSON.parse(confirmation.dataset.orderTrackingInfo));
         }
     }
 
