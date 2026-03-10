@@ -144,6 +144,7 @@ class HrLeave(models.Model):
         ]""",
         tracking=True)
     work_entry_type_requires_allocation = fields.Boolean(related="work_entry_type_id.requires_allocation")
+    work_entry_type_filter_domain = fields.Json(compute="_compute_work_entry_type_filter_domain")
     color = fields.Integer("Color", related='work_entry_type_id.color')
     validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.leave_validation_type', readonly=False)
     # HR data
@@ -492,6 +493,26 @@ class HrLeave(models.Model):
                     holiday.work_entry_type_id = no_allocation_required_work_entry_types[0] if no_allocation_required_work_entry_types else None
                 else:
                     holiday.work_entry_type_id = valid_types[0]
+
+    @api.depends('company_id', 'company_id.country_id')
+    def _compute_work_entry_type_filter_domain(self):
+        for record in self:
+            country_id = record.company_id.country_id.id
+            has_system_types = False
+            if country_id:
+                has_system_types = self.env['hr.work.entry.type'].sudo().search_count([
+                    ('country_id', '=', country_id),
+                    ('create_uid', '=', 1)
+                ]) > 0
+            if not country_id:
+                domain = [('country_id', '=', False)]
+            elif has_system_types:
+                domain = [('country_id', '=', country_id)]
+            else:
+                domain = ['|', ('country_id', '=', False), ('country_id', '=', country_id)]
+
+        matching_types = self.env['hr.work.entry.type'].sudo().search(domain)
+        record.work_entry_type_filter_domain = matching_types.ids
 
     @api.depends('employee_id')
     def _compute_department_id(self):
