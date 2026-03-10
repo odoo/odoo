@@ -278,17 +278,21 @@ class ResSession(models.Model):
         for session in self:
             device_ids = session_map[session.session_identifier]
             session.device_ids = device_ids
-            if session.is_current:
+
+            # If a `res.session` record exists, there is at least one `res.device` record
+            last_device_id = device_ids[0]  # because order is `last_activity desc`
+
+            if session.is_current and \
+                (current_device_id := device_ids.filtered('is_current')):
                 # The user will see the information for the device he is
                 # currently using, even if there are more recent logs for
                 # another device.
-                current_device_id = device_ids.filtered('is_current')
-            else:
-                current_device_id = device_ids[0]  # because order is `last_activity desc`
-            session.ip_address = current_device_id.ip_address
-            session.user_agent = current_device_id.user_agent
-            session.country = current_device_id.country
-            session.city = current_device_id.city
+                last_device_id = current_device_id
+
+            session.ip_address = last_device_id.ip_address
+            session.user_agent = last_device_id.user_agent
+            session.country = last_device_id.country
+            session.city = last_device_id.city
             session.first_activity = min(device_ids.mapped('first_activity'))
 
     def _compute_display_name(self):
