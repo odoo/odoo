@@ -98,3 +98,72 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         order = self.env['pos.order'].sync_from_ui([pos_order])
         self.assertEqual(self.env['pos.order'].browse(order['pos.order'][0]['id']).picking_ids.move_line_ids.lot_id, lot1)
+
+    def test_read_converted_lot_quantities_pick_then_deliver(self):
+        """
+        Test that read_converted returns correct lot quantities with 2-step
+        "Pick then Deliver" after delivery is validated (no double-counting).
+        """
+        warehouse = self.env['stock.warehouse'].search(
+            [('company_id', '=', self.env.company.id)], limit=1
+        )
+        warehouse.delivery_steps = 'pick_ship'
+        stock_location = warehouse.lot_stock_id
+
+        product = self.env['product.product'].create({
+            'name': 'Product Lot Tracked',
+            'tracking': 'lot',
+            'is_storable': True,
+            'available_in_pos': True,
+            'lst_price': 10,
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lots = self.env['stock.lot'].create([
+            {'name': 'LOT-1', 'product_id': product.id, 'company_id': self.env.company.id},
+            {'name': 'LOT-2', 'product_id': product.id, 'company_id': self.env.company.id},
+        ])
+        for lot in lots:
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 1,
+                'location_id': stock_location.id,
+                'lot_id': lot.id,
+            }).action_apply_inventory()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test'}).id,
+            'warehouse_id': warehouse.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'product_uom_qty': 2,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        pick_picking = sale_order.picking_ids.filtered(
+            lambda p: p.picking_type_code != 'outgoing'
+        )
+        pick_picking.action_assign()
+        mls = pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == product)
+        for ml, lot in zip(mls[:2], lots):
+            ml.write({'lot_id': lot.id, 'quantity': 1})
+        for ml in mls[2:]:
+            ml.unlink()
+        pick_picking.move_ids.picked = True
+        pick_picking._action_done()
+
+        delivery_picking = sale_order.picking_ids.filtered(
+            lambda p: p.picking_type_code == 'outgoing'
+        )
+        delivery_picking.action_assign()
+        delivery_picking.move_ids.picked = True
+        delivery_picking._action_done()
+
+        [conv] = sale_order.order_line.read_converted()
+        self.assertEqual(conv['product_uom_qty'], 2)
+        lot_qty_sum = sum(conv.get('lot_qty_by_name', {}).values())
+        self.assertEqual(lot_qty_sum, 2)
