@@ -577,15 +577,15 @@ class IrActionsReport(models.Model):
 
             if header:
                 head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
+                stack.callback(delete_file, head_file_path)
                 with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
                     head_file.write(header.encode())
-                stack.callback(delete_file, head_file_path)
                 files_command_args.extend(['--header-html', head_file_path])
             if footer:
                 foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+                stack.callback(delete_file, foot_file_path)
                 with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                     foot_file.write(footer.encode())
-                stack.callback(delete_file, foot_file_path)
                 files_command_args.extend(['--footer-html', foot_file_path])
 
             paths = []
@@ -593,6 +593,7 @@ class IrActionsReport(models.Model):
             for body_idx, body in enumerate(bodies):
                 prefix = f'report.body.tmp.{body_idx}.'
                 body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
+                stack.callback(delete_file, body_file_path)
                 with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
                     # HACK: wkhtmltopdf doesn't like big table at all and the
                     #       processing time become exponential with the number
@@ -608,11 +609,10 @@ class IrActionsReport(models.Model):
                         _split_table(tree, 500)
                         body_file.write(lxml.html.tostring(tree))
                 paths.append(body_file_path)
-                stack.callback(delete_file, body_file_path)
 
             pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-            os.close(pdf_report_fd)
             stack.callback(delete_file, pdf_report_path)
+            os.close(pdf_report_fd)
 
             process = _run_wkhtmltopdf(command_args + files_command_args + paths + [pdf_report_path])
             err = process.stderr
