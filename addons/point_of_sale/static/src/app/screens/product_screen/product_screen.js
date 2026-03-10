@@ -499,7 +499,9 @@ export class ProductScreen extends Component {
 
         const { limit_categories, iface_available_categ_ids } = this.pos.config;
         if (limit_categories && iface_available_categ_ids.length > 0) {
-            const categIds = iface_available_categ_ids.map((categ) => categ.id);
+            const categIds = iface_available_categ_ids.flatMap((categ) =>
+                categ.getAllChildren().map((c) => c.id)
+            );
             domain.push(["pos_categ_ids", "in", categIds]);
         }
         const product = await this.pos.data.searchRead(

@@ -208,6 +208,26 @@ registry.category("web_tour.tours").add("test_limited_categories", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_limited_categories_child_product_search", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // The product in the child category is not pre-loaded (limited product count = 1).
+            // Typing its name should not show it in the local list.
+            ProductScreen.searchProduct("Child Cat Product"),
+            ProductScreen.productIsDisplayed("Child Cat Product").map(negateStep),
+            // Clicking "Search more" triggers loadProductFromDB which queries the server.
+            // With the fix, the domain now includes child category IDs so the product is found.
+            {
+                content: "Click 'Search more' to search for unloaded product on the server",
+                trigger: ".search-more-button button",
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Child Cat Product"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
     steps: () =>
         [
