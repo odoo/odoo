@@ -89,6 +89,19 @@ class Stream:
         assert self.type in ('data', 'path', 'url'), f"Invalid type {self.type!r} in Stream"
         assert getattr(self, self.type, None) is not None, f"Missing attribute {self.type!r} to Stream"
 
+        # When the URL targets a file located in an addon, assume it
+        # is a path to the resource. It saves an indirection and
+        # stream the file right away.
+        if self.type == 'url':
+            from .router import root  # noqa: PLC0415
+            if static_path := root.get_static_file(
+                self.url,
+                host=request.httprequest.environ.get('HTTP_HOST', '')
+            ):
+                # use type(self) because self.from_path is None (see above)
+                static_stream = type(self).from_path(static_path, public=True)
+                self.__dict__.update(vars(static_stream))
+
     @classmethod
     def from_path(cls, path: str, filter_ext: tuple[str, ...] = (), public: bool = False) -> Self:
         """

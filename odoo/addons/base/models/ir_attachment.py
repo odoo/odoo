@@ -19,8 +19,6 @@ import werkzeug.security
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import request
-from odoo.http.router import root
 from odoo.http.stream import Stream
 from odoo.tools import (
     OrderedSet,
@@ -892,10 +890,7 @@ class IrAttachment(models.Model):
         )
 
         if self.store_fname:
-            path = werkzeug.security.safe_join(
-                os.path.abspath(config.filestore(request.db)),
-                self.store_fname
-            )
+            path = self._full_path(self.store_fname)
             stat = os.stat(path)
             kw.update(
                 type='path',
@@ -905,17 +900,10 @@ class IrAttachment(models.Model):
             )
 
         elif self.url:
-            # When the URL targets a file located in an addon, assume it
-            # is a path to the resource. It saves an indirection and
-            # stream the file right away.
-            static_path = root.get_static_file(
-                self.url,
-                host=request.httprequest.environ.get('HTTP_HOST', '')
+            kw.update(
+                type='url',
+                url=self.url,
             )
-            if static_path:
-                return Stream.from_path(static_path, public=True)
-            else:
-                kw.update(type='url', url=self.url)
 
         else:
             data = self.raw.content
