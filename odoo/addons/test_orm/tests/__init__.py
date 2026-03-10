@@ -15,4 +15,5 @@ from . import (
     test_create,
     test_domain,
     test_domain_expression,
+    test_fields,
 )

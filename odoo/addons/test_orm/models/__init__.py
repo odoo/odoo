@@ -10,4 +10,5 @@ from . import (
     test_convert_env,
     test_create,
     test_domain,
+    test_fields,
 )
