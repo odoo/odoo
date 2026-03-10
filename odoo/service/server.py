@@ -257,6 +257,8 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             self.reload_socket = False
             super().server_bind()
             _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
+            if self.port == 0:
+                self.port = config['http_port'] = self.server_port
 
     def server_activate(self):
         if not self.reload_socket:
@@ -847,6 +849,8 @@ class GeventServer(CommonServer):
         sock.bind((self.interface, self.port))
         sock.listen(128)
         sock.setblocking(0)
+        if self.port == 0:
+            self.port = config['gevent_port'] = sock.getsockname()[1]
 
         self.httpd = WSGIServer(
             sock, self.app,
@@ -1100,11 +1104,6 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
-            if config.http_socket_activation:
-                self.logger.info("HTTP service (werkzeug) running through socket activation")
-            else:
-                self.logger.info("HTTP service (werkzeug) running on %s:%s", self.interface, self.port)
-
             if os.environ.get('ODOO_HTTP_SOCKET_FD'):
                 # reload
                 self.socket = socket.socket(fileno=int(os.environ.pop('ODOO_HTTP_SOCKET_FD')))
@@ -1121,7 +1120,15 @@ class PreforkServer(CommonServer):
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 self.socket.setblocking(0)
                 self.socket.bind((self.interface, self.port))
+                if self.port == 0:
+                    self.port = config['http_port'] = self.socket.getsockname()[1]
                 self.socket.listen(8 * self.population)
+
+            if config.http_socket_activation:
+                _logger.info("HTTP service running through socket activation")
+            else:
+                _logger.info("HTTP service running on %s:%s",
+                    f'[{self.interface}]' if ':' in self.interface else self.interface, self.port)
 
     def fork_and_reload(self):
         self.logger.info("Reloading server")
