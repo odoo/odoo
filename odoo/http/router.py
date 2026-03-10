@@ -31,7 +31,6 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.service.server import thread_local
 from odoo.tools import config, file_path, real_time
 from odoo.tools.misc import submap
 
@@ -245,7 +244,7 @@ class Application:
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
-        thread_local.rpc_model_method = ''
+        current_thread.rpc_model_method = ''
 
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
