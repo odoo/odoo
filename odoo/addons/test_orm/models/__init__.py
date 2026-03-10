@@ -16,4 +16,5 @@ from . import (
     test_inherits,
     test_ir_rules,
     test_json_field,
+    test_many2many,
 )
