@@ -956,6 +956,24 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
             f"Unexpected MyInvois state: {myinvois_document.myinvois_state}",
         )
 
+    def test_consolidate_invoices_with_year_range_sequence(self):
+        with freeze_time("2026-01-01"):
+            # Create the orders
+            with self.with_pos_session():
+                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+            # Consolidate them
+            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+                'date_from': '2026-01-01',
+                'date_to': '2026-01-31',
+                'consolidation_type': 'pos',
+            })
+            wizard.button_consolidate()
+            consolidated_invoice = first_order.consolidated_invoice_ids
+            consolidated_invoice.name = "POS/2025-2026/000001"
+            with patch(CONTACT_PROXY_METHOD, new=self._mock_successful_submission):
+                consolidated_invoice.action_submit_to_myinvois()
+            self.assertTrue(consolidated_invoice.myinvois_file_id)
+
     #################
     # Patched methods
     #################
