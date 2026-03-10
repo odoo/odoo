@@ -115,10 +115,12 @@ class PosOrderReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
+        group_by = self._group_by()
         self._cr.execute("""
             CREATE OR REPLACE VIEW %s AS (
                 %s
                 %s
+                %s
             )
-        """ % (self._table, self._select(), self._from())
+        """ % (self._table, self._select(), self._from(), ("GROUP BY " + group_by) if group_by else "")
         )

@@ -13,4 +13,5 @@ class PosOrderReport(models.Model):
         return super()._select() + ',s.employee_id AS employee_id'
 
     def _group_by(self):
-        return super()._group_by() + ',s.employee_id'
+        group_by = super()._group_by()
+        return (group_by + ',' if group_by else '') + 's.employee_id'
