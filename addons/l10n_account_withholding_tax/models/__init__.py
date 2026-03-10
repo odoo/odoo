@@ -7,3 +7,7 @@ from . import account_payment_withholding_line
 from . import product_template
 from . import res_company
 from . import res_config_settings
+from . import account_withholding_tax_section
+from . import account_account
+from . import account_move
+from . import account_move_line

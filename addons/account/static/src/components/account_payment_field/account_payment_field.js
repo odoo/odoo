@@ -51,6 +51,7 @@ export class AccountPaymentField extends Component {
             outstanding: info.outstanding,
             title: info.title,
             moveId: info.move_id,
+            is_withhod_move: info.is_withhod_move,
         };
     }
 

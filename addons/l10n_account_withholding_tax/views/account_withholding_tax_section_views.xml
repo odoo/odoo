@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="account_withholding_tax_section_view_list" model="ir.ui.view">
+        <field name="name">account.withholding.tax.section.view.list</field>
+        <field name="model">account.withholding.tax.section</field>
+        <field name="arch" type="xml">
+            <list string="Section">
+                <field name="name"/>
+                <field name="consider_amount"/>
+                <field name="per_transaction_limit"/>
+                <field name="aggregate_limit"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_withholding_tax_section_view_form" model="ir.ui.view">
+        <field name="name">account.withholding.tax.section.view.form</field>
+        <field name="model">account.withholding.tax.section</field>
+        <field name="arch" type="xml">
+            <form string="Section">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Section Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group class="w-50" string="Threshold limits">
+                        <label for="consider_amount"/>
+                        <div>
+                            <field class="w-25" name="consider_amount"/>
+                        </div>
+                        <label for="is_per_transaction_limit"/>
+                        <div>
+                            <field class="w-25" name="is_per_transaction_limit" widget="boolean_toggle"/>
+                            <field class="w-25 text-center oe_inline" name="per_transaction_limit" invisible="not is_per_transaction_limit"/>
+                        </div>
+                        <label for="is_aggregate_limit"/>
+                        <div>
+                            <field class="w-25" name="is_aggregate_limit" widget="boolean_toggle"/>
+                            <field class="w-25 text-center oe_inline" name="aggregate_limit" invisible="not is_aggregate_limit"/>
+                            <field class="w-25" name="aggregate_period" invisible="not is_aggregate_limit"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_withholding_tax_section_action" model="ir.actions.act_window">
+        <field name="name">Section</field>
+        <field name="res_model">account.withholding.tax.section</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

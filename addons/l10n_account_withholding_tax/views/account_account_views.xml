@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_l10n_account_withholding_form_inherit" model="ir.ui.view">
+        <field name="name">view.l10n.account.withholding.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="withholding_tax_section_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

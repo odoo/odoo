@@ -389,6 +389,26 @@ class AccountWithholdingLine(models.AbstractModel):
                 'amount_currency': -tax_line_vals['amount_currency'],
                 'balance': -tax_line_vals['balance'],
                 'partner_id': self._get_comodel_partner().id,
+                'is_withhold_line': True,
+            })
+
+        has_payment = 'payment_id' in self._fields and self.payment_id
+        if company.withhold_applicable_on == 'payment_bill' or not has_payment:
+            total_amount_currency = sum(
+                line.get('amount_currency', 0.0)
+                for line in tax_results['tax_lines_to_add']
+            )
+            total_balance = sum(
+                line.get('balance', 0.0)
+                for line in tax_results['tax_lines_to_add']
+            )
+            aml_create_values_list.append({
+                'name': 'Withholding Payable',
+                'partner_id': self._get_comodel_partner().id,
+                'amount_currency': total_amount_currency,
+                'balance': total_balance,
+                'account_id': self._get_comodel_partner().property_account_payable_id.id,
+                'is_withhold_line': True,
             })
 
         # Aggregate the base lines.
@@ -417,6 +437,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 'amount_currency': amounts['amount_currency'],
                 'balance': amounts['balance'],
                 'partner_id': self._get_comodel_partner().id,
+                'is_withhold_line': True,
             })
             aml_create_values_list.append({
                 **grouping_key,
@@ -425,8 +446,8 @@ class AccountWithholdingLine(models.AbstractModel):
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],
                 'partner_id': self._get_comodel_partner().id,
+                'is_withhold_line': True,
             })
-
         return aml_create_values_list
 
     @api.model

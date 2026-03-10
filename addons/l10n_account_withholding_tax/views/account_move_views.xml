@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_move_view_form_inherit_l10n_account_withholding_tax" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.l10n_account_withholding_tax</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_withholding_applicable_section_names"  role="alert">
+                        <span>It's advisable to deduct Withhold tax u/s <field name="l10n_withholding_applicable_section_names" class="oe_inline"/> on this transaction.</span>
+                        <button name="%(l10n_account_withholding_entry_form_action)d"
+                                type="action"
+                                string="Deduct Withhold Tax"
+                                invisible="withhold_only_on_payment or state != 'posted'"
+                                class="text-primary text-bg-secondary ms-auto d-flex align-items-center gap-1">
+                        </button>
+                    </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_withholding_entries"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-list-alt"
+                        invisible="not l10n_withholding_move_ids">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Withholding Entries</span>
+                        <span class="o_stat_value"><field name="l10n_total_withholding_amount"/></span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='tax_ids']" position="attributes">
+                <attribute name="domain">
+                    [
+                        ('type_tax_use', '=?', parent.invoice_filter_type_domain),
+                        ('company_id', 'parent_of', parent.company_id),
+                        ('country_id', '=', parent.tax_country_id),
+                        ('is_withholding_tax_on_payment', '=', False)
+                    ]
+                </attribute>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_invoice_lines_tab')]//group[@colspan='4']" position="after">
+                <button name="%(l10n_account_withholding_entry_form_action)d" type="action" string="Deduct Withhold Tax"
+                    class="oe_highlight col-2 ms-auto me-3" invisible="not amount_residual or withhold_only_on_payment or state != 'posted'"/>
+            </xpath>
+            <xpath expr="//notebook/page[@id='aml_tab']" position="after">
+                <page name="withholding_tab" string="Withhold Tax Lines" invisible="not l10n_withholding_line_ids">
+                    <field name="l10n_withholding_line_ids" nolabel="1" colspan="4">
+                        <list editable="bottom" string="Withhold Tax Lines">
+                            <field name="tax_ids" string="Tax" widget="many2many_tax_tags"/>
+                            <field name="price_subtotal" string="Base Amount" sum="Total"/>
+                            <field name="l10n_withholding_tax_amount" string="Withhold Amount" sum="Total"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

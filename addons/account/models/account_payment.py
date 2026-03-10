@@ -369,6 +369,12 @@ class AccountPayment(models.Model):
         if not write_off_line_vals and force_balance is not None:
             sign = 1 if liquidity_amount_currency > 0 else -1
             liquidity_balance = sign * abs(force_balance)
+            liquidity_amount_currency = self.company_id.currency_id._convert(
+                liquidity_balance,
+                self.currency_id,
+                self.company_id,
+                self.date,
+            )
         else:
             liquidity_balance = self.currency_id._convert(
                 liquidity_amount_currency,
@@ -1013,7 +1019,7 @@ class AccountPayment(models.Model):
     # SYNCHRONIZATION account.payment -> account.move
     # -------------------------------------------------------------------------
 
-    def _synchronize_to_moves(self, changed_fields):
+    def _synchronize_to_moves(self, changed_fields, skip_withholding_lines=False):
         '''
             Update the account.move regarding the modified account.payment.
             :param changed_fields: A list containing all modified fields on account.payment.
@@ -1062,8 +1068,14 @@ class AccountPayment(models.Model):
 
             for line in writeoff_lines:
                 line_ids_commands.append((2, line.id))
-            for extra_line_vals in line_vals_per_type.get('write_off_lines', []) + line_vals_per_type.get('withholding_lines', []):
-                line_ids_commands.append((0, 0, extra_line_vals))
+            if skip_withholding_lines:
+                # Only process write_off_lines, skip withholding_lines
+                for extra_line_vals in line_vals_per_type.get('write_off_lines', []):
+                    line_ids_commands.append((0, 0, extra_line_vals))
+            else:
+                # Process both write_off_lines and withholding_lines
+                for extra_line_vals in line_vals_per_type.get('write_off_lines', []) + line_vals_per_type.get('withholding_lines', []):
+                    line_ids_commands.append((0, 0, extra_line_vals))
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.
             to_write = {

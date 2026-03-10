@@ -19,6 +19,22 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
         required=True,
         ondelete='cascade',
     )
+    withholding_account_ids = fields.One2many(
+        comodel_name='account.account',
+        compute='_compute_withholding_account_ids',
+        string="Withhold Accounts",
+    )
+    withholding_tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        compute='_compute_withholding_tax_ids',
+        string="Withhold Taxes",
+    )
+    tax_id = fields.Many2one(
+        comodel_name='account.tax',
+        string="Withhold Tax",
+        required=True,
+        domain="[('company_id', '=', company_id), ('is_withholding_tax_on_payment', '=', True), ('id', 'in', withholding_tax_ids)]",
+    )
 
     # --------------------------------
     # Compute, inverse, search methods
@@ -77,6 +93,26 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
     def _compute_comodel_currency_id(self):
         for line in self:
             line.comodel_currency_id = line.payment_register_id.currency_id
+
+    @api.depends('payment_register_id.line_ids.move_id')
+    def _compute_withholding_account_ids(self):
+        for line in self:
+            accounts = line.payment_register_id.line_ids.move_id._get_withhold_account_by_sum().keys()
+            line.withholding_account_ids = [acc._origin.id for acc in accounts]
+
+    @api.depends('withholding_account_ids')
+    def _compute_withholding_tax_ids(self):
+        for line in self:
+            line.withholding_tax_ids = line.withholding_account_ids.withholding_tax_section_id.tax_ids
+
+    @api.depends('tax_id', 'payment_register_id.line_ids.move_id')
+    def _compute_base_amount(self):
+        for line in self:
+            if line.tax_id:
+                withhold_account_by_sum = line.payment_register_id.line_ids.move_id._get_withhold_account_by_sum()
+                for account, amount in withhold_account_by_sum.items():
+                    if line.tax_id in account.withholding_tax_section_id.tax_ids:
+                        line.base_amount = amount
 
     # -----------------------
     # CRUD, inherited methods

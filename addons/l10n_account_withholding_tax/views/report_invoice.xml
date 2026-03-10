@@ -1,0 +1,15 @@
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-if=&quot;payment_vals['is_refund']&quot;]" position="after">
+            <t t-elif="payment_vals['is_withhold_line']">Deducted on </t>
+        </xpath>
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_account_withholding_tax.report_invoice_document'"
+               t-call="l10n_account_withholding_tax.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

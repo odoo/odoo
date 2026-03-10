@@ -5,6 +5,18 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_payment_l10n_withholding_entry"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-list-alt"
+                        invisible="not withholding_entry_id">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Withholding Entries</span>
+                        <span class="o_stat_value"><field name="withholding_total_tax_amount"/></span>
+                    </div>
+                </button>
+            </xpath>
             <field name="memo" position="after">
                 <field name="should_withhold_tax" invisible="not display_withholding" readonly="state != 'draft'"/>
             </field>
@@ -44,6 +56,7 @@
                     </group>
                     <group>
                         <group>
+                            <field name="withholding_net_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="outstanding_account_id"
                                    required="should_withhold_tax and withholding_line_ids and not withholding_payment_account_id"
                                    invisible="(not should_withhold_tax) or withholding_payment_account_id or not display_withholding"

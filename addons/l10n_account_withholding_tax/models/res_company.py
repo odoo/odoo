@@ -9,8 +9,22 @@ class ResCompany(models.Model):
     # Fields declaration
     # ------------------
 
+    withholding_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="Withholding Journal",
+        help="This journal will be used to record withholding tax entries.",
+    )
+    withhold_applicable_on = fields.Selection(
+        selection=[
+            ('payment', 'Payment'),
+            ('payment_bill', 'Payment and Bill')
+        ],
+        default='payment',
+        string="Withholding On",
+        help="Determines whether withholding taxes are applied on payments only or on both payments and bills.",
+    )
     withholding_tax_base_account_id = fields.Many2one(
         comodel_name='account.account',
-        string="Withholding Tax Base",
+        string="Withholding Tax Control Account",
         help="This account will be set on withholding tax base lines.",
     )

@@ -121,7 +121,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard_withholding_taxes = withholding_taxes.filtered_domain(wizard_domain)
 
                 will_create_multiple_entry = not wizard.can_edit_wizard or (wizard.can_group_payments and not wizard.group_payment)
-                wizard.display_withholding = bool(wizard_withholding_taxes) and not will_create_multiple_entry
+                wizard.display_withholding = bool(wizard_withholding_taxes) and not will_create_multiple_entry and company.withhold_applicable_on == 'payment'
 
     @api.depends(
         'can_edit_wizard',

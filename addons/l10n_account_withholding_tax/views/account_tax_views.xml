@@ -23,6 +23,9 @@
             <field name="is_base_affected" position="attributes">
                 <attribute name="invisible" add="not is_withholding_tax_on_payment" separator=" and "/>
             </field>
+            <field name="tax_group_id" position="after">
+                <field name="withholding_tax_section_id"/>
+            </field>
         </field>
     </record>
 </odoo>

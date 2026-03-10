@@ -2,3 +2,5 @@
 
 from . import account_payment_register
 from . import account_payment_register_withholding_line
+from . import l10n_account_withholding_entry
+from . import l10n_account_withholding_entry_line

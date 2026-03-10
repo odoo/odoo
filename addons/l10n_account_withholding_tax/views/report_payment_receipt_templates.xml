@@ -1,27 +1,39 @@
 <odoo>
     <template inherit_id="account.report_payment_receipt_document" id="report_payment_receipt_document">
+        <xpath expr="//div[@class='row'][.//div[@t-if='o.amount']]" position="inside">
+            <div t-if="o.withholding_total_tax_amount">
+                Tax Amount:
+                <span t-field="o.withholding_total_tax_amount"
+                    t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+            </div>
+            <div t-if="o.withholding_net_amount">
+                Paid Amount:
+                <span t-field="o.withholding_net_amount"
+                    t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+            </div>
+        </xpath>
         <xpath expr="//table" position="before">
             <t t-if="o.withholding_line_ids">
                 <table id="l10n_account_withholding" class="table table-borderless border-bottom pt-2 mb-5">
                     <thead>
                         <tr>
-                            <th><span>Tax</span></th>
-                            <th><span>Withholding number</span></th>
-                            <th class="text-end"><span>Base</span></th>
-                            <th class="text-end"><span>Amount</span></th>
+                            <th><span>Withholding Seq. number</span></th>
+                            <th class="text-end"><span>Base Amount</span></th>
+                            <th><span>Withholding Tax</span></th>
+                            <th class="text-end"><span>Tax Amount</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <t t-foreach="o.withholding_line_ids" t-as="line">
                             <tr>
                                 <td>
-                                    <span t-field='line.tax_id.name'/>
-                                </td>
-                                <td>
                                     <span t-out="line.name"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-out="abs(line.base_amount)" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td>
+                                    <span t-field='line.tax_id.name'/>
                                 </td>
                                 <td class="text-end">
                                     <span t-out="abs(line.amount)" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
