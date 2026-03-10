@@ -33,9 +33,7 @@ const discussChannelPatch = {
         ) {
             return this.store.discuss.livechatLookingForHelpCategory;
         }
-        return (
-            this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
-        );
+        return this.store.discuss.defaultLivechatCategory;
     },
     get autoOpenChatWindowOnNewMessage() {
         return (

@@ -1,30 +1,24 @@
 import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_app/sidebar/category";
 import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
+
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 /** @type {DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
+    setup() {
+        super.setup();
+        this.actionService = useService("action");
+    },
     get actions() {
         const actions = super.actions;
-        if (
-            this.store.has_access_livechat &&
-            this.category.livechat_channel_id &&
-            this.category.is_open
-        ) {
+        if (this.category.id === "im_livechat.category_default" && this.store.has_access_livechat) {
             actions.push({
-                onSelect: () => {
-                    if (this.category.livechat_channel_id.are_you_inside) {
-                        this.category.livechat_channel_id.leave({ notify: false });
-                    } else {
-                        this.category.livechat_channel_id.join({ notify: false });
-                    }
-                },
-                label: this.category.livechat_channel_id.are_you_inside
-                    ? this.category.livechat_channel_id.leaveTitle
-                    : this.category.livechat_channel_id.joinTitle,
-                icon: this.category.livechat_channel_id.are_you_inside
-                    ? "fa fa-sign-out fa-rotate-180 text-danger"
-                    : "fa fa-sign-in text-success",
+                onSelect: () =>
+                    this.actionService.doAction("im_livechat.im_livechat_channel_action"),
+                label: _t("View or join live chat channels"),
+                icon: "fa fa-cog",
             });
         }
         return actions;

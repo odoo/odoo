@@ -31,7 +31,8 @@
                     <span class="rounded p-1"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
-                    <span class="o-mail-DiscussSidebarCategory-title text-break smaller d-flex align-items-center" t-att-class="{ 'fs-bold': category.open }">
+                    <span class="o-mail-DiscussSidebarCategory-title text-break smaller d-flex align-items-center gap-1" t-att-class="{ 'fs-bold': category.open }">
+                        <i class="fa-fw opacity-75" t-att-class="category.icon ?? 'fa fa-user'"/>
                         <t name="titleText" t-out="category.name"/>
                     </span>
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 ps-1"/></span>

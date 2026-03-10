@@ -60,7 +60,7 @@ patch(DiscussApp.prototype, {
                     icon: "fa fa-commenting-o",
                     id: `im_livechat.category_default`,
                     name: _t("Live Chat"),
-                    sequence: 21,
+                    sequence: 17,
                 };
             },
             eager: true,

@@ -4,7 +4,6 @@ import {
     click,
     contains,
     listenStoreFetch,
-    openDiscuss,
     setupChatHub,
     start,
     startServer,
@@ -14,98 +13,10 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { rpc } from "@web/core/network/rpc";
-import { serializeDate, today } from "@web/core/l10n/dates";
 import { livechatLastAgentLeaveFromChatWindow } from "./im_livechat_shared_tests";
 
 describe.current.tags("desktop");
 defineLivechatModels();
-
-test("from the discuss app", async () => {
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
-        group_ids: pyEnv["res.groups"]
-            .search_read([["id", "=", serverState.groupLivechatId]])
-            .map(({ id }) => id),
-    });
-    const [guestId_1, guestId_2] = pyEnv["mail.guest"].create([
-        { name: "guest_1" },
-        { name: "guest_2" },
-    ]);
-    const livechatChannelId = pyEnv["im_livechat.channel"].create({
-        name: "HR",
-        user_ids: [serverState.userId],
-    });
-    const [channelId_1] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "livechat",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    livechat_member_type: "agent",
-                }),
-                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
-            ],
-            livechat_end_dt: false,
-            livechat_channel_id: livechatChannelId,
-            create_uid: serverState.publicUserId,
-        },
-        {
-            channel_type: "livechat",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    livechat_member_type: "agent",
-                }),
-                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
-            ],
-            livechat_end_dt: serializeDate(today()),
-            livechat_channel_id: livechatChannelId,
-            create_uid: serverState.publicUserId,
-        },
-    ]);
-    pyEnv["mail.message"].create({
-        body: "Last message from guest_1",
-        model: "discuss.channel",
-        res_id: channelId_1,
-    });
-    await start();
-    await openDiscuss();
-    await contains(
-        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']"
-    );
-    await click("[title='Leave HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
-    });
-    await contains(
-        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']",
-        { count: 0 }
-    );
-    await click("[title='Join HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
-    });
-    await contains(
-        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']"
-    );
-    await click("[title='Chat Actions']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "guest_1" }],
-    });
-    await click(".o-dropdown-item:contains('Close Conversation')");
-    await contains(
-        ".modal-header:has(:text('Closing this will end the live chat with guest_1. Are you sure you want to proceed?'))"
-    );
-    await contains(".modal-body .o-mail-Message-body:has(:text('Last message from guest_1'))");
-    await click("button:contains(Close Conversation)");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "guest_1", count: 0 });
-    await click("[title='Chat Actions']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "guest_2" }],
-    });
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "guest_2", count: 0 });
-    await click("[title='Leave HR']", {
-        parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
-    });
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { text: "HR", count: 0 });
-});
 
 test("from the command palette", async () => {
     const pyEnv = await startServer();

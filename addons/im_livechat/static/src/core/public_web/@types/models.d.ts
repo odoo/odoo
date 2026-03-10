@@ -6,7 +6,4 @@ declare module "models" {
         shadowedBySelf: number;
         updateLivechatStatus: (status: "in_progress"|"need_help") => void;
     }
-    export interface LivechatChannel {
-        appCategory: DiscussAppCategory;
-    }
 }

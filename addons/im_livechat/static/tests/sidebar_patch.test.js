@@ -356,11 +356,11 @@ test("Local sidebar category state is shared between tabs", async () => {
     await contains(`${env2.selector} .o-mail-DiscussSidebarCategory-livechat .oi-chevron-right`);
 });
 
-test("live chat is displayed below its category", async () => {
+test("live chat is displayed in the Live Chat category", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = pyEnv["im_livechat.channel"].create({ name: "Helpdesk" });
     browser.localStorage.setItem(
-        `discuss_sidebar_category_im_livechat.category_${livechatChannelId}_open`,
+        `discuss_sidebar_category_im_livechat.category_default_open`,
         false
     );
     pyEnv["discuss.channel"].create({
@@ -376,9 +376,9 @@ test("live chat is displayed below its category", async () => {
     });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory .btn", { text: "Helpdesk" });
+    await contains(".o-mail-DiscussSidebarCategory .btn", { text: "Live Chat" });
     await contains(
-        ".o-mail-DiscussSidebarCategory:contains(Helpdesk) + .o-mail-DiscussSidebarCategory-channels:contains(Visitor #12)"
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarCategory-channels:contains(Visitor #12)"
     );
 });
 
