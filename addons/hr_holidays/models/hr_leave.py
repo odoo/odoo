@@ -1046,6 +1046,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
+        if len(self.employee_ids) == 1:
+            if default is None:
+                default = {}
+            default['employee_ids'] = self.employee_ids
         if default and 'request_date_from' in default and 'request_date_to' in default:
             return super().copy_data(default)
         elif self.state in {"cancel", "refuse"}:  # No overlap constraint in these cases
