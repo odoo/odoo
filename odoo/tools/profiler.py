@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import re
 import sys
 import threading
@@ -520,6 +521,8 @@ class Profiler:
             if not db:
                 # only raise if path is not given and db is not explicitely disabled
                 raise Exception('Database name cannot be defined automaticaly. \n Please provide a valid/falsy dbname or path parameter')
+        if db is not None and os.getenv('ODOO_PROFILE_DATABASE'):
+            db = os.getenv('ODOO_PROFILE_DATABASE')
         self.db = db
 
         # collectors
