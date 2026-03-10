@@ -563,6 +563,7 @@
                         <button name="action_force_register_payment" type="object" string="Pay"
                             groups="account.group_account_invoice"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
+                            <button name="action_move_download_all" type="object" string="Download"/>
                     </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="duplicated_ref_ids" column_invisible="True"/>  <!-- Needed for custome view account_tree-->
