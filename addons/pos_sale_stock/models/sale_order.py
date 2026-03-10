@@ -44,10 +44,21 @@ class SaleOrderLine(models.Model):
     def _get_read_converted_extra_items(self, sale_line):
         extra_items = super()._get_read_converted_extra_items(sale_line)
         if sale_line.product_id.tracking in ['lot', 'serial']:
-            move_lines = sale_line.move_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == sale_line.product_id.id)
+            candidates = self.env['stock.move.line'].search([
+                ('picking_id', 'in', sale_line.order_id.picking_ids.ids),
+                ('product_id', '=', sale_line.product_id.id),
+                ('move_id.sale_line_id', '=', sale_line.id),
+                ('move_id.is_inventory', '=', False),
+            ], order='picking_id, id')
+            if candidates:
+                first_picking = candidates[:1].picking_id
+                move_lines = candidates.filtered(lambda ml: ml.picking_id == first_picking)
+            else:
+                move_lines = self.env['stock.move.line']
             extra_items['lot_names'] = move_lines.lot_id.mapped('name')
             lot_qty_by_name = {}
             for line in move_lines:
-                lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
+                if line.lot_id:
+                    lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
             extra_items['lot_qty_by_name'] = lot_qty_by_name
         return extra_items
