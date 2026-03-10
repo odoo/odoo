@@ -4,6 +4,10 @@
         <field name="name">account.analytic.line.services.search.inherit.sale.project</field>
         <field name="model">account.analytic.line</field>
         <field name="inherit_id" ref="sale.view_analytic_lines_service_search"/>
+        <!-- !Disabled because this view adds filters and group-by options on project_id, task_id
+            !and employee_id, which are never set on Services & Materials analytic lines.
+            TODO: Remove this view entirely in master. -->
+        <field name="active">False</field>
         <field name="arch" type="xml">
             <filter name="my_orders" position="after">
                 <filter name="my_team" string="My Team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
