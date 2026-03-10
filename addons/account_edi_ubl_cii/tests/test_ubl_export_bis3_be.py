@@ -140,6 +140,23 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_exempt')
 
+    def test_invoice_tax_exempt_early_payment_discount(self):
+
+        early_payment_term = self._create_mixed_early_payment_term()
+        tax_0 = self.percent_tax(0.0)
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_payment_term_id=early_payment_term.id,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=self.product_a, price_unit=100.0, tax_ids=tax_0),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_exempt_early_payment_discount')
+
     def test_invoice_tax_reverse_charge(self):
         tax_21 = self.percent_tax(21.0)
         tax_minus_10_67 = self.percent_tax(-10.67)

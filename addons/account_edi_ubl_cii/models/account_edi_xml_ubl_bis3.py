@@ -1277,11 +1277,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             for tax_total in document_node['cac:TaxTotal']
             if tax_total['cbc:TaxAmount']['currencyID'] == vals['currency_id'].name
         )
-        total_allowance = sum(
+        allowances = [
             allowance_charge['cbc:Amount']['_text']
             for allowance_charge in document_node['cac:AllowanceCharge']
             if allowance_charge['cbc:ChargeIndicator']['_text'] == 'false'
-        )
+        ]
         total_charge = sum(
             allowance_charge['cbc:Amount']['_text']
             for allowance_charge in document_node['cac:AllowanceCharge']
@@ -1304,9 +1304,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             },
             'cbc:AllowanceTotalAmount': {
-                '_text': FloatFmt(total_allowance, min_dp=vals['currency_dp']),
+                '_text': FloatFmt(sum(allowances), min_dp=vals['currency_dp']),
                 'currencyID': vals['currency_name'],
-            } if total_allowance else None,
+            } if allowances else None,
             'cbc:ChargeTotalAmount': {
                 '_text': FloatFmt(total_charge, min_dp=vals['currency_dp']),
                 'currencyID': vals['currency_name'],
