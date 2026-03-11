@@ -424,7 +424,7 @@ class AccountMoveLine(models.Model):
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
-    deductible_amount = fields.Float("Deductibility", default=100)
+    deductible_percentage = fields.Float("Deductibility Percentage", default=1.0)
 
     # === Invoice sync fields === #
     term_key = fields.Json(compute='_compute_term_key', exportable=False)
@@ -1773,13 +1773,13 @@ class AccountMoveLine(models.Model):
             elif line.matched_debit_ids or line.matched_credit_ids:
                 raise Exception("Should have number")
 
-    @api.constrains('deductible_amount')
-    def _constrains_deductible_amount(self):
+    @api.constrains('deductible_percentage')
+    def _constrains_deductible_percentage(self):
         for line in self:
-            if not line.move_id.is_purchase_document() and float_compare(line.deductible_amount, 100, precision_digits=2):
+            if not line.move_id.is_purchase_document() and float_compare(line.deductible_percentage, 1, precision_digits=4):
                 raise ValidationError(_("Only vendor bills allow for deductibility of product/services."))
-            if line.deductible_amount < 0 or line.deductible_amount > 100:
-                raise ValidationError(_("The deductibility must be a value between 0 and 100."))
+            if line.deductible_percentage < 0 or line.deductible_percentage > 1:
+                raise ValidationError(_("The deductibility percentage must be between 0% and 100%"))
 
     # -------------------------------------------------------------------------
     # CRUD/ORM

@@ -199,7 +199,7 @@
                     <field name="is_account_reconcile" column_invisible="True"/>
                     <field name="sequence" column_invisible="True"/>
                     <field name="parent_state" column_invisible="True"/>
-                    <field name="deductible_amount" optional="hide"/>
+                    <field name="deductible_percentage" optional="hide"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="fa-edit"/>
                     </groupby>
@@ -1280,15 +1280,17 @@
                                                }"
                                                options="{'no_create': True}"
                                                optional="show"/>
-                                        <field name="deductible_amount"
+                                        <field name="deductible_percentage"
                                                column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
-                                               string="Professional %"
+                                               string="Professional"
                                                optional="hide"
+                                               widget="percentage"
                                                groups="!account.group_partial_purchase_deductibility"/>
-                                        <field name="deductible_amount"
+                                        <field name="deductible_percentage"
                                                column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
-                                               string="Professional %"
+                                               string="Professional"
                                                optional="show"
+                                               widget="percentage"
                                                groups="account.group_partial_purchase_deductibility"/>
                                         <field name="price_subtotal"
                                                column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"

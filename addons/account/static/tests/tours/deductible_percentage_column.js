@@ -1,7 +1,7 @@
 import { registry } from '@web/core/registry';
 import { stepUtils } from "@web_tour/tour_utils";
 
-registry.category("web_tour.tours").add("deductible_amount_column", {
+registry.category("web_tour.tours").add("deductible_percentage_column", {
     steps: () => [
     {
         content: "Add item",
@@ -14,8 +14,8 @@ registry.category("web_tour.tours").add("deductible_amount_column", {
         run: "edit Laptop"
     },
     {
-        content: "Edit deductible amount",
-        trigger: ".o_field_widget[name='deductible_amount'] > .o_input",
+        content: "Edit deductible percentage",
+        trigger: ".o_field_widget[name='deductible_percentage'] .o_input",
         run: "edit 80"
     },
     {

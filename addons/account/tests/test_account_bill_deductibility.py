@@ -16,7 +16,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -63,7 +63,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             {}
         )
 
-        bill.invoice_line_ids[0].deductible_amount = 100.0
+        bill.invoice_line_ids[0].deductible_percentage = 1.0
         self.assertInvoiceValues(
             bill,
             [
@@ -74,7 +74,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             {}
         )
 
-        bill.invoice_line_ids[0].deductible_amount = 75.0
+        bill.invoice_line_ids[0].deductible_percentage = 0.75
         bill.action_post()
         self.assertInvoiceValues(
             bill,
@@ -98,14 +98,14 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 }),
                 Command.create({
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -135,21 +135,21 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item 1',
                     'price_unit': 100,
                     'quantity': 3,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 }),
                 Command.create({
                     'name': 'Partial item 2',
                     'price_unit': 150,
                     'quantity': 1,
-                    'deductible_amount': 80.00,
+                    'deductible_percentage': 0.80,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 }),
                 Command.create({
                     'name': 'Full item',
                     'price_unit': 200,
                     'quantity': 1,
-                    'deductible_amount': 100.00,
+                    'deductible_percentage': 1.00,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 }),
             ]
@@ -184,7 +184,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [
                         Command.set((self.tax_purchase_a + tax_21).ids),
                     ],
@@ -219,7 +219,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item 1',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [
                         Command.set(self.tax_purchase_a.ids),
                     ],
@@ -228,7 +228,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item 2',
                     'price_unit': 120,
                     'quantity': 2,
-                    'deductible_amount': 50.00,
+                    'deductible_percentage': 0.50,
                     'tax_ids': [
                         Command.set(tax_21.ids),
                     ],
@@ -262,7 +262,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'price_unit': 100,
                     'quantity': 1,
                     'discount': 50,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -298,7 +298,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -327,7 +327,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -356,7 +356,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -398,7 +398,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'Partial item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 75.00,
+                    'deductible_percentage': 0.75,
                     'tax_ids': [Command.set(self.tax_purchase_a.ids)],
                 })
             ]
@@ -457,7 +457,7 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
                     'name': 'RC Partial Item',
                     'price_unit': 100,
                     'quantity': 1,
-                    'deductible_amount': 60.00,
+                    'deductible_percentage': 0.60,
                     'tax_ids': [Command.set(tax_reverse_charge.ids)],
                 })
             ]

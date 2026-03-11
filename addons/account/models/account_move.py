@@ -1751,7 +1751,7 @@ class AccountMove(models.Model):
         :return: A list of base lines representing the non deductible lines.
         """
         self.ensure_one()
-        non_deductible_product_lines = base_lines.filtered(lambda line: line.display_type == 'product' and float_compare(line.deductible_amount, 100, precision_digits=2))
+        non_deductible_product_lines = base_lines.filtered(lambda line: line.display_type == 'product' and float_compare(line.deductible_percentage, 1, precision_digits=4))
         if not non_deductible_product_lines:
             return []
 
@@ -1761,7 +1761,7 @@ class AccountMove(models.Model):
         non_deductible_lines_base_total_currency = 0.0
         non_deductible_lines = []
         for line in non_deductible_product_lines:
-            percentage = 1 - line.deductible_amount / 100
+            percentage = 1 - line.deductible_percentage
             non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
             non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
             non_deductible_lines_base_total_currency += non_deductible_base_currency
@@ -3468,13 +3468,13 @@ class AccountMove(models.Model):
             return (
                 move.state == 'draft'
                 and move.is_purchase_document()
-                and any(move.line_ids.filtered(lambda line: line.display_type == 'product' and line.deductible_amount < 100))
+                and any(move.line_ids.filtered(lambda line: line.display_type == 'product' and line.deductible_percentage < 1))
             )
 
         # Collect data to avoid recomputing value unecessarily
         product_lines_before = {
             move: Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
+                (line.name, line.price_subtotal, line.tax_ids, line.deductible_percentage, line.account_id)
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
@@ -3487,7 +3487,7 @@ class AccountMove(models.Model):
         to_create = []
         for move in container['records']:
             product_lines_now = Counter(
-                (line.name, line.price_subtotal, line.tax_ids, line.deductible_amount, line.account_id)
+                (line.name, line.price_subtotal, line.tax_ids, line.deductible_percentage, line.account_id)
                 for line in move.line_ids
                 if line.display_type == 'product'
             )
@@ -3513,10 +3513,10 @@ class AccountMove(models.Model):
             rate = move.invoice_currency_rate
 
             for line in move.line_ids.filtered(lambda line: line.display_type == 'product'):
-                if float_compare(line.deductible_amount, 100, precision_rounding=2) == 0:
+                if float_compare(line.deductible_percentage, 1, precision_digits=4) == 0:
                     continue
 
-                percentage = (1 - line.deductible_amount / 100)
+                percentage = (1 - line.deductible_percentage)
                 non_deductible_subtotal = line.currency_id.round(line.price_subtotal * percentage)
                 non_deductible_base = line.currency_id.round(sign * non_deductible_subtotal)
                 non_deductible_base_currency = line.company_currency_id.round(sign * non_deductible_subtotal / rate) if rate else 0.0
@@ -5890,7 +5890,7 @@ class AccountMove(models.Model):
         })
 
         if not self.env.user.has_group('account.group_partial_purchase_deductibility') and \
-                self.filtered(lambda move: move.move_type == 'in_invoice' and move.invoice_line_ids.filtered(lambda l: l.deductible_amount != 100)):
+                self.filtered(lambda move: move.move_type == 'in_invoice' and move.invoice_line_ids.filtered(lambda l: l.deductible_percentage != 1)):
             self.env.user.sudo().group_ids = [Command.link(self.env.ref('account.group_partial_purchase_deductibility').id)]
 
         # Add the move number to the non_deductible lines for easier auditing
