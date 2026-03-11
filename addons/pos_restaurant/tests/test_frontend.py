@@ -752,6 +752,20 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
 
+    def test_show_default_with_register_screen(self):
+        """
+        Test that showDefault() correctly updates the selected order when
+        default_screen is 'register' (ProductScreen mode, not floor/tables).
+        Regression test: navigating via showDefault() must sync selectedOrderUuid
+        so that ProductScreen displays the correct order.
+        """
+        self.pos_config.write({
+            'default_screen': 'register',
+            'printer_ids': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_show_default_with_register_screen')
+
     def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
         self.env['pos.printer'].create({
                 'name': 'Printer',

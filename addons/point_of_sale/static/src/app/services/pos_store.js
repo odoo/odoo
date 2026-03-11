@@ -201,6 +201,10 @@ export class PosStore extends WithLazyGetterTrap {
         const pageParams = registry.category("pos_pages").get(routeName);
         const component = pageParams.component;
 
+        if (routeParams.orderUuid) {
+            this.selectedOrderUuid = routeParams.orderUuid;
+        }
+
         if (component.storeOnOrder ?? true) {
             this.getOrder()?.setScreenData({ name: routeName, props: routeParams });
         }
@@ -2886,12 +2890,12 @@ export class PosStore extends WithLazyGetterTrap {
 
     orderDone(order) {
         order.setScreenData({ name: "" });
-        if (!this.config.module_pos_restaurant) {
-            this.selectedOrderUuid = this.getEmptyOrder().uuid;
-        }
         this.searchProductWord = "";
-        const nextPage = this.defaultPage;
-        this.navigate(nextPage.page, nextPage.params);
+        const { page, params } = this.defaultPage;
+        this.navigate(
+            page,
+            page === "ProductScreen" ? { orderUuid: this.getEmptyOrder().uuid } : params
+        );
     }
 
     displayPrinterWarning(printResult, printerName) {
