@@ -149,6 +149,19 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         // Check that saving always sets the first slide as active.
         checkSlides(4, 1),
+        {
+            content: "Slide the carousel",
+            trigger: ":iframe .carousel .carousel-control-next",
+            run: "click",
+        },
+        // Ensure opening edit mode while sliding doesn't cause any issue.
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Slide the carousel in edit mode",
+            trigger: ":iframe .carousel .carousel-control-next",
+            run: "click",
+        },
+        checkSlides(4, 3),
     ]
 );
 
