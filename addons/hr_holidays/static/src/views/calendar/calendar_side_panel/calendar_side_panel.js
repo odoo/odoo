@@ -73,7 +73,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
                 continue;
             }
             promises.push(
-                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [])
+                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [], { context: { from_dashboard: true } })
             );
         }
         const filterData = {};
