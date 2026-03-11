@@ -265,12 +265,13 @@ class Project(models.Model):
             return action
 
         if section_name == 'cost_of_goods_sold':
+            move_ids = [res_id] if res_id else self.env['account.move'].search(domain).ids
             action = {
                 'name': _('Cost of Goods Sold Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move.line',
                 'views': [[False, 'tree'], [False, 'form']],
-                'domain': [('move_id', '=', res_id), ('display_type', '=', 'cogs')],
+                'domain': [('move_id', 'in', move_ids), ('display_type', '=', 'cogs')],
                 'context': {'create': False, 'edit': False},
             }
             return action
