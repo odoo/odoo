@@ -8,7 +8,6 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, WebsiteSale):
-
     @route(
         route='/website_sale/combo_configurator/get_data',
         type='jsonrpc',
@@ -42,9 +41,8 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         # an issue when public users access the image of each choice via the /web/image route. To
         # bypass this access check, we send the raw image URL if the product is inaccessible to the
         # current user.
-        if (
-            not combo_item.product_id.sudo(False).has_access('read')
-            and (combo_item_image := combo_item.product_id.image_256)
+        if not combo_item.product_id.sudo(False).has_access('read') and (
+            combo_item_image := combo_item.product_id.image_256
         ):
             data['product']['image_src'] = image_data_uri(combo_item_image)
         return data

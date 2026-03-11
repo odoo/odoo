@@ -13,7 +13,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -29,62 +28,48 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         If the information is not correctly transmitted,
         the default values of the variants will be used (the first one).
         """
-        always_attribute, dynamic_attribute, never_attribute, never_attribute_custom = self.env['product.attribute'].create([
-            {
-                'name': 'Always attribute size',
-                'display_type': 'radio',
-                'create_variant': 'always'
-            },
+        always_attribute, dynamic_attribute, never_attribute, never_attribute_custom = self.env[
+            'product.attribute'
+        ].create([
+            {'name': 'Always attribute size', 'display_type': 'radio', 'create_variant': 'always'},
             {
                 'name': 'Dynamic attribute size',
                 'display_type': 'radio',
-                'create_variant': 'dynamic'
+                'create_variant': 'dynamic',
             },
             {
                 'name': 'Never attribute size',
                 'display_type': 'radio',
-                'create_variant': 'no_variant'
+                'create_variant': 'no_variant',
             },
             {
                 'name': 'Never attribute size custom',
                 'display_type': 'radio',
-                'create_variant': 'no_variant'
-            }
+                'create_variant': 'no_variant',
+            },
         ])
-        always_S, always_M, dynamic_S, dynamic_M, never_S, never_M, never_custom_no, never_custom_yes = self.env['product.attribute.value'].create([
-            {
-                'name': 'S always',
-                'attribute_id': always_attribute.id,
-            },
-            {
-                'name': 'M always',
-                'attribute_id': always_attribute.id,
-            },
-            {
-                'name': 'S dynamic',
-                'attribute_id': dynamic_attribute.id,
-            },
-            {
-                'name': 'M dynamic',
-                'attribute_id': dynamic_attribute.id,
-            },
-            {
-                'name': 'S never',
-                'attribute_id': never_attribute.id,
-            },
-            {
-                'name': 'M never',
-                'attribute_id': never_attribute.id,
-            },
-            {
-                'name': 'No never custom',
-                'attribute_id': never_attribute_custom.id,
-            },
+        (
+            always_S,
+            always_M,
+            dynamic_S,
+            dynamic_M,
+            never_S,
+            never_M,
+            never_custom_no,
+            never_custom_yes,
+        ) = self.env['product.attribute.value'].create([
+            {'name': 'S always', 'attribute_id': always_attribute.id},
+            {'name': 'M always', 'attribute_id': always_attribute.id},
+            {'name': 'S dynamic', 'attribute_id': dynamic_attribute.id},
+            {'name': 'M dynamic', 'attribute_id': dynamic_attribute.id},
+            {'name': 'S never', 'attribute_id': never_attribute.id},
+            {'name': 'M never', 'attribute_id': never_attribute.id},
+            {'name': 'No never custom', 'attribute_id': never_attribute_custom.id},
             {
                 'name': 'Yes never custom',
                 'attribute_id': never_attribute_custom.id,
                 'is_custom': True,
-            }
+            },
         ])
 
         product_short = self.env['product.template'].create({
@@ -107,7 +92,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                     'attribute_id': never_attribute_custom.id,
                     'value_ids': [(4, never_custom_no.id), (4, never_custom_yes.id)],
                 }),
-            ]
+            ],
         })
 
         # Add an optional product to trigger the modal window
@@ -118,15 +103,17 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         product_short.optional_product_ids = [(4, optional_product.id)]
 
         old_sale_order = self.env['sale.order'].search([])
-        self.start_tour(
-            product_short.website_url,
-            'website_sale.optional_products_modal',
-        )
+        self.start_tour(product_short.website_url, 'website_sale.optional_products_modal')
 
         # Check the name of the created sale order line
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
-        self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
+        self.assertEqual(
+            new_order_line.name,
+            'Short (TEST) (M always, M dynamic)'
+            '\nNever attribute size: M never'
+            '\nNever attribute size custom: Yes never custom: TEST',
+        )
 
     def test_product_configurator_optional_products(self):
         """Test that the product configurator is shown if the product has optional products."""
@@ -134,27 +121,24 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             'name': "Main product",
             'website_published': True,
             'optional_product_ids': [
-                Command.create({
-                    'name': "Optional product",
-                    'website_published': True,
-                })
+                Command.create({'name': "Optional product", 'website_published': True})
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
 
     def test_optional_products_not_visible_on_other_websites(self):
-        """Optional products assigned to a different website should not be shown"""
+        """Optional products assigned to a different website should not be shown."""
         second_website = self.env['website'].create({'name': 'second website'})
         optional_product = self.env['product.template'].create({
             'name': "Optional product",
             'website_published': True,
-            'website_id': second_website.id
+            'website_id': second_website.id,
         })
 
         main_product = self.env['product.template'].create({
@@ -165,7 +149,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertFalse(show_configurator)
@@ -183,13 +167,13 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': attribute.id,
                     'value_ids': [Command.set(attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertFalse(show_configurator)
@@ -202,10 +186,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             'name': "Multi-checkbox attribute",
             'display_type': 'multi',
             'create_variant': 'no_variant',
-            'value_ids': [
-                Command.create({'name': "A"}),
-                Command.create({'name': "B"}),
-            ],
+            'value_ids': [Command.create({'name': "A"}), Command.create({'name': "B"})],
         })
         main_product = self.env['product.template'].create({
             'name': "Main product",
@@ -214,13 +195,13 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': multi_attribute.id,
                     'value_ids': [Command.set(multi_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=True
+                product_template_id=main_product.id, is_product_configured=True
             )
 
         self.assertFalse(show_configurator)
@@ -232,10 +213,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         no_variant_attribute = self.env['product.attribute'].create({
             'name': "No variant attribute",
             'create_variant': 'no_variant',
-            'value_ids': [
-                Command.create({'name': "A"}),
-                Command.create({'name': "B"}),
-            ],
+            'value_ids': [Command.create({'name': "A"}), Command.create({'name': "B"})],
         })
         main_product = self.env['product.template'].create({
             'name': "Main product",
@@ -244,13 +222,13 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': no_variant_attribute.id,
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -262,10 +240,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         dynamic_attribute = self.env['product.attribute'].create({
             'name': "Dynamic attribute",
             'create_variant': 'dynamic',
-            'value_ids': [
-                Command.create({'name': "A"}),
-                Command.create({'name': "B"}),
-            ],
+            'value_ids': [Command.create({'name': "A"}), Command.create({'name': "B"})],
         })
         main_product = self.env['product.template'].create({
             'name': "Main product",
@@ -274,13 +249,13 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': dynamic_attribute.id,
                     'value_ids': [Command.set(dynamic_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -291,12 +266,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         """
         custom_attribute = self.env['product.attribute'].create({
             'name': "Custom attribute",
-            'value_ids': [
-                Command.create({
-                    'name': "Custom value",
-                    'is_custom': True,
-                }),
-            ],
+            'value_ids': [Command.create({'name': "Custom value", 'is_custom': True})],
         })
         main_product = self.env['product.template'].create({
             'name': "Main product",
@@ -305,13 +275,13 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': custom_attribute.id,
                     'value_ids': [Command.set(custom_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -331,7 +301,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         with self.mock_request():
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+                product_template_id=main_product.id, is_product_configured=False
             )
             configurator_values = self.pc_controller.website_sale_product_configurator_get_values(
                 product_template_id=main_product.id,
@@ -359,7 +329,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': attribute.id,
                     'value_ids': [Command.set(attribute.value_ids.ids)],
-                }),
+                })
             ],
             'taxes_id': tax,
         })
@@ -392,7 +362,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': price_attribute.id,
                     'value_ids': [Command.set(price_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         main_product = self.env['product.template'].create({
@@ -400,17 +370,12 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             'website_published': True,
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
-        self.start_tour(
-            main_product.website_url,
-            'website_sale.product_configurator_zero_priced',
-        )
+        self.start_tour(main_product.website_url, 'website_sale.product_configurator_zero_priced')
 
     def test_product_configurator_strikethrough_price(self):
         """Test that the product configurator displays the strikethrough price correctly."""
         self.pricelist = self._enable_pricelists()
-        self.env['res.config.settings'].create({
-            'group_product_price_comparison': True,
-        }).execute()
+        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
         optional_product = self.env['product.template'].create({
@@ -433,11 +398,10 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 'percent_price': 50,
                 'compute_price': 'percentage',
                 'product_tmpl_id': main_product.id,
-            }),
+            })
         ]
         self.start_tour(
-            main_product.website_url,
-            'website_sale.product_configurator_strikethrough_price',
+            main_product.website_url, 'website_sale.product_configurator_strikethrough_price'
         )
 
     def test_get_product_combination_multi_attribute_with_archived_variant_and_inactive_ptav(self):
@@ -451,11 +415,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         """
         attribute_single = self.env['product.attribute'].create({
             'name': "attribute single",
-            'value_ids': [
-                Command.create({
-                    'name': "single",
-                }),
-            ],
+            'value_ids': [Command.create({'name': "single"})],
         })
         attribute_multi = self.env['product.attribute'].create({
             'name': "attribute multi",
@@ -480,7 +440,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
         main_product.product_variant_ids.filtered(
-            lambda product: product.product_template_attribute_value_ids[1].name == 'first',
+            lambda product: product.product_template_attribute_value_ids[1].name == 'first'
         ).action_archive()
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with self.mock_request():

@@ -5,9 +5,8 @@ from odoo.http.session import touch
 
 
 class ProductWishlist(Controller):
-
     @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
-    def add_to_wishlist(self, product_id, **kw):
+    def add_to_wishlist(self, product_id, **_kw):
         product = request.env['product.product'].browse(product_id)
 
         price = product._get_combination_info_variant()['price']
@@ -25,7 +24,7 @@ class ProductWishlist(Controller):
             request.website.id,
             price,
             product_id,
-            partner_id
+            partner_id,
         )
 
         if not partner_id:
@@ -34,18 +33,16 @@ class ProductWishlist(Controller):
         return wish
 
     @route('/shop/wishlist', type='http', auth='public', website=True, readonly=True, sitemap=False)
-    def shop_wishlist(self, **kw):
+    def shop_wishlist(self, **_kw):
         wishes = request.env['product.wishlist'].current()
 
         return request.render(
             'website_sale.product_wishlist',
-            {
-                'wishes': wishes.with_context(display_default_code=False),
-            }
+            {'wishes': wishes.with_context(display_default_code=False)},
         )
 
     @route('/shop/wishlist/remove/<int:wish_id>', type='jsonrpc', auth='public', website=True)
-    def remove_from_wishlist(self, wish_id, **kw):
+    def remove_from_wishlist(self, wish_id, **_kw):
         wish = request.env['product.wishlist'].browse(wish_id)
         if request.website.is_public_user():
             wish_ids = request.session.get('wishlist_ids') or []
@@ -58,11 +55,7 @@ class ProductWishlist(Controller):
         return True
 
     @route(
-        '/shop/wishlist/get_product_ids',
-        type='jsonrpc',
-        auth='public',
-        website=True,
-        readonly=True,
+        '/shop/wishlist/get_product_ids', type='jsonrpc', auth='public', website=True, readonly=True
     )
     def shop_wishlist_get_product_ids(self):
         return request.env['product.wishlist'].current().product_id.ids

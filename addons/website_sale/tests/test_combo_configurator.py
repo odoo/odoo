@@ -24,7 +24,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': no_variant_attribute.id,
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         combo_a = self.env['product.combo'].create({
@@ -45,10 +45,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             name="Combo product",
             list_price=25,
             type='combo',
-            combo_ids=[
-                Command.link(combo_a.id),
-                Command.link(combo_b.id),
-            ],
+            combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
         )
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         self.start_tour(combo_product.website_url, 'website_sale.combo_configurator')
@@ -66,7 +63,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': no_variant_attribute.id,
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                }),
+                })
             ],
             'website_published': True,
         })
@@ -75,13 +72,10 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
         combo_product = self._create_product(
-            name="Combo product",
-            type='combo',
-            combo_ids=[Command.link(combo.id)],
+            name="Combo product", type='combo', combo_ids=[Command.link(combo.id)]
         )
         self.start_tour(
-            combo_product.website_url,
-            'website_sale.combo_configurator_single_configuration',
+            combo_product.website_url, 'website_sale.combo_configurator_single_configuration'
         )
 
     def test_website_sale_combo_configurator_single_configurable_item(self):
@@ -99,7 +93,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': no_variant_attribute.id,
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         combo = self.env['product.combo'].create({
@@ -107,11 +101,8 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
         combo_product = self._create_product(
-            name="Combo product",
-            type='combo',
-            combo_ids=[Command.link(combo.id)],
+            name="Combo product", type='combo', combo_ids=[Command.link(combo.id)]
         )
         self.start_tour(
-            combo_product.website_url,
-            'website_sale.combo_configurator_single_configurable_item',
+            combo_product.website_url, 'website_sale.combo_configurator_single_configurable_item'
         )

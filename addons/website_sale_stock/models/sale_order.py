@@ -39,13 +39,13 @@ class SaleOrder(models.Model):
             if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
+
                     def format_qty(qty):
                         return int(qty) if float(qty).is_integer() else qty
+
                     if order_line:
                         warning = order_line._set_shop_warning_stock(
-                            format_qty(total_cart_qty),
-                            format_qty(available_qty),
-                            save=False,
+                            format_qty(total_cart_qty), format_qty(available_qty), save=False
                         )
                     else:
                         warning = self.env._(
@@ -62,7 +62,8 @@ class SaleOrder(models.Model):
                     )
                 else:
                     warning = self.env._(
-                        "%(product_name)s has not been added to your cart since it is not available.",
+                        "%(product_name)s has not been added to your cart since it is not "
+                        "available.",
                         product_name=product.name,
                     )
                 return allowed_line_qty, warning
@@ -112,7 +113,7 @@ class SaleOrder(models.Model):
         return sum(
             order_lines.mapped(
                 lambda sol: sol.product_uom_id._compute_quantity(
-                    sol.product_uom_qty, sol.product_id.uom_id,
+                    sol.product_uom_qty, sol.product_id.uom_id
                 )
             )
         )
@@ -122,19 +123,17 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
     def _check_cart_is_ready_to_be_paid(self):
-        values = [
-            line.shop_warning
-            for line in self.order_line
-            if not line._check_availability()
-        ]
+        values = [line.shop_warning for line in self.order_line if not line._check_availability()]
         if values:
             raise ValidationError(' '.join(values))
         return super()._check_cart_is_ready_to_be_paid()
 
     def _filter_can_send_abandoned_cart_mail(self):
         """Filter sale orders on their product availability."""
-        return super()._filter_can_send_abandoned_cart_mail().filtered(
-            lambda so: so._all_product_available()
+        return (
+            super()
+            ._filter_can_send_abandoned_cart_mail()
+            .filtered(lambda so: so._all_product_available())
         )
 
     def _all_product_available(self):

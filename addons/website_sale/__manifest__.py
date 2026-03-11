@@ -8,14 +8,20 @@
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
     'depends': [
-        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery', 'html_builder',
+        'website',
+        'sale',
+        'website_payment',
+        'website_mail',
+        'portal_rating',
+        'digest',
+        'delivery',
+        'html_builder',
     ],
     'data': [
         # Security
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
         'security/res_groups.xml',
-
         # Record data
         'data/mail_template_data.xml',
         'data/data.xml',  # Needs mail_template_data
@@ -25,10 +31,8 @@
         'data/tour.xml',
         'data/website_checkout_step_data.xml',
         'data/website_snippet_filter_data.xml',
-
         # Reports
         'report/sale_report_views.xml',
-
         # QWeb templates
         'templates/comparison_templates.xml',
         'templates/product_tile_templates.xml',
@@ -40,7 +44,6 @@
         'templates/shop_empty_screens/svg_templates.xml',
         'templates/website_templates.xml',
         'templates/wishlist_templates.xml',
-
         # Qweb templates -> checkout
         'templates/checkout/checkout_templates.xml',  # Shared templates first
         'templates/checkout/address_templates.xml',
@@ -48,7 +51,6 @@
         'templates/checkout/confirmation_templates.xml',
         'templates/checkout/extra_info_templates.xml',
         'templates/checkout/payment_templates.xml',
-
         # Model views.
         'views/account_move_views.xml',
         'views/delivery_carrier_views.xml',
@@ -70,7 +72,6 @@
         'views/website_sale_menus.xml',
         'views/website_sale_visitor_views.xml',
         'views/website_views.xml',
-
         # Website snippets
         'templates/snippets/snippets.xml',
         'templates/snippets/product_snippet_template_data.xml',
@@ -118,9 +119,7 @@
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
-
             'website_sale/static/src/scss/product_configurator.scss',
-
             'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
@@ -153,19 +152,15 @@
             'website_sale/static/src/js/product_list/*',
             'website_sale/static/src/js/product_template_attribute_line/*',
             'website_sale/static/src/js/quantity_buttons/*',
-
             # comparison
             'website_sale/static/src/js/product_row/*',
             'website_sale/static/src/js/product_comparison_bottom_bar/*',
-
             # Location selector components are defined in `delivery` to share the codebase with the
             # backend.
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/js/location_selector/**/*',
         ],
-        'web._assets_primary_variables': [
-            'website_sale/static/src/scss/primary_variables.scss',
-        ],
+        'web._assets_primary_variables': ['website_sale/static/src/scss/primary_variables.scss'],
         'web.assets_backend': [
             'website_sale/static/src/js/client_actions/**/*',
             'website_sale/static/src/js/tours/tour_utils.js',
@@ -180,9 +175,7 @@
             'website_sale/static/src/js/date_filter_button/**/*',
             'website_sale/static/src/views/**/*',
         ],
-        'web.assets_web_dark': [
-            'website_sale/static/src/js/dashboard/**/*.dark.scss',
-        ],
+        'web.assets_web_dark': ['website_sale/static/src/js/dashboard/**/*.dark.scss'],
         'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/website_builder/**/*',
@@ -224,7 +217,7 @@
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
             # TODO Re-activate when testing edit mode
-            #('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
+            # ('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
         ],
     },
     'author': 'Odoo S.A.',

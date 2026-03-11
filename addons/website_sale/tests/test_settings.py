@@ -7,13 +7,10 @@ from odoo.addons.base.tests.common import BaseCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleSettings(BaseCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Company',
-        })
+        cls.company = cls.env['res.company'].create({'name': 'Test Company'})
         cls.website = cls.env['website'].create({
             'name': 'Test Website',
             'company_id': cls.company.id,
@@ -32,5 +29,8 @@ class TestWebsiteSaleSettings(BaseCommon):
         self.assertEqual(self.website.auth_signup_uninvited, 'b2b')
         config.create({'auth_signup_uninvited': 'b2c', 'account_on_checkout': 'disabled'}).execute()
         self.assertEqual(self.website.auth_signup_uninvited, 'b2c')
-        config.create({'auth_signup_uninvited': 'b2b', 'account_on_checkout': 'mandatory'}).execute()
+        config.create({
+            'auth_signup_uninvited': 'b2b',
+            'account_on_checkout': 'mandatory',
+        }).execute()
         self.assertEqual(self.website.auth_signup_uninvited, 'b2c')

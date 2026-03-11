@@ -11,7 +11,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
-
     def test_payment_provider_visibility_with_portal(self):
         """Check providers availability on the sales portal.
 
@@ -24,7 +23,11 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
         website_portal.write({'domain': base_url})
 
         self.provider.write({'website_id': website_portal.id})
-        restricted_provider = self.env['payment.provider'].sudo().search([('name', '=', 'Demo'), ('company_id', '=', website_shop.company_id.id)])
+        restricted_provider = (
+            self.env['payment.provider']
+            .sudo()
+            .search([('name', '=', 'Demo'), ('company_id', '=', website_shop.company_id.id)])
+        )
         restricted_provider.write({'state': 'test', 'website_id': website_shop.id})
 
         url_so = self.sale_order.get_portal_url()

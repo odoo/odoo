@@ -9,7 +9,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
-
     def test_website_sale_shop_redirects(self):
         category_a = self.env['product.public.category'].create({'name': "Category A"})
         category_b = self.env['product.public.category'].create({'name': "Category B"})
@@ -24,8 +23,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         slug = self.env['ir.http']._slug
 
         response = self.url_open(
-            f'/shop?category={category_a.id}&some-key=some-value',
-            allow_redirects=False,
+            f'/shop?category={category_a.id}&some-key=some-value', allow_redirects=False
         )
         self.assertEqual(response.status_code, 301)
         self.assertURLEqual(
@@ -49,8 +47,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         )
         self.assertEqual(response.status_code, 301)
         self.assertURLEqual(
-            response.headers.get('Location'),
-            f'/shop/{slug(test_product)}?some-key=some-value'
+            response.headers.get('Location'), f'/shop/{slug(test_product)}?some-key=some-value'
         )
 
         response = self.url_open(
@@ -59,8 +56,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         )
         self.assertEqual(response.status_code, 301)
         self.assertURLEqual(
-            response.headers.get('Location'),
-            f'/shop/{slug(test_product)}?some-key=some-value',
+            response.headers.get('Location'), f'/shop/{slug(test_product)}?some-key=some-value'
         )
 
     def test_ecommerce_product_page_url_unpublished_product(self):
@@ -106,22 +102,16 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
 
     def test_ecommerce_category_page_url_unpublished_product(self):
         # Unpublished product should redirect to the canonical category page (if category provided).
-        category = self.env['product.public.category'].create({
-            'name': 'Test Category',
-        })
+        category = self.env['product.public.category'].create({'name': 'Test Category'})
         # Add a different published product to category so that it is accessible to public users
         self.env['product.template'].create({
             'name': 'Test Product',
             'is_published': True,
-            'public_categ_ids': [
-                Command.link(category.id),
-            ],
+            'public_categ_ids': [Command.link(category.id)],
         })
         accessory_product = self.env['product.template'].create({
             'name': 'Access Product',
-            'public_categ_ids': [
-                Command.link(category.id),
-            ],
+            'public_categ_ids': [Command.link(category.id)],
         })
         accessory_product.is_published = False
         url = f'{SHOP_PATH}/{category.id}/{accessory_product.id}'
@@ -130,7 +120,8 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         self.assertEqual(
             len(res.history),
             1,
-            "Unpublished product with valid category should only redirect once to the category page.",
+            "Unpublished product with valid category should only redirect once to the category"
+            " page.",
         )
         self.assertEqual(
             res.history[0].status_code,

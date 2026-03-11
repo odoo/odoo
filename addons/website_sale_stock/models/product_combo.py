@@ -7,9 +7,9 @@ class ProductCombo(models.Model):
     _inherit = 'product.combo'
 
     def _get_max_quantity(self, website, sale_order, **kwargs):
-        """ The max quantity of a combo is the max quantity of its combo item with the highest max
-        quantity. If one of the combo items has no max quantity, then the combo also has no max
-        quantity.
+        """Return the max quantity of a combo.
+        It is the max quantity of its combo item with the highest max quantity. If one of the combo
+        items has no max quantity, then the combo also has no max quantity.
 
         Note: self.ensure_one()
 

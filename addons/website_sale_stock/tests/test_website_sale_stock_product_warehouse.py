@@ -10,17 +10,14 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductWarehouse(
-    TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase,
+    TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase
 ):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         # Set two warehouses (one was created on company creation)
-        cls.warehouse_1 = cls.env['stock.warehouse'].search([
-            ('company_id', '=', cls.company.id)
-        ])
+        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)])
         cls.warehouse_2 = cls._create_warehouse()
         cls.product_A = cls._create_product()
         cls.product_B = cls._create_product()
@@ -79,19 +76,24 @@ class TestWebsiteSaleStockProductWarehouse(
         self.assertEqual(combination_info['free_qty'], 10)
 
     def test_02_update_cart_with_multi_warehouses(self):
-        """ When the user updates his cart and increases a product quantity, if
+        """When the user updates his cart and increases a product quantity, if
         this quantity is not available in the SO's warehouse, a warning should
-        be returned and the quantity updated to its maximum. """
-
+        be returned and the quantity updated to its maximum."""
         so = self.env['sale.order'].create({
             'website_id': self.website.id,
             'partner_id': self.env.user.partner_id.id,
-            'order_line': [(0, 0, {
-                'name': self.product_A.name,
-                'product_id': self.product_A.id,
-                'product_uom_qty': 5,
-                'price_unit': self.product_A.list_price,
-            })]
+            'order_line': [
+                (
+                    0,
+                    0,
+                    {
+                        'name': self.product_A.name,
+                        'product_id': self.product_A.id,
+                        'product_uom_qty': 5,
+                        'price_unit': self.product_A.list_price,
+                    },
+                )
+            ],
         })
 
         with self.mock_request(sale_order_id=so.id) as req:

@@ -8,7 +8,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 
 @tagged('post_install', '-at_install')
 class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHttpCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -77,8 +76,8 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
                     'product_tmpl_id': cls.test_product_with_pricelist_and_compare_list_price.id,
                     'compute_price': 'percentage',
                     'percent_price': 12.5,
-                })
-            ]
+                }),
+            ],
         })
         cls.pricelist_without_discount = Pricelist.create({
             'name': 'pricelist_without_discount',
@@ -98,8 +97,8 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
                     'product_tmpl_id': cls.test_product_with_pricelist_and_compare_list_price.id,
                     'compute_price': 'percentage',
                     'percent_price': 12.5,
-                })
-            ]
+                }),
+            ],
         })
 
     def test_compare_list_price_price_list_display(self):

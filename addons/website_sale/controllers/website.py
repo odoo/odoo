@@ -16,8 +16,9 @@ from odoo.addons.website_sale.models.website import (
 
 
 class WebsiteSaleForm(WebsiteForm):
-
-    @route('/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
+    @route(
+        '/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True
+    )
     def website_form_saleorder(self, **kwargs):
         model_record = request.env.ref('sale.model_sale_order').sudo()
         try:
@@ -32,10 +33,7 @@ class WebsiteSaleForm(WebsiteForm):
             order_sudo.write(data['record'])
 
         if data['custom']:
-            order_sudo._message_log(
-                body=nl2br_enclose(data['custom'], 'p'),
-                message_type='comment',
-            )
+            order_sudo._message_log(body=nl2br_enclose(data['custom'], 'p'), message_type='comment')
 
         if data['attachments']:
             self.insert_attachment(model_record, order_sudo.id, data['attachments'])
@@ -44,7 +42,6 @@ class WebsiteSaleForm(WebsiteForm):
 
 
 class Website(main.Website):
-
     def _login_redirect(self, uid, redirect=None):
         # If we are logging in, clear the current pricelist to be able to find
         # the pricelist that corresponds to the user afterwards.
@@ -54,14 +51,16 @@ class Website(main.Website):
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
-    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(
+        self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None
+    ):
         options = options or {}
         if 'display_currency' not in options:
             options['display_currency'] = request.website.currency_id
         return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
 
     @route()
-    def get_current_currency(self, **kwargs):
+    def get_current_currency(self, **_kwargs):
         return {
             'id': request.website.currency_id.id,
             'symbol': request.website.currency_id.symbol,
@@ -72,7 +71,6 @@ class Website(main.Website):
     def change_lang(self, lang, **kwargs):
         if cart := request.cart:
             request.env.add_to_compute(
-                cart.order_line._fields['name'],
-                cart.order_line.with_context(lang=lang),
+                cart.order_line._fields['name'], cart.order_line.with_context(lang=lang)
             )
         return super().change_lang(lang, **kwargs)

@@ -8,14 +8,13 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
-
     def test_website_sale_stock_product_configurator(self):
         stock_attribute = self.env['product.attribute'].create({
             'name': "Stock",
             'value_ids': [
                 Command.create({'name': "Out of stock"}),
                 Command.create({'name': "In stock"}),
-            ]
+            ],
         })
         optional_product = self.env['product.template'].create({
             'name': "Optional product",
@@ -41,7 +40,8 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
                 'product_id': optional_product.product_variant_ids[1].id,
                 'location_id': self.warehouse.lot_stock_id.id,
                 'quantity': 10,
-            }, {
+            },
+            {
                 'product_id': main_product.id,
                 'location_id': self.warehouse.lot_stock_id.id,
                 'quantity': 10,
@@ -60,14 +60,14 @@ class TestWebsiteSaleStockConfigurators(HttpCase, WebsiteSaleStockCommon):
             'name': "Test combo",
             'combo_item_ids': [
                 Command.create({'product_id': product.id}),
-                Command.create({'product_id': self._create_product(
-                    allow_out_of_stock_order=True, is_storable=False
-                ).id}),
+                Command.create({
+                    'product_id': self._create_product(
+                        allow_out_of_stock_order=True, is_storable=False
+                    ).id
+                }),
             ],
         })
         product = self._create_product(
-            name="Combo product",
-            type='combo',
-            combo_ids=[Command.link(combo.id)]
+            name="Combo product", type='combo', combo_ids=[Command.link(combo.id)]
         )
         self.start_tour(product.website_url, 'website_sale_stock.combo_configurator')

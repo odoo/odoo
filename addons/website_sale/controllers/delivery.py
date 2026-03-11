@@ -13,7 +13,7 @@ class Delivery(WebsiteSale):
 
     @route('/shop/delivery_methods', type='jsonrpc', auth='public', website=True)
     def shop_delivery_methods(self):
-        """ Fetch available delivery methods and render them in the delivery form.
+        """Fetch available delivery methods and render them in the delivery form.
 
         :return: The rendered delivery form.
         :rtype: str
@@ -28,12 +28,12 @@ class Delivery(WebsiteSale):
         return request.env['ir.ui.view']._render_template('website_sale.delivery_form', values)
 
     def _get_additional_delivery_context(self):
-        """ Hook to update values used for rendering the website_sale.delivery_form template. """
+        """Update values used for rendering the website_sale.delivery_form template."""
         return {}
 
     @route('/shop/set_delivery_method', type='jsonrpc', auth='public', website=True)
     def shop_set_delivery_method(self, dm_id=None, **kwargs):
-        """ Set the delivery method on the current order and return the order summary values.
+        """Set the delivery method on the current order and return the order summary values.
 
         If the delivery method is already set, the order summary values are returned immediately.
 
@@ -48,18 +48,20 @@ class Delivery(WebsiteSale):
         dm_id = int(dm_id)
         if dm_id in order_sudo._get_delivery_methods().ids and dm_id != order_sudo.carrier_id.id:
             for tx_sudo in order_sudo.transaction_ids:
-                if tx_sudo.state not in ('draft', 'cancel', 'error'):
-                    raise UserError(_(
-                        "It seems that there is already a transaction for your order; you can't"
-                        " change the delivery method anymore."
-                    ))
+                if tx_sudo.state not in {'draft', 'cancel', 'error'}:
+                    raise UserError(
+                        _(
+                            "It seems that there is already a transaction for your order; you can't"
+                            " change the delivery method anymore."
+                        )
+                    )
 
             delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(dm_id).exists()
             order_sudo._set_delivery_method(delivery_method_sudo)
         return self._order_summary_values(order_sudo, **kwargs)
 
-    def _order_summary_values(self, order, **kwargs):
-        """ Return the summary values of the order.
+    def _order_summary_values(self, order, **_kwargs):
+        """Return the summary values of the order.
 
         :param sale.order order: The sales order whose summary values to return.
         :param dict kwargs: The keyword arguments. This parameter is not used here.
@@ -69,10 +71,7 @@ class Delivery(WebsiteSale):
         Monetary = request.env['ir.qweb.field.monetary']
         currency = order.currency_id
         rendered_tax_lines = request.env['ir.ui.view']._render_template(
-            'website_sale.order_tax_lines',
-            {
-                'website_sale_order': order,
-            }
+            'website_sale.order_tax_lines', {'website_sale_order': order}
         )
         return {
             'success': True,
@@ -92,7 +91,7 @@ class Delivery(WebsiteSale):
 
     @route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
     def shop_get_delivery_rate(self, dm_id):
-        """ Return the delivery rate data for the given delivery method.
+        """Return the delivery rate data for the given delivery method.
 
         :param str dm_id: The delivery method whose rate to get, as a `delivery.carrier` id.
         :return: The delivery rate data.
@@ -102,10 +101,12 @@ class Delivery(WebsiteSale):
             raise ValidationError(_("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
-            raise UserError(_(
-                "It seems that a delivery method is not compatible with your address. Please"
-                " refresh the page and try again."
-            ))
+            raise UserError(
+                _(
+                    "It seems that a delivery method is not compatible with your address. Please"
+                    " refresh the page and try again."
+                )
+            )
 
         Monetary = request.env['ir.qweb.field.monetary']
         delivery_method = request.env['delivery.carrier'].sudo().browse(int(dm_id)).exists()
@@ -124,7 +125,7 @@ class Delivery(WebsiteSale):
 
     @route('/website_sale/set_pickup_location', type='jsonrpc', auth='public', website=True)
     def website_sale_set_pickup_location(self, pickup_location_data):
-        """ Fetch the order from the request and set the pickup location on the current order.
+        """Fetch the order from the request and set the pickup location on the current order.
 
         :param str pickup_location_data: The JSON-formatted pickup location address.
         :return: The order summary values.
@@ -136,7 +137,7 @@ class Delivery(WebsiteSale):
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
     def website_sale_get_pickup_locations(self, **kwargs):
-        """ Fetch the order from the request and return the pickup locations close to the zip code.
+        """Fetch the order from the request and return the pickup locations close to the zip code.
 
         :return: The close pickup locations data.
         :rtype: dict
@@ -147,7 +148,7 @@ class Delivery(WebsiteSale):
 
     @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
-        """ Process the shipping address and return the available delivery methods.
+        """Process the shipping address and return the available delivery methods.
 
         Depending on whether the partner is registered and logged in, a new partner is created or we
         use an existing partner that matches the partial delivery address received.
@@ -167,8 +168,7 @@ class Delivery(WebsiteSale):
             # changing the partner_id of the SO. This allows website_sale to avoid creating
             # duplicates.
             partial_delivery_address['name'] = _(
-                'Anonymous express checkout partner for order %s',
-                order_sudo.name,
+                'Anonymous express checkout partner for order %s', order_sudo.name
             )
             new_partner_sudo = self._create_new_address(
                 address_values=partial_delivery_address,
@@ -187,18 +187,14 @@ class Delivery(WebsiteSale):
             # order_sudo._update_address(
             #     order_sudo.partner_shipping_id.id, ['partner_shipping_id']
             # )
-        elif not self._are_same_addresses(
-            partial_delivery_address,
-            order_sudo.partner_shipping_id,
-        ):
+        elif not self._are_same_addresses(partial_delivery_address, order_sudo.partner_shipping_id):
             # Check if a child partner doesn't already exist with the same information. The phone
             # isn't always checked because it isn't sent in delivery information with Google Pay.
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
             partial_delivery_address['name'] = _(
-                'Anonymous express checkout partner for order %s',
-                order_sudo.name,
+                'Anonymous express checkout partner for order %s', order_sudo.name
             )
             order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(
                 address_values=partial_delivery_address,
@@ -208,22 +204,35 @@ class Delivery(WebsiteSale):
             )
         order_sudo._recompute_taxes()
 
-        sorted_delivery_methods = sorted([{
-            'id': dm.id,
-            'name': dm.name,
-            'description': dm.website_description,
-            'minorAmount': payment_utils.to_minor_currency_units(price, order_sudo.currency_id),
-        } for dm, price in self._get_delivery_methods_express_checkout(order_sudo).items()
-        ], key=lambda dm: dm['minorAmount'])
+        sorted_delivery_methods = sorted(
+            [
+                {
+                    'id': dm.id,
+                    'name': dm.name,
+                    'description': dm.website_description,
+                    'minorAmount': payment_utils.to_minor_currency_units(
+                        price, order_sudo.currency_id
+                    ),
+                }
+                for dm, price in self._get_delivery_methods_express_checkout(order_sudo).items()
+            ],
+            key=lambda dm: dm['minorAmount'],
+        )
 
         # Preselect the cheapest method imitating the behavior of the express checkout form.
         if (
             sorted_delivery_methods
             and order_sudo.carrier_id.id != sorted_delivery_methods[0]['id']
-            and (cheapest_dm := next((
-                dm for dm in order_sudo._get_delivery_methods()
-                if dm.id == sorted_delivery_methods[0]['id']), None
-            ))
+            and (
+                cheapest_dm := next(
+                    (
+                        dm
+                        for dm in order_sudo._get_delivery_methods()
+                        if dm.id == sorted_delivery_methods[0]['id']
+                    ),
+                    None,
+                )
+            )
         ):
             order_sudo._set_delivery_method(cheapest_dm)
 
@@ -239,7 +248,7 @@ class Delivery(WebsiteSale):
 
     @classmethod
     def _get_delivery_methods_express_checkout(cls, order_sudo):
-        """ Return available delivery methods and their prices for the given order.
+        """Return available delivery methods and their prices for the given order.
 
         :param sale.order order_sudo: The sudoed sales order.
         :rtype: dict
@@ -258,7 +267,7 @@ class Delivery(WebsiteSale):
 
     @staticmethod
     def _get_rate(delivery_method, order, is_express_checkout_flow=False):
-        """ Compute the delivery rate and apply the taxes if relevant.
+        """Compute the delivery rate and apply the taxes if relevant.
 
         :param delivery.carrier delivery_method: The delivery method for which the rate must be
                                                  computed.
@@ -272,9 +281,9 @@ class Delivery(WebsiteSale):
         # delivering the goods). If we only have partial information about the delivery address, but
         # still want to compute the rate, this context key will ensure that we only check the
         # required fields for a partial delivery address (city, zip, country_code, state_code).
-        rate = delivery_method.rate_shipment(order.with_context(
-            express_checkout_partial_delivery_address=is_express_checkout_flow
-        ))
+        rate = delivery_method.rate_shipment(
+            order.with_context(express_checkout_partial_delivery_address=is_express_checkout_flow)
+        )
         if rate.get('success'):
             tax_ids = delivery_method.product_id.taxes_id.filtered(
                 lambda t: t.company_id == order.company_id

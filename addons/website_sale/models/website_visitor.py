@@ -24,10 +24,19 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_product_statistics(self):
-        results = self.env['website.track']._read_group([
-            ('visitor_id', 'in', self.ids), ('product_id', '!=', False),
-            ('product_id', 'any', self.env['product.product']._check_company_domain(self.env.companies)),
-        ], ['visitor_id'], ['product_id:array_agg', '__count'])
+        results = self.env['website.track']._read_group(
+            [
+                ('visitor_id', 'in', self.ids),
+                ('product_id', '!=', False),
+                (
+                    'product_id',
+                    'any',
+                    self.env['product.product']._check_company_domain(self.env.companies),
+                ),
+            ],
+            ['visitor_id'],
+            ['product_id:array_agg', '__count'],
+        )
         mapped_data = {
             visitor.id: {'product_count': count, 'product_ids': product_ids}
             for visitor, product_ids, count in results
@@ -41,7 +50,7 @@ class WebsiteVisitor(models.Model):
             visitor.product_count = len(visitor_info['product_ids'])
 
     def _add_viewed_product(self, product_id):
-        """ add a website_track with a page marked as viewed"""
+        """Add a website_track with a page marked as viewed."""
         self.ensure_one()
         if product_id and self.env['product.product'].browse(product_id)._is_variant_possible():
             domain = [('product_id', '=', product_id)]

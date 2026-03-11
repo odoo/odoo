@@ -4,7 +4,6 @@ from odoo.http import Controller, request, route
 
 
 class ProductComparison(Controller):
-
     @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
     def product_compare(self, **post):
         product_ids = [int(i) for i in post.get('products', '').split(',') if i.isdigit()]
@@ -18,7 +17,7 @@ class ProductComparison(Controller):
             {
                 'products': products.with_context(display_default_code=False),
                 'attrib_categories': products._prepare_categories_for_display(),
-            }
+            },
         )
 
     @route('/shop/compare/get_product_data', type='jsonrpc', auth='public', website=True)

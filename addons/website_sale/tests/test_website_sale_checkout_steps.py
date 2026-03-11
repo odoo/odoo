@@ -7,7 +7,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCheckoutSteps(WebsiteSaleCommon):
-
     def test_get_existing_specific_extra_step(self):
         specific_extra_step = self.website._get_checkout_step('/shop/extra_info')
         generic_extra_step = self.env.ref('website_sale.checkout_step_extra')
@@ -24,10 +23,10 @@ class TestWebsiteSaleCheckoutSteps(WebsiteSaleCommon):
 
         default_payment_step = self.env.ref('website_sale.checkout_step_payment')
         default_payment_step_FR = default_payment_step.with_context(lang='fr_FR')
-        website_1_step_FR, website_2_step_FR = CheckoutStep.with_context(lang='fr_FR').search([
-            ('website_id', '!=', False),
-            ('step_href', '=', default_payment_step.step_href),
-        ], limit=2)
+        website_1_step_FR, website_2_step_FR = CheckoutStep.with_context(lang='fr_FR').search(
+            [('website_id', '!=', False), ('step_href', '=', default_payment_step.step_href)],
+            limit=2,
+        )
 
         # Activate French
         if not (lang_fr := self.env.ref('base.lang_fr')).active:
@@ -43,7 +42,8 @@ class TestWebsiteSaleCheckoutSteps(WebsiteSaleCommon):
         IrModuleModule._load_module_terms(['website_sale'], ['fr_FR'])
         CheckoutStep.invalidate_model(['name'])
         self.assertEqual(
-            website_1_step_FR.name, "Pay in French",
+            website_1_step_FR.name,
+            "Pay in French",
             "Loading translations without overwrite should keep existing translation",
         )
         self.assertIn(
@@ -56,7 +56,8 @@ class TestWebsiteSaleCheckoutSteps(WebsiteSaleCommon):
         IrModuleModule._load_module_terms(['website_sale'], ['fr_FR'], overwrite=True)
         CheckoutStep.invalidate_model(['name'])
         self.assertEqual(
-            website_1_step_FR.name, "Payment (FR)",
+            website_1_step_FR.name,
+            "Payment (FR)",
             "Loading translations with overwrite should update existing term from template",
         )
 

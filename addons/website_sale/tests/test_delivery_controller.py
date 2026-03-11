@@ -19,11 +19,14 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
     # test that changing the delivery method while there is a pending transaction raises an error
     def test_controller_change_carrier_when_transaction(self):
         self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='pending')
-        with self.mock_request(sale_order_id=self.empty_cart.id) as request, self.assertRaises(UserError):
+        with (
+            self.mock_request(sale_order_id=self.empty_cart.id) as request,
+            self.assertRaises(UserError),
+        ):
             request.cart = self.empty_cart
             self.Controller.shop_set_delivery_method(dm_id=self.free_delivery.id)
 
-    # test that changing the delivery method while there is a draft transaction doesn't raise an error
+    # test that changing the delivery method while there is a draft transaction is successful
     def test_controller_change_carrier_when_draft_transaction(self):
         self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='draft')
         with self.mock_request(sale_order_id=self.empty_cart.id):
@@ -46,30 +49,25 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
                 'price_rule_ids': [
-                    Command.create({
-                        'operator': '>=',
-                        'max_value': 300,
-                        'variable': 'price',
-                    }),
+                    Command.create({'operator': '>=', 'max_value': 300, 'variable': 'price'})
                 ],
-            }, {
+            },
+            {
                 'name': 'Under 300',
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
                 'price_rule_ids': [
-                    Command.create({
-                        'operator': '<',
-                        'max_value': 300,
-                        'variable': 'price',
-                    }),
+                    Command.create({'operator': '<', 'max_value': 300, 'variable': 'price'})
                 ],
-            }, {
+            },
+            {
                 'name': 'No rules',
                 'delivery_type': 'base_on_rule',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,
-            }, {
+            },
+            {
                 'name': 'Fixed',
                 'product_id': self.product_delivery_poste.id,
                 'website_published': True,

@@ -8,7 +8,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class WebsiteSaleVisitorTests(WebsiteSaleCommon):
-
     def setUp(self):
         super().setUp()
         self.WebsiteSaleController = WebsiteSale()
@@ -22,16 +21,28 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
         new_tracks = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
-        self.assertEqual(len(new_visitors), 1, "A visitor should be created after visiting a tracked product")
-        self.assertEqual(len(new_tracks), 1, "A track should be created after visiting a tracked product")
+        self.assertEqual(
+            len(new_visitors), 1, "A visitor should be created after visiting a tracked product"
+        )
+        self.assertEqual(
+            len(new_tracks), 1, "A track should be created after visiting a tracked product"
+        )
 
         with self.mock_request(cookies=cookies):
             self.WebsiteSaleController.products_recently_viewed_update(self.product.id)
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
         new_tracks = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
-        self.assertEqual(len(new_visitors), 1, "No visitor should be created after visiting another tracked product")
-        self.assertEqual(len(new_tracks), 1, "No track should be created after visiting the same tracked product before 30 min")
+        self.assertEqual(
+            len(new_visitors),
+            1,
+            "No visitor should be created after visiting another tracked product",
+        )
+        self.assertEqual(
+            len(new_tracks),
+            1,
+            "No track should be created after visiting the same tracked product before 30 min",
+        )
 
         product = self.env['product.product'].create({
             'name': 'Large Cabinet',
@@ -44,16 +55,20 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
 
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
         new_tracks = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
-        self.assertEqual(len(new_visitors), 1, "No visitor should be created after visiting another tracked product")
-        self.assertEqual(len(new_tracks), 2, "A track should be created after visiting another tracked product")
+        self.assertEqual(
+            len(new_visitors),
+            1,
+            "No visitor should be created after visiting another tracked product",
+        )
+        self.assertEqual(
+            len(new_tracks), 2, "A track should be created after visiting another tracked product"
+        )
 
     def test_dynamic_filter_newest_products(self):
         """Test that a product is not displayed anymore after
         changing it company.
         """
-        new_company = self.env['res.company'].create({
-            'name': 'Test Company',
-        })
+        new_company = self.env['res.company'].create({'name': 'Test Company'})
 
         product = self.env['product.product'].create({
             'name': 'Test Product',
@@ -80,9 +95,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         - displayed after visiting it
         - not displayed after changing it company.
         """
-        new_company = self.env['res.company'].create({
-            'name': 'Test Company',
-        })
+        new_company = self.env['res.company'].create({'name': 'Test Company'})
         public_user = self.env.ref('base.public_user')
 
         product = self.env['product.product'].create({

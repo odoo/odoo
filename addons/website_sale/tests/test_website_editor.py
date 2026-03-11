@@ -5,8 +5,8 @@ import logging
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
-from odoo.tools import BinaryBytes
 from odoo.tests import HttpCase, tagged
+from odoo.tools import BinaryBytes
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
@@ -42,12 +42,9 @@ class TestProductPictureController(HttpCase):
         })
 
         cls.attachments = cls.env['ir.attachment'].create([
-            {
-                'raw': ATTACHMENT_DATA[i],
-                'name': f'image0{i}.gif',
-                'public': True
-            }
-            for i in range(ATTACHMENT_COUNT)])
+            {'raw': ATTACHMENT_DATA[i], 'name': f'image0{i}.gif', 'public': True}
+            for i in range(ATTACHMENT_COUNT)
+        ])
 
     def _create_product_images(self):
         with MockRequest(self.product.env, website=self.website):
@@ -86,8 +83,7 @@ class TestProductPictureController(HttpCase):
         # (Exception raised if error)
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.clear_product_images(
-                self.product.id,
-                self.product.product_tmpl_id.id,
+                self.product.id, self.product.product_tmpl_id.id
             )
         # According to the product, there are no variants images.
         self.assertEqual(0, len(self.product.product_template_image_ids))
@@ -99,16 +95,8 @@ class TestProductPictureController(HttpCase):
             "create_variant": "dynamic",
         })
         product_attribute_values = self.env['product.attribute.value'].create([
-            {
-                "name" : "Test Dynamic 1",
-                "attribute_id": product_attribute.id,
-                "sequence": 1,
-            },
-            {
-                "name" : "Test Dynamic 2",
-                "attribute_id": product_attribute.id,
-                "sequence": 2,
-            }
+            {"name": "Test Dynamic 1", "attribute_id": product_attribute.id, "sequence": 1},
+            {"name": "Test Dynamic 2", "attribute_id": product_attribute.id, "sequence": 2},
         ])
         product_template = self.env['product.template'].create({
             "name": "test product",
@@ -136,7 +124,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'first',
+                images[2]._name, images[2].id, 'first'
             )
             # Trigger the reordering of product.image records based on their sequence.
             self.env['product.image'].invalidate_model()
@@ -149,7 +137,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left',
+                images[2]._name, images[2].id, 'left'
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
@@ -160,7 +148,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'right',
+                images[2]._name, images[2].id, 'right'
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i3, i5, i6])
@@ -171,7 +159,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'last',
+                images[2]._name, images[2].id, 'last'
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i4, i5, i6, i3])
@@ -183,7 +171,7 @@ class TestProductPictureController(HttpCase):
             images = self.product._get_images()
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[0]._name, images[0].id, 'last',
+                images[0]._name, images[0].id, 'last'
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
@@ -196,7 +184,7 @@ class TestProductPictureController(HttpCase):
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             self.WebsiteSaleController.resequence_product_image(
-                images[2]._name, images[2].id, 'left',
+                images[2]._name, images[2].id, 'left'
             )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
@@ -210,7 +198,7 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[2]._name, images[2].id, 'first',
+                    images[2]._name, images[2].id, 'first'
                 )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
@@ -224,7 +212,7 @@ class TestProductPictureController(HttpCase):
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
             with self.assertRaises(ValidationError):
                 self.WebsiteSaleController.resequence_product_image(
-                    images[0]._name, images[0].id, 'right',
+                    images[0]._name, images[0].id, 'right'
                 )
             self.env['product.image'].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
@@ -239,9 +227,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
         cls.user_website_user.group_ids += cls.env.ref('product.group_product_manager')
 
     def test_category_page_and_products_snippet(self):
-        category = self.env['product.public.category'].create({
-            'name': 'Test Category',
-        })
+        category = self.env['product.public.category'].create({'name': 'Test Category'})
         self.env['product.public.category'].create({
             'parent_id': category.id,
             'name': 'Test Category - Child',
@@ -249,9 +235,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
         self.env['product.template'].create({
             'name': 'Test Product',
             'website_published': True,
-            'public_categ_ids': [
-                Command.link(category.id)
-            ]
+            'public_categ_ids': [Command.link(category.id)],
         })
         self.env['product.template'].create({
             'name': 'Test Product Outside Category',
@@ -262,11 +246,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
             'website_sale.category_page_and_products_snippet_edition',
             login='admin',
         )
-        self.start_tour(
-            '/shop',
-            'website_sale.category_page_and_products_snippet_use',
-            login=None,
-        )
+        self.start_tour('/shop', 'website_sale.category_page_and_products_snippet_use', login=None)
 
     def test_website_sale_restricted_editor_ui(self):
         self.env['product.template'].create({

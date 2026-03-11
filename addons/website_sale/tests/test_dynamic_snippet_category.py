@@ -36,18 +36,18 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
 
     def test_snippet_categories_returns_only_published_and_with_children(self):
         categories = self.env['product.public.category'].get_available_snippet_categories(
-            self.website.id,
+            self.website.id
         )
         category_ids = [c['id'] for c in categories]
         self.assertIn(self.category1.id, category_ids)
 
     def test_set_category_image(self):
-        """Test setting a cover image via JSON-RPC route"""
+        """Test setting a cover image via JSON-RPC route."""
         attachment = self.env['ir.attachment'].create({
             'name': "test.png",
             'raw': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
-                     'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
-                     'AElFTkSuQmCC',
+            'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
+            'AElFTkSuQmCC',
             'public': True,
         })
         with self.mock_request(user=self.env.user):

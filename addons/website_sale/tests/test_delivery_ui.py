@@ -6,16 +6,12 @@ from odoo.tests import HttpCase, tagged
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCase):
-
     def test_01_free_delivery_when_exceed_threshold(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
-        transfer_provider.write({
-            'state': 'enabled',
-            'is_published': True,
-        })
+        transfer_provider.write({'state': 'enabled', 'is_published': True})
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
         if 'enforce_cities' in self.env['res.country']._fields:
@@ -52,28 +48,21 @@ class TestUi(HttpCase):
         })
         self.carrier = self.env['delivery.carrier'].create({
             'name': 'The Poste',
-            'sequence': 9999, # ensure last to load price async
+            'sequence': 9999,  # ensure last to load price async
             'fixed_price': 20.0,
             'delivery_type': 'base_on_rule',
             'product_id': self.product_delivery_poste.id,
             'website_published': True,
             'price_rule_ids': [
-                Command.create({
-                    'max_value': 5,
-                    'list_base_price': 20,
-                }),
-                Command.create({
-                    'operator': '>=',
-                    'max_value': 5,
-                    'list_base_price': 50,
-                }),
+                Command.create({'max_value': 5, 'list_base_price': 20}),
+                Command.create({'operator': '>=', 'max_value': 5, 'list_base_price': 50}),
                 Command.create({
                     'operator': '>=',
                     'max_value': 300,
                     'variable': 'price',
                     'list_base_price': 0,
                 }),
-            ]
+            ],
         })
 
         self.start_tour(product.website_url, 'website_sale.check_free_delivery', login='admin')

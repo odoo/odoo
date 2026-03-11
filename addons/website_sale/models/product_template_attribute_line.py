@@ -20,7 +20,10 @@ class ProductTemplateAttributeLine(models.Model):
         single_value_lines = self.filtered(
             lambda ptal: len(ptal.value_ids) == 1 and not ptal.value_ids.is_custom
         )
-        single_value_attributes = OrderedDict([(pa, self.env['product.template.attribute.line']) for pa in single_value_lines.attribute_id])
+        single_value_attributes = OrderedDict([
+            (pa, self.env['product.template.attribute.line'])
+            for pa in single_value_lines.attribute_id
+        ])
         for ptal in single_value_lines:
             single_value_attributes[ptal.attribute_id] |= ptal
         return single_value_attributes
@@ -42,10 +45,15 @@ class ProductTemplateAttributeLine(models.Model):
             lambda ptal: len(ptal.value_ids) == 1 and ptal.value_ids.is_custom
         )
         attributes = filtered_self.attribute_id
-        categories = OrderedDict([(cat, self.env['product.template.attribute.line']) for cat in attributes.category_id.sorted()])
+        categories = OrderedDict([
+            (cat, self.env['product.template.attribute.line'])
+            for cat in attributes.category_id.sorted()
+        ])
         if any(not pa.category_id for pa in attributes):
             # category_id is not required and the mapped does not return empty
-            categories[self.env['product.attribute.category']] = self.env['product.template.attribute.line']
+            categories[self.env['product.attribute.category']] = self.env[
+                'product.template.attribute.line'
+            ]
         for ptal in filtered_self:
             categories[ptal.attribute_id.category_id] |= ptal
         return categories

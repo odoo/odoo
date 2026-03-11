@@ -33,13 +33,12 @@ class ProductTemplate(models.Model):
         return self.product_variant_id._is_sold_out()
 
     def _website_show_quick_add(self):
-        return (
-            super()._website_show_quick_add()
-            and not self._is_sold_out()
-        )
+        return super()._website_show_quick_add() and not self._is_sold_out()
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
-        res = super()._get_additionnal_combination_info(product_or_template, quantity, uom, date, website)
+        res = super()._get_additionnal_combination_info(
+            product_or_template, quantity, uom, date, website
+        )
 
         if not self.env.context.get('website_sale_product_page'):
             return res
@@ -49,7 +48,8 @@ class ProductTemplate(models.Model):
             # max quantity. If none of the combos has a max quantity, then the combo product also
             # has no max quantity.
             max_quantities = [
-                max_quantity for combo in product_or_template.sudo().combo_ids
+                max_quantity
+                for combo in product_or_template.sudo().combo_ids
                 if (max_quantity := combo._get_max_quantity(website, request.cart)) is not None
             ]
             if max_quantities:
@@ -67,29 +67,26 @@ class ProductTemplate(models.Model):
         if product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
             computed_qty = product_sudo.uom_id._compute_quantity(
-                website._get_product_available_qty(product_sudo),
-                to_unit=uom,
-                round=False,
+                website._get_product_available_qty(product_sudo), to_unit=uom, round=False
             )
             free_qty = float_round(computed_qty, precision_digits=0, rounding_method='DOWN')
-            has_stock_notification = (
-                product_sudo._has_stock_notification(self.env.user.partner_id)
-                or (
-                    request
-                    and product_sudo.id in request.session.get(
-                        'product_with_stock_notification_enabled', set()
-                    )
-                )
+            has_stock_notification = product_sudo._has_stock_notification(
+                self.env.user.partner_id
+            ) or (
+                request
+                and product_sudo.id
+                in request.session.get('product_with_stock_notification_enabled', set())
             )
-            stock_notification_email = request and request.session.get('stock_notification_email', '')
+            stock_notification_email = request and request.session.get(
+                'stock_notification_email', ''
+            )
             cart_quantity = 0.0
             if not product_sudo.allow_out_of_stock_order:
                 cart_quantity = product_sudo.uom_id._compute_quantity(
-                    request.cart._get_cart_qty(product_sudo.id),
-                    to_unit=uom,
+                    request.cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
             digits = self.env['decimal.precision'].precision_get('Product Unit')
-            rounding = 10 ** -digits
+            rounding = 10**-digits
             res.update({
                 'free_qty': free_qty,
                 'cart_qty': cart_quantity,
@@ -101,10 +98,7 @@ class ProductTemplate(models.Model):
                 'stock_notification_email': stock_notification_email,
             })
         else:
-            res.update({
-                'free_qty': 0,
-                'cart_qty': 0,
-            })
+            res.update({'free_qty': 0, 'cart_qty': 0})
 
         if product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
@@ -136,6 +130,8 @@ class ProductTemplate(models.Model):
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
-                    max_quantity = product_or_template.uom_id._compute_quantity(max_quantity, to_unit=uom)
+                    max_quantity = product_or_template.uom_id._compute_quantity(
+                        max_quantity, to_unit=uom
+                    )
                 data['free_qty'] = max_quantity
         return data

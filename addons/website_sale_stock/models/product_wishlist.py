@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 
 class ProductWishlist(models.Model):
     _inherit = "product.wishlist"
 
-    stock_notification = fields.Boolean(compute='_compute_stock_notification', default=False, required=True)
+    stock_notification = fields.Boolean(
+        compute='_compute_stock_notification', default=False, required=True
+    )
 
     @api.depends("product_id", "partner_id")
     def _compute_stock_notification(self):

@@ -12,11 +12,10 @@ from odoo.addons.mail.models.mail_template import MailTemplate
 
 
 class TestWebsiteSaleCartAbandonedCommon(TransactionCaseWithUserPortal):
-
     def send_mail_patched(self, sale_order_id):
         email_got_sent = False
 
-        def check_send_mail_called(this, res_id, email_values, *args, **kwargs):
+        def check_send_mail_called(this, res_id, email_values, *_args, **_kwargs):  # noqa: ARG001
             nonlocal email_got_sent
             if res_id == sale_order_id:
                 email_got_sent = True
@@ -28,21 +27,18 @@ class TestWebsiteSaleCartAbandonedCommon(TransactionCaseWithUserPortal):
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         now = datetime.utcnow()
-        cls.customer = cls.env['res.partner'].create({
-            'name': 'a',
-            'email': 'a@example.com',
-        })
+        cls.customer = cls.env['res.partner'].create({'name': 'a', 'email': 'a@example.com'})
         cls.public_partner = cls.env['res.partner'].create({
             'name': 'public',
             'email': 'public@example.com',
         })
         cls.public_user = cls.env['res.users'].create({
-            'name': 'Foo', 'login': 'foo',
+            'name': 'Foo',
+            'login': 'foo',
             'partner_id': cls.public_partner.id,
         })
         cls.website0 = cls.env['website'].create({
@@ -58,14 +54,10 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'cart_abandoned_delay': 24.0,  # 1 day
             'user_id': cls.public_user.id,  # specific public user
         })
-        product = cls.env['product.product'].create({
-            'name': 'The Product'
-        })
-        add_order_line = [[0, 0, {
-            'name': 'The Product',
-            'product_id': product.id,
-            'product_uom_qty': 1,
-        }]]
+        product = cls.env['product.product'].create({'name': 'The Product'})
+        add_order_line = [
+            [0, 0, {'name': 'The Product', 'product_id': product.id, 'product_uom_qty': 1}]
+        ]
         cls.payment_method_id = cls.env.ref('payment.payment_method_unknown').id
         cls.so0before = cls.env['sale.order'].create({
             'partner_id': cls.customer.id,
@@ -127,7 +119,8 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
         })
 
     def test_search_abandoned_cart(self):
-        """Make sure the search for abandoned carts uses the delay and public partner specified in each website."""
+        """Make sure the search for abandoned carts uses the delay and public partner specified in
+        each website."""
         SaleOrder = self.env['sale.order']
         abandoned = SaleOrder.search([('is_abandoned_cart', '=', True)]).ids
         self.assertTrue(self.so0before.id in abandoned)
@@ -153,30 +146,24 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
         """Make sure the send_abandoned_cart_email method sends the correct emails."""
         website = self.env['website'].get_current_website()
         website.send_abandoned_cart_email = True
-        website.write(
-            {
-                "send_abandoned_cart_email_activation_time": (
-                    datetime.utcnow()
-                    - relativedelta(hours=website.cart_abandoned_delay)
-                )
-                - relativedelta(minutes=10)
-            }
-        )
-
-        product = self.env['product.product'].create({
-            'name': 'The Product'
+        website.write({
+            "send_abandoned_cart_email_activation_time": (
+                datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+            )
+            - relativedelta(minutes=10)
         })
-        order_line = [[0, 0, {
-            'name': 'The Product',
-            'product_id': product.id,
-            'product_uom_qty': 1,
-        }]]
+
+        product = self.env['product.product'].create({'name': 'The Product'})
+        order_line = [
+            [0, 0, {'name': 'The Product', 'product_id': product.id, 'product_uom_qty': 1}]
+        ]
         abandoned_sale_order = self.env['sale.order'].create({
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(minutes=1),
-            'order_line': order_line
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
+            'order_line': order_line,
         })
         self.assertTrue(abandoned_sale_order.is_abandoned_cart)
 
@@ -188,9 +175,9 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
-                minutes=1),
-            'order_line': order_line
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
+            'order_line': order_line,
         })
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))
 
@@ -199,31 +186,37 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
-                minutes=1),
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
             'order_line': order_line,
-            'cart_recovery_email_sent': True
+            'cart_recovery_email_sent': True,
         })
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))
 
         # Test that no email is sent if the sale order contains product that are free.
         free_product_template = self.env['product.template'].create({
             'list_price': 0.0,
-            'name': 'free_product'
+            'name': 'free_product',
         })
         free_product_product = free_product_template.product_variant_id
-        order_line = [[0, 0, {
-            'name': 'The Product',
-            'product_id': free_product_product.id,
-            'product_uom_qty': 1,
-        }]]
+        order_line = [
+            [
+                0,
+                0,
+                {
+                    'name': 'The Product',
+                    'product_id': free_product_product.id,
+                    'product_uom_qty': 1,
+                },
+            ]
+        ]
         self.env['sale.order'].create({
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
-                minutes=1),
-            'order_line': order_line
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
+            'order_line': order_line,
         })
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))
 
@@ -232,8 +225,8 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
-                minutes=1),
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
             'order_line': order_line,
         })
         transaction = self.env['payment.transaction'].create({
@@ -244,19 +237,18 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'amount': abandoned_sale_order.amount_total,
             'state': 'error',
             'currency_id': self.env.ref('base.EUR').id,
-
         })
         abandoned_sale_order.transaction_ids += transaction
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))
 
-        # Test that if the partner of the abandoned cart made an order ulterior to the abandoned cart create date,
-        # no email is sent.
+        # Test that if the partner of the abandoned cart made an order ulterior to the abandoned
+        # cart create date, no email is sent.
         self.env['sale.order'].create({
             'partner_id': self.customer.id,
             'website_id': website.id,
             'state': 'draft',
-            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)) - relativedelta(
-                minutes=1),
+            'date_order': (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            - relativedelta(minutes=1),
             'order_line': order_line,
         })
         self.env['sale.order'].create({

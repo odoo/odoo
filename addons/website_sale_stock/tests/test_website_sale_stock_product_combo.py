@@ -9,7 +9,6 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductCombo(HttpCase, WebsiteSaleStockCommon):
-
     def test_get_max_quantity_with_max(self):
         product_a = self._create_product(is_storable=True, allow_out_of_stock_order=False)
         product_b = self._create_product(is_storable=True, allow_out_of_stock_order=False)
@@ -18,7 +17,8 @@ class TestWebsiteSaleStockProductCombo(HttpCase, WebsiteSaleStockCommon):
                 'product_id': product_a.id,
                 'location_id': self.warehouse.lot_stock_id.id,
                 'quantity': 5,
-            }, {
+            },
+            {
                 'product_id': product_b.id,
                 'location_id': self.warehouse.lot_stock_id.id,
                 'quantity': 10,

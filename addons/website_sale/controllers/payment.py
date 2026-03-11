@@ -10,21 +10,20 @@ from odoo.tools import SQL
 
 from odoo.addons.payment.controllers import portal as payment_portal
 
-
 # TODO ANVFE part of payment routes ? /shop/payment ? express_checkout ?
 
-class PaymentPortal(payment_portal.PaymentPortal):
 
-    def _validate_transaction_for_order(self, transaction, sale_order):
+class PaymentPortal(payment_portal.PaymentPortal):
+    def _validate_transaction_for_order(self, _transaction, _sale_order):
         """
         Perform final checks against the transaction & sale_order.
-        Override me to apply payment unrelated checks & processing
+        Override me to apply payment unrelated checks & processing.
         """
         return
 
     @route('/shop/payment/transaction/<int:order_id>', type='jsonrpc', auth='public', website=True)
     def shop_payment_transaction(self, order_id, access_token, **kwargs):
-        """ Create a draft transaction and return its processing values.
+        """Create a draft transaction and return its processing values.
 
         :param int order_id: The sales order to pay, as a `sale.order` id
         :param str access_token: The access token used to authenticate the request
@@ -46,8 +45,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise
         except AccessError as e:
             raise ValidationError(_("The access token is invalid.")) from e
-        except LockNotAvailable:
-            raise UserError(_("Payment is already being processed."))
+        except LockNotAvailable as lna:
+            raise UserError(_("Payment is already being processed.")) from lna
 
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been cancelled."))
@@ -72,7 +71,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if delay_token_charge := kwargs.get('flow') == 'token':
             request.update_context(delay_token_charge=True)  # wait until after tx validation
         tx_sudo = self._create_transaction(
-            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
+            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs
         )
 
         # Store the new transaction into the transaction list and if there's an old one, we remove

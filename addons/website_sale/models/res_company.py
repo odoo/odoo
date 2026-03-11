@@ -15,7 +15,7 @@ class ResCompany(models.Model):
     )
 
     def _get_default_pricelist_vals(self):
-        """ Override of product. Called at company creation or activation of the pricelist setting.
+        """Override of product. Called at company creation or activation of the pricelist setting.
 
         We don't want the default website from the current company to be applied on every company
 

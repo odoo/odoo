@@ -17,7 +17,7 @@ from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
 
 # A delimiter that users aren't likely to search for in product codes.
-RARE_DELIMITER = '\u241E'
+RARE_DELIMITER = '\u241e'
 
 _logger = logging.getLogger(__name__)
 
@@ -26,8 +26,10 @@ def get_translated_field_gist_index(registry, column_name):
     if not registry.has_trigram:
         return ""
     if registry.has_unaccent:
-        return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"
-    return f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
+        return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"  # noqa: E501
+    return (
+        f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
+    )
 
 
 class ProductTemplate(models.Model):
@@ -42,11 +44,11 @@ class ProductTemplate(models.Model):
     _mail_post_access = 'read'
     _check_company_auto = True
 
-    #=== DEFAULT METHODS ===#
+    # === DEFAULT METHODS ===#
 
     @api.model
     def _default_website_sequence(self):
-        """ We want new product to be the last (highest seq).
+        """We want new product to be the last (highest seq).
         Every product should ideally have an unique sequence.
         Default sequence (10000) should only be used for DB first product.
         As we don't resequence the whole tree (as `sequence` does), this field
@@ -58,7 +60,7 @@ class ProductTemplate(models.Model):
             return 10000
         return max_sequence + 5
 
-    #=== FIELDS ===#
+    # === FIELDS ===#
 
     website_description = fields.Html(
         string="Description for the website",
@@ -80,19 +82,21 @@ class ProductTemplate(models.Model):
         string="Alternative Products",
         comodel_name='product.template',
         relation='product_alternative_rel',
-        column1='src_id', column2='dest_id',
+        column1='src_id',
+        column2='dest_id',
         check_company=True,
         help="Suggest alternatives to your customer (upsell strategy)."
-            " Those products show up on the product page.",
+        " Those products show up on the product page.",
     )
     accessory_product_ids = fields.Many2many(
         string="Accessory Products",
         comodel_name='product.product',
         relation='product_accessory_rel',
-        column1='src_id', column2='dest_id',
+        column1='src_id',
+        column2='dest_id',
         check_company=True,
         help="Accessories show up when the customer reviews the cart before payment"
-            " (cross-sell strategy).",
+        " (cross-sell strategy).",
     )
 
     website_size_x = fields.Integer(string="Size X", default=1)
@@ -108,7 +112,7 @@ class ProductTemplate(models.Model):
     public_categ_ids = fields.Many2many(
         string="Website Product Category",
         help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit"
-             " Click on the page and enable 'Categories' to view all eCommerce categories.",
+        " Click on the page and enable 'Categories' to view all eCommerce categories.",
         comodel_name='product.public.category',
         relation='product_public_category_product_template_rel',
     )
@@ -130,7 +134,8 @@ class ProductTemplate(models.Model):
 
     base_unit_count = fields.Float(
         string="Base Unit Count",
-        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.",
+        help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
+        " product.",
         compute='_compute_base_unit_count',
         inverse='_set_base_unit_count',
         store=True,
@@ -149,20 +154,20 @@ class ProductTemplate(models.Model):
     base_unit_name = fields.Char(
         compute='_compute_base_unit_name',
         help="Displays the custom unit for the products if defined or the selected unit of measure"
-            " otherwise.",
+        " otherwise.",
     )
 
     compare_list_price = fields.Monetary(
         string="Compare to Price",
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
-             "It will not be displayed if pricelists apply.",
+        "It will not be displayed if pricelists apply.",
     )
     variants_default_code = fields.Char(
         compute='_compute_variants_default_code',
         store=True,
         index='trigram',
         help="Technical field to enhance performance when looking up default code of product"
-             "variants (LIKE/ILIKE)",
+        "variants (LIKE/ILIKE)",
     )
     description = fields.Html(index='trigram')
     description_sale = fields.Text(index='trigram')
@@ -170,9 +175,15 @@ class ProductTemplate(models.Model):
     # === INDEXES === #
 
     # We need gist indexes for similarity check in ecommerce fuzzy search.
-    _name_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "name"))
-    _description_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description"))
-    _description_sale_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_sale"))
+    _name_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "name")
+    )
+    _description_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "description")
+    )
+    _description_sale_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "description_sale")
+    )
     _default_code_gist_idx = models.Index(
         lambda registry: 'USING GIST(unaccent(default_code) gist_trgm_ops)'
         if registry.has_trigram and registry.has_unaccent
@@ -180,11 +191,13 @@ class ProductTemplate(models.Model):
     )
 
     def _auto_init(self):
-        """Override _auto_init to prevent MemoryError on ecommerce installation in dbs with lots of products"""
+        """Override _auto_init to prevent MemoryError on ecommerce installation in dbs with lots of
+        products."""
         if not column_exists(self.env.cr, 'product_template', 'variants_default_code'):
             create_column(self.env.cr, 'product_template', 'variants_default_code', 'varchar')
-            self.env.cr.execute(SQL(
-                """
+            self.env.cr.execute(
+                SQL(
+                    """
                     UPDATE product_template
                     SET variants_default_code = variants.default_codes
                     FROM (
@@ -196,10 +209,13 @@ class ProductTemplate(models.Model):
                         GROUP BY pt.id
                     ) AS variants
                     WHERE product_template.id = variants.template_id
-                """, RARE_DELIMITER))
+                """,
+                    RARE_DELIMITER,
+                )
+            )
         return super()._auto_init()
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('is_published')
     def _compute_publish_date(self):
@@ -255,7 +271,7 @@ class ProductTemplate(models.Model):
                 template.product_variant_ids.filtered('default_code').mapped('default_code')
             )
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS ===#
 
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
@@ -263,12 +279,15 @@ class ProductTemplate(models.Model):
         if (
             (description_ecommerce := vals.get('description_ecommerce'))
             and is_html_empty(description_ecommerce)
-            and not ('media_iframe_video' in description_ecommerce or 'data-embedded' in description_ecommerce)  # don't remove "empty" video div
+            and not (
+                'media_iframe_video' in description_ecommerce
+                or 'data-embedded' in description_ecommerce
+            )  # don't remove "empty" video div
         ):
             vals['description_ecommerce'] = ''
         return super().write(vals)
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -293,7 +312,10 @@ class ProductTemplate(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return any(a.create_variant == 'no_variant' for a in self.valid_product_template_attribute_line_ids.attribute_id)
+        return any(
+            a.create_variant == 'no_variant'
+            for a in self.valid_product_template_attribute_line_ids.attribute_id
+        )
 
     def _has_is_custom_values(self):
         self.ensure_one()
@@ -303,7 +325,8 @@ class ProductTemplate(models.Model):
         :return: True if at least one is_custom attribute value, False otherwise
         :rtype: bool
         """
-        return any(v.is_custom for v in self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active())
+        ptav_ids = self.valid_product_template_attribute_line_ids.product_template_value_ids
+        return any(v.is_custom for v in ptav_ids._only_active())
 
     def _get_possible_variants_sorted(self):
         """Return the sorted recordset of variants that are possible.
@@ -324,14 +347,18 @@ class ProductTemplate(models.Model):
             return (value.attribute_id.sequence, value.attribute_id.id)
 
         def _sort_key_variant(variant):
-            """
-                We assume all variants will have the same attributes, with only one value for each.
-                    - first level sort: same as "product.attribute"._order
-                    - second level sort: same as "product.attribute.value"._order
+            """Sort variants by attributes and attribute values.
+
+            We assume all variants will have the same attributes, with only one value for each.
+                - first level sort: same as "product.attribute"._order
+                - second level sort: same as "product.attribute.value"._order
             """
             keys = []
-            for attribute in variant.product_template_attribute_value_ids.sorted(_sort_key_attribute_value):
-                # if you change this order, keep it in sync with _order from `product.attribute.value`
+            for attribute in variant.product_template_attribute_value_ids.sorted(
+                _sort_key_attribute_value
+            ):
+                # if you change this order, keep it in sync with _order from
+                # `product.attribute.value`
                 keys.append(attribute.product_attribute_value_id.sequence)
                 keys.append(attribute.id)
             return keys
@@ -347,10 +374,14 @@ class ProductTemplate(models.Model):
         res = defaultdict(dict)
         show_count = 20
         for template in self:
-            previewed_ptal = next((
-                p for p in template.attribute_line_ids
-                if p.attribute_id.preview_variants != 'hidden'
-            ), None)
+            previewed_ptal = next(
+                (
+                    p
+                    for p in template.attribute_line_ids
+                    if p.attribute_id.preview_variants != 'hidden'
+                ),
+                None,
+            )
             if previewed_ptal:
                 previewed_ptavs = [
                     ptav
@@ -364,17 +395,21 @@ class ProductTemplate(models.Model):
                         matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
                         variant_query_params = {
                             **(product_query_params or {}),
-                            'attribute_values': str(ptav.product_attribute_value_id.id)
+                            'attribute_values': str(ptav.product_attribute_value_id.id),
                         }
                         previewed_ptavs_data.append({
                             'ptav': ptav,
-                            'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
-                            'variant_url': template._get_product_url(category, variant_query_params),
+                            'variant_image_url': self.env['website'].image_url(
+                                matching_variant, 'image_512'
+                            ),
+                            'variant_url': template._get_product_url(
+                                category, variant_query_params
+                            ),
                         })
 
                     res[template.id] = {
                         'ptavs_data': previewed_ptavs_data,
-                        'hidden_ptavs_count': max(0, len(previewed_ptavs) - show_count)
+                        'hidden_ptavs_count': max(0, len(previewed_ptavs) - show_count),
                     }
         return res
 
@@ -402,8 +437,8 @@ class ProductTemplate(models.Model):
             base_price = None
             template_price_vals = {
                 'price_reduce': self._apply_taxes_to_price(
-                    pricelist_price, currency, product_taxes, taxes, template, website=website,
-                ),
+                    pricelist_price, currency, product_taxes, taxes, template, website=website
+                )
             }
             pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
             if pricelist_item._show_discount_on_shop():
@@ -417,16 +452,12 @@ class ProductTemplate(models.Model):
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
-                        base_price, currency, product_taxes, taxes, template, website=website,
+                        base_price, currency, product_taxes, taxes, template, website=website
                     )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:
                 template_price_vals['base_price'] = template.currency_id._convert(
-                    template.compare_list_price,
-                    currency,
-                    self.env.company,
-                    date,
-                    round=False,
+                    template.compare_list_price, currency, self.env.company, date, round=False
                 )
 
             res[template.id] = template_price_vals
@@ -434,9 +465,7 @@ class ProductTemplate(models.Model):
         return res
 
     def _can_be_added_to_cart(self):
-        """
-        Pre-check to `_is_add_to_cart_possible` to know if product can be sold.
-        """
+        """Pre-check to `_is_add_to_cart_possible` to know if product can be sold."""
         self.ensure_one()
         return bool(self.filtered_domain(self.env['website']._product_domain()))
 
@@ -455,7 +484,7 @@ class ProductTemplate(models.Model):
         return next(self._get_possible_combinations(), False) is not False
 
     def _get_combination_info(
-        self, combination=False, product_id=False, add_qty=1.0, uom_id=False, only_template=False,
+        self, combination=False, product_id=False, add_qty=1.0, uom_id=False, only_template=False
     ):
         """Return info about a given combination.
 
@@ -513,7 +542,7 @@ class ProductTemplate(models.Model):
             product = self.env['product.product']
         elif product_id:
             product = self.env['product.product'].browse(product_id)
-            if (combination - product.product_template_attribute_value_ids):
+            if combination - product.product_template_attribute_value_ids:
                 # If the combination is not fully represented in the given product
                 #   make sure to fetch the right product for the given combination
                 product = self._get_variant_for_combination(combination)
@@ -538,20 +567,18 @@ class ProductTemplate(models.Model):
             'product_template_id': self.id,
             'display_name': display_name,
             'is_combination_possible': self._is_combination_possible(combination=combination),
-
             **self._get_additionnal_combination_info(
                 product_or_template=product_or_template,
                 quantity=add_qty or 1.0,
                 uom=uom,
                 date=fields.Date.context_today(self),
                 website=website,
-            )
+            ),
         }
 
         if website.google_analytics_key:
             combination_info['product_tracking_info'] = self._get_google_analytics_data(
-                product,
-                combination_info,
+                product, combination_info
             )
 
         if (
@@ -559,8 +586,7 @@ class ProductTemplate(models.Model):
             and website.show_line_subtotals_tax_selection == 'tax_included'
             and not all(
                 tax.price_include
-                for tax
-                in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
+                for tax in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
             )
         ):
             combination_info["tax_disclaimer"] = _("Taxes calculated at checkout.")
@@ -586,10 +612,7 @@ class ProductTemplate(models.Model):
 
         # Pricelist price doesn't have to be converted
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
-            product=product_or_template,
-            quantity=quantity,
-            uom=uom,
-            currency=currency,
+            product=product_or_template, quantity=quantity, uom=uom, currency=currency
         )
 
         price_before_discount = pricelist_price
@@ -630,7 +653,9 @@ class ProductTemplate(models.Model):
             )
 
         # Apply taxes
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+            self.env.company
+        )
         taxes = self.env['account.tax']
         if product_taxes:
             taxes = request.fiscal_position.map_tax(product_taxes)
@@ -646,12 +671,10 @@ class ProductTemplate(models.Model):
                     website=website,
                 )
         is_zero_price = float_is_zero(
-            combination_info['price'],
-            precision_rounding=currency.rounding,
+            combination_info['price'], precision_rounding=currency.rounding
         )
-        prevent_sale = (
-            website.prevent_sale
-            and website._prevent_product_sale(product_or_template, is_zero_price)
+        prevent_sale = website.prevent_sale and website._prevent_product_sale(
+            product_or_template, is_zero_price
         )
         combination_info.update({
             'prevent_sale': prevent_sale,
@@ -681,25 +704,22 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _apply_taxes_to_price(
-        self, price, currency, product_taxes, taxes, product_or_template,
-        website=None,
+        self, price, currency, product_taxes, taxes, product_or_template, website=None
     ):
         website = website or self.env['website'].get_current_website()
         price = self.env['product.product']._get_tax_included_unit_price_from_price(
-            price,
-            product_taxes,
-            product_taxes_after_fp=taxes,
+            price, product_taxes, product_taxes_after_fp=taxes
         )
         show_tax = website.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
 
         # The list_price is always the price of one.
-        return taxes.compute_all(
-            price, currency, 1, product_or_template, self.env.user.partner_id
-        )[tax_display]
+        return taxes.compute_all(price, currency, 1, product_or_template, self.env.user.partner_id)[
+            tax_display
+        ]
 
     def create_product_variant(self, product_template_attribute_value_ids):
-        """ Create if necessary and possible and return the id of the product
+        """Create if necessary and possible and return the id of the product
         variant matching the given combination for this template.
 
         Note AWA: Known "exploit" issues with this method:
@@ -731,14 +751,15 @@ class ProductTemplate(models.Model):
         :rtype: int
         """
         combination = self.env['product.template.attribute.value'].browse(
-            product_template_attribute_value_ids)
+            product_template_attribute_value_ids
+        )
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
     def _get_image_holder(self):
-        """Returns the holder of the image to use as default representation.
+        """Return the holder of the image to use as default representation.
         If the product template has an image it is the product template,
-        otherwise if the product has variants it is the first variant
+        otherwise if the product has variants it is the first variant.
 
         :return: this product template or the first product variant
         :rtype: recordset of 'product.template' or recordset of 'product.product'
@@ -750,7 +771,7 @@ class ProductTemplate(models.Model):
         # if the variant has no image anyway, spare some queries by using template
         return variant if variant.image_variant_128 else self
 
-    def _get_suitable_image_size(self, columns, x_size, y_size):
+    def _get_suitable_image_size(self, columns, x_size, y_size):  # noqa: PLR6301
         if x_size == 1 and y_size == 1 and columns >= 3:
             return 'image_512'
         return 'image_1024'
@@ -759,7 +780,11 @@ class ProductTemplate(models.Model):
         # to avoid generating a single default website_sequence when installing the module,
         # we need to set the default row by row for this column
         if column_name == "website_sequence":
-            _logger.debug("Table '%s': setting default value of new column %s to unique values for each row", self._table, column_name)
+            _logger.debug(
+                "Table '%s': setting default value of new column %s to unique values for each row",
+                self._table,
+                column_name,
+            )
             self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
             prod_tmpl_ids = self.env.cr.dictfetchall()
             max_seq = self._default_website_sequence()
@@ -769,7 +794,9 @@ class ProductTemplate(models.Model):
                 FROM (VALUES %s) AS p(p_id, web_seq)
                 WHERE id = p.p_id
             """
-            values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
+            values_args = [
+                (prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
+            ]
             self.env.cr.execute_values(query, values_args)
         else:
             super()._init_column(column_name)
@@ -783,22 +810,36 @@ class ProductTemplate(models.Model):
         self.website_sequence = max_sequence.website_sequence + 5
 
     def set_sequence_up(self):
-        previous_product_tmpl = self.sudo().search([
-            ('website_sequence', '<', self.website_sequence),
-            ('website_published', '=', self.website_published),
-        ], order='website_sequence DESC', limit=1)
+        previous_product_tmpl = self.sudo().search(
+            [
+                ('website_sequence', '<', self.website_sequence),
+                ('website_published', '=', self.website_published),
+            ],
+            order='website_sequence DESC',
+            limit=1,
+        )
         if previous_product_tmpl:
-            previous_product_tmpl.website_sequence, self.website_sequence = self.website_sequence, previous_product_tmpl.website_sequence
+            previous_product_tmpl.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                previous_product_tmpl.website_sequence,
+            )
         else:
             self.set_sequence_top()
 
     def set_sequence_down(self):
-        next_prodcut_tmpl = self.search([
-            ('website_sequence', '>', self.website_sequence),
-            ('website_published', '=', self.website_published),
-        ], order='website_sequence ASC', limit=1)
+        next_prodcut_tmpl = self.search(
+            [
+                ('website_sequence', '>', self.website_sequence),
+                ('website_published', '=', self.website_published),
+            ],
+            order='website_sequence ASC',
+            limit=1,
+        )
         if next_prodcut_tmpl:
-            next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
+            next_prodcut_tmpl.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                next_prodcut_tmpl.website_sequence,
+            )
         else:
             return self.set_sequence_bottom()
 
@@ -815,7 +856,7 @@ class ProductTemplate(models.Model):
         return self.env.ref('website_sale.dynamic_filter_cross_selling_alternative_products').id
 
     @api.model
-    def _get_product_types_allow_zero_price(self):
+    def _get_product_types_allow_zero_price(self):  # noqa: PLR6301
         """Return service_tracking types that can be sold at zero price.
 
         When the website's `prevent_sale` is enabled with `prevent_sale_for='zero_price'`,
@@ -835,7 +876,7 @@ class ProductTemplate(models.Model):
     # ---------------------------------------------------------
 
     def _rating_domain(self):
-        """ Only take the published rating into account to compute avg and count """
+        """Only take the published rating into account to compute avg and count."""
         return super()._rating_domain() & Domain('is_internal', '=', False)
 
     def _get_images(self):
@@ -851,14 +892,14 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return [self] + list(self.product_template_image_ids)
 
-    def _get_attribute_value_domain(self, attribute_value_dict):
+    def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
         return [
             [('attribute_line_ids.value_ids', 'in', attribute_value_ids)]
             for attribute_value_ids in attribute_value_dict.values()
         ]
 
     @api.model
-    def _search_get_detail(self, website, order, options):
+    def _search_get_detail(self, website, _order, options):
         with_image = options['displayImage']
         with_description = options['displayDescription']
         with_category = options['displayExtraLink']
@@ -872,15 +913,19 @@ class ProductTemplate(models.Model):
         if extra_domain := options.get('extra_domain'):
             domains.append(extra_domain)
         if category:
-            domains.append([('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])])
+            domains.append([
+                ('public_categ_ids', 'child_of', self.env['ir.http']._unslug(category)[1])
+            ])
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
             tags = list(map(int, tags))  # Convert list of strings to list of integers
-            domains.append(Domain.OR([
-                Domain('product_tag_ids', 'in', tags),
-                Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
-            ]))
+            domains.append(
+                Domain.OR([
+                    Domain('product_tag_ids', 'in', tags),
+                    Domain('product_variant_ids.additional_product_tag_ids', 'in', tags),
+                ])
+            )
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
@@ -892,7 +937,11 @@ class ProductTemplate(models.Model):
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
-            'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
+            'product_variant_ids.default_code': {
+                'name': 'product_variant_ids.default_code',
+                'type': 'text',
+                'match': True,
+            },
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_image:
@@ -905,8 +954,16 @@ class ProductTemplate(models.Model):
             fetch_fields.append('description_sale')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
-            mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
-            mapping['detail_strike'] = {'name': 'list_price', 'type': 'html', 'display_currency': options['display_currency']}
+            mapping['detail'] = {
+                'name': 'price',
+                'type': 'html',
+                'display_currency': options['display_currency'],
+            }
+            mapping['detail_strike'] = {
+                'name': 'list_price',
+                'type': 'html',
+                'display_currency': options['display_currency'],
+            }
         if with_category:
             mapping['extra_link'] = {'name': 'category', 'type': 'html'}
         return {
@@ -925,7 +982,9 @@ class ProductTemplate(models.Model):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         current_website = self.env['website'].get_current_website()
         for product, data in zip(self, results_data):
-            categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
+            categ_ids = product.public_categ_ids.filtered(
+                lambda c: not c.website_id or c.website_id == current_website
+            )
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
                 data['price'], list_price = self._search_render_results_prices(
@@ -937,13 +996,17 @@ class ProductTemplate(models.Model):
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and categ_ids:
-                data['category'] = self.env['ir.ui.view'].sudo()._render_template(
-                    "website_sale.product_category_extra_link",
-                    {
-                        'categories': categ_ids,
-                        'slug': self.env['ir.http']._slug,
-                        'shop_path': SHOP_PATH,
-                    }
+                data['category'] = (
+                    self.env['ir.ui.view']
+                    .sudo()
+                    ._render_template(
+                        "website_sale.product_category_extra_link",
+                        {
+                            'categories': categ_ids,
+                            'slug': self.env['ir.http']._slug,
+                            'shop_path': SHOP_PATH,
+                        },
+                    )
                 )
         return results_data
 
@@ -978,7 +1041,7 @@ class ProductTemplate(models.Model):
         }
 
     def _get_contextual_pricelist(self):
-        """ Override to fallback on website current pricelist """
+        """Override to fallback on website current pricelist."""
         pricelist = super()._get_contextual_pricelist()
         if request and request.is_frontend and not pricelist:
             return request.pricelist
@@ -998,7 +1061,7 @@ class ProductTemplate(models.Model):
     def _get_configurator_display_price(
         self, product_or_template, quantity, date, currency, pricelist, **kwargs
     ):
-        """ Override of `sale` to apply taxes.
+        """Override of `sale` to apply taxes.
 
         :param product.product|product.template product_or_template: The product for which to get
             the price.
@@ -1026,7 +1089,7 @@ class ProductTemplate(models.Model):
         return price, pricelist_rule_id
 
     def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for the current product template.
+        """Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
         Otherwise, the markup data generation is delegated to the variant to use the
@@ -1043,9 +1106,12 @@ class ProductTemplate(models.Model):
         else:
             # perf: temporal solution to avoid slowness when product have many variants and
             # pricelist rules
-            limit = self.env['ir.config_parameter'].sudo().get_int(
-                'website_sale.markup_data_limit_variants'
-            ) or None
+            limit = (
+                self.env['ir.config_parameter']
+                .sudo()
+                .get_int('website_sale.markup_data_limit_variants')
+                or None
+            )
             if limit:
                 product_variant_ids = self.product_variant_ids[:limit]
             else:
@@ -1058,7 +1124,7 @@ class ProductTemplate(models.Model):
                 'name': self.name,
                 'image': f'{base_url}{website.image_url(self, "image_1920")}',
                 'url': f'{base_url}{self.website_url}',
-                'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
+                'hasVariant': [product._to_markup_data(website) for product in product_variant_ids],
             }
             if self.description_ecommerce:
                 markup_data['description'] = text_from_html(self.description_ecommerce)
@@ -1095,7 +1161,7 @@ class ProductTemplate(models.Model):
             if auto_assign_ribbons is None:
                 # On product page, the auto_assign_ribbons are not provided.
                 auto_assign_ribbons = self.env['product.ribbon'].search_fetch([
-                    ('assign', '!=', 'manual'),
+                    ('assign', '!=', 'manual')
                 ])
             for rb in auto_assign_ribbons:
                 if rb._is_applicable_for(variant, price_vals):
@@ -1104,7 +1170,7 @@ class ProductTemplate(models.Model):
         return ribbon
 
     def _get_access_action(self, access_uid=None, force_website=False):
-        """ Instead of the classic form view, redirect to website if it is published. """
+        """Instead of the classic form view, redirect to website if it is published."""
         self.ensure_one()
         if force_website or (self.website_published and self.env.user.share):
             return {
@@ -1116,7 +1182,7 @@ class ProductTemplate(models.Model):
         return super()._get_access_action(access_uid=access_uid, force_website=force_website)
 
     @api.model
-    def _allow_publish_rating_stats(self):
+    def _allow_publish_rating_stats(self):  # noqa: PLR6301
         return True
 
     def _get_product_url(self, category=None, query_params=None, grouped_attributes_values=None):

@@ -6,19 +6,16 @@ import odoo
 from odoo import SUPERUSER_ID, fields
 from odoo.tests import tagged
 
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMail(HttpCaseWithUserPortal):
-
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""
-        self.env.ref('base.user_admin').write({
-            'email': 'mitchell.admin@example.com',
-        })
+        self.env.ref('base.user_admin').write({'email': 'mitchell.admin@example.com'})
         test_product = self.env['product.template'].create({
             'name': 'Acoustic Bloc Screens',
             'list_price': 2950.0,
@@ -33,7 +30,9 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
         # we override unlink because we don't want the email to be auto deleted
         MailMail = odoo.addons.mail.models.mail_mail.MailMail
         # as we check some link content, avoid mobile doing its link management
-        self.env['ir.config_parameter'].sudo().set_bool('mail_mobile.disable_redirect_firebase_dynamic_link', True)
+        self.env['ir.config_parameter'].sudo().set_bool(
+            'mail_mobile.disable_redirect_firebase_dynamic_link', True
+        )
 
         main_website = self.env.ref('website.default_website')
         other_websites = self.env['website'].search([]) - main_website
@@ -43,12 +42,17 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
         main_website.domain = "my-test-domain.com"
         for w in other_websites:
             w.domain = f'domain-not-used-{w.id}.fr'
-        with patch.object(MailMail, 'unlink', lambda self: None):
+        with patch.object(MailMail, 'unlink', lambda _self: None):
             start_time = fields.Datetime.now()
             self.start_tour(test_product.website_url, 'website_sale.so_mail', login='admin')
-            new_mail = self.env['mail.mail'].search([('create_date', '>=', start_time),
-                                                     ('body_html', 'ilike', 'https://my-test-domain.com')],
-                                                    order='create_date DESC', limit=None)
+            new_mail = self.env['mail.mail'].search(
+                [
+                    ('create_date', '>=', start_time),
+                    ('body_html', 'ilike', 'https://my-test-domain.com'),
+                ],
+                order='create_date DESC',
+                limit=None,
+            )
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
             self.assertIn('order', new_mail.body_html)
@@ -89,21 +93,20 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             'sale_ok': True,
             'website_published': True,
         })
-        product_message = self.env["mail.message"].create(
-            {
-                "author_id": self.env.ref("base.user_admin").partner_id.id,
-                "body": "Test Message",
-                "model": product_template._name,
-                "res_id": product_template.id,
-                "subtype_id": self.ref("mail.mt_comment"),
-            }
+        product_message = self.env["mail.message"].create({
+            "author_id": self.env.ref("base.user_admin").partner_id.id,
+            "body": "Test Message",
+            "model": product_template._name,
+            "res_id": product_template.id,
+            "subtype_id": self.ref("mail.mt_comment"),
+        })
+        self.start_tour(
+            f"/mail/message/{product_message.id}", "product_review_highlight_tour", login="portal"
         )
-        self.start_tour(f"/mail/message/{product_message.id}", "product_review_highlight_tour", login="portal")
 
 
 @tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
-
     def test_salesman_assignation(self):
         self.website.salesperson_id = self.user_admin
         MailThread = odoo.addons.mail.models.mail_thread.MailThread
@@ -114,7 +117,9 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
         with patch.object(
             MailThread, '_message_create', autospec=True, side_effect=base_method
         ) as patcher:
-            self.cart.with_user(self.public_user).with_context(tracking_disable=False, mail_no_track=False).sudo().action_confirm()
+            self.cart.with_user(self.public_user).with_context(
+                tracking_disable=False, mail_no_track=False
+            ).sudo().action_confirm()
             patcher.assert_called()
 
             order, msg_values = None, {}
@@ -136,7 +141,9 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
         with patch.object(
             MailThread, '_message_create', autospec=True, side_effect=base_method
         ) as patcher:
-            portal_user_cart.with_user(user_portal).with_context(tracking_disable=False, mail_no_track=False).sudo().action_confirm()
+            portal_user_cart.with_user(user_portal).with_context(
+                tracking_disable=False, mail_no_track=False
+            ).sudo().action_confirm()
             patcher.assert_called()
 
             order, msg_values = None, {}

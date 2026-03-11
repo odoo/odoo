@@ -10,7 +10,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
-
     def test_website_sale_get_configurator_display_price(self):
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
@@ -42,7 +41,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 Command.create({
                     'attribute_id': product_attribute.id,
                     'value_ids': [Command.set(product_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         with self.mock_request():
@@ -85,9 +84,11 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
     def test_markup_data_converts_price_to_website_currency(self):
         company_currency = self.env.company.currency_id
         # Find a currency different from the company currency.
-        self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
-            ('name', '!=', company_currency.name)
-        ], limit=1)
+        self.website.currency_id = (
+            self.env['res.currency']
+            .with_context(active_test=False)
+            .search([('name', '!=', company_currency.name)], limit=1)
+        )
         with self.mock_request():
             markup = self.product._to_markup_data(self.website)
         # Expected converted price
@@ -100,24 +101,28 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertAlmostEqual(markup['offers']['price'], expected_price, places=2)
 
     def test_remove_archived_products_from_cart(self):
-        """Archived products shouldn't appear in carts"""
+        """Archived products shouldn't appear in carts."""
         self.product.action_archive()
         self.assertNotIn(
-            self.product, self.cart.order_line.product_id,
+            self.product,
+            self.cart.order_line.product_id,
             "Archived product should be deleted from the cart.",
         )
         self.service_product.product_tmpl_id.action_archive()
         self.assertNotIn(
-            self.service_product, self.cart.order_line.product_id,
+            self.service_product,
+            self.cart.order_line.product_id,
             "All products from archived product templates should be removed from the cart.",
         )
 
     def test_get_additionnal_combination_info_converts_price_to_website_currency(self):
         company_currency = self.env.company.currency_id
         # Find a currency different from the company currency.
-        self.website.currency_id = self.env['res.currency'].with_context(active_test=False).search([
-            ('name', '!=', company_currency.name)
-        ], limit=1)
+        self.website.currency_id = (
+            self.env['res.currency']
+            .with_context(active_test=False)
+            .search([('name', '!=', company_currency.name)], limit=1)
+        )
         with self.mock_request():
             result = self.env['product.template']._get_additionnal_combination_info(
                 self.product, 1.0, self.product.uom_id, Date.from_string('2020-01-01'), self.website

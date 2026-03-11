@@ -32,11 +32,7 @@ class ProductRibbon(models.Model):
     )
     assign = fields.Selection(
         string="Assign",
-        selection=[
-            ('manual', "Manually"),
-            ('sale', "On Sale"),
-            ('new', "When New"),
-        ],
+        selection=[('manual', "Manually"), ('sale', "On Sale"), ('new', "When New")],
         required=True,
         default='manual',
         help=(
@@ -57,21 +53,21 @@ class ProductRibbon(models.Model):
         """
         for ribbon in self:
             if ribbon.assign != 'manual':
-                existing_ribbons = self.search([
-                    ('id', '!=', ribbon.id),
-                    ('assign', '=', ribbon.assign)
-                ], limit=1)
+                existing_ribbons = self.search(
+                    [('id', '!=', ribbon.id), ('assign', '=', ribbon.assign)], limit=1
+                )
                 if existing_ribbons:
                     raise ValidationError(
                         _(
                             "Only one ribbon with the assign %s is allowed.",
-                            dict(self._fields['assign'].selection).get(ribbon.assign)
+                            dict(self._fields['assign'].selection).get(ribbon.assign),
                         )
                     )
 
     def _get_css_classes(self):
         """
         Return the CSS classes for this ribbon based on style and position.
+
         rtype: str
         """
         css_classes = ""

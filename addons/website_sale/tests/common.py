@@ -19,7 +19,7 @@ from odoo.addons.website_sale.models.website import (
 
 
 @contextmanager
-def MockRequest(
+def MockRequest(  # noqa: N802
     *args,
     sale_order_id=None,
     website_sale_current_pl=None,
@@ -47,7 +47,6 @@ def MockRequest(
 
 
 class WebsiteSaleCommon(DeliveryCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -71,15 +70,9 @@ class WebsiteSaleCommon(DeliveryCommon):
             'partner_id': cls.partner.id,
             'website_id': cls.website.id,
             'order_line': [
-                Command.create({
-                    'product_id': cls.product.id,
-                    'product_uom_qty': 5.0,
-                }),
-                Command.create({
-                    'product_id': cls.service_product.id,
-                    'product_uom_qty': 12.5,
-                })
-            ]
+                Command.create({'product_id': cls.product.id, 'product_uom_qty': 5.0}),
+                Command.create({'product_id': cls.service_product.id, 'product_uom_qty': 12.5}),
+            ],
         })
 
         cls.country_be = cls.quick_ref('base.be')

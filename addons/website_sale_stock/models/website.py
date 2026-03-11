@@ -8,7 +8,7 @@ class Website(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
 
-    def _get_product_available_qty(self, product, **kwargs):
+    def _get_product_available_qty(self, product, **_kwargs):
         """Give the available quantity of a given product.
 
         NB: this method is only meant to be used on the shop before the checkout.

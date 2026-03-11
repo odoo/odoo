@@ -10,17 +10,20 @@ class SaleOrderLine(models.Model):
     name_short = fields.Char(compute='_compute_name_short')
     shop_warning = fields.Char(string="Warning")
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('product_id.display_name')
     def _compute_name_short(self):
-        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
-            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
+        """Compute a short name for this sale order line, to be used on the website where we don't
+        have much space. To keep it short, instead of using the first line of the description,
+        we take the product name without the internal reference.
         """
         for record in self:
-            record.name_short = record.product_id.with_context(display_default_code=False).display_name
+            record.name_short = record.product_id.with_context(
+                display_default_code=False
+            ).display_name
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     def get_description_following_lines(self):
         return reversed(self.name.splitlines()[1:])
@@ -56,26 +59,33 @@ class SaleOrderLine(models.Model):
         unit_price = self._get_display_price_ignore_combo() if is_combo else self.price_unit
 
         return self.tax_ids.compute_all(
-            unit_price, self.currency_id, 1, self.product_id, self.order_partner_id,
+            unit_price, self.currency_id, 1, self.product_id, self.order_partner_id
         )[tax_display]
 
     def _get_selected_combo_items(self):
         if self.product_id.type == 'combo':
-            return [{
-                'id': linked_line.combo_item_id.id,
-                'no_variant_ptav_ids': linked_line.product_no_variant_attribute_value_ids.ids,
-                'custom_ptavs': [{
-                    'id': pcav.custom_product_template_attribute_value_id.id,
-                    'value': pcav.custom_value,
-                } for pcav in linked_line.product_custom_attribute_value_ids]
-            } for linked_line in self.linked_line_ids]
+            return [
+                {
+                    'id': linked_line.combo_item_id.id,
+                    'no_variant_ptav_ids': linked_line.product_no_variant_attribute_value_ids.ids,
+                    'custom_ptavs': [
+                        {
+                            'id': pcav.custom_product_template_attribute_value_id.id,
+                            'value': pcav.custom_value,
+                        }
+                        for pcav in linked_line.product_custom_attribute_value_ids
+                    ],
+                }
+                for linked_line in self.linked_line_ids
+            ]
 
         return None
 
     def _get_displayed_quantity(self):
-        rounded_uom_qty = round(self.product_uom_qty,
-                                self.env['decimal.precision'].precision_get('Product Unit'))
-        return int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty) or rounded_uom_qty
+        rounded_uom_qty = round(
+            self.product_uom_qty, self.env['decimal.precision'].precision_get('Product Unit')
+        )
+        return (int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty)) or rounded_uom_qty
 
     def _show_in_cart(self):
         self.ensure_one()
@@ -106,21 +116,23 @@ class SaleOrderLine(models.Model):
             and website.prevent_sale
             and website._prevent_product_sale(
                 self.product_template_id,
-                sum(self._get_lines_with_price().mapped('price_unit')) == 0
+                sum(self._get_lines_with_price().mapped('price_unit')) == 0,
             )
             # Only allow zero-price exemption for zero_price mode, not for category-based prevention
             and not (
                 website.prevent_sale_for == 'zero_price'
                 and self.product_template_id.service_tracking
-                    in self.env['product.template']._get_product_types_allow_zero_price()
+                in self.env['product.template']._get_product_types_allow_zero_price()
             )
         ):
-            raise UserError(self.env._(
-                "The given product does not have a price therefore it cannot be added to cart.",
-            ))
+            raise UserError(
+                self.env._(
+                    "The given product does not have a price therefore it cannot be added to cart."
+                )
+            )
 
     def _should_show_strikethrough_price(self):
-        """ Compute whether the strikethrough price should be shown.
+        """Compute whether the strikethrough price should be shown.
 
         The strikethrough price should be shown if there is a discount on a sellable line for
         which a price unit is non-zero.

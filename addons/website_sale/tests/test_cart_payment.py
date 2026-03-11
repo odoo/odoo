@@ -12,7 +12,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -39,7 +38,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                     request.cart,
                     self.cart,
                     msg=f"The transaction state '{unpaid_order_tx_state}' should not prevent "
-                        f"retrieving the linked order.",
+                    f"retrieving the linked order.",
                 )
 
     def test_paid_orders_cannot_be_retrieved(self):
@@ -53,7 +52,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                 self.assertFalse(
                     request.cart,
                     msg=f"The transaction state '{paid_order_tx_state}' should prevent retrieving "
-                        f"the linked order.",
+                    f"the linked order.",
                 )
 
     @mute_logger('odoo.http')

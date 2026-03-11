@@ -6,7 +6,6 @@ from odoo.tests import HttpCase, tagged
 
 @tagged('-at_install', 'post_install')
 class TestWishlistProcess(HttpCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -20,27 +19,16 @@ class TestWishlistProcess(HttpCase):
                 'name': 'Legs',
                 'sequence': 10,
                 'value_ids': [
-                    Command.create({
-                        'name': 'Steel',
-                        'sequence': 1,
-                    }),
-                    Command.create({
-                        'name': 'Aluminium',
-                        'sequence': 2,
-                    }),
+                    Command.create({'name': 'Steel', 'sequence': 1}),
+                    Command.create({'name': 'Aluminium', 'sequence': 2}),
                 ],
-            }, {
+            },
+            {
                 'name': 'Color',
                 'sequence': 20,
                 'value_ids': [
-                    Command.create({
-                        'name': 'White',
-                        'sequence': 1,
-                    }),
-                    Command.create({
-                        'name': 'Black',
-                        'sequence': 2,
-                    }),
+                    Command.create({'name': 'White', 'sequence': 1}),
+                    Command.create({'name': 'Black', 'sequence': 2}),
                 ],
             },
         ])
@@ -54,14 +42,17 @@ class TestWishlistProcess(HttpCase):
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': attribute.id,
-                    'value_ids': [Command.set(attribute.value_ids.ids)]
-                }) for attribute in attributes
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                })
+                for attribute in attributes
             ],
         })
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour('/shop?search=Customizable Desk', 'website_sale.wishlist_updates', timeout=120)
+        self.start_tour(
+            '/shop?search=Customizable Desk', 'website_sale.wishlist_updates', timeout=120
+        )
 
     def test_wishlist_dynamic_attributes(self):
 
@@ -73,14 +64,14 @@ class TestWishlistProcess(HttpCase):
                 Command.create({'name': 'red'}),
                 Command.create({'name': 'blue'}),
                 Command.create({'name': 'black'}),
-            ]
+            ],
         })
         bottle = self.env['product.template'].create({
             'name': "Bottle",
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': dynamic_color.id,
-                    'value_ids': [Command.set(dynamic_color.value_ids.ids)]
+                    'value_ids': [Command.set(dynamic_color.value_ids.ids)],
                 })
             ],
             'website_published': True,
@@ -95,11 +86,5 @@ class TestWishlistProcess(HttpCase):
         # active=True and website_published=True, countering the new
         # WebsitePublishedMixin behavior that unpublishes records when they're
         # archived.
-        bottle.with_context(active_test=False).write({
-            'active': True,
-            'website_published': True,
-        })
-        self.start_tour(
-            bottle.website_url,
-            'website_sale.no_valid_combination'
-        )
+        bottle.with_context(active_test=False).write({'active': True, 'website_published': True})
+        self.start_tour(bottle.website_url, 'website_sale.no_valid_combination')

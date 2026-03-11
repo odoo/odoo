@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         implied_group="website_sale.group_product_price_comparison",
         group='base.group_user',
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
-             "It will not be displayed if pricelists apply."
+        "It will not be displayed if pricelists apply.",
     )
     group_gmc_feed = fields.Boolean(
         string="Google Merchant Center",
@@ -33,33 +33,22 @@ class ResConfigSettings(models.TransientModel):
     # Website-dependent settings
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
     cart_recovery_mail_template = fields.Many2one(
-        related='website_id.cart_recovery_mail_template_id',
-        readonly=False,
+        related='website_id.cart_recovery_mail_template_id', readonly=False
     )
-    cart_abandoned_delay = fields.Float(
-        related='website_id.cart_abandoned_delay',
-        readonly=False,
-    )
+    cart_abandoned_delay = fields.Float(related='website_id.cart_abandoned_delay', readonly=False)
     send_abandoned_cart_email = fields.Boolean(
-        string="Abandoned Email",
-        related='website_id.send_abandoned_cart_email',
-        readonly=False,
+        string="Abandoned Email", related='website_id.send_abandoned_cart_email', readonly=False
     )
-    salesperson_id = fields.Many2one(
-        related='website_id.salesperson_id',
-        readonly=False,
-    )
+    salesperson_id = fields.Many2one(related='website_id.salesperson_id', readonly=False)
     salesteam_id = fields.Many2one(related='website_id.salesteam_id', readonly=False)
     prevent_sale = fields.Boolean(related='website_id.prevent_sale', readonly=False)
     prevent_sale_for = fields.Selection(related='website_id.prevent_sale_for', readonly=False)
     prevent_sale_for_categories = fields.Many2many(
-        related='website_id.prevent_sale_for_categories',
-        readonly=False,
+        related='website_id.prevent_sale_for_categories', readonly=False
     )
     contact_us_link_url = fields.Char(related='website_id.contact_us_link_url', readonly=False)
     show_line_subtotals_tax_selection = fields.Selection(
-        related='website_id.show_line_subtotals_tax_selection',
-        readonly=False,
+        related='website_id.show_line_subtotals_tax_selection', readonly=False
     )
     confirmation_email_template_id = fields.Many2one(
         related='website_id.confirmation_email_template_id', readonly=False
@@ -75,20 +64,13 @@ class ResConfigSettings(models.TransientModel):
     # Additional settings
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
-        selection=[
-            ("optional", "Optional"),
-            ("disabled", "Disabled"),
-            ("mandatory", "Mandatory"),
-        ],
+        selection=[("optional", "Optional"), ("disabled", "Disabled"), ("mandatory", "Mandatory")],
         compute="_compute_account_on_checkout",
         inverse="_inverse_account_on_checkout",
         readonly=False,
         required=True,
     )
-    ecommerce_access = fields.Selection(
-        related='website_id.ecommerce_access',
-        readonly=False,
-    )
+    ecommerce_access = fields.Selection(related='website_id.ecommerce_access', readonly=False)
 
     # === COMPUTE METHODS === #
 
@@ -138,7 +120,9 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'mail.template',
             'view_id': False,
             'view_mode': 'form',
-            'res_id': self.env['ir.model.data']._xmlid_to_res_id("website_sale.mail_template_sale_cart_recovery"),
+            'res_id': self.env['ir.model.data']._xmlid_to_res_id(
+                "website_sale.mail_template_sale_cart_recovery"
+            ),
         }
 
     @api.readonly
@@ -162,9 +146,6 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'product.feed',
             'views': [(False, 'list')],
             'target': 'new',
-            'context': {
-                'default_website_id': self.website_id.id,
-                'hide_website_column': True,
-            },
+            'context': {'default_website_id': self.website_id.id, 'hide_website_column': True},
             'domain': [('website_id', '=', self.website_id.id)],
         }

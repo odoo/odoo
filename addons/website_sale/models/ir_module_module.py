@@ -25,14 +25,15 @@ class IrModuleModule(models.Model):
             # PSQL functions take 100 args max, and we're generating 2 per lang
             batched_lang_items = split_every(50, lang_items)
             update_jsonb = SQL(' || ').join(
-                SQL('jsonb_build_object(%s)', SQL(', ').join(batch))
-                for batch in batched_lang_items
+                SQL('jsonb_build_object(%s)', SQL(', ').join(batch)) for batch in batched_lang_items
             )
             ordered = reversed if overwrite else iter
-            src = SQL(' || ').join(ordered([
-                SQL('jsonb_strip_nulls(%s)', update_jsonb),  # gets updated translation
-                SQL('jsonb_strip_nulls(step.%s)', fname),  # keeps current translation
-            ]))
+            src = SQL(' || ').join(
+                ordered([
+                    SQL('jsonb_strip_nulls(%s)', update_jsonb),  # gets updated translation
+                    SQL('jsonb_strip_nulls(step.%s)', fname),  # keeps current translation
+                ])
+            )
             return SQL('%(fname)s = %(src)s', fname=fname, src=src)
 
         WebsiteCheckoutStep = self.env['website.checkout.step']
@@ -44,8 +45,9 @@ class IrModuleModule(models.Model):
         set_fields = SQL(', ').join(set_field(fname) for fname in to_translate)
 
         WebsiteCheckoutStep.invalidate_model()
-        self.env.cr.execute(SQL(
-            '''
+        self.env.cr.execute(
+            SQL(
+                '''
             UPDATE website_checkout_step step
                SET %(set_fields)s
               FROM website_checkout_step o_step
@@ -55,5 +57,6 @@ class IrModuleModule(models.Model):
                AND s_step.website_id IS NOT NULL
                AND step.id = s_step.id
             ''',
-            set_fields=set_fields,
-        ))
+                set_fields=set_fields,
+            )
+        )

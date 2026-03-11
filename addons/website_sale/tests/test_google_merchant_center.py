@@ -13,7 +13,6 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
-
     def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
         response = self.url_open(self.gmc_feed.url)
 
@@ -33,8 +32,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(self.website.name, gmc_xml.xpath('//title')[0].text)
         self.assertURLEqual('/en', gmc_xml.xpath('//link')[0].text)
         self.assertEqual(
-            'This is the homepage of the website',
-            gmc_xml.xpath('//description')[0].text,
+            'This is the homepage of the website', gmc_xml.xpath('//description')[0].text
         )
 
     def test_gmc_xml_localization(self):
@@ -51,10 +49,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             f'^\\/{fr_lang.url_code}.*',
             'The links must redirect to the french website.',
         )
-        self.assertEqual(
-            'Canapé (rouge)',
-            self.red_sofa_item['title'],
-        )
+        self.assertEqual('Canapé (rouge)', self.red_sofa_item['title'])
 
     def test_gmc_xml_pricelist(self):
         self.gmc_feed.pricelist_id = self.eur_pricelist
@@ -66,7 +61,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             '1100.0 EUR',  # 1000.0 * 1.1 (EUR rate)
             gmc_xml.xpath(
                 '//item[g:id="SOFA-R"]/g:price', namespaces={'g': 'http://base.google.com/ns/1.0'}
-            )[0].text
+            )[0].text,
         )
 
     def test_gmc_items_required_fields(self):
@@ -88,7 +83,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             )  # subseteq
 
     def test_gmc_items_use_internal_reference_if_exists(self):
-        """Test prefer internal code to database id"""
+        """Test prefer internal code to database id."""
         # setup: red_sofa.code = 'SOFA-R', blue_sofa.code = False
         self.update_items()
 
@@ -113,11 +108,12 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
             self.assertEqual(200, response.status_code)
             url = urlparse(product.website_url)
+            ptav_ids = product.product_template_attribute_value_ids.product_attribute_value_id.ids
             self.assertURLEqual(
                 f'{url.path}'
-                 f'?attribute_values={",".join(str(i) for i in product.product_template_attribute_value_ids.product_attribute_value_id.ids)}'
-                 f'&pricelist={self.eur_pricelist.id}'
-                 f'#{url.fragment}',
+                f'?attribute_values={",".join(str(i) for i in ptav_ids)}'
+                f'&pricelist={self.eur_pricelist.id}'
+                f'#{url.fragment}',
                 response.url,
             )
 
@@ -127,8 +123,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual('1000.0 USD', self.red_sofa_item['price'])
         self.assertEqual('1200.0 USD', self.blue_sofa_item['price'])
         self.start_tour(
-            self.red_sofa_item['link'],
-            'website_sale.gmc_check_advertised_prices_red_sofa_default',
+            self.red_sofa_item['link'], 'website_sale.gmc_check_advertised_prices_red_sofa_default'
         )
         self.start_tour(
             self.blue_sofa_item['link'],
@@ -148,10 +143,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
                     'date_start': datetime.now() - timedelta(1),
                     'date_end': datetime.now() + timedelta(1),
                 }),
-                Command.create({
-                    'compute_price': 'percentage',
-                    'percent_price': 0.0,
-                }),
+                Command.create({'compute_price': 'percentage', 'percent_price': 0.0}),
             ],
         )
 
@@ -195,11 +187,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         image = self._create_image('blue')
         self.blue_sofa.write({
             'product_variant_image_ids': [
-                Command.create({
-                    'name': f'image {i}',
-                    'image_1920': image,
-                })
-                for i in range(12)
+                Command.create({'name': f'image {i}', 'image_1920': image}) for i in range(12)
             ]
         })
 
@@ -238,14 +226,12 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
                 name.replace('/', '>')
                 for name in self.public_categories.sorted('sequence').mapped('display_name')
             ],
-            self.red_sofa_item['product_type']
+            self.red_sofa_item['product_type'],
         )
 
     def test_gmc_items_types_limit_to_5(self):
         self.product_template_sofa.write({
-            'public_categ_ids': [
-                Command.create({'name': f'Category {i}'}) for i in range(6)
-            ]
+            'public_categ_ids': [Command.create({'name': f'Category {i}'}) for i in range(6)]
         })
 
         self.update_items()
@@ -253,18 +239,22 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(5, len(self.red_sofa_item['product_type']))
 
     def test_gmc_product_variants(self):
-        product_one_variant = self.env['product.template'].create({
-            'name': 'Test product',
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': attr.attribute_id.id,
-                    'value_ids': [Command.link(attr.id)],
-                })
-                for attr in (self.color_attribute_green + self.size_attribute_l)
-            ],
-            'list_price': 49.0,
-            'is_published': True,
-        }).product_variant_ids
+        product_one_variant = (
+            self.env['product.template']
+            .create({
+                'name': 'Test product',
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': attr.attribute_id.id,
+                        'value_ids': [Command.link(attr.id)],
+                    })
+                    for attr in (self.color_attribute_green + self.size_attribute_l)
+                ],
+                'list_price': 49.0,
+                'is_published': True,
+            })
+            .product_variant_ids
+        )
         self.products |= product_one_variant
 
         self.update_items()
@@ -284,8 +274,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         tags = [f'tag {i}' for i in range(3)]
         self.product_template_sofa.write({
             'product_tag_ids': [
-                Command.create({'name': tag, 'sequence': i})
-                for i, tag in enumerate(tags)
+                Command.create({'name': tag, 'sequence': i}) for i, tag in enumerate(tags)
             ]
         })
 
@@ -296,8 +285,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_tags_limit_to_5(self):
         self.product_template_sofa.write({
             'product_tag_ids': [
-                Command.create({'name': f"Tag {i}", 'sequence': i})
-                for i in range(10)
+                Command.create({'name': f"Tag {i}", 'sequence': i}) for i in range(10)
             ]
         })
 
@@ -308,23 +296,22 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_default_availability_in_stock(self):
         self.update_items()
 
-        self.assertEqual(
-            'in_stock',
-            self.red_sofa_item['availability'],
-        )
+        self.assertEqual('in_stock', self.red_sofa_item['availability'])
 
     def _setup_6l_water_pack(self):
         self.env.user.group_ids |= self.env.ref('uom.group_uom')
         uom_litre = self.env.ref('uom.product_uom_pack_6')
         base_unit_litre = self.env['website.base.unit'].create({'name': 'L'})
-        six_pack = self.env['product.product'].create([{
-            'name': 'Water Pack 6L',
-            'list_price': 12.0,
-            'uom_id': uom_litre.id,
-            'base_unit_count': 6.0,
-            'base_unit_id': base_unit_litre.id,
-            'is_published': True,
-        }])
+        six_pack = self.env['product.product'].create([
+            {
+                'name': 'Water Pack 6L',
+                'list_price': 12.0,
+                'uom_id': uom_litre.id,
+                'base_unit_count': 6.0,
+                'base_unit_id': base_unit_litre.id,
+                'is_published': True,
+            }
+        ])
         self.products |= six_pack
         return six_pack
 

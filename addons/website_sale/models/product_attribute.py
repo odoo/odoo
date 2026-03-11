@@ -21,7 +21,7 @@ class ProductAttribute(models.Model):
         string="On Product Cards",
         selection=[('visible', "Visible"), ('hidden', "Hidden"), ('hover', "Hover")],
         default='hidden',
-        help="Instantly created variants are available for selection from your /shop page.",
+        help="Instantly created variants are available for selection from your /shop page.",
     )
     is_thumbnail_visible = fields.Boolean(
         string="Show Thumbnails",
@@ -30,7 +30,8 @@ class ProductAttribute(models.Model):
 
     @api.onchange('create_variant', 'display_type')
     def _onchange_disable_preview_variants(self):
-        """The option to preview variants is only available for instantly created single variants."""
+        """Disable preview variants for multi display types and if variant creation method is not
+        set to instant."""
         if self.create_variant != 'always' or self.display_type == 'multi':
             self.preview_variants = 'hidden'
             self.is_thumbnail_visible = False

@@ -23,7 +23,7 @@ class ProductProduct(models.Model):
     base_unit_count = fields.Float(
         string="Base Unit Count",
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
-             " product.",
+        " product.",
         required=True,
         default=1,
     )
@@ -32,13 +32,10 @@ class ProductProduct(models.Model):
         help="Define a custom unit to display in the price per unit of measure field.",
         comodel_name='website.base.unit',
     )
-    base_unit_price = fields.Monetary(
-        string="Price Per Unit",
-        compute='_compute_base_unit_price',
-    )
+    base_unit_price = fields.Monetary(string="Price Per Unit", compute='_compute_base_unit_price')
     base_unit_name = fields.Char(
         help="Displays the custom unit for the products if defined or the selected unit of measure"
-            " otherwise.",
+        " otherwise.",
         compute='_compute_base_unit_name',
     )
 
@@ -48,7 +45,7 @@ class ProductProduct(models.Model):
         compute='_compute_product_website_url',
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     def _get_base_unit_price(self, price):
         self.ensure_one()
@@ -77,17 +74,19 @@ class ProductProduct(models.Model):
                 url = f'{url}?attribute_values={",".join(pav_ids)}'
             product.website_url = url
 
-    #=== CONSTRAINT METHODS ===#
+    # === CONSTRAINT METHODS ===#
 
     @api.constrains('base_unit_count')
     def _check_base_unit_count(self):
         if any(product.base_unit_count < 0 for product in self):
-            raise ValidationError(_(
-                "The value of Base Unit Count must be greater than 0."
-                " Use 0 to hide the price per unit on this product."
-            ))
+            raise ValidationError(
+                _(
+                    "The value of Base Unit Count must be greater than 0."
+                    " Use 0 to hide the price per unit on this product."
+                )
+            )
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -129,9 +128,8 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.product_tmpl_id._get_combination_info(
-            combination=self.product_template_attribute_value_ids,
-            product_id=self.id,
-            **kwargs)
+            combination=self.product_template_attribute_value_ids, product_id=self.id, **kwargs
+        )
 
     def _website_show_quick_add(self):
         self.ensure_one()
@@ -152,9 +150,8 @@ class ProductProduct(models.Model):
         if not self.filtered_domain(self.env['website']._product_domain()):
             return False
         website = self.env['website'].get_current_website()
-        if (
-            website.prevent_sale
-            and website._prevent_product_sale(self, not self._get_contextual_price())
+        if website.prevent_sale and website._prevent_product_sale(
+            self, not self._get_contextual_price()
         ):
             return False
         return website.has_ecommerce_access()
@@ -167,7 +164,7 @@ class ProductProduct(models.Model):
             self.website_published = False
 
     def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for the current product.
+        """Generate JSON-LD markup data for the current product.
 
         :param website website: The current website.
         :return: The JSON-LD markup data.
@@ -192,11 +189,7 @@ class ProductProduct(models.Model):
             'name': self.with_context(display_default_code=False).display_name,
             'url': f'{base_url}{self.website_url}',
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {
-                '@type': 'Offer',
-                'price': price,
-                'priceCurrency': website.currency_id.name,
-            },
+            'offers': {'@type': 'Offer', 'price': price, 'priceCurrency': website.currency_id.name},
         }
         if self.website_meta_description or self.description_sale:
             markup_data['description'] = self.website_meta_description or self.description_sale
@@ -205,7 +198,7 @@ class ProductProduct(models.Model):
         return markup_data
 
     def _get_image_1920_url(self):
-        """ Returns the local url of the product main image.
+        """Return the local url of the product main image.
 
         Note: self.ensure_one()
 
@@ -215,7 +208,7 @@ class ProductProduct(models.Model):
         return self.env['website'].image_url(self, 'image_1920')
 
     def _get_extra_image_1920_urls(self):
-        """ Returns the local url of the product additional images, no videos. This includes the
+        """Return the local url of the product additional images, no videos. This includes the
         variant specific images first and then the template images.
 
         Note: self.ensure_one()
@@ -260,23 +253,31 @@ class ProductProduct(models.Model):
             }]
         }]
         """
-        attributes = self.product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id.sorted()
+        attributes = (
+            self.product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id.sorted()
+        )
         categories = OrderedDict([(cat, OrderedDict()) for cat in attributes.category_id.sorted()])
         if any(not pa.category_id for pa in attributes):
             # category_id is not required and the mapped does not return empty
             categories[self.env['product.attribute.category']] = OrderedDict()
         for pa in attributes:
-            categories[pa.category_id][pa] = OrderedDict([(
-                product,
-                product.product_template_attribute_value_ids.filtered(
-                    lambda ptav: ptav.attribute_id == pa
-                ) or  # If no_variant, show all possible values
-                product.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id == pa).value_ids
-            ) for product in self])
+            categories[pa.category_id][pa] = OrderedDict([
+                (
+                    product,
+                    product.product_template_attribute_value_ids.filtered(
+                        lambda ptav: ptav.attribute_id == pa
+                    )  # If no_variant, show all possible values
+                    or product.attribute_line_ids.filtered(
+                        lambda ptal: ptal.attribute_id == pa
+                    ).value_ids,
+                )
+                for product in self
+            ])
         return categories
 
     def _get_image_1024_url(self):
-        """ Returns the local url of the product main image.
+        """Return the local url of the product main image.
+
         Note: self.ensure_one()
         :rtype: str
         """

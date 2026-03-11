@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+
 from odoo import api, models
 
 
@@ -22,19 +23,26 @@ class WebsitePage(models.Model):
 
         # update generated html from "webiste_sale.header_cart_link" used on all page
 
-        my_cart_quantity_re = re.compile(r"""
+        my_cart_quantity_re = re.compile(
+            r"""
             <sup\s
             class="(?P<classname>my_cart_quantity[^"]*)"
             (?P<attributes>[^>]*?)
             >
             (?P<quantity>[^<]*)
             </sup>
-            """, re.VERBOSE)
+            """,
+            re.VERBOSE,
+        )
 
         html = response.response[0]
         cache_quantity = re.search(my_cart_quantity_re, html)
-        classname = cache_quantity.group('classname').replace('d-none', '') + ('' if quantity else 'd-none')
-        attributes = cache_quantity.group('attributes') + (f' data-order-id="{order_id}"' if quantity else '')
+        classname = cache_quantity.group('classname').replace('d-none', '') + (
+            '' if quantity else 'd-none'
+        )
+        attributes = cache_quantity.group('attributes') + (
+            f' data-order-id="{order_id}"' if quantity else ''
+        )
         html_quantity = f'''<sup class="{classname}"{attributes}>{quantity}</sup>'''
         html = html.replace(cache_quantity.group(0), html_quantity)
 

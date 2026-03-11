@@ -14,7 +14,7 @@ class WebsiteSaleExtraField(models.Model):
         comodel_name='ir.model.fields',
         domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])],
         required=True,
-        ondelete='cascade'
+        ondelete='cascade',
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')

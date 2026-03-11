@@ -10,16 +10,19 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 @tagged('post_install', '-at_install')
 class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.macbook = cls._create_product(name="Macbook Pro")
 
     def test_back_in_stock_notification_product(self):
-        self.start_tour(self.macbook.website_url, 'website_sale_stock.subscribe_to_stock_notification')
+        self.start_tour(
+            self.macbook.website_url, 'website_sale_stock.subscribe_to_stock_notification'
+        )
 
-        partner = self.env['mail.thread']._partner_find_from_emails_single(['test@test.test'], no_create=True)
+        partner = self.env['mail.thread']._partner_find_from_emails_single(
+            ['test@test.test'], no_create=True
+        )
         self.assertTrue(self.macbook._has_stock_notification(partner))
 
         with self.setup_cron_env() as env:
@@ -39,7 +42,7 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
 
     @contextmanager
     def setup_cron_env(self):
-        """Setup the `TestCursor` required to execute a cron job and ensures proper handling of the
+        """Set up the `TestCursor` required to execute a cron job and ensures proper handling of the
         environment before and after the operation.
 
         Note: In `HttpCase`, `TransactionCase.enter_registry_test_mode` is enabled by default.

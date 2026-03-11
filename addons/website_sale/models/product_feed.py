@@ -45,17 +45,10 @@ class ProductFeed(models.Model):
     website_lang_ids = fields.Many2many(related='website_id.language_ids')
     product_category_ids = fields.Many2many('product.public.category', string="Categories")
     target = fields.Selection(
-        selection=[
-            ('gmc', "Google Merchant Center"),
-        ],
-        required=True,
-        default='gmc',
+        selection=[('gmc', "Google Merchant Center")], required=True, default='gmc'
     )
     access_token = fields.Char(
-        readonly=True,
-        required=True,
-        default=lambda _: uuid.uuid4().hex,
-        copy=False,
+        readonly=True, required=True, default=lambda _: uuid.uuid4().hex, copy=False
     )
     url = fields.Char(compute='_compute_url')
 
@@ -85,9 +78,7 @@ class ProductFeed(models.Model):
         for feed in self.filtered(lambda f: not f.lang_id):
             feed.lang_id = feed.website_id.default_lang_id
 
-    @api.depends(
-        'website_id', 'pricelist_id', 'lang_id', 'product_category_ids'
-    )
+    @api.depends('website_id', 'pricelist_id', 'lang_id', 'product_category_ids')
     def _compute_feed_cache(self):
         """Invalidate cache on feed parameter changes."""
         self.action_invalidate_cache()
@@ -103,11 +94,13 @@ class ProductFeed(models.Model):
                 feed._get_feed_product_domain(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
             )
             if product_count > const.PRODUCT_FEED_SOFT_LIMIT:
-                raise ValidationError(feed.env._(
-                    "A single feed cannot contain more than %(limit)s products."
-                    " Please separate products with Categories.",
-                    limit=f"{const.PRODUCT_FEED_SOFT_LIMIT:,}",  # Format to 5,000
-                ))
+                raise ValidationError(
+                    feed.env._(
+                        "A single feed cannot contain more than %(limit)s products."
+                        " Please separate products with Categories.",
+                        limit=f"{const.PRODUCT_FEED_SOFT_LIMIT:,}",  # Format to 5,000
+                    )
+                )
 
     def action_invalidate_cache(self):
         self.cache_expiry = fields.Datetime.now() - relativedelta(days=1)
@@ -115,10 +108,7 @@ class ProductFeed(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {
-                'type': 'success',
-                'message': self.env._("Feed cache successfully reset."),
-            },
+            'params': {'type': 'success', 'message': self.env._("Feed cache successfully reset.")},
         }
 
     def _render_and_cache_compressed_gmc_feed(self):
@@ -177,9 +167,7 @@ class ProductFeed(models.Model):
             'items': self._prepare_gmc_items(),
         }
 
-        return self.env['ir.ui.view'].sudo()._render_template(
-            'website_sale.gmc_xml', gmc_data,
-        )
+        return self.env['ir.ui.view'].sudo()._render_template('website_sale.gmc_xml', gmc_data)
 
     def _prepare_gmc_items(self):
         """Prepare Google Merchant Center items' fields.
@@ -256,7 +244,7 @@ class ProductFeed(models.Model):
 
         return products
 
-    def _prepare_gmc_identifier(self, product):
+    def _prepare_gmc_identifier(self, product):  # noqa: PLR6301
         """Prepare the product identifiers for Google Merchant Center.
 
         :return: The barcode of the product as GTIN
@@ -266,7 +254,7 @@ class ProductFeed(models.Model):
             return {'gtin': product.barcode, 'identifier_exists': 'yes'}
         return {'identifier_exists': 'no'}
 
-    def _prepare_gmc_image_links(self, product, base_url):
+    def _prepare_gmc_image_links(self, product, base_url):  # noqa: PLR6301
         """Prepare the product image links for Google Merchant Center.
 
         :return: The main product image link, and the extra images. No videos.
@@ -289,7 +277,8 @@ class ProductFeed(models.Model):
         Note: If the product is not sellable on the website, an empty dictionary is returned
         and the product is excluded from the feed.
 
-        :return: A dictionary containing nothing if sale is prevented (zero price or specific category), or:
+        :return: A dictionary containing nothing if sale is prevented (zero price or specific
+        category), or:
             - List price,
             - Sale price (if applicable), and
             - Comparison prices (e.g., $100 / ml) if "Product Reference Price" is enabled.
@@ -299,7 +288,7 @@ class ProductFeed(models.Model):
             product.product_template_attribute_value_ids
         )
         combination_info = product.with_context(
-            **price_context,
+            **price_context
         ).product_tmpl_id._get_additionnal_combination_info(
             product,
             quantity=1.0,
@@ -312,21 +301,21 @@ class ProductFeed(models.Model):
 
         price_info = {
             'price': utils.gmc_format_price(
-                combination_info['list_price'], combination_info['currency'],
-            ),
+                combination_info['list_price'], combination_info['currency']
+            )
         }
 
         if combination_info['has_discounted_price']:
             price_info['sale_price'] = utils.gmc_format_price(
-                combination_info['price'], combination_info['currency'],
+                combination_info['price'], combination_info['currency']
             )
             start_date = combination_info['discount_start_date']
             end_date = combination_info['discount_end_date']
             if start_date and end_date:
                 price_info['sale_price_effective_date'] = (
                     start_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
-                    + '/' +
-                    end_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
+                    + '/'
+                    + end_date.replace(tzinfo=UTC).isoformat(timespec='minutes')
                 )
 
         # Note: Google only supports a restricted set of unit and computes the comparison prices
@@ -339,15 +328,16 @@ class ProductFeed(models.Model):
         if (
             combination_info.get('base_unit_name')
             and product.base_unit_count
-            and (match := const.GMC_BASE_MEASURE.match(
-                combination_info['base_unit_name'].strip().lower()
-            ))
+            and (
+                match := const.GMC_BASE_MEASURE.match(
+                    combination_info['base_unit_name'].strip().lower()
+                )
+            )
         ):
             base_count, base_unit = match['base_count'] or '1', match['base_unit']
             count = product.base_unit_count * int(base_count)
-            if (
-                base_unit in const.GMC_SUPPORTED_UOM
-                and not float_is_zero(count, precision_digits=2)
+            if base_unit in const.GMC_SUPPORTED_UOM and not float_is_zero(
+                count, precision_digits=2
             ):
                 price_info['unit_pricing_measure'] = (
                     f'{float_round(count, precision_digits=2)}{base_unit}'
@@ -356,11 +346,11 @@ class ProductFeed(models.Model):
 
         return price_info
 
-    def _prepare_gmc_stock_info(self, _product):
+    def _prepare_gmc_stock_info(self, _product):  # noqa: PLR6301
         """Intended to be overridden in stock."""
         return {'availability': 'in_stock'}
 
-    def _prepare_gmc_additional_info(self, product):
+    def _prepare_gmc_additional_info(self, product):  # noqa: PLR6301
         additional_info = {
             'product_detail': [
                 (attr.attribute_id.name, attr.name)

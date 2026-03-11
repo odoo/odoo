@@ -28,7 +28,7 @@ class ProductPublicCategory(models.Model):
 
     name = fields.Char(required=True, translate=True)
     cover_image = fields.Image(
-        string="Cover Image", help="Displayed only in the Category List Snippet.",
+        string="Cover Image", help="Displayed only in the Category List Snippet."
     )
     is_published = fields.Boolean(compute='_compute_is_published')
     not_in_shop = fields.Boolean(
@@ -42,10 +42,7 @@ class ProductPublicCategory(models.Model):
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
-        string="Parent",
-        comodel_name='product.public.category',
-        ondelete='cascade',
-        index=True,
+        string="Parent", comodel_name='product.public.category', ondelete='cascade', index=True
     )
     child_id = fields.One2many(
         string="Children Categories",
@@ -54,13 +51,11 @@ class ProductPublicCategory(models.Model):
     )
     parent_path = fields.Char(index=True)
     parents_and_self = fields.Many2many(
-        comodel_name='product.public.category',
-        compute='_compute_parents_and_self',
+        comodel_name='product.public.category', compute='_compute_parents_and_self'
     )
 
     product_tmpl_ids = fields.Many2many(
-        comodel_name='product.template',
-        relation='product_public_category_product_template_rel',
+        comodel_name='product.template', relation='product_public_category_product_template_rel'
     )
     has_published_products = fields.Boolean(
         compute='_compute_has_published_products',
@@ -87,19 +82,22 @@ class ProductPublicCategory(models.Model):
     show_category_title = fields.Boolean(
         string="Show Category Title",
         default=False,
-        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option."
+        help="Display the category title on the shop page. Corresponds to the 'Show Title' editor"
+        " option.",
     )
 
     show_category_description = fields.Boolean(
         string="Show Category Description",
         default=True,
-        help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option."
+        help="Display the category description on the shop page. Corresponds to the"
+        " 'Show Description' editor option.",
     )
 
     align_category_content = fields.Boolean(
         string="Align Category Content",
         default=False,
-        help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option."
+        help="Align the category content on the shop page. Corresponds to the 'Center Content'"
+        " editor option.",
     )
 
     # === COMPUTE METHODS === #
@@ -119,40 +117,48 @@ class ProductPublicCategory(models.Model):
     def _compute_parents_and_self(self):
         for category in self:
             if category.parent_path:
-                category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
+                category.parents_and_self = self.env['product.public.category'].browse([
+                    int(p) for p in category.parent_path.split('/')[:-1]
+                ])
             else:
                 category.parents_and_self = category
 
     @api.depends('parents_and_self')
     def _compute_display_name(self):
         for category in self:
-            category.display_name = " / ".join(category.parents_and_self.mapped(
-                lambda cat: cat.name or self.env._("New")
-            ))
+            category.display_name = " / ".join(
+                category.parents_and_self.mapped(lambda cat: cat.name or self.env._("New"))
+            )
 
     def _compute_website_url(self):
         super()._compute_website_url()
         for category in self:
             if category.id:
-                category.website_url = f'{SHOP_PATH}/category/%s' % self.env['ir.http']._slug(category)
+                category.website_url = f'{SHOP_PATH}/category/%s' % self.env['ir.http']._slug(
+                    category
+                )
 
     @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
     def _compute_has_published_products(self):
         grouped_product_templates = self.env['product.template']._read_group(
-            domain=[('public_categ_ids', 'in', self.ids), ('is_published', '=', True), ('active', '=', True)],
-            groupby=['public_categ_ids']
+            domain=[
+                ('public_categ_ids', 'in', self.ids),
+                ('is_published', '=', True),
+                ('active', '=', True),
+            ],
+            groupby=['public_categ_ids'],
         )
         published_category_ids = {group[0].id for group in grouped_product_templates}
         for category in self:
             has_published = category.id in published_category_ids
-            category.has_published_products = (
-                has_published or any(c.has_published_products for c in category.child_id)
+            category.has_published_products = has_published or any(
+                c.has_published_products for c in category.child_id
             )
 
     # === SEARCH METHODS === #
 
     @api.model
-    def _search_has_published_products(self, operator, value):
+    def _search_has_published_products(self, operator, _value):
         if operator != 'in':
             return NotImplemented
         published_categ_ids = self.search_fetch(
@@ -160,16 +166,12 @@ class ProductPublicCategory(models.Model):
             ['parent_path'],
         ).ids
         # Note that if the `value` is False, the ORM will invert the domain below
-        return [
-            '|',
-            ('id', 'in', published_categ_ids),
-            ('id', 'parent_of', published_categ_ids),
-        ]
+        return ['|', ('id', 'in', published_categ_ids), ('id', 'parent_of', published_categ_ids)]
 
     # === BUSINESS METHODS === #
 
     @api.model
-    def _search_get_detail(self, website, order, options):
+    def _search_get_detail(self, website, order, options):  # noqa: PLR6301
         with_description = options['displayDescription']
         search_fields = ['name']
         fetch_fields = ['id', 'name']
@@ -180,7 +182,12 @@ class ProductPublicCategory(models.Model):
         if with_description:
             search_fields.append('website_description')
             fetch_fields.append('website_description')
-            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True, 'html': True}
+            mapping['description'] = {
+                'name': 'website_description',
+                'type': 'text',
+                'match': True,
+                'html': True,
+            }
         return {
             'model': 'product.public.category',
             'base_domain': [website.website_domain()],
@@ -210,10 +217,11 @@ class ProductPublicCategory(models.Model):
             aggregates=['id:count'],
             groupby=['parent_id'],
         )
-        return [{
-            'id': parent_category.id,
-            'name': f'{parent_category.name} ({child_count})',
-        } for parent_category, child_count in child_count_by_parent if parent_category]
+        return [
+            {'id': parent_category.id, 'name': f'{parent_category.name} ({child_count})'}
+            for parent_category, child_count in child_count_by_parent
+            if parent_category
+        ]
 
     @api.model
     def _get_available_category_domain(self, website_id):

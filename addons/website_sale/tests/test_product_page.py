@@ -9,7 +9,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -20,7 +19,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         """Check that the "Contact Us" button:
         - is shown for zero-priced products
         - is hidden for other products
-        - is not displayed at the same time as the "Add to Cart" button
+        - is not displayed at the same time as the "Add to Cart" button.
         """
         self.website.prevent_sale = True
 
@@ -31,7 +30,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self.start_tour(red_sofa.website_url, 'website_sale.contact_us_button')
 
     def test_product_reviews_reactions_public(self):
-        """Check that public users can not react to reviews"""
+        """Check that public users can not react to reviews."""
         password = "Pl1bhD@2!kXZ"
         manager = self.env.ref("base.user_admin")
         manager.write({"password": password})
@@ -51,16 +50,11 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
             body="Bad box!",
             message_type="comment",
             rating_value="1",
-            subtype_xmlid="mail.mt_comment"
+            subtype_xmlid="mail.mt_comment",
         )
         self.authenticate(manager.login, password)
         self.make_jsonrpc_request(
-            "/mail/message/reaction",
-            {
-                "action": "add",
-                "content":  "😊",
-                "message_id": message.id,
-            },
+            "/mail/message/reaction", {"action": "add", "content": "😊", "message_id": message.id}
         )
 
         self.start_tour(
@@ -84,22 +78,28 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         self.start_tour(self.product.website_url, 'website_sale.product_pricelist_qty_change')
 
     def test_product_unpublished_without_category(self):
-        """Test that products created from frontend are unpublished without category"""
-        self.start_tour(self.env["website"].get_client_action_url("/"), 'product_unpublished_without_category', login="admin")
+        """Test that products created from frontend are unpublished without category."""
+        self.start_tour(
+            self.env["website"].get_client_action_url("/"),
+            'product_unpublished_without_category',
+            login="admin",
+        )
         product = self.env['product.product'].search(
-            [('name', '=', 'Product Without Category')],
-            limit=1,
+            [('name', '=', 'Product Without Category')], limit=1
         )
         self.assertTrue(product)
         self.assertFalse(product.website_published)
 
     def test_product_published_with_category(self):
-        """Test that products with category are published"""
+        """Test that products with category are published."""
         self.env['product.public.category'].create({'name': 'Test Category'})
-        self.start_tour(self.env["website"].get_client_action_url("/"), 'product_published_with_category', login="admin")
+        self.start_tour(
+            self.env["website"].get_client_action_url("/"),
+            'product_published_with_category',
+            login="admin",
+        )
         product = self.env['product.product'].search(
-            [('name', '=', 'Product With Category')],
-            limit=1,
+            [('name', '=', 'Product With Category')], limit=1
         )
         self.assertTrue(product)
         self.assertTrue(product.website_published)

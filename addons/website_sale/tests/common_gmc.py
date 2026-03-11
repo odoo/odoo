@@ -8,17 +8,13 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.ProductFeedController = ProductFeed()
         cls.env['res.config.settings'].create({'group_gmc_feed': True}).execute()
 
-        cls.gmc_feed = cls.env['product.feed'].create({
-            'name': "GMC",
-            'website_id': cls.website.id,
-        })
+        cls.gmc_feed = cls.env['product.feed'].create({'name': "GMC", 'website_id': cls.website.id})
 
         # Prepare products
         cls.product_template_sofa.list_price = 1000.0
@@ -33,21 +29,19 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
                 'name': "Sofa Combo",
                 'combo_item_ids': [
                     Command.create({'product_id': cls.red_sofa.id}),
-                    Command.create({'product_id': cls.blue_sofa.id})
-                ]
+                    Command.create({'product_id': cls.blue_sofa.id}),
+                ],
             },
             {
                 'name': "Blanket Combo",
-                'combo_item_ids': [
-                    Command.create({'product_id': cls.blanket.id}),
-                ]
-            }
+                'combo_item_ids': [Command.create({'product_id': cls.blanket.id})],
+            },
         ])
         cls.sofa_bundle = cls._create_product(
             name="Sofa + Blanket",
             type='combo',
             combo_ids=[Command.set(combos.ids)],
-            list_price=1099.0
+            list_price=1099.0,
         )
         cls.products = cls.red_sofa + cls.blue_sofa + cls.blanket + cls.sofa_bundle
         cls.products.website_published = True
@@ -59,13 +53,11 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
             'active': True,
             'rate_ids': [
                 Command.clear(),
-                Command.create({'name': Date.subtract(Date.today(), days=1), 'rate': 1.1})
+                Command.create({'name': Date.subtract(Date.today(), days=1), 'rate': 1.1}),
             ],
         })
         cls.eur_pricelist = cls._create_pricelist(
-            name="EUR",
-            currency_id=cls.eur_currency.id,
-            selectable=True,
+            name="EUR", currency_id=cls.eur_currency.id, selectable=True
         )
 
         # Needed for gmc tests to succeed, should be investigated and dropped someday ideally
@@ -75,9 +67,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
         feed = feed or self.gmc_feed
         feed = feed.with_context(lang=feed.lang_id.code)
         with MockRequest(
-            feed.env,
-            website=feed.website_id,
-            website_sale_current_pl=feed.pricelist_id.id,
+            feed.env, website=feed.website_id, website_sale_current_pl=feed.pricelist_id.id
         ):
             self.items = feed._prepare_gmc_items()
 

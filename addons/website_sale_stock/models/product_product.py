@@ -6,15 +6,20 @@ from odoo import fields, models
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    stock_notification_partner_ids = fields.Many2many('res.partner', relation='stock_notification_product_partner_rel', string='Back in stock Notifications')
+    stock_notification_partner_ids = fields.Many2many(
+        'res.partner',
+        relation='stock_notification_product_partner_rel',
+        string='Back in stock Notifications',
+    )
 
     def _has_stock_notification(self, partner):
         self.ensure_one()
         return partner in self.stock_notification_partner_ids
 
     def _get_max_quantity(self, website, sale_order, **kwargs):
-        """ The max quantity of a product is the difference between the quantity that's free to use
-        and the quantity that's already been added to the cart.
+        """Return The max quantity of a product.
+        It is the difference between the quantity that's free to use and the quantity that's already
+        been added to the cart.
 
         Note: self.ensure_one()
 
@@ -49,7 +54,7 @@ class ProductProduct(models.Model):
 
     def _send_availability_email(self):
         products = self.search([('stock_notification_partner_ids', '!=', False)]).filtered(
-            lambda p: not p._is_sold_out(),
+            lambda p: not p._is_sold_out()
         )
         self.env['ir.cron']._commit_progress(remaining=len(products.stock_notification_partner_ids))
 
@@ -58,7 +63,7 @@ class ProductProduct(models.Model):
             product = self.env['product.product'].browse(product_id)
             for partner_id in product.with_context(
                 # Only fetch the ids, all the other fields will be invalidated either way
-                prefetch_fields=False,
+                prefetch_fields=False
             ).stock_notification_partner_ids.ids:
                 partner = self.env['res.partner'].browse(partner_id)
                 self_ctxt = self.with_context(lang=partner.lang).with_user(website.salesperson_id)
@@ -79,7 +84,7 @@ class ProductProduct(models.Model):
                 )
                 mail_values = {
                     'subject': self_ctxt.env._(
-                        "%(product_name)s is back in stock", product_name=product_ctxt.name,
+                        "%(product_name)s is back in stock", product_name=product_ctxt.name
                     ),
                     'email_from': (
                         website.company_id.partner_id.email_formatted
@@ -95,7 +100,7 @@ class ProductProduct(models.Model):
                 self.env['ir.cron']._commit_progress(1)
 
     def _to_markup_data(self, website):
-        """ Override of `website_sale` to include the product availability in the offer. """
+        """Override of `website_sale` to include the product availability in the offer."""
         markup_data = super()._to_markup_data(website)
         if self.is_product_variant and self.is_storable:
             if not self._is_sold_out():

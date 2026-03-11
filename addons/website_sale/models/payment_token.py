@@ -7,7 +7,7 @@ class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
     def _get_available_tokens(self, *args, is_express_checkout=False, **kwargs):
-        """ Override of `payment` not to return the tokens in case of express checkout.
+        """Override of `payment` not to return the tokens in case of express checkout.
 
         :param dict args: Locally unused arguments.
         :param bool is_express_checkout: Whether the payment is made through express checkout.

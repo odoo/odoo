@@ -208,7 +208,6 @@ export class CartService {
             '/website_sale/should_show_product_configurator',
             {
                 product_template_id: productTemplateId,
-                ptav_ids: ptavs,
                 is_product_configured: isConfigured,
             }
         );

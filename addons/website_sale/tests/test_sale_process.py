@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 
 @tagged('post_install', '-at_install')
 class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsiteUser):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -30,14 +29,8 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'name': 'Legs',
             'sequence': 10,
             'value_ids': [
-                Command.create({
-                    'name': 'Steel',
-                    'sequence': 1,
-                }),
-                Command.create({
-                    'name': 'Aluminium',
-                    'sequence': 2,
-                }),
+                Command.create({'name': 'Steel', 'sequence': 1}),
+                Command.create({'name': 'Aluminium', 'sequence': 2}),
             ],
         })
         cls.conference_chair = cls.env['product.template'].create({
@@ -59,7 +52,9 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         })
         # Crappy hack: But otherwise the "Proceed To Checkout" modal button won't be displayed
         if 'optional_product_ids' in cls.env['product.template']:
-            cls.conference_chair.optional_product_ids = [Command.set(cls.chair_floor_protection.ids)]
+            cls.conference_chair.optional_product_ids = [
+                Command.set(cls.chair_floor_protection.ids)
+            ]
 
         cls.env['account.journal'].create({
             'name': 'Cash - Test',
@@ -73,10 +68,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
 
         if cls.env['ir.module.module']._get('payment_custom').state == 'installed':
             transfer_provider = cls.env.ref('payment.payment_provider_transfer')
-            transfer_provider.write({
-                'state': 'enabled',
-                'is_published': True,
-            })
+            transfer_provider.write({'state': 'enabled', 'is_published': True})
             transfer_provider._transfer_ensure_pending_msg_is_set()
 
     def test_01_admin_shop_tour(self):
@@ -112,7 +104,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'name': 'Tax 15%',
             'amount': 15,
             'type_tax_use': 'sale',
-            'tax_group_id': tax_group.id
+            'tax_group_id': tax_group.id,
         })
         # storage box
         self.product_product_7 = self.env['product.product'].create({
@@ -132,7 +124,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         self.start_tour(
             self.env['website'].get_client_action_url('/shop/cart', True),
             'website_sale.enable_extra_info',
-            login='admin'
+            login='admin',
         )
         self.start_tour('/shop/cart', 'website_sale.complete_flow_2', login='admin')
 
@@ -142,14 +134,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'name': 'Color',
             'sequence': 10,
             'display_type': 'color',
-            'value_ids': [
-                Command.create({
-                    'name': 'Red',
-                }),
-                Command.create({
-                    'name': 'Pink',
-                }),
-            ]
+            'value_ids': [Command.create({'name': 'Red'}), Command.create({'name': 'Pink'})],
         })
         self.env['product.template'].create({
             'name': 'Colored T-Shirt',
@@ -158,11 +143,8 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'type': 'consu',
             'website_published': True,
             'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': attribute.id,
-                    'value_ids': attribute.value_ids,
-                })
-            ]
+                Command.create({'attribute_id': attribute.id, 'value_ids': attribute.value_ids})
+            ],
         })
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour('/shop?search=Colored T-Shirt', 'website_sale.google_analytics_view_item')
@@ -171,12 +153,12 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'name': 'Basic Shirt',
             'standard_price': 500,
             'type': 'consu',
-            'website_published': True
+            'website_published': True,
         })
         self.start_tour('/shop?search=Basic Shirt', 'website_sale.google_analytics_add_to_cart')
 
     def test_06_public_user_shop_repair(self):
-        """ Public user purchasing repair service products in website shop. """
+        """Public user purchasing repair service products in website shop."""
         if self.env['ir.module.module']._get('repair').state != 'installed':
             self.skipTest("Repair is not installed")
 
@@ -215,18 +197,30 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         previous_step = checkout_step._get_previous_checkout_step(allowed_steps_domain)
         next_step = checkout_step._get_next_checkout_step(allowed_steps_domain)
         root = lxml.html.fromstring(response.content)
-        self.assertEqual(len(root.xpath(f'//a[@href="{previous_step.step_href}"]//span[text()="{previous_step.back_button_label}"]')), 2)
-        self.assertEqual(len(root.xpath(f'//a[@name="website_sale_main_button"][not(@href)]//span[text()="{next_step.main_button_label}"]')), 2)
+        self.assertEqual(
+            len(
+                root.xpath(
+                    f'//a[@href="{previous_step.step_href}"]//span[text()="{previous_step.back_button_label}"]'
+                )
+            ),
+            2,
+        )
+        self.assertEqual(
+            len(
+                root.xpath(
+                    f'//a[@name="website_sale_main_button"][not(@href)]//span[text()="{next_step.main_button_label}"]'
+                )
+            ),
+            2,
+        )
 
     def test_update_same_address_billing_shipping_edit(self):
-        """Phone field should be required when updating an adress for billing and shipping"""
+        """Phone field should be required when updating an adress for billing and shipping."""
         self.env['product.product'].create({
             'name': 'Office Chair Black TEST',
             'list_price': 12.50,
             'is_published': True,
         })
         self.start_tour(
-            '/shop',
-            'website_sale.update_billing_shipping_address',
-            login='website_user',
+            '/shop', 'website_sale.update_billing_shipping_address', login='website_user'
         )

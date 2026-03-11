@@ -17,4 +17,5 @@ class ProductDocument(models.Model):
         for document in self:
             if document.res_model == 'product.product' and document.shown_on_product_page:
                 raise ValidationError(
-                    _("Documents shown on product page cannot be restricted to a specific variant"))
+                    _("Documents shown on product page cannot be restricted to a specific variant")
+                )

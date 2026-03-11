@@ -4,7 +4,6 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 class WebsiteSaleStockCommon(WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -21,7 +20,7 @@ class WebsiteSaleStockCommon(WebsiteSaleCommon):
 
     @classmethod
     def _create_product(cls, **create_values):
-        """ Override of `website_sale` to create storable products by default and restrict them from
+        """Override of `website_sale` to create storable products by default and restrict them from
         selling when out of stock.
         """
         if create_values.get('type', 'consu') == 'consu':  # Only for goods.

@@ -6,7 +6,6 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged('post_install', '-at_install')
 class TestProductPublicCategory(TransactionCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -25,10 +24,7 @@ class TestProductPublicCategory(TransactionCase):
             {
                 'name': '1',
                 'child_id': create_multi([
-                    {
-                        'name': '1.1',
-                        'child_id': create_multi([{'name': '1.1.1'}]),
-                    },
+                    {'name': '1.1', 'child_id': create_multi([{'name': '1.1.1'}])},
                     {'name': '1.2', 'product_tmpl_ids': [Command.link(cls.published_product.id)]},
                 ]),
             },
@@ -37,13 +33,15 @@ class TestProductPublicCategory(TransactionCase):
                 'child_id': create_multi([
                     {
                         'name': '2.1',
-                        'child_id': create_multi([{
-                            'name': '2.1.1',
-                            'product_tmpl_ids': [
-                                Command.link(cls.published_product.id),
-                                Command.link(cls.unpublished_product.id)
-                            ],
-                        }]),
+                        'child_id': create_multi([
+                            {
+                                'name': '2.1.1',
+                                'product_tmpl_ids': [
+                                    Command.link(cls.published_product.id),
+                                    Command.link(cls.unpublished_product.id),
+                                ],
+                            }
+                        ]),
                     },
                     {'name': '2.2'},
                 ]),
@@ -52,15 +50,19 @@ class TestProductPublicCategory(TransactionCase):
         ])
 
     def test_search_has_published_products(self):
-        published_categs = set(self.env['product.public.category'].search(
-            [('has_published_products', 'not in', (False,))]
-        ).mapped('name'))
+        published_categs = set(
+            self.env['product.public.category']
+            .search([('has_published_products', 'not in', (False,))])
+            .mapped('name')
+        )
 
         self.assertSetEqual(published_categs, {'1', '1.2', '2', '2.1', '2.1.1'})
 
     def test_search_does_not_have_published_products(self):
-        unpublished_categs = set(self.env['product.public.category'].search(
-            [('has_published_products', '!=', True)]
-        ).mapped('name'))
+        unpublished_categs = set(
+            self.env['product.public.category']
+            .search([('has_published_products', '!=', True)])
+            .mapped('name')
+        )
 
         self.assertSetEqual(unpublished_categs, {'1.1', '1.1.1', '2.2', '3'})
