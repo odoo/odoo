@@ -1067,7 +1067,12 @@ class ChromeBrowser:
         log_path = pathlib.Path(self.user_data_dir, 'err.log')
         with log_path.open('wb') as log_file:
             # pylint: disable=subprocess-popen-preexec-fn
-            proc = subprocess.Popen(cmd, stderr=log_file, preexec_fn=_preexec)  # noqa: PLW1509
+            proc = subprocess.Popen(
+                cmd,
+                stderr=log_file,
+                preexec_fn=_preexec,
+                env={**os.environ, 'TMPDIR': self.user_data_dir},
+            )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
