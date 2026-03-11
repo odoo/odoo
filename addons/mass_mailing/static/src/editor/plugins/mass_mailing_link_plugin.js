@@ -4,7 +4,6 @@ import { MassMailingLinkPopover } from "../../components/mass_mailing_link_popov
 import { LinkPlugin } from "@html_editor/main/link/link_plugin";
 
 export class MassMailingLinkPlugin extends LinkPlugin {
-    static id = "link";
     resources = {
         ...this.resources,
         link_popovers: [

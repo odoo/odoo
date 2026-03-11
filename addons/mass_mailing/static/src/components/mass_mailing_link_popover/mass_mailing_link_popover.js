@@ -16,17 +16,17 @@ export class MassMailingLinkPopover extends LinkPopover {
     setup() {
         super.setup();
         this.linkElement = this.props.linkElement;
-        this.notrackingStatus = this.linkElement.dataset.noTracking || "0";
-        this.state.notracking = {
+        this.noTrackingStatus = this.linkElement.dataset.noTracking || "0";
+        this.state.noTracking = {
             label: "Disable Link Tracking",
             description: _t("Send the orignal url instead of wraping it into a tracking url"),
-            isChecked: this.notrackingStatus == "1",
+            isChecked: this.noTrackingStatus == "1",
         };
     }
 
     toggleDisableLinkTracking() {
-        this.notrackingStatus = this.notrackingStatus == "1" ? "0" : "1";
-        this.state.notracking.isChecked = !this.state.notracking.isChecked;
+        this.noTrackingStatus = this.noTrackingStatus == "1" ? "0" : "1";
+        this.state.noTracking.isChecked = !this.state.noTracking.isChecked;
     }
 
     shouldDisplayNoTrackingOption() {
@@ -47,7 +47,7 @@ export class MassMailingLinkPopover extends LinkPopover {
             this.state.linkTarget,
             this.state.attachmentId,
             relValue,
-            this.notrackingStatus
+            this.noTrackingStatus
         );
     }
 }

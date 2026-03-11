@@ -4,12 +4,12 @@
     <t t-name="mass_mailing.MailingLinkPopover"
        t-inherit="html_editor.linkPopover"
        t-inherit-mode="primary">
-        <xpath expr="//div[contains(@class, 'o_advance_options_grid')]" position="inside">
+        <xpath expr="//div[hasclass('o_advance_options_grid')]" position="inside">
             <t t-if="shouldDisplayNoTrackingOption()">
                 <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                    <span t-att-title="state.notracking.description"><t t-out="state.notracking.label"/></span>
+                    <span t-att-title="state.noTracking.description"><t t-out="state.noTracking.label"/></span>
                     <CheckBox
-                        value="state.notracking.isChecked"
+                        value="state.noTracking.isChecked"
                         onChange="toggleDisableLinkTracking.bind(this)"/>
                 </div>
             </t>
