@@ -4,9 +4,11 @@ import logging
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
-from odoo.addons.base_report_engine_paper_muncher.engine import PaperMuncher, status
+from odoo.addons.base_report_engine_paper_muncher.engine.paper_muncher import run_paper_muncher
+from odoo.addons.base_report_engine_paper_muncher.engine import status
 
 _logger = logging.getLogger(__name__)
+
 
 
 class IrActionsReport(models.Model):
@@ -31,10 +33,13 @@ class IrActionsReport(models.Model):
     @api.model
     def _run_paper_muncher(
         self,
-        html,
+        bodies,
         report_ref=False,
         landscape=False,
-        **kwargs,
+        header=None,
+        footer=None,
+        specific_paperformat_args=None,
+        set_viewport_size=False,
     ) -> bytes:
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
@@ -46,23 +51,21 @@ class IrActionsReport(models.Model):
         '''
 
         report_name = self._get_report(report_ref).report_name or "placeholder_report_title"
-        # TODO: find a better way to handle localhost url and mimetypes
-        args: list[str] = ["pipe://127.0.0.1:8069/" + report_name + '.html']
         if landscape:
             args += ['--orientation', 'landscape']
 
         paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
-        if paperformat_id:
-            if paperformat_id.format and paperformat_id.format != 'custom':
-                args += ['--paper', str(paperformat_id.format)]
 
-            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
-                args += ['--width', str(paperformat_id.page_width) + 'mm']
-                args += ['--height', str(paperformat_id.page_height) + 'mm']
-
-        pm_engine = PaperMuncher(self.env, html, report_name)
         try:
-            output = pm_engine.print(*args)
+            output = run_paper_muncher(
+                paperformat_id,
+                bodies,
+                header=header,
+                footer=footer,
+                landscape=landscape,
+                specific_paperformat_args=specific_paperformat_args,
+                set_viewport_size=set_viewport_size
+            )
         except Exception as e:  # noqa: BLE001
             _logger.error(
                 "Error while running paper-muncher",
@@ -74,5 +77,13 @@ class IrActionsReport(models.Model):
 
     def _run_pdf_engine(self, engine_name, html, report_ref=False, landscape=False, **kwargs):
         if engine_name == 'paper-muncher':
-            return self._run_paper_muncher(html, report_ref, landscape, **kwargs)
-        return super()._run_pdf_engine(engine_name, html, report_ref, landscape, **kwargs)
+            report_sudo = self._get_report(report_ref)
+            bodies, html_ids, header, footer, specific_paperformat_args = report_sudo \
+                .with_context(debug=False)._prepare_wkhtmltopdf_html(html, report_model=report_sudo.model)
+            return self._run_paper_muncher(bodies,
+                                           report_ref=report_ref,
+                                           header=header,
+                                           footer=footer,
+                                           landscape=landscape,
+                                           specific_paperformat_args=specific_paperformat_args)
+        return super()._run_pdf_engine(engine_name, html, report_ref, landscape)
