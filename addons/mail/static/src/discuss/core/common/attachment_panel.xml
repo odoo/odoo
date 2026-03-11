@@ -5,13 +5,13 @@
         <ActionPanel title.translate="Attachments" minWidth="200" initialWidth="400" icon="'fa fa-paperclip'">
             <div class="d-flex flex-column py-2 flex-grow-1">
                 <div class="flex-grow-1" t-att-class="{
-                    'd-flex justify-content-center align-items-center': props.channel.attachments.length === 0,
+                    'd-flex justify-content-center align-items-center': this.props.channel.attachments.length === 0,
                 }">
-                    <p t-if="props.channel.attachments.length === 0" class="text-center fst-italic text-500">
-                        <t t-if="props.channel.channel_type === 'channel'">This channel doesn't have any attachments.</t>
+                    <p t-if="this.props.channel.attachments.length === 0" class="text-center fst-italic text-500">
+                        <t t-if="this.props.channel.channel_type === 'channel'">This channel doesn't have any attachments.</t>
                         <t t-else="">This conversation doesn't have any attachments.</t>
                     </p>
-                    <div t-else="" t-foreach="attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
+                    <div t-else="" t-foreach="this.attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
                         <DateSection date="dateDay" className="'my-1'"/>
                         <AttachmentList attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
                     </div>

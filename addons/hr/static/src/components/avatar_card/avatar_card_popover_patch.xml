@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
         <xpath expr="//a[hasclass('o-mail-avatar-card-tel')]" position="after">
-            <span t-if="employee?.work_location_id" class="text-muted" data-tooltip="Work Location">
-                <i t-if="employee.work_location_id.location_type === 'office'" class="me-1 fa fa-fw fa-building-o"/>
-                <i t-elif="employee.work_location_id.location_type === 'home'" class="me-1 fa fa-fw fa-home"/>
+            <span t-if="this.employee?.work_location_id" class="text-muted" data-tooltip="Work Location">
+                <i t-if="this.employee.work_location_id.location_type === 'office'" class="me-1 fa fa-fw fa-building-o"/>
+                <i t-elif="this.employee.work_location_id.location_type === 'home'" class="me-1 fa fa-fw fa-home"/>
                 <i t-else="" class="me-1 fa fa-fw fa-map-marker"/>
-                <t t-out="employee.work_location_id.name"/>
+                <t t-out="this.employee.work_location_id.name"/>
             </span>
         </xpath>
     </t>

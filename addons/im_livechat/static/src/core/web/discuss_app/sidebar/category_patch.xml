@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
-            <i t-if="store.discuss.isSidebarCompact and props.channel.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and props.channel.matchesSelfExpertise"
+            <i t-if="this.store.discuss.isSidebarCompact and this.props.channel.discussAppCategory.eq(this.store.discuss.livechatLookingForHelpCategory) and this.props.channel.matchesSelfExpertise"
                class="fa fa-star o-mail-favorite position-absolute top-0 start-0 z-1"
                role="image"
                title="Relevant to your expertise"
             />
             <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="templateParams" t-value="{ livechatThread: props.channel.thread, small: true }"/>
+                <t t-set="templateParams" t-value="{ livechatThread: this.props.channel.thread, small: true }"/>
             </t>
         </xpath>
     </t>

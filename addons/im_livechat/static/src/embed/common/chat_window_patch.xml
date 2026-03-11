@@ -2,22 +2,22 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
-           <FeedbackPanel t-if="props.chatWindow.feedbackDoneResolver" onClickClose="() => this.props.chatWindow.feedbackDoneResolver.resolve()" onClickNewSession="() => this.onClickNewSession()" thread="channel.thread"/>
+           <FeedbackPanel t-if="this.props.chatWindow.feedbackDoneResolver" onClickClose="() => this.props.chatWindow.feedbackDoneResolver.resolve()" onClickNewSession="() => this.onClickNewSession()" thread="this.channel.thread"/>
            <t t-else="">
             <t>$0</t>
            </t>
         </xpath>
-        <xpath expr="//*[@t-custom-ref='needactionCounter']" position="replace">
-            <t t-if="!channel.chatbot">$0</t>
+        <xpath expr="//*[@t-custom-ref='this.needactionCounter']" position="replace">
+            <t t-if="!this.channel.chatbot">$0</t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
-            <attribute name="t-attf-style" add="color: {{ livechatService.options.title_color }}; --o-mail-livechat-btn-color: {{ livechatService.options.title_color }}; background-color: {{ livechatService.options.header_background_color }} !important;" separator=" "/>
+            <attribute name="t-attf-style" add="color: {{ this.livechatService.options.title_color }}; --o-mail-livechat-btn-color: {{ this.livechatService.options.title_color }}; background-color: {{ this.livechatService.options.header_background_color }} !important;" separator=" "/>
         </xpath>
-        <xpath expr="//*[@t-custom-ref='composerHiddenContainer']" position="inside">
-            <button t-if="showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.props.chatWindow.requestClose()">Continue</button>
+        <xpath expr="//*[@t-custom-ref='this.composerHiddenContainer']" position="inside">
+            <button t-if="this.showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.props.chatWindow.requestClose()">Continue</button>
         </xpath>
-        <xpath expr="//*[@t-custom-ref='composerHiddenContainer']" position="attributes">
-            <attribute name="t-attf-class" add="{{ showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
+        <xpath expr="//*[@t-custom-ref='this.composerHiddenContainer']" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
         </xpath>
     </t>
 </templates>

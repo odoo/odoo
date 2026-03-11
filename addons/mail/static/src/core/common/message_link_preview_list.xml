@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageLinkPreviewList">
-        <div class="o-mail-LinkPreviewList d-flex flex-column mt-1" t-att-class="{ 'me-2 pe-4': env.inChatWindow and !env.alignedRight, 'ms-2 ps-4': env.inChatWindow and env.alignedRight }">
+        <div class="o-mail-LinkPreviewList d-flex flex-column mt-1" t-att-class="{ 'me-2 pe-4': this.env.inChatWindow and !this.env.alignedRight, 'ms-2 ps-4': this.env.inChatWindow and this.env.alignedRight }">
             <div class="d-flex flex-column">
-                <LinkPreview t-foreach="props.messageLinkPreviews" t-as="messageLinkPreview" t-key="messageLinkPreview.id" messageLinkPreview="messageLinkPreview"/>
+                <LinkPreview t-foreach="this.props.messageLinkPreviews" t-as="messageLinkPreview" t-key="messageLinkPreview.id" messageLinkPreview="messageLinkPreview"/>
             </div>
         </div>
     </t>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel t-if="!env[DROPDOWN_NESTING] and env.inChatWindow" title.translate="Notification Settings" resizable="!!env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
+        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-bell'">
             <t t-call="discuss.NotificationSettings.content"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.NotificationSettings.content"/>
@@ -10,62 +10,62 @@
 
     <t t-name="discuss.NotificationSettings.content">
         <div class="o-discuss-NotificationSettings">
-            <t t-if="props.channel.channel_type === 'channel'">
+            <t t-if="this.props.channel.channel_type === 'channel'">
                 <t t-call="discuss.NotificationSettings.unMuteSttings" />
-                <Dropdown position="ui.isSmall ? 'bottom-end' : 'right-start'" state="muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 py-0 ' + store.discussDropdownMenuClass(this)" manual="true">
+                <Dropdown position="this.ui.isSmall ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 py-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
                     <button class="btn w-100 d-flex border-0 py-2 opacity-100-hover" t-att-class="{
-                        'o-px-2_5': env[DROPDOWN_NESTING],
-                        'o-ps-2_5 o-pe-1_5': !env[DROPDOWN_NESTING],
-                        'opacity-100': muteConversationDropdownState.isOpen,
-                        'opacity-75': !muteConversationDropdownState.isOpen,
+                        'o-px-2_5': this.env[this.DROPDOWN_NESTING],
+                        'o-ps-2_5 o-pe-1_5': !this.env[this.DROPDOWN_NESTING],
+                        'opacity-100': this.muteConversationDropdownState.isOpen,
+                        'opacity-75': !this.muteConversationDropdownState.isOpen,
                     }" t-custom-ref="mute-button">
                         <span class="text-wrap text-start text-break">Mute Conversation</span>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                        <i t-if="!env[DROPDOWN_NESTING]" class="fa fa-caret-right fa-lg mx-2"/>
+                        <i t-if="!this.env[this.DROPDOWN_NESTING]" class="fa fa-caret-right fa-lg mx-2"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-call="discuss.NotificationSettings.muteSttings"/>
                     </t>
                 </Dropdown>
                 <hr class="solid o-mx-2_5 mt-1 mb-2"/>
-                <button class="btn d-flex w-100 o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-on-click="() => store.settings.setCustomNotifications(false, props.channel)">
+                <button class="btn d-flex w-100 o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-on-click="() => this.store.settings.setCustomNotifications(false, this.props.channel)">
                     <div class="d-flex flex-column align-items-start">
                         <span class="fs-6 text-wrap text-start text-break">Use Default</span>
-                        <span class="o-fw-600 o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.label === store.settings.channel_notifications).name"/></span>
+                        <span class="o-fw-600 o-xsmaller ps-2 o-discuss-NotificationSettings-defaultValue"><t t-out="this.store.settings.NOTIFICATIONS.find((n) => n.label === this.store.settings.channel_notifications).name"/></span>
                     </div>
                     <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                    <input class="form-check-input shadow-sm me-1" type="radio" t-att-checked="!props.channel.self_member_id?.custom_notifications"/>
+                    <input class="form-check-input shadow-sm me-1" type="radio" t-att-checked="!this.props.channel.self_member_id?.custom_notifications"/>
                 </button>
-                <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
-                    <button class="btn w-100 d-flex o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-att-class="{ 'mb-1': notif_last and !env[DROPDOWN_NESTING] }" t-on-click="() => store.settings.setCustomNotifications(notif.label, props.channel)">
+                <t t-foreach="this.store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
+                    <button class="btn w-100 d-flex o-ps-2_5 o-pe-1_5 py-1 border-0 opacity-75 opacity-100-hover" t-att-class="{ 'mb-1': notif_last and !this.env[this.DROPDOWN_NESTING] }" t-on-click="() => this.store.settings.setCustomNotifications(notif.label, this.props.channel)">
                         <span class="fs-6 fw-normal text-wrap text-start text-break" t-out="notif.name"/>
                         <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                        <input class="form-check-input ms-2 shadow-sm me-1" type="radio" t-att-checked="props.channel.self_member_id?.custom_notifications === notif.label"/>
+                        <input class="form-check-input ms-2 shadow-sm me-1" type="radio" t-att-checked="this.props.channel.self_member_id?.custom_notifications === notif.label"/>
                     </button>
                 </t>
             </t>
             <t t-else="">
-                <span t-if="!env[DROPDOWN_NESTING]" class="p-2 pb-0 d-flex smaller fw-bold text-muted">Mute Conversation</span>
+                <span t-if="!this.env[this.DROPDOWN_NESTING]" class="p-2 pb-0 d-flex smaller fw-bold text-muted">Mute Conversation</span>
                 <t t-call="discuss.NotificationSettings.muteSttings"/>
             </t>
         </div>
     </t>
 
     <t t-name="discuss.NotificationSettings.muteSttings">
-        <div class="d-flex flex-column" t-attf-class="{{ store.discussDropdownMenuClass(this) }}" t-custom-ref="mute-menu">
-            <t t-if="props.channel.channel_type !== 'channel'" t-call="discuss.NotificationSettings.unMuteSttings" />
-            <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
+        <div class="d-flex flex-column" t-attf-class="{{ this.store.discussDropdownMenuClass(this) }}" t-custom-ref="mute-menu">
+            <t t-if="this.props.channel.channel_type !== 'channel'" t-call="discuss.NotificationSettings.unMuteSttings" />
+            <t t-foreach="this.store.settings.MUTES" t-as="mute" t-key="mute.label">
                 <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn btn-secondary rounded-0 d-flex align-items-center px-3 o-py-1_5 m-0'" onSelected="()=>this.setMute(mute.value)"><t t-out="mute.name"/></DropdownItem>
             </t>
         </div>
     </t>
 
     <t t-name="discuss.NotificationSettings.unMuteSttings">
-        <t t-if="props.channel.self_member_id?.mute_until_dt">
+        <t t-if="this.props.channel.self_member_id?.mute_until_dt">
             <button class="btn w-100 d-flex o-px-2_5 py-1 opacity-75 border-0 opacity-75 opacity-100-hover" t-on-click="()=>this.setMute(false)">
                 <div class="d-flex flex-column flex-grow-1 w-100 rounded">
                     <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
-                    <span class="fw-normal smaller text-start text-muted" t-out="store.settings.getMuteUntilText(props.channel.self_member_id?.mute_until_dt)"/>
+                    <span class="fw-normal smaller text-start text-muted" t-out="this.store.settings.getMuteUntilText(this.props.channel.self_member_id?.mute_until_dt)"/>
                 </div>
             </button>
         </t>
