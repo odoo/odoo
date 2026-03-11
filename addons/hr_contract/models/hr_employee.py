@@ -285,6 +285,10 @@ class Employee(models.Model):
             duration_data['hours'] += contract_duration_data['hours']
         return duration_data
 
+    def filter_valid(self, checked_date):
+        valid_contracts = self._get_contracts(checked_date, checked_date, states=['open', 'close'])
+        return valid_contracts.mapped('employee_id')
+
     def write(self, vals):
         res = super().write(vals)
         if vals.get('contract_id'):

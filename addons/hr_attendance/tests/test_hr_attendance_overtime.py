@@ -63,6 +63,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'tz': 'UTC',
             'resource_calendar_id': cls.calendar_flex_40h.id,
         })
+        cls.is_module_hr_contract_installed = hasattr(cls.env['hr.employee'], 'contract_id')
 
     def test_overtime_company_settings(self):
         self.company.write({
@@ -614,10 +615,12 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         self.env['hr.attendance']._cron_absence_detection()
 
+        overtime_assertion = -8 if not self.is_module_hr_contract_installed else 0
+
         # Check that absences were correctly attributed
-        self.assertAlmostEqual(self.other_employee.total_overtime, -8, 2)
-        self.assertAlmostEqual(self.jpn_employee.total_overtime, -8, 2)
-        self.assertAlmostEqual(self.honolulu_employee.total_overtime, -8, 2)
+        self.assertAlmostEqual(self.other_employee.total_overtime, overtime_assertion, 2)
+        self.assertAlmostEqual(self.jpn_employee.total_overtime, overtime_assertion, 2)
+        self.assertAlmostEqual(self.honolulu_employee.total_overtime, overtime_assertion, 2)
 
         # Employee Checked in yesterday, no absence found
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
