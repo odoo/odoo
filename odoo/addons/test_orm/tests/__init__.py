@@ -38,4 +38,5 @@ from . import (
     test_schema,
     test_search,
     test_search_order,
+    test_sort,
 )

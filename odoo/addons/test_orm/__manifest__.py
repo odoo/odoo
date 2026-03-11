@@ -43,6 +43,7 @@
         'security/test_related_translation/ir.model.access.csv',
         'security/test_schema/ir.model.access.csv',
         'security/test_search/ir.model.access.csv',
+        'security/test_sort/ir.model.access.csv',
 
         # VIEWS
     ],
