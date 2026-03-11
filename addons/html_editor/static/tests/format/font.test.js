@@ -18,30 +18,32 @@ test("should change the containing block with the font", async () => {
     expect(getContent(el)).toBe("<blockquote>ab[cde]fg</blockquote>");
 });
 
-test("should have font tool only if the block is content editable", async () => {
-    for (const [contenteditable, count] of [
-        [false, 0],
-        [true, 1],
-    ]) {
-        await setupEditor(
-            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
-        );
-        await expandToolbar();
-        expect(".btn[name='font_type']").toHaveCount(count);
-    }
+test("should have font tool only if the block is content editable (non editable)", async () => {
+    await setupEditor(
+        `<div contenteditable="false"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='font_type']").toHaveCount(0);
+});
+
+test("should have font tool only if the block is content editable (editable)", async () => {
+    await setupEditor(
+        `<div contenteditable="true"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='font_type']").toHaveCount(1);
 });
 
 test("should not have font tool if it would need to re-tag a block which is in a non-editable element", async () => {
-    for (const [contenteditable, count] of [
-        [false, 0],
-        [true, 1],
-    ]) {
-        await setupEditor(
-            `<div contenteditable="${contenteditable}"><p contenteditable="true">ab[cde]fg</p></div>`
-        );
-        await expandToolbar();
-        expect(".btn[name='font_type']").toHaveCount(count);
-    }
+    await setupEditor(`<div contenteditable="false"><p contenteditable="true">ab[cde]fg</p></div>`);
+    await expandToolbar();
+    expect(".btn[name='font_type']").toHaveCount(0);
+});
+
+test("should have font tool if it would need to re-tag a block which is in an editable element", async () => {
+    await setupEditor(`<div contenteditable="true"><p contenteditable="true">ab[cde]fg</p></div>`);
+    await expandToolbar();
+    expect(".btn[name='font_type']").toHaveCount(1);
 });
 
 test("should allow creation of a block in a div which is in a non-editable element", async () => {
