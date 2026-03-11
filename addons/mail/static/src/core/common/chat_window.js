@@ -61,6 +61,20 @@ export class ChatWindow extends Component {
         useBackButton(() => this.close());
     }
 
+    get autofocusComposer() {
+        if (this.isMobileOS || this.channel.composerDisabled || this.channel.composerHidden) {
+            return undefined;
+        }
+        return this.props.chatWindow.autofocus;
+    }
+
+    get autofocusThread() {
+        if (this.isMobileOS || this.channel.composerDisabled || this.channel.composerHidden) {
+            return this.props.chatWindow.autofocus;
+        }
+        return undefined;
+    }
+
     get hasActionsMenu() {
         const partition = this.threadActions.partition;
         return (
