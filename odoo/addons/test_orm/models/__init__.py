@@ -26,4 +26,5 @@ from . import (
     test_read_grouping_sets,
     test_related_translation,
     test_schema,
+    test_search,
 )
