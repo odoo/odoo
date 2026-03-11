@@ -74,6 +74,55 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_show_default_with_register_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Add a product to the first direct-sale order
+            ProductScreen.addOrderline("Coca-Cola", "1"),
+            // Assign the order to table 5: Set Table → enter 5 → Assign
+            {
+                content: "click Set Table button",
+                trigger: ".product-screen .actionpad .set-table",
+                run: "click",
+            },
+            ProductScreen.clickNumpad("5"),
+            {
+                content: "table number 5 is shown in the input",
+                trigger: ".product-screen .input .input-value:contains('5')",
+            },
+            {
+                content: "click Assign to assign order to table 5",
+                trigger: ".product-screen .actionpad .assign-button",
+                run: "click",
+            },
+            // Click "New" which calls showDefault() - this is the bug trigger
+            {
+                content: "click New button to navigate to a new empty order",
+                trigger: ".product-screen .actionpad button:contains('New')",
+                run: "click",
+            },
+            // Go to ticket screen and load the table order with Coca-Cola
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+            // Verify the loaded order has Coca-Cola (not an empty order due to wrong selectedOrderUuid)
+            {
+                content: "loaded order should contain Coca-Cola",
+                trigger: ".product-screen .orderline .product-name:contains('Coca-Cola')",
+            },
+            // Click "New" again from the loaded table order
+            {
+                content: "click New button again",
+                trigger: ".product-screen .actionpad button:contains('New')",
+                run: "click",
+            },
+            // Verify the resulting order is empty
+            ProductScreen.orderIsEmpty(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_sync_lines_qty_update_ticket_screen", {
     steps: () =>
         [
