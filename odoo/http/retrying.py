@@ -64,7 +64,10 @@ def retrying[T](func: Callable[[], T], env: Environment) -> T:
                 env.transaction.reset()
                 env.registry.reset_changes()
                 if request:
-                    request.session = request._get_session_and_dbname()[0]
+                    # We need to reset the `session` attribute of `request`
+                    # which may have been modified during the transaction.
+                    # The `dbname` remains the same (consistent with the session).
+                    _set_session_and_dbname(request)
                     # Rewind files in case of failure
                     for filename, file in request.httprequest.files.items():
                         if hasattr(file, "seekable") and file.seekable():
@@ -113,4 +116,5 @@ def retrying[T](func: Callable[[], T], env: Environment) -> T:
     return result
 
 
-from .requestlib import request  # noqa: E402
+# ruff: noqa: E402
+from .router import _set_session_and_dbname, request
