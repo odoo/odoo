@@ -98,6 +98,14 @@ describe("inline code", () => {
         });
     });
 
+    test("should not convert text into inline code when space is avaialbe right after first backtick", async () => {
+        await testEditor({
+            contentBefore: "<p>ab` test[]</p>",
+            stepFunction: async (editor) => await insertText(editor, "`"),
+            contentAfter: "<p>ab` test`[]</p>",
+        });
+    });
+
     test("should not convert text into inline code when interrupted by linebreak", async () => {
         await testEditor({
             contentBefore: "<p>ab`c<br>d[]ef</p>",
