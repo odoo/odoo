@@ -21,4 +21,5 @@ from . import (
     test_performance,
     test_properties,
     test_qweb_float,
+    test_read_group_override,
 )
