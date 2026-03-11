@@ -134,6 +134,11 @@ export class Thread extends Record {
         },
     });
     isDisplayedOnUpdate() {}
+
+    get composerHidden() {
+        return false;
+    }
+
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
