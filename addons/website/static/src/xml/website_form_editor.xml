@@ -251,7 +251,7 @@
 
     <!-- Radio -->
     <t t-name="website.form_radio">
-        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <t t-set="recordId" t-value="this.field.id + record_index"/>
         <div t-attf-class="radio col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
@@ -338,7 +338,7 @@
 
     <!-- Checkbox -->
     <t t-name="website.form_checkbox">
-        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <t t-set="recordId" t-value="this.field.id + record_index"/>
         <div t-attf-class="checkbox col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
