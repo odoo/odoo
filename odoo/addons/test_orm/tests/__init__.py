@@ -34,4 +34,5 @@ from . import (
     test_read_group_private,
     test_read_grouping_sets,
     test_registry_signaling,
+    test_related_translation,
 )
