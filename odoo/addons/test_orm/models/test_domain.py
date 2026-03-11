@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class DomainBool(models.Model):
+class TestDomainBool(models.Model):
     _name = 'test_domain.bool'
     _description = 'Boolean Domain'
 
@@ -13,28 +13,28 @@ class DomainBool(models.Model):
     bool_undefined = fields.Boolean('b3')
 
 
-class TestOrmEmpty_Int(models.Model):
+class TestDomainEmptyInt(models.Model):
     _name = 'test_domain.empty_int'
     _description = 'A model to test empty int'
 
     number = fields.Integer('Number')
 
 
-class TestOrmEmpty_Char(models.Model):
+class TestDomainEmptyChar(models.Model):
     _name = 'test_domain.empty_char'
     _description = 'A model to test emtpy char'
 
     name = fields.Char('Name')
 
 
-class TestOrmIndexed_Translation(models.Model):
+class TestDomainIndexedTranslation(models.Model):
     _name = 'test_domain.indexed_translation'
     _description = 'A model to indexed translated fields'
 
     name = fields.Text('Name trigram', translate=True, index='trigram')
 
 
-class TestOrmAnyParent(models.Model):
+class TestDomainAnyParent(models.Model):
     _name = 'test_domain.any.parent'
     _description = 'Any Parent'
 
@@ -42,7 +42,7 @@ class TestOrmAnyParent(models.Model):
     child_ids = fields.One2many('test_domain.any.child', 'parent_id')
 
 
-class TestOrmAnyChild(models.Model):
+class TestDomainAnyChild(models.Model):
     _name = 'test_domain.any.child'
     _description = 'Any Child'
     _inherits = {
@@ -55,7 +55,7 @@ class TestOrmAnyChild(models.Model):
     tag_ids = fields.Many2many('test_domain.any.tag')
 
 
-class TestOrmAnyTag(models.Model):
+class TestDomainAnyTag(models.Model):
     _name = 'test_domain.any.tag'
     _description = 'Any tag'
 
@@ -63,7 +63,7 @@ class TestOrmAnyTag(models.Model):
     child_ids = fields.Many2many('test_domain.any.child')
 
 
-class TestOrmMixed(models.Model):
+class TestDomainMixed(models.Model):
     _name = 'test_domain.mixed'
     _description = 'Test ORM Mixed'
 
@@ -106,7 +106,7 @@ class TestOrmMixed(models.Model):
                 if not model.model.startswith('ir.')]
 
 
-class TestOrmModel_Active_Field(models.Model):
+class TestDomainModelActiveField(models.Model):
     _name = 'test_domain.model_active_field'
     _description = 'A model with active field'
 
@@ -130,7 +130,7 @@ class TestOrmModel_Active_Field(models.Model):
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
-class TestOrmFoo(models.Model):
+class TestDomainFoo(models.Model):
     _name = 'test_domain.foo'
     _description = 'Test ORM Foo'
 
@@ -140,7 +140,7 @@ class TestOrmFoo(models.Model):
     text = fields.Char(trim=False)
 
 
-class TestOrmBar(models.Model):
+class TestDomainBar(models.Model):
     _name = 'test_domain.bar'
     _description = 'Test ORM Bar'
 
@@ -163,7 +163,7 @@ class TestOrmBar(models.Model):
         return [('name', 'in', records.mapped('name'))]
 
 
-class TestOrmCategory(models.Model):
+class TestDomainCategory(models.Model):
     _name = 'test_domain.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -236,7 +236,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestDomainDiscussion(models.Model):
     _name = 'test_domain.discussion'
     _description = 'Test ORM Discussion'
 
@@ -286,7 +286,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestDomainMessage(models.Model):
     _name = 'test_domain.message'
     _description = 'Test ORM Message'
 
@@ -389,7 +389,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestDomainEmailmessage(models.Model):
     _name = 'test_domain.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_domain.message': 'message'}

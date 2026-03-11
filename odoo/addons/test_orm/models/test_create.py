@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class TestOrmMixed(models.Model):
+class TestCreateMixed(models.Model):
     _name = 'test_create.mixed'
     _description = 'Test ORM Mixed'
 

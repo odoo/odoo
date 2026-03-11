@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class Test_Access_RightSome_Obj(models.Model):
+class TestIrRulesSomeObj(models.Model):
     _name = 'test_ir_rules.some_obj'
     _description = 'Object For Test Access Right'
 
@@ -17,7 +17,7 @@ class Test_Access_RightSome_Obj(models.Model):
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
 
 
-class Test_Access_RightObj_Categ(models.Model):
+class TestIrRulesObjCateg(models.Model):
     _name = 'test_ir_rules.obj_categ'
     _description = "Context dependent searchable model"
 
@@ -30,14 +30,14 @@ class Test_Access_RightObj_Categ(models.Model):
         return super().search_fetch(domain, field_names, offset, limit, order)
 
 
-class Test_Access_RightContainer(models.Model):
+class TestIrRulesContainer(models.Model):
     _name = 'test_ir_rules.container'
     _description = 'Test Access Right Container'
 
     some_ids = fields.Many2many('test_ir_rules.some_obj', 'test_ir_rules_rel', 'container_id', 'some_id')
 
 
-class Test_Access_RightInherits(models.Model):
+class TestIrRulesInherits(models.Model):
     _name = 'test_ir_rules.inherits'
     _description = 'Object for testing related access rights'
 

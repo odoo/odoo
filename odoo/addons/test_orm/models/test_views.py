@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class TestOrmCategory(models.Model):
+class TestViewsCategory(models.Model):
     _name = 'test_views.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -77,7 +77,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestViewsDiscussion(models.Model):
     _name = 'test_views.discussion'
     _description = 'Test ORM Discussion'
 
@@ -127,7 +127,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestViewsMessage(models.Model):
     _name = 'test_views.message'
     _description = 'Test ORM Message'
 
@@ -230,7 +230,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestViewsEmailmessage(models.Model):
     _name = 'test_views.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_views.message': 'message'}
@@ -242,7 +242,7 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmCreativeworkEdition(models.Model):
+class TestViewsCreativeworkEdition(models.Model):
     _name = 'test_views.creativework.edition'
     _description = 'Test ORM Creative Work Edition'
 
@@ -252,7 +252,7 @@ class TestOrmCreativeworkEdition(models.Model):
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
-class TestOrmCreativeworkBook(models.Model):
+class TestViewsCreativeworkBook(models.Model):
     _name = 'test_views.creativework.book'
     _description = 'Test ORM Creative Work Book'
 
@@ -262,7 +262,7 @@ class TestOrmCreativeworkBook(models.Model):
     )
 
 
-class TestOrmCreativeworkMovie(models.Model):
+class TestViewsCreativeworkMovie(models.Model):
     _name = 'test_views.creativework.movie'
     _description = 'Test ORM Creative Work Movie'
 
@@ -272,7 +272,7 @@ class TestOrmCreativeworkMovie(models.Model):
     )
 
 
-class TestOrmMixed(models.Model):
+class TestViewsMixed(models.Model):
     _name = 'test_views.mixed'
     _description = 'Test ORM Mixed'
 
@@ -334,7 +334,7 @@ class CalendarTest(models.Model):
         self.date_start = self.date_end = fields.Date.today()
 
 
-class TestOrmModelAll_Access(models.Model):
+class TestViewsModelAllAccess(models.Model):
     _name = 'test_views.model.all_access'
     _description = "Testing Utilities attrs and groups: if free access rights"
 
@@ -346,7 +346,7 @@ class TestOrmModelAll_Access(models.Model):
         return
 
 
-class TestOrmModelSome_Access(models.Model):
+class TestViewsModelSomeAccess(models.Model):
     _name = 'test_views.model.some_access'
     _description = 'Testing Utilities attrs and groups'
 
@@ -364,7 +364,7 @@ class TestOrmModelSome_Access(models.Model):
     g_id = fields.Many2one("test_views.model.all_access", string="m2o g_id")
 
 
-class TestOrmModel2Some_Access(models.Model):
+class TestViewsModel2SomeAccess(models.Model):
     _name = 'test_views.model2.some_access'
     _description = 'Testing Utilities attrs and groups sub'
 
@@ -372,7 +372,7 @@ class TestOrmModel2Some_Access(models.Model):
     g_d = fields.Integer(related='g_id.d')
 
 
-class TestOrmModel3Some_Access(models.Model):
+class TestViewsModel3SomeAccess(models.Model):
     _name = 'test_views.model3.some_access'
     _description = 'Testing Utilities attrs and groups sub sub'
 
@@ -380,7 +380,7 @@ class TestOrmModel3Some_Access(models.Model):
     xxx_sub_id = fields.Many2one(related='xxx_id.g_id')
 
 
-class TestOrmModel_Binary(models.Model):
+class TestViewsModelBinary(models.Model):
     _name = 'test_views.model_binary'
     _description = 'Test Image field'
 

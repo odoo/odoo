@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class Test_PerformanceSimpleMinded(models.Model):
+class TestTimeitSimpleMinded(models.Model):
     _name = 'test_timeit.simple.minded'
     _description = 'test_timeit.simple.minded'
 

@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class TestOrmCategory(models.Model):
+class TestJsonFieldCategory(models.Model):
     _name = 'test_json_field.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -77,7 +77,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestJsonFieldDiscussion(models.Model):
     _name = 'test_json_field.discussion'
     _description = 'Test ORM Discussion'
 
@@ -127,7 +127,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestJsonFieldMessage(models.Model):
     _name = 'test_json_field.message'
     _description = 'Test ORM Message'
 
@@ -230,7 +230,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestJsonFieldEmailmessage(models.Model):
     _name = 'test_json_field.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_json_field.message': 'message'}

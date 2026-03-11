@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class TestOrmCrew(models.Model):
+class TestMany2manyCrew(models.Model):
     _name = 'test_many2many.crew'
     _description = 'All yaaaaaarrrrr by ship'
     _table = 'test_many2many_crew'
@@ -13,7 +13,7 @@ class TestOrmCrew(models.Model):
     ship_id = fields.Many2one('test_many2many.ship')
 
 
-class TestOrmShip(models.Model):
+class TestMany2manyShip(models.Model):
     _name = 'test_many2many.ship'
     _description = 'Yaaaarrr machine'
 
@@ -22,7 +22,7 @@ class TestOrmShip(models.Model):
     prisoner_ids = fields.Many2many('test_many2many.prisoner', 'test_many2many_crew', 'ship_id', 'prisoner_id')
 
 
-class TestOrmPirate(models.Model):
+class TestMany2manyPirate(models.Model):
     _name = 'test_many2many.pirate'
     _description = 'Yaaarrr'
 
@@ -30,7 +30,7 @@ class TestOrmPirate(models.Model):
     ship_ids = fields.Many2many('test_many2many.ship', 'test_many2many_crew', 'pirate_id', 'ship_id')
 
 
-class TestOrmPrisoner(models.Model):
+class TestMany2manyPrisoner(models.Model):
     _name = 'test_many2many.prisoner'
     _description = 'Yaaarrr minions'
 
@@ -38,7 +38,7 @@ class TestOrmPrisoner(models.Model):
     ship_ids = fields.Many2many('test_many2many.ship', 'test_many2many_crew', 'prisoner_id', 'ship_id')
 
 
-class TestOrmAttachment(models.Model):
+class TestMany2manyAttachment(models.Model):
     _name = 'test_many2many.attachment'
     _description = 'Attachment'
     _access_domain_heavy = True
@@ -64,7 +64,7 @@ class TestOrmAttachment(models.Model):
         return super().modified(fnames, *args, **kwargs)
 
 
-class TestOrmAttachmentHost(models.Model):
+class TestMany2manyAttachmentHost(models.Model):
     _name = 'test_many2many.attachment.host'
     _description = 'Attachment Host'
 

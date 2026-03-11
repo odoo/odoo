@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
-class TestOrmMulti(models.Model):
+class TestOne2manyMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
     """
@@ -33,7 +33,7 @@ class TestOrmMulti(models.Model):
             line.tags |= self.tags
 
 
-class TestOrmMultiLine(models.Model):
+class TestOne2manyMultiLine(models.Model):
     _name = 'test_one2many.multi.line'
     _description = 'Test ORM Multi Line'
 
@@ -43,7 +43,7 @@ class TestOrmMultiLine(models.Model):
     tags = fields.Many2many('test_one2many.multi.tag')
 
 
-class TestOrmMultiTag(models.Model):
+class TestOne2manyMultiTag(models.Model):
     _name = 'test_one2many.multi.tag'
     _description = 'Test ORM Multi Tag'
 
@@ -59,7 +59,7 @@ class TestOrmMultiTag(models.Model):
             record.display_name = name or ""
 
 
-class TestOrmCreativeworkEdition(models.Model):
+class TestOne2manyCreativeworkEdition(models.Model):
     _name = 'test_one2many.creativework.edition'
     _description = 'Test ORM Creative Work Edition'
 
@@ -69,7 +69,7 @@ class TestOrmCreativeworkEdition(models.Model):
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
-class TestOrmCreativeworkBook(models.Model):
+class TestOne2manyCreativeworkBook(models.Model):
     _name = 'test_one2many.creativework.book'
     _description = 'Test ORM Creative Work Book'
 
@@ -79,7 +79,7 @@ class TestOrmCreativeworkBook(models.Model):
     )
 
 
-class TestOrmCreativeworkMovie(models.Model):
+class TestOne2manyCreativeworkMovie(models.Model):
     _name = 'test_one2many.creativework.movie'
     _description = 'Test ORM Creative Work Movie'
 
@@ -89,14 +89,14 @@ class TestOrmCreativeworkMovie(models.Model):
     )
 
 
-class TestOrmField_With_Caps(models.Model):
+class TestOne2manyField_With_Caps(models.Model):
     _name = 'test_one2many.field_with_caps'
     _description = 'Model with field defined with capital letters'
 
     pArTneR_321_id = fields.Many2one('res.partner')
 
 
-class TestOrmAttachment(models.Model):
+class TestOne2manyAttachment(models.Model):
     _name = 'test_one2many.attachment'
     _description = 'Attachment'
     _access_domain_heavy = True
@@ -122,7 +122,7 @@ class TestOrmAttachment(models.Model):
         return super().modified(fnames, *args, **kwargs)
 
 
-class TestOrmAttachmentHost(models.Model):
+class TestOne2manyAttachmentHost(models.Model):
     _name = 'test_one2many.attachment.host'
     _description = 'Attachment Host'
 
@@ -144,7 +144,7 @@ class TestOrmAttachmentHost(models.Model):
     )
 
 
-class TestOrmCategory(models.Model):
+class TestOne2manyCategory(models.Model):
     _name = 'test_one2many.category'
     _description = 'Test ORM Category'
     _order = 'name'
@@ -217,7 +217,7 @@ class TestOrmCategory(models.Model):
         return super()._fetch_query(query, fields)
 
 
-class TestOrmDiscussion(models.Model):
+class TestOne2manyDiscussion(models.Model):
     _name = 'test_one2many.discussion'
     _description = 'Test ORM Discussion'
 
@@ -267,7 +267,7 @@ class TestOrmDiscussion(models.Model):
         self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
 
 
-class TestOrmMessage(models.Model):
+class TestOne2manyMessage(models.Model):
     _name = 'test_one2many.message'
     _description = 'Test ORM Message'
 
@@ -370,7 +370,7 @@ class TestOrmMessage(models.Model):
         return super().write(vals)
 
 
-class TestOrmEmailmessage(models.Model):
+class TestOne2manyEmailmessage(models.Model):
     _name = 'test_one2many.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_one2many.message': 'message'}
@@ -382,7 +382,7 @@ class TestOrmEmailmessage(models.Model):
     active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
-class TestOrmModel_Child_M2o(models.Model):
+class TestOne2manyModelChildM2o(models.Model):
     _name = 'test_one2many.model_child_m2o'
     _description = 'dummy model with override write and ValidationError'
 
@@ -411,7 +411,7 @@ class TestOrmModel_Child_M2o(models.Model):
         return res
 
 
-class TestOrmModel_Parent_M2o(models.Model):
+class TestOne2manyModelParentM2o(models.Model):
     _name = 'test_one2many.model_parent_m2o'
     _description = 'dummy model with multiple childs'
 
@@ -425,7 +425,7 @@ class TestOrmModel_Parent_M2o(models.Model):
             record.cost = sum(child.cost for child in record.child_ids)
 
 
-class TestOrmOrder(models.Model):
+class TestOne2manyOrder(models.Model):
     _name = 'test_one2many.order'
     _description = 'test_one2many.order'
 
@@ -433,7 +433,7 @@ class TestOrmOrder(models.Model):
     line_short_field_name = fields.Integer(index=True)
 
 
-class TestOrmOrderLine(models.Model):
+class TestOne2manyOrderLine(models.Model):
     _name = 'test_one2many.order.line'
     _description = 'test_one2many.order.line'
 
@@ -464,7 +464,7 @@ class TestOrmOrderLine(models.Model):
         return super().unlink()
 
 
-class TestOrmComputeContainer(models.Model):
+class TestOne2manyComputeContainer(models.Model):
     _name = 'test_one2many.compute.container'
     _description = 'test_one2many.compute.container'
 
@@ -479,7 +479,7 @@ class TestOrmComputeContainer(models.Model):
             record.member_count = len(record.member_ids)
 
 
-class TestOrmComputeMember(models.Model):
+class TestOne2manyComputeMember(models.Model):
     _name = 'test_one2many.compute.member'
     _description = 'test_one2many.compute.member'
 
@@ -518,7 +518,7 @@ class TestOrmComputeMember(models.Model):
         return [(field_name, operator, value)]
 
 
-class TestOrmTeam(models.Model):
+class TestOne2manyTeam(models.Model):
     _name = 'test_one2many.team'
     _description = 'Odoo Team'
 
@@ -527,7 +527,7 @@ class TestOrmTeam(models.Model):
     member_ids = fields.One2many('test_one2many.team.member', 'team_id')
 
 
-class TestOrmTeamMember(models.Model):
+class TestOne2manyTeamMember(models.Model):
     _name = 'test_one2many.team.member'
     _description = 'Odoo Developer'
 
@@ -536,7 +536,7 @@ class TestOrmTeamMember(models.Model):
     parent_id = fields.Many2one('test_one2many.team', related='team_id.parent_id')
 
 
-class TestOrmUnsearchableO2m(models.Model):
+class TestOne2manyUnsearchableO2m(models.Model):
     _name = 'test_one2many.unsearchable.o2m'
     _description = 'Test non-stored unsearchable o2m'
 
@@ -551,7 +551,7 @@ class TestOrmUnsearchableO2m(models.Model):
             r.parent_id = r.stored_parent_id
 
 
-class TestOrmComputedInverseOne2many(models.Model):
+class TestOne2manyComputedInverseOne2many(models.Model):
     _name = 'test_one2many.computed_inverse_one2many'
     _description = "A computed/inverse o2m, subset of a main one"
 
