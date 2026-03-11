@@ -282,5 +282,6 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
 
             invoice = self.env['account.move'].search([('l10n_tr_nilvera_uuid', '=', 'invoice_uuid')])
             self.assertEqual(len(invoice), 1)
-            self.assertListEqual(sorted(invoice.attachment_ids.mapped('mimetype')), ['application/xml'])
+            self.assertFalse(invoice.attachment_ids)
+            self.assertTrue(invoice.ubl_cii_xml_id)  # XML file used at import
             self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
