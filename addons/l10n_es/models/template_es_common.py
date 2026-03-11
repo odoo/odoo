@@ -25,8 +25,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'account_common_768',
                 'expense_currency_exchange_account_id': 'account_common_668',
                 'account_journal_suspense_account_id': 'account_common_572998',
-                'account_journal_early_pay_discount_loss_account_id': 'account_common_6060',
-                'account_journal_early_pay_discount_gain_account_id': 'account_common_7060',
+                'account_journal_early_pay_discount_loss_account_id': 'account_common_7060',
+                'account_journal_early_pay_discount_gain_account_id': 'account_common_6060',
                 'default_cash_difference_income_account_id': 'account_common_778',
                 'default_cash_difference_expense_account_id': 'account_common_678',
                 'deferred_expense_account_id': 'account_common_480',
@@ -115,3 +115,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'account_common_611',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if (
+            template_data['parent'] == 'es_common'
+            and (purchase_journal := self.ref('purchase', raise_if_not_found=False))
+            and (non_decuctible_account := self.ref('account_common_544', raise_if_not_found=False))
+        ):
+            purchase_journal.non_deductible_account_id = non_decuctible_account
