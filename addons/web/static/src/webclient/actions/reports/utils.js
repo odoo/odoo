@@ -5,12 +5,13 @@ import { download } from "@web/core/network/download";
  * Generates the report url given a report action.
  *
  * @param {Object} action the report action
- * @param {"text"|"qweb"|"html"} type the type of the report
+ * @param {"text"|"qweb"|"html"|"pdf"} type the type of the report
  * @param {Object} userContext the user context
  * @returns {string}
  */
 export function getReportUrl(action, type, userContext) {
     let url = `/report/${type}/${action.report_name}`;
+    console.log(`[report/download] Generating report url with action ${action.id} and type ${type}`);
     const actionContext = action.context || {};
     if (action.data && JSON.stringify(action.data) !== "{}") {
         // build a query string with `action.data` (it's the place where reports
@@ -58,23 +59,30 @@ function getWKHTMLTOPDF_MESSAGES(status) {
  *
  * @param {Function} rpc a function to perform RPCs
  * @param {Object} action the report action
- * @param {"pdf"|"text"} type the type of the report to download
+ * @param {"pdf-wkhtmltopdf"|"pdf-paper-muncher"|"text"} type the type of the report to download
  * @param {Object} userContext the user context
  * @returns {Promise<{success: boolean, message?: string}>}
  */
 export async function downloadReport(rpc, action, type, userContext) {
     let message;
-    if (type === "pdf") {
+    let ext = "text";
+    if (type.startsWith("pdf")) {
+        ext = "pdf"
         // Cache the wkhtml status on the function. In prod this means is only
         // checked once, but we can reset it between tests to test multiple statuses.
-        downloadReport.wkhtmltopdfStatusProm ||= rpc("/report/get_pdf_engine_state");
-        const status = await downloadReport.wkhtmltopdfStatusProm;
-        message = getWKHTMLTOPDF_MESSAGES(status);
+        downloadReport.reportingEngineStatusProm ||= rpc("/report/get_pdf_engine_state");
+        const status = await downloadReport.reportingEngineStatusProm;
+        if ( type === "pdf-wkhtmltopdf"){
+            message = getWKHTMLTOPDF_MESSAGES(status);
+        }
         if (!["upgrade", "ok"].includes(status)) {
+            console.log(`[report/download] Wkhtmltopdf status is ${status}`);
             return { success: false, message };
         }
     }
-    const url = getReportUrl(action, type);
+    console.log(`[report/download] Downloading report with action ${action.id} and type ${type}`);
+    const url = getReportUrl(action, ext);
+    console.log(`[report/download] Downloading report with url ${url}`);
     await download({
         url: "/report/download",
         data: {
@@ -82,5 +90,6 @@ export async function downloadReport(rpc, action, type, userContext) {
             context: JSON.stringify(userContext),
         },
     });
+    console.log(`[report/download] Download launched`);
     return { success: true, message };
 }

@@ -110,8 +110,11 @@ class ReportController(Controller):
         requestcontent = json.loads(data)
         url, type_ = requestcontent[0], requestcontent[1]
         reportname = '???'
+        if type_.startswith('qweb-pdf'):
+            type_ = 'qweb-pdf'
+
         try:
-            if type_ in ['qweb-pdf', 'qweb-text']:
+            if type_ in ['qweb-pdf', 'qweb-text'] or type_.startswith('qweb-pdf'):
                 converter = 'pdf' if type_ == 'qweb-pdf' else 'text'
                 extension = 'pdf' if type_ == 'qweb-pdf' else 'txt'
 

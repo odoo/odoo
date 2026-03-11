@@ -21,6 +21,9 @@ class IrActionsReport(models.Model):
 
     @api.model
     def get_pdf_engine_state(self, engine_name=None):
+        if engine_name is None:
+            if self.report_type.startswith('qweb-pdf-paper-muncher'):
+                engine_name = 'paper-muncher'
         if engine_name == 'paper-muncher':
             return status
         return super().get_pdf_engine_state(engine_name)
@@ -44,7 +47,7 @@ class IrActionsReport(models.Model):
 
         report_name = self._get_report(report_ref).report_name or "placeholder_report_title"
         # TODO: find a better way to handle localhost url and mimetypes
-        args: list[str] = ["http://127.0.0.1:8069/" + report_name + '.html']
+        args: list[str] = ["pipe://127.0.0.1:8069/" + report_name + '.html']
         if landscape:
             args += ['--orientation', 'landscape']
 

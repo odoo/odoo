@@ -476,7 +476,8 @@ class IrActionsReport(models.Model):
 
         is_pdf_engine_required = not res_ids or res_ids_wo_stream
         if is_pdf_engine_required:
-            engine_name = report_sudo.report_type.rpartition('-')[2]
+            engine_name = report_sudo.report_type.rpartition('pdf-')[2]
+            print("Report %s: calling PDF engine %s :: %s" % (report_sudo.report_name, engine_name, report_sudo.report_type))
             if engine_name == 'pdf':
                 engine_name = self.env.company.report_rendering_engine
             engine_status = self.get_pdf_engine_state(engine_name)

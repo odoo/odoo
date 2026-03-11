@@ -1371,8 +1371,9 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type === "qweb-pdf" || action.report_type === "qweb-text") {
+        } else if (action.report_type.startsWith("qweb-pdf") || action.report_type === "qweb-text") {
             const type = action.report_type.slice(5);
+            console.log(`Generating report of type ${type}...`, action);
             let success, message;
             env.services.ui.block();
             try {
@@ -1382,6 +1383,7 @@ export function makeActionManager(env, router = _router) {
                 }
                 ({ success, message } = await downloadReport(rpc, action, type, downloadContext));
             } finally {
+                console.log(`Report generation finished with success=${success} and message=${message}`);
                 env.services.ui.unblock();
             }
             if (message) {

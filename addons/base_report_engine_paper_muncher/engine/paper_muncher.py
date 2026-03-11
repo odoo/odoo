@@ -23,10 +23,10 @@ class PaperMuncher:
     def __init__(self, env, document, doc_name):
         self.loader = OdooLoader(env, document, doc_name)
 
-    def _run(self, mode, *args: list[str]) -> bytes:
+    def _run(self, *args: list[str]) -> bytes:
         # TODO: find a better way to handle the arg0 and output url
         with subprocess.Popen(
-            [self.binary, '--sandbox', mode, args[0], '-o', 'http://stdout', *args[1:]],
+            [self.binary, '--sandboxed', args[0], '-o', 'pipe://stdout', *args[1:]],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
         ) as process:
@@ -65,6 +65,7 @@ class PaperMuncher:
                     description='Only GET and PUT methods are allowed for paper muncher',
                 )
 
+    # can go
     @staticmethod
     def _construct_args(*args, **kwargs):
         extra_args = list(args)
@@ -73,7 +74,7 @@ class PaperMuncher:
         return extra_args
 
     def print(self, *args, **kwargs):
-        return self._run('print', *self._construct_args(*args, **kwargs))
+        return self._run(*self._construct_args(*args, **kwargs))
 
     def render(self, *args, **kwargs):
-        return self._run('render', *self._construct_args(*args, **kwargs))
+        return self._run( *self._construct_args(*args, **kwargs))
