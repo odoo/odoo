@@ -2,10 +2,11 @@ import { Component, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
-import { advanceTime, animationFrame, expect, test, tick } from "@odoo/hoot";
+import { advanceTime, animationFrame, expect, runAllTimers, test, tick } from "@odoo/hoot";
 import {
     getService,
     makeMockEnv,
+    mockOffline,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
@@ -369,4 +370,95 @@ test("scheduleORM", async () => {
             model: "partner",
         },
     ]);
+});
+
+test("syncORM ConnectionLost", async () => {
+    // If a ConnectionLost is detected when syncing,
+    // we should stop the syncing and don't put the scheduledORM as in error.
+    const setOffline = mockOffline();
+    const def = Promise.withResolvers();
+
+    onRpc("partner", "create", async () => {
+        await def.promise;
+        expect.step("partner create was called: returned connection lost");
+        return new Response("", { status: 502 });
+    });
+
+    onRpc("partner", "modify", () => {
+        throw Error("This shouldn't be called");
+    });
+
+    await makeMockEnv();
+    expect(getService("offline").offline).toBe(false);
+
+    // go offline
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    await getService("offline").scheduleORM(
+        "partner",
+        "create",
+        [22, 13],
+        { arg1: true, arg2: false },
+        { extras: { timeStamp: 11 } }
+    );
+    await getService("offline").scheduleORM(
+        "partner",
+        "modify",
+        [22, 13],
+        { arg3: true },
+        { id: 22, extras: { timeStamp: 22, toSaveMore: true } }
+    );
+
+    // go online
+    await setOffline(false);
+    expect(getService("offline").offline).toBe(false);
+
+    expect(getService("offline").syncingORM).toBe(true);
+
+    //go offline Again
+    await setOffline(true);
+    def.resolve();
+    await tick();
+    await runAllTimers(); // run the time for the rpc to sync
+
+    // SyncORM !
+    // Only the first should be try to be sync, as we go offline in the middle of the first sync
+    await expect.waitForSteps(["partner create was called: returned connection lost"]);
+
+    expect(getService("offline").syncingORM).toBe(false);
+
+    // Neither of the scheduledORM should be in error !
+    expect(getService("offline").scheduledORM).toEqual({
+        22: {
+            key: "22",
+            value: {
+                args: [22, 13],
+                extras: {
+                    toSaveMore: true,
+                    timeStamp: 22,
+                },
+                kwargs: {
+                    arg3: true,
+                },
+                method: "modify",
+                model: "partner",
+            },
+        },
+        ba559cc9: {
+            key: "ba559cc9",
+            value: {
+                args: [22, 13],
+                extras: {
+                    timeStamp: 11,
+                },
+                kwargs: {
+                    arg1: true,
+                    arg2: false,
+                },
+                method: "create",
+                model: "partner",
+            },
+        },
+    });
 });

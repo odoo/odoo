@@ -336,7 +336,10 @@ class OfflineManager extends Reactive {
                 try {
                     await this.orm.silent.call(value.model, value.method, value.args, value.kwargs);
                     this.removeScheduledORM(key);
-                } catch {
+                } catch (e) {
+                    if (e instanceof ConnectionLostError) {
+                        break;
+                    }
                     this.scheduleORM(value.model, value.method, value.args, value.kwargs, {
                         id: key,
                         extras: { ...value.extras, error: true },
