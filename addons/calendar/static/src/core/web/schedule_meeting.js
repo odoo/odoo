@@ -12,6 +12,7 @@ export async function openScheduleMeeting(env) {
         additionalContext: {
             default_access_token: videocallLocation.split("/").pop(),
             default_videocall_location: videocallLocation,
+            default_is_draft: false,
             return_to_parent_breadcrumb: true,
         },
     });
