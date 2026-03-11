@@ -5,11 +5,12 @@ from odoo import api, fields, models
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
-    x_leave_ids = fields.One2many(
+    x_leave_ids = fields.Many2many(
         'hr.leave',
-        'x_attendance_ids',
-        string='Related Time Off',
-        readonly=True,
+        'hr_leave_attendance_rel',
+        'attendance_id',
+        'leave_id',
+        string='Related Leaves',
     )
 
     x_is_covered = fields.Boolean(

@@ -24,7 +24,11 @@ Connecting attendance records with leave management to be a list to choose from
         # Views
         'views/hr_leave_views.xml',
     ],
-    'assets': {},
+    'assets': {
+        'web.assets_backend': [
+            'KSW_attendance_leave/static/src/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': False,
     'application': True,
