@@ -5189,6 +5189,12 @@ class TestMrpOrder(TestMrpCommon):
         child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
         self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
         self.assertEqual(parent_production_2._get_children(), child_production_2)
+        # Cancel the grandparent production, this should log a cancellation activity on the parent productions.
+        grandparent_production.action_cancel()
+        self.assertRegex(
+            parent_production.activity_ids[-1].note,
+            fr"Exception\(s\) occurred on the manufacturing order\(s\):[\s\S]*{grandparent_production.name}"
+        )
 
     def test_mo_modify_date_with_manuf_lead_time(self):
         """ A direct write on MrpProduction.date_start should result in that exact date value being
