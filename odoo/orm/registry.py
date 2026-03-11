@@ -209,6 +209,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             update_module = True
                 if update_module:
                     cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))")
+                # commit after acquiring the lock to re-start the transaction
+                cr.commit()
 
                 # now load modules
                 if new_db_demo is None:
