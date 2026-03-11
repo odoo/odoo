@@ -112,16 +112,18 @@
                                         </div>
                                     </div>
                                 </group>
-                                <group name="group_standard_price" col="2">
-                                    <field name="list_price"
-                                        widget="monetary"
-                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                    <label for="uom_id" string="Per"/>
-                                    <field
-                                        name="uom_id" widget="many2one_uom"
-                                        options="{'no_quick_create': True}"
-                                        nolabel="1"
-                                    />
+                                <group name="group_standard_price">
+                                    <label for="list_price"/>
+                                    <div name="list_price_per_uom_id" class="d-flex align-items-baseline gap-2">
+                                        <field name="list_price"
+                                            widget="monetary"
+                                            options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                        <span>per</span>
+                                        <field
+                                            name="uom_id" widget="many2one_uom"
+                                            options="{'no_quick_create': True}"
+                                        />
+                                    </div>
                                     <div colspan="2" class="o_row" name="standard_price_uom" invisible="type == 'combo'
                                         or (not is_product_variant and (
                                             product_variant_count &gt; 1
