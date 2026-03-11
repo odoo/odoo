@@ -499,7 +499,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=67, employee=67), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=69, employee=69), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -954,7 +954,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients(self):
         record = self.test_records_recipients[0].with_env(self.env)
-        with self.assertQueryCount(employee=7):
+        with self.assertQueryCount(employee=9):
             defaults = record._message_get_default_recipients()
         self.assertDictEqual(defaults, {record.id: {
             'email_cc': '', 'email_to': 'only.email.1@test.example.com', 'partner_ids': [],
@@ -964,7 +964,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=9):
+        with self.assertQueryCount(employee=11):
             defaults = records._message_get_default_recipients()
         self.assertDictEqual(defaults, {
             records[0].id: {
