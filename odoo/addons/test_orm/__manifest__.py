@@ -50,6 +50,7 @@
         'security/test_read_group_private/ir.model.access.csv',
         'security/test_read_grouping_sets/ir.model.access.csv',
         'security/test_related_translation/ir.model.access.csv',
+        'security/test_schema/ir.model.access.csv',
 
         # VIEWS
     ],
