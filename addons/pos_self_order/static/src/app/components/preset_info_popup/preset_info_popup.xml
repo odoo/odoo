@@ -22,11 +22,25 @@
                         placeholder="Email"
                         t-custom-model="state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
-                        <input type="text"
-                            class="form-control form-control-lg"
-                            placeholder="Phone"
-                            t-custom-model="state.phone"/>
-                        <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
+                        <div class="input-group">
+                            <div class="position-relative w-25 me-3">
+                                <div class="form-control form-control-lg d-flex align-items-center gap-1 pe-none">
+                                    <t t-out="this.flagEmoji(this.selectedCountry?.code || '')"/>
+                                    <span>+<t t-out="state.phoneCode"/></span>
+                                </div>
+                                <select class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
+                                        t-custom-model.number="state.phoneCode">
+                                    <option t-foreach="this.selfOrder.models['res.country'].getAll()" t-as="c" t-key="c.id" t-att-value="c.phone_code">
+                                        <t t-out="this.flagEmoji(c.code)"/> +<t t-out="c.phone_code"/> <t t-out="c.name"/>
+                                    </option>
+                                </select>
+                            </div>
+                            <input type="text"
+                                class="form-control form-control-lg"
+                                placeholder="Phone"
+                                t-custom-model="state.phoneLocal" />
+                        </div>
+                        <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
                         <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId">

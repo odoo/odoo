@@ -6,6 +6,7 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderPreset(SelfOrderCommonTest):
     def setUp(self):
         super().setUp()
+        self.env.company.country_id = self.env.ref('base.be')
         self.preset_dine_in = self.env['pos.preset'].create({
             'name': 'Dine in',
             'available_in_self': True,

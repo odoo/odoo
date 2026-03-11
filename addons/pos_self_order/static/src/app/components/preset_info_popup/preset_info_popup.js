@@ -25,7 +25,11 @@ export class PresetInfoPopup extends Component {
             selectedPartnerId: partner?.id || null,
             name: partner?.name || "",
             email: partner?.email || "",
-            phone: partner?.phone || "",
+            phoneCode:
+                partner?.country_id?.phone_code ||
+                this.selfOrder.config.company_id.country_id.phone_code ||
+                "",
+            phoneLocal: "",
             phoneError: "",
             street: partner?.street || "",
             countryId: partner?.country_id?.id || companyCountryId || null,
@@ -40,13 +44,13 @@ export class PresetInfoPopup extends Component {
     }
 
     async setInformations() {
-        if (this.preset.needsPartner || this.state.phone) {
+        if (this.preset.needsPartner || this.state.phoneLocal) {
             const countryId = parseInt(this.state.countryId, 10) || null;
             const stateId = parseInt(this.state.stateId, 10) || null;
             const partnerData = {
                 name: this.state.name,
                 email: this.state.email,
-                phone: this.state.phone,
+                phone: this.getFullPhone(),
                 street: this.state.street,
                 city: this.state.city,
                 country_id: countryId,
@@ -74,7 +78,7 @@ export class PresetInfoPopup extends Component {
         } else {
             this.selfOrder.currentOrder.floating_order_name = this.state.name;
         }
-        this.props.getPayload(this.state);
+        this.props.getPayload({ ...this.state, phone: this.getFullPhone() });
         this.props.close();
     }
 
@@ -101,12 +105,30 @@ export class PresetInfoPopup extends Component {
         return country?.state_ids || [];
     }
 
+    get selectedCountry() {
+        return this.selfOrder.models["res.country"]
+            .getAll()
+            .find((c) => c.phone_code === this.state.phoneCode);
+    }
+
+    flagEmoji(code) {
+        return [...code.toUpperCase()]
+            .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
+            .join("");
+    }
+
+    getFullPhone() {
+        return this.state.phoneLocal.trim()
+            ? `+${this.state.phoneCode}${this.state.phoneLocal.trim()}`
+            : "";
+    }
+
     get validSelection() {
         return this.selfOrder.isValidSelection(this.selfOrder.currentOrder.raw.preset_time, {
             id: parseInt(this.state.selectedPartnerId),
             name: this.state.name,
             email: this.state.email,
-            phone: this.state.phone,
+            phone: this.getFullPhone(),
             street: this.state.street,
             city: this.state.city,
             country_id: this.state.countryId,
@@ -121,6 +143,6 @@ export class PresetInfoPopup extends Component {
     }
 
     checkPhoneFormat() {
-        return !this.state.phone || isValidPhone(this.state.phone);
+        return !this.state.phoneLocal || isValidPhone(this.getFullPhone());
     }
 }
