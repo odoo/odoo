@@ -40,4 +40,5 @@ from . import (
     test_search_order,
     test_sort,
     test_timeit,
+    test_transactions,
 )
