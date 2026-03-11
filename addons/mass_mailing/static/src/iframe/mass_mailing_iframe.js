@@ -1,13 +1,6 @@
 import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onWillDestroy,
-    onWillUnmount,
-    status,
-} from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
 import { LazyComponent } from "@web/core/assets";
-import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
@@ -55,7 +48,6 @@ export class MassMailingIframe extends Component {
         iframeRef: { type: Function },
         iframeWrapperRef: { type: Function },
         showThemeSelector: { type: Boolean, optional: true },
-        onIframeLoad: { type: Function, optional: true },
         showCodeView: { type: Boolean, optional: true },
         toggleCodeView: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
@@ -84,7 +76,7 @@ export class MassMailingIframe extends Component {
             isMobile: false,
             ready: false,
         });
-        this.iframeLoaded = new Deferred();
+        this.iframeLoaded = Promise.withResolvers();
         onMounted(() => {
             this.setupIframe();
         });
@@ -179,7 +171,7 @@ export class MassMailingIframe extends Component {
         });
         useLayoutEffect(
             () => {
-                this.iframeLoaded.then(() => {
+                this.iframeLoaded.promise.then(() => {
                     if (status(this) === "destroyed") {
                         return;
                     }
@@ -194,7 +186,7 @@ export class MassMailingIframe extends Component {
         );
         useLayoutEffect(
             () => {
-                this.iframeLoaded.then(() => {
+                this.iframeLoaded.promise.then(() => {
                     if (status(this) === "destroyed") {
                         return;
                     }
@@ -211,6 +203,9 @@ export class MassMailingIframe extends Component {
             if (this.htmlResizeObserver) {
                 this.htmlResizeObserver.disconnect();
             }
+        });
+        onWillDestroy(() => {
+            this.iframeLoaded.resolve(false);
         });
     }
 
@@ -257,7 +252,6 @@ export class MassMailingIframe extends Component {
         });
         this.iframeRef.el.contentWindow.addEventListener("focus", this.props.onFocus.bind(this));
         this.iframeLoaded.resolve(this.iframeRef.el);
-        this.props.onIframeLoad?.(this.iframeLoaded);
         this.state.ready = true;
     }
 
@@ -289,7 +283,7 @@ export class MassMailingIframe extends Component {
     }
 
     async setupBasicEditor() {
-        await this.iframeLoaded;
+        await this.iframeLoaded.promise;
         if (status(this) === "destroyed") {
             return;
         }
@@ -326,7 +320,7 @@ export class MassMailingIframe extends Component {
     getBuilderProps() {
         return {
             overlayRef: this.overlayRef,
-            iframeLoaded: this.iframeLoaded,
+            iframeLoaded: this.iframeLoaded.promise,
             snippetsName: "mass_mailing.email_designer_snippets",
             config: this.props.config,
             isMobile: this.state.isMobile,

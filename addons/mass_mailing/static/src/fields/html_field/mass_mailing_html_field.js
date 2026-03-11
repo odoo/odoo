@@ -10,7 +10,6 @@ import { onWillUpdateProps, status, toRaw } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
@@ -60,7 +59,6 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
 
-        this.resetIframe();
         this.iframeRef = useChildRef();
         this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
@@ -86,8 +84,6 @@ export class MassMailingHtmlField extends HtmlField {
                 }
                 if (state.key !== currentKey) {
                     // html value may have been reset from the server:
-                    // - await the new iframe
-                    this.resetIframe();
                     // - ensure that the activeTheme is up to date with the next
                     //   record.
                     this.updateActiveTheme(props.record);
@@ -116,20 +112,6 @@ export class MassMailingHtmlField extends HtmlField {
 
     get withBuilder() {
         return this.state.activeTheme !== "basic" && !this.props.readonly;
-    }
-
-    resetIframe() {
-        this.iframeLoaded = new Deferred();
-    }
-
-    async ensureIframeLoaded() {
-        const iframeLoaded = this.iframeLoaded;
-        await iframeLoaded;
-        return iframeLoaded === this.iframeLoaded;
-    }
-
-    onIframeLoad(iframeLoaded) {
-        this.iframeLoaded.resolve(iframeLoaded);
     }
 
     updateActiveTheme(record = this.props.record) {
@@ -182,7 +164,6 @@ export class MassMailingHtmlField extends HtmlField {
             iframeWrapperRef: this.iframeWrapperRef,
             onFocus: this.onFocus.bind(this),
             onEditorLoad: this.onEditorLoad.bind(this),
-            onIframeLoad: this.onIframeLoad.bind(this),
             readonly: this.props.readonly,
             showThemeSelector: this.state.showThemeSelector,
             showCodeView: this.state.showCodeView,
@@ -289,6 +270,10 @@ export class MassMailingHtmlField extends HtmlField {
         };
     }
 
+    isEditorReady() {
+        return this.editor && this.editor.isReady && !this.editor.isDestroyed;
+    }
+
     onChange() {
         // Ensure that a change in the edited field will reset the validity
         // of the inlineField (since it is most likely invisible and not
@@ -338,7 +323,7 @@ export class MassMailingHtmlField extends HtmlField {
     async commitChanges({ urgent } = {}) {
         if (!urgent) {
             await this.mutex.exec(() => {
-                if (this.withBuilder && this.editor && !this.editor.isDestroyed) {
+                if (this.withBuilder && this.isEditorReady()) {
                     return this.editor.shared.operation.getUnlockedDef();
                 }
             });
@@ -353,20 +338,15 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async _commitChanges({ urgent }) {
+        if (!this.state.showCodeView && !this.isEditorReady()) {
+            return;
+        }
         if (
-            this.editor &&
-            !this.editor.isDestroyed &&
+            this.props.record.data[this.props.name].toString() !== "" &&
             this.props.record.data[this.props.inlineField].toString() === ""
         ) {
-            if ((await this.ensureIframeLoaded()) && this.editor && !this.editor.isDestroyed) {
-                this.isDirty = true;
-                this.lastValue = undefined;
-            } else {
-                return;
-            }
-        }
-        if (!this.state.showCodeView && this.editor?.isDestroyed) {
-            return;
+            this.isDirty = true;
+            this.lastValue = undefined;
         }
         return super._commitChanges({ urgent });
     }

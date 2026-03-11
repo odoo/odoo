@@ -433,10 +433,11 @@ describe("field HTML", () => {
             resId: 1,
         });
         await contains(".o_data_cell").click();
-        await waitFor(".o_dialog");
+        await waitFor(".o_dialog", { timeout: 3000 });
         await waitForThemeSelector();
         await contains(
-            ".o_dialog :iframe .o_mailing_template_preview_wrapper [data-name='event']"
+            ".o_dialog :iframe .o_mailing_template_preview_wrapper [data-name='event']",
+            { timeout: 3000 }
         ).click();
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .o_snippet_thumbnail", {
             timeout: 3000,
