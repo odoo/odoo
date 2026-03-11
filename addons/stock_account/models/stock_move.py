@@ -453,8 +453,9 @@ class StockMove(models.Model):
     def _get_value_from_returns(self, quantity, at_date=None):
         if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
             origin_move = self.origin_returned_move_id
+            origin_valued_qty = origin_move._get_valued_qty()
             return {
-                'value': origin_move.value * quantity / origin_move._get_valued_qty(),
+                'value': 0 if self.product_uom.is_zero(origin_valued_qty) else origin_move.value * quantity / origin_valued_qty,
                 'quantity': quantity,
                 'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
             }
