@@ -40,7 +40,7 @@
                 <field name="date_promised" optional="hide" column_invisible="parent.state not in ('purchase', 'cancel')"/>
             </xpath>
             <xpath expr="//div[@name='reminder']" position="attributes">
-                <attribute name="invisible">effective_date</attribute>
+                <attribute name="invisible" add="effective_date" separator=" or "/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
                 <field name="move_ids"/>
