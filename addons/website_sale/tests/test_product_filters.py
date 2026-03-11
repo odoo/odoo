@@ -112,7 +112,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         self.assertEqual(len(result), len(products))
         for product, html_description in zip(products, result):
             tree = html.fromstring(html_description)
-            self.assertEqual(tree.xpath('//h2')[0].text_content().strip(), product.display_name)
+            self.assertEqual(tree.xpath('//h6')[0].text_content().strip(), product.display_name)
             self.assertEqual(
                 tree.xpath('//*[@name="product_price"]/span')[0].text,
                 self.env['ir.qweb.field.float'].value_to_html(product.lst_price, {'precision': 2})
