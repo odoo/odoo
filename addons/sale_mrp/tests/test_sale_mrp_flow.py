@@ -2773,3 +2773,61 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(sale_picking.move_ids.quantity, 2)
         sale_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
+
+    def test_sale_mto_manufacture_quantity_update_propagation(self):
+        """
+        Check that in MTO the quantity update on an SO is propagated on the MO
+        and that an activity is scheduled on operation cancellation.
+        """
+        product = self.product
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        product.route_ids = [Command.set([self.ref('stock.route_warehouse0_mto'), warehouse.manufacture_pull_id.route_id.id])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({
+                'product_id': self.component_a.id, 'product_qty': 1.0,
+            })],
+        })
+        sale_order, sale_order_to_cancel = sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3,
+            })],
+        } for _ in range(2)])
+        sale_orders.action_confirm()
+
+        production = self.env['mrp.production'].search([('procurement_group_id.sale_id', '=', sale_order.id)], limit=1)
+        self.assertRecordValues(production, [
+            {'product_qty': 3.0, 'product_uom_id': product.uom_id.id}
+        ])
+        # Cancel the delivery which adds a warning in the chatter but does not cancel the MO
+        delivery = sale_order.picking_ids
+        delivery.action_cancel()
+        # Check that an activity was linked on the the MO
+        self.assertRecordValues(production.activity_ids, [
+            {'user_id': self.env.user.id, 'display_name': 'Exception'}
+        ])
+        self.assertRegex(production.activity_ids.note, fr"Exception\(s\) occurred on the picking.*\n.*{delivery.name.replace('/', '.')}.*\n.*Manual actions may be needed")
+        # Update the selling demand to 10 units, this should create a delivery for
+        # 10 units and MTO should adapt existing MO for an additinal 10 units
+        with Form(sale_order) as so_form:
+            with so_form.order_line.edit(0) as order_line:
+                order_line.product_uom_qty = 10.0
+        self.assertRecordValues(
+            self.env['mrp.production'].search([('procurement_group_id.sale_id', '=', sale_order.id)]),
+            [
+                {'product_qty': 3.0, 'product_uom_id': product.uom_id.id},
+                {'product_qty': 10.0, 'product_uom_id': product.uom_id.id},
+            ]
+        )
+
+        # Check that cancelling the SO, propagates the cancellation on the delivery
+        # and scheduled a signle activity on the MO (the one of the SO, not the DO)
+        Form.from_action(self.env, sale_order_to_cancel.action_cancel()).save().action_cancel()
+        self.assertEqual(sale_order_to_cancel.picking_ids.state, 'cancel')
+        production_2 = self.env['mrp.production'].search([('procurement_group_id.sale_id', '=', sale_order_to_cancel.id)], limit=1)
+        self.assertRecordValues(production_2.activity_ids, [
+            {'user_id': self.env.user.id, 'display_name': 'Exception'}
+        ])
+        self.assertRegex(production_2.activity_ids.note, fr"Exception\(s\) occurred on the sale order\(s\).*\n.*{sale_order_to_cancel.name}.*\n.*Manual actions may be needed")
