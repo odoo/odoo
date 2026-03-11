@@ -106,7 +106,7 @@ def run_process_multi(
 ):
     names = [f"pipe:{i}.html" for i in range(len(documents))]
     with subprocess.Popen(
-            [binary, "print", *names, '-o', "pipe:" ] + extra_args,
+            [binary, *names, '-o', "pipe:" ] + extra_args,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -216,7 +216,7 @@ def run_process(
         content,
 ):
     with subprocess.Popen(
-            [binary, "print", "pipe:", '-o', "pipe:"] + extra_args,
+            [binary, "pipe:", '-o', "pipe:"] + extra_args,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

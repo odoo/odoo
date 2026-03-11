@@ -10,13 +10,16 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from email.utils import format_datetime
-from typing import BinaryIO, Optional
+from typing import BinaryIO, Optional, IO
 from wsgiref.types import WSGIEnvironment
 from lxml import etree, html
 from PyPDF2 import PdfMerger
 
+from werkzeug.test import create_environ, run_wsgi_app
+
 import odoo
 from odoo.http import request
+from odoo.http.router import root
 
 _logger = logging.getLogger(__name__)
 
@@ -36,12 +39,12 @@ def remaining_time(deadline: float) -> float:
 
 
 def readline_with_timeout(
-        file_object: BinaryIO,
+        file_object: IO[bytes],
         timeout: int = DEFAULT_READLINE_TIMEOUT,
 ) -> bytes:
     """Read a full line ending with '\\n' from a file-like object within a timeout.
 
-    :param BinaryIO file_object: File-like object to read from (must be in binary mode).
+    :param IO[bytes] file_object: File-like object to read from (must be in binary mode).
     :param int timeout: Max seconds to wait for line data.
     :return: A line of bytes ending in '\\n'.
     :rtype: bytes
@@ -141,18 +144,18 @@ def write_with_timeout(
 
 
 def consume_paper_muncher_request(
-        stdout: BinaryIO,
+        stdout: IO[bytes],
         timeout: int = DEFAULT_READLINE_TIMEOUT
 ) -> None:
     """Read and discard all header lines from a Paper Muncher request.
 
-    :param BinaryIO stdout: File-like stdout stream from Paper Muncher.
+    :param IO[bytes] stdout: File-like stdout stream from Paper Muncher.
     :param int timeout: Timeout in seconds for each line read.
     :return: None
     :rtype: None
     """
     deadline = time.monotonic() + timeout
-    while line := readline_with_timeout(stdout, timeout=remaining_time(deadline)):
+    while line := readline_with_timeout(stdout, timeout=int(remaining_time(deadline))):
         _logger.debug("Paper Muncher request line: %s", line.rstrip())
         if line == b"\r\n":
             return
@@ -174,7 +177,7 @@ def read_paper_muncher_request(
     :raises ValueError: If the request format is invalid or the method is unsupported.
     """
     deadline = time.monotonic() + timeout
-    first_line_bytes = readline_with_timeout(stdout, timeout=remaining_time(deadline))
+    first_line_bytes = readline_with_timeout(stdout, timeout=int(remaining_time(deadline)))
 
     if not first_line_bytes:
         raise EOFError("EOF reached while reading first line from subprocess")
@@ -195,7 +198,7 @@ def read_paper_muncher_request(
         raise ValueError(
             f"Unexpected HTTP method: {method} in line: {first_line}")
 
-    consume_paper_muncher_request(stdout, timeout=remaining_time(deadline))
+    consume_paper_muncher_request(stdout, timeout=int(remaining_time(deadline)))
 
     return path
 
