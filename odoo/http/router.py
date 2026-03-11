@@ -1,17 +1,24 @@
 from __future__ import annotations
 
+import datetime as dt
 import functools
 import logging
 import re
 import threading
 import typing
+from contextlib import nullcontext
 from os.path import join as opj
 from urllib.parse import urlparse
 
 import psycopg2
 import werkzeug.routing
 from psycopg2.errors import OperationalError, ReadOnlySqlTransaction
-from werkzeug.exceptions import Forbidden, HTTPException, NotFound
+from werkzeug.exceptions import (
+    Forbidden,
+    HTTPException,
+    NotFound,
+    UnsupportedMediaType,
+)
 from werkzeug.security import safe_join
 from werkzeug.urls import url_encode  # TODO: use urllib
 
@@ -23,7 +30,6 @@ except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 
 import odoo.modules.db
-import odoo.service
 from odoo.api import Environment
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.modules.module import (
@@ -31,7 +37,7 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.tools import config, file_path, real_time
+from odoo.tools import config, file_path, profiler, real_time
 from odoo.tools.misc import submap
 
 if typing.TYPE_CHECKING:
@@ -119,6 +125,8 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
     :param params: the keyword arguments for method call
     :return: the return value of the called method
     """
+    import odoo.service  # noqa: PLC0415
+
     if service_name == 'object':
         dispatch = odoo.service.model.dispatch
     elif service_name == 'common':
@@ -267,7 +275,7 @@ class Application:
                     response = serve_static(request)
                 elif request.db:
                     try:
-                        with request._get_profiler_context_manager():
+                        with _get_profiler_context_manager(request):
                             response = serve_db(request)
                     except RegistryError as e:
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
@@ -353,7 +361,7 @@ def serve_nodb(request: Request) -> Response:
                 ('Content-Type', 'text/html; charset=utf-8'),
             ])
             raise
-        request._set_request_dispatcher(rule)
+        _set_request_dispatcher(request, rule)
         request.dispatcher.pre_dispatch(rule, args)
         endpoint: Endpoint = rule.endpoint  # type: ignore
         response = request.dispatcher.dispatch(endpoint, args)
@@ -392,7 +400,7 @@ def serve_db(request: Request) -> Response:
             readonly = True
         else:
             # a controller endpoint matched -> dispatch it the request
-            request._set_request_dispatcher(rule)
+            _set_request_dispatcher(request, rule)
             serve_func = functools.partial(serve_ir_http, request, rule, args)
             endpoint: Endpoint = rule.endpoint  # type: ignore
             readonly = endpoint.routing['readonly']
@@ -446,6 +454,40 @@ def serve_db(request: Request) -> Response:
             cr.close()
 
 
+def _get_profiler_context_manager(request: Request) -> typing.ContextManager:
+    """
+    Get a profiler when the profiling is enabled and the requested
+    URL is profile-safe. Otherwise, get a context-manager that does
+    nothing.
+    """
+    if request.session.get('profile_session') and request.db:
+        if request.session['profile_expiration'] < str(dt.datetime.now()):
+            # avoid having session profiling for too long if user forgets to disable profiling
+            request.session['profile_session'] = None
+            _logger.warning("Profiling expiration reached, disabling profiling")
+        elif 'set_profiling' in request.httprequest.path:
+            _logger.debug("Profiling disabled on set_profiling route")
+        elif request.httprequest.path.startswith('/websocket'):
+            _logger.debug("Profiling disabled for websocket")
+        elif odoo.evented:
+            # only longpolling should be in a evented server, but this is an additional safety
+            _logger.debug("Profiling disabled for evented server")
+        else:
+            try:
+                return profiler.Profiler(
+                    db=request.db,
+                    description=request.httprequest.full_path,
+                    profile_session=request.session['profile_session'],
+                    collectors=request.session['profile_collectors'],
+                    params=request.session['profile_params'],
+                )._get_cm_proxy()
+            except Exception:
+                _logger.exception("Failure during Profiler creation")
+                request.session['profile_session'] = None
+
+    return nullcontext()
+
+
 def _set_session_and_dbname(request: Request) -> None:
     sid = request.httprequest.cookies.get('session_id', '')
     session = session_store().get(sid, keep_sid=True)
@@ -482,6 +524,28 @@ def _set_session_and_dbname(request: Request) -> None:
     session.is_dirty = False
     request.session = session
     request.db = dbname
+
+
+def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
+    endpoint: Endpoint = rule.endpoint  # type: ignore
+    routing = endpoint.routing
+    dispatcher_cls = _dispatchers[routing['type']]
+    if (not is_cors_preflight(request, endpoint)
+        and not dispatcher_cls.is_compatible_with(request)):
+        compatible_dispatchers = [
+            disp.routing_type
+            for disp in _dispatchers.values()
+            if disp.is_compatible_with(request)
+        ]
+        e = (f"Request inferred type is compatible with {compatible_dispatchers} "
+                f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
+                "Please verify the Content-Type request header and try again.")
+        # werkzeug doesn't let us add headers to UnsupportedMediaType
+        # so use the following (ugly) to still achieve what we want
+        res = UnsupportedMediaType(e).get_response()
+        res.headers['Accept'] = ', '.join(dispatcher_cls.mimetypes)
+        raise UnsupportedMediaType(response=res)
+    request.dispatcher = dispatcher_cls(request)
 
 
 def _update_served_exception(request: Request, exc: Exception) -> Exception:
@@ -532,12 +596,13 @@ def serve_ir_http(request: Request, rule: werkzeug.routing.Rule, args) -> Respon
 
 
 # ruff: noqa: E402
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher
+from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
 from .requestlib import (
     HTTPRequest,
     Request,
     _request_stack,
     borrow_request,
+    is_cors_preflight,
     request,
 )
 from .response import Response
