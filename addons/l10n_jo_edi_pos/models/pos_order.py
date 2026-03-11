@@ -173,7 +173,7 @@ class PosOrder(models.Model):
         vals = super()._prepare_invoice_vals()
         return {
             **vals,
-            'ref': self.l10n_jo_edi_pos_return_reason,
+            'ref': self.l10n_jo_edi_pos_return_reason or vals.get('ref', False),
             'l10n_jo_edi_uuid': self.l10n_jo_edi_pos_uuid,
             'l10n_jo_edi_state': self.l10n_jo_edi_pos_state,
             'l10n_jo_edi_error': self.l10n_jo_edi_pos_error,
