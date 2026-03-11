@@ -42,8 +42,8 @@
             </div>
         </button>
 
-        <t t-foreach="this.items.inline" position="replace">
-            <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
+        <t t-foreach="items.inline" position="replace">
+            <t t-foreach="items.inline" t-as="item" t-key="item.value">
                 <div class="o_arrow_button_wrapper"
                         t-att-data-tooltip="item.toolTip">
                     <button

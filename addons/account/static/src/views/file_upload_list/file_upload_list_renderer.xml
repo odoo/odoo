@@ -1,14 +1,14 @@
 <templates>
 
     <t t-name="account.FileUploadListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
-        <xpath expr="//div[@t-custom-ref='this.root']" position="before">
+        <xpath expr="//div[@t-custom-ref='root']" position="before">
             <UploadDropZone
                 visible="this.dropzoneState.visible"
                 hideZone="() => this.dropzoneState.visible = false"
                 dropZoneTitle="this.dropZoneTitle"
                 dropZoneDescription="this.dropZoneDescription"/>
         </xpath>
-        <xpath expr="//div[@t-custom-ref='this.root']" position="attributes">
+        <xpath expr="//div[@t-custom-ref='root']" position="attributes">
             <attribute name="t-on-dragenter.stop.prevent">this.onDragStart</attribute>
             <attribute name="t-on-paste">this.onPaste</attribute>
         </xpath>

@@ -1,6 +1,6 @@
 <templates>
     <t t-name="project.DependOnIdsListRowsRenderer" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-foreach='this.list.records']" position="after">
+        <xpath expr="//t[@t-foreach='list.records']" position="after">
         <tr class="o_data_row">
             <td t-if="this.nbHiddenRecords" t-att-colspan="this.nbCols" style="text-align:center;">
                 <i class="text-muted">

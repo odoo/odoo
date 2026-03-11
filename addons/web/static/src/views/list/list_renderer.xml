@@ -204,7 +204,7 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ this.canResequenceRows and this.group_index > 0 ? 'o_row_draggable' : '' }} {{this.state.altKeyMode ? 'o_multi_group_expand_available' : ''}}"
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ this.canResequenceRows and group_index > 0 ? 'o_row_draggable' : '' }} {{this.state.altKeyMode ? 'o_multi_group_expand_available' : ''}}"
             t-att-data-group-id="group.id"
             t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
         >

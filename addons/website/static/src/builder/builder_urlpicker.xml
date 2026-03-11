@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website.AutoCompleteBuilderUrlPicker" t-inherit="web.AutoComplete">
-        <xpath expr="//div[@t-custom-ref='this.root']" position="attributes">
+        <xpath expr="//div[@t-custom-ref='root']" position="attributes">
             <attribute name="t-att-data-action-id">this.info.actionId</attribute>
             <attribute name="t-att-data-action-param">this.info.actionParam</attribute>
             <attribute name="t-att-data-action-value">this.info.actionValue</attribute>
@@ -12,7 +12,7 @@
             <attribute name="t-att-data-attribute-action">this.info.attributeAction</attribute>
             <attribute name="t-att-data-attribute-action-value">this.info.attributeActionValue</attribute>
         </xpath>
-        <xpath expr="//input[@t-custom-ref='this.input']" position="attributes">
+        <xpath expr="//input[@t-custom-ref='input']" position="attributes">
             <attribute name="t-attf-class" add="{{this.props.inputClass}}" separator=" "/>
         </xpath>
     </t>

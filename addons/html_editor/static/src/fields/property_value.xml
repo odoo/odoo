@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="web.PropertyValue" t-inherit-mode="extension">
-        <xpath expr="//t[@t-elif=&#34;props.type === 'text'&#34;]" position="before">
+        <xpath expr="//t[@t-elif=&#34;this.props.type === 'text'&#34;]" position="before">
             <t t-elif="this.props.type === 'html'">
                 <HtmlViewer
                     t-if="this.props.readonly"

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DebugMenu.ProfilingItem">
-        <DropdownItem class="this.o_debug_profiling_item_wrapper">
+        <DropdownItem class="'o_debug_profiling_item_wrapper'">
             <div class="d-flex justify-content-between ps-3">
                 <div class="align-self-center">
                     <div t-if="this.profiling.state.isEnabled" class="alert alert-info py-2 me-3">Recording...</div>

@@ -2086,9 +2086,12 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
 
     if (getMockEnv().isSmall) {
         await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+        expect(`.o_list_button_discard`).toHaveCount(0);
+        expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
+    } else {
+        await contains(`.o_list_button_discard`).click();
     }
 
-    await contains(`.o_list_button_discard`).click();
     expect(`.o_data_row`).toHaveCount(3);
     expect(`tbody tr`).toHaveCount(4);
     expect(`tbody tr:eq(0)`).toHaveClass("o_data_row");

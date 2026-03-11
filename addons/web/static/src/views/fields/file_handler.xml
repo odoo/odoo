@@ -13,7 +13,7 @@
                 t-att-name="this.props.inputName"
                 t-custom-ref="fileInput"
                 t-attf-class="o_input_file d-none {{ this.props.fileUploadClass or '' }}"
-                t-att-multiple="thislprops.multiUpload ? 'multiple' : false" t-att-accept="thislprops.acceptedFileExtensions or '*'"
+                t-att-multiple="this.props.multiUpload ? 'multiple' : false" t-att-accept="this.props.acceptedFileExtensions or '*'"
                 t-on-change="this.onFileChange"
             />
         </div>
