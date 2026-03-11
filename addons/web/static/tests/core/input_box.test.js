@@ -112,4 +112,27 @@ describe("Elements with o_input_box classname", () => {
         expect(".o_input_box .o_input_box").not.toHaveAttribute("style");
         expect(".o_input_box .fa-phone").toBeVisible();
     });
+
+    test("InputBox overlays that are invisible don't affect the padding", async () => {
+        class Root extends Component {
+            static components = {};
+            static props = {};
+            static template = xml`
+                <div class="o_input_box">
+                    <i class="o_input_box_overlay_start fa fa-phone d-none d-touch-block"/>
+                    <div class="o_input_box">
+                        <span>0123456</span>
+                        <i class="o_input_box_overlay_end fa fa-arrow"/>
+                    </div>
+                </div>
+            `;
+        }
+        await mountWithCleanup(Root);
+        // Component with o_input_box class having o_input_box_overlay elements must call the positioning function after the render
+        positionInputBoxOverlay(getFixture());
+        await animationFrame();
+        const overlayPaddingEnd = queryFirst(".o_input_box_overlay_end").clientWidth + INPUTBOX_SPACING_UNIT;
+        expect(".o_input_box:not(.o_input_box .o_input_box").toHaveAttribute("style",`--inputbox-overlay-padding-prefix: 0px; --inputbox-overlay-padding-suffix: ${overlayPaddingEnd}px;`);
+        expect(".o_input_box .fa-phone").not.toBeVisible();
+    });
 });
