@@ -5060,6 +5060,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(grandparent_production.move_raw_ids.product_uom_qty, 2)
         self.assertEqual(parent_production.product_qty, 2)
         self.assertEqual(child_production.product_qty, 2)
+        # Cancel the grandparent production, this should log a cancellation activity on the parent productions.
+        grandparent_production.action_cancel()
+        self.assertRegex(
+            parent_production.activity_ids[-1:].note,
+            fr"Exception\(s\) occurred on the manufacturing order\(s\):[\s\S]*{grandparent_production.name}.*\n\s*2\.0 Units of parent\n\s*cancelled"
+        )
 
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same
