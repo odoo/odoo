@@ -1039,7 +1039,11 @@ class SaleOrder(models.Model):
         partners_to_archive = self.env["res.partner"]
         for order in self:
             if not (commercial_partner := order.partner_id).user_ids:
-                partners_to_archive |= commercial_partner + commercial_partner.child_ids
+                partners_to_archive |= (
+                    commercial_partner
+                    | commercial_partner.child_ids
+                    | commercial_partner.parent_id
+                )
 
         partners_to_archive.active = False
 
