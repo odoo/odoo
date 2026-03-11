@@ -32,7 +32,7 @@
                         registerMessageRef="registerMessageRef"
                         messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
-                        onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
+                        onParentMessageClick.bind="() => this.onParentMessageClick(msg.parentMessage)"
                         thread="props.thread"
                         messageEdition="props.messageEdition"
                         isFirstMessage="msg_first"
