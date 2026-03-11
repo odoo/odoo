@@ -1228,7 +1228,7 @@ class HrExpense(models.Model):
     @api.model
     def _get_untitled_expense_name(self, *args):
         """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
-        return _("Untitled Expense %s", *args)
+        return self.env._("Untitled Expense %s", *args)
 
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
