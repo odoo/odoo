@@ -271,8 +271,8 @@
     <record id="hr_holidays_cl_mit_1" model="hr.leave">
         <field name="name">Trip</field>
         <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_legal_leave"/>
-        <field name="request_date_from" eval="(datetime.today().date() - relativedelta(months=1, day=5, weekday=0))"/>
-        <field name="request_date_to" eval="(datetime.today().date() - relativedelta(months=1, day=5, weekday=0))"/>
+        <field name="request_date_from" eval="time.strftime('%Y-01-15')"/>
+        <field name="request_date_to" eval="time.strftime('%Y-01-15')"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="state">confirm</field>
     </record>
