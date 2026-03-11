@@ -6,13 +6,13 @@ import { markup } from "@odoo/owl";
 registry.category("web_tour.tours").add('hr_recruitment_tour',{
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["community"],
-    trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
+    trigger: '[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     tooltipPosition: 'right',
     run: "click",
 }, {
     isActive: ["enterprise"],
-    trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
+    trigger: '[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: markup(_t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>.")),
     tooltipPosition: 'bottom',
     run: "click",
@@ -23,27 +23,30 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     run: "click",
 },
 {
-    trigger: ".o_hr_job_simple_form",
+    trigger: ".o_form_view",
 },
 {
-    trigger: ".o_job_name",
+    trigger: ".o_field_widget[name='name'] textarea, .o_field_widget[name='name'] input",
     content: _t("What do you want to recruit today? Choose a job title..."),
     tooltipPosition: "right",
     run: "click",
 },
 {
-    trigger: '.o_hr_job_simple_form',
+    trigger: ".o_form_view",
 },
 {
-    trigger: ".o_job_alias",
+    trigger: ".o_field_widget[name='alias_name'] input",
     content: _t("Choose an application email."),
     tooltipPosition: "right",
     run: "click",
 }, {
-    trigger: '.o_create_job',
+    trigger: ".o_form_button_save",
     content: _t('Let\'s create the position. An email will be setup for applications, and a public job description, if you use the Website app.'),
     tooltipPosition: 'bottom',
-    run: "click .modal:visible .btn.btn-primary",
+    run: "click",
+}, {
+    trigger: "button.oe_stat_button:has(i.fa-pencil)",
+    run: "click",
 }, {
     trigger: ".o_copy_paste_email",
     content: _t("Copy this email address, to paste it in your email composer, to apply."),

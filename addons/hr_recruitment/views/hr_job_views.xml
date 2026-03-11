@@ -13,7 +13,7 @@
         <field name="arch" type="xml">
             <kanban highlight_color="color"
                 class="o_hr_recruitment_kanban"
-                on_create="hr_recruitment.create_job_simple"
+                on_create="hr.action_create_job_position"
                 sample="1"
                 limit="40"
                 action="%(action_hr_job_applications)d"
