@@ -183,8 +183,6 @@ class AccountMove(models.Model):
         Perform checks to evaluate if a move is eligible to grouping/ungrouping
         """
         self.ensure_one()
-        if not self.is_purchase_document(include_receipts=True):
-            raise UserError(self.env._("You can only (un)group lines of a incoming invoice (vendor bill)"))
         if self.state != 'draft':
             raise UserError(self.env._("You can only (un)group lines of a draft invoice"))
 
