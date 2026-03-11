@@ -19,11 +19,7 @@ from werkzeug.datastructures import (
     ImmutableMultiDict,
     MultiDict,
 )
-from werkzeug.exceptions import (
-    Forbidden,
-    NotFound,
-    UnsupportedMediaType,
-)
+from werkzeug.exceptions import NotFound, UnsupportedMediaType
 from werkzeug.local import LocalStack
 from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
@@ -32,15 +28,16 @@ import odoo
 from odoo.tools import consteq, json_default, profiler
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Mapping, Iterable
+    from collections.abc import Iterable, Mapping
+
     import werkzeug.routing
 
     from odoo.api import Environment
     from odoo.models import BaseModel
     from odoo.modules.registry import Registry
+
     from .response import Response
     from .routing_map import Endpoint
-    from .session import Session
 
     HeaderType = Mapping[str, str | Iterable[str]] | Iterable[tuple[str, str]]
 
@@ -88,46 +85,6 @@ class Request:
         self.env: Environment | None = None
         # set by the Dispatcher
         self.params: Mapping | None = None
-
-    def _post_init(self) -> None:
-        self.session, self.db = self._get_session_and_dbname()
-        self._post_init = None
-
-    def _get_session_and_dbname(self) -> tuple[Session, str | None]:
-        sid = self.httprequest._session_id__
-        session = session_store().get(sid, keep_sid=True)
-
-        for key, val in get_default_session().items():
-            session.setdefault(key, val)
-        if not session.context.get('lang'):
-            session.context['lang'] = self.default_lang()
-
-        dbname = None
-        host = self.httprequest.environ['HTTP_HOST']
-        header_dbname = self.httprequest.headers.get('X-Odoo-Database')
-        if session.db and router.db_filter([session.db], host=host):
-            dbname = session.db
-            if header_dbname and header_dbname != dbname:
-                e = ("Cannot use both the session_id cookie and the "
-                     "x-odoo-database header.")
-                raise Forbidden(e)
-        elif header_dbname:
-            session.can_save = False  # stateless
-            if router.db_filter([header_dbname], host=host):
-                dbname = header_dbname
-        else:
-            all_dbs = router.db_list(force=True, host=host)
-            if len(all_dbs) == 1:
-                dbname = all_dbs[0]  # monodb
-
-        if session.db != dbname:
-            if session.db:
-                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
-                logout(session, keep_db=False)
-            session.db = dbname
-
-        session.is_dirty = False
-        return session, dbname
 
     # =====================================================
     # Getters and setters
@@ -445,41 +402,6 @@ class Request:
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
 
-    def _save_session(self, env: Environment | None = None):
-        """
-        Save a modified session on disk.
-
-        :param env: an environment to compute the session token.
-            MUST be left ``None`` (in which case it uses the request's
-            env) UNLESS the database changed.
-        """
-        sess = self.session
-        if env is None:
-            env = self.env
-
-        if not sess.can_save:
-            return
-
-        if sess.should_rotate:
-            session_store().rotate(sess, env)  # it saves
-        elif (
-            sess.uid
-            and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
-            and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
-        ):
-            session_store().rotate(sess, env, soft=True)
-        elif sess.is_dirty:
-            session_store().save(sess)
-
-        cookie_sid = self.cookies.get('session_id')
-        if sess.is_dirty or cookie_sid != sess.sid:
-            self.future_response.set_cookie(
-                'session_id',
-                sess.sid,
-                max_age=get_session_max_inactivity(env),
-                httponly=True
-            )
-
     def _set_request_dispatcher(self, rule: werkzeug.routing.Rule):
         endpoint: Endpoint = rule.endpoint  # type: ignore
         routing = endpoint.routing
@@ -511,16 +433,4 @@ else:
 from .dispatcher import HttpDispatcher, _dispatchers
 from .geoip import GeoIP
 from .response import FutureResponse, Response
-from .session import (
-    DEFAULT_LANG,
-    SESSION_ROTATION_EXCLUDED_PATHS,
-    SESSION_ROTATION_INTERVAL,
-    STORED_SESSION_BYTES,
-    get_default_session,
-    get_session_max_inactivity,
-    logout,
-    session_store,
-)
-
-# ruff: noqa: I001
-from . import router  # db_list, db_filter
+from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session
