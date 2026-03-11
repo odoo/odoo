@@ -1877,6 +1877,7 @@ class TestPackagePropagation(TestPackingCommon):
         # action_assign => On move lines, result_package_id is not set.
         self.assertEqual(partial_deliveries.move_line_ids.package_id, package, "The package should be used as source.")
         self.assertFalse(partial_deliveries.move_line_ids.result_package_id, "If the contents of a single pack are reserved by multiple picks, the entire pack can't reproduce on each pick.")
+<<<<<<< 876331c042d86514287cf3083ba0173fd725944c
 
     def test_multi_step_reservation_multi_level_packages(self):
         """ Checks that in a multi-step delivery, the packages are correctly re-assigned after the validation of the first step.
@@ -2217,3 +2218,68 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse(pack2.quant_ids)
         self.assertEqual(pack2.location_id, self.stock_location)
         self.assertEqual(pack2.company_id, self.stock_location.company_id)
+||||||| 32408a8dea43f57bba1a56c775ae228131720749
+=======
+
+    def test_reusable_package_propagation_backorder(self):
+        """ Test a reusable package should not be propagated to the next picking
+        when a backorder occured and using the same reusable package"""
+        reusable_package = self.env['stock.quant.package'].create({
+            'name': 'Reusable Package',
+            'package_use': 'reusable',
+        })
+        self.productA = self.env['product.product'].create({
+            'name': 'productA',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
+        pg = self.env['procurement.group'].create({'name': 'propagation_test'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                self.productA,
+                2.0,
+                self.productA.uom_id,
+                self.customer_location,
+                'propagation_test',
+                'propagation_test',
+                self.warehouse.company_id,
+                {
+                    'warehouse_id': self.warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+        picking = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        picking.action_assign()
+        picking.move_ids.move_line_ids.result_package_id = reusable_package
+        picking.move_ids.move_line_ids.quantity = 1
+        picking.move_ids.picked = True
+        picking._action_done()
+        self.assertEqual(picking.state, 'done')
+        pack_lines = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.pack_location.id),
+        ]).move_line_ids
+
+        self.assertEqual(len(pack_lines), 1, 'Should have only 1 stock move line')
+        self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
+
+        # Do the backorder
+        backorder = picking.backorder_ids
+        backorder.action_assign()
+
+        # Put in the same package
+        backorder.move_ids.move_line_ids.result_package_id = reusable_package
+        backorder.move_ids.move_line_ids.quantity = 1
+        backorder.move_ids.picked = True
+        backorder._action_done()
+        pack = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.pack_location.id),
+        ])
+        self.assertFalse(pack.move_line_ids.result_package_id, 'Should not have the reusable package')
+>>>>>>> fb081740aa6f44a24a76b4eda79c2f21ff4be087
