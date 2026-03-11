@@ -26,7 +26,11 @@ patch(Chatter.prototype, {
     },
 
     get extraMessageFetchRouteParams() {
-        return super.extraMessageFetchRouteParams;
+        const params = super.extraMessageFetchRouteParams;
+        if (this.props.projectSharingId) {
+            params.share_only = true;
+        }
+        return params;
     },
 
     async toggleIsFollower() {

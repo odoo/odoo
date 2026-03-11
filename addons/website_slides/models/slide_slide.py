@@ -16,7 +16,7 @@ from odoo.http import request
 from odoo.addons.website.tools import text_from_html
 from odoo.tools import BinaryBytes, html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
-from odoo.addons.portal.controllers.thread import PortalWebClientController
+from odoo.addons.mail.controllers.webclient import WebclientController
 
 _logger = logging.getLogger(__name__)
 
@@ -244,7 +244,7 @@ class SlideSlide(models.Model):
     def _compute_comments_count(self):
         count_by_slide = dict(
             self.env["mail.message"]._read_group(
-                PortalWebClientController._get_portal_message_fetch_domain(self),
+                WebclientController._get_fetch_share_domain(self),
                 groupby=["res_id"],
                 aggregates=["__count"],
             )

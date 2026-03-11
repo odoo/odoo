@@ -8,6 +8,9 @@ patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
         this.topRef = useRef("top");
+        this.env.bus.addEventListener("reload_chatter_content", (ev) =>
+            this._reloadChatterContent(ev.detail)
+        );
         onWillPatch(() => {
             // Keep the composer position under the page header on scrolling
             // unless the header is on the side.
@@ -35,6 +38,16 @@ patch(Chatter.prototype, {
     },
 
     get extraMessageFetchRouteParams() {
-        return super.extraMessageFetchRouteParams;
+        const params = super.extraMessageFetchRouteParams;
+        if (this.env.inFrontendPortalChatter) {
+            params.share_only = true;
+        }
+        return params;
+    },
+
+    async _reloadChatterContent(data) {
+        this.state.thread.messages = await this.state.thread.fetchMessages({
+            routeParams: this.messageFetchRouteParams,
+        });
     },
 });
