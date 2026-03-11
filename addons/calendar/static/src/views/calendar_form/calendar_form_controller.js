@@ -27,6 +27,7 @@ export class CalendarFormController extends FormController {
                 await this.archiveOrUnlinkCalendarEvent({
                     requestedAction: "archive",
                     resId: record.resId,
+                    isDraft: record.data.is_draft,
                     partnerIds: record.data.partner_ids.resIds,
                     recurrency: record.data.recurrency,
                     start: record.data.start,
@@ -64,6 +65,7 @@ export class CalendarFormController extends FormController {
             await this.archiveOrUnlinkCalendarEvent({
                 requestedAction: "unlink",
                 resId: record.resId,
+                isDraft: record.data.is_draft,
                 partnerIds: record.data.partner_ids.resIds,
                 recurrency: record.data.recurrency,
                 start: record.data.start,

@@ -84,6 +84,8 @@ class MicrosoftCalendarSync(models.AbstractModel):
                         if not values:
                             continue
                         record._microsoft_patch(record._get_organizer(), record.microsoft_id, values, timeout=timeout)
+                elif vals.get('is_draft') is False:
+                    record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=timeout)
 
         return result
 
@@ -98,7 +100,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
             timeout = self._get_microsoft_graph_timeout()
 
             for record in records:
-                if record.need_sync_m and record.active:
+                if record.need_sync_m and record.active and not record._is_draft():
                     record._microsoft_insert(record._microsoft_values(self._get_microsoft_synced_fields()), timeout=timeout)
         return records
 
@@ -144,7 +146,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
             sender_user = record._get_event_user_m()
-            if record._is_microsoft_insertion_blocked(sender_user):
+            if record._is_microsoft_insertion_blocked(sender_user) or not record._is_draft():
                 continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
@@ -553,4 +555,8 @@ class MicrosoftCalendarSync(models.AbstractModel):
         otherwise the event ownership would be lost in Outlook and it would block the
         future record synchronization for the original owner.
         """
+        raise NotImplementedError()
+
+    def _is_draft(self):
+        """Required to block the insertion to Microsoft of the record if it is a draft event."""
         raise NotImplementedError()

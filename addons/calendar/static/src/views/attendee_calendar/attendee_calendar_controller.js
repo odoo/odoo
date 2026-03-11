@@ -96,6 +96,7 @@ export class AttendeeCalendarController extends CalendarController {
             await this.archiveOrUnlinkCalendarEvent({
                 requestedAction: "unlink",
                 resId: record.id,
+                isDraft: record.rawRecord.is_draft,
                 partnerIds: record.rawRecord.partner_ids,
                 recurrency: record.rawRecord.recurrency,
                 start: record.start,

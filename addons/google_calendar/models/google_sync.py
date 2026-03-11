@@ -73,6 +73,8 @@ class GoogleCalendarSync(models.AbstractModel):
             for record in self:
                 if record.need_sync and record.google_id:
                     record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
+                elif vals.get('is_draft') is False:
+                    record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
 
         return result
 
@@ -91,7 +93,7 @@ class GoogleCalendarSync(models.AbstractModel):
         google_service = GoogleCalendarService(self.env['google.service'])
         if self.env.user._get_google_sync_status() != "sync_paused":
             for record in records:
-                if record.need_sync and record.active:
+                if record.need_sync and record.active and not record._is_draft():
                     record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
         return records
 
@@ -145,7 +147,7 @@ class GoogleCalendarSync(models.AbstractModel):
                 if record.google_id and record.need_sync:
                     record.with_user(record._get_event_user())._google_delete(google_service, record.google_id)
             for record in new_records:
-                if record._is_google_insertion_blocked(sender_user=self.env.user):
+                if record._is_google_insertion_blocked(sender_user=self.env.user) or record._is_draft():
                     continue
                 record.with_user(record._get_event_user())._google_insert(google_service, record._google_values())
             for record in updated_records:
@@ -415,4 +417,8 @@ class GoogleCalendarSync(models.AbstractModel):
         as it avoids that events have permanently the wrong organizer in Google
         by not synchronizing records through owner and not through the attendees.
         """
+        raise NotImplementedError()
+
+    def _is_draft(self):
+        """Required to block the insertion to Google of the record if it is a draft event."""
         raise NotImplementedError()

@@ -35,7 +35,7 @@ class CalendarEventMultiArchiveOrUnlinkWizard(models.TransientModel):
         self.ensure_one()
         now = fields.Datetime.now()
         events_to_notify = self.calendar_event_ids.filtered(
-            lambda event: event.partner_ids != self.env.user.partner_id and event.start > now
+            lambda event: event.partner_ids != self.env.user.partner_id and event.start > now and not event.is_draft
         )
         self._send_mails_from_template(events_to_notify)
 
