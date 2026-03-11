@@ -37,4 +37,5 @@ from . import (
     test_related_translation,
     test_schema,
     test_search,
+    test_search_order,
 )
