@@ -600,18 +600,8 @@ class MailingMailing(models.Model):
     # ------------------------------------------------------
 
     def action_use_template(self):
-        """
-        <p>
-        Create a copy of the template and set it as a mailing (no longer a template) ready to be used.
-        </p>
-        <p>
-        The template is removed from Favorites to avoid duplicates in the Templates view, however the user
-        can set it back to Favorites so that it appears in the Templates view.
-        </p>"""
         if mass_mailing_copy := self._create_mailing_from_template(self):
-            res_context = dict(self.env.context)
-            res_context['default_is_template'] = 0
-            res_context['default_favorite'] = 0
+            res_context = dict(**self.env.context, default_is_template=0, default_favorite=0)
             return {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
