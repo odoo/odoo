@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mail.ChatterComposer" t-inherit="mail.Composer" t-inherit-mode="extension">
-        <xpath expr="//div[@t-custom-ref='this.root']" position="before">
+        <xpath expr="//div[@t-custom-ref='root']" position="before">
             <div t-if="this.props.withMessageFields and this.props.type === 'message'" class="py-1">
                 <div class="d-flex">
                     <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>

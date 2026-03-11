@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
-        <xpath expr="//*[@t-custom-ref='this.displayName']" position="before">
+        <xpath expr="//*[@t-custom-ref='displayName']" position="before">
             <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country'"/>
         </xpath>
-        <xpath expr="//*[@t-custom-ref='this.displayNameAdditionalContent']" position="inside">
+        <xpath expr="//*[@t-custom-ref='displayNameAdditionalContent']" position="inside">
             <span t-if="this.channel.livechat_lang_id" class="fw-normal small text-uppercase text-muted" t-out="this.channel.livechat_lang_id.baseCode" t-att-title="this.channel.livechat_lang_id.name"/>
             <t t-if="this.channel.livechat_status === 'need_help'">
                 <i t-if="this.channel.matchesSelfExpertise" class="fa fa-star o-mail-favorite" role="image" title="Relevant to your expertise"/>
