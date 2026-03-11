@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test, waitForNone } from "@odoo/hoot";
 import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { ensureDistinctHistoryCommit, insertText, insertSpace } from "./_helpers/user_actions";
@@ -1505,6 +1505,7 @@ describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () 
                 "<p>before</p>" + highlightedPre({ value: "a\nb" }) + "<p>[]<br><br>after</p>",
             stepFunction: async () => {
                 await pressAndWait("ArrowUp");
+                await waitForNone(".o-we-toolbar");
             },
             contentAfterEdit:
                 "<p>before</p>" +
