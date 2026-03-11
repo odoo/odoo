@@ -23,17 +23,20 @@ function getAlignItem(icon) {
     return queryOne(`.o-we-toolbar-dropdown button[data-icon='format_align_${icon}']`);
 }
 
-test("should have align tool only if the block is content editable", async () => {
-    for (const [contenteditable, count] of [
-        [false, 0],
-        [true, 1],
-    ]) {
-        await setupEditor(
-            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
-        );
-        await expandToolbar();
-        expect(".btn[name='text_align']").toHaveCount(count);
-    }
+test("should have align tool only if the block is content editable (non editable)", async () => {
+    await setupEditor(
+        `<div contenteditable="false"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='text_align']").toHaveCount(0);
+});
+
+test("should have align tool only if the block is content editable (editable)", async () => {
+    await setupEditor(
+        `<div contenteditable="true"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='text_align']").toHaveCount(1);
 });
 
 describe("start", () => {
