@@ -1,11 +1,41 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from itertools import product
 
-from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
+from odoo.addons.mail.tests.common_controllers import (
+    MailControllerThreadCommon,
+    MessagePostSubTestData,
+)
 from odoo.tests import tagged
 
 
 @tagged("mail_controller")
 class TestPortalThreadController(MailControllerThreadCommon):
+    def _authenticate_pseudo_user(self, pseudo_user):
+        self._current_pseudo_user = pseudo_user
+        return super()._authenticate_pseudo_user(pseudo_user)
+
+    def _message_fetch_params(self, record, route_kw):
+        params = super()._message_fetch_params(record, route_kw)
+        if share_only := route_kw.pop("share_only", None):
+            params["share_only"] = share_only
+        return params
+
+    def _check_fetched_messages(self, record, messages, allowed, route_kw):
+        """Check which messages should be displayed in portal."""
+        super()._check_fetched_messages(record, messages, allowed, route_kw)
+        if allowed == "share_only":
+            user_data = self._current_pseudo_user
+            if not (user_data._name == "res.users" and user_data._is_internal()):
+                self._fetch_and_assert_is_not_note(record, messages, route_kw)
+            self._fetch_and_assert_is_not_note(record, messages, {**route_kw, "share_only": True})
+
+    def _fetch_and_assert_is_not_note(self, record, messages, route_kw):
+        fetched_data = self._message_fetch(record, route_kw)
+        fetched_messages = fetched_data["mail.message"]
+        self.assertNotEqual(len(fetched_messages), len(messages))
+        self.assertEqual(len(fetched_messages), 1)
+        self.assertEqual(fetched_messages[0]["subtype_id"], self.env.ref("mail.mt_comment").id)
 
     def test_message_post_portal_no_partner(self):
         """Test access of message post for portal without partner."""
@@ -84,9 +114,7 @@ class TestPortalThreadController(MailControllerThreadCommon):
         All users are allowed to mention with specific message_mention token."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
-        all_partners = (
-            self.user_portal + self.user_employee + self.user_admin
-        ).partner_id
+        all_partners = (self.user_portal + self.user_employee + self.user_admin).partner_id
         record.message_subscribe(partner_ids=self.user_employee.partner_id.ids)
 
         def test_partners(user, allowed, exp_partners, route_kw=None, exp_author=None):
@@ -107,7 +135,9 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 test_partners(self.user_public, False, all_partners, route_kw=bad_token),
                 test_partners(self.user_public, False, all_partners, route_kw=bad_sign),
                 test_partners(self.user_public, True, all_partners, route_kw=token),
-                test_partners(self.user_public, True, all_partners, route_kw=sign, exp_author=partner),
+                test_partners(
+                    self.user_public, True, all_partners, route_kw=sign, exp_author=partner
+                ),
                 test_partners(self.guest, False, all_partners),
                 test_partners(self.guest, False, all_partners, route_kw=bad_token),
                 test_partners(self.guest, False, all_partners, route_kw=bad_sign),
@@ -131,9 +161,7 @@ class TestPortalThreadController(MailControllerThreadCommon):
         Only internal users are allowed to mention without specific message_mention token."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
-        all_partners = (
-            self.user_portal + self.user_employee + self.user_admin
-        ).partner_id
+        all_partners = (self.user_portal + self.user_employee + self.user_admin).partner_id
         record.message_subscribe(partner_ids=self.user_employee.partner_id.ids)
 
         def test_partners(user, allowed, exp_partners, route_kw=None, exp_author=None):
@@ -153,12 +181,20 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 test_partners(self.user_public, False, self.env["res.partner"], route_kw=bad_token),
                 test_partners(self.user_public, False, self.env["res.partner"], route_kw=bad_sign),
                 test_partners(self.user_public, True, self.env["res.partner"], route_kw=token),
-                test_partners(self.user_public, True, self.env["res.partner"], route_kw=sign, exp_author=partner),
+                test_partners(
+                    self.user_public,
+                    True,
+                    self.env["res.partner"],
+                    route_kw=sign,
+                    exp_author=partner,
+                ),
                 test_partners(self.guest, False, self.env["res.partner"]),
                 test_partners(self.guest, False, self.env["res.partner"], route_kw=bad_token),
                 test_partners(self.guest, False, self.env["res.partner"], route_kw=bad_sign),
                 test_partners(self.guest, True, self.env["res.partner"], route_kw=token),
-                test_partners(self.guest, True, self.env["res.partner"], route_kw=sign, exp_author=partner),
+                test_partners(
+                    self.guest, True, self.env["res.partner"], route_kw=sign, exp_author=partner
+                ),
                 test_partners(self.user_portal, False, self.env["res.partner"]),
                 test_partners(self.user_portal, False, self.env["res.partner"], route_kw=bad_token),
                 test_partners(self.user_portal, False, self.env["res.partner"], route_kw=bad_sign),
@@ -207,6 +243,55 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 self.assertFalse(thread_data["canPostOnReadonly"])
                 self.assertFalse(thread_data["hasReadAccess"])
                 self.assertFalse(thread_data["hasWriteAccess"])
+
+    def test_message_fetch_access_portal(self):
+        """Test access to fetch the messages on a portal record."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
+        route_kws = ({}, token, bad_token, sign, bad_sign)
+        # Subtest format: (user, security params)
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), ({}, bad_token, bad_sign)),
+            record,
+            allowed=False,
+        )
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), (token, sign)), record, allowed="share_only"
+        )
+        self._execute_message_fetch_subtests(
+            product((self.user_admin, self.user_employee, self.user_portal), route_kws),
+            record,
+            allowed="share_only",
+        )
+
+    def test_portal_attachment_ownership_through_fetch(self):
+        """Test an attachment ownership token is fetched only with the portal author credential."""
+        rec_partner = self.env["res.partner"].create({"name": "Record Partner"})
+        record = self.env["mail.test.portal"].create({"name": "Test", "partner_id": rec_partner.id})
+        token = {"token": record._portal_ensure_token()}
+        sign = {"hash": record._sign_token(rec_partner.id), "pid": rec_partner.id}
+        attachment = self.env["ir.attachment"].create(
+            {"name": "File", "res_id": 0, "res_model": "mail.compose.message"}
+        )
+        record.message_post(
+            attachment_ids=attachment.ids,
+            author_id=rec_partner.id,
+            body="Posted",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+
+        def fetched_attachment(pseudo_user, route_kw):
+            self._authenticate_pseudo_user(pseudo_user)
+            res = self._message_fetch(record, route_kw)
+            return next((a for a in res.get("ir.attachment", []) if a["id"] == attachment.id), {})
+
+        for user, route_kw in product(
+            (self.user_public, self.user_portal, self.user_employee), ({}, token, sign)
+        ):
+            with self.subTest(user=user.name, route_kw=route_kw):
+                attachment_data = fetched_attachment(user, route_kw)
+                self.assertEqual("ownership_token" in attachment_data, route_kw in (token, sign))
 
     def test_message_post_sanitizes_post_data(self):
         """Only internal users with direct posting ACL can pass custom

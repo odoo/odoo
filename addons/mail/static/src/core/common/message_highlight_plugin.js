@@ -28,10 +28,16 @@ function needsScrollToCenter(el) {
  *
  * Config:
  * - `thread`: function returning the thread whose messages are highlighted.
+ * - `messageFetchRouteParams` (optional): function returning the route
+ *   params used to load the messages around the highlighted message.
  */
 export class MessageHighlightPlugin extends Plugin {
     duration = HIGHLIGHT_DURATION;
     thread = useConfig("thread", t.function([], t.instanceOf(Thread).optional()));
+    messageFetchRouteParams = useConfig(
+        "messageFetchRouteParams",
+        t.function([], t.object()).optional()
+    );
     highlightedMessageId = signal(null, { type: t.or([t.number(), t.literal(null)]) });
     /** @type {number|null} */
     timeout = null;
@@ -72,7 +78,10 @@ export class MessageHighlightPlugin extends Plugin {
         let messageScrollDirection;
         if (message.notIn(thread.messages)) {
             messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
-            await thread.loadAround({ messageId: message.id });
+            await thread.loadAround({
+                messageId: message.id,
+                routeParams: this.messageFetchRouteParams ? this.messageFetchRouteParams() : {},
+            });
         }
         const lastHighlightedMessageId = this.highlightedMessageId();
         this.clear();

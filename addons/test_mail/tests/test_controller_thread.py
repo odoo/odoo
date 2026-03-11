@@ -16,6 +16,32 @@ class TestMessageController(MailControllerThreadCommon):
 
         cls.test_public_record = cls.env["mail.test.access.public"].create({"name": "Public Channel", "email": "john@test.be", "mobile": "+32455001122"})
 
+    def test_attachment_ownership_through_fetch(self):
+        """Test an attachment's ownership token is fetched only by the message author."""
+        record = self.env["mail.test.access.public"].create({"name": "Test"})
+        attachment = self.env["ir.attachment"].create(
+            {"name": "File", "res_id": 0, "res_model": "mail.compose.message"}
+        )
+        record.message_post(
+            attachment_ids=attachment.ids,
+            author_id=self.user_employee.partner_id.id,
+            body="Posted",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+
+        def fetched_attachment(pseudo_user):
+            self._authenticate_pseudo_user(pseudo_user)
+            res = self._message_fetch(record)
+            return next((a for a in res.get("ir.attachment", []) if a["id"] == attachment.id), {})
+
+        # the author receives the ownership token of their own attachment
+        self.assertIn("ownership_token", fetched_attachment(self.user_employee))
+        # no one else does
+        for user in (self.guest, self.user_admin, self.user_portal, self.user_public):
+            with self.subTest(user=user.name):
+                self.assertNotIn("ownership_token", fetched_attachment(user))
+
     @mute_logger("odoo.http")
     def test_thread_attachment_hijack(self):
         att = self.env["ir.attachment"].create({
@@ -236,3 +262,13 @@ class TestMessageController(MailControllerThreadCommon):
                 result = self.make_jsonrpc_request("/mail/read_subscription_data", {"follower_id": follower.id})
                 self.assertIn(subtype_public.id, result["subtype_ids"])
                 self.assertEqual(subtype_internal.id in result["subtype_ids"], internal_expected)
+
+    def test_message_fetch_access(self):
+        """Test access to fetch the messages on a record with group_user access."""
+        record = self.env["mail.performance.thread"].create({"name": "Test"})
+        self._execute_message_fetch_subtests(
+            (self.user_admin, self.user_employee), record, allowed="all"
+        )
+        self._execute_message_fetch_subtests(
+            (self.guest, self.user_portal, self.user_public), record, allowed=False
+        )

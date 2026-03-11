@@ -1,4 +1,7 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, exceptions, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class RatingRating(models.Model):
@@ -52,3 +55,14 @@ class RatingRating(models.Model):
             if not values.get('publisher_id'):
                 values['publisher_id'] = self.env.user.partner_id.id
         return values
+
+    def _store_rating_fields(self, res: Store.FieldList):
+        super()._store_rating_fields(res)
+        res.extend(["publisher_comment", "publisher_datetime"])
+        res.one(
+            "publisher_id",
+            lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.attr("name"),
+            ),
+        )

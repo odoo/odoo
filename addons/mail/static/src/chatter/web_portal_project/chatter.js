@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
@@ -36,11 +37,17 @@ export class Chatter extends Component {
             thread: undefined,
         });
         this.ancestors = useAncestors({ inChatter: this.chatterAncestor });
-        providePlugins([MessageHighlightPlugin], { thread: () => this.state.thread });
+        providePlugins([MessageHighlightPlugin], {
+            thread: () => this.state.thread,
+            messageFetchRouteParams: () => this.messageFetchRouteParams,
+        });
         this.highlightMessage = router.current.highlight_message_id;
         this.rootRef = signal.ref(HTMLDivElement);
         this.topRef = signal.ref(HTMLDivElement);
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll.bind(this));
+        useSubEnv({
+            messageFetchRouteParams: this.extraMessageFetchRouteParams,
+        });
 
         onMounted(this._onMounted);
 
@@ -77,6 +84,14 @@ export class Chatter extends Component {
 
     get afterPostRequestList() {
         return ["messages"];
+    }
+
+    get extraMessageFetchRouteParams() {
+        return {};
+    }
+
+    get messageFetchRouteParams() {
+        return this.env.messageFetchRouteParams;
     }
 
     get onCloseFullComposerRequestList() {
@@ -136,7 +151,9 @@ export class Chatter extends Component {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        await thread.fetchThreadData(requestList);
+        await thread.fetchThreadData(requestList, {
+            messageFetchRouteParams: this.messageFetchRouteParams,
+        });
     }
 
     onCloseFullComposerCallback() {
