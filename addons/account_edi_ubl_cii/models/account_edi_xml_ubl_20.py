@@ -880,6 +880,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', qty_factor)
         line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
 
+        # We could call _find_purchase_orders here and
+        # if not potential_matching_po_ids:
+        # GROUP BY TAX before writing
+
         invoice_values = {
             **invoice_values,
             'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],

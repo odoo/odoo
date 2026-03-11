@@ -5265,6 +5265,16 @@ class AccountMove(models.Model):
             ])
         next_moves.made_sequence_gap = made_gap
 
+    @api.model
+    def _find_purchase_orders(self, po_references, partner_id, amount_untaxed, company_id):
+        # hook to be used with purchase, only to search for potential purchase orders matching the move.
+        # No deep search trying to match invoice lines with PO lines, and no link with the PO are made
+        return {}
+
+    def _match_and_set_purchase_orders(self, potential_purchase_orders, partner_id, amount_total, from_ocr=False, timeout=10):
+        # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
+        self.ensure_one()
+
     def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, from_ocr=False, timeout=10):
         # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
         self.ensure_one()
@@ -5272,7 +5282,8 @@ class AccountMove(models.Model):
     def _link_bill_origin_to_purchase_orders(self, timeout=10):
         for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
             references = [ref.strip() for ref in move.invoice_origin.split(',')] if move.invoice_origin else []
-            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
+            potential_purchase_orders = self._find_purchase_orders(references, move.partner_id.id, move.amount_untaxed, move.company_id.id)
+            move._match_and_set_purchase_orders(potential_purchase_orders, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
 
     def _autopost_bill(self):

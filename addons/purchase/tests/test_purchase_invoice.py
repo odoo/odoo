@@ -774,12 +774,25 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
+    def _find_match_and_set_purchase_orders(self, refs, invoice, from_ocr=False):
+        potential_purchase_orders = self.env['account.move']._find_purchase_orders(
+            refs,
+            invoice.partner_id.id,
+            invoice.amount_untaxed,
+            invoice.company_id.id,
+        )
+        invoice._match_and_set_purchase_orders(
+            potential_purchase_orders,
+            invoice.partner_id.id,
+            invoice.amount_total,
+            from_ocr=from_ocr,
+        )
+
     def test_total_match_via_partner(self):
         po = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
-        invoice._find_and_set_purchase_orders(
-            [], invoice.partner_id.id, invoice.amount_total)
+        self._find_match_and_set_purchase_orders([], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertEqual(invoice.amount_total, po.amount_total)
@@ -788,8 +801,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertEqual(invoice.amount_total, po.amount_total)
@@ -798,8 +810,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice, from_ocr=True)
         additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
@@ -812,8 +823,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -828,8 +838,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -857,8 +866,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice_line.env.cr.execute(query_string)
         invoice_line.invalidate_model(['price_unit'], flush=False)
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -872,8 +880,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -887,8 +894,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order_var_name, self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -902,8 +908,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order_var_name, self.product_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.product_order_other_price])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
@@ -932,8 +937,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         })
         po = self.init_purchase(confirm=True, products=[product_order_zero_price])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertFalse(invoice.id in po.invoice_ids.ids)
 
@@ -941,8 +945,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice, from_ocr=True)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
 
@@ -950,8 +953,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
-        invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['my_match_reference'], invoice)
 
         self.assertTrue(invoice.id not in po.invoice_ids.ids)
 
@@ -959,8 +961,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
-        invoice._find_and_set_purchase_orders(
-            ['other_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+        self._find_match_and_set_purchase_orders(['other_reference'], invoice)
 
         self.assertTrue(invoice.id not in po.invoice_ids.ids)
 
