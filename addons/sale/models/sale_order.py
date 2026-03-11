@@ -370,6 +370,10 @@ class SaleOrder(models.Model):
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
     analytic_account_id = fields.Many2one(string="Analytic Account", comodel_name='account.analytic.account')
+    is_product_mandatory = fields.Boolean(
+        related='company_id.sale_order_mandatory_product',
+        string="Product is mandatory on Sales Orders",
+    )
 
     _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
@@ -1297,14 +1301,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in {'draft', 'sent'}:
             return _("Some orders are not in a state requiring confirmation.")
-        if any(
-            not line.display_type
-            and not line.is_downpayment
-            and not line.product_id
-            for line in self.order_line
-        ):
-            return _("Some order lines are missing a product, you need to correct them before going further.")
-
         return False
 
     def _prepare_confirmation_values(self):
