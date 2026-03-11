@@ -24,12 +24,12 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
-        <div t-attf-class="s_website_form_field mb-3 #{field.formatInfo.col or 'col-12'} #{field.formatInfo.offset} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 's_website_form_dnone' or ''}"
-            t-att-data-type="field.type"
+        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''}"
+            t-att-data-type="this.field.type"
             data-name="Field"
-            t-att-data-translated-name="defaultName">
-            <div t-if="field.formatInfo.labelPosition !== 'none' and field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+            t-att-data-translated-name="this.defaultName">
+            <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
+                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <t t-else="">
-                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="s_website_form_label #{this.field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <t t-out="0"/>
@@ -48,12 +48,12 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <span class="s_website_form_label_content" t-out="field.string"/>
-        <t t-if="field.required or field.modelRequired">
-            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-out="' ' + field.formatInfo.mark"/>
+        <span class="s_website_form_label_content" t-out="this.field.string"/>
+        <t t-if="this.field.required or this.field.modelRequired">
+            <span class="s_website_form_mark" t-if="this.field.formatInfo.requiredMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
         <t t-else="">
-            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-out="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark" t-if="this.field.formatInfo.optionalMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
     </t>
 
@@ -251,17 +251,17 @@
 
     <!-- Radio -->
     <t t-name="website.form_radio">
-        <t t-set="recordId" t-value="field.id + record_index"/>
-        <div t-attf-class="radio col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <div t-attf-class="radio col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="radio"
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att="{checked: record.selected and 'checked' or None}"
                     t-att-value="record.id"
-                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-required="this.field.required || this.field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
                     <t t-out="record.display_name"/>
@@ -338,17 +338,17 @@
 
     <!-- Checkbox -->
     <t t-name="website.form_checkbox">
-        <t t-set="recordId" t-value="field.id + record_index"/>
-        <div t-attf-class="checkbox col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <div t-attf-class="checkbox col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="checkbox"
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att="{checked: record.selected and 'checked' or None}"
                     t-att-value="record.id"
-                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-required="this.field.required || this.field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
                     <t t-out="record.display_name"/>

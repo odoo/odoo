@@ -22,7 +22,7 @@
         <BuilderRange action="'setClassRange'" actionParam="['o_spc-none','o_spc-small','o_spc-medium','o_spc-big']" max="3"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Columns" t-if="isActiveItem('grid_mode_opt') || isActiveItem('masonry_mode_opt')">
+    <BuilderRow label.translate="Columns" t-if="this.isActiveItem('grid_mode_opt') || this.isActiveItem('masonry_mode_opt')">
         <BuilderSelect>
             <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="column">
                 <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-out="column"/></BuilderSelectItem>
@@ -68,7 +68,7 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <BuilderRow label.translate="Outline" level="2" t-if="isActiveItem('indicators_squared_opt') || isActiveItem('indicators_rounded_opt')">
+        <BuilderRow label.translate="Outline" level="2" t-if="this.isActiveItem('indicators_squared_opt') || this.isActiveItem('indicators_rounded_opt')">
             <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
         </BuilderRow>
     </t>
@@ -92,7 +92,7 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
+        <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
             <BuilderRow label.translate="Timespan" level="1">
                 <BuilderNumberInput dataAttributeAction="'bsInterval'"
                     default="10"

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.SwitchableViews">
-    <t t-foreach="switchableRelatedViews" t-as="view" t-key="view.id">
+    <t t-foreach="this.switchableRelatedViews" t-as="view" t-key="view.id">
         <BuilderRow label="view.name">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{
                     views: [view.key],

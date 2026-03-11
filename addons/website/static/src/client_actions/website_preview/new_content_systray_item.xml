@@ -3,19 +3,19 @@
 
 <t t-name="website.NewContentSystrayItem">
     <div class="o_menu_systray_item o_new_content_container d-none d-md-flex">
-        <Dropdown manual="true" state="dropdown" menuClass="'o_new_content_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
-            <button t-on-click="toggleDropdown" accesskey="c" class="o-dropdown-caret o-website-btn-custo-secondary btn rounded-0 border-0 px-3 o-dropdown-toggle-custo">New</button>
+        <Dropdown manual="true" state="this.dropdown" menuClass="'o_new_content_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
+            <button t-on-click="this.toggleDropdown" accesskey="c" class="o-dropdown-caret o-website-btn-custo-secondary btn rounded-0 border-0 px-3 o-dropdown-toggle-custo">New</button>
             <t t-set-slot="content">
-                <t t-set="showNewPageButton" t-value="isDesigner"/>
-                <t t-set="appItems" t-value="sortedNewContentElements"/>
+                <t t-set="showNewPageButton" t-value="this.isDesigner"/>
+                <t t-set="appItems" t-value="this.sortedNewContentElements"/>
                 <t t-set="nbItems" t-value="(showNewPageButton ? 1 : 0) + appItems.length"/>
                 <t t-if="nbItems">
                     <t t-set="colClass" t-value="'g-col-' + (nbItems > 5 ? 6 : 12)"/>
                     <DropdownItem t-if="showNewPageButton"
                             tag="'button'"
                             class="`o_new_content_element d-flex gap-2 ${colClass} p-2 rounded`"
-                            attrs="newPageAttrs"
-                            onSelected="() => props.onNewPage(false)">
+                            attrs="this.newPageAttrs"
+                            onSelected="() => this.props.onNewPage(false)">
                         <div class="o_new_content_element_tile d-flex align-items-center justify-content-center border rounded">
                             <img src="/website/static/description/icon.png" alt=""/>
                         </div>
@@ -27,7 +27,7 @@
                     <t t-foreach="appItems" t-as="element" t-key="element.moduleXmlId">
                         <DropdownItem tag="'button'"
                                 class="`o_new_content_element rounded ${colClass} p-0`"
-                                attrs="Object.assign({}, newPageAttrs, {
+                                attrs="Object.assign({}, this.newPageAttrs, {
                                     'aria-label': element.title,
                                     'data-module-xml-id': element.moduleXmlId,
                                 })"

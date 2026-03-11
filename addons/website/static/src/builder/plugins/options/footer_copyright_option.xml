@@ -23,7 +23,7 @@
                 <BuilderSelectItem actionParam="{ views: ['portal.footer_language_selector', 'website.footer_language_selector_inline'] }">Inline</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow t-if="!isActiveItem('language_selector_none_opt')" level="1" label.translate="Label">
+        <BuilderRow t-if="!this.isActiveItem('language_selector_none_opt')" level="1" label.translate="Label">
             <BuilderSelect id="'footer_language_selector_label_opt'" preview="false" action="'websiteConfig'">
                 <BuilderSelectItem actionParam="{ views: [] }">Text</BuilderSelectItem>
                 <BuilderSelectItem

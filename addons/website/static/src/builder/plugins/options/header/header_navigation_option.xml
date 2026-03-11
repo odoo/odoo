@@ -42,7 +42,7 @@
             website.template_header_hamburger => Hamburger Icon Position
             website.template_header_sidebar => Sidebar Position
         -->
-        <BuilderButtonGroup action="'websiteConfig'" t-if="hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
+        <BuilderButtonGroup action="'websiteConfig'" t-if="this.hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
             <BuilderButton
                 icon="'fa-long-arrow-left'"
                 actionParam="{
@@ -113,10 +113,10 @@
     <t t-set="excludedViewsSubMenus" t-value="[
         'website.template_header_hamburger',
     ]"/>
-    <BuilderRow label.translate="Sub Menus" tooltip.translate="Opening behavior of dropdown menus" t-if="!hasSomeViews(excludedViewsSubMenus)">
+    <BuilderRow label.translate="Sub Menus" tooltip.translate="Opening behavior of dropdown menus" t-if="!this.hasSomeViews(excludedViewsSubMenus)">
         <BuilderSelect action="'previewableWebsiteConfig'">
             <BuilderSelectItem
-                id="header_dropdown_on_click_opt"
+                id="this.header_dropdown_on_click_opt"
                 label.translate="On Click"
                 actionParam="{views: [], previewClass: ''}"
             >On Click</BuilderSelectItem>

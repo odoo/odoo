@@ -9,10 +9,10 @@
                 <BuilderSelectItem actionParam="{views: ['website.option_header_brand_logo']}" id="'option_header_brand_logo'">Image</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Height" level="1" t-if="!isActiveItem('option_header_brand_none')" action="'customizeWebsiteVariable'">
+        <BuilderRow label.translate="Height" level="1" t-if="!this.isActiveItem('option_header_brand_none')" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'logo-height'" default="null" unit="'px'" saveUnit="'rem'" />
         </BuilderRow>
-        <BuilderRow label.translate="Height (Scrolled)" level="1" t-if="!isActiveItem('!header_effect_scroll_opt')" action="'customizeWebsiteVariable'">
+        <BuilderRow label.translate="Height (Scrolled)" level="1" t-if="!this.isActiveItem('!header_effect_scroll_opt')" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'fixed-logo-height'" default="null" unit="'px'" saveUnit="'rem'"/>
         </BuilderRow>
     </t>

@@ -9,7 +9,7 @@
                 <t t-if="this.translationState.isTranslating">
                     <i class="fa fa-circle-o-notch fa-spin lh-1"/> Translating...
                 </t>
-                <t t-else="" t-out="env.services.website.currentWebsite.metadata.langName"/>
+                <t t-else="" t-out="this.env.services.website.currentWebsite.metadata.langName"/>
             </BuilderButton>
         </BuilderRow>
     </BuilderContext>

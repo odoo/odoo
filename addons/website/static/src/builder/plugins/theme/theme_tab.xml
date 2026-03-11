@@ -4,7 +4,7 @@
 <t t-name="website.ThemeTab">
     <div class="o_theme_tab h-100" role="tabpanel" aria-labelledby="theme-tab">
         <div t-custom-ref="content" class="d-flex flex-column h-100">
-            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+            <t t-foreach="this.optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                 <!-- TODO Define a more basic kind of options container -->
                 <OptionsContainer
                     snippetModel="optionsContainer.snippetModel"
@@ -77,7 +77,7 @@
             </BuilderSelect>
             <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
+        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
             <BuilderRow label.translate="Width" level="2">
                 <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>

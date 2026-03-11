@@ -76,7 +76,7 @@
     <BuilderRow label.translate="Description">
         <BuilderCheckbox id="'map_description'" action="'mapDescription'"/>
     </BuilderRow>
-    <t t-if="isActiveItem('map_description')">
+    <t t-if="this.isActiveItem('map_description')">
         <BuilderRow label.translate="Description Text" level="1">
             <BuilderTextInput action="'mapDescriptionTextValue'"/>
         </BuilderRow>

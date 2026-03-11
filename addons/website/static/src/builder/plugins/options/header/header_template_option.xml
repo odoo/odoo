@@ -3,7 +3,7 @@
     <t t-name="website.HeaderTemplateOption">
         <BuilderRow label.translate="Template">
             <BuilderSelect action="'reloadComposite'">
-                <t t-foreach="headerTemplates" t-as="template" t-key="template.key">
+                <t t-foreach="this.headerTemplates" t-as="template" t-key="template.key">
                     <t t-component="template.Component" t-props="template.props"/>
                 </t>
             </BuilderSelect>
@@ -21,7 +21,7 @@
                     combinationColor: 'menu',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_one_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_one_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -32,7 +32,7 @@
                     combinationColor: 'header-sales_one',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_two_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_two_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -43,7 +43,7 @@
                     combinationColor: 'header-sales_two',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_three_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_three_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -54,7 +54,7 @@
                     combinationColor: 'header-sales_three',
                     nullValue: 'NULL',
                 }"/>
-            <BuilderColorPicker t-if="isActiveItem('header_sales_four_opt')"
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_four_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
                 preview="false"
                 defaultColor="''"
@@ -74,9 +74,9 @@
             'header_sales_three_opt',
             'header_sales_four_opt',
         ]"/>
-        <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
             <BuilderButtonGroup applyTo="'#o_main_nav'"
-                    action="hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
+                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
                 <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
@@ -92,7 +92,7 @@
             </BuilderButtonGroup>
         </BuilderRow>
 
-        <BuilderRow t-if="isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
+        <BuilderRow t-if="this.isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
             <BuilderNumberInput
                 action="'customizeWebsiteVariable'"
                 actionParam="'sidebar-width'"
@@ -159,23 +159,23 @@
 
     <t t-name="website.HeaderTemplateChoice">
         <BuilderSelectItem
-            id="props.id"
-            title="props.title"
+            id="this.props.id"
+            title="this.props.title"
             actionParam="[
                 {
                     action: 'websiteConfig',
                     actionParam: {
-                        views: props.views,
+                        views: this.props.views,
                         vars: {
-                            'header-template': props.varName,
-                            'menu-shadow-class': props.menuShadowClass,
+                            'header-template': this.props.varName,
+                            'menu-shadow-class': this.props.menuShadowClass,
                             'menu-box-shadow-style': null,
                         },
                         checkVars: false,
                     },
                 }
             ]">
-            <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="props.imgSrc"/>
+            <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="this.props.imgSrc"/>
         </BuilderSelectItem>
     </t>
 </templates>
