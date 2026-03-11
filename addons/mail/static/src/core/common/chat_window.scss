@@ -9,6 +9,11 @@
         height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
     }
     outline: none;
+
+    transition: box-shadow 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    &.o-highlighted {
+        box-shadow: 0 0 1.5rem #{$o-component-active-border} !important;
+    }
 }
 
 .o-mail-ChatWindow-moreActions {

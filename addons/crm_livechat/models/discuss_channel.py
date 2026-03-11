@@ -51,21 +51,10 @@ class DiscussChannel(models.Model):
         :param partner: internal user partner (operator) that created the lead;
         :param key: operator input in chat ('/lead Lead about Product')
         """
-        # if public user is part of the chat: consider lead to be linked to an
-        # anonymous user whatever the participants. Otherwise keep only share
-        # partners (no user or portal user) to link to the lead.
-        customers = self.env['res.partner']
-        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
-            if customer.is_public:
-                customers = self.env['res.partner']
-                break
-            else:
-                customers |= customer
-
         return self.env['crm.lead'].create({
             "origin_channel_id": self.id,
             'name': html2plaintext(key[5:]),
-            'partner_id': customers[0].id if customers else False,
+            'partner_id': self.livechat_customer_partner_ids[0].id if self.livechat_customer_partner_ids else False,
             'user_id': False,
             'team_id': False,
             'description': self._get_channel_history(),

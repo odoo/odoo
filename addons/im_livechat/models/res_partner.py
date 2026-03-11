@@ -114,4 +114,8 @@ class ResPartner(models.Model):
             ast.literal_eval(action["domain"]),
             [('id', 'in', livechat_channel_ids)]
         ])
+        action["context"] = {
+            **ast.literal_eval(action["context"].strip()),
+            "search_default_filter_session_date": None,
+        }
         return action

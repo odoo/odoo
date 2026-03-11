@@ -635,8 +635,10 @@ class DiscussChannel(models.Model):
             # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
             if previous_message_author != message_author:
+                if parts:
+                    parts.append(Markup("<br/>"))
                 parts.append(
-                    Markup("<br/><strong>%s:</strong><br/>")
+                    Markup("<strong>%s:</strong><br/>")
                     % (
                         (message_author.user_livechat_username if message_author._name == "res.partner" else None)
                         or message_author.name

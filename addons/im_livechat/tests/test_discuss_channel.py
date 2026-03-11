@@ -249,7 +249,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel_history = channel.with_user(self.visitor_user)._get_channel_history()
         self.assertEqual(
             channel_history,
-            "<br/><strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
+            "<strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
             "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s<br/>"
             % {
                 "attachment_1": _convert_attachment_to_html(attachment1),

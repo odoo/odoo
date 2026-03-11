@@ -735,14 +735,20 @@ export class Thread extends Record {
         return false;
     }
 
-    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact, swapOpened } = {}) {
+    async openChatWindow({
+        focus = false,
+        fromMessagingMenu,
+        bypassCompact,
+        swapOpened,
+        highlight,
+    } = {}) {
         const thread = await this.store["mail.thread"].getOrFetch(this);
         if (!thread) {
             return;
         }
         await this.store.chatHub.initPromise;
         this.channel.chatWindow = { fromMessagingMenu, bypassCompact };
-        this.channel.chatWindow.open({ focus, swapOpened });
+        this.channel.chatWindow.open({ focus, swapOpened, highlight });
         return this.channel.chatWindow;
     }
 

@@ -82,6 +82,7 @@ export class ChatWindow extends Component {
         return {
             "w-100 h-100 o-mobile": this.ui.isSmall,
             "o-rounded-bubble border border-dark o-border-opacity-15 mb-2": !this.ui.isSmall,
+            "o-highlighted": this.props.chatWindow.highlighted,
         };
     }
 

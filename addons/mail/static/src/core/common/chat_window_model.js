@@ -1,4 +1,5 @@
 import { fields, Record } from "@mail/model/export";
+import { browser } from "@web/core/browser/browser";
 
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
@@ -13,6 +14,7 @@ export class ChatWindow extends Record {
     hidden = false;
     /** Whether the chat window was created from the messaging menu */
     fromMessagingMenu = false;
+    highlighted = false;
     hubAsOpened = fields.One("ChatHub", { inverse: "opened" });
     hubAsFolded = fields.One("ChatHub", { inverse: "folded" });
     hubAsCanShowOpened = fields.One("ChatHub", {
@@ -137,11 +139,20 @@ export class ChatWindow extends Record {
         this.bypassCompact = false;
     }
 
+    async highlight() {
+        this.highlighted = true;
+        await new Promise((resolve) => browser.setTimeout(resolve, 2000));
+        if (this.exists()) {
+            this.highlighted = false;
+        }
+    }
+
     async open({
         focus = false,
         notifyState = true,
         jumpToNewMessage = false,
         swapOpened = true,
+        highlight = false,
     } = {}) {
         await this.store.chatHub.initPromise;
         this.store.env.bus.trigger("ChatWindow:will-open");
@@ -155,6 +166,9 @@ export class ChatWindow extends Record {
         }
         if (focus) {
             this.focus({ jumpToNewMessage });
+        }
+        if (highlight) {
+            this.highlight();
         }
     }
 

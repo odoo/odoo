@@ -461,7 +461,7 @@ export class DiscussChannel extends Record {
         onUpdate() {
             if (this.open_chat_window) {
                 this.open_chat_window = undefined;
-                this.openChatWindow({ focus: true });
+                this.openChatWindow({ focus: true, highlight: this.chatWindow?.isOpen });
             }
         },
     });
